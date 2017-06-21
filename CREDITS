@@ -1,0 +1,31 @@
+CREDITS
+-------
+
+Major developer:
+
+- Philippe Beaudoin
+
+Contributors:
+
+
+
+
+A large part of the infrastruture components has been borrowed to the phpPgAdmin project, 
+an open source project available at http://phppgadmin.sourceforge.net under GPL licence.
+
+Third Party Libraries:
+
+- Highlight.php (Jacob D. Cohen of rafb.net)
+- XLoadTree2 (Erik Arvidsson & Emil A Eklund of webfx.eae.net)
+- jQuery (http://jquery.com/)
+
+
+Project resources:
+
+- github.com - Official GIT repository hosting
+
+Corporate Sponsors:
+
+- Dalibo ( http://www.dalibo.com ) - sponsors developpment as Philippe Beaudoin employer
+
+

@@ -1,0 +1,212 @@
+Adaptation plugin ppa5.1 pour emaj 1.1.0
+----------------------------------------
+x fin support emaj < 0.11.0
+x fin support pg 8.2
+- emaj_group : 
+x	- remplacer group_state par group_is_logging
+x	- liste des groupe ou détail groupe : remplacer la colonne "état" par "logging?" ou une icone ? 
+x	- remplacer group_state par une icone "caméra" si logging ou "caméra barrée" si idle" (fnct callback)
+	- passer le booléen au lieu du texte
+	- une icone à la place du texte ROLLBACKABLE ou AUDIT_ONLY ?
+- emaj_mark :
+x	- remplacer mark_state par mark_is_deleted
+x	- remplacer mark_state par croix rouge si deleted et mark verte si valide (fnct callback)
+	- passer le booléen au lieu du texte
+- emaj_estimate_rollback_duration() supprimé et remplacé par
+x	- emaj_estimate_rollback_group()
+		- passage de logged ou unlogged ? (pour le moment unlogged forcé)
+		- passer par une fenêtre d'option et validation ?
+	- emaj_estimate_rollback_groups()
+		- une nouvelle fonction multi-groupe
+		- avec un paramètre pour type de rlbk (logged ou non)
+
+x une fonction de emaj_cleanup_rollback_state() qui passe en committed ou aborted
+x	- à mettre avec l'évolution du traitement des rollbacks
+x nouvelle fonction emaj_rollback_activity()
+x	- ex. select * from emaj.emaj_rollback_activity()
+x	- pour emaj_adm and emaj_viewer
+x état final des rollback accessible dans rlbk_status et rlbk_msg de la table emaj_rlbk
+- définition des groupes de tables (ou create_group/alter_group?) : 
+	- les tables temporaires et les unlogged tables ne peuvent être gérées par E-Maj.
+		- filtrer lors de la définition des groupes
+- suivi des rollbacks
+	- page avec liste des rlbk
+x		- nouvelle fnct 'rlbk_activity' et fnct '
+x		- emajDb->getCompletedRlbk(nb int, nb heure rétention int) def 3 et 24 (si -1, pas de limite)
+x			- cleanup au début de getCompletedRlbk()
+x		- emajDb->getInProgressRlbk()
+x		- une liste avec les derniers rollbacks terminés
+x			- nb variable et rétention variables
+x		- une liste avec les rollbacks en cours
+		- avec possibilité de raffraichissement automatique (comme d'autres pages de ppa)
+		- tester la possibilité de monitoring dans le plugin ppa
+x			- open_cnx('test') puis si cnx ok, close_cnx('test')
+x			- traite le code retour de _dblink_open_cnx()
+			- éviter de tester la cnx à chaque affichage => en cache dans $_SESSION ? avec les autres variables d'état ?
+				- durée de vie de $_SESSION ? supprimée par logout : OK pour tout mettre en cache
+- rollback asynchrone
+	- nom sur le bouton ? ("asynchronous rollback" "batch rollback" "deferred rollback")
+x	- le rollback continue à tourner qd plus de ppa en ligne : OUI
+x	- rollback_group() : appel emaj_rollback_groups() en asynchrone
+x		- si dblink utilisable, ajout bouton "rollback avec suivi"
+x		- retourne le rlbk_id pour le suivi, possibilité affichage de la prévision de durée ?
+		- texte
+>>		- ne proposer que le bouton que si isset($this->conf['psql_path']) existe et est ok, et idem pour 'temp_dir'
+x	- rollback_group_ok() : traiter le nouveau bouton
+		- texte
+x	- créer fonction asyncRollbackGroup()
+x		- SELECT emaj._rlbk_init(v_groupNames, v_mark, v_isLoggedRlbk, 1, v_multiGroup) as rlbkId;
+x		- SELECT emaj._rlbk_async(rlbkId, v_multiGroup BOOLEAN)
+			- modifier la fonction  pour retourner quelque chose ?
+		- tester avec rollback long
+x			- ajouter pg_sleep(10) dans les étapes
+			- supprimer modif _rlbk_async()
+		- que se passe-t'il si durée rollback > max_execution_time() de php ?
+		- un psql externe pour lancer le rollback
+			- voir dbexport.php
+x			- cmd dans la config
+x			- fichier de sortie du psql : 
+x				- fichier généré dans une directory dans la config (temp_dir) avec un nom = rlbk_<num>_report ?
+>>			- et si des " dans les req ? (array par exemple ou nom de groupe avec ")
+
+	- rollback_groups() : appel emaj_rollback_groups() en asynchrone
+		- si dblink utilisable, ajout bouton "rollback avec suivi"
+		- retourne le rlbk_id pour le suivi, possibilité affichage de la prévision de durée ?
+	- rollback_groups_ok() : traiter le nouveau bouton
+	- créer fonction asyncRollbackGroups()
+	- en sortie d'init : état LOCKING, bof ?
+
+- tri en cliquant sur les entetes de colonne ?
+x	- plugin jquery 
+x		- modif printTable() pour ajout <thead> et <tbody>
+x	- traiter les tableaux de
+x		- def : schéma, tables et séquences
+x		- groupes
+x		- stat
+x		- contenu
+x			- ajouter une colonnes avec taille du log en octets pour pouvoir trier
+x		- liste marks
+	- tablesorter :
+		- filter : bouton pour reset des filtres ?
+		- option stickyHeaders : à tester
+		- emaj_viewer, les commentaires sur les groupes et les marques n'ont pas de filtre !
+	- regarder les icones iconfinder.com
+
+- changement de groupe dans le tree -> aller sur le dernier onglet ouvert
+	- $_SESSION["webdbLastTab"]["emajgroup"] est déjà maintenu avec le nom du dernier onglet
+	- comment fait ppa pour réutiliser ?
+		$misc->getLastTabURL($section/subject) appelé par redirect.php appelé dans les .php
+
+- render rollbackable / audit-only ? flèche verte pour rollbackable et loupe ou flèche verte barrée ? pour audit-only)
+- Envir. E-Maj : visu et modif paramètres, bouton export envir emaj (tables des schémas emaj)?)
+- export ? snap_group, snap_log_group, gen_sql_groups...
+- pourquoi affichage onglet environnement qd reconnexion suite à coupure ?
+- variable de session du tableau $_SESSION["emaj"] à mettre aussi en configuration ? ou plutôt en cookie ?
+- stat : étudier le multi-groupe
+ 
+Développement du plugin emaj pour ppa5.1
+----------------------------------------
+
+Notice: Undefined variable: plugin_lang in C:\Documents and Settings\Beaudoin-P\Bureau\ppa51emaj\classes\Plugin.php on line 22 
+si pas de $plugin_lang défini
+
+2- pb : comment déclarer les callback fonctions pour les render des colonnes et pour les renders des actions ?
+	- Pb avec la correction proposée
+
+7- patch phb1.patch
+	- Misc.php : ajout 4 lignes pour option target et class sur les boutons
+		- rem : Misc.php vers lignes 1850 : commentaires plus à jour ?
+	- sqledit.php : ajout alimentation de la zone de saisie sql par l'option sqlquery dans la requête surchargeant ce qui est récupéré au niveau de la session
+A la place :
+	- lien avec target = emajsqledit vers plugin fnct = 'call_sqledit' avec passage de la requête dans l'url
+	- fnct 'call_sqledit' : valorisation de $_SESSION puis open de la page sqledit
+	- changer en jquery le target et le onclick() des cellules de classe opbutton1 contenant "SQL"
+
+- ajouter une classe css errormsg dans global.css avec color:red et bold ?
+
+
+AMELIORATIONS
+-------------
+- mettre les tableaux dans des div pour gérer les espacements autour du tableau ?
+- faire un fichier css ?
+- estimation et durée rollback : et si > 24h ?
+- fonction modifier assignation
+	- pas en multi-action
+	- lire les attributs avant affichage
+
+Correction à apporter au plugin 504 :
+-----------------------------------
+- liste des groupes : manquerait pas une interdiction de alter_group pour emaj_viewer ?
+- Emaj.php:
+	function getSchemas() {
+...
+					  nspname != 'information_schema' AND nspname != '{$this->emaj_schema}' ";
+		if ($this->emaj_version_num >= 10000){			// version >= 1.0.0
+		$sql = $sql .
+				"AND nspname NOT IN (SELECT DISTINCT rel_log_schema FROM emaj.emaj_relation WHERE rel_log_schema IS NOT NULL) ";
+		}
+ ...
+- french/english : 2 entrées redondante dans une des langues 
+
+
+Default tablespace de la database :
+---------------------------------
+- Doc 9.2
+	ALTER DATABASE name [ [ WITH ] option [ ... ] ]
+		where option can be: CONNECTION LIMIT connlimit
+x	ALTER DATABASE name RENAME TO new_name
+x	ALTER DATABASE name OWNER TO new_owner
+	ALTER DATABASE name SET TABLESPACE new_tablespace
+		- move fichier => peut prendre du temps
+			- ok pour faire dans ppa ?
+	ALTER DATABASE name SET configuration_parameter { TO | = } { value | DEFAULT }
+	ALTER DATABASE name SET configuration_parameter FROM CURRENT
+	ALTER DATABASE name RESET configuration_parameter
+	ALTER DATABASE name RESET ALL
+
+Alter index :
+-----------
+- Doc 9.2
+	ALTER INDEX [ IF EXISTS ] name RENAME TO new_name
+	ALTER INDEX [ IF EXISTS ] name SET TABLESPACE tablespace_name
+	ALTER INDEX [ IF EXISTS ] name SET ( storage_parameter = value [, ... ] )
+	ALTER INDEX [ IF EXISTS ] name RESET ( storage_parameter [, ... ] )
+- pas de bouton Alter sur le tableau des index d'une table
+
+Add constraint fk :
+-----------------
+- manque option differable/immediate
+- manque option not valid à la création
+
+Alter constraint :
+----------------
+- Doc 9.2
+	ALTER TABLE [ IF EXISTS ] [ ONLY ] name [ * ] VALIDATE CONSTRAINT constraint_name
+	ALTER TABLE [ IF EXISTS ] [ ONLY ] name [ * ] RENAME CONSTRAINT constraint_name TO new_constraint_name
+	[SET CONSTRAINTS ... DEFFERED | IMMEDIATE	mais que pour la tx courant, donc pas d'intérêt à mettre dans ppa]
+
+Add constraint pk ou unique :
+---------------------------
+- manque possibilité de réutiliser un index existant
+
+Bouton disponible en fonction des permissions :
+---------------------------------------------
+
+Alter table :
+-----------
+- Ajouter bouton no cluster si un index cluster existe
+ou mieux, liste des index avec possibilité de positionner l'index cluster ou supprimer
+	- ALTER TABLE ... CLUSTER ON ... | SET WITHOUT CLUSTER
+	- SET NO CLUSTER qu'à partir de pg8.0
+	- Postgres.php
+x		- ajout : hasAlterTableNocluster() = true
+x		- getTable() : ajout du nom de l'index cluster ou '' si aucun
+x		- alterTable() : ajout d'un paramètre clusterIndex
+x		- création fonction alterTableClusteredIndex() 
+x			- appelé par _alterTable()
+	- Postgres74.php
+x		- ajout : hasAlterTableNocluster() = false
+x		- getTable() : ajout du nom de l'index cluster ou '' si aucun
+	- tblproperties.php
+x		- appel de $data->getIndexes($table)
+x		- affiche liste déroulante avec l'index cluster actuel sélectionné + une entrée "Aucun" ou "" ?

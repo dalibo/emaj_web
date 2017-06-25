@@ -1,48 +1,29 @@
 Emaj_web Installation Guide
------------------------------
+---------------------------
 
-1. Unpack your download
+1. Clone the github repository or Download ZIP
 
-   If you've downloaded a tar.gz package, execute from a terminal:
+   Go to the https://github.com/beaud76/emaj_web URL and click on the 
+   "Clone or Download" button.
 
-   gunzip Emaj_web-*.tar.gz
-   tar -xvf Emaj_web-*.tar
-
-   Else, if you've downloaded a tar.bz2 package, execute from a terminal: 
-
-   bunzip2 Emaj_web-*.tar.bz2
-   tar -xvf Emaj_web-*.tar
-
-   Else, if you've downloaded a zip package, execute from a terminal:
-
-   unzip Emaj_web-*.zip
+   If you download the ZIP file, extract the zip package.
 
 2. Configure Emaj_web
 
-   edit Emaj_web/conf/config.inc.php
+   Edit the conf/config.inc.php. 
+
+   It mainly deals with the configuration of PostgreSQL servers connections.
 
    If you mess up the configuration file, you can recover it from the
    config.inc.php-dist file.
 
-3. If you run your PHP installation in safe mode, in order that the database
-   dump feature can work correctly, you need to set the 'safe_mode_allowed_env_vars'
-   php.ini variable to include the PGPASSWORD and PGUSER environmental variables
-   and the safe_mode_exec_dir to include /usr/bin (or wherever the pg_dump
-   binaries are found).
-   
-   	eg. safe_mode_allowed_env_vars = PHP_,PG
-   	    safe_mode_exec_dir = /usr/bin
-   
-   Given that you usually don't want to allow everything in /usr/bin to
-   be executed, you might want to copy the pg_dump and pg_dumpall utilities
-   to a directory by themselves.
-   
-   Lastly, if you run Emaj_web in safe mode, very long running imports,
-   exports and transactions may time out and be aborted.
+3. Browse to the Emaj_web installation using a web browser.
 
-4. Browse to the Emaj_web installation using a web browser.
+   If the E-Maj extension is not installed on the database you connect on,
+   or if the connection role is not granted emaj_adm or emaj_viewer rights,
+   the E-Maj icon in the trail and in the left tree is not visible.
 
-5. IMPORTANT - SECURITY
+4. IMPORTANT - SECURITY
 
    PostgreSQL by default does not require you to use a password to log in.
    We STRONGLY recommend that you enable md5 passwords for local connections
@@ -57,3 +38,4 @@ Emaj_web Installation Guide
    Once you are certain you have properly secured your database server, you
    can then disable 'extra_login_security' so that you can log in as your
    database administrator using the administrator password.
+

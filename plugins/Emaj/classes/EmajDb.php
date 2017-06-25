@@ -573,7 +573,7 @@ class EmajDb {
 		$data->clean($group);
 
 		if ($this->getNumEmajVersion() >= 10200){	// version >= 1.2.0
-			$sql = "SELECT rel_schema, rel_tblseq, rel_kind, rel_priority,
+			$sql = "SELECT rel_schema, rel_tblseq, rel_kind || '+' AS relkind, rel_priority,
 						rel_log_schema, rel_log_dat_tsp, rel_log_idx_tsp,
 						substring(rel_log_function FROM '(.*)\_log\_fnct') AS emaj_names_prefix,
 						CASE WHEN rel_kind = 'r' THEN 
@@ -586,7 +586,7 @@ class EmajDb {
 					WHERE rel_group = '{$group}'
 					ORDER BY rel_schema, rel_tblseq";
 		} else {
-			$sql = "SELECT rel_schema, rel_tblseq, rel_kind, rel_priority";
+			$sql = "SELECT rel_schema, rel_tblseq, rel_kind || '+' AS relkind, rel_priority";
 			if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
 				$sql .=
 					", rel_log_schema, rel_log_dat_tsp, rel_log_idx_tsp";

@@ -2262,7 +2262,7 @@ class Emaj extends Plugin {
 			$columns = array(
 				'type' => array(
 					'title' => $lang['strtype'],
-					'field' => field('rel_kind'),
+					'field' => field('relkind'),
 					'type'	=> 'callback',
 					'params'=> array('function' => array($this, 'renderTblSeq'),'align' => 'center')
 				),

@@ -1388,6 +1388,60 @@ class EmajDb {
 	}
 
 	/**
+	 * Returns information about all alter_group operations that have been executed after a mark set for one or several groups
+	 * The function is called when emaj version >= 2.1
+	 */
+	function getAlterAfterMarkGroups($groups,$mark) {
+
+		global $data;
+
+		$data->clean($groups);
+		$data->clean($mark);
+
+		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
+		$firstGroup = substr($groups, 0, strpos($groups.',', ','));
+
+		// look at the alter group operations executed after the mark
+		$sql = "SELECT time_tx_timestamp, altr_step, CASE
+				  WHEN altr_step = 'REMOVE_TBL' THEN
+					'The table ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' has been removed from the tables group ' || quote_literal(altr_group)
+				  WHEN altr_step = 'REMOVE_SEQ' THEN
+					'The sequence ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' has been removed from the tables group ' || quote_literal(altr_group)
+				  WHEN altr_step = 'REPAIR_TBL' THEN
+					'E-Maj objects for the table ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' have been repaired'
+				  WHEN altr_step = 'REPAIR_SEQ' THEN
+					'E-Maj objects for the sequence ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' have been repaired'
+				  WHEN altr_step = 'CHANGE_TBL_LOG_SCHEMA' THEN
+					'The E-Maj log schema for the table ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' has been changed'
+				  WHEN altr_step = 'CHANGE_TBL_NAMES_PREFIX' THEN
+					'The E-Maj names prefix for the table ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' has been changed'
+				  WHEN altr_step = 'CHANGE_TBL_LOG_DATA_TSP' THEN
+					'The tablespace for the log data files of the table ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' has been changed'
+				  WHEN altr_step = 'CHANGE_TBL_LOG_INDEX_TSP' THEN
+					'The tablespace for the log index files of the table ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' has been changed'
+				  WHEN altr_step = 'ASSIGN_REL' THEN
+					'The table ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' has been moved from the tables group ' || quote_literal(altr_group) || ' to the tables group ' || quote_literal(altr_new_group)
+				  WHEN altr_step = 'CHANGE_REL_PRIORITY' THEN
+					'The E-Maj priority for the table ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' has been changed'
+				  WHEN altr_step = 'ADD_TBL' THEN
+					'The table ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' has been added to the tables group ' || quote_literal(altr_group)
+				  WHEN altr_step = 'ADD_SEQ' THEN
+					'The sequence ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' has been added to the tables group ' || quote_literal(altr_group)
+                  END AS altr_action, 
+				CASE WHEN altr_step IN ('REPAIR_TBL', 'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP', 'CHANGE_TBL_LOG_INDEX_TSP', 'CHANGE_REL_PRIORITY')
+					THEN false ELSE true END AS altr_auto_rolled_back
+				  FROM \"{$this->emaj_schema}\".emaj_alter_plan, \"{$this->emaj_schema}\".emaj_mark, \"{$this->emaj_schema}\".emaj_time_stamp
+				  WHERE altr_group = ANY ({$groupsArray})
+			    	AND mark_group = '{$firstGroup}' AND mark_name = '{$mark}'
+					AND altr_time_id > mark_time_id
+					AND altr_time_id = time_id
+					AND altr_step IN ('REMOVE_TBL', 'REMOVE_SEQ', 'REPAIR_TBL', 'REPAIR_SEQ', 'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX',
+									  'CHANGE_TBL_LOG_DATA_TSP', 'CHANGE_TBL_LOG_INDEX_TSP', 'ASSIGN_REL', 'CHANGE_REL_PRIORITY', 'ADD_TBL', 'ADD_SEQ')
+				  ORDER BY time_tx_timestamp, altr_schema, altr_tblseq, altr_step";
+		return $data->selectSet($sql);
+	}
+
+	/**
 	 * Rollbacks a group to a mark
 	 */
 	function rollbackGroup($group,$mark,$isLogged) {

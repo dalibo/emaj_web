@@ -29,6 +29,7 @@
 	$lang['strport'] = 'Port';
 	$lang['strlogout'] = 'Logout';
 	$lang['strowner'] = 'Owner';
+	$lang['straction'] = 'Action';
 	$lang['stractions'] = 'Actions';
 	$lang['strname'] = 'Name';
 	$lang['strproperties'] = 'Properties';
@@ -65,6 +66,7 @@
 	$lang['strvalue'] = 'Value';
 	$lang['strsql'] = 'SQL';
 	$lang['strexecute'] = 'Execute';
+	$lang['strconfirm'] = 'Confirm';
 	$lang['strellipsis'] = '...';
 	$lang['strseparator'] = ': ';
 	$lang['strexpand'] = 'Expand';

@@ -286,6 +286,8 @@
 	$plugin_lang['emajcantrlbkidlegroup'] = 'Rollbacking the tables group "%s" is not possible. The group is stopped.';
 	$plugin_lang['emajcantrlbkprotgroup'] = 'Rollbacking the tables group "%s" is not possible. The group is protected.';
 	$plugin_lang['emajcantrlbkinvalidmarkgroup'] = 'Rollbacking the tables group "%s" is not possible. The mark "%s" is not valid.';
+	$plugin_lang['emajreachaltergroup'] = 'Rollbacking the tables group "%s" to the mark "%s" would reach a point in time prior alter_group operations. Please confirm the rollback.';
+	$plugin_lang['emajautorolledback'] = 'Automatically rolled back?';
 	$plugin_lang['emajgroupisprotected'] = 'The group "%s" is protected.';
 	$plugin_lang['emajinvalidrlbkmark'] = 'Mark "%s" is not valid anymore.';
 	$plugin_lang['emajrlbkgroupok'] = 'Tables group "%s" has been rollbacked to mark "%s".';
@@ -301,6 +303,7 @@
 	$plugin_lang['emajcantrlbkprotgroups'] = 'Rollbacking the tables groups "%s" is not possible. The groups "%s" are protected.';
 	$plugin_lang['emajnomarkgroups'] = 'No common mark for tables groups "%s" can be used for a rollback.';
 	$plugin_lang['emajcantrlbkinvalidmarkgroups'] = 'Rollbacking the tables groups "%s" is not possible. The mark "%s" is not valid.';
+	$plugin_lang['emajreachaltergroups'] = 'Rollbacking the tables groups "%s" to the mark "%s" would reach a point in time prior alter_group operations. Please confirm the rollback.';
 	$plugin_lang['emajrlbkgroupsok'] = 'Tables groups "%s" have been rollbacked to mark "%s".';
 	$plugin_lang['emajrlbkgroupserr'] = 'Error during tables groups "%s" rollback to mark "%s"!';
 

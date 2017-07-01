@@ -90,7 +90,7 @@ class Emaj extends Plugin {
 					),
 					'icon' => $this->icon('Emaj')
 				);
-				if ($this->emajdb->isEmaj_Adm()){
+				if ($this->emajdb->isEmaj_Adm()) {
 					$tabs['emajconfiguregroups'] = array (
 						'title' => $this->lang['emajgroupsconf'],
 						'url' => 'plugin.php',
@@ -228,8 +228,10 @@ class Emaj extends Plugin {
 		'reset_group',
 		'reset_group_ok',
 		'rollback_group',
+		'rollback_group_confirm_alter',
 		'rollback_group_ok',
 		'rollback_groups',
+		'rollback_groups_confirm_alter',
 		'rollback_groups_ok',
 		'set_mark_group',
 		'set_mark_group_ok',
@@ -268,14 +270,14 @@ class Emaj extends Plugin {
 	// Function to dynamicaly modify actions list for tables
 	function tblseqPre(&$rowdata, $actions) {
 		// disable 'assign' if the table already belongs to a group
-		if ($rowdata->fields['grpdef_group'] != NULL){
+		if ($rowdata->fields['grpdef_group'] != NULL) {
 			$actions['assign']['disable'] = true;
-		}else{
+		} else {
 		// otherwise, disable 'remove' and 'update'
 			$actions['remove']['disable'] = true;
 			$actions['update']['disable'] = true;
 		// disable also 'assign' for unsupported object type
-			if ($rowdata->fields['relkind'] != 'r+' and $rowdata->fields['relkind'] != 'S+'){
+			if ($rowdata->fields['relkind'] != 'r+' and $rowdata->fields['relkind'] != 'S+') {
 				$actions['assign']['disable'] = true;
 			}
 		};
@@ -287,18 +289,18 @@ class Emaj extends Plugin {
 		global $emajdb;
 		// disable the rollback button for audit_only groups
 		$isGroupRollbackable = $this->emajdb->isGroupRollbackable($rowdata->fields['group_name']);
-		if (isset($loggingActions['rollback_group']) && !$isGroupRollbackable){
+		if (isset($loggingActions['rollback_group']) && !$isGroupRollbackable) {
 			$loggingActions['rollback_group']['disable'] = true;
 		}
 		if ($this->emajdb->getNumEmajVersion() >= 10300) {
 			$isGroupProtected = $this->emajdb->isGroupProtected($rowdata->fields['group_name']);
 		// disable the protect button for audit_only or protected groups
-			if (isset($loggingActions['protect_group']) && (!$isGroupRollbackable || $isGroupProtected)){
+			if (isset($loggingActions['protect_group']) && (!$isGroupRollbackable || $isGroupProtected)) {
 				$loggingActions['protect_group']['disable'] = true;
 				$loggingActions['rollback_group']['disable'] = true;
 			}
 		// disable the unprotect button for audit_only or unprotected groups
-			if (isset($loggingActions['unprotect_group']) && (!$isGroupRollbackable || !$isGroupProtected)){
+			if (isset($loggingActions['unprotect_group']) && (!$isGroupRollbackable || !$isGroupProtected)) {
 				$loggingActions['unprotect_group']['disable'] = true;
 			}
 		}
@@ -310,7 +312,7 @@ class Emaj extends Plugin {
 		global $emajdb;
 
 		// disable the rollback button if the mark is deleted
-		if (isset($actions['rollbackgroup']) && $rowdata->fields['mark_state'] == 'DELETED'){
+		if (isset($actions['rollbackgroup']) && $rowdata->fields['mark_state'] == 'DELETED') {
 			$actions['rollbackgroup']['disable'] = true;
 		}
 		// disable the rollback button if a previous mark is protected
@@ -318,11 +320,11 @@ class Emaj extends Plugin {
 			$actions['rollbackgroup']['disable'] = true;
 		}
 		// disable the protect button if the mark is already protected
-		if (isset($actions['protectmark']) && $rowdata->fields['mark_state'] != 'ACTIVE'){
+		if (isset($actions['protectmark']) && $rowdata->fields['mark_state'] != 'ACTIVE') {
 			$actions['protectmark']['disable'] = true;
 		}
 		// disable the unprotect button if the mark is not protected
-		if (isset($actions['unprotectmark']) && $rowdata->fields['mark_state'] != 'ACTIVE-PROTECTED'){
+		if (isset($actions['unprotectmark']) && $rowdata->fields['mark_state'] != 'ACTIVE-PROTECTED') {
 			$actions['unprotectmark']['disable'] = true;
 		}
 		// if the mark is protected, set the flag to disable the rollback button for next marks
@@ -344,9 +346,9 @@ class Emaj extends Plugin {
 	// Callback function to dynamicaly add an icon to each diagnostic message
 	function renderDiagnostic($val) {
 		global $misc;
-		if (preg_match("/[Nn]o error /",$val)){
+		if (preg_match("/[Nn]o error /",$val)) {
 			$icon = 'CheckConstraint';
-		}else{
+		} else {
 			$icon = 'CorruptedDatabase';
 		}
 		return "<img src=\"".$misc->icon($icon)."\" style=\"vertical-align:bottom;\" />" . $val;
@@ -356,7 +358,7 @@ class Emaj extends Plugin {
 	// It generates a warning icon when the owner is not known (i.e. the object does not exist)
 	function renderSchemaOwner($val) {
 		global $misc;
-		if ($val == '!'){
+		if ($val == '!') {
 			return "<img src=\"".$misc->icon('ObjectNotFound')."\" alt=\"{$this->lang['emajunknownobject']}\" title=\"{$this->lang['emajunknownobject']}\" style=\"vertical-align:bottom;\" />";
 		}
 		return $val;
@@ -366,16 +368,16 @@ class Emaj extends Plugin {
 	// It replaces the database value by an icon representing either a table or a sequence
 	function renderTblSeq($val) {
 		global $misc, $lang;
-		if ($val == 'r+'){						// regular table
+		if ($val == 'r+') {							// regular table
 			$icon = $misc->icon('Table');
 			$alt = $lang['strtable'];
-		}elseif ($val == 'S+'){					// sequence
+		} elseif ($val == 'S+') {					// sequence
 			$icon = $misc->icon('Sequence');
 			$alt = $lang['strsequence'];
-		}elseif ($val == '!'){					// object declared in the emaj_group_def table but unknown in the catalog
+		} elseif ($val == '!') {					// object declared in the emaj_group_def table but unknown in the catalog
 			$icon = $misc->icon('ObjectNotFound');
 			$alt = $this->lang['emajunknownobject'];
-		}else{									// unsupported type
+		} else {									// unsupported type
 			$icon = $misc->icon('ObjectNotFound');
 			$alt = $this->lang['emajunsupportedobject'];
 		}
@@ -385,15 +387,15 @@ class Emaj extends Plugin {
 	// Callback function to dynamicaly replace the group type from the database by one or two icons
 	function renderGroupType($val) {
 		global $misc;
-		if ($val == 'ROLLBACKABLE'){
+		if ($val == 'ROLLBACKABLE') {
 			$icon = $misc->icon(array($this->name,'EmajRollbackable'));
 			$alt = $this->lang['emajrollbackable'];
 			$img = "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
-		}elseif ($val == 'AUDIT_ONLY'){
+		} elseif ($val == 'AUDIT_ONLY') {
 			$icon = $misc->icon(array($this->name,'EmajAuditOnly'));
 			$alt = $this->lang['emajauditonly'];
 			$img = "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
-		}elseif ($val == 'ROLLBACKABLE-PROTECTED') {
+		} elseif ($val == 'ROLLBACKABLE-PROTECTED') {
 			$icon = $misc->icon(array($this->name,'EmajRollbackable'));
 			$alt = $this->lang['emajrollbackable'];
 			$img = "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
@@ -408,10 +410,10 @@ class Emaj extends Plugin {
 	// It replaces the database value by an icon
 	function renderGroupState($val) {
 		global $misc;
-		if ($val == 'IDLE'){
+		if ($val == 'IDLE') {
 			$icon = $misc->icon(array($this->name,'EmajIdle'));
 			$alt = $this->lang['emajidle'];
-		}else{
+		} else {
 			$icon = $misc->icon(array($this->name,'EmajLogging'));
 			$alt = $this->lang['emajlogging'];
 		}
@@ -424,19 +426,30 @@ class Emaj extends Plugin {
 		return $val == 't' ? $lang['stryes'] : $lang['strno'];
 	}
 
+	// Callback function to dynamicaly translate a boolean column into an icon
+	function renderBooleanIcon($val) {
+		global $misc;
+		if ($val == 't') {
+			$icon = 'CheckConstraint';
+		} else {
+			$icon = 'Delete';
+		}
+		return "<img src=\"".$misc->icon($icon)."\" style=\"vertical-align:bottom;\" />";
+	}
+
 	// Callback function to dynamicaly modify the mark state column content
 	// It replaces the database value by an icon
 	function renderMarkState($val) {
 		global $misc;
-		if ($val == 'ACTIVE'){
+		if ($val == 'ACTIVE') {
 			$icon = $misc->icon(array($this->name,'EmajMark'));
 			$alt = $this->lang['emajactive'];
 			$img = "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
-		}elseif ($val == 'DELETED'){
+		} elseif ($val == 'DELETED') {
 			$icon = $misc->icon('Delete');
 			$alt = $this->lang['emajdeleted'];
 			$img = "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
-		}elseif ($val == 'ACTIVE-PROTECTED') {
+		} elseif ($val == 'ACTIVE-PROTECTED') {
 			$icon = $misc->icon(array($this->name,'EmajMark'));
 			$alt = $this->lang['emajactive'];
 			$img = "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
@@ -461,12 +474,12 @@ class Emaj extends Plugin {
 
 		$emajOK = $this->printEmajHeader("action=show_emaj_envir",$this->lang['emajenvironment']);
 
-		if ($emajOK){
+		if ($emajOK) {
 
 			// General characteristics of the E-Maj environment
 			echo "<h3>{$this->lang['emajcharacteristics']}</h3>\n";
 			echo "<p>{$this->lang['emajversion']}{$this->emajdb->getEmajVersion()}</p>\n";
-			if ($this->emajdb->isEmaj_Adm()){
+			if ($this->emajdb->isEmaj_Adm()) {
 				echo "<p>".sprintf($this->lang['emajdiskspace'],$this->emajdb->getEmajSize())."</p>\n";
 			}
 
@@ -508,7 +521,7 @@ class Emaj extends Plugin {
 
 		$emajOK = $this->printEmajHeader("action=configure_groups&amp;appschema=".urlencode($_REQUEST['appschema']),$this->lang['emajgroupsconfiguration']);
 
-		if ($emajOK){
+		if ($emajOK) {
 			$this->printMsg($msg,$errMsg);
 
 		// Schemas list
@@ -561,7 +574,7 @@ class Emaj extends Plugin {
 			echo "<hr>\n";
 
 		// Tables and sequences for the selected schema, if any
-			if (isset($_REQUEST['appschema']) && $_REQUEST['appschema'] != ''){
+			if (isset($_REQUEST['appschema']) && $_REQUEST['appschema'] != '') {
 
 				echo "<h3>".sprintf($this->lang['emajtblseqofschema'],$_REQUEST['appschema'])."</h3>\n";
 				$tblseq = $this->emajdb->getTablesSequences($_REQUEST['appschema']);
@@ -591,7 +604,7 @@ class Emaj extends Plugin {
 						'params'=> array('align' => 'center'),
 					),
 				);
-				if ($this->emajdb->getNumEmajVersion() >= 10000){			// version >= 1.0.0
+				if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
 					$columns = array_merge($columns, array(
 						'logschemasuffix' => array(
 							'title' => $this->lang['emajlogschemasuffix'],
@@ -599,7 +612,7 @@ class Emaj extends Plugin {
 						),
 					));
 				};
-				if ($this->emajdb->getNumEmajVersion() >= 10200){			// version >= 1.2.0
+				if ($this->emajdb->getNumEmajVersion() >= 10200) {			// version >= 1.2.0
 					$columns = array_merge($columns, array(
 						'emajnamesprefix' => array(
 							'title' => $this->lang['emajnamesprefix'],
@@ -607,7 +620,7 @@ class Emaj extends Plugin {
 						),
 					));
 				};
-				if ($this->emajdb->getNumEmajVersion() >= 10000){			// version >= 1.0.0
+				if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
 					$columns = array_merge($columns, array(
 						'logdattsp' => array(
 							'title' => $this->lang['emajlogdattsp'],
@@ -706,7 +719,7 @@ class Emaj extends Plugin {
 						$(\"#tablesSeqTable table\").tablesorter(
 							{
 							textExtraction: { 
-								1: function(s){
+								1: function(s) {
 									if($(s).find('img').length == 0) return $(s).text();
 									return $(s).find('img').attr('alt');
 								}},
@@ -746,7 +759,7 @@ class Emaj extends Plugin {
 
 		$emajOK = $this->printEmajHeader("action=show_groups",$this->lang['emajgrouplist']);
 
-		if ($emajOK){
+		if ($emajOK) {
 			$this->printMsg($msg,$errMsg);
 
 			$idleGroups = $this->emajdb->getIdleGroups();
@@ -815,7 +828,7 @@ class Emaj extends Plugin {
 							)))),
 				),
 			);
-			if ($this->emajdb->isEmaj_Adm()){
+			if ($this->emajdb->isEmaj_Adm()) {
 				$loggingActions = array_merge($loggingActions, array(
 				'multiactions' => array(
 					'keycols' => array('group' => 'group_name'),
@@ -862,7 +875,7 @@ class Emaj extends Plugin {
 					'multiaction' => 'rollback_groups',
 				)));
 			};
-			if ($this->emajdb->isEmaj_Adm() && $this->emajdb->getNumEmajVersion() >= 10300){
+			if ($this->emajdb->isEmaj_Adm() && $this->emajdb->getNumEmajVersion() >= 10300) {
 				$loggingActions = array_merge($loggingActions, array(
 				'protect_group' => array(
 					'content' => $this->lang['emajprotect'],
@@ -890,7 +903,7 @@ class Emaj extends Plugin {
 					),
 				));
 			};
-			if ($this->emajdb->isEmaj_Adm() && $this->emajdb->getNumEmajVersion() >= 20100){	// version >= 2.1.0
+			if ($this->emajdb->isEmaj_Adm() && $this->emajdb->getNumEmajVersion() >= 20100) {	// version >= 2.1.0
 				$loggingActions = array_merge($loggingActions, array(
 					'alter_group' => array(
 						'content' => $lang['stralter'],
@@ -905,11 +918,11 @@ class Emaj extends Plugin {
 							))))
 					),
 				));
-				if ($this->emajdb->getNumEmajVersion() >= 20100){	// version >= 2.1.0
+				if ($this->emajdb->getNumEmajVersion() >= 20100) {	// version >= 2.1.0
 						$loggingActions['alter_group']['multiaction'] = 'alter_groups';
 				}
 			};
-			if ($this->emajdb->isEmaj_Adm()){
+			if ($this->emajdb->isEmaj_Adm()) {
 				$loggingActions = array_merge($loggingActions, array(
 				'comment_group' => array(
 					'content' => $this->lang['emajsetcomment'],
@@ -940,7 +953,7 @@ class Emaj extends Plugin {
 							))))
 				),
 			);
-			if ($this->emajdb->isEmaj_Adm()){
+			if ($this->emajdb->isEmaj_Adm()) {
 				$idleActions = array_merge($idleActions, array(
 				'multiactions' => array(
 					'keycols' => array('group' => 'group_name'),
@@ -986,7 +999,7 @@ class Emaj extends Plugin {
 				),
 				));
 			};
-			if ($this->emajdb->isEmaj_Adm() && $this->emajdb->getNumEmajVersion() >= 10000){	// version >= 1.0.0
+			if ($this->emajdb->isEmaj_Adm() && $this->emajdb->getNumEmajVersion() >= 10000) {	// version >= 1.0.0
 				$idleActions = array_merge($idleActions, array(
 					'alter_group' => array(
 						'content' => $lang['stralter'],
@@ -1001,11 +1014,11 @@ class Emaj extends Plugin {
 							))))
 					),
 				));
-				if ($this->emajdb->getNumEmajVersion() >= 20100){	// version >= 2.1.0
+				if ($this->emajdb->getNumEmajVersion() >= 20100) {	// version >= 2.1.0
 						$idleActions['alter_group']['multiaction'] = 'alter_groups';
 				}
 			};
-			if ($this->emajdb->isEmaj_Adm()){
+			if ($this->emajdb->isEmaj_Adm()) {
 				$idleActions = array_merge($idleActions, array(
 				'comment_group' => array(
 					'content' => $this->lang['emajsetcomment'],
@@ -1114,7 +1127,7 @@ class Emaj extends Plugin {
 
 			// get groups name known in emaj_group_def table but not yet created (i.e. not known in emaj_group table)
 			// for emaj_adm role only
-			if ($this->emajdb->isEmaj_Adm()){
+			if ($this->emajdb->isEmaj_Adm()) {
 				$newGroups = $this->emajdb->getNewGroups();
 				if ($newGroups->recordCount() > 0) {
 
@@ -1172,7 +1185,7 @@ class Emaj extends Plugin {
 
 		$emajOK = $this->printEmajHeader("action=show_rollbacks",$this->lang['emajrlbkoperations']);
 
-		if ($emajOK){
+		if ($emajOK) {
 			$this->printMsg($msg,$errMsg);
 
 			if (!isset($_SESSION['emaj']['RlbkNb'])) {
@@ -1377,7 +1390,7 @@ class Emaj extends Plugin {
 			echo "</script>\n";
 
 			// Display the E-Maj logged rollback operations that may be consolidated (i.e. transformed into unlogged rollback)
-			if ($this->emajdb->getNumEmajVersion() >= 20000){			// version >= 2.0.0
+			if ($this->emajdb->getNumEmajVersion() >= 20000) {			// version >= 2.0.0
 
 				$columnsConsRlbk = array(
 					'consGroup' => array(
@@ -1453,7 +1466,7 @@ class Emaj extends Plugin {
 
 		$emajOK = $this->printEmajHeader("action=show_group&amp;group=".urlencode($_REQUEST['group']),sprintf($this->lang['emajgrouppropertiesmarks'],$_REQUEST['group']));
 
-		if ($emajOK){
+		if ($emajOK) {
 			$this->printMsg($msg,$errMsg);
 
 		// general information about the group
@@ -1529,53 +1542,53 @@ class Emaj extends Plugin {
 			echo "<ul class=\"navlink\">";
 
 			// start_group
-			if ($this->emajdb->isEmaj_Adm() && $groupState == 'IDLE'){
+			if ($this->emajdb->isEmaj_Adm() && $groupState == 'IDLE') {
 				echo "  <li><a href=\"plugin.php?plugin={$this->name}&amp;&action=start_group&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\">{$lang['strstart']}</a></li>\n";
 			}
 
 			// stop_group
-			if ($this->emajdb->isEmaj_Adm() && $groupState == 'LOGGING'){
+			if ($this->emajdb->isEmaj_Adm() && $groupState == 'LOGGING') {
 				echo "  <li><a href=\"plugin.php?plugin={$this->name}&amp;&action=stop_group&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\">{$lang['strstop']}</a></li>\n";
 			}
 
 			// set_mark_group
-			if ($this->emajdb->isEmaj_Adm() && $groupState == 'LOGGING'){
+			if ($this->emajdb->isEmaj_Adm() && $groupState == 'LOGGING') {
 				echo "  <li><a href=\"plugin.php?plugin={$this->name}&amp;&action=set_mark_group&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\">{$this->lang['emajsetmark']}</a></li>\n";
 			}
 
 			// reset_group
-			if ($this->emajdb->isEmaj_Adm() && $groupState == 'IDLE'){
+			if ($this->emajdb->isEmaj_Adm() && $groupState == 'IDLE') {
 				echo "  <li><a href=\"plugin.php?plugin={$this->name}&amp;&action=reset_group&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\">{$lang['strreset']}</a></li>\n";
 			}
 
 			// drop_group
-			if ($this->emajdb->isEmaj_Adm() && $groupState == 'IDLE'){
+			if ($this->emajdb->isEmaj_Adm() && $groupState == 'IDLE') {
 				echo "  <li><a href=\"plugin.php?plugin={$this->name}&amp;&action=drop_group&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\">{$lang['strdrop']}</a></li>\n";
 			}
 
 			// alter_group
-			if ($this->emajdb->getNumEmajVersion() >= 10000){			// version >= 1.0.0
-				if ($this->emajdb->isEmaj_Adm() && ($groupState == 'IDLE' || $this->emajdb->getNumEmajVersion() >= 20100)){
+			if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
+				if ($this->emajdb->isEmaj_Adm() && ($groupState == 'IDLE' || $this->emajdb->getNumEmajVersion() >= 20100)) {
 					echo "  <li><a href=\"plugin.php?plugin={$this->name}&amp;&action=alter_group&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\">{$lang['stralter']}</a></li>\n";
 				}
 			}
 
 			// protect_group
-			if ($this->emajdb->getNumEmajVersion() >= 10300){			// version >= 1.3.0
-				if ($this->emajdb->isEmaj_Adm() && $groupState == 'LOGGING' && $groupType == "ROLLBACKABLE"){
+			if ($this->emajdb->getNumEmajVersion() >= 10300) {			// version >= 1.3.0
+				if ($this->emajdb->isEmaj_Adm() && $groupState == 'LOGGING' && $groupType == "ROLLBACKABLE") {
 					echo "  <li><a href=\"plugin.php?plugin={$this->name}&amp;&action=protect_group&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\">{$this->lang['emajprotect']}</a></li>\n";
 				}
 			}
 
 			// unprotect_group
-			if ($this->emajdb->getNumEmajVersion() >= 10300){			// version >= 1.3.0
-				if ($this->emajdb->isEmaj_Adm() && $groupState == 'LOGGING' && $groupType == "ROLLBACKABLE-PROTECTED"){
+			if ($this->emajdb->getNumEmajVersion() >= 10300) {			// version >= 1.3.0
+				if ($this->emajdb->isEmaj_Adm() && $groupState == 'LOGGING' && $groupType == "ROLLBACKABLE-PROTECTED") {
 					echo "  <li><a href=\"plugin.php?plugin={$this->name}&amp;&action=unprotect_group&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\">{$this->lang['emajunprotect']}</a></li>\n";
 				}
 			}
 
 			// comment_group
-			if ($this->emajdb->isEmaj_Adm()){
+			if ($this->emajdb->isEmaj_Adm()) {
 				echo "  <li><a href=\"plugin.php?plugin={$this->name}&amp;&action=comment_group&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\">{$this->lang['emajsetcomment']}</a></li>\n";
 			}
 
@@ -1626,7 +1639,7 @@ class Emaj extends Plugin {
 			$urlvars = $misc->getRequestVars();
 
 			$actions = array();
-			if ($this->emajdb->isEmaj_Adm() && $groupType == "ROLLBACKABLE"){
+			if ($this->emajdb->isEmaj_Adm() && $groupType == "ROLLBACKABLE") {
 				$actions = array_merge($actions, array(
 					'rollbackgroup' => array(
 						'content' => $this->lang['emajrlbk'],
@@ -1643,7 +1656,7 @@ class Emaj extends Plugin {
 					),
 				));
 			}
-			if ($this->emajdb->isEmaj_Adm()){
+			if ($this->emajdb->isEmaj_Adm()) {
 				$actions = array_merge($actions, array(
 					'renamemark' => array(
 						'content' => $this->lang['emajrename'],
@@ -1686,8 +1699,8 @@ class Emaj extends Plugin {
 					),
 				));
 			}
-			if ($this->emajdb->getNumEmajVersion() >= 10300){			// version >= 1.3.0
-				if ($this->emajdb->isEmaj_Adm() && $groupState == 'LOGGING' && $groupType != "AUDIT_ONLY"){
+			if ($this->emajdb->getNumEmajVersion() >= 10300) {			// version >= 1.3.0
+				if ($this->emajdb->isEmaj_Adm() && $groupState == 'LOGGING' && $groupType != "AUDIT_ONLY") {
 					$actions = array_merge($actions, array(
 						'protectmark' => array(
 							'content' => $this->lang['emajprotect'],
@@ -1718,7 +1731,7 @@ class Emaj extends Plugin {
 					));
 				};
 			}
-			if ($this->emajdb->isEmaj_Adm()){
+			if ($this->emajdb->isEmaj_Adm()) {
 				$actions = array_merge($actions, array(
 					'commentmark' => array(
 						'content' => $this->lang['emajsetcomment'],
@@ -1821,7 +1834,7 @@ class Emaj extends Plugin {
 
 		$emajOK = $this->printEmajHeader("action=log_stat_group&amp;group=".urlencode($_REQUEST['group']),sprintf($this->lang['emajshowstat'],$_REQUEST['group']));
 
-		if ($emajOK){
+		if ($emajOK) {
 
 		// display the stat form
 
@@ -1905,14 +1918,14 @@ class Emaj extends Plugin {
 				echo "  $(document).ready(function() {\n";
 				echo "    mark = $(\"#rangestart option:selected\").val();\n";
 				echo "    todisable = false;\n";
-				echo "    $(\"#rangeend option\").each(function(){\n";
+				echo "    $(\"#rangeend option\").each(function() {\n";
 				echo "      $(this).prop('disabled', todisable);\n";
 				echo "      if ($(this).val() == mark) {todisable = true;}\n";
 				echo "    });\n";
 				echo "    mark = $(\"#rangeend option:selected\").val();\n";
 				echo "    todisable = true;\n";
 				echo "    if (mark == \"currentsituation\") {todisable = false;}\n";
-				echo "    $(\"#rangestart option\").each(function(){\n";
+				echo "    $(\"#rangestart option\").each(function() {\n";
 				echo "      if ($(this).val() == mark) { todisable = false; }\n";
 				echo "      $(this).prop('disabled', todisable);\n";
 				echo "    });\n";
@@ -1928,7 +1941,7 @@ class Emaj extends Plugin {
 				echo "  $(\"#rangestart\").change(function () {\n";
 				echo "    mark = $(\"#rangestart option:selected\").val();\n";
 				echo "    todisable = false;\n";
-				echo "    $(\"#rangeend option\").each(function(){\n";
+				echo "    $(\"#rangeend option\").each(function() {\n";
 				echo "      $(this).prop('disabled', todisable);\n";
 				echo "      if ($(this).val() == mark) {todisable = true;}\n";
 				echo "    });\n";
@@ -1937,7 +1950,7 @@ class Emaj extends Plugin {
 				echo "    mark = $(\"#rangeend option:selected\").val();\n";
 				echo "    todisable = true;\n";
 				echo "    if (mark == \"currentsituation\") {todisable = false;}\n";
-				echo "    $(\"#rangestart option\").each(function(){\n";
+				echo "    $(\"#rangestart option\").each(function() {\n";
 				echo "      if ($(this).val() == mark) { todisable = false; }\n";
 				echo "      $(this).prop('disabled', todisable);\n";
 				echo "    });\n";
@@ -1982,10 +1995,10 @@ class Emaj extends Plugin {
 		global $misc, $lang;
 
 		// Get statistics from E-Maj
-		if ($_REQUEST['rangeend']=='currentsituation'){
+		if ($_REQUEST['rangeend']=='currentsituation') {
 			$w1 = $this->lang['emajlogstatcurrentsituation'];
 			$stats = $this->emajdb->getLogStatGroup($_REQUEST['group'],$_REQUEST['rangestart'],'');
-		}else{
+		} else {
 			$w1 = sprintf($this->lang['emajlogstatmark'], $_REQUEST['rangeend']);
 			$stats = $this->emajdb->getLogStatGroup($_REQUEST['group'],$_REQUEST['rangestart'],$_REQUEST['rangeend']);
 		}
@@ -2009,7 +2022,7 @@ class Emaj extends Plugin {
 		echo "</div>\n";
 		
 		// Display rollback duration estimate if requested
-		if ($rlbkDuration != ''){
+		if ($rlbkDuration != '') {
 			echo "<p>",sprintf($this->lang['emajsimrlbkduration'], $misc->printVal($_REQUEST['group']), $misc->printVal($_REQUEST['rangestart']),$rlbkDuration),"</p>\n";
 		}
 
@@ -2104,10 +2117,10 @@ class Emaj extends Plugin {
 		if (!ini_get('safe_mode')) set_time_limit(0);		// Prevent timeouts on large stats (non-safe mode only)
 
 		// Get statistics from E-Maj
-		if ($_REQUEST['rangeend']=='currentsituation'){
+		if ($_REQUEST['rangeend']=='currentsituation') {
 			$w1 = $this->lang['emajlogstatcurrentsituation'];
 			$stats = $this->emajdb->getDetailedLogStatGroup($_REQUEST['group'],$_REQUEST['rangestart'],'');
-		}else{
+		} else {
 			$w1 = sprintf($this->lang['emajlogstatmark'], $_REQUEST['rangeend']);
 			$stats = $this->emajdb->getDetailedLogStatGroup($_REQUEST['group'],$_REQUEST['rangestart'],$_REQUEST['rangeend']);
 		}
@@ -2152,7 +2165,7 @@ class Emaj extends Plugin {
 		echo "</div>\n";
 
 		// Display rollback duration estimate if requested
-		if ($rlbkDuration != ''){
+		if ($rlbkDuration != '') {
 			echo "<p>",sprintf($this->lang['emajsimrlbkduration'], $misc->printVal($_REQUEST['group']), $misc->printVal($_REQUEST['rangestart']),$rlbkDuration),"</p>\n";
 		}
 
@@ -2255,7 +2268,7 @@ class Emaj extends Plugin {
 
 		$emajOK = $this->printEmajHeader("action=show_content_group&amp;group=".urlencode($_REQUEST['group']),sprintf($this->lang['emajgroupcontent'],$_REQUEST['group']));
 
-		if ($emajOK){
+		if ($emajOK) {
 
 			$groupContent = $this->emajdb->getContentGroup($_REQUEST['group']);
 
@@ -2284,7 +2297,7 @@ class Emaj extends Plugin {
 					'params'=> array('align' => 'center'),
 				),
 			);
-			if ($this->emajdb->getNumEmajVersion() >= 10000){			// version >= 1.0.0
+			if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
 				$columns = array_merge($columns, array(
 					'log_schema' => array(
 						'title' => $this->lang['emajlogschema'],
@@ -2300,7 +2313,7 @@ class Emaj extends Plugin {
 					),
 				));
 			};
-			if ($this->emajdb->getNumEmajVersion() >= 10200){			// version >= 1.2.0
+			if ($this->emajdb->getNumEmajVersion() >= 10200) {			// version >= 1.2.0
 				$columns = array_merge($columns, array(
 					'names_prefix' => array(
 						'title' => $this->lang['emajnamesprefix'],
@@ -2335,7 +2348,7 @@ class Emaj extends Plugin {
 					$(\"#groupContentTable table\").tablesorter(
 						{ 	
 							textExtraction: { 
-								0: function(s){
+								0: function(s) {
 									if($(s).find('img').length == 0) return $(s).text();
 									return $(s).find('img').attr('alt');
 								}},
@@ -2403,17 +2416,17 @@ class Emaj extends Plugin {
 		if (isset($_REQUEST['ma'])) {
 			foreach($_REQUEST['ma'] as $t) {
 				$a = unserialize(htmlspecialchars_decode($t, ENT_QUOTES));
-				if ($a['group'] != ''){
+				if ($a['group'] != '') {
 					$this->configure_groups('',sprintf($this->lang['emajtblseqyetgroup'],$a['appschema'],$a['tblseq']));
 					exit();
 				}
-				if ($a['type'] != 'r+' and $a['type'] != 'S+'){
+				if ($a['type'] != 'r+' and $a['type'] != 'S+') {
 					$this->configure_groups('',sprintf($this->lang['emajtblseqbadtype'],$a['appschema'],$a['tblseq']));
 					exit();
 				}
 			}
 		} else {
-			if ($_REQUEST['group'] != ''){
+			if ($_REQUEST['group'] != '') {
 				$this->configure_groups('',sprintf($this->lang['emajtblseqyetgroup'],$_REQUEST['appschema'],$_REQUEST['tblseq']));
 				exit();
 			}
@@ -2427,12 +2440,12 @@ class Emaj extends Plugin {
 		$knownGroups = $this->emajdb->getKnownGroups();
 
 		// Get log schema suffix already known in emaj_group_def table
-		if ($this->emajdb->getNumEmajVersion() >= 10000){			// version >= 1.0.0
+		if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
 			$knownSuffix = $this->emajdb->getKnownSuffix();
 		}
 
 		// Get tablespaces the current user can see
-		if ($this->emajdb->getNumEmajVersion() >= 10000){			// version >= 1.0.0
+		if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
 			$knownTsp = $this->emajdb->getKnownTsp();
 		}
 
@@ -2448,7 +2461,7 @@ class Emaj extends Plugin {
 				echo "<input type=\"hidden\" name=\"appschema[]\" value=\"", htmlspecialchars($a['appschema']), "\" />\n";
 				echo "<input type=\"hidden\" name=\"tblseq[]\" value=\"", htmlspecialchars($a['tblseq']), "\" />\n";
 				$lst .= "<br>- {$a['appschema']}.{$a['tblseq']}";
-				if ($a['type'] == 'r') $nbTbl++; else $nbSeq++;
+				if ($a['type'] == 'r+') $nbTbl++; else $nbSeq++;
 			}
 		} else {
 
@@ -2456,7 +2469,7 @@ class Emaj extends Plugin {
 			echo "<input type=\"hidden\" name=\"appschema\" value=\"", htmlspecialchars($_REQUEST['appschema']), "\" />\n";
 			echo "<input type=\"hidden\" name=\"tblseq\" value=\"", htmlspecialchars($_REQUEST['tblseq']), "\" />\n";
 			$lst = "{$_REQUEST['appschema']}.{$_REQUEST['tblseq']}";
-			if ($_REQUEST['type'] == 'r') $nbTbl++; else $nbSeq++;
+			if ($_REQUEST['type'] == 'r+') $nbTbl++; else $nbSeq++;
 		}
 
 		echo "<p>", sprintf($this->lang['emajconfirmassigntblseq'], $lst), "</p>\n";
@@ -2475,7 +2488,7 @@ class Emaj extends Plugin {
 		echo "<tr><th class=\"data left\">{$this->lang['emajenterpriority']}</th>";
 		echo "<td class=\"data1\"><input type=\"text\" name=\"priority\" size=9 maxlength=9 style=\"text-align: right;\" value=\"\" class=\"mask-pnum\"/> <span style=\"font-size: smaller; vertical-align: super;\"> (2)</span></td></tr>\n";
 
-		if ($this->emajdb->getNumEmajVersion() >= 10000){			// version >= 1.0.0
+		if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
 			if ($nbTbl >= 1) {
 				echo "<tr><th class=\"data left\" rowspan=2>{$this->lang['emajenterlogschema']}</th>";
 				echo "<td class=\"data1\"><input type=\"text\" id=\"suffixInput\" name=\"suffix\" value=\"\"/><span style=\"font-size: smaller; vertical-align: super;\"> (3)</span></td></tr>\n";
@@ -2493,7 +2506,7 @@ class Emaj extends Plugin {
 			echo "<p><input type=\"hidden\" name=\"suffix\" value=\"\" />\n";
 		}
 
-		if ($this->emajdb->getNumEmajVersion() >= 10200){			// version >= 1.2.0
+		if ($this->emajdb->getNumEmajVersion() >= 10200) {			// version >= 1.2.0
 			if ($nbTbl == 1) {
 				// the names prefix is accessible only for a single table assignment
 				echo "<tr><th class=\"data left\">{$this->lang['emajenternameprefix']}</th>";
@@ -2505,7 +2518,7 @@ class Emaj extends Plugin {
 			echo "<p><input type=\"hidden\" name=\"nameprefix\" value=\"\" />\n";
 		}
 
-		if ($this->emajdb->getNumEmajVersion() >= 10000){			// version >= 1.0.0
+		if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
 			if ($nbTbl >= 1) {
 				echo "<tr><th class=\"data left\" rowspan=2>{$this->lang['emajenterlogdattsp']}</th>";
 				echo "<td class=\"data1\"><input type=\"text\" id=\"logdattspInput\" name=\"logdattsp\" value=\"\"/></td></tr>\n";
@@ -2526,23 +2539,23 @@ class Emaj extends Plugin {
 						echo "\t\t<option value=\"{$r['spcname']}\">{$r['spcname']}</option>\n";
 				}
 				echo "\t</select></td></tr>\n";
-			}else{
+			} else {
 				echo "<p><input type=\"hidden\" name=\"logdattsp\" value=\"\" />\n";
 				echo "<p><input type=\"hidden\" name=\"logidxtsp\" value=\"\" />\n";
 			}
-		}else{
+		} else {
 			echo "<p><input type=\"hidden\" name=\"logdattsp\" value=\"\" />\n";
 			echo "<p><input type=\"hidden\" name=\"logidxtsp\" value=\"\" />\n";
 		};
 		echo "</table>\n";
 
 		echo "<p><span style=\"font-size: smaller;\">(1) </span>{$this->lang['emajrequired']}<br><span style=\"font-size: smaller;\">(2) </span> {$this->lang['emajpriorityhelp']}";
-		if ($this->emajdb->getNumEmajVersion() >= 10000){			// version >= 1.0.0
+		if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
 			if ($nbTbl >= 1) {
 				echo "<br><span style=\"font-size: smaller;\">(3) </span>{$this->lang['emajlogschemahelp']}";
 			}
 		}
-		if ($this->emajdb->getNumEmajVersion() >= 10200){			// version >= 1.2.0
+		if ($this->emajdb->getNumEmajVersion() >= 10200) {			// version >= 1.2.0
 			if ($nbTbl == 1) {
 				echo "<br><span style=\"font-size: smaller;\">(4) </span>{$this->lang['emajnameprefixhelp']}";
 			}
@@ -2603,7 +2616,7 @@ class Emaj extends Plugin {
 			else
 				$this->configure_groups('',$this->lang['emajmodifygrouperr']);
 
-		}else{
+		} else {
 
 		// single assignement
 			$status = $this->emajdb->assignTblSeq($_POST['appschema'],$_POST['tblseq'],$_POST['group'],
@@ -2627,7 +2640,7 @@ class Emaj extends Plugin {
 			exit();
 		}
 		// Test the table/sequence is already assign to a group
-		if ($_REQUEST['group'] == ''){
+		if ($_REQUEST['group'] == '') {
 			$this->configure_groups('',sprintf($this->lang['emajtblseqnogroup'],$_REQUEST['appschema'],$_REQUEST['tblseq']));
 			exit();
 		}
@@ -2640,12 +2653,12 @@ class Emaj extends Plugin {
 		$knownGroups = $this->emajdb->getKnownGroups();
 
 		// Get log schema suffix already known in emaj_group_def table
-		if ($this->emajdb->getNumEmajVersion() >= 10000){			// version >= 1.0.0
+		if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
 			$knownSuffix = $this->emajdb->getKnownSuffix();
 		}
 
 		// Get tablespaces the current user can see
-		if ($this->emajdb->getNumEmajVersion() >= 10000){			// version >= 1.0.0
+		if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
 			$knownTsp = $this->emajdb->getKnownTsp();
 		}
 
@@ -2671,8 +2684,8 @@ class Emaj extends Plugin {
 		echo "<tr><th class=\"data left\">{$this->lang['emajenterpriority']}</th>";
 		echo "<td class=\"data1\"><input type=\"text\" name=\"priority\" size=9 maxlength=9 style=\"text-align: right;\" value=\"{$_REQUEST['priority']}\" class=\"mask-pnum\"/> <span style=\"font-size: smaller; vertical-align: super;\"> (2)</span></td></tr>\n";
 
-		if ($this->emajdb->getNumEmajVersion() >= 10000){			// version >= 1.0.0
-			if ($_REQUEST['type'] == 'r') {
+		if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
+			if ($_REQUEST['type'] == 'r+') {
 				echo "<tr><th class=\"data left\" rowspan=2>{$this->lang['emajenterlogschema']}</th>";
 				echo "<td class=\"data1\"><input type=\"text\" id=\"suffixInput\" name=\"suffix\" value=\"{$_REQUEST['logschemasuffix']}\"/><span style=\"font-size: smaller; vertical-align: super;\"> (3)</span></td></tr>\n";
 				echo "<tr><td><select id=\"suffixList\" name=\"suffix1\">\n";
@@ -2689,8 +2702,8 @@ class Emaj extends Plugin {
 			echo "<p><input type=\"hidden\" name=\"suffix\" value=\"\" />\n";
 		}
 
-		if ($this->emajdb->getNumEmajVersion() >= 10200){			// version >= 1.2.0
-			if ($_REQUEST['type'] == 'r') {
+		if ($this->emajdb->getNumEmajVersion() >= 10200) {			// version >= 1.2.0
+			if ($_REQUEST['type'] == 'r+') {
 				// the names prefix is accessible only for a single table assignment
 				echo "<tr><th class=\"data left\">{$this->lang['emajenternameprefix']}</th>";
 				echo "<td class=\"data1\"><input type=\"text\" id=\"nameprefixInput\" name=\"nameprefix\" value=\"{$_REQUEST['emajnamesprefix']}\"/><span style=\"font-size: smaller; vertical-align: super;\"> (4)</span></td></tr>\n";
@@ -2701,8 +2714,8 @@ class Emaj extends Plugin {
 			echo "<p><input type=\"hidden\" name=\"nameprefix\" value=\"\" />\n";
 		}
 
-		if ($this->emajdb->getNumEmajVersion() >= 10000){			// version >= 1.0.0
-			if ($_REQUEST['type'] == 'r') {
+		if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
+			if ($_REQUEST['type'] == 'r+') {
 				echo "<tr><th class=\"data left\" rowspan=2>{$this->lang['emajenterlogdattsp']}</th>";
 				echo "<td class=\"data1\"><input type=\"text\" id=\"logdattspInput\" name=\"logdattsp\" value=\"{$_REQUEST['logdattsp']}\"/></td></tr>\n";
 				echo "<tr><td><select id=\"logdattspList\" name=\"logdattsp1\">\n";
@@ -2722,11 +2735,11 @@ class Emaj extends Plugin {
 						echo "\t\t<option value=\"{$r['spcname']}\">{$r['spcname']}</option>\n";
 				}
 				echo "\t</select></td></tr>\n";
-			}else{
+			} else {
 				echo "<p><input type=\"hidden\" name=\"logdattsp\" value=\"\" />\n";
 				echo "<p><input type=\"hidden\" name=\"logidxtsp\" value=\"\" />\n";
 			}
-		}else{
+		} else {
 			echo "<p><input type=\"hidden\" name=\"logdattsp\" value=\"\" />\n";
 			echo "<p><input type=\"hidden\" name=\"logidxtsp\" value=\"\" />\n";
 		};
@@ -2734,13 +2747,13 @@ class Emaj extends Plugin {
 
 		echo $misc->form;
 		echo "<p><span style=\"font-size: smaller;\">(1) </span>{$this->lang['emajrequired']}<br><span style=\"font-size: smaller;\">(2) </span> {$this->lang['emajpriorityhelp']}";
-		if ($this->emajdb->getNumEmajVersion() >= 10000){			// version >= 1.0.0
-			if ($_REQUEST['type'] == 'r') {
+		if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
+			if ($_REQUEST['type'] == 'r+') {
 				echo "<br><span style=\"font-size: smaller;\">(3) </span>{$this->lang['emajlogschemahelp']}";
 			}
 		}
-		if ($this->emajdb->getNumEmajVersion() >= 10200){			// version >= 1.2.0
-			if ($_REQUEST['type'] == 'r') {
+		if ($this->emajdb->getNumEmajVersion() >= 10200) {			// version >= 1.2.0
+			if ($_REQUEST['type'] == 'r+') {
 				echo "<br><span style=\"font-size: smaller;\">(4) </span>{$this->lang['emajnameprefixhelp']}";
 			}
 		}
@@ -2802,13 +2815,13 @@ class Emaj extends Plugin {
 		if (isset($_REQUEST['ma'])) {
 			foreach($_REQUEST['ma'] as $t) {
 				$a = unserialize(htmlspecialchars_decode($t, ENT_QUOTES));
-				if ($a['group'] == ''){
+				if ($a['group'] == '') {
 					$this->configure_groups('',sprintf($this->lang['emajtblseqnogroup'],$a['appschema'],$a['tblseq']));
 					exit();
 				}
 			}
 		} else {
-			if ($_REQUEST['group'] == ''){
+			if ($_REQUEST['group'] == '') {
 				$this->configure_groups('',sprintf($this->lang['emajtblseqnogroup'],$_REQUEST['appschema'],$_REQUEST['tblseq']));
 				exit();
 			}
@@ -2876,7 +2889,7 @@ class Emaj extends Plugin {
 			else
 				$this->configure_groups('',$this->lang['emajmodifygrouperr']);
 
-		}else{
+		} else {
 		// single removal
 			$status = $this->emajdb->removeTblSeq($_POST['appschema'],$_POST['tblseq'],$_POST['group']);
 
@@ -2925,7 +2938,7 @@ class Emaj extends Plugin {
 		if (isset($_POST['cancel'])) {$this->show_groups(); exit();}
 
 		$status = $this->emajdb->createGroup($_POST['group'],$_POST['grouptype']=='rollbackable');
-		if ($status > 0){
+		if ($status > 0) {
 			$_reload_browser = true;
 			$this->show_groups(sprintf($this->lang['emajcreategroupok'],$_POST['group']));
 		}else
@@ -2966,7 +2979,7 @@ class Emaj extends Plugin {
 		if (isset($_POST['cancel'])) {
 			if ($_POST['back'] == 'list') {
 				$this->show_groups();
-			}else{
+			} else {
 				$this->show_group();
 			}
 			exit();
@@ -2977,7 +2990,7 @@ class Emaj extends Plugin {
 		if ($group->fields['group_state'] != 'IDLE') {
 			if ($_POST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajcantdropgroup'],$_POST['group']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajcantdropgroup'],$_POST['group']));
 			}
 			return;
@@ -2985,7 +2998,7 @@ class Emaj extends Plugin {
 
 	// OK
 		$status = $this->emajdb->dropGroup($_POST['group']);
-		if ($status > 0){
+		if ($status > 0) {
 			$_reload_browser = true;
 			$this->show_groups(sprintf($this->lang['emajdropgroupok'],$_POST['group']));
 		}else
@@ -3026,19 +3039,19 @@ class Emaj extends Plugin {
 		if (isset($_POST['cancel'])) {
 			if ($_POST['back'] == 'list') {
 				$this->show_groups();
-			}else{
+			} else {
 				$this->show_group();
 			}
 			exit();
 		}
 
 	// Check the group is always in IDLE state
-		if ($this->emajdb->getNumEmajVersion() < 20100){			// version < 2.1.0
+		if ($this->emajdb->getNumEmajVersion() < 20100) {			// version < 2.1.0
 			$group = $this->emajdb->getGroup($_REQUEST['group']);
 			if ($group->fields['group_state'] != 'IDLE') {
 				if ($_POST['back']=='list') {
 					$this->show_groups('',sprintf($this->lang['emajcantaltergroup'],$_POST['group']));
-				}else{
+				} else {
 					$this->show_group('',sprintf($this->lang['emajcantaltergroup'],$_POST['group']));
 				}
 		}
@@ -3047,17 +3060,17 @@ class Emaj extends Plugin {
 
 	// OK
 		$status = $this->emajdb->alterGroup($_POST['group']);
-		if ($status >= 0){
+		if ($status >= 0) {
 			$_reload_browser = true;
 			if ($_POST['back'] == 'list') {
 				$this->show_groups(sprintf($this->lang['emajaltergroupok'],$_POST['group']));
-			}else{
+			} else {
 				$this->show_group(sprintf($this->lang['emajaltergroupok'],$_POST['group']));
 			}
 		}else
 			if ($_POST['back'] == 'list') {
 				$this->show_groups('',sprintf($this->lang['emajaltergrouperr'],$_POST['group']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajaltergrouperr'],$_POST['group']));
 			}
 	}
@@ -3110,17 +3123,17 @@ class Emaj extends Plugin {
 
 	// OK
 		$status = $this->emajdb->alterGroups($_POST['groups']);
-		if ($status >= 0){
+		if ($status >= 0) {
 			$_reload_browser = true;
 			if ($_POST['back'] == 'list') {
 				$this->show_groups(sprintf($this->lang['emajaltergroupsok'],$_POST['groups']));
-			}else{
+			} else {
 				$this->show_group(sprintf($this->lang['emajaltergroupsok'],$_POST['groups']));
 			}
 		}else
 			if ($_POST['back'] == 'list') {
 				$this->show_groups('',sprintf($this->lang['emajaltergroupserr'],$_POST['groups']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajaltergroupserr'],$_POST['groups']));
 			}
 	}
@@ -3166,7 +3179,7 @@ class Emaj extends Plugin {
 		if (isset($_POST['cancel'])) {
 			if ($_POST['back'] == 'list') {
 				$this->show_groups();
-			}else{
+			} else {
 				$this->show_group();
 			}
 			exit();
@@ -3176,13 +3189,13 @@ class Emaj extends Plugin {
 		if ($status >= 0)
 			if ($_POST['back']=='list') {
 				$this->show_groups(sprintf($this->lang['emajcommentgroupok'],$_POST['group']));
-			}else{
+			} else {
 				$this->show_group(sprintf($this->lang['emajcommentgroupok'],$_POST['group']));
 			}
 		else
 			if ($_POST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajcommentgrouperr'],$_POST['group']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajcommentgrouperr'],$_POST['group']));
 			}
 	}
@@ -3241,7 +3254,7 @@ class Emaj extends Plugin {
 		if (isset($_POST['cancel'])) {
 			if ($_POST['back'] == 'list') {
 				$this->show_groups();
-			}else{
+			} else {
 				$this->show_group();
 			}
 			exit();
@@ -3251,7 +3264,7 @@ class Emaj extends Plugin {
 		if ($group->fields['group_state'] != 'IDLE') {
 			if ($_POST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajcantstartgroup'],$_POST['group']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajcantstartgroup'],$_POST['group']));
 			}
 			return;
@@ -3260,7 +3273,7 @@ class Emaj extends Plugin {
 		if (!isSet($_POST['resetlog']) && !$this->emajdb->isNewMarkValidGroup($_POST['group'],$_POST['mark'])) {
 			if ($_POST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajinvalidmark'],$_POST['mark']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajinvalidmark'],$_POST['mark']));
 			}
 			return;
@@ -3270,13 +3283,13 @@ class Emaj extends Plugin {
 		if ($status > 0)
 			if ($_POST['back']=='list') {
 				$this->show_groups(sprintf($this->lang['emajstartgroupok'],$_POST['group'],$_POST['mark']));
-			}else{
+			} else {
 				$this->show_group(sprintf($this->lang['emajstartgroupok'],$_POST['group'],$_POST['mark']));
 			}
 		else
 			if ($_POST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajstartgrouperr'],$_POST['group']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajstartgrouperr'],$_POST['group']));
 			}
 	}
@@ -3349,7 +3362,7 @@ class Emaj extends Plugin {
 		// Check the groups are always in IDLE state
 		$groups=explode(', ',$_POST['groups']);
 		foreach($groups as $g) {
-			if ($this->emajdb->getGroup($g)->fields['group_state'] != 'IDLE'){
+			if ($this->emajdb->getGroup($g)->fields['group_state'] != 'IDLE') {
 				$this->show_groups('',sprintf($this->lang['emajcantstartgroups'],$_POST['groups'],$g));
 				return;
 			}
@@ -3358,7 +3371,7 @@ class Emaj extends Plugin {
 		if (!isSet($_POST['resetlog']) && !$this->emajdb->isNewMarkValidGroups($_POST['groups'],$_POST['mark'])) {
 			if ($_POST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajinvalidmark'],$_POST['mark']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajinvalidmark'],$_POST['mark']));
 			}
 			return;
@@ -3385,13 +3398,13 @@ class Emaj extends Plugin {
 
 		echo "<form action=\"plugin.php?plugin={$this->name}&amp;\" method=\"post\">\n";
 		echo "<p>", sprintf($this->lang['emajconfirmstopgroup'], $misc->printVal($_REQUEST['group'])), "</p>\n";
-		if ($this->emajdb->getNumEmajVersion() >= 10000){					// version >= 1.0.0
+		if ($this->emajdb->getNumEmajVersion() >= 10000) {					// version >= 1.0.0
 			echo "<table>\n";
 			echo "<tr><th class=\"data left\" style=\"width: 100px\">{$this->lang['emajstopmark']}</th>\n";
 			echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"STOP_%\" /></td></tr>\n";
 			echo "</table>\n";
 			echo "<p><input type=checkbox name=\"forcestop\" />{$this->lang['emajforcestop']}</p>\n";
-		}else{
+		} else {
 			echo "<input type=\"hidden\" name=\"mark\" value=\"\" />\n";
 		}
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"stop_group_ok\" />\n";
@@ -3416,17 +3429,17 @@ class Emaj extends Plugin {
 		if (isset($_POST['cancel'])) {
 			if ($_POST['back'] == 'list') {
 				$this->show_groups();
-			}else{
+			} else {
 				$this->show_group();
 			}
 			exit();
 		}
 		// Check the group is always in LOGGING state
 		$group = $this->emajdb->getGroup($_REQUEST['group']);
-		if ($group->fields['group_state'] != 'LOGGING'){
+		if ($group->fields['group_state'] != 'LOGGING') {
 			if ($_POST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajcantstopgroup'],$_POST['group']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajcantstopgroup'],$_POST['group']));
 			}
 			return;
@@ -3436,13 +3449,13 @@ class Emaj extends Plugin {
 		if ($status > 0)
 			if ($_POST['back']=='list') {
 				$this->show_groups(sprintf($this->lang['emajstopgroupok'],$_POST['group']));
-			}else{
+			} else {
 				$this->show_group(sprintf($this->lang['emajstopgroupok'],$_POST['group']));
 			}
 		else
 			if ($_POST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajstopgrouperr'],$_POST['group']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajstopgrouperr'],$_POST['group']));
 			}
 	}
@@ -3472,12 +3485,12 @@ class Emaj extends Plugin {
 		// send form
 		echo "<form action=\"plugin.php?plugin={$this->name}&amp;\" method=\"post\">\n";
 		echo "<p>", sprintf($this->lang['emajconfirmstopgroups'], $misc->printVal($groupsList)), "</p>\n";
-		if ($this->emajdb->getNumEmajVersion() >= 10000){					// version >= 1.0.0
+		if ($this->emajdb->getNumEmajVersion() >= 10000) {					// version >= 1.0.0
 			echo "<table>\n";
 			echo "<tr><th class=\"data left\" style=\"width: 100px\">{$this->lang['emajstopmark']}</th>\n";
 			echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"STOP_%\" /></td></tr>\n";
 			echo "</table>\n";
-		}else{
+		} else {
 			echo "<input type=\"hidden\" name=\"mark\" value=\"\" />\n";
 		}
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"stop_groups_ok\" />\n";
@@ -3551,7 +3564,7 @@ class Emaj extends Plugin {
 		if (isset($_POST['cancel'])) {
 			if ($_POST['back'] == 'list') {
 				$this->show_groups();
-			}else{
+			} else {
 				$this->show_group();
 			}
 			exit();
@@ -3561,7 +3574,7 @@ class Emaj extends Plugin {
 		if ($group->fields['group_state'] != 'IDLE') {
 			if ($_POST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajcantresetgroup'],$_POST['group']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajcantresetgroup'],$_POST['group']));
 			}
 			return;
@@ -3571,13 +3584,13 @@ class Emaj extends Plugin {
 		if ($status > 0)
 			if ($_POST['back']=='list') {
 				$this->show_groups(sprintf($this->lang['emajresetgroupok'],$_POST['group']));
-			}else{
+			} else {
 				$this->show_group(sprintf($this->lang['emajresetgroupok'],$_POST['group']));
 			}
 		else
 			if ($_POST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajresetgrouperr'],$_POST['group']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajresetgrouperr'],$_POST['group']));
 			}
 	}
@@ -3593,7 +3606,7 @@ class Emaj extends Plugin {
 		if ($group->fields['group_state'] != 'LOGGING') {
 			if ($_REQUEST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajcantprotectgroup'],$_REQUEST['group']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajcantprotectgroup'],$_REQUEST['group']));
 			}
 			return;
@@ -3602,7 +3615,7 @@ class Emaj extends Plugin {
 		$status = $this->emajdb->protectGroup($_REQUEST['group']);
 		if ($_REQUEST['back']=='list') {
 			$this->show_groups(sprintf($this->lang['emajprotectgroupok'],$_REQUEST['group']));
-		}else{
+		} else {
 			$this->show_group(sprintf($this->lang['emajprotectgroupok'],$_REQUEST['group']));
 		}
 	}
@@ -3618,7 +3631,7 @@ class Emaj extends Plugin {
 		if ($group->fields['group_state'] != 'LOGGING') {
 			if ($_REQUEST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajcantunprotectgroup'],$_REQUEST['group']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajcantunprotectgroup'],$_REQUEST['group']));
 			}
 			return;
@@ -3627,7 +3640,7 @@ class Emaj extends Plugin {
 		$status = $this->emajdb->unprotectGroup($_REQUEST['group']);
 		if ($_REQUEST['back']=='list') {
 			$this->show_groups(sprintf($this->lang['emajunprotectgroupok'],$_REQUEST['group']));
-		}else{
+		} else {
 			$this->show_group(sprintf($this->lang['emajunprotectgroupok'],$_REQUEST['group']));
 		}
 	}
@@ -3685,7 +3698,7 @@ class Emaj extends Plugin {
 		if (isset($_POST['cancel'])) {
 			if ($_POST['back'] == 'list') {
 				$this->show_groups();
-			}else{
+			} else {
 				$this->show_group();
 			}
 			exit();
@@ -3695,7 +3708,7 @@ class Emaj extends Plugin {
 		if ($group->fields['group_state'] != 'LOGGING') {
 			if ($_POST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajcantsetmarkgroup'],$_POST['group']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajcantsetmarkgroup'],$_POST['group']));
 			}
 			return;
@@ -3704,7 +3717,7 @@ class Emaj extends Plugin {
 		if (!$this->emajdb->isNewMarkValidGroup($_POST['group'],$_POST['mark'])) {
 			if ($_POST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajinvalidmark'],$_POST['mark']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajinvalidmark'],$_POST['mark']));
 			}
 			return;
@@ -3714,13 +3727,13 @@ class Emaj extends Plugin {
 		if ($status == 0)
 			if ($_POST['back']=='list') {
 				$this->show_groups(sprintf($this->lang['emajsetmarkgroupok'],$_POST['mark'],$_POST['group']));
-			}else{
+			} else {
 				$this->show_group(sprintf($this->lang['emajsetmarkgroupok'],$_POST['mark'],$_POST['group']));
 			}
 		else
 			if ($_POST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajsetmarkgrouperr'],$_POST['mark'],$_POST['group']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajsetmarkgrouperr'],$_POST['mark'],$_POST['group']));
 			}
 	}
@@ -3821,7 +3834,7 @@ class Emaj extends Plugin {
 		if ($group->fields['group_state'] != 'LOGGING') {
 			if ($_REQUEST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajcantprotectmarkgroup'],$_REQUEST['group']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajcantprotectmarkgroup'],$_REQUEST['group']));
 			}
 			return;
@@ -3830,7 +3843,7 @@ class Emaj extends Plugin {
 		$status = $this->emajdb->protectMarkGroup($_REQUEST['group'],$_REQUEST['mark']);
 		if ($_REQUEST['back']=='list') {
 			$this->show_groups(sprintf($this->lang['emajprotectmarkgroupok'],$_REQUEST['group'],$_REQUEST['mark']));
-		}else{
+		} else {
 			$this->show_group(sprintf($this->lang['emajprotectmarkgroupok'],$_REQUEST['group'],$_REQUEST['mark']));
 		}
 	}
@@ -3846,7 +3859,7 @@ class Emaj extends Plugin {
 		if ($group->fields['group_state'] != 'LOGGING') {
 			if ($_REQUEST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajcantunprotectmarkgroup'],$_REQUEST['group']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajcantunprotectmarkgroup'],$_REQUEST['group']));
 			}
 			return;
@@ -3855,7 +3868,7 @@ class Emaj extends Plugin {
 		$status = $this->emajdb->unprotectMarkGroup($_REQUEST['group'],$_REQUEST['mark']);
 		if ($_REQUEST['back']=='list') {
 			$this->show_groups(sprintf($this->lang['emajunprotectmarkgroupok'],$_REQUEST['group'],$_REQUEST['mark']));
-		}else{
+		} else {
 			$this->show_group(sprintf($this->lang['emajunprotectmarkgroupok'],$_REQUEST['group'],$_REQUEST['mark']));
 		}
 	}
@@ -3920,15 +3933,17 @@ class Emaj extends Plugin {
 
 		echo "<style type=\"text/css\">[disabled]{color:#933;}</style>\n";
 		echo "<form action=\"plugin.php?plugin={$this->name}&amp;\" method=\"post\">\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"rollback_group_ok\" />\n";
+//		echo "<p><input type=\"hidden\" name=\"action\" value=\"rollback_group_ok\" />\n";
+		echo "<p><input type=\"hidden\" name=\"action\" value=\"rollback_group_confirm_alter\" />\n";
+
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		if (isset($_REQUEST['mark'])) {
-		// the mark name is already defined (coming from detail group page)
+		// the mark name is already defined (we are coming from the 'detail group' page)
 			echo "<p>", sprintf($this->lang['emajconfirmrlbkgroup'], $misc->printVal($_REQUEST['group']), $misc->printVal($_REQUEST['mark'])), "</p>\n";
 			echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
-		}else{
-		// the mark name is not yet defined (coming from list groups page)
+		} else {
+		// the mark name is not yet defined (we are coming from the 'list groups' page)
 			$marks=$this->emajdb->getRollbackMarkGroup($_REQUEST['group']);
 			echo sprintf($this->lang['emajselectmarkgroup'], $misc->printVal($_REQUEST['group']));
 			echo "<select name=\"mark\">\n";
@@ -3946,7 +3961,7 @@ class Emaj extends Plugin {
 		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"logged\">{$this->lang['emajlogged']}\n";
 		echo "</p><p>";
 		echo "<input type=\"submit\" name=\"rollbackgroup\" value=\"{$this->lang['emajrlbk']}\" />\n";
-		if ($this->emajdb->getNumEmajVersion() >= 10100){	// version >= 1.1.0
+		if ($this->emajdb->getNumEmajVersion() >= 10100) {	// version >= 1.1.0
 			if ($this->emajdb->isAsyncRlbkUsable($this->conf) ) {
 				echo "<input type=\"submit\" name=\"async\" value=\"{$this->lang['emajrlbkthenmonitor']}\" />\n";
 			}
@@ -3959,6 +3974,114 @@ class Emaj extends Plugin {
 	}
 
 	/**
+	 * Ask the user to confirm a rollback targeting a mark set prior alter_group operations
+	 */
+	function rollback_group_confirm_alter() {
+		global $lang, $misc;
+
+		if ($this->emajdb->getNumEmajVersion() < 20100) {	// version < 2.1.0) {
+			// for emaj version prior 2.1, directly go call the function that executes the rollback
+			$this->rollback_group_ok();
+		} else {
+			// check that the rollback would not reach a mark set before any alter group operation
+
+			// process the click on the <cancel> button
+			if (isset($_POST['cancel'])) {
+				if ($_POST['back'] == 'list') {
+					$this->show_groups();
+				} else {
+					$this->show_group();
+				}
+				exit();
+			}
+			// Check the group is always in LOGGING state and ROLLBACKABLE (i.e. not protected)
+			$group = $this->emajdb->getGroup($_POST['group']);
+			if ($group->fields['group_state'] != 'LOGGING') {
+				if ($_POST['back']=='list') {
+					$this->show_groups('',sprintf($this->lang['emajcantrlbkidlegroup'],$_POST['group']));
+				} else {
+					$this->show_group('',sprintf($this->lang['emajcantrlbkidlegroup'],$_POST['group']));
+				}
+				return;
+			}
+			if ($group->fields['group_type'] != 'ROLLBACKABLE') {
+				if ($_POST['back']=='list') {
+					$this->show_groups('',sprintf($this->lang['emajcantrlbkprotgroup'],$_POST['group']));
+				} else {
+					$this->show_group('',sprintf($this->lang['emajcantrlbkprotgroup'],$_POST['group']));
+				}
+				return;
+			}
+			// Check the mark is always valid for a rollback
+			if (!$this->emajdb->isRollbackMarkValidGroup($_POST['group'],$_POST['mark'])) {
+				if ($_POST['back']=='list') {
+					$this->show_groups('',sprintf($this->lang['emajcantrlbkinvalidmarkgroup'],$_POST['group'],$_POST['mark']));
+				} else {
+					$this->show_group('',sprintf($this->lang['emajcantrlbkinvalidmarkgroup'],$_POST['group'],$_POST['mark']));
+				}
+				return;
+			}
+	
+			$alterGroupSteps = $this->emajdb->getAlterAfterMarkGroups($_POST['group'],$_POST['mark']);
+
+			if ($alterGroupSteps->recordCount() > 0) {
+				// there are alter_group operation to cross over, so ask for a confirmation
+
+				$columns = array(
+					'time' => array(
+						'title' => $this->lang['emajtimestamp'],
+						'field' => field('time_tx_timestamp'),
+					),
+					'step' => array(
+						'title' => $lang['straction'],
+						'field' => field('altr_action'),
+					),
+					'autorollback' => array(
+						'title' => $this->lang['emajautorolledback'],
+						'field' => field('altr_auto_rolled_back'),
+						'type'	=> 'callback',
+						'params'=> array('function' => array($this, 'renderBooleanIcon'),'align' => 'center')
+					),
+				);
+	
+				$actions = array ();
+	
+				$this->printPageHeader();
+
+				$misc->printTitle($this->lang['emajrlbkagroup']);
+
+				echo "<p>" . sprintf($this->lang['emajreachaltergroup'],$_REQUEST['group'], $_REQUEST['mark']) . "</p>\n";
+
+//				$misc->printTable($alterGroupSteps, $columns, $actions, 'alterGroupStep');
+				echo "<div id=\"alterGroupStep\" style=\"margin-top:15px;margin-bottom:15px\" >\n";
+				$this->printTable($alterGroupSteps, $columns, $actions, 'alterGroupStep');
+				echo "</div>\n";
+	
+				echo "<form action=\"plugin.php?plugin={$this->name}&amp;\" method=\"post\">\n";
+				echo "<p><input type=\"hidden\" name=\"action\" value=\"rollback_group_ok\" />\n";
+				echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
+				echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
+				echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
+				echo "<input type=\"hidden\" name=\"rollbacktype\"", htmlspecialchars($_REQUEST['unlogged']), "\" />\n";
+				if (isset($_POST['async'])) {
+					echo "<input type=\"hidden\" name=\"async\"", htmlspecialchars($_REQUEST['async']), "\" />\n";
+				}
+				echo $misc->form;
+				echo "<input type=\"submit\" name=\"rollbackgroup\" value=\"{$lang['strconfirm']}\" />\n";
+				echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+				echo "</form>\n";
+
+				$this->printEmajFooter();
+				$misc->printFooter();
+
+			} else {
+				// otherwise, directly execute the rollback
+				$this->rollback_group_ok();
+			}
+		}
+	}
+
+	/**
 	 * Perform rollback_group
 	 */
 	function rollback_group_ok() {
@@ -3968,34 +4091,34 @@ class Emaj extends Plugin {
 		if (isset($_POST['cancel'])) {
 			if ($_POST['back'] == 'list') {
 				$this->show_groups();
-			}else{
+			} else {
 				$this->show_group();
 			}
 			exit();
 		}
 		// Check the group is always in LOGGING state and ROLLBACKABLE (i.e. not protected)
 		$group = $this->emajdb->getGroup($_POST['group']);
-		if ($group->fields['group_state'] != 'LOGGING'){
+		if ($group->fields['group_state'] != 'LOGGING') {
 			if ($_POST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajcantrlbkidlegroup'],$_POST['group']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajcantrlbkidlegroup'],$_POST['group']));
 			}
 			return;
 		}
-		if ($group->fields['group_type'] != 'ROLLBACKABLE'){
+		if ($group->fields['group_type'] != 'ROLLBACKABLE') {
 			if ($_POST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajcantrlbkprotgroup'],$_POST['group']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajcantrlbkprotgroup'],$_POST['group']));
 			}
 			return;
 		}
 		// Check the mark is always valid for a rollback
-		if (!$this->emajdb->isRollbackMarkValidGroup($_POST['group'],$_POST['mark'])){
+		if (!$this->emajdb->isRollbackMarkValidGroup($_POST['group'],$_POST['mark'])) {
 			if ($_POST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajcantrlbkinvalidmarkgroup'],$_POST['group'],$_POST['mark']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajcantrlbkinvalidmarkgroup'],$_POST['group'],$_POST['mark']));
 			}
 			return;
@@ -4012,7 +4135,7 @@ class Emaj extends Plugin {
 			if (empty($version)) {
 				if ($_POST['back']=='list') {
 					$this->show_groups('',sprintf($this->lang['emajbadpsqlpath'], $this->conf['psql_path']));
-				}else{
+				} else {
 					$this->show_group('',sprintf($this->lang['emajbadpsqlpath'], $this->conf['psql_path']));
 				}
 				exit;
@@ -4025,7 +4148,7 @@ class Emaj extends Plugin {
 			if (!$f) {
 				if ($_POST['back']=='list') {
 					$this->show_groups('',sprintf($this->lang['emajbadtempdir'], $this->conf['temp_dir']));
-				}else{
+				} else {
 					$this->show_group('',sprintf($this->lang['emajbadtempdir'], $this->conf['temp_dir']));
 				}
 				exit;
@@ -4043,21 +4166,21 @@ class Emaj extends Plugin {
 
 		if (!ini_get('safe_mode')) set_time_limit(0);		// Prevent timeouts on large rollbacks (non-safe mode only)
 
-		if (isset($_POST['rollbacktype'])){
+		if (isset($_POST['rollbacktype'])) {
 			$status = $this->emajdb->rollbackGroup($_POST['group'],$_POST['mark'],$_POST['rollbacktype']=='logged');
-		}else{
+		} else {
 			$status = $this->emajdb->rollbackGroup($_POST['group'],$_POST['mark'],false);
 		}
-		if ($status >= 0){
+		if ($status >= 0) {
 			if ($_POST['back']=='list') {
 				$this->show_groups(sprintf($this->lang['emajrlbkgroupok'],$_POST['group'],$_POST['mark']));
-			}else{
+			} else {
 				$this->show_group(sprintf($this->lang['emajrlbkgroupok'],$_POST['group'],$_POST['mark']));
 			}
-		}else{
+		} else {
 			if ($_POST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajrlbkgrouperr'],$_POST['group'],$_POST['mark']));
-			}else{
+			} else {
 				$this->show_group('',sprintf($this->lang['emajrlbkgrouperr'],$_POST['group'],$_POST['mark']));
 			}
 		}
@@ -4083,7 +4206,7 @@ class Emaj extends Plugin {
 		$groupsList=substr($groupsList,0,strlen($groupsList)-2);
 
 		$server_info = $misc->getServerInfo();
-		if ($server_info["pgVersion"]>=8.4){
+		if ($server_info["pgVersion"]>=8.4) {
 		// if at least one selected group is protected, stop
 			$protectedGroups=$this->emajdb->getProtectedGroups($groupsList);
 			if ($protectedGroups != '') {
@@ -4098,9 +4221,9 @@ class Emaj extends Plugin {
 				return;
 			}
 		// get the youngest timestamp protected mark for all groups
-			if ($this->emajdb->getNumEmajVersion() >= 10300){
+			if ($this->emajdb->getNumEmajVersion() >= 10300) {
 				$youngestProtectedMarkTimestamp=$this->emajdb->getYoungestProtectedMarkTimestamp($groupsList);
-			}else{
+			} else {
 				$youngestProtectedMarkTimestamp='';
 			}
 		}
@@ -4110,12 +4233,12 @@ class Emaj extends Plugin {
 
 		echo "<style type=\"text/css\">[disabled]{color:#933;}</style>\n";
 		echo "<form action=\"plugin.php?plugin={$this->name}&amp;\" method=\"post\">\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"rollback_groups_ok\" />\n";
+		echo "<p><input type=\"hidden\" name=\"action\" value=\"rollback_groups_confirm_alter\" />\n";
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo sprintf($this->lang['emajselectmarkgroups'], $misc->printVal($groupsList));
 
-		if ($server_info["pgVersion"]>=8.4){
+		if ($server_info["pgVersion"]>=8.4) {
 		// pg 8.4+ => use a combo box with the only acceptable marks
 			echo "<select name=\"mark\">\n";
 			$optionDisabled = '';
@@ -4125,7 +4248,7 @@ class Emaj extends Plugin {
 				echo "<option value=\"",htmlspecialchars($m['mark_name']),"\" $optionDisabled>",htmlspecialchars($m['mark_name'])," (",htmlspecialchars($m['mark_datetime']),")</option>\n";
 			}
 			echo "</select></p><p>\n";
-		}else{
+		} else {
 		// pg 8.3- => just use a simple text input (the mark validity check will be done in doRollbackGroups() function)
 			echo "<input name=\"mark\" size=\"32\" value=\"\" /></p><p>\n";
 		}
@@ -4135,7 +4258,7 @@ class Emaj extends Plugin {
 		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"logged\">{$this->lang['emajlogged']}\n";
 		echo "</p><p>";
 		echo "<input type=\"submit\" name=\"rollbackgroups\" value=\"{$this->lang['emajrlbk']}\" />\n";
-		if ($this->emajdb->getNumEmajVersion() >= 10100){	// version >= 1.1.0
+		if ($this->emajdb->getNumEmajVersion() >= 10100) {	// version >= 1.1.0
 			if ($this->emajdb->isAsyncRlbkUsable($this->conf) ) {
 				echo "<input type=\"submit\" name=\"async\" value=\"{$this->lang['emajrlbkthenmonitor']}\" />\n";
 			}
@@ -4145,6 +4268,108 @@ class Emaj extends Plugin {
 
 		$this->printEmajFooter();
 		$misc->printFooter();
+	}
+
+	/**
+	 * Ask the user to confirm a multi groups rollback targeting a mark set prior alter_group operations
+	 */
+	function rollback_groups_confirm_alter() {
+		global $lang, $misc;
+
+		if ($this->emajdb->getNumEmajVersion() < 20100) {	// version < 2.1.0) {
+			// for emaj version prior 2.1, directly go call the function that executes the rollback
+			$this->rollback_groups_ok();
+		} else {
+			// check that the rollback would not reach a mark set before any alter group operation
+
+			// process the click on the <cancel> button
+			if (isset($_POST['cancel'])) {
+				if ($_POST['back'] == 'list') {
+					$this->show_groups();
+				} else {
+					$this->show_group();
+				}
+				exit();
+			}
+
+			// Check the groups are always in LOGGING state and not protected
+			$groups=explode(', ',$_POST['groups']);
+			foreach($groups as $g) {
+				if ($this->emajdb->getGroup($g)->fields['group_state'] != 'LOGGING') {
+					$this->show_groups('',sprintf($this->lang['emajcantrlbkidlegroups'],$groups,$g));
+					return;
+				}
+			}
+			// if at least one selected group is protected, stop
+			$protectedGroups=$this->emajdb->getProtectedGroups($_POST['groups']);
+			if ($protectedGroups != '') {
+				$this->show_groups('',sprintf($this->lang['emajcantrlbkprotgroups'],$groups,$protectedGroups));
+				return;
+			}
+
+			// Check the mark is always valid
+			if (!$this->emajdb->isRollbackMarkValidGroups($_POST['groups'],$_POST['mark'])) {
+				$this->show_groups('',sprintf($this->lang['emajcantrlbkinvalidmarkgroups'],$_POST['groups'],$_POST['mark']));
+				return;
+			}
+	
+			$alterGroupSteps = $this->emajdb->getAlterAfterMarkGroups($_POST['groups'],$_POST['mark']);
+
+			if ($alterGroupSteps->recordCount() > 0) {
+				// there are alter_group operation to cross over, so ask for a confirmation
+
+				$columns = array(
+					'time' => array(
+						'title' => $this->lang['emajtimestamp'],
+						'field' => field('time_tx_timestamp'),
+					),
+					'step' => array(
+						'title' => $lang['straction'],
+						'field' => field('altr_action'),
+					),
+					'autorollback' => array(
+						'title' => $this->lang['emajautorolledback'],
+						'field' => field('altr_auto_rolled_back'),
+						'type'	=> 'callback',
+						'params'=> array('function' => array($this, 'renderBooleanIcon'),'align' => 'center')
+					),
+				);
+	
+				$actions = array ();
+	
+				$this->printPageHeader();
+
+				$misc->printTitle($this->lang['emajrlbkgroups']);
+
+				echo "<p>" . sprintf($this->lang['emajreachaltergroups'],$_REQUEST['groups'], $_REQUEST['mark']) . "</p>\n";
+
+//				$misc->printTable($alterGroupSteps, $columns, $actions, 'alterGroupStep');
+				echo "<div id=\"alterGroupStep\" style=\"margin-top:15px;margin-bottom:15px\" >\n";
+				$this->printTable($alterGroupSteps, $columns, $actions, 'alterGroupStep');
+				echo "</div>\n";
+	
+				echo "<form action=\"plugin.php?plugin={$this->name}&amp;\" method=\"post\">\n";
+				echo "<p><input type=\"hidden\" name=\"action\" value=\"rollback_groups_ok\" />\n";
+				echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($_REQUEST['groups']), "\" />\n";
+				echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
+				echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
+				echo "<input type=\"hidden\" name=\"rollbacktype\"", htmlspecialchars($_REQUEST['unlogged']), "\" />\n";
+				if (isset($_POST['async'])) {
+					echo "<input type=\"hidden\" name=\"async\"", htmlspecialchars($_REQUEST['async']), "\" />\n";
+				}
+				echo $misc->form;
+				echo "<input type=\"submit\" name=\"rollbackgroups\" value=\"{$lang['strconfirm']}\" />\n";
+				echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+				echo "</form>\n";
+
+				$this->printEmajFooter();
+				$misc->printFooter();
+
+			} else {
+				// otherwise, directly execute the rollback
+				$this->rollback_groups_ok();
+			}
+		}
 	}
 
 	/**
@@ -4165,7 +4390,7 @@ class Emaj extends Plugin {
 			}
 		}
 		$server_info = $misc->getServerInfo();
-		if ($server_info["pgVersion"]>=8.4){
+		if ($server_info["pgVersion"]>=8.4) {
 		// if at least one selected group is protected, stop
 			$protectedGroups=$this->emajdb->getProtectedGroups($_POST['groups']);
 			if ($protectedGroups != '') {
@@ -4175,7 +4400,7 @@ class Emaj extends Plugin {
 		}
 
 		// Check the mark is always valid
-		if (!$this->emajdb->isRollbackMarkValidGroups($_POST['groups'],$_POST['mark'])){
+		if (!$this->emajdb->isRollbackMarkValidGroups($_POST['groups'],$_POST['mark'])) {
 			$this->show_groups('',sprintf($this->lang['emajcantrlbkinvalidmarkgroups'],$_POST['groups'],$_POST['mark']));
 			return;
 		}
@@ -4192,7 +4417,7 @@ class Emaj extends Plugin {
 			if (empty($version)) {
 				if ($_POST['back']=='list') {
 					$this->show_groups('',sprintf($this->lang['emajbadpsqlpath'], $this->conf['psql_path']));
-				}else{
+				} else {
 					$this->show_group('',sprintf($this->lang['emajbadpsqlpath'], $this->conf['psql_path']));
 				}
 				exit;
@@ -4205,7 +4430,7 @@ class Emaj extends Plugin {
 			if (!$f) {
 				if ($_POST['back']=='list') {
 					$this->show_groups('',sprintf($this->lang['emajbadtempdir'], $this->conf['temp_dir']));
-				}else{
+				} else {
 					$this->show_group('',sprintf($this->lang['emajbadtempdir'], $this->conf['temp_dir']));
 				}
 				exit;
@@ -4223,14 +4448,14 @@ class Emaj extends Plugin {
 
 		if (!ini_get('safe_mode')) set_time_limit(0);		// Prevent timeouts on large rollbacks (non-safe mode only)
 
-		if (isset($_POST['rollbacktype'])){
+		if (isset($_POST['rollbacktype'])) {
 			$status = $this->emajdb->rollbackGroups($_POST['groups'],$_POST['mark'],$_POST['rollbacktype']=='logged');
-		}else{
+		} else {
 			$status = $this->emajdb->rollbackGroups($_POST['groups'],$_POST['mark'],false);
 		}
-		if ($status >= 0){
+		if ($status >= 0) {
 			$this->show_groups(sprintf($this->lang['emajrlbkgroupsok'],$_POST['groups'],$_POST['mark']));
-		}else{
+		} else {
 			$this->show_groups('',sprintf($this->lang['emajrlbkgroupserr'],$_POST['groups'],$_POST['mark']));
 		}
 	}

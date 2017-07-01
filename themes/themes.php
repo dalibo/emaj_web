@@ -1,15 +1,12 @@
 <?php
 	/**
-	 * Available Themes for phpPgAdmin
-	 *
-	 * $Id: 
+	 * Available Themes for Emaj_web
 	 */
 
 	// List of themes
 	
 	$appThemes = array(
 		'default' => 'Default',
-		'cappuccino' => 'Cappuccino',
-		'gotar' => 'Blue/Green'
+		'cappuccino' => 'Cappuccino'
 	);
 ?>

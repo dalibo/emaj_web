@@ -583,8 +583,11 @@ class EmajDb {
 							pg_size_pretty(pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table)))
 						END AS pretty_log_size 
 					FROM \"{$this->emaj_schema}\".emaj_relation
-					WHERE rel_group = '{$group}'
-					ORDER BY rel_schema, rel_tblseq";
+					WHERE rel_group = '{$group}'";
+			if ($this->getNumEmajVersion() >= 22000){	// version >= 2.2.0
+				$sql .= " AND upper_inf(rel_time_range)";
+			}
+			$sql .= "		ORDER BY rel_schema, rel_tblseq";
 		} else {
 			$sql = "SELECT rel_schema, rel_tblseq, rel_kind || '+' AS relkind, rel_priority";
 			if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
@@ -834,12 +837,13 @@ class EmajDb {
 	/**
 	 * Update a table or sequence into the emaj_group_def table
 	 */
-	function updateTblSeq($schema,$tblseq,$group,$priority,$logSchemaSuffix,$emajNamesPrefix,$logDatTsp,$logIdxTsp) {
+	function updateTblSeq($schema,$tblseq,$groupOld,$groupNew,$priority,$logSchemaSuffix,$emajNamesPrefix,$logDatTsp,$logIdxTsp) {
 		global $data;
 
 		$data->clean($schema);
 		$data->clean($tblseq);
-		$data->clean($group);
+		$data->clean($groupOld);
+		$data->clean($groupNew);
 		$data->clean($priority);
 		$data->clean($logSchemaSuffix);
 		$data->clean($emajNamesPrefix);
@@ -859,7 +863,7 @@ class EmajDb {
 
 		// Update the row in the emaj_group_def table
 		$sql = "UPDATE emaj.emaj_group_def SET 
-					grpdef_group = '{$group}'";
+					grpdef_group = '{$groupNew}'";
 		if ($priority == '')
 			$sql .= ", grpdef_priority = NULL";
 		else
@@ -887,7 +891,7 @@ class EmajDb {
 				$sql .= ", grpdef_log_idx_tsp = '{$logIdxTsp}'";
 		}
 		$sql .=
-               " WHERE grpdef_schema = '{$schema}' AND grpdef_tblseq = '{$tblseq}'";
+               " WHERE grpdef_schema = '{$schema}' AND grpdef_tblseq = '{$tblseq}' AND grpdef_group = '{$groupOld}'";
 
 		return $data->execute($sql);
 	}
@@ -1428,13 +1432,15 @@ class EmajDb {
 				  WHEN altr_step = 'ADD_SEQ' THEN
 					'The sequence ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' has been added to the tables group ' || quote_literal(altr_group)
                   END AS altr_action, 
-				CASE WHEN altr_step IN ('REPAIR_TBL', 'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP', 'CHANGE_TBL_LOG_INDEX_TSP', 'CHANGE_REL_PRIORITY')
+				CASE WHEN altr_step IN ('REMOVE_TBL', 'REMOVE_SEQ', 'REPAIR_TBL',
+										'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP', 'CHANGE_TBL_LOG_INDEX_TSP', 'CHANGE_REL_PRIORITY')
 					THEN false ELSE true END AS altr_auto_rolled_back
-				  FROM \"{$this->emaj_schema}\".emaj_alter_plan, \"{$this->emaj_schema}\".emaj_mark, \"{$this->emaj_schema}\".emaj_time_stamp
-				  WHERE altr_group = ANY ({$groupsArray})
-			    	AND mark_group = '{$firstGroup}' AND mark_name = '{$mark}'
-					AND altr_time_id > mark_time_id
-					AND altr_time_id = time_id
+				  FROM \"{$this->emaj_schema}\".emaj_alter_plan, \"{$this->emaj_schema}\".emaj_time_stamp
+				  WHERE time_id = altr_time_id
+					AND altr_group = ANY ({$groupsArray})
+					AND altr_time_id >
+						(SELECT mark_time_id FROM \"{$this->emaj_schema}\".emaj_mark WHERE mark_group = '{$firstGroup}' AND mark_name = '{$mark}')
+					AND altr_rlbk_id IS NULL
 					AND altr_step IN ('REMOVE_TBL', 'REMOVE_SEQ', 'REPAIR_TBL', 'REPAIR_SEQ', 'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX',
 									  'CHANGE_TBL_LOG_DATA_TSP', 'CHANGE_TBL_LOG_INDEX_TSP', 'ASSIGN_REL', 'CHANGE_REL_PRIORITY', 'ADD_TBL', 'ADD_SEQ')
 				  ORDER BY time_tx_timestamp, altr_schema, altr_tblseq, altr_step";

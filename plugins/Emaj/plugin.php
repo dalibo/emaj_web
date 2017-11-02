@@ -2667,13 +2667,14 @@ class Emaj extends Plugin {
 
 		echo "<input type=\"hidden\" name=\"appschema\" value=\"", htmlspecialchars($_REQUEST['appschema']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"tblseq\" value=\"", htmlspecialchars($_REQUEST['tblseq']), "\" />\n";
+		echo "<input type=\"hidden\" name=\"groupold\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 
 		echo "<p>", sprintf($this->lang['emajconfirmupdatetblseq'], "{$_REQUEST['appschema']}.{$_REQUEST['tblseq']}"), "</p>\n";
 
 		// Display the input fields depending on the context
 		echo "<table>\n";
 		echo "<tr><th class=\"data left required\" rowspan=2>{$this->lang['emajgroup']}</th>";
-		echo "<td class=\"data1\"><input id=\"groupInput\" type=\"text\" name=\"group\" value=\"{$_REQUEST['group']}\"/><span style=\"font-size: smaller; vertical-align: super;\"> (1)</span></td></tr>\n";
+		echo "<td class=\"data1\"><input id=\"groupInput\" type=\"text\" name=\"groupnew\" value=\"{$_REQUEST['group']}\"/><span style=\"font-size: smaller; vertical-align: super;\"> (1)</span></td></tr>\n";
 		echo "<tr><td><select id=\"groupList\" name=\"group1\"><option value=\"new_group\">{$this->lang['emajnewgroup']}</option>\n";
 		if ($knownGroups->recordCount() > 0) {
 			foreach($knownGroups as $r)
@@ -2792,7 +2793,7 @@ class Emaj extends Plugin {
 	// process the click on the <cancel> button
 		if (isset($_POST['cancel'])) {$this->configure_groups(); exit();}
 
-		$status = $this->emajdb->updateTblSeq($_POST['appschema'],$_POST['tblseq'],$_POST['group'],
+		$status = $this->emajdb->updateTblSeq($_POST['appschema'],$_POST['tblseq'],$_POST['groupold'],$_POST['groupnew'],
 							$_POST['priority'], $_POST['suffix'], $_POST['nameprefix'], $_POST['logdattsp'], $_POST['logidxtsp']);
 		if ($status == 0)
 			$this->configure_groups($this->lang['emajmodifygroupok']);

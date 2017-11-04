@@ -3934,7 +3934,6 @@ class Emaj extends Plugin {
 
 		echo "<style type=\"text/css\">[disabled]{color:#933;}</style>\n";
 		echo "<form action=\"plugin.php?plugin={$this->name}&amp;\" method=\"post\">\n";
-//		echo "<p><input type=\"hidden\" name=\"action\" value=\"rollback_group_ok\" />\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"rollback_group_confirm_alter\" />\n";
 
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -4023,7 +4022,7 @@ class Emaj extends Plugin {
 				return;
 			}
 	
-			$alterGroupSteps = $this->emajdb->getAlterAfterMarkGroups($_POST['group'],$_POST['mark']);
+			$alterGroupSteps = $this->emajdb->getAlterAfterMarkGroups($_POST['group'],$_POST['mark'],$this->lang);
 
 			if ($alterGroupSteps->recordCount() > 0) {
 				// there are alter_group operation to cross over, so ask for a confirmation
@@ -4063,7 +4062,7 @@ class Emaj extends Plugin {
 				echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 				echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
 				echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
-				echo "<input type=\"hidden\" name=\"rollbacktype\"", htmlspecialchars($_REQUEST['unlogged']), "\" />\n";
+				echo "<input type=\"hidden\" name=\"rollbacktype\"", htmlspecialchars($_REQUEST['rollbacktype']), "\" />\n";
 				if (isset($_POST['async'])) {
 					echo "<input type=\"hidden\" name=\"async\"", htmlspecialchars($_REQUEST['async']), "\" />\n";
 				}
@@ -4313,11 +4312,11 @@ class Emaj extends Plugin {
 				$this->show_groups('',sprintf($this->lang['emajcantrlbkinvalidmarkgroups'],$_POST['groups'],$_POST['mark']));
 				return;
 			}
-	
-			$alterGroupSteps = $this->emajdb->getAlterAfterMarkGroups($_POST['groups'],$_POST['mark']);
+
+			$alterGroupSteps = $this->emajdb->getAlterAfterMarkGroups($_POST['groups'],$_POST['mark'],$this->lang);
 
 			if ($alterGroupSteps->recordCount() > 0) {
-				// there are alter_group operation to cross over, so ask for a confirmation
+				// there are alter_group operations to cross over, so ask for a confirmation
 
 				$columns = array(
 					'time' => array(
@@ -4335,9 +4334,9 @@ class Emaj extends Plugin {
 						'params'=> array('function' => array($this, 'renderBooleanIcon'),'align' => 'center')
 					),
 				);
-	
+
 				$actions = array ();
-	
+
 				$this->printPageHeader();
 
 				$misc->printTitle($this->lang['emajrlbkgroups']);
@@ -4354,7 +4353,7 @@ class Emaj extends Plugin {
 				echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($_REQUEST['groups']), "\" />\n";
 				echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
 				echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
-				echo "<input type=\"hidden\" name=\"rollbacktype\"", htmlspecialchars($_REQUEST['unlogged']), "\" />\n";
+				echo "<input type=\"hidden\" name=\"rollbacktype\"", htmlspecialchars($_REQUEST['rollbacktype']), "\" />\n";
 				if (isset($_POST['async'])) {
 					echo "<input type=\"hidden\" name=\"async\"", htmlspecialchars($_REQUEST['async']), "\" />\n";
 				}

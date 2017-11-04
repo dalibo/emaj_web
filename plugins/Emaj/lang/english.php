@@ -307,6 +307,20 @@
 	$plugin_lang['emajrlbkgroupsok'] = 'Tables groups "%s" have been rollbacked to mark "%s".';
 	$plugin_lang['emajrlbkgroupserr'] = 'Error during tables groups "%s" rollback to mark "%s"!';
 
+	// Elementary alter group actions previously executed, reported at rollback time 
+	$plugin_lang['emajalteredremovetbl'] = 'The table %s.%s has been removed from the tables group %s';
+	$plugin_lang['emajalteredremoveseq'] = 'The sequence %s.%s has been removed from the tables group %s';
+	$plugin_lang['emajalteredrepairtbl'] = 'E-Maj objects for the table %s.%s have been repaired';
+	$plugin_lang['emajalteredrepairseq'] = 'E-Maj objects for the sequence %s.%s have been repaired';
+	$plugin_lang['emajalteredchangetbllogschema'] = 'The E-Maj log schema for the table %s.%s has been changed';
+	$plugin_lang['emajalteredchangetblnamesprefix'] = 'The E-Maj names prefix for the table %s.%s has been changed';
+	$plugin_lang['emajalteredchangetbllogdatatsp'] = 'The tablespace for the log data files of the table %s.%s has been changed';
+	$plugin_lang['emajalteredchangetbllogindextsp'] = 'The tablespace for the log index files of the table %s.%s has been changed';
+	$plugin_lang['emajalteredassignrel'] = 'The table or sequence %s.%s has been moved from the tables group %s to the tables group %s';
+	$plugin_lang['emajalteredchangerelpriority'] = 'The E-Maj priority for the table %s.%s has been changed';
+	$plugin_lang['emajalteredaddtbl'] = 'The table %s.%s has been added to the tables group %s';
+	$plugin_lang['emajalteredaddseq'] = 'The sequence %s.%s has been added to the tables group %s';
+
 	// Mark renaming
 	$plugin_lang['emajrenameamark'] = 'E-Maj : Rename a mark';
 	$plugin_lang['emajconfirmrenamemark'] = 'Renaming mark "%s" of tables group "%s"';

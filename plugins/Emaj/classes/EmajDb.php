@@ -1395,7 +1395,7 @@ class EmajDb {
 	 * Returns information about all alter_group operations that have been executed after a mark set for one or several groups
 	 * The function is called when emaj version >= 2.1
 	 */
-	function getAlterAfterMarkGroups($groups,$mark) {
+	function getAlterAfterMarkGroups($groups,$mark,$emajlang) {
 
 		global $data;
 
@@ -1408,29 +1408,29 @@ class EmajDb {
 		// look at the alter group operations executed after the mark
 		$sql = "SELECT time_tx_timestamp, altr_step, CASE
 				  WHEN altr_step = 'REMOVE_TBL' THEN
-					'The table ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' has been removed from the tables group ' || quote_literal(altr_group)
+					format('{$emajlang['emajalteredremovetbl']}', quote_ident(altr_schema), quote_ident(altr_tblseq), quote_literal(altr_group))
 				  WHEN altr_step = 'REMOVE_SEQ' THEN
-					'The sequence ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' has been removed from the tables group ' || quote_literal(altr_group)
+					format('{$emajlang['emajalteredremoveseq']}', quote_ident(altr_schema), quote_ident(altr_tblseq), quote_literal(altr_group))
 				  WHEN altr_step = 'REPAIR_TBL' THEN
-					'E-Maj objects for the table ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' have been repaired'
+					format('{$emajlang['emajalteredrepairtbl']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
 				  WHEN altr_step = 'REPAIR_SEQ' THEN
-					'E-Maj objects for the sequence ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' have been repaired'
+					format('{$emajlang['emajalteredrepairseq']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
 				  WHEN altr_step = 'CHANGE_TBL_LOG_SCHEMA' THEN
-					'The E-Maj log schema for the table ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' has been changed'
+					format('{$emajlang['emajalteredchangetbllogschema']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
 				  WHEN altr_step = 'CHANGE_TBL_NAMES_PREFIX' THEN
-					'The E-Maj names prefix for the table ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' has been changed'
+					format('{$emajlang['emajalteredchangetblnamesprefix']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
 				  WHEN altr_step = 'CHANGE_TBL_LOG_DATA_TSP' THEN
-					'The tablespace for the log data files of the table ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' has been changed'
+					format('{$emajlang['emajalteredchangetbllogdatatsp']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
 				  WHEN altr_step = 'CHANGE_TBL_LOG_INDEX_TSP' THEN
-					'The tablespace for the log index files of the table ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' has been changed'
+					format('{$emajlang['emajalteredchangetbllogindextsp']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
 				  WHEN altr_step = 'ASSIGN_REL' THEN
-					'The table ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' has been moved from the tables group ' || quote_literal(altr_group) || ' to the tables group ' || quote_literal(altr_new_group)
+					format('{$emajlang['emajalteredremovetbl']}', quote_ident(altr_schema), quote_ident(altr_tblseq), quote_literal(altr_group), quote_literal(altr_new_group))
 				  WHEN altr_step = 'CHANGE_REL_PRIORITY' THEN
-					'The E-Maj priority for the table ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' has been changed'
+					format('{$emajlang['emajalteredchangerelpriority']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
 				  WHEN altr_step = 'ADD_TBL' THEN
-					'The table ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' has been added to the tables group ' || quote_literal(altr_group)
+					format('{$emajlang['emajalteredaddtbl']}', quote_ident(altr_schema), quote_ident(altr_tblseq), quote_literal(altr_group))
 				  WHEN altr_step = 'ADD_SEQ' THEN
-					'The sequence ' || quote_ident(altr_schema) || '.' || quote_ident(altr_tblseq) || ' has been added to the tables group ' || quote_literal(altr_group)
+					format('{$emajlang['emajalteredaddseq']}', quote_ident(altr_schema), quote_ident(altr_tblseq), quote_literal(altr_group))
                   END AS altr_action, 
 				CASE WHEN altr_step IN ('REMOVE_TBL', 'REMOVE_SEQ', 'REPAIR_TBL',
 										'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP', 'CHANGE_TBL_LOG_INDEX_TSP', 'CHANGE_REL_PRIORITY')

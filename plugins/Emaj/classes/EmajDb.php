@@ -1456,10 +1456,22 @@ class EmajDb {
 		$data->clean($group);
 		$data->clean($mark);
 
-		if ($isLogged){
-			$sql = "SELECT\"{$this->emaj_schema}\".emaj_logged_rollback_group('{$group}','{$mark}') AS nbtblseq";
+		if ($this->getNumEmajVersion() >= 20100){	// version >= 2.1.0
+			if ($isLogged){
+				$sql = "SELECT sum(substring(rlbk_message from '^\d+')::integer) AS nbtblseq
+						FROM \"{$this->emaj_schema}\".emaj_logged_rollback_group('{$group}','{$mark}',true)
+						WHERE rlbk_severity = 'Notice'";
+			}else{
+				$sql = "SELECT sum(substring(rlbk_message from '^\d+')::integer) AS nbtblseq
+						FROM \"{$this->emaj_schema}\".emaj_rollback_group('{$group}','{$mark}',true)
+						WHERE rlbk_severity = 'Notice'";
+			}
 		}else{
-			$sql = "SELECT \"{$this->emaj_schema}\".emaj_rollback_group('{$group}','{$mark}') AS nbtblseq";
+			if ($isLogged){
+				$sql = "SELECT\"{$this->emaj_schema}\".emaj_logged_rollback_group('{$group}','{$mark}') AS nbtblseq";
+			}else{
+				$sql = "SELECT \"{$this->emaj_schema}\".emaj_rollback_group('{$group}','{$mark}') AS nbtblseq";
+			}
 		}
 
 		return $data->selectField($sql,'nbtblseq');
@@ -1468,7 +1480,7 @@ class EmajDb {
 	/**
 	 * rollbacks asynchronously one or several groups to a mark, using a single session
 	 */
-	function asyncRollbackGroups($groups,$mark,$isLogged,$psqlExe,$tempDir) {
+	function asyncRollbackGroups($groups,$mark,$isLogged,$psqlExe,$tempDir,$isMulti) {
 		global $data, $misc;
 
 		$data->clean($groups);
@@ -1480,13 +1492,22 @@ class EmajDb {
 
 		// Initialize the rollback operation and get its rollback id
 		$isL = $isLogged ? 'true' : 'false';
-		$sql = "SELECT \"{$this->emaj_schema}\"._rlbk_init({$groupsArray}, '{$mark}', {$isL}, 1, false) as rlbk_id";
-		$rlbkId = $data->selectField($sql,'rlbk_id');
+		$isM = $isMulti ? 'true' : 'false';
+		if ($this->getNumEmajVersion() >= 20100){	// version >= 2.1.0
+			$sql1 = "SELECT \"{$this->emaj_schema}\"._rlbk_init({$groupsArray}, '{$mark}', {$isL}, 1, $isM, true) as rlbk_id";
+		} else {
+			$sql1 = "SELECT \"{$this->emaj_schema}\"._rlbk_init({$groupsArray}, '{$mark}', {$isL}, 1, $isM) as rlbk_id";
+		}
+		$rlbkId = $data->selectField($sql1,'rlbk_id');
 
 		// Build the psql report file name, the SQL command and submit the rollback execution asynchronously
+		if ($this->getNumEmajVersion() >= 20100){	// version >= 2.1.0
+			$sql2 = "SELECT * FROM \"{$this->emaj_schema}\"._rlbk_async({$rlbkId},{$isM},true)";
+		} else {
+			$sql2 = "SELECT \"{$this->emaj_schema}\"._rlbk_async({$rlbkId},{$isM})";
+		}
 		$psqlReport = "rlbk_{$rlbkId}_report";
-		$sql = "SELECT \"{$this->emaj_schema}\"._rlbk_async({$rlbkId},false)";
-		$this->execPsqlInBackground($psqlExe,$sql,$tempDir,$psqlReport);
+		$this->execPsqlInBackground($psqlExe,$sql2,$tempDir,$psqlReport);
 
 		return $rlbkId;
 	}
@@ -1497,7 +1518,7 @@ class EmajDb {
 	function execPsqlInBackground($psqlExe,$stmt,$tempDir,$psqlReport) {
 		global $misc;
 
-		// Set environmental variables that psql needs to connect
+		// Set environment variables that psql needs to connect
 		$server_info = $misc->getServerInfo();
 		putenv('PGPASSWORD=' . $server_info['password']);
 		putenv('PGUSER=' . $server_info['username']);
@@ -1512,11 +1533,11 @@ class EmajDb {
 
 		// Build and submit the psql command
 		if (substr(php_uname(), 0, 3) == "Win"){
-			$psqlCmd = "{$psqlExe} -d {$_REQUEST['database']} -c \"{$stmt}\" -o \"{$tempDir}\\{$psqlReport}\" 2>&1";
+			$psqlCmd = "{$psqlExe} -d {$_REQUEST['database']} -c \"{$stmt}\" -o {$tempDir}\\{$psqlReport} 2>&1";
 			pclose(popen("start /b \"\" ". $psqlCmd, "r"));
 		} else {
-			$psqlCmd = "{$psqlExe} -d {$_REQUEST['database']} -c \"{$stmt}\" -o \"{$tempDir}/{$psqlReport}\" 2>&1";
-			exec($psqlCmd . " > /dev/null &");  
+			$psqlCmd = "{$psqlExe} -d {$_REQUEST['database']} -c \"{$stmt}\" -o {$tempDir}/{$psqlReport} 2>&1";
+			exec($psqlCmd . " > /dev/null &");
 		}
 	}
 
@@ -1670,10 +1691,22 @@ class EmajDb {
 		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
 		$data->clean($mark);
 
-		if ($isLogged){
-			$sql = "SELECT \"{$this->emaj_schema}\".emaj_logged_rollback_groups({$groupsArray},'{$mark}') AS nbtblseq";
+		if ($this->getNumEmajVersion() >= 20100){	// version >= 2.1.0
+			if ($isLogged){
+				$sql = "SELECT sum(substring(rlbk_message from '^\d+')::integer) AS nbtblseq
+						FROM \"{$this->emaj_schema}\".emaj_logged_rollback_groups({$groupsArray},'{$mark}',true)
+						WHERE rlbk_severity = 'Notice'";
+			}else{
+				$sql = "SELECT sum(substring(rlbk_message from '^\d+')::integer) AS nbtblseq
+						FROM \"{$this->emaj_schema}\".emaj_rollback_groups({$groupsArray},'{$mark}',true)
+						WHERE rlbk_severity = 'Notice'";
+			}
 		}else{
-			$sql = "SELECT\"{$this->emaj_schema}\".emaj_rollback_groups({$groupsArray},'{$mark}') AS nbtblseq";
+			if ($isLogged){
+				$sql = "SELECT \"{$this->emaj_schema}\".emaj_logged_rollback_groups({$groupsArray},'{$mark}') AS nbtblseq";
+			}else{
+				$sql = "SELECT\"{$this->emaj_schema}\".emaj_rollback_groups({$groupsArray},'{$mark}') AS nbtblseq";
+			}
 		}
 
 		return $data->selectField($sql,'nbtblseq');

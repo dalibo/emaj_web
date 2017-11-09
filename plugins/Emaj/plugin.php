@@ -4157,7 +4157,7 @@ class Emaj extends Plugin {
 				unlink($testFileName);
 			}
 
-			$rlbkId = $this->emajdb->asyncRollbackGroups($_POST['group'],$_POST['mark'],$_POST['rollbacktype']=='logged', $psqlExe, $this->conf['temp_dir'].$sep);
+			$rlbkId = $this->emajdb->asyncRollbackGroups($_POST['group'],$_POST['mark'],$_POST['rollbacktype']=='logged', $psqlExe, $this->conf['temp_dir'].$sep, false);
 			$this->show_rollbacks(sprintf($this->lang['emajasyncrlbkstarted'],$rlbkId));
 			exit;
 		}
@@ -4353,7 +4353,7 @@ class Emaj extends Plugin {
 				echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($_REQUEST['groups']), "\" />\n";
 				echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
 				echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
-				echo "<input type=\"hidden\" name=\"rollbacktype\"", htmlspecialchars($_REQUEST['rollbacktype']), "\" />\n";
+				echo "<input type=\"hidden\" name=\"rollbacktype\" value=\"", htmlspecialchars($_REQUEST['rollbacktype']), "\" />\n";
 				if (isset($_POST['async'])) {
 					echo "<input type=\"hidden\" name=\"async\"", htmlspecialchars($_REQUEST['async']), "\" />\n";
 				}
@@ -4439,7 +4439,7 @@ class Emaj extends Plugin {
 				unlink($testFileName);
 			}
 
-			$rlbkId = $this->emajdb->asyncRollbackGroups($_POST['groups'],$_POST['mark'],$_POST['rollbacktype']=='logged', $psqlExe, $this->conf['temp_dir'].$sep);
+			$rlbkId = $this->emajdb->asyncRollbackGroups($_POST['groups'],$_POST['mark'],$_POST['rollbacktype']=='logged', $psqlExe, $this->conf['temp_dir'].$sep, true);
 			$this->show_rollbacks(sprintf($this->lang['emajasyncrlbkstarted'],$rlbkId));
 			exit;
 		}

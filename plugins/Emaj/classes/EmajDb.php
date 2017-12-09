@@ -266,6 +266,7 @@ class EmajDb {
 	function getEmajSize() {
 		global $data;
 
+//TODO: with emaj version >= 22000 use emaj_schema instead of emaj_relation
 		if ($this->emaj_adm){
 			if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
 // The E-Maj size = size of all relations in emaj primary and secondaries schemas + size of linked toast tables
@@ -627,6 +628,7 @@ class EmajDb {
 	function getSchemas() {
 		global $data;
 
+//TODO: with emaj version >= 22000 use emaj_schema instead of emaj_relation
 		$sql = "SELECT 1, pn.nspname, pu.rolname AS nspowner,
 					   pg_catalog.obj_description(pn.oid, 'pg_namespace') AS nspcomment
 				FROM pg_catalog.pg_namespace pn
@@ -1501,11 +1503,7 @@ class EmajDb {
 		$rlbkId = $data->selectField($sql1,'rlbk_id');
 
 		// Build the psql report file name, the SQL command and submit the rollback execution asynchronously
-		if ($this->getNumEmajVersion() >= 20100){	// version >= 2.1.0
-			$sql2 = "SELECT * FROM \"{$this->emaj_schema}\"._rlbk_async({$rlbkId},{$isM},true)";
-		} else {
-			$sql2 = "SELECT \"{$this->emaj_schema}\"._rlbk_async({$rlbkId},{$isM})";
-		}
+		$sql2 = "SELECT \"{$this->emaj_schema}\"._rlbk_async({$rlbkId},{$isM})";
 		$psqlReport = "rlbk_{$rlbkId}_report";
 		$this->execPsqlInBackground($psqlExe,$sql2,$tempDir,$psqlReport);
 

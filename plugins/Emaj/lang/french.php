@@ -170,6 +170,7 @@
 
 	// Group's content
 	$plugin_lang['emajgroupcontent'] = 'Contenu du groupe de tables "%s"';
+	$plugin_lang['emajemptygroup'] = 'Le groupe de tables "%s" est actuellement vide.';
 	$plugin_lang['emajpriority'] = 'Priorité';
 	$plugin_lang['emajlogschema'] = 'Schéma de log';
 	$plugin_lang['emajlogdattsp'] = 'Tablespace log';

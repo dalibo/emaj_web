@@ -2272,104 +2272,111 @@ class Emaj extends Plugin {
 
 			$groupContent = $this->emajdb->getContentGroup($_REQUEST['group']);
 
-			$columns = array(
-				'type' => array(
-					'title' => $lang['strtype'],
-					'field' => field('relkind'),
-					'type'	=> 'callback',
-					'params'=> array('function' => array($this, 'renderTblSeq'),'align' => 'center')
-				),
-				'schema' => array(
-					'title' => $lang['strschema'],
-					'field' => field('rel_schema'),
-					'url'   => "redirect.php?subject=schema&amp;{$misc->href}&amp;",
-					'vars'  => array('schema' => 'rel_schema'),
-				),
-				'tblseq' => array(
-					'title' => $lang['strname'],
-					'field' => field('rel_tblseq'),
-					'url'	=> "redirect.php?subject=table&amp;{$misc->href}&amp;",
-					'vars'  => array('schema' => 'rel_schema', 'table' => 'rel_tblseq'),
-				),
-				'priority' => array(
-					'title' => $this->lang['emajpriority'],
-					'field' => field('rel_priority'),
-					'params'=> array('align' => 'center'),
-				),
-			);
-			if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
+			if ($groupContent->recordCount() < 1) {
+
+				// The group is empty
+				echo "<p>" . sprintf($this->lang['emajemptygroup'],$_REQUEST['group']) . "</p>\n";
+
+			} else {
+
+				$columns = array(
+					'type' => array(
+						'title' => $lang['strtype'],
+						'field' => field('relkind'),
+						'type'	=> 'callback',
+						'params'=> array('function' => array($this, 'renderTblSeq'),'align' => 'center')
+					),
+					'schema' => array(
+						'title' => $lang['strschema'],
+						'field' => field('rel_schema'),
+						'url'   => "redirect.php?subject=schema&amp;{$misc->href}&amp;",
+						'vars'  => array('schema' => 'rel_schema'),
+					),
+					'tblseq' => array(
+						'title' => $lang['strname'],
+						'field' => field('rel_tblseq'),
+						'url'	=> "redirect.php?subject=table&amp;{$misc->href}&amp;",
+						'vars'  => array('schema' => 'rel_schema', 'table' => 'rel_tblseq'),
+					),
+					'priority' => array(
+						'title' => $this->lang['emajpriority'],
+						'field' => field('rel_priority'),
+						'params'=> array('align' => 'center'),
+					),
+				);
+				if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
+					$columns = array_merge($columns, array(
+						'log_schema' => array(
+							'title' => $this->lang['emajlogschema'],
+							'field' => field('rel_log_schema'),
+						),
+						'log_dat_tsp' => array(
+							'title' => $this->lang['emajlogdattsp'],
+							'field' => field('rel_log_dat_tsp'),
+						),
+						'log_idx_tsp' => array(
+							'title' => $this->lang['emajlogidxtsp'],
+							'field' => field('rel_log_idx_tsp'),
+						),
+					));
+				};
+				if ($this->emajdb->getNumEmajVersion() >= 10200) {			// version >= 1.2.0
+					$columns = array_merge($columns, array(
+						'names_prefix' => array(
+							'title' => $this->lang['emajnamesprefix'],
+							'field' => field('emaj_names_prefix'),
+						),
+					));
+				};
 				$columns = array_merge($columns, array(
-					'log_schema' => array(
-						'title' => $this->lang['emajlogschema'],
-						'field' => field('rel_log_schema'),
+					'bytelogsize' => array(
+						'title' => $this->lang['emajlogsize'],
+						'field' => field('byte_log_size'),
+						'params'=> array('align' => 'right'),
 					),
-					'log_dat_tsp' => array(
-						'title' => $this->lang['emajlogdattsp'],
-						'field' => field('rel_log_dat_tsp'),
-					),
-					'log_idx_tsp' => array(
-						'title' => $this->lang['emajlogidxtsp'],
-						'field' => field('rel_log_idx_tsp'),
+					'prettylogsize' => array(
+						'title' => $this->lang['emajlogsize'],
+						'field' => field('pretty_log_size'),
+						'params'=> array('align' => 'center'),
 					),
 				));
-			};
-			if ($this->emajdb->getNumEmajVersion() >= 10200) {			// version >= 1.2.0
-				$columns = array_merge($columns, array(
-					'names_prefix' => array(
-						'title' => $this->lang['emajnamesprefix'],
-						'field' => field('emaj_names_prefix'),
-					),
-				));
-			};
-			$columns = array_merge($columns, array(
-				'bytelogsize' => array(
-					'title' => $this->lang['emajlogsize'],
-					'field' => field('byte_log_size'),
-					'params'=> array('align' => 'right'),
-				),
-				'prettylogsize' => array(
-					'title' => $this->lang['emajlogsize'],
-					'field' => field('pretty_log_size'),
-					'params'=> array('align' => 'center'),
-				),
-			));
-
-			$actions = array ();
-
-//			$misc->printTable($groupContent, $columns, $actions, 'groupContent');
-			echo "<div id=\"groupContentTable\" style=\"margin-top:15px;margin-bottom:15px\" >\n";
-			$this->printTable($groupContent, $columns, $actions, 'groupContent');
-			echo "</div>\n";
-
-			// activate tablesorter script
-			echo "<script type=\"text/javascript\">
-				$(document).ready(function() {
-					$(\"#groupContentTable table\").addClass('tablesorter');
-					$(\"#groupContentTable table\").tablesorter(
-						{ 	
-							textExtraction: { 
-								0: function(s) {
-									if($(s).find('img').length == 0) return $(s).text();
-									return $(s).find('img').attr('alt');
-								}},
-							headers: { 
-								0: { filter: false }, 
-								8: { sorter: false, filter: false } 
-							},
-							emptyTo: 'none',
-							widgets: [\"zebra\", \"filter\"],
-							widgetOptions: {
-								zebra : [ \"data1\", \"data2\" ],
-								filter_hideFilters : true,
-								filter_functions : {  1: true, 4: true, 5: true, 6: true },
-								stickyHeaders : 'tablesorter-stickyHeader', 
-							},
-						}
-					);
-				});
-				</script>";
+	
+				$actions = array ();
+	
+//				$misc->printTable($groupContent, $columns, $actions, 'groupContent');
+				echo "<div id=\"groupContentTable\" style=\"margin-top:15px;margin-bottom:15px\" >\n";
+				$this->printTable($groupContent, $columns, $actions, 'groupContent');
+				echo "</div>\n";
+	
+				// activate tablesorter script
+				echo "<script type=\"text/javascript\">
+					$(document).ready(function() {
+						$(\"#groupContentTable table\").addClass('tablesorter');
+						$(\"#groupContentTable table\").tablesorter(
+							{ 	
+								textExtraction: { 
+									0: function(s) {
+										if($(s).find('img').length == 0) return $(s).text();
+										return $(s).find('img').attr('alt');
+									}},
+								headers: { 
+									0: { filter: false }, 
+									8: { sorter: false, filter: false } 
+								},
+								emptyTo: 'none',
+								widgets: [\"zebra\", \"filter\"],
+								widgetOptions: {
+									zebra : [ \"data1\", \"data2\" ],
+									filter_hideFilters : true,
+									filter_functions : {  1: true, 4: true, 5: true, 6: true },
+									stickyHeaders : 'tablesorter-stickyHeader', 
+								},
+							}
+						);
+					});
+					</script>";
+			}
 		}
-
 		$this->printEmajFooter();
 		$misc->printFooter();
 	}

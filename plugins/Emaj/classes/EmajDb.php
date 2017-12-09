@@ -724,14 +724,17 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets group names already known in the emaj_group_def table
+	 * Gets group names already known in the emaj_group and emaj_group_def tables
 	 */
 	function getKnownGroups() {
 		global $data;
 
 		$data->fieldClean($schema);
-		$sql = "SELECT DISTINCT grpdef_group AS group_name 
-				FROM \"{$this->emaj_schema}\".emaj_group_def
+		$sql = "SELECT group_name
+				  FROM \"{$this->emaj_schema}\".emaj_group
+				UNION
+				SELECT DISTINCT grpdef_group
+				  FROM \"{$this->emaj_schema}\".emaj_group_def
 				ORDER BY 1";
 		return $data->selectSet($sql);
 	}

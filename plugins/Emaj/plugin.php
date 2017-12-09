@@ -3454,7 +3454,7 @@ class Emaj extends Plugin {
 		}
 		// OK
 		$status = $this->emajdb->stopGroup($_POST['group'],$_POST['mark'],isSet($_POST['forcestop']));
-		if ($status > 0)
+		if ($status == 0)
 			if ($_POST['back']=='list') {
 				$this->show_groups(sprintf($this->lang['emajstopgroupok'],$_POST['group']));
 			} else {

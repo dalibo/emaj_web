@@ -266,10 +266,9 @@ class EmajDb {
 	function getEmajSize() {
 		global $data;
 
-//TODO: with emaj version >= 22000 use emaj_schema instead of emaj_relation
 		if ($this->emaj_adm){
 			if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
-// The E-Maj size = size of all relations in emaj primary and secondaries schemas + size of linked toast tables
+// The E-Maj size = size of all relations in emaj primary and secondary schemas + size of linked toast tables
 				$sql = "SELECT coalesce(pg_size_pretty(t.emajtotalsize) || 
 								to_char(t.emajtotalsize * 100 / pg_database_size(current_database())::float,' = FM990D0%'), '0 B = 0%') as emajsize 
 						FROM 
@@ -279,18 +278,26 @@ class EmajDb {
 								SELECT sum(relpages) as totalpages
 								  FROM pg_catalog.pg_class, pg_catalog.pg_namespace 
 								  WHERE relnamespace = pg_namespace.oid 
-									AND nspname IN 
-										(SELECT DISTINCT rel_log_schema FROM emaj.emaj_relation)
-								) as t1,
+									AND nspname IN ";
+				if ($this->getNumEmajVersion() >= 22000){	// version >= 2.2.0
+					$sql .= "			(SELECT sch_name FROM emaj.emaj_schema)";
+				} else {
+					$sql .= "			(SELECT DISTINCT rel_log_schema FROM emaj.emaj_relation)";
+				}
+				$sql .= "		) as t1,
 								(
 								SELECT sum(c2.relpages) as totalpages
-								  FROM pg_catalog.pg_class c1,pg_catalog. pg_namespace, emaj.emaj_relation,
+								  FROM pg_catalog.pg_class c1, pg_catalog.pg_namespace, emaj.emaj_relation,
 									   pg_catalog.pg_class c2 
 								  WHERE c1.relnamespace = pg_namespace.oid 
 									AND c2.oid = c1.reltoastrelid
-									AND nspname = rel_log_schema AND c1.relname = rel_schema || '_' || rel_tblseq || '_log' 
-									AND rel_kind = 'r'
-								) as t2
+									AND nspname = rel_log_schema ";
+				if ($this->getNumEmajVersion() >= 12000){	// version >= 1.2.0
+					$sql .= "		AND c1.relname = rel_log_table";
+				} else {
+					$sql .= "		AND c1.relname = rel_schema || '_' || rel_tblseq || '_log' AND rel_kind = 'r'";
+				}
+				$sql .= "		) as t2
 							WHERE pg_settings.name = 'block_size'
 						) as t";
 			}else{
@@ -628,7 +635,6 @@ class EmajDb {
 	function getSchemas() {
 		global $data;
 
-//TODO: with emaj version >= 22000 use emaj_schema instead of emaj_relation
 		$sql = "SELECT 1, pn.nspname, pu.rolname AS nspowner,
 					   pg_catalog.obj_description(pn.oid, 'pg_namespace') AS nspcomment
 				FROM pg_catalog.pg_namespace pn
@@ -636,8 +642,13 @@ class EmajDb {
 				WHERE nspname NOT LIKE 'pg@_%' ESCAPE '@' AND 
 					  nspname != 'information_schema' AND nspname != '{$this->emaj_schema}' ";
 		if ($this->getNumEmajVersion() >= 10000){			// version >= 1.0.0
-			$sql .=
-				"AND nspname NOT IN (SELECT DISTINCT rel_log_schema FROM emaj.emaj_relation WHERE rel_log_schema IS NOT NULL) ";
+			if ($this->getNumEmajVersion() >= 22000){			// version >= 2.2.0
+				$sql .=
+					"AND nspname NOT IN (SELECT sch_name FROM emaj.emaj_schema) ";
+			} else {
+				$sql .=
+					"AND nspname NOT IN (SELECT DISTINCT rel_log_schema FROM emaj.emaj_relation WHERE rel_log_schema IS NOT NULL) ";
+			}
 		}
 		$sql .= "UNION
 				SELECT DISTINCT 2, grpdef_schema AS nspname, '!' AS nspowner, NULL AS nspcomment

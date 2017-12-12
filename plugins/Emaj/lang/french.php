@@ -80,7 +80,7 @@
 	$plugin_lang['emajtblseqnogroup'] = 'Erreur, " %s.%s " n\'est actuellement affecté à aucun groupe de tables.';
 	$plugin_lang['emajremovetblseq'] = 'E-Maj : Retirer des tables / séquences d\'un groupe de tables';
 	$plugin_lang['emajconfirmremovetblseq'] = 'Etes-vous sûr de vouloir retirer " %s.%s " du groupe de tables "%s" ?';
-	$plugin_lang['emajmodifygroupok'] = 'La modification est enregistrée. Elle sera effective après (re)création des groupes de tables concernés.';
+	$plugin_lang['emajmodifygroupok'] = 'La modification est enregistrée. Elle sera effective après (re)création ou modification des groupes de tables concernés.';
 	$plugin_lang['emajmodifygrouperr'] = 'Erreur lors du changement de composition des groupes de tables.';
 
 	// List Groups
@@ -193,7 +193,7 @@
 	// Group alter
 	$plugin_lang['emajalteragroup'] = 'E-Maj : Modifier un groupe de tables';
 	$plugin_lang['emajconfirmaltergroup'] = 'Etes-vous sûr de vouloir modifier le groupe de tables "%s" ?';
-	$plugin_lang['emajcantaltergroup'] = 'La modification du groupe de tables "%s" est impossible. Le groupe est démarré.';
+	$plugin_lang['emajcantaltergroup'] = 'La modification du groupe "%s" générerait des actions qui ne peuvent être effectuées sur un groupe actif. Arrêtez le groupe avant de le modifier.';
 	$plugin_lang['emajaltergroupok'] = 'Le groupe de tables "%s" a été modifié.';
 	$plugin_lang['emajaltergrouperr'] = 'Erreur lors de la modification du groupe de tables "%s" !';
 

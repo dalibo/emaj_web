@@ -279,7 +279,7 @@ class EmajDb {
 								  FROM pg_catalog.pg_class, pg_catalog.pg_namespace 
 								  WHERE relnamespace = pg_namespace.oid 
 									AND nspname IN ";
-				if ($this->getNumEmajVersion() >= 22000){	// version >= 2.2.0
+				if ($this->getNumEmajVersion() >= 20200){	// version >= 2.2.0
 					$sql .= "			(SELECT sch_name FROM emaj.emaj_schema)";
 				} else {
 					$sql .= "			(SELECT DISTINCT rel_log_schema FROM emaj.emaj_relation)";
@@ -292,7 +292,7 @@ class EmajDb {
 								  WHERE c1.relnamespace = pg_namespace.oid 
 									AND c2.oid = c1.reltoastrelid
 									AND nspname = rel_log_schema ";
-				if ($this->getNumEmajVersion() >= 12000){	// version >= 1.2.0
+				if ($this->getNumEmajVersion() >= 10200){	// version >= 1.2.0
 					$sql .= "		AND c1.relname = rel_log_table";
 				} else {
 					$sql .= "		AND c1.relname = rel_schema || '_' || rel_tblseq || '_log' AND rel_kind = 'r'";
@@ -966,6 +966,56 @@ class EmajDb {
 		$sql = "SELECT \"{$this->emaj_schema}\".emaj_drop_group('{$group}') AS nbtblseq";
 
 		return $data->selectField($sql,'nbtblseq');
+	}
+
+	/**
+	 * Check that the group can be altered
+	 * If the group is not IDLE, it performs checks on operations that will be performed
+	 * Returns 1 if OK, else 0
+	 */
+	function checkAlterGroup($group) {
+		global $data;
+
+		$data->clean($group);
+
+		// get the group's state
+		$sql = "SELECT CASE WHEN group_is_logging THEN 1 ELSE 0 END AS is_logging
+				FROM \"{$this->emaj_schema}\".emaj_group
+				WHERE group_name = '{$group}'";
+		$isLogging = $data->selectField($sql,'is_logging');
+		// the group is idle, so return immediately
+		if (! $isLogging) { return 1; }
+		// the group is logging 
+		// if the emaj version is prior 2.1.0, exit immediately
+		if ($this->getNumEmajVersion() < 20100){ return 0; }
+
+		// if the emaj version is prior 2.2.0, check no table or sequence would be removed from the group
+		if ($this->getNumEmajVersion() < 20200){	// version < 2.2.0
+			$sql = "SELECT count(*) as nb_errors FROM (
+						SELECT rel_schema, rel_tblseq FROM \"{$this->emaj_schema}\".emaj_relation WHERE rel_group = '{$group}'
+							EXCEPT
+						SELECT grpdef_schema, grpdef_tblseq FROM \"{$this->emaj_schema}\".emaj_group_def WHERE grpdef_group = '{$group}'
+					) as t";
+			if ($data->selectField($sql,'nb_errors') > 0 ) { return 0; }
+		}
+
+		// check no table or sequence would be added to the group
+		$sql = "SELECT count(*) as nb_errors FROM (
+					SELECT grpdef_schema, grpdef_tblseq FROM \"{$this->emaj_schema}\".emaj_group_def WHERE grpdef_group = '{$group}'
+						EXCEPT
+					SELECT rel_schema, rel_tblseq FROM \"{$this->emaj_schema}\".emaj_relation WHERE rel_group = '{$group}'";
+		if ($this->getNumEmajVersion() >= 20200){	// version >= 2.2.0
+			$sql .= " AND upper_inf(rel_time_range) ";
+		}
+		$sql .= ") as t";
+		if ($data->selectField($sql,'nb_errors') > 0 ) { return 0; }
+
+		// check that no table or sequence would be repaired for the group
+		$sql = "SELECT count(*) as nb_errors FROM \"{$this->emaj_schema}\"._verify_groups(ARRAY['{$group}'], false)";
+		if ($data->selectField($sql,'nb_errors') > 0 ) { return 0; }
+
+		// all checks are ok
+		return 1;
 	}
 
 	/**

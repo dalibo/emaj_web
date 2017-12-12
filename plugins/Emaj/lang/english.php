@@ -80,7 +80,7 @@
 	$plugin_lang['emajtblseqnogroup'] = 'Error, " %s.%s " is not currently assigned to any tables group.';
 	$plugin_lang['emajremovetblseq'] = 'E-Maj: Remove tables / sequences from a tables group';
 	$plugin_lang['emajconfirmremovetblseq'] = 'Are you sure you want to remove " %s.%s " from tables group "%s" ?';
-	$plugin_lang['emajmodifygroupok'] = 'The change is recorded. It will take effect when the concerned tables groups will be (re)created.';
+	$plugin_lang['emajmodifygroupok'] = 'The change is recorded. It will take effect when the concerned tables groups will be (re)created or altered.';
 	$plugin_lang['emajmodifygrouperr'] = 'Error while updating tables groups content.';
 
 	// List Groups
@@ -193,7 +193,7 @@
 	// Group alter
 	$plugin_lang['emajalteragroup'] = 'E-Maj: Alter a tables group';
 	$plugin_lang['emajconfirmaltergroup'] = 'Are you sure you want to alter tables group "%s" ?';
-	$plugin_lang['emajcantaltergroup'] = 'Altering the tables group "%s" is not possible. The group is started.';
+	$plugin_lang['emajcantaltergroup'] = 'Altering the group "%s" would generate actions that cannot be executed on LOGGING group. Stop the group before altering it.';
 	$plugin_lang['emajaltergroupok'] = 'The tables group "%s" has been altered.';
 	$plugin_lang['emajaltergrouperr'] = 'Error during tables group "%s" alter!';
 

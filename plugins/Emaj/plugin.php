@@ -3020,7 +3020,6 @@ class Emaj extends Plugin {
 		global $misc, $lang;
 
 		$this->printPageHeader();
-
 		$misc->printTitle($this->lang['emajalteragroup']);
 
 		echo "<p>", sprintf($this->lang['emajconfirmaltergroup'], $misc->printVal($_REQUEST['group'])), "</p>\n";
@@ -3053,17 +3052,15 @@ class Emaj extends Plugin {
 			exit();
 		}
 
-	// Check the group is always in IDLE state
-		if ($this->emajdb->getNumEmajVersion() < 20100) {			// version < 2.1.0
-			$group = $this->emajdb->getGroup($_REQUEST['group']);
-			if ($group->fields['group_state'] != 'IDLE') {
-				if ($_POST['back']=='list') {
-					$this->show_groups('',sprintf($this->lang['emajcantaltergroup'],$_POST['group']));
-				} else {
-					$this->show_group('',sprintf($this->lang['emajcantaltergroup'],$_POST['group']));
-				}
-		}
-		return;
+	// check the group can be altered by looking at its state and operations that will be performed
+		$check = $this->emajdb->checkAlterGroup($_REQUEST['group']);
+		if ($check == 0) {
+			if ($_POST['back'] == 'list') {
+				$this->show_groups('',sprintf($this->lang['emajcantaltergroup'],$_POST['group']));
+			} else {
+				$this->show_group('',sprintf($this->lang['emajcantaltergroup'],$_POST['group']));
+			}
+			exit();
 		}
 
 	// OK
@@ -3095,7 +3092,6 @@ class Emaj extends Plugin {
 		}
 
 		$this->printPageHeader();
-
 		$misc->printTitle($this->lang['emajaltergroups']);
 
 		// build the groups list
@@ -3128,6 +3124,21 @@ class Emaj extends Plugin {
 
 	// process the click on the <cancel> button
 		if (isset($_POST['cancel'])) { $this->show_groups(); exit(); }
+
+	// check the groups can be altered by looking at their state and operations that will be performed
+		$groups = explode(', ',$_POST['groups']);
+		foreach($groups as $g) {
+			$check = $this->emajdb->checkAlterGroup($g);
+			// exit the loop in case of error
+			if ($check == 0) {
+				if ($_POST['back'] == 'list') {
+					$this->show_groups('',sprintf($this->lang['emajcantaltergroup'],$g));
+				} else {
+					$this->show_group('',sprintf($this->lang['emajcantaltergroup'],$g));
+				}
+				exit();
+			}
+		}
 
 	// OK
 		$status = $this->emajdb->alterGroups($_POST['groups']);

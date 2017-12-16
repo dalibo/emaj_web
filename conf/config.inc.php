@@ -31,7 +31,7 @@
 	//$conf['servers'][1]['port'] = 5432;
 	//$conf['servers'][1]['sslmode'] = 'allow';
 	//$conf['servers'][1]['defaultdb'] = 'template1';
-	
+
 	$conf['servers'][1]['desc'] = 'Pg 9.1';
 	$conf['servers'][1]['host'] = 'localhost';
 	$conf['servers'][1]['port'] = 5491;
@@ -73,7 +73,7 @@
 	$conf['servers'][7]['port'] = 5410;
 	$conf['servers'][7]['sslmode'] = 'allow';
 	$conf['servers'][7]['defaultdb'] = 'postgres';
-	
+
 	/* Groups definition */
 	/* Groups allow administrators to logicaly group servers together under
 	 * group nodes in the left browser tree

@@ -386,10 +386,11 @@ class EmajDb {
 
 		if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
 			$sql = "SELECT group_name, group_nb_table, group_nb_sequence,
-					  CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END 
-						as group_type, 
-					  CASE WHEN length(group_comment) > 100 THEN substr(group_comment,1,97) || '...' ELSE group_comment END 
-						as abbr_comment, 
+					  CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
+						   WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
+						   ELSE 'ROLLBACKABLE-PROTECTED' END as group_type,
+					  CASE WHEN length(group_comment) > 100 THEN substr(group_comment,1,97) || '...' ELSE group_comment END
+						as abbr_comment,
 					  to_char(time_tx_timestamp,'DD/MM/YYYY HH24:MI:SS') as creation_datetime,
 					  (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
 					FROM \"{$this->emaj_schema}\".emaj_group, \"{$this->emaj_schema}\".emaj_time_stamp
@@ -397,19 +398,18 @@ class EmajDb {
 					  AND time_id = group_creation_time_id
 					ORDER BY group_name";
 		}else{
-			$sql = "SELECT group_name, group_nb_table, group_nb_sequence,
-					 CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END as group_type, ";
+			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, ";
 			if ($this->getNumEmajVersion() >= 10300){	// version >= 1.3.0
 				$sql .=	"
 						CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
-							 WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE' 
+							 WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
 							 ELSE 'ROLLBACKABLE-PROTECTED' END as group_type, ";
 			}else{
 				$sql .=	"
 						CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END as group_type, ";
 			}
 			$sql .=	"
-					 CASE WHEN length(group_comment) > 100 THEN substr(group_comment,1,97) || '...' ELSE group_comment END 
+					 CASE WHEN length(group_comment) > 100 THEN substr(group_comment,1,97) || '...' ELSE group_comment END
 						as abbr_comment, 
 					 to_char(group_creation_datetime,'DD/MM/YYYY HH24:MI:SS') as creation_datetime,
 					 (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark

@@ -159,6 +159,10 @@
 	$plugin_lang['emajlogstatmark'] = 'la marque "%s"';
 	$plugin_lang['emajlogstattittle'] = 'Mises à jour de table entre la marque "%s" et %s pour le groupe de tables "%s"';
 	$plugin_lang['emajsimrlbkduration'] = 'Le rollback du groupe de tables "%s" à la marque "%s" durerait environ %s.';
+	$plugin_lang['emajstatfirstmark'] = 'Première marque';
+	$plugin_lang['emajstatfirstmarkdatetime'] = 'Date-Heure première marque';
+	$plugin_lang['emajstatlastmark'] = 'Dernière marque';
+	$plugin_lang['emajstatlastmarkdatetime'] = 'Date-Heure dernière marque';
 	$plugin_lang['emajstatverb'] = 'Verbe SQL';
 	$plugin_lang['emajnbinsert'] = 'Nb INSERT';
 	$plugin_lang['emajnbupdate'] = 'Nb UPDATE';

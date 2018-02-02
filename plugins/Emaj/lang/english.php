@@ -159,6 +159,10 @@
 	$plugin_lang['emajlogstatmark'] = 'mark "%s"';
 	$plugin_lang['emajlogstattittle'] = 'Table updates between mark "%s" and %s for tables group "%s"';
 	$plugin_lang['emajsimrlbkduration'] = 'Rolling the tables group "%s" back to mark "%s" would take about %s.';
+	$plugin_lang['emajstatfirstmark'] = 'First mark';
+	$plugin_lang['emajstatfirstmarkdatetime'] = 'First mark date/time';
+	$plugin_lang['emajstatlastmark'] = 'Last mark';
+	$plugin_lang['emajstatlastmarkdatetime'] = 'Last mark date/time';
 	$plugin_lang['emajstatverb'] = 'SQL verb';
 	$plugin_lang['emajnbinsert'] = '# INSERT';
 	$plugin_lang['emajnbupdate'] = '# UPDATE';

@@ -1912,7 +1912,11 @@ class EmajDb {
 
 		if ($lastMark==''){
 			$sql = "CREATE TEMP TABLE tmp_stat AS
-					SELECT stat_group, stat_schema, stat_table, stat_rows, 
+					SELECT stat_group, stat_schema, stat_table, ";
+			if ($this->getNumEmajVersion() >= 203000){	// version >= 2.3.0
+				$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
+			}
+            $sql .= "stat_rows, 
 					'select * from ' || ";
 			if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
 				$sql .= "quote_ident(rel_log_schema)";
@@ -1945,7 +1949,11 @@ class EmajDb {
 			}
 		}else{
 			$sql = "CREATE TEMP TABLE tmp_stat AS
-					SELECT stat_group, stat_schema, stat_table, stat_rows, 
+					SELECT stat_group, stat_schema, stat_table, ";
+			if ($this->getNumEmajVersion() >= 203000){	// version >= 2.3.0
+				$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
+			}
+            $sql .= "stat_rows, 
 					'select * from ' || ";
 			if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
 				$sql .= "quote_ident(rel_log_schema)";
@@ -1988,7 +1996,11 @@ class EmajDb {
 
 		$data->execute($sql);
 
-		$sql = "SELECT stat_group, stat_schema, stat_table, stat_rows, sql_text FROM tmp_stat
+		$sql = "SELECT stat_group, stat_schema, stat_table, ";
+		if ($this->getNumEmajVersion() >= 203000){	// version >= 2.3.0
+			$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
+		}
+        $sql .= "stat_rows, sql_text FROM tmp_stat
 				ORDER BY stat_group, stat_schema, stat_table";
 
 		return $data->selectSet($sql);
@@ -2020,7 +2032,11 @@ class EmajDb {
 
 		if ($lastMark==''){
 			$sql = "CREATE TEMP TABLE tmp_stat AS
-					SELECT stat_group, stat_schema, stat_table, stat_role, stat_verb, stat_rows, 
+					SELECT stat_group, stat_schema, stat_table, ";
+			if ($this->getNumEmajVersion() >= 203000){	// version >= 2.3.0
+				$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
+			}
+            $sql .= "stat_role, stat_verb, stat_rows, 
 					'select * from ' || ";
 			if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
 				$sql .= "quote_ident(rel_log_schema)";
@@ -2054,7 +2070,11 @@ class EmajDb {
 			}
 		}else{
 			$sql = "CREATE TEMP TABLE tmp_stat AS
-					SELECT stat_group, stat_schema, stat_table, stat_role, stat_verb, stat_rows, 
+					SELECT stat_group, stat_schema, stat_table, ";
+			if ($this->getNumEmajVersion() >= 203000){	// version >= 2.3.0
+				$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
+			}
+            $sql .= "stat_role, stat_verb, stat_rows, 
 					'select * from ' || ";
 			if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
 				$sql .= "quote_ident(rel_log_schema)";
@@ -2098,7 +2118,11 @@ class EmajDb {
 		}
 		$data->execute($sql);
 
-		$sql = "SELECT stat_group, stat_schema, stat_table, stat_role, stat_verb, stat_rows, sql_text FROM tmp_stat
+		$sql = "SELECT stat_group, stat_schema, stat_table, ";
+		if ($this->getNumEmajVersion() >= 203000){	// version >= 2.3.0
+			$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
+		}
+        $sql .= "stat_role, stat_verb, stat_rows, sql_text FROM tmp_stat
 				ORDER BY stat_group, stat_schema, stat_table, stat_role, stat_verb";
 
 		return $data->selectSet($sql);

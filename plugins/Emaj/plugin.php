@@ -2043,7 +2043,28 @@ class Emaj extends Plugin {
 					'field' => field('stat_table'),
 					'url'	=> "redirect.php?subject=table&amp;{$misc->href}&amp;",
 					'vars'  => array('schema' => 'stat_schema', 'table' => 'stat_table'),
-				),
+				));
+			if ($this->emajdb->getNumEmajVersion() >= 20300) {			// version >= 2.3.0
+				$columns = array_merge($columns, array(
+					'stat_first_mark' => array(
+						'title' => $this->lang['emajstatfirstmark'],
+						'field' => field('stat_first_mark'),
+					),
+					'stat_first_mark_datetime' => array(
+						'title' => $this->lang['emajstatfirstmarkdatetime'],
+						'field' => field('stat_first_mark_datetime'),
+					),
+					'stat_last_mark' => array(
+						'title' => $this->lang['emajstatlastmark'],
+						'field' => field('stat_last_mark'),
+					),
+					'stat_last_mark_datetime' => array(
+						'title' => $this->lang['emajstatlastmarkdatetime'],
+						'field' => field('stat_last_mark_datetime'),
+					),
+				));
+			}
+			$columns = array_merge($columns, array(
 				'nbrow' => array(
 					'title' => $this->lang['emajstatrows'],
 					'field' => field('stat_rows'),
@@ -2052,7 +2073,7 @@ class Emaj extends Plugin {
 				'actions' => array(
 					'title' => $lang['stractions'],
 				),
-			);
+			));
 
 			$actions = array(
 				'sql' => array(
@@ -2081,7 +2102,7 @@ class Emaj extends Plugin {
 					$(\"#statTable table\").addClass('tablesorter');
 					$(\"#statTable table\").tablesorter(
 						{	headers: { 
-								3: { sorter: false, filter: false } 
+								7: { sorter: false, filter: false } 
 							},
 							emptyTo: 'none',
 							widgets: [\"zebra\", \"filter\"],
@@ -2186,7 +2207,28 @@ class Emaj extends Plugin {
 					'field' => field('stat_table'),
 					'url'	=> "redirect.php?subject=table&amp;{$misc->href}&amp;",
 					'vars'  => array('schema' => 'stat_schema', 'table' => 'stat_table'),
-				),
+				));
+			if ($this->emajdb->getNumEmajVersion() >= 20300) {			// version >= 2.3.0
+				$columns = array_merge($columns, array(
+					'stat_first_mark' => array(
+						'title' => $this->lang['emajstatfirstmark'],
+						'field' => field('stat_first_mark'),
+					),
+					'stat_first_mark_datetime' => array(
+						'title' => $this->lang['emajstatfirstmarkdatetime'],
+						'field' => field('stat_first_mark_datetime'),
+					),
+					'stat_last_mark' => array(
+						'title' => $this->lang['emajstatlastmark'],
+						'field' => field('stat_last_mark'),
+					),
+					'stat_last_mark_datetime' => array(
+						'title' => $this->lang['emajstatlastmarkdatetime'],
+						'field' => field('stat_last_mark_datetime'),
+					),
+				));
+			}
+			$columns = array_merge($columns, array(
 				'role' => array(
 					'title' => $lang['strrole'],
 					'field' => field('stat_role'),
@@ -2203,7 +2245,7 @@ class Emaj extends Plugin {
 				'actions' => array(
 					'title' => $lang['stractions'],
 				),
-			);
+			));
 
 			$actions = array(
 				'sql' => array(
@@ -2232,7 +2274,7 @@ class Emaj extends Plugin {
 					$(\"#statTable table\").addClass('tablesorter');
 					$(\"#statTable table\").tablesorter(
 						{	headers: { 
-								5: { sorter: false, filter: false } 
+								9: { sorter: false, filter: false } 
 							},
 							emptyTo: 'none',
 							widgets: [\"zebra\", \"filter\"],

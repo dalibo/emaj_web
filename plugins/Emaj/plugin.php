@@ -3064,8 +3064,26 @@ class Emaj extends Plugin {
 		$this->printPageHeader();
 		$misc->printTitle($this->lang['emajalteragroup']);
 
-		echo "<p>", sprintf($this->lang['emajconfirmaltergroup'], $misc->printVal($_REQUEST['group'])), "</p>\n";
+		$isGroupLogging = $this->emajdb->isGroupLogging($_REQUEST['group']);
+
 		echo "<form action=\"plugin.php?plugin={$this->name}&amp;\" method=\"post\">\n";
+
+		if ($this->emajdb->getNumEmajVersion() >= 20100) {			// version >= 2.1.0
+			if ($isGroupLogging) {
+				echo "<p>", sprintf($this->lang['emajalteraloggingroup'], $misc->printVal($_REQUEST['group'])), "</p>";
+				echo "<table>\n";
+				echo "<tr><th class=\"data left\">{$this->lang['emajmark']}</th>\n";
+				echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"\" id=\"mark\"></td></tr>\n";
+				echo "</table>\n";
+			} else {
+				echo "<p>", sprintf($this->lang['emajconfirmaltergroup'], $misc->printVal($_REQUEST['group'])), "</p>\n";
+				echo "<input type=\"hidden\" name=\"mark\" value=\"\">";
+			}
+		} else {
+				echo "<p>", sprintf($this->lang['emajconfirmaltergroup'], $misc->printVal($_REQUEST['group'])), "</p>\n";
+				echo "<input type=\"hidden\" name=\"mark\" value=\"\">";
+		}
+
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"alter_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
@@ -3105,8 +3123,18 @@ class Emaj extends Plugin {
 			exit();
 		}
 
+	// Check the supplied mark is valid
+		if ($_POST['mark'] != '' && !$this->emajdb->isNewMarkValidGroup($_POST['group'],$_POST['mark'])) {
+			if ($_POST['back']=='list') {
+				$this->show_groups('',sprintf($this->lang['emajinvalidmark'],$_POST['mark']));
+			} else {
+				$this->show_group('',sprintf($this->lang['emajinvalidmark'],$_POST['mark']));
+			}
+			return;
+		}
+
 	// OK
-		$status = $this->emajdb->alterGroup($_POST['group']);
+		$status = $this->emajdb->alterGroup($_POST['group'],$_POST['mark']);
 		if ($status >= 0) {
 			$_reload_browser = true;
 			if ($_POST['back'] == 'list') {
@@ -3144,8 +3172,19 @@ class Emaj extends Plugin {
 		}
 		$groupsList=substr($groupsList,0,strlen($groupsList)-2);
 
-		echo "<p>", sprintf($this->lang['emajconfirmaltergroups'], $misc->printVal($groupsList)), "</p>\n";
 		echo "<form action=\"plugin.php?plugin={$this->name}&amp;\" method=\"post\">\n";
+
+		if ($this->emajdb->getNumEmajVersion() >= 20100) {			// version >= 2.1.0
+			echo "<p>", sprintf($this->lang['emajalterallloggingroups'], $misc->printVal($groupsList)), "</p>";
+			echo "<table>\n";
+			echo "<tr><th class=\"data left\">{$this->lang['emajmark']}</th>\n";
+			echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"\" id=\"mark\"></td></tr>\n";
+			echo "</table>\n";
+		} else {
+			echo "<p>", sprintf($this->lang['emajconfirmaltergroups'], $misc->printVal($groupsList)), "</p>\n";
+			echo "<input type=\"hidden\" name=\"mark\" value=\"\">";
+		}
+
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"alter_groups_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
@@ -3181,9 +3220,14 @@ class Emaj extends Plugin {
 				exit();
 			}
 		}
+	// Check the supplied mark is valid for the groups
+		if (!$this->emajdb->isNewMarkValidGroups($_POST['groups'],$_POST['mark'])) {
+			$this->show_groups('',sprintf($this->lang['emajinvalidmark'],$_POST['mark']));
+			return;
+		}
 
 	// OK
-		$status = $this->emajdb->alterGroups($_POST['groups']);
+		$status = $this->emajdb->alterGroups($_POST['groups'],$_POST['mark']);
 		if ($status >= 0) {
 			$_reload_browser = true;
 			if ($_POST['back'] == 'list') {

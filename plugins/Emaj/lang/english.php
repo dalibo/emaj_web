@@ -196,6 +196,7 @@
 
 	// Group alter
 	$plugin_lang['emajalteragroup'] = 'E-Maj: Alter a tables group';
+	$plugin_lang['emajalteraloggingroup'] = 'The group "%s" is in LOGGING state. You can specify a mark name.';
 	$plugin_lang['emajconfirmaltergroup'] = 'Are you sure you want to alter tables group "%s" ?';
 	$plugin_lang['emajcantaltergroup'] = 'Altering the group "%s" would generate actions that cannot be executed on LOGGING group. Stop the group before altering it.';
 	$plugin_lang['emajaltergroupok'] = 'The tables group "%s" has been altered.';
@@ -203,6 +204,7 @@
 
 	// Groups alter
 	$plugin_lang['emajaltergroups'] = 'E-Maj: Alter tables groups';
+	$plugin_lang['emajalterallloggingroups'] = 'The groups "%s" are in LOGGING state. You can specify a mark name.';
 	$plugin_lang['emajconfirmaltergroups'] = 'Are you sure you want to alter tables groups "%s" ?';
 	$plugin_lang['emajaltergroupsok'] = 'The tables groups "%s" have been altered.';
 	$plugin_lang['emajaltergroupserr'] = 'Error during tables groups "%s" alter!';

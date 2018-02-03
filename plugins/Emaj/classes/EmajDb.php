@@ -496,7 +496,22 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets isRollbackable properties of one emaj_group (1 if rollbackable, 0 if audit_only)
+	 * Gets the isLogging property of one emaj_group (1 if in logging state, 0 if idle)
+	 */
+	function isGroupLogging($group) {
+		global $data;
+
+		$data->clean($group);
+
+		$sql = "SELECT CASE WHEN group_is_logging THEN 1 ELSE 0 END AS is_logging
+				FROM \"{$this->emaj_schema}\".emaj_group
+				WHERE group_name = '{$group}'";
+
+		return $data->selectField($sql,'is_logging');
+	}
+
+	/**
+	 * Gets the isRollbackable property of one emaj_group (1 if rollbackable, 0 if audit_only)
 	 */
 	function isGroupRollbackable($group) {
 		global $data;
@@ -511,7 +526,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets isProtected properties of one emaj_group (1 if protected, 0 if unprotected)
+	 * Gets the isProtected property of one emaj_group (1 if protected, 0 if unprotected)
 	 */
 	function isGroupProtected($group) {
 		global $data;
@@ -1021,24 +1036,31 @@ class EmajDb {
 	/**
 	 * Alters a group
 	 */
-	function alterGroup($group) {
+	function alterGroup($group,$mark) {
 		global $data;
 
-		$sql = "SELECT \"{$this->emaj_schema}\".emaj_alter_group('{$group}') AS nbtblseq";
-
+		if ($mark == '') {
+			$sql = "SELECT \"{$this->emaj_schema}\".emaj_alter_group('{$group}') AS nbtblseq";
+		} else {
+			$sql = "SELECT \"{$this->emaj_schema}\".emaj_alter_group('{$group}', '{$mark}') AS nbtblseq";
+		}
 		return $data->selectField($sql,'nbtblseq');
 	}
 
 	/**
 	 * Alters several groups
 	 */
-	function alterGroups($groups) {
+	function alterGroups($groups,$mark) {
 		global $data;
 
 		$data->clean($groups);
 		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
 
-		$sql = "SELECT \"{$this->emaj_schema}\".emaj_alter_groups({$groupsArray}) AS nbtblseq";
+		if ($mark == '') {
+			$sql = "SELECT \"{$this->emaj_schema}\".emaj_alter_groups({$groupsArray}) AS nbtblseq";
+		} else {
+			$sql = "SELECT \"{$this->emaj_schema}\".emaj_alter_groups({$groupsArray}, '{$mark}') AS nbtblseq";
+		}
 
 		return $data->selectField($sql,'nbtblseq');
 	}

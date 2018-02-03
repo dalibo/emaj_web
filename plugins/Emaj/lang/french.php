@@ -196,6 +196,7 @@
 
 	// Group alter
 	$plugin_lang['emajalteragroup'] = 'E-Maj : Modifier un groupe de tables';
+	$plugin_lang['emajalteraloggingroup'] = 'Le groupe "%s" est actif. Vous pouvez spécifier un nom de marque.';
 	$plugin_lang['emajconfirmaltergroup'] = 'Etes-vous sûr de vouloir modifier le groupe de tables "%s" ?';
 	$plugin_lang['emajcantaltergroup'] = 'La modification du groupe "%s" générerait des actions qui ne peuvent être effectuées sur un groupe actif. Arrêtez le groupe avant de le modifier.';
 	$plugin_lang['emajaltergroupok'] = 'Le groupe de tables "%s" a été modifié.';
@@ -203,6 +204,7 @@
 
 	// Groups alter
 	$plugin_lang['emajaltergroups'] = 'E-Maj : Modifier des groupes de tables';
+	$plugin_lang['emajalterallloggingroups'] = 'Les groupes "%s" sont actifs. Vous pouvez spécifier un nom de marque.';
 	$plugin_lang['emajconfirmaltergroups'] = 'Etes-vous sûr de vouloir modifier les groupes de tables "%s" ?';
 	$plugin_lang['emajaltergroupsok'] = 'Les groupes de tables "%s" ont été modifiés.';
 	$plugin_lang['emajaltergroupserr'] = 'Erreur lors de la modification des groupes de tables "%s" !';

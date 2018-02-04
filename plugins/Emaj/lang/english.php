@@ -158,6 +158,7 @@
 	$plugin_lang['emajlogstatcurrentsituation'] = 'the current situation';
 	$plugin_lang['emajlogstatmark'] = 'mark "%s"';
 	$plugin_lang['emajlogstattittle'] = 'Table updates between mark "%s" and %s for tables group "%s"';
+	$plugin_lang['emajnosimrlbkduration'] = 'The start mark cannot be used for a rollback. No rollback duration can be estimated.';
 	$plugin_lang['emajsimrlbkduration'] = 'Rolling the tables group "%s" back to mark "%s" would take about %s.';
 	$plugin_lang['emajstatfirstmark'] = 'First mark';
 	$plugin_lang['emajstatfirstmarkdatetime'] = 'First mark date/time';

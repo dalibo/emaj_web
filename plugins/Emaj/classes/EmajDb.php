@@ -1437,6 +1437,32 @@ class EmajDb {
 	}
 
 	/**
+	 * Determines whether or not a mark name for a group is ACTIVE (ie. not deleted)
+	 * Returns 1 if the mark name is known and is not deleted
+	 * Retuns 0 otherwise.
+	 */
+	function isMarkActiveGroup($group,$mark) {
+
+		global $data;
+
+		$data->clean($group);
+		$data->clean($mark);
+
+		// check the mark is active
+		$sql = "SELECT CASE WHEN EXISTS
+				 (SELECT 0 FROM \"{$this->emaj_schema}\".emaj_mark 
+                   WHERE mark_group = '{$group}' AND mark_name = '{$mark}' AND ";
+		if ($this->getNumEmajVersion() >= 10100){	// version >= 1.1.0
+			$sql .= "NOT mark_is_deleted";
+		}else{
+			$sql .= "mark_state = 'ACTIVE'";
+		}
+		$sql .= ") THEN 1 ELSE 0 END AS is_active";
+
+		return $data->selectField($sql,'is_active');
+	}
+
+	/**
 	 * Determines whether or not a mark name is valid as a mark to rollback to for a group
 	 * Returns 1 if:
 	 *   - the mark name is known and in ACTIVE state and 
@@ -1451,16 +1477,7 @@ class EmajDb {
 		$data->clean($mark);
 
 		// check the mark is active (i.e. not deleted)
-		$sql = "SELECT CASE WHEN EXISTS
-				 (SELECT 0 FROM \"{$this->emaj_schema}\".emaj_mark 
-                   WHERE mark_group = '{$group}' AND mark_name = '{$mark}' AND ";
-		if ($this->getNumEmajVersion() >= 10100){	// version >= 1.1.0
-			$sql .= "NOT mark_is_deleted";
-		}else{
-			$sql .= "mark_state = 'ACTIVE'";
-		}
-		$sql .= ") THEN 1 ELSE 0 END AS result";
-		$result = $data->selectField($sql,'result');
+		$result = $this->isMarkActiveGroup($group,$mark);
 
 		if ($result == 1) {
 			// the mark is active, so now check there is no intermediate protected mark

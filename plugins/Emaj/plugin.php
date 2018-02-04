@@ -1906,13 +1906,6 @@ class Emaj extends Plugin {
 					echo "  $(\"#rangeend option:first-child\").attr(\"selected\", true);\n";
 				}
 
-				// JQuery to deactivate the sim rlbk checkbox if the selected rangeend is not the first one (current situation) 
-				if (isset($_REQUEST['rangeend'])) {
-					echo "  $(\"#rangeend option[value={$_REQUEST['rangeend']}]\").attr(\"selected\", true);\n";
-				} else {
-					echo "  $(\"#rangeend option:first-child\").attr(\"selected\", true);\n";
-				}
-
 				// JQuery script to avoid rangestart > rangeend
 					// After document loaded
 				echo "  $(document).ready(function() {\n";
@@ -1937,6 +1930,7 @@ class Emaj extends Plugin {
 				echo "      $(\"#simrlbk\").prop('disabled',true);\n";
 				echo "    }\n";
 				echo "  });\n";
+
 					// At each list box change
 				echo "  $(\"#rangestart\").change(function () {\n";
 				echo "    mark = $(\"#rangestart option:selected\").val();\n";
@@ -1968,7 +1962,12 @@ class Emaj extends Plugin {
 				// If rollback simulation is requested, compute the duration estimate
 				$rlbkDuration = '';
 				if ($simRlbk) {
-					$rlbkDuration=$this->emajdb->estimateRollbackGroup($_REQUEST['group'],$_REQUEST['rangestart']);
+					// check the start mark is not deleted
+					if ($this->emajdb->isMarkActiveGroup($_REQUEST['group'],$_REQUEST['rangestart']) == 1) {
+						$rlbkDuration = $this->emajdb->estimateRollbackGroup($_REQUEST['group'],$_REQUEST['rangestart']);
+					} else {
+						$rlbkDuration = "-";
+					}
 				}
 
 				// If global stat display is requested
@@ -2023,7 +2022,13 @@ class Emaj extends Plugin {
 		
 		// Display rollback duration estimate if requested
 		if ($rlbkDuration != '') {
-			echo "<p>",sprintf($this->lang['emajsimrlbkduration'], $misc->printVal($_REQUEST['group']), $misc->printVal($_REQUEST['rangestart']),$rlbkDuration),"</p>\n";
+			if ($rlbkDuration == '-') {
+				// the start mark cannot be used for a rollback
+				echo "<p>{$this->lang['emajnosimrlbkduration']}</p>";
+			} else {
+				// dispay the duration estimate
+				echo "<p>",sprintf($this->lang['emajsimrlbkduration'], $misc->printVal($_REQUEST['group']), $misc->printVal($_REQUEST['rangestart']),$rlbkDuration),"</p>\n";
+			}
 		}
 
 		if ($summary->fields['nb_tables'] > 0) {
@@ -2187,7 +2192,13 @@ class Emaj extends Plugin {
 
 		// Display rollback duration estimate if requested
 		if ($rlbkDuration != '') {
-			echo "<p>",sprintf($this->lang['emajsimrlbkduration'], $misc->printVal($_REQUEST['group']), $misc->printVal($_REQUEST['rangestart']),$rlbkDuration),"</p>\n";
+			if ($rlbkDuration == '-') {
+				// the start mark cannot be used for a rollback
+				echo "<p>{$this->lang['emajnosimrlbkduration']}</p>";
+			} else {
+				// dispay the duration estimate
+				echo "<p>",sprintf($this->lang['emajsimrlbkduration'], $misc->printVal($_REQUEST['group']), $misc->printVal($_REQUEST['rangestart']),$rlbkDuration),"</p>\n";
+			}
 		}
 
 		if ($summary->fields['nb_tables'] > 0) {

@@ -158,6 +158,7 @@
 	$plugin_lang['emajlogstatcurrentsituation'] = 'la situation courante';
 	$plugin_lang['emajlogstatmark'] = 'la marque "%s"';
 	$plugin_lang['emajlogstattittle'] = 'Mises à jour de table entre la marque "%s" et %s pour le groupe de tables "%s"';
+	$plugin_lang['emajnosimrlbkduration'] = 'La première marque ne peut pas être utilisée pour un rollback. Aucune durée de rollback ne peut être estimée.';
 	$plugin_lang['emajsimrlbkduration'] = 'Le rollback du groupe de tables "%s" à la marque "%s" durerait environ %s.';
 	$plugin_lang['emajstatfirstmark'] = 'Première marque';
 	$plugin_lang['emajstatfirstmarkdatetime'] = 'Date-Heure première marque';

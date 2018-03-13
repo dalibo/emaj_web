@@ -251,7 +251,7 @@ class EmajDb {
 					list($v1,$v2) = explode(".",$this->emaj_version);
 					$this->emaj_version_num = 10000 * $v1 + 100 * $v2;
 				}
-				if ($this->emaj_version == '<NEXT_VERSION>'){
+				if ($this->emaj_version == '<NEXT_VERSION>' || $this->emaj_version == '<devel>'){
 					$this->emaj_version = htmlspecialchars($this->emaj_version);
 					$this->emaj_version_num = 999999;
 				}

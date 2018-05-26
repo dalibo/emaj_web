@@ -1014,16 +1014,18 @@ class EmajDb {
 			if ($data->selectField($sql,'nb_errors') > 0 ) { return 0; }
 		}
 
-		// check no table or sequence would be added to the group
-		$sql = "SELECT count(*) as nb_errors FROM (
-					SELECT grpdef_schema, grpdef_tblseq FROM \"{$this->emaj_schema}\".emaj_group_def WHERE grpdef_group = '{$group}'
-						EXCEPT
-					SELECT rel_schema, rel_tblseq FROM \"{$this->emaj_schema}\".emaj_relation WHERE rel_group = '{$group}'";
-		if ($this->getNumEmajVersion() >= 20200){	// version >= 2.2.0
-			$sql .= " AND upper_inf(rel_time_range) ";
+		// if the emaj version is prior 2.3.0, check no table or sequence would be added to the group
+		if ($this->getNumEmajVersion() < 20300){	// version < 2.3.0
+			$sql = "SELECT count(*) as nb_errors FROM (
+						SELECT grpdef_schema, grpdef_tblseq FROM \"{$this->emaj_schema}\".emaj_group_def WHERE grpdef_group = '{$group}'
+							EXCEPT
+						SELECT rel_schema, rel_tblseq FROM \"{$this->emaj_schema}\".emaj_relation WHERE rel_group = '{$group}'";
+			if ($this->getNumEmajVersion() >= 20200){	// version >= 2.2.0
+				$sql .= " AND upper_inf(rel_time_range) ";
+			}
+			$sql .= ") as t";
+			if ($data->selectField($sql,'nb_errors') > 0 ) { return 0; }
 		}
-		$sql .= ") as t";
-		if ($data->selectField($sql,'nb_errors') > 0 ) { return 0; }
 
 		// check that no table or sequence would be repaired for the group
 		$sql = "SELECT count(*) as nb_errors FROM \"{$this->emaj_schema}\"._verify_groups(ARRAY['{$group}'], false)";
@@ -1537,7 +1539,7 @@ class EmajDb {
 				  WHEN altr_step = 'ADD_SEQ' THEN
 					format('{$emajlang['emajalteredaddseq']}', quote_ident(altr_schema), quote_ident(altr_tblseq), quote_literal(altr_group))
                   END AS altr_action, 
-				CASE WHEN altr_step IN ('REMOVE_TBL', 'REMOVE_SEQ', 'REPAIR_TBL',
+				CASE WHEN altr_step IN ('ADD_TBL', 'ADD_SEQ', 'REMOVE_TBL', 'REMOVE_SEQ', 'ASSIGN_REL', 'REPAIR_TBL', 'REPAIR_SEQ',
 										'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP', 'CHANGE_TBL_LOG_INDEX_TSP', 'CHANGE_REL_PRIORITY')
 					THEN false ELSE true END AS altr_auto_rolled_back
 				  FROM \"{$this->emaj_schema}\".emaj_alter_plan, \"{$this->emaj_schema}\".emaj_time_stamp
@@ -1546,8 +1548,8 @@ class EmajDb {
 					AND altr_time_id >
 						(SELECT mark_time_id FROM \"{$this->emaj_schema}\".emaj_mark WHERE mark_group = '{$firstGroup}' AND mark_name = '{$mark}')
 					AND altr_rlbk_id IS NULL
-					AND altr_step IN ('REMOVE_TBL', 'REMOVE_SEQ', 'REPAIR_TBL', 'REPAIR_SEQ', 'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX',
-									  'CHANGE_TBL_LOG_DATA_TSP', 'CHANGE_TBL_LOG_INDEX_TSP', 'ASSIGN_REL', 'CHANGE_REL_PRIORITY', 'ADD_TBL', 'ADD_SEQ')
+					AND altr_step IN ('ADD_TBL', 'ADD_SEQ', 'REMOVE_TBL', 'REMOVE_SEQ', 'ASSIGN_REL', 'REPAIR_TBL', 'REPAIR_SEQ',
+									  'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP', 'CHANGE_TBL_LOG_INDEX_TSP', 'CHANGE_REL_PRIORITY')
 				  ORDER BY time_tx_timestamp, altr_schema, altr_tblseq, altr_step";
 		return $data->selectSet($sql);
 	}
@@ -1949,87 +1951,100 @@ class EmajDb {
 		$data->clean($firstMark);
 		$data->clean($lastMark);
 
-		if ($lastMark==''){
+		if ($this->getNumEmajVersion() >= 203000){	// version >= 2.3.0
 			$sql = "CREATE TEMP TABLE tmp_stat AS
-					SELECT stat_group, stat_schema, stat_table, ";
-			if ($this->getNumEmajVersion() >= 203000){	// version >= 2.3.0
-				$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
-			}
-            $sql .= "stat_rows, 
-					'select * from ' || ";
-			if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
-				$sql .= "quote_ident(rel_log_schema)";
+					SELECT stat_group, stat_schema, stat_table,
+						   stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
+						   stat_rows, 
+						   'select * from ' || quote_ident(stat_log_schema) || '.' || quote_ident(stat_log_table) ||
+						   ' where emaj_gid > ' || stat_first_mark_gid::text ||
+						   coalesce (' and emaj_gid <= ' || stat_last_mark_gid::text, '') ||
+						   ' order by emaj_gid' as sql_text
+						FROM \"{$this->emaj_schema}\"._log_stat_groups('{\"{$group}\"}',false,'{$firstMark}','{$lastMark}')
+						WHERE stat_rows > 0";
+		} else {									// oldest emaj versions
+			if ($lastMark == ''){
+				$sql = "CREATE TEMP TABLE tmp_stat AS
+						SELECT stat_group, stat_schema, stat_table, ";
+				if ($this->getNumEmajVersion() >= 202030){	// version >= 2.2.3
+					$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
+				}
+				$sql .= "stat_rows, 
+						'select * from ' || ";
+				if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
+					$sql .= "quote_ident(rel_log_schema)";
+				}else{
+					$sql .= "'{$this->emaj_schema}'";
+				}
+				if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
+					$sql .= " || '.' || quote_ident(rel_log_table) || 
+								' where emaj_gid > ' || strttime.time_last_emaj_gid ||
+								' order by emaj_gid' as sql_text
+							FROM \"{$this->emaj_schema}\".emaj_log_stat_group('{$group}','{$firstMark}',NULL), 
+								\"{$this->emaj_schema}\".emaj_mark strtmark, \"{$this->emaj_schema}\".emaj_time_stamp strttime,
+								\"{$this->emaj_schema}\".emaj_relation
+							WHERE stat_rows > 0 
+								AND strtmark.mark_group = '{$group}' 
+								AND strtmark.mark_name = '{$firstMark}' 
+								AND rel_schema = stat_schema AND rel_tblseq = stat_table
+								AND strtmark.mark_time_id = strttime.time_id";
+				}else{
+					$sql .= " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') || 
+								' where emaj_gid > ' || strtmark.mark_global_seq ||
+								' order by emaj_gid' as sql_text
+							FROM \"{$this->emaj_schema}\".emaj_log_stat_group('{$group}','{$firstMark}',NULL), 
+								\"{$this->emaj_schema}\".emaj_mark strtmark, 
+								\"{$this->emaj_schema}\".emaj_relation
+							WHERE stat_rows > 0 
+								AND strtmark.mark_group = '{$group}' 
+								AND strtmark.mark_name = '{$firstMark}' 
+								AND rel_schema = stat_schema AND rel_tblseq = stat_table";
+				}
 			}else{
-				$sql .= "'{$this->emaj_schema}'";
-			}
-			if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-				$sql .= " || '.' || quote_ident(rel_log_table) || 
-							' where emaj_gid > ' || strttime.time_last_emaj_gid ||
-							' order by emaj_gid' as sql_text
-						FROM \"{$this->emaj_schema}\".emaj_log_stat_group('{$group}','{$firstMark}',NULL), 
-							\"{$this->emaj_schema}\".emaj_mark strtmark, \"{$this->emaj_schema}\".emaj_time_stamp strttime,
-							\"{$this->emaj_schema}\".emaj_relation
-						WHERE stat_rows > 0 
-							AND strtmark.mark_group = '{$group}' 
-							AND strtmark.mark_name = '{$firstMark}' 
-							AND rel_schema = stat_schema AND rel_tblseq = stat_table
-							AND strtmark.mark_time_id = strttime.time_id";
-			}else{
-				$sql .= " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') || 
-							' where emaj_gid > ' || strtmark.mark_global_seq ||
-							' order by emaj_gid' as sql_text
-						FROM \"{$this->emaj_schema}\".emaj_log_stat_group('{$group}','{$firstMark}',NULL), 
-							\"{$this->emaj_schema}\".emaj_mark strtmark, 
-							\"{$this->emaj_schema}\".emaj_relation
-						WHERE stat_rows > 0 
-							AND strtmark.mark_group = '{$group}' 
-							AND strtmark.mark_name = '{$firstMark}' 
-							AND rel_schema = stat_schema AND rel_tblseq = stat_table";
-			}
-		}else{
-			$sql = "CREATE TEMP TABLE tmp_stat AS
-					SELECT stat_group, stat_schema, stat_table, ";
-			if ($this->getNumEmajVersion() >= 203000){	// version >= 2.3.0
-				$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
-			}
-            $sql .= "stat_rows, 
-					'select * from ' || ";
-			if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
-				$sql .= "quote_ident(rel_log_schema)";
-			}else{
-				$sql .= "'{$this->emaj_schema}'";
-			}
-			if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-				$sql .= " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') ||
-							' where emaj_gid > ' || strttime.time_last_emaj_gid ||
-							' and emaj_gid <= ' || stoptime.time_last_emaj_gid ||
-							' order by emaj_gid' as sql_text
-						FROM \"{$this->emaj_schema}\".emaj_log_stat_group('{$group}','{$firstMark}','{$lastMark}'), 
-							\"{$this->emaj_schema}\".emaj_mark strtmark, \"{$this->emaj_schema}\".emaj_time_stamp strttime, 
-							\"{$this->emaj_schema}\".emaj_mark stopmark, \"{$this->emaj_schema}\".emaj_time_stamp stoptime, 
-							\"{$this->emaj_schema}\".emaj_relation
-						WHERE stat_rows > 0 
-							AND strtmark.mark_group = '{$group}' 
-							AND strtmark.mark_name = '{$firstMark}' 
-							AND stopmark.mark_group = '{$group}' 
-							AND stopmark.mark_name = '{$lastMark}' 
-							AND rel_schema = stat_schema AND rel_tblseq = stat_table
-							AND strtmark.mark_time_id = strttime.time_id
-							AND stopmark.mark_time_id = stoptime.time_id";
-			}else{
-				$sql .= " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') ||
-							' where emaj_gid > ' || strtmark.mark_global_seq ||
-							' and emaj_gid <= ' || stopmark.mark_global_seq ||
-							' order by emaj_gid' as sql_text
-						FROM \"{$this->emaj_schema}\".emaj_log_stat_group('{$group}','{$firstMark}','{$lastMark}'), 
-							\"{$this->emaj_schema}\".emaj_mark strtmark , \"{$this->emaj_schema}\".emaj_mark stopmark, 
-							\"{$this->emaj_schema}\".emaj_relation
-						WHERE stat_rows > 0 
-							AND strtmark.mark_group = '{$group}' 
-							AND strtmark.mark_name = '{$firstMark}' 
-							AND stopmark.mark_group = '{$group}' 
-							AND stopmark.mark_name = '{$lastMark}' 
-							AND rel_schema = stat_schema AND rel_tblseq = stat_table";
+				$sql = "CREATE TEMP TABLE tmp_stat AS
+						SELECT stat_group, stat_schema, stat_table, ";
+				if ($this->getNumEmajVersion() >= 202030){	// version >= 2.2.3
+					$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
+				}
+				$sql .= "stat_rows, 
+						'select * from ' || ";
+				if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
+					$sql .= "quote_ident(rel_log_schema)";
+				}else{
+					$sql .= "'{$this->emaj_schema}'";
+				}
+				if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
+					$sql .= " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') ||
+								' where emaj_gid > ' || strttime.time_last_emaj_gid ||
+								' and emaj_gid <= ' || stoptime.time_last_emaj_gid ||
+								' order by emaj_gid' as sql_text
+							FROM \"{$this->emaj_schema}\".emaj_log_stat_group('{$group}','{$firstMark}','{$lastMark}'), 
+								\"{$this->emaj_schema}\".emaj_mark strtmark, \"{$this->emaj_schema}\".emaj_time_stamp strttime, 
+								\"{$this->emaj_schema}\".emaj_mark stopmark, \"{$this->emaj_schema}\".emaj_time_stamp stoptime, 
+								\"{$this->emaj_schema}\".emaj_relation
+							WHERE stat_rows > 0 
+								AND strtmark.mark_group = '{$group}' 
+								AND strtmark.mark_name = '{$firstMark}' 
+								AND stopmark.mark_group = '{$group}' 
+								AND stopmark.mark_name = '{$lastMark}' 
+								AND rel_schema = stat_schema AND rel_tblseq = stat_table
+								AND strtmark.mark_time_id = strttime.time_id
+								AND stopmark.mark_time_id = stoptime.time_id";
+				}else{
+					$sql .= " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') ||
+								' where emaj_gid > ' || strtmark.mark_global_seq ||
+								' and emaj_gid <= ' || stopmark.mark_global_seq ||
+								' order by emaj_gid' as sql_text
+							FROM \"{$this->emaj_schema}\".emaj_log_stat_group('{$group}','{$firstMark}','{$lastMark}'), 
+								\"{$this->emaj_schema}\".emaj_mark strtmark , \"{$this->emaj_schema}\".emaj_mark stopmark, 
+								\"{$this->emaj_schema}\".emaj_relation
+							WHERE stat_rows > 0 
+								AND strtmark.mark_group = '{$group}' 
+								AND strtmark.mark_name = '{$firstMark}' 
+								AND stopmark.mark_group = '{$group}' 
+								AND stopmark.mark_name = '{$lastMark}' 
+								AND rel_schema = stat_schema AND rel_tblseq = stat_table";
+				}
 			}
 		}
 
@@ -2051,7 +2066,7 @@ class EmajDb {
 	function getLogStatSummary() {
 		global $data;
 
-		$sql = "SELECT coalesce(sum(stat_rows),0) AS sum_rows, count(distinct stat_table) AS nb_tables 
+		$sql = "SELECT coalesce(sum(stat_rows),0) AS sum_rows, count(distinct stat_schema || '.' || stat_table) AS nb_tables 
 				FROM tmp_stat";
 
 		return $data->selectSet($sql);
@@ -2069,90 +2084,104 @@ class EmajDb {
 		$data->clean($firstMark);
 		$data->clean($lastMark);
 
-		if ($lastMark==''){
+		if ($this->getNumEmajVersion() >= 203000){	// version >= 2.3.0
 			$sql = "CREATE TEMP TABLE tmp_stat AS
-					SELECT stat_group, stat_schema, stat_table, ";
-			if ($this->getNumEmajVersion() >= 203000){	// version >= 2.3.0
-				$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
-			}
-            $sql .= "stat_role, stat_verb, stat_rows, 
-					'select * from ' || ";
-			if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
-				$sql .= "quote_ident(rel_log_schema)";
+					SELECT stat_group, stat_schema, stat_table,
+						   stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
+						   stat_role, stat_verb, stat_rows,
+						   'select * from ' || quote_ident(stat_log_schema) || '.' || quote_ident(stat_log_table) ||
+						   ' where emaj_gid > ' || stat_first_mark_gid::text ||
+						   coalesce (' and emaj_gid <= ' || stat_last_mark_gid::text, '') ||
+						   ' and emaj_verb = ' || quote_literal(substring(stat_verb from 1 for 3)) ||
+						   ' order by emaj_gid' as sql_text
+						FROM \"{$this->emaj_schema}\"._detailed_log_stat_groups('{\"{$group}\"}',false,'{$firstMark}','{$lastMark}')
+						WHERE stat_rows > 0";
+		} else {									// oldest emaj versions
+			if ($lastMark==''){
+				$sql = "CREATE TEMP TABLE tmp_stat AS
+						SELECT stat_group, stat_schema, stat_table, ";
+				if ($this->getNumEmajVersion() >= 202030){	// version >= 2.2.3
+					$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
+				}
+				$sql .= "stat_role, stat_verb, stat_rows, 
+						'select * from ' || ";
+				if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
+					$sql .= "quote_ident(rel_log_schema)";
+				}else{
+					$sql .= "'{$this->emaj_schema}'";
+				}
+				if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
+					$sql .=    " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') || 
+								' where emaj_gid > ' || strttime.time_last_emaj_gid ||
+								' and emaj_verb = ' || quote_literal(substring(stat_verb from 1 for 3)) || 
+								' order by emaj_gid' as sql_text
+							FROM \"{$this->emaj_schema}\".emaj_detailed_log_stat_group('{$group}','{$firstMark}',NULL), 
+								\"{$this->emaj_schema}\".emaj_mark strtmark, \"{$this->emaj_schema}\".emaj_time_stamp strttime, 
+								\"{$this->emaj_schema}\".emaj_relation
+							WHERE stat_rows > 0 
+								AND strtmark.mark_group = '{$group}' 
+								AND strtmark.mark_name = '{$firstMark}' 
+								AND rel_schema = stat_schema AND rel_tblseq = stat_table
+								AND strtmark.mark_time_id = strttime.time_id";
+				}else{
+					$sql .=    " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') || 
+								' where emaj_gid > ' || strtmark.mark_global_seq ||
+								' and emaj_verb = ' || quote_literal(substring(stat_verb from 1 for 3)) || 
+								' order by emaj_gid' as sql_text
+							FROM \"{$this->emaj_schema}\".emaj_detailed_log_stat_group('{$group}','{$firstMark}',NULL), 
+								\"{$this->emaj_schema}\".emaj_mark strtmark, \"{$this->emaj_schema}\".emaj_relation
+							WHERE stat_rows > 0 
+								AND strtmark.mark_group = '{$group}' 
+								AND strtmark.mark_name = '{$firstMark}' 
+								AND rel_schema = stat_schema AND rel_tblseq = stat_table";
+				}
 			}else{
-				$sql .= "'{$this->emaj_schema}'";
-			}
-			if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-				$sql .=    " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') || 
-							' where emaj_gid > ' || strttime.time_last_emaj_gid ||
-							' and emaj_verb = ' || quote_literal(substring(stat_verb from 1 for 3)) || 
-							' order by emaj_gid' as sql_text
-						FROM \"{$this->emaj_schema}\".emaj_detailed_log_stat_group('{$group}','{$firstMark}',NULL), 
-							\"{$this->emaj_schema}\".emaj_mark strtmark, \"{$this->emaj_schema}\".emaj_time_stamp strttime, 
-							\"{$this->emaj_schema}\".emaj_relation
-						WHERE stat_rows > 0 
-							AND strtmark.mark_group = '{$group}' 
-							AND strtmark.mark_name = '{$firstMark}' 
-							AND rel_schema = stat_schema AND rel_tblseq = stat_table
-							AND strtmark.mark_time_id = strttime.time_id";
-			}else{
-				$sql .=    " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') || 
-							' where emaj_gid > ' || strtmark.mark_global_seq ||
-							' and emaj_verb = ' || quote_literal(substring(stat_verb from 1 for 3)) || 
-							' order by emaj_gid' as sql_text
-						FROM \"{$this->emaj_schema}\".emaj_detailed_log_stat_group('{$group}','{$firstMark}',NULL), 
-							\"{$this->emaj_schema}\".emaj_mark strtmark, \"{$this->emaj_schema}\".emaj_relation
-						WHERE stat_rows > 0 
-							AND strtmark.mark_group = '{$group}' 
-							AND strtmark.mark_name = '{$firstMark}' 
-							AND rel_schema = stat_schema AND rel_tblseq = stat_table";
-			}
-		}else{
-			$sql = "CREATE TEMP TABLE tmp_stat AS
-					SELECT stat_group, stat_schema, stat_table, ";
-			if ($this->getNumEmajVersion() >= 203000){	// version >= 2.3.0
-				$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
-			}
-            $sql .= "stat_role, stat_verb, stat_rows, 
-					'select * from ' || ";
-			if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
-				$sql .= "quote_ident(rel_log_schema)";
-			}else{
-				$sql .= "'{$this->emaj_schema}'";
-			}
-			if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-				$sql .=    " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') || 
-							' where emaj_gid > ' || strttime.time_last_emaj_gid ||
-							' and emaj_gid <= ' || stoptime.time_last_emaj_gid ||
-							' and emaj_verb = ' || quote_literal(substring(stat_verb from 1 for 3)) || 
-							' order by emaj_gid' as sql_text
-						FROM \"{$this->emaj_schema}\".emaj_detailed_log_stat_group('{$group}','{$firstMark}','{$lastMark}'), 
-							\"{$this->emaj_schema}\".emaj_mark strtmark, \"{$this->emaj_schema}\".emaj_time_stamp strttime, 
-							\"{$this->emaj_schema}\".emaj_mark stopmark, \"{$this->emaj_schema}\".emaj_time_stamp stoptime, 
-							\"{$this->emaj_schema}\".emaj_relation
-						WHERE stat_rows > 0 
-							AND strtmark.mark_group = '{$group}' 
-							AND strtmark.mark_name = '{$firstMark}' 
-							AND stopmark.mark_group = '{$group}' 
-							AND stopmark.mark_name = '{$lastMark}' 
-							AND rel_schema = stat_schema AND rel_tblseq = stat_table
-							AND strtmark.mark_time_id = strttime.time_id
-							AND stopmark.mark_time_id = stoptime.time_id";
-			}else{
-				$sql .=    " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') || 
-							' where emaj_gid > ' || strtmark.mark_global_seq ||
-							' and emaj_gid <= ' || stopmark.mark_global_seq ||
-							' and emaj_verb = ' || quote_literal(substring(stat_verb from 1 for 3)) || 
-							' order by emaj_gid' as sql_text
-						FROM \"{$this->emaj_schema}\".emaj_detailed_log_stat_group('{$group}','{$firstMark}','{$lastMark}'), 
-							\"{$this->emaj_schema}\".emaj_mark strtmark , \"{$this->emaj_schema}\".emaj_mark stopmark, 
-							\"{$this->emaj_schema}\".emaj_relation
-						WHERE stat_rows > 0 
-							AND strtmark.mark_group = '{$group}' 
-							AND strtmark.mark_name = '{$firstMark}' 
-							AND stopmark.mark_group = '{$group}' 
-							AND stopmark.mark_name = '{$lastMark}' 
-							AND rel_schema = stat_schema AND rel_tblseq = stat_table";
+				$sql = "CREATE TEMP TABLE tmp_stat AS
+						SELECT stat_group, stat_schema, stat_table, ";
+				if ($this->getNumEmajVersion() >= 202030){	// version >= 2.2.3
+					$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
+				}
+				$sql .= "stat_role, stat_verb, stat_rows, 
+						'select * from ' || ";
+				if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
+					$sql .= "quote_ident(rel_log_schema)";
+				}else{
+					$sql .= "'{$this->emaj_schema}'";
+				}
+				if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
+					$sql .=    " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') || 
+								' where emaj_gid > ' || strttime.time_last_emaj_gid ||
+								' and emaj_gid <= ' || stoptime.time_last_emaj_gid ||
+								' and emaj_verb = ' || quote_literal(substring(stat_verb from 1 for 3)) || 
+								' order by emaj_gid' as sql_text
+							FROM \"{$this->emaj_schema}\".emaj_detailed_log_stat_group('{$group}','{$firstMark}','{$lastMark}'), 
+								\"{$this->emaj_schema}\".emaj_mark strtmark, \"{$this->emaj_schema}\".emaj_time_stamp strttime, 
+								\"{$this->emaj_schema}\".emaj_mark stopmark, \"{$this->emaj_schema}\".emaj_time_stamp stoptime, 
+								\"{$this->emaj_schema}\".emaj_relation
+							WHERE stat_rows > 0 
+								AND strtmark.mark_group = '{$group}' 
+								AND strtmark.mark_name = '{$firstMark}' 
+								AND stopmark.mark_group = '{$group}' 
+								AND stopmark.mark_name = '{$lastMark}' 
+								AND rel_schema = stat_schema AND rel_tblseq = stat_table
+								AND strtmark.mark_time_id = strttime.time_id
+								AND stopmark.mark_time_id = stoptime.time_id";
+				}else{
+					$sql .=    " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') || 
+								' where emaj_gid > ' || strtmark.mark_global_seq ||
+								' and emaj_gid <= ' || stopmark.mark_global_seq ||
+								' and emaj_verb = ' || quote_literal(substring(stat_verb from 1 for 3)) || 
+								' order by emaj_gid' as sql_text
+							FROM \"{$this->emaj_schema}\".emaj_detailed_log_stat_group('{$group}','{$firstMark}','{$lastMark}'), 
+								\"{$this->emaj_schema}\".emaj_mark strtmark , \"{$this->emaj_schema}\".emaj_mark stopmark, 
+								\"{$this->emaj_schema}\".emaj_relation
+							WHERE stat_rows > 0 
+								AND strtmark.mark_group = '{$group}' 
+								AND strtmark.mark_name = '{$firstMark}' 
+								AND stopmark.mark_group = '{$group}' 
+								AND stopmark.mark_name = '{$lastMark}' 
+								AND rel_schema = stat_schema AND rel_tblseq = stat_table";
+				}
 			}
 		}
 		$data->execute($sql);

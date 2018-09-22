@@ -74,6 +74,12 @@
 	$conf['servers'][7]['sslmode'] = 'allow';
 	$conf['servers'][7]['defaultdb'] = 'postgres';
 
+	$conf['servers'][8]['desc'] = 'Pg 11';
+	$conf['servers'][8]['host'] = 'localhost';
+	$conf['servers'][8]['port'] = 5411;
+	$conf['servers'][8]['sslmode'] = 'allow';
+	$conf['servers'][8]['defaultdb'] = 'postgres';
+
 	/* Groups definition */
 	/* Groups allow administrators to logicaly group servers together under
 	 * group nodes in the left browser tree

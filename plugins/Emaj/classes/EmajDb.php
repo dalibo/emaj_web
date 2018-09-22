@@ -1530,8 +1530,6 @@ class EmajDb {
 					format('{$emajlang['emajalteredchangetbllogdatatsp']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
 				  WHEN altr_step = 'CHANGE_TBL_LOG_INDEX_TSP' THEN
 					format('{$emajlang['emajalteredchangetbllogindextsp']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
-				  WHEN altr_step = 'ASSIGN_REL' THEN
-					format('{$emajlang['emajalteredremovetbl']}', quote_ident(altr_schema), quote_ident(altr_tblseq), quote_literal(altr_group), quote_literal(altr_new_group))
 				  WHEN altr_step = 'CHANGE_REL_PRIORITY' THEN
 					format('{$emajlang['emajalteredchangerelpriority']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
 				  WHEN altr_step = 'ADD_TBL' THEN
@@ -1539,8 +1537,9 @@ class EmajDb {
 				  WHEN altr_step = 'ADD_SEQ' THEN
 					format('{$emajlang['emajalteredaddseq']}', quote_ident(altr_schema), quote_ident(altr_tblseq), quote_literal(altr_group))
                   END AS altr_action, 
-				CASE WHEN altr_step IN ('ADD_TBL', 'ADD_SEQ', 'REMOVE_TBL', 'REMOVE_SEQ', 'ASSIGN_REL', 'REPAIR_TBL', 'REPAIR_SEQ',
-										'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP', 'CHANGE_TBL_LOG_INDEX_TSP', 'CHANGE_REL_PRIORITY')
+				CASE WHEN altr_step IN ('ADD_TBL', 'ADD_SEQ', 'REMOVE_TBL', 'REMOVE_SEQ', 'REPAIR_TBL', 'REPAIR_SEQ',
+										'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP',
+										'CHANGE_TBL_LOG_INDEX_TSP', 'CHANGE_REL_PRIORITY')
 					THEN false ELSE true END AS altr_auto_rolled_back
 				  FROM \"{$this->emaj_schema}\".emaj_alter_plan, \"{$this->emaj_schema}\".emaj_time_stamp
 				  WHERE time_id = altr_time_id
@@ -1548,8 +1547,9 @@ class EmajDb {
 					AND altr_time_id >
 						(SELECT mark_time_id FROM \"{$this->emaj_schema}\".emaj_mark WHERE mark_group = '{$firstGroup}' AND mark_name = '{$mark}')
 					AND altr_rlbk_id IS NULL
-					AND altr_step IN ('ADD_TBL', 'ADD_SEQ', 'REMOVE_TBL', 'REMOVE_SEQ', 'ASSIGN_REL', 'REPAIR_TBL', 'REPAIR_SEQ',
-									  'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP', 'CHANGE_TBL_LOG_INDEX_TSP', 'CHANGE_REL_PRIORITY')
+					AND altr_step IN ('ADD_TBL', 'ADD_SEQ', 'REMOVE_TBL', 'REMOVE_SEQ', 'REPAIR_TBL', 'REPAIR_SEQ',
+									  'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP',
+									  'CHANGE_TBL_LOG_INDEX_TSP', 'CHANGE_REL_PRIORITY')
 				  ORDER BY time_tx_timestamp, altr_schema, altr_tblseq, altr_step";
 		return $data->selectSet($sql);
 	}

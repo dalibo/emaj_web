@@ -219,10 +219,12 @@
 	// Group protect
 	$plugin_lang['emajcantprotectgroup'] = 'La protection du groupe de tables "%s" est impossible. Le groupe est arrêté.';
 	$plugin_lang['emajprotectgroupok'] = 'Le groupe de tables "%s" est maintenant protégé contre les rollbacks.';
+	$plugin_lang['emajprotectgrouperr'] = 'Erreur lors de la protection du groupe de tables "%s" !';
 
 	// Group unprotect
 	$plugin_lang['emajcantunprotectgroup'] = 'La déprotection du groupe de tables "%s" est impossible. Le groupe est arrêté.';
 	$plugin_lang['emajunprotectgroupok'] = 'Le groupe de tables "%s" est maintenant déprotégé.';
+	$plugin_lang['emajunprotectgrouperr'] = 'Erreur lors de la deprotection du groupe de tables "%s" !';
 
 	// Group start
 	$plugin_lang['emajstartagroup'] = 'E-Maj : Démarrer un groupe de tables';
@@ -275,10 +277,12 @@
 	// Protect mark
 	$plugin_lang['emajcantprotectmarkgroup'] = 'La protection d\'une marque pour le groupe de tables "%s" est impossible. Le groupe est arrêté.';
 	$plugin_lang['emajprotectmarkgroupok'] = 'La marque "%s" du groupe de tables "%s" est maintenant protégé contre les rollbacks.';
+	$plugin_lang['emajprotectmarkgrouperr'] = 'Erreur lors de la protection de la marque "%s" du groupe de tables "%s" !';
 
 	// Unprotect mark
 	$plugin_lang['emajcantunprotectmarkgroup'] = 'La déprotection d\'une marque pour le groupe de tables "%s" est impossible. Le groupe est arrêté.';
 	$plugin_lang['emajunprotectmarkgroupok'] = 'La marque "%s" du groupe de tables "%s" est maintenant déprotégé.';
+	$plugin_lang['emajunprotectmarkgrouperr'] = 'Erreur lors de la déprotection de la marque "%s" du groupe de tables "%s" !';
 
 	// Comment mark
 	$plugin_lang['emajcommentamark'] = 'E-Maj : Enregistrer un commentaire pour une marque';

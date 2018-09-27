@@ -556,7 +556,7 @@ class EmajDb {
 							 ELSE 'ACTIVE' END as mark_state, 
 						coalesce(mark_log_rows_before_next,
 						(SELECT SUM(stat_rows) 
-							FROM \"{$this->emaj_schema}\".emaj_log_stat_group(emaj_mark.mark_group,emaj_mark.mark_name,NULL)))
+							FROM \"{$this->emaj_schema}\".emaj_log_stat_group(emaj_mark.mark_group,emaj_mark.mark_name,NULL)),0)
 						 AS mark_logrows, 
 						 0 AS mark_cumlogrows
 					FROM \"{$this->emaj_schema}\".emaj_mark, \"{$this->emaj_schema}\".emaj_time_stamp 
@@ -969,7 +969,7 @@ class EmajDb {
 			$sql = "SELECT \"{$this->emaj_schema}\".emaj_create_group('{$group}',false) AS nbtblseq";
 		}			
 
-		return $data->selectField($sql,'nbtblseq');
+		return $data->execute($sql);
 	}
 
 	/**
@@ -980,7 +980,7 @@ class EmajDb {
 
 		$sql = "SELECT \"{$this->emaj_schema}\".emaj_drop_group('{$group}') AS nbtblseq";
 
-		return $data->selectField($sql,'nbtblseq');
+		return $data->execute($sql);
 	}
 
 	/**
@@ -1046,7 +1046,7 @@ class EmajDb {
 		} else {
 			$sql = "SELECT \"{$this->emaj_schema}\".emaj_alter_group('{$group}', '{$mark}') AS nbtblseq";
 		}
-		return $data->selectField($sql,'nbtblseq');
+		return $data->execute($sql);
 	}
 
 	/**
@@ -1064,7 +1064,7 @@ class EmajDb {
 			$sql = "SELECT \"{$this->emaj_schema}\".emaj_alter_groups({$groupsArray}, '{$mark}') AS nbtblseq";
 		}
 
-		return $data->selectField($sql,'nbtblseq');
+		return $data->execute($sql);
 	}
 
 	/**
@@ -1168,7 +1168,7 @@ class EmajDb {
 			$sql = "SELECT \"{$this->emaj_schema}\".emaj_start_group('{$group}','{$mark}',false) AS nbtblseq";
 		}
 
-		return $data->selectField($sql,'nbtblseq');
+		return $data->execute($sql);
 	}
 
 	/**
@@ -1187,7 +1187,7 @@ class EmajDb {
 			$sql = "SELECT \"{$this->emaj_schema}\".emaj_start_groups({$groupsArray},'{$mark}',false) AS nbtblseq";
 		}
 
-		return $data->selectField($sql,'nbtblseq');
+		return $data->execute($sql);
 	}
 
 	/**
@@ -1209,7 +1209,7 @@ class EmajDb {
 			}
 		}
 
-		return $data->selectField($sql,'nbtblseq');
+		return $data->execute($sql);
 	}
 
 	/**
@@ -1228,7 +1228,7 @@ class EmajDb {
 			$sql = "SELECT \"{$this->emaj_schema}\".emaj_stop_groups({$groupsArray},'{$mark}') AS nbtblseq";
 		}
 
-		return $data->selectField($sql,'nbtblseq');
+		return $data->execute($sql);
 	}
 
 	/**
@@ -1241,7 +1241,7 @@ class EmajDb {
 
 		$sql = "SELECT \"{$this->emaj_schema}\".emaj_reset_group('{$group}') AS nbtblseq";
 
-		return $data->selectField($sql,'nbtblseq');
+		return $data->execute($sql);
 	}
 
 	/**
@@ -1254,7 +1254,7 @@ class EmajDb {
 
 		$sql = "SELECT \"{$this->emaj_schema}\".emaj_protect_group('{$group}') AS status";
 
-		return $data->selectField($sql,'status');
+		return $data->execute($sql);
 	}
 
 	/**
@@ -1267,7 +1267,7 @@ class EmajDb {
 
 		$sql = "SELECT \"{$this->emaj_schema}\".emaj_unprotect_group('{$group}') AS status";
 
-		return $data->selectField($sql,'status');
+		return $data->execute($sql);
 	}
 
 	/**
@@ -1341,7 +1341,7 @@ class EmajDb {
 
 		$sql = "SELECT \"{$this->emaj_schema}\".emaj_protect_mark_group('{$group}','{$mark}') AS status";
 
-		return $data->selectField($sql,'status');
+		return $data->execute($sql);
 	}
 
 	/**
@@ -1355,7 +1355,7 @@ class EmajDb {
 
 		$sql = "SELECT \"{$this->emaj_schema}\".emaj_unprotect_mark_group('{$group}','{$mark}') AS status";
 
-		return $data->selectField($sql,'status');
+		return $data->execute($sql);
 	}
 
 	/**
@@ -1581,7 +1581,7 @@ class EmajDb {
 			}
 		}
 
-		return $data->selectField($sql,'nbtblseq');
+		return $data->execute($sql);
 	}
 
 	/**
@@ -1812,7 +1812,7 @@ class EmajDb {
 			}
 		}
 
-		return $data->selectField($sql,'nbtblseq');
+		return $data->execute($sql);
 	}
 
 	/**
@@ -1936,7 +1936,7 @@ class EmajDb {
 
 		$sql = "SELECT \"{$this->emaj_schema}\".emaj_consolidate_rollback_group('{$group}','{$mark}') AS nbtblseq";
 
-		return $data->selectField($sql,'nbtblseq');
+		return $data->execute($sql);
 	}
 
 	/**

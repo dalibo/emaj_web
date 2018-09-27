@@ -219,10 +219,12 @@
 	// Group protect
 	$plugin_lang['emajcantprotectgroup'] = 'Protecting the tables group "%s" is not possible. The group is stopped.';
 	$plugin_lang['emajprotectgroupok'] = 'The tables group "%s" is now protected against rollbacks.';
+	$plugin_lang['emajprotectgrouperr'] = 'Error while protecting the tables group "%s"!';
 
 	// Group unprotect
 	$plugin_lang['emajcantunprotectgroup'] = 'Unprotecting the tables group "%s" is not possible. The group is stopped.';
 	$plugin_lang['emajunprotectgroupok'] = 'The tables group "%s" is now unprotected.';
+	$plugin_lang['emajunprotectgrouperr'] = 'Error while unprotecting the tables group "%s"!';
 
 	// Group start
 	$plugin_lang['emajstartagroup'] = 'E-Maj: Start a tables group';
@@ -275,10 +277,12 @@
 	// Protect mark
 	$plugin_lang['emajcantprotectmarkgroup'] = 'Protecting a mark on the tables group "%s" is not possible. The group is stopped.';
 	$plugin_lang['emajprotectmarkgroupok'] = 'The mark "%s" for tables group "%s" is now protected against rollbacks.';
+	$plugin_lang['emajprotectmarkgrouperr'] = 'Error while protecting the mark "%s" for tables group "%s"!';
 
 	// Unprotect mark
 	$plugin_lang['emajcantunprotectmarkgroup'] = 'Unprotecting a mark on the tables group "%s" is not possible. The group is stopped.';
 	$plugin_lang['emajunprotectmarkgroupok'] = 'The mark "%s" for tables group "%s" is now unprotected.';
+	$plugin_lang['emajunprotectmarkgrouperr'] = 'Error while unprotecting the mark "%s" for tables group "%s"!';
 
 	// Comment mark
 	$plugin_lang['emajcommentamark'] = 'E-Maj: Record a comment for a mark';

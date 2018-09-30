@@ -1951,7 +1951,7 @@ class EmajDb {
 		$data->clean($firstMark);
 		$data->clean($lastMark);
 
-		if ($this->getNumEmajVersion() >= 203000){	// version >= 2.3.0
+		if ($this->getNumEmajVersion() >= 20300){	// version >= 2.3.0
 			$sql = "CREATE TEMP TABLE tmp_stat AS
 					SELECT stat_group, stat_schema, stat_table,
 						   stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
@@ -1966,7 +1966,7 @@ class EmajDb {
 			if ($lastMark == ''){
 				$sql = "CREATE TEMP TABLE tmp_stat AS
 						SELECT stat_group, stat_schema, stat_table, ";
-				if ($this->getNumEmajVersion() >= 202030){	// version >= 2.2.3
+				if ($this->getNumEmajVersion() >= 20203){	// version >= 2.2.3
 					$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
 				}
 				$sql .= "stat_rows, 
@@ -2003,7 +2003,7 @@ class EmajDb {
 			}else{
 				$sql = "CREATE TEMP TABLE tmp_stat AS
 						SELECT stat_group, stat_schema, stat_table, ";
-				if ($this->getNumEmajVersion() >= 202030){	// version >= 2.2.3
+				if ($this->getNumEmajVersion() >= 20203){	// version >= 2.2.3
 					$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
 				}
 				$sql .= "stat_rows, 
@@ -2051,7 +2051,7 @@ class EmajDb {
 		$data->execute($sql);
 
 		$sql = "SELECT stat_group, stat_schema, stat_table, ";
-		if ($this->getNumEmajVersion() >= 203000){	// version >= 2.3.0
+		if ($this->getNumEmajVersion() >= 20300){	// version >= 2.3.0
 			$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
 		}
         $sql .= "stat_rows, sql_text FROM tmp_stat
@@ -2084,7 +2084,7 @@ class EmajDb {
 		$data->clean($firstMark);
 		$data->clean($lastMark);
 
-		if ($this->getNumEmajVersion() >= 203000){	// version >= 2.3.0
+		if ($this->getNumEmajVersion() >= 20300){	// version >= 2.3.0
 			$sql = "CREATE TEMP TABLE tmp_stat AS
 					SELECT stat_group, stat_schema, stat_table,
 						   stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
@@ -2100,7 +2100,7 @@ class EmajDb {
 			if ($lastMark==''){
 				$sql = "CREATE TEMP TABLE tmp_stat AS
 						SELECT stat_group, stat_schema, stat_table, ";
-				if ($this->getNumEmajVersion() >= 202030){	// version >= 2.2.3
+				if ($this->getNumEmajVersion() >= 20203){	// version >= 2.2.3
 					$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
 				}
 				$sql .= "stat_role, stat_verb, stat_rows, 
@@ -2138,7 +2138,7 @@ class EmajDb {
 			}else{
 				$sql = "CREATE TEMP TABLE tmp_stat AS
 						SELECT stat_group, stat_schema, stat_table, ";
-				if ($this->getNumEmajVersion() >= 202030){	// version >= 2.2.3
+				if ($this->getNumEmajVersion() >= 20203){	// version >= 2.2.3
 					$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
 				}
 				$sql .= "stat_role, stat_verb, stat_rows, 
@@ -2187,7 +2187,7 @@ class EmajDb {
 		$data->execute($sql);
 
 		$sql = "SELECT stat_group, stat_schema, stat_table, ";
-		if ($this->getNumEmajVersion() >= 203000){	// version >= 2.3.0
+		if ($this->getNumEmajVersion() >= 20300){	// version >= 2.3.0
 			$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
 		}
         $sql .= "stat_role, stat_verb, stat_rows, sql_text FROM tmp_stat

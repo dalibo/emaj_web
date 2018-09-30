@@ -2967,7 +2967,7 @@ class Emaj extends Plugin {
 	function create_group() {
 		global $misc, $lang;
 
-		$this->printPageHeader();
+		$this->printPageHeader('emaj','emajgroups');
 
 		$misc->printTitle($this->lang['emajcreateagroup']);
 
@@ -3012,7 +3012,10 @@ class Emaj extends Plugin {
 	function drop_group() {
 		global $misc, $lang;
 
-		$this->printPageHeader();
+		if ($_REQUEST['back']=='list')
+			$this->printPageHeader('emaj','emajgroups');
+		else
+			$this->printPageHeader('emajgroup','emajgroupproperties');
 
 		$misc->printTitle($this->lang['emajdropagroup']);
 
@@ -3072,7 +3075,10 @@ class Emaj extends Plugin {
 	function alter_group() {
 		global $misc, $lang;
 
-		$this->printPageHeader();
+		if ($_REQUEST['back']=='list')
+			$this->printPageHeader('emaj','emajgroups');
+		else
+			$this->printPageHeader('emajgroup','emajgroupproperties');
 		$misc->printTitle($this->lang['emajalteragroup']);
 
 		$isGroupLogging = $this->emajdb->isGroupLogging($_REQUEST['group']);
@@ -3172,7 +3178,7 @@ class Emaj extends Plugin {
 			return;
 		}
 
-		$this->printPageHeader();
+		$this->printPageHeader('emaj','emajgroups');
 		$misc->printTitle($this->lang['emajaltergroups']);
 
 		// build the groups list
@@ -3260,7 +3266,10 @@ class Emaj extends Plugin {
 	function comment_group() {
 		global $misc, $lang;
 
-		$this->printPageHeader();
+		if ($_REQUEST['back']=='list')
+			$this->printPageHeader('emaj','emajgroups');
+		else
+			$this->printPageHeader('emajgroup','emajgroupproperties');
 
 		$misc->printTitle($this->lang['emajcommentagroup']);
 
@@ -3324,7 +3333,10 @@ class Emaj extends Plugin {
 
 		if (!isset($_POST['mark'])) $_POST['mark'] = '';
 
-		$this->printPageHeader();
+		if ($_REQUEST['back']=='list')
+			$this->printPageHeader('emaj','emajgroups');
+		else
+			$this->printPageHeader('emajgroup','emajgroupproperties');
 
 		$misc->printTitle($this->lang['emajstartagroup']);
 
@@ -3422,7 +3434,7 @@ class Emaj extends Plugin {
 		}
 		if (!isset($_POST['mark'])) $_POST['mark'] = '';
 
-		$this->printPageHeader();
+		$this->printPageHeader('emaj','emajgroups');
 
 		$misc->printTitle($this->lang['emajstartgroups']);
 
@@ -3508,7 +3520,10 @@ class Emaj extends Plugin {
 	function stop_group() {
 		global $misc, $lang;
 
-		$this->printPageHeader();
+		if ($_REQUEST['back']=='list')
+			$this->printPageHeader('emaj','emajgroups');
+		else
+			$this->printPageHeader('emajgroup','emajgroupproperties');
 
 		$misc->printTitle($this->lang['emajstopagroup']);
 
@@ -3587,7 +3602,7 @@ class Emaj extends Plugin {
 			return;
 		}
 
-		$this->printPageHeader();
+		$this->printPageHeader('emaj','emajgroups');
 
 		$misc->printTitle($this->lang['emajstopgroups']);
 
@@ -3652,7 +3667,10 @@ class Emaj extends Plugin {
 	function reset_group() {
 		global $misc, $lang;
 
-		$this->printPageHeader();
+		if ($_REQUEST['back']=='list')
+			$this->printPageHeader('emaj','emajgroups');
+		else
+			$this->printPageHeader('emajgroup','emajgroupproperties');
 
 		$misc->printTitle($this->lang['emajresetagroup']);
 
@@ -3783,10 +3801,12 @@ class Emaj extends Plugin {
 
 		if (!isset($_POST['mark'])) $_POST['mark'] = '';
 
-		$this->printPageHeader();
+		if ($_REQUEST['back']=='list')
+			$this->printPageHeader('emaj','emajgroups');
+		else
+			$this->printPageHeader('emajgroup','emajgroupproperties');
 
 		$misc->printTitle($this->lang['emajsetamark']);
-
 		echo "<p>", sprintf($this->lang['emajconfirmsetmarkgroup'], $misc->printVal($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"plugin.php?plugin={$this->name}&amp;\" method=\"post\">\n";
 		echo "<table>\n";
@@ -3880,7 +3900,7 @@ class Emaj extends Plugin {
 		}
 		if (!isset($_POST['mark'])) $_POST['mark'] = '';
 
-		$this->printPageHeader();
+		$this->printPageHeader('emaj','emajgroups');
 
 		$misc->printTitle($this->lang['emajsetamark']);
 
@@ -4023,7 +4043,7 @@ class Emaj extends Plugin {
 	function comment_mark_group() {
 		global $misc, $lang;
 
-		$this->printPageHeader();
+		$this->printPageHeader('emajgroup','emajgroupproperties');
 
 		$misc->printTitle($this->lang['emajcommentamark']);
 
@@ -4071,7 +4091,10 @@ class Emaj extends Plugin {
 	function rollback_group() {
 		global $misc, $lang;
 
-		$this->printPageHeader();
+		if ($_REQUEST['back']=='list')
+			$this->printPageHeader('emaj','emajgroups');
+		else
+			$this->printPageHeader('emajgroup','emajgroupproperties');
 
 		$misc->printTitle($this->lang['emajrlbkagroup']);
 
@@ -4189,7 +4212,10 @@ class Emaj extends Plugin {
 	
 				$actions = array ();
 	
-				$this->printPageHeader();
+				if ($_REQUEST['back']=='list')
+					$this->printPageHeader('emaj','emajgroups');
+				else
+					$this->printPageHeader('emajgroup','emajgroupproperties');
 
 				$misc->printTitle($this->lang['emajrlbkagroup']);
 
@@ -4370,7 +4396,7 @@ class Emaj extends Plugin {
 				$youngestProtectedMarkTimestamp='';
 			}
 		}
-		$this->printPageHeader();
+		$this->printPageHeader('emaj','emajgroups');
 
 		$misc->printTitle($this->lang['emajrlbkgroups']);
 
@@ -4480,7 +4506,7 @@ class Emaj extends Plugin {
 
 				$actions = array ();
 
-				$this->printPageHeader();
+				$this->printPageHeader('emaj','emajgroups');
 
 				$misc->printTitle($this->lang['emajrlbkgroups']);
 
@@ -4609,7 +4635,7 @@ class Emaj extends Plugin {
 	function consolidate_rollback() {
 		global $misc, $lang;
 
-		$this->printPageHeader();
+		$this->printPageHeader('emaj','emajmonitorrlbk');
 
 		$misc->printTitle($this->lang['emajconsolidaterlbk']);
 
@@ -4656,7 +4682,7 @@ class Emaj extends Plugin {
 		if (!isset($_POST['group'])) $_POST['group'] = '';
 		if (!isset($_POST['mark'])) $_POST['mark'] = '';
 
-		$this->printPageHeader();
+		$this->printPageHeader('emajgroup','emajgroupproperties');
 
 		$misc->printTitle($this->lang['emajrenameamark']);
 
@@ -4720,7 +4746,7 @@ class Emaj extends Plugin {
 	function delete_mark() {
 		global $misc, $lang;
 
-		$this->printPageHeader();
+		$this->printPageHeader('emajgroup','emajgroupproperties');
 
 		$misc->printTitle($this->lang['emajdelamark']);
 
@@ -4761,7 +4787,7 @@ class Emaj extends Plugin {
 	function delete_before_mark() {
 		global $misc, $lang;
 
-		$this->printPageHeader();
+		$this->printPageHeader('emajgroup','emajgroupproperties');
 
 		$misc->printTitle($this->lang['emajdelmarks']);
 

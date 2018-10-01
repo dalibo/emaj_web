@@ -80,15 +80,15 @@ class Emaj extends Plugin {
 				break;
 			  break;
 			case 'emaj':
-				$tabs['emajenvir'] = array (
-					'title' => $this->lang['emajenvir'],
+				$tabs['emajgroups'] = array (
+					'title' => $this->lang['emajgroups'],
 					'url' => 'plugin.php',
 					'urlvars' => array(
 						'plugin' => $this->name,
 						'subject' => 'emaj',
-						'action' => 'show_emaj_envir'
+						'action' => 'show_groups'
 					),
-					'icon' => $this->icon('Emaj')
+					'icon' => $this->icon('EmajGroup')
 				);
 				if ($this->emajdb->isEmaj_Adm()) {
 					$tabs['emajconfiguregroups'] = array (
@@ -102,16 +102,6 @@ class Emaj extends Plugin {
 						'icon' => 'Admin'
 					);
 				}
-				$tabs['emajgroups'] = array (
-					'title' => $this->lang['emajgroups'],
-					'url' => 'plugin.php',
-					'urlvars' => array(
-						'plugin' => $this->name,
-						'subject' => 'emaj',
-						'action' => 'show_groups'
-					),
-					'icon' => $this->icon('EmajGroup')
-				);
 				$tabs['emajmonitorrlbk'] = array (
 					'title' => $this->lang['emajrlbkop'],
 					'url' => 'plugin.php',
@@ -122,6 +112,16 @@ class Emaj extends Plugin {
 					),
 					'hide' => ($this->emajdb->getNumEmajVersion() < 10100),
 					'icon' => $this->icon('EmajRollback')
+				);
+				$tabs['emajenvir'] = array (
+					'title' => $this->lang['emajenvir'],
+					'url' => 'plugin.php',
+					'urlvars' => array(
+						'plugin' => $this->name,
+						'subject' => 'emaj',
+						'action' => 'show_emaj_envir'
+					),
+					'icon' => $this->icon('Emaj')
 				);
 				break;
 			case 'emajgroup':

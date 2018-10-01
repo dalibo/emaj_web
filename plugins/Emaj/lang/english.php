@@ -66,11 +66,11 @@
 	$plugin_lang['emajassigntblseq'] = 'E-Maj: Assign tables / sequences to a tables group';
 	$plugin_lang['emajconfirmassigntblseq'] = 'Assign: %s';
 	$plugin_lang['emajenterpriority'] = 'Processing priority';
-	$plugin_lang['emajpriorityhelp'] = 'Tables and sequences are processed in priority ascending order';
+	$plugin_lang['emajpriorityhelp'] = 'Tables and sequences are processed in priority ascending order, and in names alphabetic order if no priority is defined.';
 	$plugin_lang['emajenterlogschema'] = 'Log schema suffix';
-	$plugin_lang['emajlogschemahelp'] = 'Log schema = \'emaj\' + suffix';
+	$plugin_lang['emajlogschemahelp'] = 'A log schema contains log tables, sequences and functions. The default log schema is \'emaj\'. If a suffix is defined for the table, its objects will be hosted in the schema \'emaj\' + suffix.';
 	$plugin_lang['emajenternameprefix'] = 'E-Maj objects name prefix';
-	$plugin_lang['emajnameprefixhelp'] = 'Default = &lt;schema&gt;_&lt;table&gt; ; must be unique';
+	$plugin_lang['emajnameprefixhelp'] = 'By default, log objects names are prefixed by &lt;schema&gt;_&lt;table&gt;. But another prefix can be defined for the table. It must be unique in the database.';
 	$plugin_lang['emajenterlogdattsp'] = 'Log table tablespace';
 	$plugin_lang['emajenterlogidxtsp'] = 'Log index tablespace';
 	$plugin_lang['emajspecifytblseqtoupdate'] = 'Specify at least one table or sequence to update';

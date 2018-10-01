@@ -726,13 +726,13 @@ class Emaj extends Plugin {
 							headers: { 	0: { sorter: false, filter: false },
 										1: { filter: false },
 										2: { sorter: false, filter: false },
-										9: { sorter: false, filter: false } },
+										10: { sorter: false, filter: false } },
 							emptyTo: 'none',
 							widgets: [\"zebra\", \"filter\"],
 							widgetOptions: {
 								zebra : [ \"data1\", \"data2\" ],
 								filter_hideFilters : true,
-								filter_functions : {  4: true, 6: true, 7: true, 8: true, 11: true, 12: true },
+								filter_functions : {  3:true, 4: true, 6: true, 7: true, 8: true, 9: true, 13: true, 14: true, 15: true },
 								stickyHeaders : 'tablesorter-stickyHeader', 
 								},
 							}
@@ -2537,7 +2537,7 @@ class Emaj extends Plugin {
 		// Display the input fields depending on the context
 		echo "<table>\n";
 		echo "<tr><th class=\"data left required\" rowspan=2>{$this->lang['emajgroup']}</th>";
-		echo "<td class=\"data1\"><input id=\"groupInput\" type=\"text\" name=\"group\" value=\"\"/><span style=\"font-size: smaller; vertical-align: super;\"> (1)</span></td></tr>\n";
+		echo "<td class=\"data1\"><input id=\"groupInput\" type=\"text\" name=\"group\" value=\"\"/> *</td></tr>\n";
 		echo "<tr><td><select id=\"groupList\" name=\"group1\"><option value=\"new_group\">{$this->lang['emajnewgroup']}</option>\n";
 		if ($knownGroups->recordCount() > 0) {
 			foreach($knownGroups as $r)
@@ -2546,12 +2546,12 @@ class Emaj extends Plugin {
 		echo "</select></td></tr>\n";
 		// mask-pnum class is used by jquery.filter to only accept digits
 		echo "<tr><th class=\"data left\">{$this->lang['emajenterpriority']}</th>";
-		echo "<td class=\"data1\"><input type=\"text\" name=\"priority\" size=9 maxlength=9 style=\"text-align: right;\" value=\"\" class=\"mask-pnum\"/> <span style=\"font-size: smaller; vertical-align: super;\"> (2)</span></td></tr>\n";
+		echo "<td class=\"data1\"><input type=\"text\" name=\"priority\" size=9 maxlength=9 style=\"text-align: right;\" value=\"\" class=\"mask-pnum\"/> <img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajpriorityhelp']}\"/></td></tr>\n";
 
 		if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
 			if ($nbTbl >= 1) {
 				echo "<tr><th class=\"data left\" rowspan=2>{$this->lang['emajenterlogschema']}</th>";
-				echo "<td class=\"data1\"><input type=\"text\" id=\"suffixInput\" name=\"suffix\" value=\"\"/><span style=\"font-size: smaller; vertical-align: super;\"> (3)</span></td></tr>\n";
+				echo "<td class=\"data1\"><input type=\"text\" id=\"suffixInput\" name=\"suffix\" value=\"\"/> <img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajlogschemahelp']}\"/></td></tr>\n";
 				echo "<tr><td><select id=\"suffixList\" name=\"suffix1\">\n";
 				echo "\t\t<option value=\"new_log_schema_suffix\">{$this->lang['emajnewsuffix']}</option>\n";
 				if ($knownSuffix->recordCount() > 0) {
@@ -2570,7 +2570,7 @@ class Emaj extends Plugin {
 			if ($nbTbl == 1) {
 				// the names prefix is accessible only for a single table assignment
 				echo "<tr><th class=\"data left\">{$this->lang['emajenternameprefix']}</th>";
-				echo "<td class=\"data1\"><input type=\"text\" id=\"nameprefixInput\" name=\"nameprefix\" value=\"\"/><span style=\"font-size: smaller; vertical-align: super;\"> (4)</span></td></tr>\n";
+				echo "<td class=\"data1\"><input type=\"text\" id=\"nameprefixInput\" name=\"nameprefix\" value=\"\"/> <img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajnameprefixhelp']}\"/></td></tr>\n";
 			} else {
 				echo "<p><input type=\"hidden\" name=\"nameprefix\" value=\"\" />\n";
 			}
@@ -2609,17 +2609,7 @@ class Emaj extends Plugin {
 		};
 		echo "</table>\n";
 
-		echo "<p><span style=\"font-size: smaller;\">(1) </span>{$this->lang['emajrequired']}<br><span style=\"font-size: smaller;\">(2) </span> {$this->lang['emajpriorityhelp']}";
-		if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
-			if ($nbTbl >= 1) {
-				echo "<br><span style=\"font-size: smaller;\">(3) </span>{$this->lang['emajlogschemahelp']}";
-			}
-		}
-		if ($this->emajdb->getNumEmajVersion() >= 10200) {			// version >= 1.2.0
-			if ($nbTbl == 1) {
-				echo "<br><span style=\"font-size: smaller;\">(4) </span>{$this->lang['emajnameprefixhelp']}";
-			}
-		}
+		echo "<br>* = {$this->lang['emajrequired']}";
 		echo"</p>\n";
 		echo $misc->form;
 		echo "<p><input type=\"submit\" name=\"assigntblseq\" value=\"{$this->lang['emajassign']}\" id=\"ok\" disabled=\"disabled\" />\n";
@@ -2734,7 +2724,7 @@ class Emaj extends Plugin {
 		// Display the input fields depending on the context
 		echo "<table>\n";
 		echo "<tr><th class=\"data left required\" rowspan=2>{$this->lang['emajgroup']}</th>";
-		echo "<td class=\"data1\"><input id=\"groupInput\" type=\"text\" name=\"groupnew\" value=\"{$_REQUEST['group']}\"/><span style=\"font-size: smaller; vertical-align: super;\"> (1)</span></td></tr>\n";
+		echo "<td class=\"data1\"><input id=\"groupInput\" type=\"text\" name=\"groupnew\" value=\"{$_REQUEST['group']}\"/> *</td></tr>\n";
 		echo "<tr><td><select id=\"groupList\" name=\"group1\"><option value=\"new_group\">{$this->lang['emajnewgroup']}</option>\n";
 		if ($knownGroups->recordCount() > 0) {
 			foreach($knownGroups as $r)
@@ -2743,12 +2733,12 @@ class Emaj extends Plugin {
 		echo "</select></td></tr>\n";
 		// mask-pnum class is used by jquery.filter to only accept digits
 		echo "<tr><th class=\"data left\">{$this->lang['emajenterpriority']}</th>";
-		echo "<td class=\"data1\"><input type=\"text\" name=\"priority\" size=9 maxlength=9 style=\"text-align: right;\" value=\"{$_REQUEST['priority']}\" class=\"mask-pnum\"/> <span style=\"font-size: smaller; vertical-align: super;\"> (2)</span></td></tr>\n";
+		echo "<td class=\"data1\"><input type=\"text\" name=\"priority\" size=9 maxlength=9 style=\"text-align: right;\" value=\"{$_REQUEST['priority']}\" class=\"mask-pnum\"/> <img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajpriorityhelp']}\"/></td></tr>\n";
 
 		if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
 			if ($_REQUEST['type'] == 'r+') {
 				echo "<tr><th class=\"data left\" rowspan=2>{$this->lang['emajenterlogschema']}</th>";
-				echo "<td class=\"data1\"><input type=\"text\" id=\"suffixInput\" name=\"suffix\" value=\"{$_REQUEST['logschemasuffix']}\"/><span style=\"font-size: smaller; vertical-align: super;\"> (3)</span></td></tr>\n";
+				echo "<td class=\"data1\"><input type=\"text\" id=\"suffixInput\" name=\"suffix\" value=\"{$_REQUEST['logschemasuffix']}\"/> <img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajlogschemahelp']}\"/></td></tr>\n";
 				echo "<tr><td><select id=\"suffixList\" name=\"suffix1\">\n";
 				echo "\t\t<option value=\"new_log_schema_suffix\">{$this->lang['emajnewsuffix']}</option>\n";
 				if ($knownSuffix->recordCount() > 0) {
@@ -2767,7 +2757,7 @@ class Emaj extends Plugin {
 			if ($_REQUEST['type'] == 'r+') {
 				// the names prefix is accessible only for a single table assignment
 				echo "<tr><th class=\"data left\">{$this->lang['emajenternameprefix']}</th>";
-				echo "<td class=\"data1\"><input type=\"text\" id=\"nameprefixInput\" name=\"nameprefix\" value=\"{$_REQUEST['emajnamesprefix']}\"/><span style=\"font-size: smaller; vertical-align: super;\"> (4)</span></td></tr>\n";
+				echo "<td class=\"data1\"><input type=\"text\" id=\"nameprefixInput\" name=\"nameprefix\" value=\"{$_REQUEST['emajnamesprefix']}\"/> <img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajnameprefixhelp']}\"/></td></tr>\n";
 			} else {
 				echo "<p><input type=\"hidden\" name=\"nameprefix\" value=\"\" />\n";
 			}
@@ -2806,18 +2796,8 @@ class Emaj extends Plugin {
 		};
 		echo "</table>\n";
 
+		echo "<br>* = {$this->lang['emajrequired']}";
 		echo $misc->form;
-		echo "<p><span style=\"font-size: smaller;\">(1) </span>{$this->lang['emajrequired']}<br><span style=\"font-size: smaller;\">(2) </span> {$this->lang['emajpriorityhelp']}";
-		if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
-			if ($_REQUEST['type'] == 'r+') {
-				echo "<br><span style=\"font-size: smaller;\">(3) </span>{$this->lang['emajlogschemahelp']}";
-			}
-		}
-		if ($this->emajdb->getNumEmajVersion() >= 10200) {			// version >= 1.2.0
-			if ($_REQUEST['type'] == 'r+') {
-				echo "<br><span style=\"font-size: smaller;\">(4) </span>{$this->lang['emajnameprefixhelp']}";
-			}
-		}
 		echo"</p>\n";
 		echo "<p><input type=\"submit\" name=\"updatetblseq\" value=\"{$lang['strupdate']}\" id=\"ok\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";

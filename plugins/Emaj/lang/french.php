@@ -66,11 +66,11 @@
 	$plugin_lang['emajassigntblseq'] = 'E-Maj : Affecter des tables / séquences à un groupe de tables';
 	$plugin_lang['emajconfirmassigntblseq'] = 'Affecter : %s';
 	$plugin_lang['emajenterpriority'] = 'Priorité de traitement';
-	$plugin_lang['emajpriorityhelp'] = 'Les tables et séquences sont traitées par ordre croissant de priorité';
+	$plugin_lang['emajpriorityhelp'] = 'Les tables et séquences sont traitées par ordre croissant de priorité, et par ordre alphabétique de nom si aucune priorité n\'est définie.';
 	$plugin_lang['emajenterlogschema'] = 'Suffixe du schéma de log';
-	$plugin_lang['emajlogschemahelp'] = 'Schema de log = \'emaj\' + suffixe ; défaut = \'emaj\'';
+	$plugin_lang['emajlogschemahelp'] = 'Un schéma de log contient des tables, séquences et fonctions de log. Le schéma de log par défaut est \'emaj\'. Si un suffixe est défini pour la table, ses objets iront dans le schéma \'emaj\' + suffixe.';
 	$plugin_lang['emajenternameprefix'] = 'Préfixe des noms d\'objets E-Maj';
-	$plugin_lang['emajnameprefixhelp'] = 'Défaut = &lt;schéma&gt;_&lt;table&gt; ; doit être unique';
+	$plugin_lang['emajnameprefixhelp'] = 'Par défaut les noms des objets de log sont préfixés par &lt;schéma&gt;_&lt;table&gt;. Mais on peut définir un autre préfixe pour la table. Il doit être unique dans la base de données.';
 	$plugin_lang['emajenterlogdattsp'] = 'Tablespace pour la table de log';
 	$plugin_lang['emajenterlogidxtsp'] = 'Tablespace pour l\'index de la table de log';
 	$plugin_lang['emajspecifytblseqtoupdate'] = 'Spécifier au moins une table ou séquence à modifier';
@@ -80,7 +80,7 @@
 	$plugin_lang['emajtblseqnogroup'] = 'Erreur, " %s.%s " n\'est actuellement affecté à aucun groupe de tables.';
 	$plugin_lang['emajremovetblseq'] = 'E-Maj : Retirer des tables / séquences d\'un groupe de tables';
 	$plugin_lang['emajconfirmremovetblseq'] = 'Etes-vous sûr de vouloir retirer " %s.%s " du groupe de tables "%s" ?';
-	$plugin_lang['emajmodifygroupok'] = 'La modification est enregistrée. Elle sera effective après (re)création ou modification des groupes de tables concernés.';
+	$plugin_lang['emajmodifygroupok'] = 'Le changement de configuration est enregistré. Il sera effectif après (re)création ou modification des groupes de tables concernés.';
 	$plugin_lang['emajmodifygrouperr'] = 'Erreur lors du changement de composition des groupes de tables.';
 
 	// List Groups

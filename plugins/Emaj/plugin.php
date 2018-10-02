@@ -1538,61 +1538,80 @@ class Emaj extends Plugin {
 				echo "<p>{$lang['strcomment']} : ",$comment,"</p>\n";
 			}
 
-		// display the link corresponding to the available functions for the group
-			echo "<ul class=\"navlink\">";
+		// display the buttons corresponding to the available functions for the group, depending on its state
 
-			// start_group
-			if ($this->emajdb->isEmaj_Adm() && $groupState == 'IDLE') {
-				echo "  <li><a href=\"plugin.php?plugin={$this->name}&amp;&action=start_group&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\">{$lang['strstart']}</a></li>\n";
-			}
-
-			// stop_group
-			if ($this->emajdb->isEmaj_Adm() && $groupState == 'LOGGING') {
-				echo "  <li><a href=\"plugin.php?plugin={$this->name}&amp;&action=stop_group&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\">{$lang['strstop']}</a></li>\n";
-			}
-
-			// set_mark_group
-			if ($this->emajdb->isEmaj_Adm() && $groupState == 'LOGGING') {
-				echo "  <li><a href=\"plugin.php?plugin={$this->name}&amp;&action=set_mark_group&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\">{$this->lang['emajsetmark']}</a></li>\n";
-			}
-
-			// reset_group
-			if ($this->emajdb->isEmaj_Adm() && $groupState == 'IDLE') {
-				echo "  <li><a href=\"plugin.php?plugin={$this->name}&amp;&action=reset_group&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\">{$lang['strreset']}</a></li>\n";
-			}
-
-			// drop_group
-			if ($this->emajdb->isEmaj_Adm() && $groupState == 'IDLE') {
-				echo "  <li><a href=\"plugin.php?plugin={$this->name}&amp;&action=drop_group&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\">{$lang['strdrop']}</a></li>\n";
-			}
-
-			// alter_group
-			if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
-				if ($this->emajdb->isEmaj_Adm() && ($groupState == 'IDLE' || $this->emajdb->getNumEmajVersion() >= 20100)) {
-					echo "  <li><a href=\"plugin.php?plugin={$this->name}&amp;&action=alter_group&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\">{$lang['stralter']}</a></li>\n";
-				}
-			}
-
-			// protect_group
-			if ($this->emajdb->getNumEmajVersion() >= 10300) {			// version >= 1.3.0
-				if ($this->emajdb->isEmaj_Adm() && $groupState == 'LOGGING' && $groupType == "ROLLBACKABLE") {
-					echo "  <li><a href=\"plugin.php?plugin={$this->name}&amp;&action=protect_group&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\">{$this->lang['emajprotect']}</a></li>\n";
-				}
-			}
-
-			// unprotect_group
-			if ($this->emajdb->getNumEmajVersion() >= 10300) {			// version >= 1.3.0
-				if ($this->emajdb->isEmaj_Adm() && $groupState == 'LOGGING' && $groupType == "ROLLBACKABLE-PROTECTED") {
-					echo "  <li><a href=\"plugin.php?plugin={$this->name}&amp;&action=unprotect_group&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\">{$this->lang['emajunprotect']}</a></li>\n";
-				}
-			}
-
-			// comment_group
 			if ($this->emajdb->isEmaj_Adm()) {
-				echo "  <li><a href=\"plugin.php?plugin={$this->name}&amp;&action=comment_group&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\">{$this->lang['emajsetcomment']}</a></li>\n";
-			}
+				echo "<p>\n";
 
-			echo "</ul>\n";
+				// start_group
+				if ($groupState == 'IDLE') {
+					echo "<form id=\"start_group_form\" action=\"plugin.php?plugin={$this->name}&amp;action=start_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline;\">\n";
+					echo "  <input type=\"submit\" name=\"startgroup\" value=\"{$lang['strstart']}\" />";
+					echo "</form>\n";
+				}
+
+				// set_mark_group
+				if ($groupState == 'LOGGING') {
+					echo "<form id=\"set_mark_group_form\" action=\"plugin.php?plugin={$this->name}&amp;action=set_mark_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline;\">\n";
+					echo "  <input type=\"submit\" name=\"setmarkgroup\" value=\"{$this->lang['emajsetmark']}\" />";
+					echo "</form>\n";
+				}
+
+				// reset_group
+				if ($groupState == 'IDLE') {
+					echo "<form id=\"reset_group_form\" action=\"plugin.php?plugin={$this->name}&amp;action=reset_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
+					echo "  <input type=\"submit\" name=\"resetgroup\" value=\"{$lang['strreset']}\" />";
+					echo "</form>\n";
+				}
+
+				// protect_group
+				if ($this->emajdb->getNumEmajVersion() >= 10300) {			// version >= 1.3.0
+					if ($groupState == 'LOGGING' && $groupType == "ROLLBACKABLE") {
+						echo "<form id=\"protect_group_form\" action=\"plugin.php?plugin={$this->name}&amp;action=protect_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
+						echo "  <input type=\"submit\" name=\"protectgroup\" value=\"{$this->lang['emajprotect']}\" />";
+						echo "</form>\n";
+					}
+				}
+
+				// unprotect_group
+				if ($this->emajdb->getNumEmajVersion() >= 10300) {			// version >= 1.3.0
+					if ($groupState == 'LOGGING' && $groupType == "ROLLBACKABLE-PROTECTED") {
+						echo "<form id=\"unprotect_group_form\" action=\"plugin.php?plugin={$this->name}&amp;action=unprotect_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
+						echo "  <input type=\"submit\" name=\"unprotectgroup\" value=\"{$this->lang['emajunprotect']}\" />";
+						echo "</form>\n";
+					}
+				}
+
+				// stop_group
+				if ($groupState == 'LOGGING') {
+					echo "<form id=\"stop_group_form\" action=\"plugin.php?plugin={$this->name}&amp;action=stop_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
+					echo "  <input type=\"submit\" name=\"stopgroup\" value=\"{$lang['strstop']}\" />";
+					echo "</form>\n";
+				}
+
+				// comment_group
+				echo "<form id=\"comment_group_form\" action=\"plugin.php?plugin={$this->name}&amp;action=comment_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:30px;\">\n";
+				echo "  <input type=\"submit\" name=\"commentgroup\" value=\"{$this->lang['emajsetcomment']}\" />";
+				echo "</form>\n";
+
+				// alter_group
+				if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
+					if (($groupState == 'IDLE' || $this->emajdb->getNumEmajVersion() >= 20100)) {
+						echo "<form id=\"alter_group_form\" action=\"plugin.php?plugin={$this->name}&amp;action=alter_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
+						echo "  <input type=\"submit\" name=\"altergroup\" value=\"{$lang['stralter']}\" />";
+						echo "</form>\n";
+					}
+				}
+
+				// drop_group
+				if ($groupState == 'IDLE') {
+					echo "<form id=\"drop_group_form\" action=\"plugin.php?plugin={$this->name}&amp;action=drop_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
+					echo "  <input type=\"submit\" name=\"dropgroup\" value=\"{$lang['strdrop']}\" />";
+					echo "</form>\n";
+				}
+
+				echo "</p>\n";
+			}
 
 		// Show marks of the groups
 

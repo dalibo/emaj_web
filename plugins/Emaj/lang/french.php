@@ -33,8 +33,8 @@
 	$plugin_lang['emajto'] = 'A';
 
 	// E-Maj tabs
-	$plugin_lang['emajenvir'] = 'Envir. E-Maj';
-	$plugin_lang['emajgroupsconf'] = 'Config. groupes';
+	$plugin_lang['emajenvir'] = 'Environnement E-Maj';
+	$plugin_lang['emajgroupsconf'] = 'Configuration groupes';
 	$plugin_lang['emajrlbkop'] = 'Rollbacks';
 	$plugin_lang['emajlogstat'] = 'Statistiques log';
 

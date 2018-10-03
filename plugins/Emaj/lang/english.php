@@ -33,9 +33,9 @@
 	$plugin_lang['emajto'] = 'To';
 
 	// E-Maj tabs
-	$plugin_lang['emajenvir'] = 'E-Maj env.';
-	$plugin_lang['emajgroupsconf'] = 'Groups conf.';
-	$plugin_lang['emajrlbkop'] = 'Rollback op.';
+	$plugin_lang['emajenvir'] = 'E-Maj environment';
+	$plugin_lang['emajgroupsconf'] = 'Groups configuration';
+	$plugin_lang['emajrlbkop'] = 'Rollback operations';
 	$plugin_lang['emajlogstat'] = 'Log statistics';
 
 	// E-Maj environment

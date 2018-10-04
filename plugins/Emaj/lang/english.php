@@ -80,7 +80,7 @@
 	$plugin_lang['emajtblseqnogroup'] = 'Error, " %s.%s " is not currently assigned to any tables group.';
 	$plugin_lang['emajremovetblseq'] = 'E-Maj: Remove tables / sequences from a tables group';
 	$plugin_lang['emajconfirmremovetblseq'] = 'Are you sure you want to remove " %s.%s " from tables group "%s" ?';
-	$plugin_lang['emajmodifygroupok'] = 'The change is recorded. It will take effect when the concerned tables groups will be (re)created or altered.';
+	$plugin_lang['emajmodifygroupok'] = 'The configuration change is recorded. It will take effect when the concerned tables groups will be (re)created or altered.';
 	$plugin_lang['emajmodifygrouperr'] = 'Error while updating tables groups content.';
 
 	// List Groups
@@ -96,7 +96,9 @@
 	$plugin_lang['emajsetcomment'] = 'Set a comment';
 	$plugin_lang['emajnoidlegroup'] = 'No Emaj tables group is currently in idle state.';
 	$plugin_lang['emajnologginggroup'] = 'No Emaj tables group is currently in logging state.';
+	$plugin_lang['emajnoconfiguredgroup'] = 'No group is currently configured.<br>To create one, go first to the groups configuration tab,<br>or create an empty group and then add tables and sequences into it.';
 	$plugin_lang['emajcreategroup'] = 'Creation of a new tables group';
+	$plugin_lang['emajcreatethegroup'] = 'Create the group';
 	$plugin_lang['emajcreateemptygroup'] = 'Create an empty group';
 
 	// Rollback activity

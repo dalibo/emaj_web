@@ -96,7 +96,9 @@
 	$plugin_lang['emajsetcomment'] = 'Commenter';
 	$plugin_lang['emajnoidlegroup'] = 'Il n\'y a actuellement aucun groupe de tables en état "arrêté".';
 	$plugin_lang['emajnologginggroup'] = 'Il n\'y a actuellement aucun groupe de tables en état "démarré".';
+	$plugin_lang['emajnoconfiguredgroup'] = 'Aucun groupe n\'est configuré.<br>Pour en créer un, allez d\'abord dans l\'onglet de configuration des groupes,<br>ou créez un groupe vide puis ajoutez-y des tables et séquences.';
 	$plugin_lang['emajcreategroup'] = 'Création d\'un nouveau groupe de tables';
+	$plugin_lang['emajcreatethegroup'] = 'Créer le groupe';
 	$plugin_lang['emajcreateemptygroup'] = 'Créer un groupe vide';
 
 	// Rollback activity

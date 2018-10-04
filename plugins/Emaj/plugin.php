@@ -465,291 +465,6 @@ class Emaj extends Plugin {
  *******************************************************************************************************/
 
 	/**
-	 * Show E-Maj environment characteristics
-	 */
-	function show_emaj_envir() {
-		global $misc, $lang;
-
-		$this->printPageHeader('emaj','emajenvir');
-
-		$emajOK = $this->printEmajHeader("action=show_emaj_envir",$this->lang['emajenvironment']);
-
-		if ($emajOK) {
-
-			// General characteristics of the E-Maj environment
-			echo "<h3>{$this->lang['emajcharacteristics']}</h3>\n";
-			echo "<p>{$this->lang['emajversion']}{$this->emajdb->getEmajVersion()}</p>\n";
-			if ($this->emajdb->isEmaj_Adm()) {
-				echo "<p>".sprintf($this->lang['emajdiskspace'],$this->emajdb->getEmajSize())."</p>\n";
-			}
-
-			// E-Maj environment checking
-			echo "<hr/>\n";
-			echo "<h3>{$this->lang['emajchecking']}</h3>\n";
-
-			$messages = $this->emajdb->checkEmaj();
-
-			$columns = array(
-				'message' => array(
-					'title' => $this->lang['emajdiagnostics'],
-					'field' => field('emaj_verify_all'),
-					'type'	=> 'callback',
-					'params'=> array('function' => array($this, 'renderDiagnostic'))
-				),
-			);
-
-			$actions = array ();
-
-//			$misc->printTable($messages, $columns, $actions, 'checks');
-			$this->printTable($messages, $columns, $actions, 'checks');
-		}
-
-		$this->printEmajFooter();
-		$misc->printFooter();
-	}
-
-	/**
-	 * Define groups content
-	 */
-	function configure_groups($msg = '', $errMsg = '') {
-		global $misc, $lang;
-
-		$this->printPageHeader('emaj','emajconfiguregroups');
-
-		if (!isset($_REQUEST['appschema'])) $_REQUEST['appschema'] = '';
-		if (is_array($_REQUEST['appschema'])) $_REQUEST['appschema'] = $_REQUEST['appschema'][0];
-
-		$emajOK = $this->printEmajHeader("action=configure_groups&amp;appschema=".urlencode($_REQUEST['appschema']),$this->lang['emajgroupsconfiguration']);
-
-		if ($emajOK) {
-			$this->printMsg($msg,$errMsg);
-
-		// Schemas list
-			echo "<h3>{$this->lang['emajschemaslist']}</h3>\n";
-
-			$schemas = $this->emajdb->getSchemas();
-
-			$columns = array(
-				'schema' => array(
-					'title' => $lang['strschema'],
-					'field' => field('nspname'),
-					'url'   => "plugin.php?plugin={$this->name}&amp;action=configure_groups&amp;back=define&amp;{$misc->href}&amp;",
-					'vars'  => array('appschema' => 'nspname'),
-				),
-				'owner' => array(
-					'title' => $lang['strowner'],
-					'field' => field('nspowner'),
-					'type'	=> 'callback',
-					'params'=> array('function' => array($this, 'renderSchemaOwner'))
-				),
-				'comment' => array(
-					'title' => $lang['strcomment'],
-					'field' => field('nspcomment'),
-				),
-			);
-
-			$actions = array ();
-
-			echo "<div id=\"schemasTable\">\n";
-//			$misc->printTable($schemas, $columns, $actions, 'defineGroupSchemas', $lang['strnoschemas']);
-			$this->printTable($schemas, $columns, $actions, 'defineGroupSchemas', $lang['strnoschemas']);
-			echo "</div>\n";
-
-			// activate tablesorter script
-			echo "<script type=\"text/javascript\">
-				$(document).ready(function() {
-					$(\"#schemasTable table\").addClass('tablesorter');
-					$(\"#schemasTable table\").tablesorter(
-						{	
-							emptyTo: 'none',
-							widgets: [\"zebra\"],
-							widgetOptions: {
-								zebra : [ \"data1\", \"data2\" ],
-								filter_hideFilters : true,
-								stickyHeaders : 'tablesorter-stickyHeader', 
-							},
-						})
-					});
-				</script>";
-			echo "<hr>\n";
-
-		// Tables and sequences for the selected schema, if any
-			if (isset($_REQUEST['appschema']) && $_REQUEST['appschema'] != '') {
-
-				echo "<h3>".sprintf($this->lang['emajtblseqofschema'],$_REQUEST['appschema'])."</h3>\n";
-				$tblseq = $this->emajdb->getTablesSequences($_REQUEST['appschema']);
-
-				$columns = array(
-					'type' => array(
-						'title' => $lang['strtype'],
-						'field' => field('relkind'),
-						'type'	=> 'callback',
-						'params'=> array('function' => array($this, 'renderTblSeq'),'align' => 'center')
-					),
-					'appschema' => array(
-						'title' => $lang['strschema'],
-						'field' => field('nspname'),
-					),
-					'tblseq' => array(
-						'title' => $lang['strname'],
-						'field' => field('relname'),
-					),
-					'group' => array(
-						'title' => $this->lang['emajgroup'],
-						'field' => field('grpdef_group'),
-					),
-					'priority' => array(
-						'title' => $this->lang['emajpriority'],
-						'field' => field('grpdef_priority'),
-						'params'=> array('align' => 'center'),
-					),
-				);
-				if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
-					$columns = array_merge($columns, array(
-						'logschemasuffix' => array(
-							'title' => $this->lang['emajlogschemasuffix'],
-							'field' => field('grpdef_log_schema_suffix'),
-						),
-					));
-				};
-				if ($this->emajdb->getNumEmajVersion() >= 10200) {			// version >= 1.2.0
-					$columns = array_merge($columns, array(
-						'emajnamesprefix' => array(
-							'title' => $this->lang['emajnamesprefix'],
-							'field' => field('grpdef_emaj_names_prefix'),
-						),
-					));
-				};
-				if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
-					$columns = array_merge($columns, array(
-						'logdattsp' => array(
-							'title' => $this->lang['emajlogdattsp'],
-							'field' => field('grpdef_log_dat_tsp'),
-						),
-						'logidxtsp' => array(
-							'title' => $this->lang['emajlogidxtsp'],
-							'field' => field('grpdef_log_idx_tsp'),
-						),
-					));
-				};
-				$columns = array_merge($columns, array(
-					'actions' => array(
-						'title' => $lang['stractions'],
-					),
-					'owner' => array(
-						'title' => $lang['strowner'],
-						'field' => field('relowner'),
-					),
-					'tablespace' => array(
-						'title' => $lang['strtablespace'],
-						'field' => field('tablespace')
-					),
-					'comment' => array(
-						'title' => $lang['strcomment'],
-						'field' => field('relcomment'),
-					),
-				));
-
-				$urlvars = $misc->getRequestVars();
-
-				$actions = array(
-					'multiactions' => array(
-						'keycols' => array('appschema' => 'nspname', 'tblseq' => 'relname', 'group' => 'grpdef_group', 'type' => 'relkind'),
-						'url' => "plugin.php?plugin={$this->name}&amp;back=define",
-					),
-					'assign' => array(
-						'content' => $this->lang['emajassign'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'plugin.php',
-								'urlvars' => array_merge($urlvars, array (
-									'plugin' => $this->name,
-									'action' => 'assign_tblseq',
-									'appschema' => field('nspname'),
-									'tblseq' => field('relname'),
-									'group' => field('grpdef_group'),
-									'type' => field('relkind'),
-								)))),
-						'multiaction' => 'assign_tblseq',
-					),
-					'update' => array(
-						'content' => $lang['strupdate'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'plugin.php',
-								'urlvars' => array_merge($urlvars, array (
-									'plugin' => $this->name,
-									'action' => 'update_tblseq',
-									'type' => field('relkind'),
-									'appschema' => field('nspname'),
-									'tblseq' => field('relname'),
-									'group' => field('grpdef_group'),
-									'priority' => field('grpdef_priority'),
-									'logschemasuffix' => field('grpdef_log_schema_suffix'),
-									'emajnamesprefix' => field('grpdef_emaj_names_prefix'),
-									'logdattsp' => field('grpdef_log_dat_tsp'),
-									'logidxtsp' => field('grpdef_log_idx_tsp'),
-								)))),
-					),
-					'remove' => array(
-						'content' => $this->lang['emajremove'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'plugin.php',
-								'urlvars' => array_merge($urlvars, array (
-									'plugin' => $this->name,
-									'action' => 'remove_tblseq',
-									'appschema' => field('nspname'),
-									'tblseq' => field('relname'),
-									'group' => field('grpdef_group'),
-								)))),
-						'multiaction' => 'remove_tblseq',
-					),
-				);
-
-				echo "<div id=\"tablesSeqTable\">\n";
-//				$misc->printTable($tblseq, $columns, $actions, 'defineGroupTblseq', $lang['strnotables'],'tablePre');
-				$this->printTable($tblseq, $columns, $actions, 'defineGroupTblseq', $lang['strnotables'],array($this,'tblseqPre'));
-				echo "</div>\n";
-
-				// activate tablesorter script
-				echo "<script type=\"text/javascript\">
-					$(document).ready(function() {
-						$(\"#tablesSeqTable table\").addClass('tablesorter');
-						$(\"#tablesSeqTable table\").tablesorter(
-							{
-							textExtraction: { 
-								1: function(s) {
-									if($(s).find('img').length == 0) return $(s).text();
-									return $(s).find('img').attr('alt');
-								}},
-							headers: { 	0: { sorter: false, filter: false },
-										1: { filter: false },
-										2: { sorter: false, filter: false },
-										10: { sorter: false, filter: false } },
-							emptyTo: 'none',
-							widgets: [\"zebra\", \"filter\"],
-							widgetOptions: {
-								zebra : [ \"data1\", \"data2\" ],
-								filter_hideFilters : true,
-								filter_functions : {  3:true, 4: true, 6: true, 7: true, 8: true, 9: true, 13: true, 14: true, 15: true },
-								stickyHeaders : 'tablesorter-stickyHeader', 
-								},
-							}
-						);
-						// disable filters on all but first actions columns
-						$('#tablesSeqTable input[data-column=\"10\"]').addClass(\"disabled\");
-						$('#tablesSeqTable input[data-column=\"10\"]').attr(\"disabled\",\"\");
-					});
-					</script>";
-			}
-		}
-
-		$this->printEmajFooter();
-		$misc->printFooter();
-	}
-
-	/**
 	 * Show list of created emaj groups
 	 */
 	function show_groups($msg = '', $errMsg = '') {
@@ -1129,41 +844,291 @@ class Emaj extends Plugin {
 			// for emaj_adm role only
 			if ($this->emajdb->isEmaj_Adm()) {
 				$newGroups = $this->emajdb->getNewGroups();
-				echo "<table>\n";
-				if ($newGroups->recordCount() > 0) {
 
-				// form used to create a new configured group
-
-					echo "<form id=\"createGroup_form\" action=\"plugin.php?plugin={$this->name}&amp;action=create_group&amp;back=list&amp;empty=false&amp;{$misc->href}\"";
-					echo " method=\"post\" enctype=\"multipart/form-data\">\n";
-					echo "<tr>\n";
-					echo "<th class=\"data\" style=\"text-align: left\" colspan=\"2\">{$this->lang['emajcreategroup']}</th>\n";
-					echo "</tr>\n";
-					echo "<tr>\n";
-					echo "<td class=\"data1\">\n";
-					echo "\t<select name=\"group\">\n";
-					foreach($newGroups as $r)
-						echo "\t\t<option value=\"",htmlspecialchars($r['group_name']),"\">",htmlspecialchars($r['group_name']),"</option>\n";
-					echo "\t</select>\n";
-					echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
-					echo "</td>\n";
-					echo "</tr>\n";
-					echo "</form>\n";
-				};
-
-				// Button to create a new empty group
-				if ($this->emajdb->getNumEmajVersion() >= 20100) {			// version >= 2.1.0
+				if (($newGroups->recordCount() + $idleGroups->recordCount() + $loggingGroups->recordCount() == 0) 
+					and ($this->emajdb->getNumEmajVersion() >= 20100)) {			// version >= 2.1.0
+				// if there is no group already created or configured, just display an information message and a create empty group button
+					echo "<p>{$this->lang['emajnoconfiguredgroup']}</p>";
 					echo "<form id=\"createEmptyGroup_form\" action=\"plugin.php?plugin={$this->name}&amp;action=create_group&amp;back=list&amp;empty=true&amp;{$misc->href}\"";
 					echo " method=\"post\" enctype=\"multipart/form-data\">\n";
-					echo "<tr>\n";
-					echo "<td class=\"data1\">\n";
 					echo "\t<input type=\"submit\" value=\"{$this->lang['emajcreateemptygroup']}\" />\n";
-					echo "</td>\n";
-					echo "</tr>\n";
 					echo "</form>\n";
-				}
+				} else {
+					echo "<table>\n";
+					echo "<tr>\n";
+					echo "<th class=\"data\" style=\"text-align: left\" colspan=\"3\">{$this->lang['emajcreategroup']}</th>\n";
+					echo "</tr><tr>\n";
+					if ($newGroups->recordCount() > 0) {
 
-				echo "</table>\n";
+					// form used to create a new configured group
+
+						echo "<form id=\"createGroup_form\" action=\"plugin.php?plugin={$this->name}&amp;action=create_group&amp;back=list&amp;empty=false&amp;{$misc->href}\"";
+						echo " method=\"post\" enctype=\"multipart/form-data\">\n";
+						echo "<td class=\"data1\">{$this->lang['emajcreatethegroup']}\n";
+						echo "\t<select name=\"group\">\n";
+						foreach($newGroups as $r)
+							echo "\t\t<option value=\"",htmlspecialchars($r['group_name']),"\">",htmlspecialchars($r['group_name']),"</option>\n";
+						echo "\t</select>\n";
+//						echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
+						echo "<input type=\"submit\" value=\"{$lang['strok']}\" />\n";
+						echo "</td>\n";
+						echo "</form>\n";
+					};
+
+					// Button to create a new empty group
+					if ($this->emajdb->getNumEmajVersion() >= 20100) {			// version >= 2.1.0
+						echo "<form id=\"createEmptyGroup_form\" action=\"plugin.php?plugin={$this->name}&amp;action=create_group&amp;back=list&amp;empty=true&amp;{$misc->href}\"";
+						echo " method=\"post\" enctype=\"multipart/form-data\">\n";
+						echo "<td class=\"data1\"> - </td>\n";
+						echo "<td class=\"data1\">\n";
+						echo "\t<input type=\"submit\" value=\"{$this->lang['emajcreateemptygroup']}\" />\n";
+						echo "</td>\n";
+						echo "</form>\n";
+					}
+
+					echo "</tr></table>\n";
+				}
+			}
+		}
+
+		$this->printEmajFooter();
+		$misc->printFooter();
+	}
+
+	/**
+	 * Define groups content
+	 */
+	function configure_groups($msg = '', $errMsg = '') {
+		global $misc, $lang;
+
+		$this->printPageHeader('emaj','emajconfiguregroups');
+
+		if (!isset($_REQUEST['appschema'])) $_REQUEST['appschema'] = '';
+		if (is_array($_REQUEST['appschema'])) $_REQUEST['appschema'] = $_REQUEST['appschema'][0];
+
+		$emajOK = $this->printEmajHeader("action=configure_groups&amp;appschema=".urlencode($_REQUEST['appschema']),$this->lang['emajgroupsconfiguration']);
+
+		if ($emajOK) {
+			$this->printMsg($msg,$errMsg);
+
+		// Schemas list
+			echo "<h3>{$this->lang['emajschemaslist']}</h3>\n";
+
+			$schemas = $this->emajdb->getSchemas();
+
+			$columns = array(
+				'schema' => array(
+					'title' => $lang['strschema'],
+					'field' => field('nspname'),
+					'url'   => "plugin.php?plugin={$this->name}&amp;action=configure_groups&amp;back=define&amp;{$misc->href}&amp;",
+					'vars'  => array('appschema' => 'nspname'),
+				),
+				'owner' => array(
+					'title' => $lang['strowner'],
+					'field' => field('nspowner'),
+					'type'	=> 'callback',
+					'params'=> array('function' => array($this, 'renderSchemaOwner'))
+				),
+				'comment' => array(
+					'title' => $lang['strcomment'],
+					'field' => field('nspcomment'),
+				),
+			);
+
+			$actions = array ();
+
+			echo "<div id=\"schemasTable\">\n";
+//			$misc->printTable($schemas, $columns, $actions, 'defineGroupSchemas', $lang['strnoschemas']);
+			$this->printTable($schemas, $columns, $actions, 'defineGroupSchemas', $lang['strnoschemas']);
+			echo "</div>\n";
+
+			// activate tablesorter script
+			echo "<script type=\"text/javascript\">
+				$(document).ready(function() {
+					$(\"#schemasTable table\").addClass('tablesorter');
+					$(\"#schemasTable table\").tablesorter(
+						{	
+							emptyTo: 'none',
+							widgets: [\"zebra\"],
+							widgetOptions: {
+								zebra : [ \"data1\", \"data2\" ],
+								filter_hideFilters : true,
+								stickyHeaders : 'tablesorter-stickyHeader', 
+							},
+						})
+					});
+				</script>";
+			echo "<hr>\n";
+
+		// Tables and sequences for the selected schema, if any
+			if (isset($_REQUEST['appschema']) && $_REQUEST['appschema'] != '') {
+
+				echo "<h3>".sprintf($this->lang['emajtblseqofschema'],$_REQUEST['appschema'])."</h3>\n";
+				$tblseq = $this->emajdb->getTablesSequences($_REQUEST['appschema']);
+
+				$columns = array(
+					'type' => array(
+						'title' => $lang['strtype'],
+						'field' => field('relkind'),
+						'type'	=> 'callback',
+						'params'=> array('function' => array($this, 'renderTblSeq'),'align' => 'center')
+					),
+					'appschema' => array(
+						'title' => $lang['strschema'],
+						'field' => field('nspname'),
+					),
+					'tblseq' => array(
+						'title' => $lang['strname'],
+						'field' => field('relname'),
+					),
+					'group' => array(
+						'title' => $this->lang['emajgroup'],
+						'field' => field('grpdef_group'),
+					),
+					'priority' => array(
+						'title' => $this->lang['emajpriority'],
+						'field' => field('grpdef_priority'),
+						'params'=> array('align' => 'center'),
+					),
+				);
+				if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
+					$columns = array_merge($columns, array(
+						'logschemasuffix' => array(
+							'title' => $this->lang['emajlogschemasuffix'],
+							'field' => field('grpdef_log_schema_suffix'),
+						),
+					));
+				};
+				if ($this->emajdb->getNumEmajVersion() >= 10200) {			// version >= 1.2.0
+					$columns = array_merge($columns, array(
+						'emajnamesprefix' => array(
+							'title' => $this->lang['emajnamesprefix'],
+							'field' => field('grpdef_emaj_names_prefix'),
+						),
+					));
+				};
+				if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
+					$columns = array_merge($columns, array(
+						'logdattsp' => array(
+							'title' => $this->lang['emajlogdattsp'],
+							'field' => field('grpdef_log_dat_tsp'),
+						),
+						'logidxtsp' => array(
+							'title' => $this->lang['emajlogidxtsp'],
+							'field' => field('grpdef_log_idx_tsp'),
+						),
+					));
+				};
+				$columns = array_merge($columns, array(
+					'actions' => array(
+						'title' => $lang['stractions'],
+					),
+					'owner' => array(
+						'title' => $lang['strowner'],
+						'field' => field('relowner'),
+					),
+					'tablespace' => array(
+						'title' => $lang['strtablespace'],
+						'field' => field('tablespace')
+					),
+					'comment' => array(
+						'title' => $lang['strcomment'],
+						'field' => field('relcomment'),
+					),
+				));
+
+				$urlvars = $misc->getRequestVars();
+
+				$actions = array(
+					'multiactions' => array(
+						'keycols' => array('appschema' => 'nspname', 'tblseq' => 'relname', 'group' => 'grpdef_group', 'type' => 'relkind'),
+						'url' => "plugin.php?plugin={$this->name}&amp;back=define",
+					),
+					'assign' => array(
+						'content' => $this->lang['emajassign'],
+						'attr' => array (
+							'href' => array (
+								'url' => 'plugin.php',
+								'urlvars' => array_merge($urlvars, array (
+									'plugin' => $this->name,
+									'action' => 'assign_tblseq',
+									'appschema' => field('nspname'),
+									'tblseq' => field('relname'),
+									'group' => field('grpdef_group'),
+									'type' => field('relkind'),
+								)))),
+						'multiaction' => 'assign_tblseq',
+					),
+					'update' => array(
+						'content' => $lang['strupdate'],
+						'attr' => array (
+							'href' => array (
+								'url' => 'plugin.php',
+								'urlvars' => array_merge($urlvars, array (
+									'plugin' => $this->name,
+									'action' => 'update_tblseq',
+									'type' => field('relkind'),
+									'appschema' => field('nspname'),
+									'tblseq' => field('relname'),
+									'group' => field('grpdef_group'),
+									'priority' => field('grpdef_priority'),
+									'logschemasuffix' => field('grpdef_log_schema_suffix'),
+									'emajnamesprefix' => field('grpdef_emaj_names_prefix'),
+									'logdattsp' => field('grpdef_log_dat_tsp'),
+									'logidxtsp' => field('grpdef_log_idx_tsp'),
+								)))),
+					),
+					'remove' => array(
+						'content' => $this->lang['emajremove'],
+						'attr' => array (
+							'href' => array (
+								'url' => 'plugin.php',
+								'urlvars' => array_merge($urlvars, array (
+									'plugin' => $this->name,
+									'action' => 'remove_tblseq',
+									'appschema' => field('nspname'),
+									'tblseq' => field('relname'),
+									'group' => field('grpdef_group'),
+								)))),
+						'multiaction' => 'remove_tblseq',
+					),
+				);
+
+				echo "<div id=\"tablesSeqTable\">\n";
+//				$misc->printTable($tblseq, $columns, $actions, 'defineGroupTblseq', $lang['strnotables'],'tablePre');
+				$this->printTable($tblseq, $columns, $actions, 'defineGroupTblseq', $lang['strnotables'],array($this,'tblseqPre'));
+				echo "</div>\n";
+
+				// activate tablesorter script
+				echo "<script type=\"text/javascript\">
+					$(document).ready(function() {
+						$(\"#tablesSeqTable table\").addClass('tablesorter');
+						$(\"#tablesSeqTable table\").tablesorter(
+							{
+							textExtraction: { 
+								1: function(s) {
+									if($(s).find('img').length == 0) return $(s).text();
+									return $(s).find('img').attr('alt');
+								}},
+							headers: { 	0: { sorter: false, filter: false },
+										1: { filter: false },
+										2: { sorter: false, filter: false },
+										10: { sorter: false, filter: false } },
+							emptyTo: 'none',
+							widgets: [\"zebra\", \"filter\"],
+							widgetOptions: {
+								zebra : [ \"data1\", \"data2\" ],
+								filter_hideFilters : true,
+								filter_functions : {  3:true, 4: true, 6: true, 7: true, 8: true, 9: true, 13: true, 14: true, 15: true },
+								stickyHeaders : 'tablesorter-stickyHeader', 
+								},
+							}
+						);
+						// disable filters on all but first actions columns
+						$('#tablesSeqTable input[data-column=\"10\"]').addClass(\"disabled\");
+						$('#tablesSeqTable input[data-column=\"10\"]').attr(\"disabled\",\"\");
+					});
+					</script>";
 			}
 		}
 
@@ -1463,6 +1428,50 @@ class Emaj extends Plugin {
 				$inProgressRlbks = $this->emajdb->getInProgressRlbk();
 				$this->printTable($consolidableRlbks, $columnsConsRlbk, $actions, 'consolidableRlbk', $this->lang['emajnorlbk']);
 			}
+		}
+
+		$this->printEmajFooter();
+		$misc->printFooter();
+	}
+
+	/**
+	 * Show E-Maj environment characteristics
+	 */
+	function show_emaj_envir() {
+		global $misc, $lang;
+
+		$this->printPageHeader('emaj','emajenvir');
+
+		$emajOK = $this->printEmajHeader("action=show_emaj_envir",$this->lang['emajenvironment']);
+
+		if ($emajOK) {
+
+			// General characteristics of the E-Maj environment
+			echo "<h3>{$this->lang['emajcharacteristics']}</h3>\n";
+			echo "<p>{$this->lang['emajversion']}{$this->emajdb->getEmajVersion()}</p>\n";
+			if ($this->emajdb->isEmaj_Adm()) {
+				echo "<p>".sprintf($this->lang['emajdiskspace'],$this->emajdb->getEmajSize())."</p>\n";
+			}
+
+			// E-Maj environment checking
+			echo "<hr/>\n";
+			echo "<h3>{$this->lang['emajchecking']}</h3>\n";
+
+			$messages = $this->emajdb->checkEmaj();
+
+			$columns = array(
+				'message' => array(
+					'title' => $this->lang['emajdiagnostics'],
+					'field' => field('emaj_verify_all'),
+					'type'	=> 'callback',
+					'params'=> array('function' => array($this, 'renderDiagnostic'))
+				),
+			);
+
+			$actions = array ();
+
+//			$misc->printTable($messages, $columns, $actions, 'checks');
+			$this->printTable($messages, $columns, $actions, 'checks');
 		}
 
 		$this->printEmajFooter();

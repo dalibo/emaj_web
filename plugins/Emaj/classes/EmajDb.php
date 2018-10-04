@@ -958,17 +958,42 @@ class EmajDb {
 	}
 
 	/**
-	 * Creates a group
+	 * Determines whether or not a group name is valid as a new empty group
+	 * Returns 1 if the group name is not already known, 0 otherwise.
 	 */
-	function createGroup($group,$isRollbackable) {
+	function isNewEmptyGroupValid($group) {
+
 		global $data;
 
-		if ($isRollbackable){
-			$sql = "SELECT \"{$this->emaj_schema}\".emaj_create_group('{$group}',true) AS nbtblseq";
-		}else{
-			$sql = "SELECT \"{$this->emaj_schema}\".emaj_create_group('{$group}',false) AS nbtblseq";
-		}			
+		$data->clean($group);
 
+		$sql = "SELECT CASE WHEN 
+				(SELECT COUNT(*) FROM \"{$this->emaj_schema}\".emaj_group WHERE group_name = '{$group}') +
+				(SELECT COUNT(*) FROM \"{$this->emaj_schema}\".emaj_group_def WHERE grpdef_group = '{$group}')
+				= 0 THEN 1 ELSE 0 END AS result";
+
+		return $data->selectField($sql,'result');
+	}
+
+	/**
+	 * Creates a group
+	 */
+	function createGroup($group,$isRollbackable,$isEmpty) {
+		global $data;
+
+		if ($isEmpty) {
+			if ($isRollbackable){
+				$sql = "SELECT \"{$this->emaj_schema}\".emaj_create_group('{$group}',true,true) AS nbtblseq";
+			}else{
+				$sql = "SELECT \"{$this->emaj_schema}\".emaj_create_group('{$group}',false,true) AS nbtblseq";
+			}
+		} else {
+			if ($isRollbackable){
+				$sql = "SELECT \"{$this->emaj_schema}\".emaj_create_group('{$group}',true) AS nbtblseq";
+			}else{
+				$sql = "SELECT \"{$this->emaj_schema}\".emaj_create_group('{$group}',false) AS nbtblseq";
+			}
+		}
 		return $data->execute($sql);
 	}
 

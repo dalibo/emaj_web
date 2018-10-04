@@ -97,6 +97,7 @@
 	$plugin_lang['emajnoidlegroup'] = 'Il n\'y a actuellement aucun groupe de tables en état "arrêté".';
 	$plugin_lang['emajnologginggroup'] = 'Il n\'y a actuellement aucun groupe de tables en état "démarré".';
 	$plugin_lang['emajcreategroup'] = 'Création d\'un nouveau groupe de tables';
+	$plugin_lang['emajcreateemptygroup'] = 'Créer un groupe vide';
 
 	// Rollback activity
 	$plugin_lang['emajrlbkoperations'] = 'Rollbacks E-Maj';
@@ -184,7 +185,9 @@
 
 	// Group creation
 	$plugin_lang['emajcreateagroup'] = 'E-Maj : Créer un groupe de tables';
+	$plugin_lang['emajcreateanemptygroup'] = "Création d'un groupe de tables vide";
 	$plugin_lang['emajconfirmcreategroup'] = 'Etes-vous sûr de vouloir créer le groupe de tables "%s" ?';
+	$plugin_lang['emajinvalidemptygroup'] = 'Erreur, le groupe de table "%s" est déjà créé ou configuré !';
 	$plugin_lang['emajcreategroupok'] = 'Le groupe de tables "%s" a été créé.';
 	$plugin_lang['emajcreategrouperr'] = 'Erreur lors de la création du groupe de tables "%s" !';
 

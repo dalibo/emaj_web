@@ -1123,19 +1123,19 @@ class Emaj extends Plugin {
 				});
 				</script>";
 
-			echo "<hr>";
+			echo "<hr>\n";
 
 			// get groups name known in emaj_group_def table but not yet created (i.e. not known in emaj_group table)
 			// for emaj_adm role only
 			if ($this->emajdb->isEmaj_Adm()) {
 				$newGroups = $this->emajdb->getNewGroups();
+				echo "<table>\n";
 				if ($newGroups->recordCount() > 0) {
 
-				// form used to create a new group
+				// form used to create a new configured group
 
-					echo "<form id=\"createGroup_form\" action=\"plugin.php?plugin={$this->name}&amp;action=create_group&amp;back=list&amp;{$misc->href}\"";
-					echo "  method=\"post\" enctype=\"multipart/form-data\">\n";
-					echo "<table>\n";
+					echo "<form id=\"createGroup_form\" action=\"plugin.php?plugin={$this->name}&amp;action=create_group&amp;back=list&amp;empty=false&amp;{$misc->href}\"";
+					echo " method=\"post\" enctype=\"multipart/form-data\">\n";
 					echo "<tr>\n";
 					echo "<th class=\"data\" style=\"text-align: left\" colspan=\"2\">{$this->lang['emajcreategroup']}</th>\n";
 					echo "</tr>\n";
@@ -1148,9 +1148,22 @@ class Emaj extends Plugin {
 					echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
 					echo "</td>\n";
 					echo "</tr>\n";
-					echo "</table>\n";
-					echo '</form>';
+					echo "</form>\n";
+				};
+
+				// Button to create a new empty group
+				if ($this->emajdb->getNumEmajVersion() >= 20100) {			// version >= 2.1.0
+					echo "<form id=\"createEmptyGroup_form\" action=\"plugin.php?plugin={$this->name}&amp;action=create_group&amp;back=list&amp;empty=true&amp;{$misc->href}\"";
+					echo " method=\"post\" enctype=\"multipart/form-data\">\n";
+					echo "<tr>\n";
+					echo "<td class=\"data1\">\n";
+					echo "\t<input type=\"submit\" value=\"{$this->lang['emajcreateemptygroup']}\" />\n";
+					echo "</td>\n";
+					echo "</tr>\n";
+					echo "</form>\n";
 				}
+
+				echo "</table>\n";
 			}
 		}
 
@@ -2970,13 +2983,28 @@ class Emaj extends Plugin {
 
 		$misc->printTitle($this->lang['emajcreateagroup']);
 
-		echo "<p>", sprintf($this->lang['emajconfirmcreategroup'], $misc->printVal($_REQUEST['group'])), "</p>\n";
+		if (htmlspecialchars($_REQUEST['empty'])=='false') {
+			echo "<p>", sprintf($this->lang['emajconfirmcreategroup'], $misc->printVal($_REQUEST['group'])), "</p>\n";
+		} else {
+			echo "<p>{$this->lang['emajcreateanemptygroup']}</p>\n";
+		}
 		echo "<form action=\"plugin.php?plugin={$this->name}&amp;\" method=\"post\">\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"create_group_ok\" />\n";
-		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"create_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
+		echo "<input type=\"hidden\" name=\"empty\" value=\"", htmlspecialchars($_REQUEST['empty']), "\" />\n";
 		echo $misc->form;
-		echo "{$this->lang['emajgrouptype']} : ";
+
+	// if the group name is not defined, ask for a mark name
+		if (htmlspecialchars($_REQUEST['empty'])=='false') {
+			echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
+		} else {
+			echo "<table>\n";
+			echo "<tr><th class=\"data left\">{$this->lang['emajgroup']}</th>\n";
+			echo "<td class=\"data1\"><input name=\"group\" size=\"32\" value=\"\" id=\"group\"></td></tr>\n";
+			echo "</table>\n";
+		}
+
+		echo "<p>{$this->lang['emajgrouptype']} : ";
 		echo "<input type=\"radio\" name=\"grouptype\" value=\"rollbackable\" checked>{$this->lang['emajrollbackable']}";
 		echo "<input type=\"radio\" name=\"grouptype\" value=\"auditonly\">{$this->lang['emajauditonly']}\n";
 		echo "</p><p>";
@@ -2997,7 +3025,13 @@ class Emaj extends Plugin {
 	// process the click on the <cancel> button
 		if (isset($_POST['cancel'])) {$this->show_groups(); exit();}
 
-		$status = $this->emajdb->createGroup($_POST['group'],$_POST['grouptype']=='rollbackable');
+	// if the group is supposed to be empty, check the supplied group name doesn't exist
+		if ($_POST['empty'] == 'true' && !$this->emajdb->isNewEmptyGroupValid($_POST['group'])) {
+			$this->show_groups('',sprintf($this->lang['emajinvalidemptygroup'],$_POST['group']));
+			return;
+		}
+
+		$status = $this->emajdb->createGroup($_POST['group'],$_POST['grouptype']=='rollbackable',$_POST['empty']=='true');
 		if ($status == 0) {
 			$_reload_browser = true;
 			$this->show_groups(sprintf($this->lang['emajcreategroupok'],$_POST['group']));

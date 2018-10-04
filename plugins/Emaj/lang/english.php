@@ -97,6 +97,7 @@
 	$plugin_lang['emajnoidlegroup'] = 'No Emaj tables group is currently in idle state.';
 	$plugin_lang['emajnologginggroup'] = 'No Emaj tables group is currently in logging state.';
 	$plugin_lang['emajcreategroup'] = 'Creation of a new tables group';
+	$plugin_lang['emajcreateemptygroup'] = 'Create an empty group';
 
 	// Rollback activity
 	$plugin_lang['emajrlbkoperations'] = 'E-Maj Rollbacks';
@@ -184,7 +185,9 @@
 
 	// Group creation
 	$plugin_lang['emajcreateagroup'] = 'E-Maj: Create a tables group';
+	$plugin_lang['emajcreateanemptygroup'] = "Create an empty tables group";
 	$plugin_lang['emajconfirmcreategroup'] = 'Are you sure you want to create tables group "%s" ?';
+	$plugin_lang['emajinvalidemptygroup'] = 'Error, the tables group "%s" is already created or configured!';
 	$plugin_lang['emajcreategroupok'] = 'The tables group "%s" has been created.';
 	$plugin_lang['emajcreategrouperr'] = 'Error during group "%s" creation!';
 

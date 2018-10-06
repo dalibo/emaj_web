@@ -3131,7 +3131,8 @@ class Emaj extends Plugin {
 				echo "<p>", sprintf($this->lang['emajalteraloggingroup'], $misc->printVal($_REQUEST['group'])), "</p>";
 				echo "<table>\n";
 				echo "<tr><th class=\"data left\">{$this->lang['emajmark']}</th>\n";
-				echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"\" id=\"mark\"></td></tr>\n";
+				echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"\" id=\"mark\">\n";
+				echo "<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajmarknamehelp']}\"/></td></tr>";
 				echo "</table>\n";
 			} else {
 				echo "<p>", sprintf($this->lang['emajconfirmaltergroup'], $misc->printVal($_REQUEST['group'])), "</p>\n";
@@ -3236,7 +3237,8 @@ class Emaj extends Plugin {
 			echo "<p>", sprintf($this->lang['emajalterallloggingroups'], $misc->printVal($groupsList)), "</p>";
 			echo "<table>\n";
 			echo "<tr><th class=\"data left\">{$this->lang['emajmark']}</th>\n";
-			echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"\" id=\"mark\"></td></tr>\n";
+			echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"\" id=\"mark\">\n";
+			echo "<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajmarknamemultihelp']}\"/></td></tr>";
 			echo "</table>\n";
 		} else {
 			echo "<p>", sprintf($this->lang['emajconfirmaltergroups'], $misc->printVal($groupsList)), "</p>\n";
@@ -3386,7 +3388,8 @@ class Emaj extends Plugin {
 		echo "<table>\n";
 		echo "<tr><th class=\"data left required\" style=\"width: 100px\">{$this->lang['emajinitmark']}</th>\n";
 		echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"",
-			htmlspecialchars($_POST['mark']), "\" id=\"mark\" /></td></tr>\n";
+			htmlspecialchars($_POST['mark']), "\" id=\"mark\" />\n";
+		echo "<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajmarknamehelp']}\"/></td></tr>";
 		echo "</table>\n";
 		echo "<p><input type=checkbox name=\"resetlog\" checked/>{$this->lang['emajoldlogsdeletion']}</p>\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -3492,7 +3495,8 @@ class Emaj extends Plugin {
 		echo "<table>\n";
 		echo "<tr><th class=\"data left required\" style=\"width: 100px\">{$this->lang['emajinitmark']}</th>\n";
 		echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"",
-			htmlspecialchars($_POST['mark']), "\" id=\"mark\" /></td></tr>\n";
+			htmlspecialchars($_POST['mark']), "\" id=\"mark\" />\n";
+		echo "<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajmarknamemultihelp']}\"/></td></tr>";
 		echo "</table>\n";
 		echo "<p><input type=checkbox name=\"resetlog\" checked/>{$this->lang['emajoldlogsdeletion']}</p>\n";
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
@@ -3573,7 +3577,8 @@ class Emaj extends Plugin {
 		if ($this->emajdb->getNumEmajVersion() >= 10000) {					// version >= 1.0.0
 			echo "<table>\n";
 			echo "<tr><th class=\"data left\" style=\"width: 100px\">{$this->lang['emajstopmark']}</th>\n";
-			echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"STOP_%\" /></td></tr>\n";
+			echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"STOP_%\" />\n";
+			echo "<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajmarknamehelp']}\"/></td></tr>";
 			echo "</table>\n";
 			echo "<p><input type=checkbox name=\"forcestop\" />{$this->lang['emajforcestop']}</p>\n";
 		} else {
@@ -3660,7 +3665,8 @@ class Emaj extends Plugin {
 		if ($this->emajdb->getNumEmajVersion() >= 10000) {					// version >= 1.0.0
 			echo "<table>\n";
 			echo "<tr><th class=\"data left\" style=\"width: 100px\">{$this->lang['emajstopmark']}</th>\n";
-			echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"STOP_%\" /></td></tr>\n";
+			echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"STOP_%\" />\n";
+			echo "<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajmarknamemultihelp']}\"/></td></tr>";
 			echo "</table>\n";
 		} else {
 			echo "<input type=\"hidden\" name=\"mark\" value=\"\" />\n";
@@ -3853,7 +3859,8 @@ class Emaj extends Plugin {
 		echo "<table>\n";
 		echo "<tr><th class=\"data left required\">{$this->lang['emajmark']}</th>\n";
 		echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"",
-			htmlspecialchars($_POST['mark']), "\" id=\"mark\"/></td></tr>\n";
+			htmlspecialchars($_POST['mark']), "\" id=\"mark\"/>\n";
+		echo "<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajmarknamehelp']}\"/></td></tr>";
 		echo "</table>\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"set_mark_group_ok\" />\n";
@@ -3958,7 +3965,8 @@ class Emaj extends Plugin {
 		echo "<table>\n";
 		echo "<tr><th class=\"data left required\">{$this->lang['emajmark']}</th>\n";
 		echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"",
-			htmlspecialchars($_POST['mark']), "\" id=\"mark\"/></td></tr>\n";
+			htmlspecialchars($_POST['mark']), "\" id=\"mark\"/>\n";
+		echo "<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajmarknamemultihelp']}\"/></td></tr>";
 		echo "</table>\n";
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"set_mark_groups_ok\" />\n";
@@ -4447,21 +4455,14 @@ class Emaj extends Plugin {
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo sprintf($this->lang['emajselectmarkgroups'], $misc->printVal($groupsList));
-
-		if ($server_info["pgVersion"]>=8.4) {
-		// pg 8.4+ => use a combo box with the only acceptable marks
-			echo "<select name=\"mark\">\n";
-			$optionDisabled = '';
-			foreach($marks as $m) {
-				// if the mark is older than the youngest protected against rollback, disabled it and the next ones
-				if ($m['mark_datetime'] < $youngestProtectedMarkTimestamp) $optionDisabled = 'disabled';
-				echo "<option value=\"",htmlspecialchars($m['mark_name']),"\" $optionDisabled>",htmlspecialchars($m['mark_name'])," (",htmlspecialchars($m['mark_datetime']),")</option>\n";
-			}
-			echo "</select></p><p>\n";
-		} else {
-		// pg 8.3- => just use a simple text input (the mark validity check will be done in doRollbackGroups() function)
-			echo "<input name=\"mark\" size=\"32\" value=\"\" /></p><p>\n";
+		echo "<select name=\"mark\">\n";
+		$optionDisabled = '';
+		foreach($marks as $m) {
+			// if the mark is older than the youngest protected against rollback, disabled it and the next ones
+			if ($m['mark_datetime'] < $youngestProtectedMarkTimestamp) $optionDisabled = 'disabled';
+			echo "<option value=\"",htmlspecialchars($m['mark_name']),"\" $optionDisabled>",htmlspecialchars($m['mark_name'])," (",htmlspecialchars($m['mark_datetime']),")</option>\n";
 		}
+		echo "</select></p><p>\n";
 		echo $misc->form;
 		echo "{$this->lang['emajrollbacktype']} : ";
 		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"unlogged\" checked>{$this->lang['emajunlogged']}";

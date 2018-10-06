@@ -38,6 +38,10 @@
 	$plugin_lang['emajrlbkop'] = 'Rollbacks';
 	$plugin_lang['emajlogstat'] = 'Statistiques log';
 
+	// Common help messages
+	$plugin_lang['emajmarknamehelp'] = 'Le nom de la marque doit être unique pour le groupe. Un caractère % représente l\'heure courante (format hh.mn.ss.ms).';
+	$plugin_lang['emajmarknamemultihelp'] = 'Le nom de la marque doit être unique pour les groupes concernés. Un caractère % représente l\'heure courante (format hh.mn.ss.ms).';
+
 	// E-Maj environment
 	$plugin_lang['emajenvironment'] = 'Environnement E-Maj';
 	$plugin_lang['emajcharacteristics'] = 'Caractéristiques';

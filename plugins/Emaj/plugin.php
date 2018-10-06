@@ -545,113 +545,114 @@ class Emaj extends Plugin {
 			);
 			if ($this->emajdb->isEmaj_Adm()) {
 				$loggingActions = array_merge($loggingActions, array(
-				'multiactions' => array(
-					'keycols' => array('group' => 'group_name'),
-					'url' => "plugin.php?plugin={$this->name}&amp;back=list",
-					'default' => 'set_mark_group',
-				),
-				'stop_group' => array(
-					'content' => $lang['strstop'],
-					'attr' => array (
-						'href' => array (
-							'url' => 'plugin.php',
-							'urlvars' => array_merge($urlvars, array (
-								'plugin' => $this->name,
-								'action' => 'stop_group',
-								'back' => 'list',
-								'group' => field('group_name'),
-							)))),
-					'multiaction' => 'stop_groups',
-				),
-				'set_mark_group' => array(
-					'content' => $this->lang['emajsetmark'],
-					'attr' => array (
-						'href' => array (
-							'url' => 'plugin.php',
-							'urlvars' => array_merge($urlvars, array (
-								'plugin' => $this->name,
-								'action' => 'set_mark_group',
-								'back' => 'list',
-								'group' => field('group_name'),
-							)))),
-					'multiaction' => 'set_mark_groups',
-				),
-				'rollback_group' => array(
-					'content' => $this->lang['emajrlbk'],
-					'attr' => array (
-						'href' => array (
-							'url' => 'plugin.php',
-							'urlvars' => array_merge($urlvars, array (
-								'plugin' => $this->name,
-								'action' => 'rollback_group',
-								'back' => 'list',
-								'group' => field('group_name'),
-							)))),
-					'multiaction' => 'rollback_groups',
-				)));
-			};
-			if ($this->emajdb->isEmaj_Adm() && $this->emajdb->getNumEmajVersion() >= 10300) {
-				$loggingActions = array_merge($loggingActions, array(
-				'protect_group' => array(
-					'content' => $this->lang['emajprotect'],
-					'attr' => array (
-						'href' => array (
-							'url' => 'plugin.php',
-							'urlvars' => array_merge($urlvars, array (
-								'plugin' => $this->name,
-								'action' => 'protect_group',
-								'back' => 'list',
-								'group' => field('group_name'),
-							))))
+					'multiactions' => array(
+						'keycols' => array('group' => 'group_name'),
+						'url' => "plugin.php?plugin={$this->name}&amp;back=list",
+						'default' => 'set_mark_group',
 					),
-				'unprotect_group' => array(
-					'content' => $this->lang['emajunprotect'],
-					'attr' => array (
-						'href' => array (
-							'url' => 'plugin.php',
-							'urlvars' => array_merge($urlvars, array (
-								'plugin' => $this->name,
-								'action' => 'unprotect_group',
-								'back' => 'list',
-								'group' => field('group_name'),
-							))))
-					),
-				));
-			};
-			if ($this->emajdb->isEmaj_Adm() && $this->emajdb->getNumEmajVersion() >= 20100) {	// version >= 2.1.0
-				$loggingActions = array_merge($loggingActions, array(
-					'alter_group' => array(
-						'content' => $lang['stralter'],
+					'set_mark_group' => array(
+						'content' => $this->lang['emajsetmark'],
 						'attr' => array (
 							'href' => array (
 								'url' => 'plugin.php',
 								'urlvars' => array_merge($urlvars, array (
 									'plugin' => $this->name,
-									'action' => 'alter_group',
+									'action' => 'set_mark_group',
 									'back' => 'list',
 									'group' => field('group_name'),
-							))))
+								)))),
+						'multiaction' => 'set_mark_groups',
 					),
 				));
-				if ($this->emajdb->getNumEmajVersion() >= 20100) {	// version >= 2.1.0
-						$loggingActions['alter_group']['multiaction'] = 'alter_groups';
-				}
-			};
-			if ($this->emajdb->isEmaj_Adm()) {
+				if ($this->emajdb->getNumEmajVersion() >= 10300) {
+					$loggingActions = array_merge($loggingActions, array(
+						'protect_group' => array(
+							'content' => $this->lang['emajprotect'],
+							'attr' => array (
+								'href' => array (
+									'url' => 'plugin.php',
+									'urlvars' => array_merge($urlvars, array (
+										'plugin' => $this->name,
+										'action' => 'protect_group',
+										'back' => 'list',
+										'group' => field('group_name'),
+									))))
+							),
+						'unprotect_group' => array(
+							'content' => $this->lang['emajunprotect'],
+							'attr' => array (
+								'href' => array (
+									'url' => 'plugin.php',
+									'urlvars' => array_merge($urlvars, array (
+										'plugin' => $this->name,
+										'action' => 'unprotect_group',
+										'back' => 'list',
+										'group' => field('group_name'),
+									))))
+							),
+					));
+				};
 				$loggingActions = array_merge($loggingActions, array(
-				'comment_group' => array(
-					'content' => $this->lang['emajsetcomment'],
-					'attr' => array (
-						'href' => array (
-							'url' => 'plugin.php',
-							'urlvars' => array_merge($urlvars, array (
-								'plugin' => $this->name,
-								'action' => 'comment_group',
-								'back' => 'list',
-								'group' => field('group_name'),
-							))))
-				),
-				));
+					'rollback_group' => array(
+						'content' => $this->lang['emajrlbk'],
+						'attr' => array (
+							'href' => array (
+								'url' => 'plugin.php',
+								'urlvars' => array_merge($urlvars, array (
+									'plugin' => $this->name,
+									'action' => 'rollback_group',
+									'back' => 'list',
+									'group' => field('group_name'),
+								)))),
+						'multiaction' => 'rollback_groups',
+					),
+					'stop_group' => array(
+						'content' => $lang['strstop'],
+						'attr' => array (
+							'href' => array (
+								'url' => 'plugin.php',
+								'urlvars' => array_merge($urlvars, array (
+									'plugin' => $this->name,
+									'action' => 'stop_group',
+									'back' => 'list',
+									'group' => field('group_name'),
+								)))),
+						'multiaction' => 'stop_groups',
+					))
+				);
+				$loggingActions = array_merge($loggingActions, array(
+					'comment_group' => array(
+						'content' => $this->lang['emajsetcomment'],
+						'attr' => array (
+							'href' => array (
+								'url' => 'plugin.php',
+								'urlvars' => array_merge($urlvars, array (
+									'plugin' => $this->name,
+									'action' => 'comment_group',
+									'back' => 'list',
+									'group' => field('group_name'),
+								))))
+					))
+				);
+				if ($this->emajdb->getNumEmajVersion() >= 20100) {	// version >= 2.1.0
+					$loggingActions = array_merge($loggingActions, array(
+						'alter_group' => array(
+							'content' => $lang['stralter'],
+							'attr' => array (
+								'href' => array (
+									'url' => 'plugin.php',
+									'urlvars' => array_merge($urlvars, array (
+										'plugin' => $this->name,
+										'action' => 'alter_group',
+										'back' => 'list',
+										'group' => field('group_name'),
+								))))
+						),
+					));
+					if ($this->emajdb->getNumEmajVersion() >= 20100) {	// version >= 2.1.0
+							$loggingActions['alter_group']['multiaction'] = 'alter_groups';
+					}
+				};
 			};
 
 			$idleActions = array(
@@ -670,84 +671,82 @@ class Emaj extends Plugin {
 			);
 			if ($this->emajdb->isEmaj_Adm()) {
 				$idleActions = array_merge($idleActions, array(
-				'multiactions' => array(
-					'keycols' => array('group' => 'group_name'),
-					'url' => "plugin.php?plugin={$this->name}&amp;back=list",
-					'default' => 'start_group',
-				),
-				'start_group' => array(
-					'content' => $lang['strstart'],
-					'attr' => array (
-						'href' => array (
-							'url' => 'plugin.php',
-							'urlvars' => array_merge($urlvars, array (
-								'plugin' => $this->name,
-								'action' => 'start_group',
-								'back' => 'list',
-								'group' => field('group_name'),
-							)))),
-					'multiaction' => 'start_groups',
-				),
-				'reset_group' => array(
-					'content' => $lang['strreset'],
-					'attr' => array (
-						'href' => array (
-							'url' => 'plugin.php',
-							'urlvars' => array_merge($urlvars, array (
-								'plugin' => $this->name,
-								'action' => 'reset_group',
-								'back' => 'list',
-								'group' => field('group_name'),
-							))))
-				),
-				'drop_group' => array(
-					'content' => $lang['strdrop'],
-					'attr' => array (
-						'href' => array (
-							'url' => 'plugin.php',
-							'urlvars' => array_merge($urlvars, array (
-								'plugin' => $this->name,
-								'action' => 'drop_group',
-								'back' => 'list',
-								'group' => field('group_name'),
-							))))
-				),
-				));
-			};
-			if ($this->emajdb->isEmaj_Adm() && $this->emajdb->getNumEmajVersion() >= 10000) {	// version >= 1.0.0
-				$idleActions = array_merge($idleActions, array(
-					'alter_group' => array(
-						'content' => $lang['stralter'],
+					'multiactions' => array(
+						'keycols' => array('group' => 'group_name'),
+						'url' => "plugin.php?plugin={$this->name}&amp;back=list",
+						'default' => 'start_group',
+					),
+					'start_group' => array(
+						'content' => $lang['strstart'],
 						'attr' => array (
 							'href' => array (
 								'url' => 'plugin.php',
 								'urlvars' => array_merge($urlvars, array (
 									'plugin' => $this->name,
-									'action' => 'alter_group',
+									'action' => 'start_group',
 									'back' => 'list',
 									'group' => field('group_name'),
-							))))
+								)))),
+						'multiaction' => 'start_groups',
+					),
+					'reset_group' => array(
+						'content' => $lang['strreset'],
+						'attr' => array (
+							'href' => array (
+								'url' => 'plugin.php',
+								'urlvars' => array_merge($urlvars, array (
+									'plugin' => $this->name,
+									'action' => 'reset_group',
+									'back' => 'list',
+									'group' => field('group_name'),
+								))))
+					),
+					'comment_group' => array(
+						'content' => $this->lang['emajsetcomment'],
+						'attr' => array (
+							'href' => array (
+								'url' => 'plugin.php',
+								'urlvars' => array_merge($urlvars, array (
+									'plugin' => $this->name,
+									'action' => 'comment_group',
+									'back' => 'list',
+									'group' => field('group_name'),
+								))))
 					),
 				));
-				if ($this->emajdb->getNumEmajVersion() >= 20100) {	// version >= 2.1.0
-						$idleActions['alter_group']['multiaction'] = 'alter_groups';
-				}
-			};
-			if ($this->emajdb->isEmaj_Adm()) {
+				if ($this->emajdb->getNumEmajVersion() >= 10000) {	// version >= 1.0.0
+					$idleActions = array_merge($idleActions, array(
+						'alter_group' => array(
+							'content' => $lang['stralter'],
+							'attr' => array (
+								'href' => array (
+									'url' => 'plugin.php',
+									'urlvars' => array_merge($urlvars, array (
+										'plugin' => $this->name,
+										'action' => 'alter_group',
+										'back' => 'list',
+										'group' => field('group_name'),
+								))))
+						),
+					));
+					if ($this->emajdb->getNumEmajVersion() >= 20100) {	// version >= 2.1.0
+							$idleActions['alter_group']['multiaction'] = 'alter_groups';
+					}
+				};
 				$idleActions = array_merge($idleActions, array(
-				'comment_group' => array(
-					'content' => $this->lang['emajsetcomment'],
-					'attr' => array (
-						'href' => array (
-							'url' => 'plugin.php',
-							'urlvars' => array_merge($urlvars, array (
-								'plugin' => $this->name,
-								'action' => 'comment_group',
-								'back' => 'list',
-								'group' => field('group_name'),
-							))))
-				),
-			));
+					'drop_group' => array(
+						'content' => $lang['strdrop'],
+						'attr' => array (
+							'href' => array (
+								'url' => 'plugin.php',
+								'urlvars' => array_merge($urlvars, array (
+									'plugin' => $this->name,
+									'action' => 'drop_group',
+									'back' => 'list',
+									'group' => field('group_name'),
+								))))
+					),
+				));
 			};
 
 			echo "<h3>{$this->lang['emajlogginggroups']}:</h3>\n";

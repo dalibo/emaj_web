@@ -749,7 +749,7 @@ class Emaj extends Plugin {
 				));
 			};
 
-			echo "<h3>{$this->lang['emajlogginggroups']}:</h3>\n";
+			echo "<h3>{$this->lang['emajlogginggroups']}<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajlogginggrouphelp']}\"/></h3>";
 
 			echo "<div id=\"loggingGroupsTable\">\n";
 //			$misc->printTable($loggingGroups, $columns, $loggingActions, 'loggingGroups', $this->lang['emajnologginggroup']
@@ -795,7 +795,7 @@ class Emaj extends Plugin {
 				</script>";
 
 			echo "<hr>";
-			echo "<h3>{$this->lang['emajidlegroups']}:</h3>\n";
+			echo "<h3>{$this->lang['emajidlegroups']}<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajidlegrouphelp']}\"/></h3>\n";
 
 			echo "<div id=\"idleGroupsTable\">\n";
 //			$misc->printTable($idleGroups, $columns, $idleActions, 'idleGroups', $this->lang['emajnoidlegroup']);

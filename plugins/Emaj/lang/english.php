@@ -91,6 +91,8 @@
 	$plugin_lang['emajgrouplist'] = 'Tables groups list';
 	$plugin_lang['emajidlegroups'] = 'Tables groups in "IDLE" state ';
 	$plugin_lang['emajlogginggroups'] = 'Tables groups in "LOGGING" state ';
+	$plugin_lang['emajlogginggrouphelp'] = 'When a tables group is in \'logging\' state, the row insertions, updates and deletions on its tables are recorded.';
+ 	$plugin_lang['emajidlegrouphelp'] = 'When a tables group is in \'idle\' state, the row insertions, updates and deletions on its tables are NOT recorded.';
 	$plugin_lang['emajcreationdatetime'] = 'Creation date/time';
 	$plugin_lang['emajnbtbl'] = '# tables';
 	$plugin_lang['emajnbseq'] = '# sequences';

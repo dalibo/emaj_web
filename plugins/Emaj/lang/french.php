@@ -91,6 +91,8 @@
 	$plugin_lang['emajgrouplist'] = 'Liste des groupes de tables';
 	$plugin_lang['emajidlegroups'] = 'Groupes de tables en état "arrêté" ';
 	$plugin_lang['emajlogginggroups'] = 'Groupes de tables en état "démarré" ';
+	$plugin_lang['emajlogginggrouphelp'] = 'Quand un groupe de tables est dans l\'état \'démarré\', les insertions, modifications et suppression de lignes sur ses tables sont enregistrées.';
+ 	$plugin_lang['emajidlegrouphelp'] = 'Quand un groupe de tables est dans l\'état \'arrêté\', les insertions, modifications et suppressions de lignes sur ses tables ne sont PAS enregistrées.';
 	$plugin_lang['emajcreationdatetime'] = 'Date/heure de création';
 	$plugin_lang['emajnbtbl'] = 'Nb tables';
 	$plugin_lang['emajnbseq'] = 'Nb séquences';

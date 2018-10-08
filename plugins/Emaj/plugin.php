@@ -791,6 +791,8 @@ class Emaj extends Plugin {
 					$('#loggingGroupsTable input[data-column=\"12\"]').attr(\"disabled\",\"\");
 					$('#loggingGroupsTable input[data-column=\"13\"]').addClass(\"disabled\");
 					$('#loggingGroupsTable input[data-column=\"13\"]').attr(\"disabled\",\"\");
+					$('#loggingGroupsTable input[data-column=\"14\"]').addClass(\"disabled\");
+					$('#loggingGroupsTable input[data-column=\"14\"]').attr(\"disabled\",\"\");
 				});
 				</script>";
 
@@ -980,6 +982,9 @@ class Emaj extends Plugin {
 						'title' => $lang['strname'],
 						'field' => field('relname'),
 					),
+					'actions' => array(
+						'title' => $lang['stractions'],
+					),
 					'group' => array(
 						'title' => $this->lang['emajgroup'],
 						'field' => field('grpdef_group'),
@@ -1019,9 +1024,6 @@ class Emaj extends Plugin {
 					));
 				};
 				$columns = array_merge($columns, array(
-					'actions' => array(
-						'title' => $lang['stractions'],
-					),
 					'owner' => array(
 						'title' => $lang['strowner'],
 						'field' => field('relowner'),
@@ -1112,20 +1114,22 @@ class Emaj extends Plugin {
 							headers: { 	0: { sorter: false, filter: false },
 										1: { filter: false },
 										2: { sorter: false, filter: false },
-										10: { sorter: false, filter: false } },
+										4: { sorter: false, filter: false } },
 							emptyTo: 'none',
 							widgets: [\"zebra\", \"filter\"],
 							widgetOptions: {
 								zebra : [ \"data1\", \"data2\" ],
 								filter_hideFilters : true,
-								filter_functions : {  3:true, 4: true, 6: true, 7: true, 8: true, 9: true, 13: true, 14: true, 15: true },
+								filter_functions : { 13: true, 14: true, 15: true },
 								stickyHeaders : 'tablesorter-stickyHeader', 
 								},
 							}
 						);
 						// disable filters on all but first actions columns
-						$('#tablesSeqTable input[data-column=\"10\"]').addClass(\"disabled\");
-						$('#tablesSeqTable input[data-column=\"10\"]').attr(\"disabled\",\"\");
+						$('#tablesSeqTable input[data-column=\"5\"]').addClass(\"disabled\");
+						$('#tablesSeqTable input[data-column=\"5\"]').attr(\"disabled\",\"\");
+						$('#tablesSeqTable input[data-column=\"6\"]').addClass(\"disabled\");
+						$('#tablesSeqTable input[data-column=\"6\"]').attr(\"disabled\",\"\");
 					});
 					</script>";
 			}
@@ -1833,10 +1837,6 @@ class Emaj extends Plugin {
 					$('#marksTable input[data-column=\"8\"]').attr(\"disabled\",\"\");
 					$('#marksTable input[data-column=\"9\"]').addClass(\"disabled\");
 					$('#marksTable input[data-column=\"9\"]').attr(\"disabled\",\"\");
-					$('#marksTable input[data-column=\"10\"]').addClass(\"disabled\");
-					$('#marksTable input[data-column=\"10\"]').attr(\"disabled\",\"\");
-					$('#marksTable input[data-column=\"11\"]').addClass(\"disabled\");
-					$('#marksTable input[data-column=\"11\"]').attr(\"disabled\",\"\");
 				});
 				</script>";
 

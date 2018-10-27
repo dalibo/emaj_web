@@ -1044,6 +1044,7 @@ class Emaj extends Plugin {
 					'multiactions' => array(
 						'keycols' => array('appschema' => 'nspname', 'tblseq' => 'relname', 'group' => 'grpdef_group', 'type' => 'relkind'),
 						'url' => "plugin.php?plugin={$this->name}&amp;back=define",
+						'default' => 'assign',
 					),
 					'assign' => array(
 						'content' => $this->lang['emajassign'],
@@ -1837,6 +1838,10 @@ class Emaj extends Plugin {
 					$('#marksTable input[data-column=\"8\"]').attr(\"disabled\",\"\");
 					$('#marksTable input[data-column=\"9\"]').addClass(\"disabled\");
 					$('#marksTable input[data-column=\"9\"]').attr(\"disabled\",\"\");
+					$('#marksTable input[data-column=\"10\"]').addClass(\"disabled\");
+					$('#marksTable input[data-column=\"10\"]').attr(\"disabled\",\"\");
+					$('#marksTable input[data-column=\"11\"]').addClass(\"disabled\");
+					$('#marksTable input[data-column=\"11\"]').attr(\"disabled\",\"\");
 				});
 				</script>";
 

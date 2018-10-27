@@ -899,12 +899,12 @@ class Emaj extends Plugin {
 	/**
 	 * Define groups content
 	 */
-	function configure_groups($msg = '', $errMsg = '') {
+	function configure_groups($msg = '', $errMsg = '', $prevSchema = '') {
 		global $misc, $lang;
 
 		$this->printPageHeader('emaj','emajconfiguregroups');
 
-		if (!isset($_REQUEST['appschema'])) $_REQUEST['appschema'] = '';
+		if (!isset($_REQUEST['appschema'])) $_REQUEST['appschema'] = $prevSchema;
 		if (is_array($_REQUEST['appschema'])) $_REQUEST['appschema'] = $_REQUEST['appschema'][0];
 
 		$emajOK = $this->printEmajHeader("action=configure_groups&amp;appschema=".urlencode($_REQUEST['appschema']),$this->lang['emajgroupsconfiguration']);
@@ -2522,18 +2522,13 @@ class Emaj extends Plugin {
 			foreach($_REQUEST['ma'] as $t) {
 				$a = unserialize(htmlspecialchars_decode($t, ENT_QUOTES));
 				if ($a['group'] != '') {
-					$this->configure_groups('',sprintf($this->lang['emajtblseqyetgroup'],$a['appschema'],$a['tblseq']));
+					$this->configure_groups('', sprintf($this->lang['emajtblseqyetgroup'],$a['appschema'],$a['tblseq']), $a['appschema']);
 					exit();
 				}
 				if ($a['type'] != 'r+' and $a['type'] != 'S+') {
-					$this->configure_groups('',sprintf($this->lang['emajtblseqbadtype'],$a['appschema'],$a['tblseq']));
+					$this->configure_groups('', sprintf($this->lang['emajtblseqbadtype'],$a['appschema'],$a['tblseq']), $a['appschema']);
 					exit();
 				}
-			}
-		} else {
-			if ($_REQUEST['group'] != '') {
-				$this->configure_groups('',sprintf($this->lang['emajtblseqyetgroup'],$_REQUEST['appschema'],$_REQUEST['tblseq']));
-				exit();
 			}
 		}
 
@@ -2701,7 +2696,7 @@ class Emaj extends Plugin {
 								$_POST['priority'], $_POST['suffix'], $_POST['nameprefix'], $_POST['logdattsp'], $_POST['logidxtsp']);
 					if ($status != 0) {
 						$data->endTransaction();
-						configure_groups('',$this->lang['emajmodifygrouperr']);
+						$this->configure_groups('', $this->lang['emajmodifygrouperr']);
 						return;
 					}
 				}
@@ -2709,7 +2704,7 @@ class Emaj extends Plugin {
 			if($data->endTransaction() == 0)
 				$this->configure_groups($this->lang['emajmodifygroupok']);
 			else
-				$this->configure_groups('',$this->lang['emajmodifygrouperr']);
+				$this->configure_groups('', $this->lang['emajmodifygrouperr']);
 
 		} else {
 
@@ -2719,7 +2714,7 @@ class Emaj extends Plugin {
 			if ($status == 0)
 				$this->configure_groups($this->lang['emajmodifygroupok']);
 			else
-				$this->configure_groups('',$this->lang['emajmodifygrouperr']);
+				$this->configure_groups('', $this->lang['emajmodifygrouperr']);
 		}
 	}
 
@@ -2736,7 +2731,7 @@ class Emaj extends Plugin {
 		}
 		// Test the table/sequence is already assign to a group
 		if ($_REQUEST['group'] == '') {
-			$this->configure_groups('',sprintf($this->lang['emajtblseqnogroup'],$_REQUEST['appschema'],$_REQUEST['tblseq']));
+			$this->configure_groups('', sprintf($this->lang['emajtblseqnogroup'],$_REQUEST['appschema'],$_REQUEST['tblseq']), $_REQUEST['appschema']);
 			exit();
 		}
 
@@ -2883,7 +2878,7 @@ class Emaj extends Plugin {
 		if ($status == 0)
 			$this->configure_groups($this->lang['emajmodifygroupok']);
 		else
-			$this->configure_groups('',$this->lang['emajmodifygrouperr']);
+			$this->configure_groups('', $this->lang['emajmodifygrouperr']);
 	}
 
 	/**
@@ -2902,14 +2897,9 @@ class Emaj extends Plugin {
 			foreach($_REQUEST['ma'] as $t) {
 				$a = unserialize(htmlspecialchars_decode($t, ENT_QUOTES));
 				if ($a['group'] == '') {
-					$this->configure_groups('',sprintf($this->lang['emajtblseqnogroup'],$a['appschema'],$a['tblseq']));
+					$this->configure_groups('', sprintf($this->lang['emajtblseqnogroup'],$a['appschema'],$a['tblseq']), $a['appschema']);
 					exit();
 				}
-			}
-		} else {
-			if ($_REQUEST['group'] == '') {
-				$this->configure_groups('',sprintf($this->lang['emajtblseqnogroup'],$_REQUEST['appschema'],$_REQUEST['tblseq']));
-				exit();
 			}
 		}
 
@@ -2965,7 +2955,7 @@ class Emaj extends Plugin {
 					$status = $this->emajdb->removeTblSeq($_POST['appschema'][$i],$_POST['tblseq'][$i],$_POST['group'][$i]);
 					if ($status != 0) {
 						$data->endTransaction();
-						$this->configure_groups('',$this->lang['emajmodifygrouperr']);
+						$this->configure_groups('', $this->lang['emajmodifygrouperr']);
 						return;
 					}
 				}
@@ -2973,7 +2963,7 @@ class Emaj extends Plugin {
 			if($data->endTransaction() == 0)
 				$this->configure_groups($this->lang['emajmodifygroupok']);
 			else
-				$this->configure_groups('',$this->lang['emajmodifygrouperr']);
+				$this->configure_groups('', $this->lang['emajmodifygrouperr']);
 
 		} else {
 		// single removal
@@ -2982,7 +2972,7 @@ class Emaj extends Plugin {
 			if ($status == 0)
 				$this->configure_groups($this->lang['emajmodifygroupok']);
 			else
-				$this->configure_groups('',$this->lang['emajmodifygrouperr']);
+				$this->configure_groups('', $this->lang['emajmodifygrouperr']);
 		}
 	}
 

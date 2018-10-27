@@ -64,7 +64,7 @@
 	$plugin_lang['emajnewgroup'] = '-- nouveau groupe --';
 	$plugin_lang['emajnewsuffix'] = '-- nouveau suffixe --';
 	$plugin_lang['emajnewtsp'] = '-- nouveau tablespace --';
-	$plugin_lang['emajspecifytblseqtoassign'] = 'Spécifier au moins une table ou séquence à affecter';
+	$plugin_lang['emajspecifytblseqtoassign'] = 'Spécifiez au moins une table ou séquence à affecter';
 	$plugin_lang['emajtblseqyetgroup'] = 'Erreur, " %s.%s " est déjà affecté à un groupe de tables.';
 	$plugin_lang['emajtblseqbadtype'] = 'Erreur, le type de " %s.%s " n\'est pas supporté par E-Maj.';
 	$plugin_lang['emajassigntblseq'] = 'E-Maj : Affecter des tables / séquences à un groupe de tables';
@@ -77,10 +77,10 @@
 	$plugin_lang['emajnameprefixhelp'] = 'Par défaut les noms des objets de log sont préfixés par &lt;schéma&gt;_&lt;table&gt;. Mais on peut définir un autre préfixe pour la table. Il doit être unique dans la base de données.';
 	$plugin_lang['emajenterlogdattsp'] = 'Tablespace pour la table de log';
 	$plugin_lang['emajenterlogidxtsp'] = 'Tablespace pour l\'index de la table de log';
-	$plugin_lang['emajspecifytblseqtoupdate'] = 'Spécifier au moins une table ou séquence à modifier';
+	$plugin_lang['emajspecifytblseqtoupdate'] = 'Spécifiez au moins une table ou séquence à modifier';
 	$plugin_lang['emajupdatetblseq'] = 'E-Maj : Modifier les propriétés d\'une table / séquence dans un groupe de tables';
 	$plugin_lang['emajconfirmupdatetblseq'] = 'Modifier : %s';
-	$plugin_lang['emajspecifytblseqtoremove'] = 'Spécifier au moins une table ou séquence à retirer';
+	$plugin_lang['emajspecifytblseqtoremove'] = 'Spécifiez au moins une table ou séquence à retirer';
 	$plugin_lang['emajtblseqnogroup'] = 'Erreur, " %s.%s " n\'est actuellement affecté à aucun groupe de tables.';
 	$plugin_lang['emajremovetblseq'] = 'E-Maj : Retirer des tables / séquences d\'un groupe de tables';
 	$plugin_lang['emajconfirmremovetblseq'] = 'Etes-vous sûr de vouloir retirer " %s.%s " du groupe de tables "%s" ?';

@@ -27,7 +27,7 @@
 	$plugin_lang['emajprotected'] = 'Protected against rollback';
 	$plugin_lang['emajpagebottom'] = 'Go to bottom';
 	$plugin_lang['emajlogsize'] = 'Log size';
-	$plugin_lang['emajrequired'] = 'Required';
+	$plugin_lang['emajrequiredfield'] = 'Required field';
 	$plugin_lang['emajestimates'] = 'Estimates';
 	$plugin_lang['emajfrom'] = 'From';
 	$plugin_lang['emajto'] = 'To';

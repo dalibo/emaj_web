@@ -2576,29 +2576,42 @@ class Emaj extends Plugin {
 
 		// Display the input fields depending on the context
 		echo "<table>\n";
-		echo "<tr><th class=\"data left required\" rowspan=2>{$this->lang['emajgroup']}</th>";
-		echo "<td class=\"data1\"><input id=\"groupInput\" type=\"text\" name=\"group\" value=\"\"/> *</td></tr>\n";
-		echo "<tr><td><select id=\"groupList\" name=\"group1\"><option value=\"new_group\">{$this->lang['emajnewgroup']}</option>\n";
+
+		// group name
+		echo "<tr><th class=\"data left\" style=\"text-align:right\">{$this->lang['emajgroup']}</th>";
+		echo "<td class=\"data1\">";
+		echo "<input type=\"text\" name=\"group\" list=\"groupList\" required pattern=\"\S+.*\" value=\"\" placeholder='{$this->lang['emajrequiredfield']}' autocomplete=\"off\"/>\n";
+		echo "</td><td style=\"text-align:center\">*\n";
+		echo "</td></tr>\n";
+		echo "<datalist id=\"groupList\">\n";
 		if ($knownGroups->recordCount() > 0) {
 			foreach($knownGroups as $r)
-				echo "<option value=\"{$r['group_name']}\">{$r['group_name']}</option>\n";
+				echo "<option value=\"{$r['group_name']}\">\n";
 		}
-		echo "</select></td></tr>\n";
-		// mask-pnum class is used by jquery.filter to only accept digits
-		echo "<tr><th class=\"data left\">{$this->lang['emajenterpriority']}</th>";
-		echo "<td class=\"data1\"><input type=\"text\" name=\"priority\" size=9 maxlength=9 style=\"text-align: right;\" value=\"\" class=\"mask-pnum\"/> <img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajpriorityhelp']}\"/></td></tr>\n";
+		echo "</datalist>\n";
 
+		// priority level
+		echo "<tr><th class=\"data left\" style=\"text-align:right\">{$this->lang['emajenterpriority']}</th>";
+		echo "<td class=\"data1\">";
+		// mask-pnum class is used by jquery.filter to only accept digits
+		echo "<input type=\"text\" name=\"priority\" size=6 maxlength=9 style=\"text-align: right;\" value=\"\" class=\"mask-pnum\"/>";
+		echo "</td><td><img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajpriorityhelp']}\"/>";
+		echo "</td></tr>\n";
+
+		// log schema name suffix
 		if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
 			if ($nbTbl >= 1) {
-				echo "<tr><th class=\"data left\" rowspan=2>{$this->lang['emajenterlogschema']}</th>";
-				echo "<td class=\"data1\"><input type=\"text\" id=\"suffixInput\" name=\"suffix\" value=\"\"/> <img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajlogschemahelp']}\"/></td></tr>\n";
-				echo "<tr><td><select id=\"suffixList\" name=\"suffix1\">\n";
-				echo "\t\t<option value=\"new_log_schema_suffix\">{$this->lang['emajnewsuffix']}</option>\n";
+				echo "<tr><th class=\"data left\" style=\"text-align:right\">{$this->lang['emajenterlogschema']}</th>";
+				echo "<td class=\"data1\">";
+				echo "<input type=\"text\" name=\"suffix\" list=\"suffixList\" value=\"\"/ autocomplete=\"off\">";
+				echo "</td><td><img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajlogschemahelp']}\"/>";
+				echo "</td></tr>\n";
+				echo "<datalist id=\"suffixList\">\n";
 				if ($knownSuffix->recordCount() > 0) {
 					foreach($knownSuffix as $r)
-						echo "\t\t<option value=\"{$r['known_suffix']}\">{$r['known_suffix']}</option>\n";
+						echo "<option value=\"{$r['known_suffix']}\">\n";
 				}
-				echo "\t</select></td></tr>\n";
+				echo "</datalist>\n";
 			} else {
 				echo "<p><input type=\"hidden\" name=\"suffix\" value=\"\" />\n";
 			}
@@ -2606,39 +2619,39 @@ class Emaj extends Plugin {
 			echo "<p><input type=\"hidden\" name=\"suffix\" value=\"\" />\n";
 		}
 
+		// objects name prefix (only for tables)
 		if ($this->emajdb->getNumEmajVersion() >= 10200) {			// version >= 1.2.0
 			if ($nbTbl == 1) {
 				// the names prefix is accessible only for a single table assignment
-				echo "<tr><th class=\"data left\">{$this->lang['emajenternameprefix']}</th>";
-				echo "<td class=\"data1\"><input type=\"text\" id=\"nameprefixInput\" name=\"nameprefix\" value=\"\"/> <img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajnameprefixhelp']}\"/></td></tr>\n";
+				echo "<tr><th class=\"data left\" style=\"text-align:right\">{$this->lang['emajenternameprefix']}</th>";
+				echo "<td class=\"data1\">";
+				echo "<input type=\"text\" name=\"nameprefix\" value=\"\"/>";
+				echo "</td><td><img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajnameprefixhelp']}\"/>";
+				echo "</td></tr>\n";
 			} else {
 				echo "<p><input type=\"hidden\" name=\"nameprefix\" value=\"\" />\n";
 			}
 		} else {
 			echo "<p><input type=\"hidden\" name=\"nameprefix\" value=\"\" />\n";
 		}
-
+		// data log tablespace (only for tables)
 		if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
 			if ($nbTbl >= 1) {
-				echo "<tr><th class=\"data left\" rowspan=2>{$this->lang['emajenterlogdattsp']}</th>";
-				echo "<td class=\"data1\"><input type=\"text\" id=\"logdattspInput\" name=\"logdattsp\" value=\"\"/></td></tr>\n";
-				echo "<tr><td><select id=\"logdattspList\" name=\"logdattsp1\">\n";
-				echo "\t\t<option value=\"new_log_dat_tsp\">{$this->lang['emajnewtsp']}</option>\n";
+				echo "<tr><th class=\"data left\" style=\"text-align:right\">{$this->lang['emajenterlogdattsp']}</th>";
+				echo "<td class=\"data1\">";
+				echo "<input type=\"text\" name=\"logdattsp\" list=\"tspList\" value=\"\" autocomplete=\"off\"/>";
+				echo "</td><td></td></tr>\n";
+		// index log tablespace (only for tables)
+				echo "<tr><th class=\"data left\" style=\"text-align:right\">{$this->lang['emajenterlogidxtsp']}</th>";
+				echo "<td class=\"data1\">";
+				echo "<input type=\"text\" name=\"logidxtsp\"  list=\"tspList\" value=\"\" autocomplete=\"off\"/>";
+				echo "</td><td></td></tr>\n";
+				echo "<datalist id=\"tspList\">\n";
 				if ($knownTsp->recordCount() > 0) {
 					foreach($knownTsp as $r)
-						echo "\t\t<option value=\"{$r['spcname']}\">{$r['spcname']}</option>\n";
+						echo "<option value=\"{$r['spcname']}\">\n";
 				}
-				echo "\t</select></td></tr>\n";
-	
-				echo "<tr><th class=\"data left\" rowspan=2>{$this->lang['emajenterlogidxtsp']}</th>";
-				echo "<td class=\"data1\"><input type=\"text\" id=\"logidxtspInput\" name=\"logidxtsp\" value=\"\"/></td></tr>\n";
-				echo "<tr><td><select id=\"logidxtspList\" name=\"logidxtsp1\">\n";
-				echo "\t\t<option value=\"new_log_idx_tsp\">{$this->lang['emajnewtsp']}</option>\n";
-				if ($knownTsp->recordCount() > 0) {
-					foreach($knownTsp as $r)
-						echo "\t\t<option value=\"{$r['spcname']}\">{$r['spcname']}</option>\n";
-				}
-				echo "\t</select></td></tr>\n";
+				echo "</datalist>\n";
 			} else {
 				echo "<p><input type=\"hidden\" name=\"logdattsp\" value=\"\" />\n";
 				echo "<p><input type=\"hidden\" name=\"logidxtsp\" value=\"\" />\n";
@@ -2649,29 +2662,12 @@ class Emaj extends Plugin {
 		};
 		echo "</table>\n";
 
-		echo "<br>* = {$this->lang['emajrequired']}";
+		echo "<br>* = {$this->lang['emajrequiredfield']}";
 		echo"</p>\n";
 		echo $misc->form;
-		echo "<p><input type=\"submit\" name=\"assigntblseq\" value=\"{$this->lang['emajassign']}\" id=\"ok\" disabled=\"disabled\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+		echo "<p><input type=\"submit\" name=\"assigntblseq\" value=\"{$this->lang['emajassign']}\" id=\"ok\" />\n";
+		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";
 		echo "</form>\n";
-
-		echo "<script type=\"text/javascript\">\n";
-		// JQuery script to only enable the submit button when the group name is not empty
-		echo "  $(\"#groupInput\").keyup(function (data) {\n";
-		echo "    if ($(this).val() != \"\") { $(\"#ok\").removeAttr(\"disabled\"); }\n";
-		echo "      else { $(\"#ok\").attr(\"disabled\", \"disabled\"); }\n";
-		echo "  });\n";
-		// JQuery script to link input fields and associated list boxes
-		echo "  $(\"#groupList\").change(function () { $(\"#groupInput\").val($(\"#groupList option:selected\").text()); $(\"#ok\").removeAttr(\"disabled\");});\n";
-		echo "  $(\"#groupInput\").keyup(function () { $(\"#groupList option:first-child\").attr(\"selected\", true); });\n";
-		echo "  $(\"#suffixList\").change(function () { $(\"#suffixInput\").val($(\"#suffixList option:selected\").text()); });\n";
-		echo "  $(\"#suffixInput\").keyup(function () { $(\"#suffixList option:first-child\").attr(\"selected\", true); });\n";
-		echo "  $(\"#logdattspList\").change(function () { $(\"#logdattspInput\").val($(\"#logdattspList option:selected\").text()); });\n";
-		echo "  $(\"#logdattspInput\").keyup(function () { $(\"#logdattspList option:first-child\").attr(\"selected\", true); });\n";
-		echo "  $(\"#logidxtspList\").change(function () { $(\"#logidxtspInput\").val($(\"#logidxtspList option:selected\").text()); });\n";
-		echo "  $(\"#logidxtspInput\").keyup(function () { $(\"#logidxtspList option:first-child\").attr(\"selected\", true); });\n";
-		echo "</script>";
 
 		$this->printEmajFooter();
 		$misc->printFooter();
@@ -2763,29 +2759,41 @@ class Emaj extends Plugin {
 
 		// Display the input fields depending on the context
 		echo "<table>\n";
-		echo "<tr><th class=\"data left required\" rowspan=2>{$this->lang['emajgroup']}</th>";
-		echo "<td class=\"data1\"><input id=\"groupInput\" type=\"text\" name=\"groupnew\" value=\"{$_REQUEST['group']}\"/> *</td></tr>\n";
-		echo "<tr><td><select id=\"groupList\" name=\"group1\"><option value=\"new_group\">{$this->lang['emajnewgroup']}</option>\n";
+		// group name
+		echo "<tr><th class=\"data left\" style=\"text-align:right\">{$this->lang['emajgroup']}</th>";
+		echo "<td class=\"data1\">";
+		echo "<input type=\"text\" name=\"groupnew\" list=\"groupList\" required pattern=\"\S+.*\" value=\"{$_REQUEST['group']}\" placeholder='{$this->lang['emajrequiredfield']}' autocomplete=\"off\"/>\n";
+		echo "</td><td style=\"text-align:center\">*\n";
+		echo "</td></tr>\n";
+		echo "<datalist id=\"groupList\">\n";
 		if ($knownGroups->recordCount() > 0) {
 			foreach($knownGroups as $r)
-				echo "<option value=\"{$r['group_name']}\">{$r['group_name']}</option>\n";
+				echo "<option value=\"{$r['group_name']}\">\n";
 		}
-		echo "</select></td></tr>\n";
-		// mask-pnum class is used by jquery.filter to only accept digits
-		echo "<tr><th class=\"data left\">{$this->lang['emajenterpriority']}</th>";
-		echo "<td class=\"data1\"><input type=\"text\" name=\"priority\" size=9 maxlength=9 style=\"text-align: right;\" value=\"{$_REQUEST['priority']}\" class=\"mask-pnum\"/> <img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajpriorityhelp']}\"/></td></tr>\n";
+		echo "</datalist>\n";
 
+		// priority level
+		// mask-pnum class is used by jquery.filter to only accept digits
+		echo "<tr><th class=\"data left\" style=\"text-align:right\">{$this->lang['emajenterpriority']}</th>";
+		echo "<td class=\"data1\">";
+		echo "<input type=\"text\" name=\"priority\" size=6 maxlength=9 style=\"text-align: right;\" value=\"{$_REQUEST['priority']}\" class=\"mask-pnum\"/>";
+		echo "</td><td><img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajpriorityhelp']}\"/>";
+		echo "</td></tr>\n";
+
+		// log schema name suffix (only for tables)
 		if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
 			if ($_REQUEST['type'] == 'r+') {
-				echo "<tr><th class=\"data left\" rowspan=2>{$this->lang['emajenterlogschema']}</th>";
-				echo "<td class=\"data1\"><input type=\"text\" id=\"suffixInput\" name=\"suffix\" value=\"{$_REQUEST['logschemasuffix']}\"/> <img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajlogschemahelp']}\"/></td></tr>\n";
-				echo "<tr><td><select id=\"suffixList\" name=\"suffix1\">\n";
-				echo "\t\t<option value=\"new_log_schema_suffix\">{$this->lang['emajnewsuffix']}</option>\n";
+				echo "<tr><th class=\"data left\" style=\"text-align:right\">{$this->lang['emajenterlogschema']}</th>";
+				echo "<td class=\"data1\">";
+				echo "<input type=\"text\" name=\"suffix\" list=\"suffixList\" value=\"{$_REQUEST['logschemasuffix']}\"/ autocomplete=\"off\">";
+				echo "</td><td><img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajlogschemahelp']}\"/>";
+				echo "</td></tr>\n";
+				echo "<datalist id=\"suffixList\">\n";
 				if ($knownSuffix->recordCount() > 0) {
 					foreach($knownSuffix as $r)
-						echo "\t\t<option value=\"{$r['known_suffix']}\">{$r['known_suffix']}</option>\n";
+						echo "<option value=\"{$r['known_suffix']}\">\n";
 				}
-				echo "\t</select></td></tr>\n";
+				echo "</datalist>\n";
 			} else {
 				echo "<p><input type=\"hidden\" name=\"suffix\" value=\"\" />\n";
 			}
@@ -2793,11 +2801,15 @@ class Emaj extends Plugin {
 			echo "<p><input type=\"hidden\" name=\"suffix\" value=\"\" />\n";
 		}
 
+		// objects name prefix (only for tables)
 		if ($this->emajdb->getNumEmajVersion() >= 10200) {			// version >= 1.2.0
 			if ($_REQUEST['type'] == 'r+') {
-				// the names prefix is accessible only for a single table assignment
-				echo "<tr><th class=\"data left\">{$this->lang['emajenternameprefix']}</th>";
-				echo "<td class=\"data1\"><input type=\"text\" id=\"nameprefixInput\" name=\"nameprefix\" value=\"{$_REQUEST['emajnamesprefix']}\"/> <img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajnameprefixhelp']}\"/></td></tr>\n";
+				// the names prefix is accessible only for a table
+				echo "<tr><th class=\"data left\" style=\"text-align:right\">{$this->lang['emajenternameprefix']}</th>";
+				echo "<td class=\"data1\">";
+				echo "<input type=\"text\" name=\"nameprefix\" value=\"{$_REQUEST['emajnamesprefix']}\"/>";
+				echo "</td><td><img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajnameprefixhelp']}\"/>";
+				echo "</td></tr>\n";
 			} else {
 				echo "<p><input type=\"hidden\" name=\"nameprefix\" value=\"\" />\n";
 			}
@@ -2805,27 +2817,24 @@ class Emaj extends Plugin {
 			echo "<p><input type=\"hidden\" name=\"nameprefix\" value=\"\" />\n";
 		}
 
+		// data log tablespace (only for tables)
 		if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
 			if ($_REQUEST['type'] == 'r+') {
-				echo "<tr><th class=\"data left\" rowspan=2>{$this->lang['emajenterlogdattsp']}</th>";
-				echo "<td class=\"data1\"><input type=\"text\" id=\"logdattspInput\" name=\"logdattsp\" value=\"{$_REQUEST['logdattsp']}\"/></td></tr>\n";
-				echo "<tr><td><select id=\"logdattspList\" name=\"logdattsp1\">\n";
-				echo "\t\t<option value=\"new_log_dat_tsp\">{$this->lang['emajnewtsp']}</option>\n";
+				echo "<tr><th class=\"data left\" style=\"text-align:right\">{$this->lang['emajenterlogdattsp']}</th>";
+				echo "<td class=\"data1\">";
+				echo "<input type=\"text\" name=\"logdattsp\" list=\"tspList\" value=\"{$_REQUEST['logdattsp']}\" autocomplete=\"off\"/>";
+				echo "</td><td></td></tr>\n";
+		// index log tablespace (only for tables)
+				echo "<tr><th class=\"data left\" style=\"text-align:right\">{$this->lang['emajenterlogidxtsp']}</th>";
+				echo "<td class=\"data1\">";
+				echo "<input type=\"text\" name=\"logidxtsp\"  list=\"tspList\" value=\"{$_REQUEST['logidxtsp']}\" autocomplete=\"off\"/>";
+				echo "</td><td></td></tr>\n";
+				echo "<datalist id=\"tspList\">\n";
 				if ($knownTsp->recordCount() > 0) {
 					foreach($knownTsp as $r)
-						echo "\t\t<option value=\"{$r['spcname']}\">{$r['spcname']}</option>\n";
+						echo "<option value=\"{$r['spcname']}\">\n";
 				}
-				echo "\t</select></td></tr>\n";
-	
-				echo "<tr><th class=\"data left\" rowspan=2>{$this->lang['emajenterlogidxtsp']}</th>";
-				echo "<td class=\"data1\"><input type=\"text\" id=\"logidxtspInput\" name=\"logidxtsp\" value=\"{$_REQUEST['logidxtsp']}\"/></td></tr>\n";
-				echo "<tr><td><select id=\"logidxtspList\" name=\"logidxtsp1\">\n";
-				echo "\t\t<option value=\"new_log_idx_tsp\">{$this->lang['emajnewtsp']}</option>\n";
-				if ($knownTsp->recordCount() > 0) {
-					foreach($knownTsp as $r)
-						echo "\t\t<option value=\"{$r['spcname']}\">{$r['spcname']}</option>\n";
-				}
-				echo "\t</select></td></tr>\n";
+				echo "</datalist>\n";
 			} else {
 				echo "<p><input type=\"hidden\" name=\"logdattsp\" value=\"\" />\n";
 				echo "<p><input type=\"hidden\" name=\"logidxtsp\" value=\"\" />\n";
@@ -2836,29 +2845,12 @@ class Emaj extends Plugin {
 		};
 		echo "</table>\n";
 
-		echo "<br>* = {$this->lang['emajrequired']}";
+		echo "<br>* = {$this->lang['emajrequiredfield']}";
 		echo $misc->form;
 		echo"</p>\n";
 		echo "<p><input type=\"submit\" name=\"updatetblseq\" value=\"{$lang['strupdate']}\" id=\"ok\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate /></p>\n";
 		echo "</form>\n";
-
-		echo "<script type=\"text/javascript\">\n";
-		// JQuery script to only enable the submit button when the group name is not empty
-		echo "  $(\"#groupInput\").keyup(function (data) {\n";
-		echo "    if ($(this).val() != \"\") { $(\"#ok\").removeAttr(\"disabled\"); }\n";
-		echo "      else { $(\"#ok\").attr(\"disabled\", \"disabled\"); }\n";
-		echo "  });\n";
-		// JQuery script to link input fields and associated list boxes
-		echo "  $(\"#groupList\").change(function () { $(\"#groupInput\").val($(\"#groupList option:selected\").text()); $(\"#ok\").removeAttr(\"disabled\");});\n";
-		echo "  $(\"#groupInput\").keyup(function () { $(\"#groupList option:first-child\").attr(\"selected\", true); });\n";
-		echo "  $(\"#suffixList\").change(function () { $(\"#suffixInput\").val($(\"#suffixList option:selected\").text()); });\n";
-		echo "  $(\"#suffixInput\").keyup(function () { $(\"#suffixList option:first-child\").attr(\"selected\", true); });\n";
-		echo "  $(\"#logdattspList\").change(function () { $(\"#logdattspInput\").val($(\"#logdattspList option:selected\").text()); });\n";
-		echo "  $(\"#logdattspInput\").keyup(function () { $(\"#logdattspList option:first-child\").attr(\"selected\", true); });\n";
-		echo "  $(\"#logidxtspList\").change(function () { $(\"#logidxtspInput\").val($(\"#logidxtspList option:selected\").text()); });\n";
-		echo "  $(\"#logidxtspInput\").keyup(function () { $(\"#logidxtspList option:first-child\").attr(\"selected\", true); });\n";
-		echo "</script>";
 
 		$this->printEmajFooter();
 		$misc->printFooter();

@@ -3211,23 +3211,31 @@ class Emaj extends Plugin {
 		$this->printPageHeader('emaj','emajgroups');
 		$misc->printTitle($this->lang['emajaltergroups']);
 
-		// build the groups list
-		$groupsList='';
+		// build the groups list and the global state of this list 
+		$groupsList = ''; $anyGroupLogging = 0;
 		foreach($_REQUEST['ma'] as $v) {
 			$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-			$groupsList.=$a['group'].', ';
+			$groupsList .= $a['group'].', ';
+			if ($this->emajdb->isGroupLogging($a['group'])) {
+				$anyGroupLogging = 1;
+			}
 		}
-		$groupsList=substr($groupsList,0,strlen($groupsList)-2);
+		$groupsList = substr($groupsList,0,strlen($groupsList)-2);
 
 		echo "<form action=\"plugin.php?plugin={$this->name}&amp;\" method=\"post\">\n";
 
 		if ($this->emajdb->getNumEmajVersion() >= 20100) {			// version >= 2.1.0
-			echo "<p>", sprintf($this->lang['emajalterallloggingroups'], $misc->printVal($groupsList)), "</p>";
-			echo "<table>\n";
-			echo "<tr><th class=\"data left\">{$this->lang['emajmark']}</th>\n";
-			echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"\" id=\"mark\">\n";
-			echo "<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajmarknamemultihelp']}\"/></td></tr>";
-			echo "</table>\n";
+			if ($anyGroupLogging) {
+				echo "<p>", sprintf($this->lang['emajalterallloggingroups'], $misc->printVal($groupsList)), "</p>";
+				echo "<table>\n";
+				echo "<tr><th class=\"data left\">{$this->lang['emajmark']}</th>\n";
+				echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"\" id=\"mark\">\n";
+				echo "<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajmarknamemultihelp']}\"/></td></tr>";
+				echo "</table>\n";
+			} else {
+				echo "<p>", sprintf($this->lang['emajconfirmaltergroups'], $misc->printVal($groupsList)), "</p>\n";
+				echo "<input type=\"hidden\" name=\"mark\" value=\"\">";
+			}
 		} else {
 			echo "<p>", sprintf($this->lang['emajconfirmaltergroups'], $misc->printVal($groupsList)), "</p>\n";
 			echo "<input type=\"hidden\" name=\"mark\" value=\"\">";

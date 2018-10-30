@@ -82,8 +82,8 @@
 	$plugin_lang['emajconfirmupdatetblseq'] = 'Modifier : %s';
 	$plugin_lang['emajspecifytblseqtoremove'] = 'Spécifiez au moins une table ou séquence à retirer';
 	$plugin_lang['emajtblseqnogroup'] = 'Erreur, " %s.%s " n\'est actuellement affecté à aucun groupe de tables.';
-	$plugin_lang['emajremovetblseq'] = 'E-Maj : Retirer des tables / séquences d\'un groupe de tables';
-	$plugin_lang['emajconfirmremovetblseq'] = 'Etes-vous sûr de vouloir retirer " %s.%s " du groupe de tables "%s" ?';
+	$plugin_lang['emajremovetblseq'] = 'E-Maj : Retirer des tables / séquences de groupes de tables';
+	$plugin_lang['emajconfirmremovetblseq'] = 'Etes-vous sûr de vouloir retirer "%s.%s" du groupe de tables "%s" ?';
 	$plugin_lang['emajmodifygroupok'] = 'Le changement de configuration est enregistré. Il sera effectif après (re)création ou modification des groupes de tables concernés.';
 	$plugin_lang['emajmodifygrouperr'] = 'Erreur lors du changement de composition des groupes de tables.';
 
@@ -223,7 +223,7 @@
 
 	// Group comment
 	$plugin_lang['emajcommentagroup'] = 'E-Maj : Enregistrer un commentaire pour un groupe de tables ';
-	$plugin_lang['emajcommentgroup'] = 'Entrez, modifier ou supprimer un commentaire pour le groupe de tables "%s"';
+	$plugin_lang['emajcommentgroup'] = 'Entrer, modifier ou supprimer un commentaire pour le groupe de tables "%s"';
 	$plugin_lang['emajcommentgroupok'] = 'Le commentaire a été enregistré pour le groupe de tables "%s".';
 	$plugin_lang['emajcommentgrouperr'] = 'Erreur lors de l\'enregistrement du commentaire pour le groupe de tables "%s" !';
 
@@ -239,7 +239,7 @@
 
 	// Group start
 	$plugin_lang['emajstartagroup'] = 'E-Maj : Démarrer un groupe de tables';
-	$plugin_lang['emajconfirmstartgroup'] = 'Démarrer le groupe de tables "%s"';
+	$plugin_lang['emajconfirmstartgroup'] = 'Démarrage du groupe de tables "%s"';
 	$plugin_lang['emajinitmark'] = 'Marque initiale';
 	$plugin_lang['emajoldlogsdeletion'] = 'Suppression des anciens logs';
 	$plugin_lang['emajcantstartgroup'] = 'Le démarrage du groupe de tables "%s" est impossible. Le groupe est déjà démarré.';
@@ -248,14 +248,14 @@
 
 	// Groups start
 	$plugin_lang['emajstartgroups'] = 'E-Maj : Démarrer des groupes de tables';
-	$plugin_lang['emajconfirmstartgroups'] = 'Démarrer les groupes de tables "%s"';
+	$plugin_lang['emajconfirmstartgroups'] = 'Démarrage des groupes de tables "%s"';
 	$plugin_lang['emajcantstartgroups'] = 'Le démarrage des groupes de tables "%s" est impossible. Le groupe "%s" est déjà démarré.';
 	$plugin_lang['emajstartgroupsok'] = 'Les groupes de tables "%s" ont été démarrés avec la marque "%s".';
 	$plugin_lang['emajstartgroupserr'] = 'Erreur lors du démarrage des groupes de tables "%s" !';
 
 	// Group stop
 	$plugin_lang['emajstopagroup'] = 'E-Maj : Arrêter un groupe de tables ';
-	$plugin_lang['emajconfirmstopgroup'] = 'Arrêter le groupe de tables "%s"';
+	$plugin_lang['emajconfirmstopgroup'] = 'Arrêt du groupe de tables "%s"';
 	$plugin_lang['emajstopmark'] = 'Marque finale';
 	$plugin_lang['emajforcestop'] = 'Forcer l\'arrêt (en cas de problème seulement)';
 	$plugin_lang['emajcantstopgroup'] = 'L\'arrêt du groupe de tables "%s" est impossible. Le groupe est déjà arrêté.';
@@ -264,7 +264,7 @@
 
 	// Groups stop
 	$plugin_lang['emajstopgroups'] = 'E-Maj : Arrêter des groupes de tables';
-	$plugin_lang['emajconfirmstopgroups'] = 'Arrêter les groupes de tables "%s"';
+	$plugin_lang['emajconfirmstopgroups'] = 'Arrêt des groupes de tables "%s"';
 	$plugin_lang['emajcantstopgroups'] = 'L\'arrêt des groupes de tables "%s" est impossible. Le groupe "%s" est déjà arrêté.';
 	$plugin_lang['emajstopgroupsok'] = 'Les groupes de tables "%s" ont été arrêtés.';
 	$plugin_lang['emajstopgroupserr'] = 'Erreur lors de l\'arrêt des groupes de tables "%s" !';
@@ -297,7 +297,7 @@
 
 	// Comment mark
 	$plugin_lang['emajcommentamark'] = 'E-Maj : Enregistrer un commentaire pour une marque';
-	$plugin_lang['emajcommentmark'] = 'Entrez, modifier ou supprimer le commentaire pour la marque "%s" du groupe de tables "%s".';
+	$plugin_lang['emajcommentmark'] = 'Entrer, modifier ou supprimer le commentaire pour la marque "%s" du groupe de tables "%s".';
 	$plugin_lang['emajcommentmarkok'] = 'Le commentaire a été enregistré pour la marque "%s" du groupe de tables "%s".';
 	$plugin_lang['emajcommentmarkerr'] = 'Erreur lors de l\'enregistrement du commentaire pour la marque "%s" du groupe de tables "%s" !';
 
@@ -359,7 +359,7 @@
 
 	// Marks before mark deletion
 	$plugin_lang['emajdelmarks'] = 'E-Maj : Supprimer des marques';
-	$plugin_lang['emajconfirmdelmarks'] = 'Etes-vous sûr de vouloir supprimer toutes les marques antérieures à la marque "%s" pour le groupe de tables "%s" ?';
+	$plugin_lang['emajconfirmdelmarks'] = 'Etes-vous sûr de vouloir supprimer toutes les marques et log antérieurs à la marque "%s" pour le groupe de tables "%s" ?';
 	$plugin_lang['emajdelmarksok'] = 'Les (%s) marques antérieures à la marque "%s" ont été supprimées pour le groupe de tables "%s".';
 	$plugin_lang['emajdelmarkserr'] = 'Erreur lors de la suppression des marques antérieures à la marque "%s" pour le groupe de tables "%s" !';
 ?>

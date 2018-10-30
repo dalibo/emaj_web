@@ -1091,6 +1091,7 @@ class Emaj extends Plugin {
 									'appschema' => field('nspname'),
 									'tblseq' => field('relname'),
 									'group' => field('grpdef_group'),
+									'type' => field('relkind'),
 								)))),
 						'multiaction' => 'remove_tblseq',
 					),
@@ -3383,7 +3384,7 @@ class Emaj extends Plugin {
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"start_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" value=\"{$lang['strok']}\" id=\"ok\" disabled=\"disabled\" />\n";
+		echo "<input type=\"submit\" value=\"{$lang['strstart']}\" id=\"ok\" disabled=\"disabled\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
@@ -3490,7 +3491,7 @@ class Emaj extends Plugin {
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"start_groups_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" value=\"{$lang['strok']}\" id=\"ok\" disabled=\"disabled\" />\n";
+		echo "<input type=\"submit\" value=\"{$lang['strstart']}\" id=\"ok\" disabled=\"disabled\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
@@ -3575,7 +3576,7 @@ class Emaj extends Plugin {
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"stopgroup\" value=\"{$lang['strok']}\"/>\n";
+		echo "<input type=\"submit\" name=\"stopgroup\" value=\"{$lang['strstop']}\"/>\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
@@ -3662,7 +3663,7 @@ class Emaj extends Plugin {
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"stopgroups\" value=\"{$lang['strok']}\" />\n";
+		echo "<input type=\"submit\" name=\"stopgroups\" value=\"{$lang['strstop']}\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
@@ -3714,7 +3715,7 @@ class Emaj extends Plugin {
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"resetgroup\" value=\"{$lang['strok']}\" />\n";
+		echo "<input type=\"submit\" name=\"resetgroup\" value=\"{$lang['strreset']}\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
@@ -4674,7 +4675,7 @@ class Emaj extends Plugin {
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"consolidaterlbk\" value=\"{$lang['strok']}\" />\n";
+		echo "<input type=\"submit\" name=\"consolidaterlbk\" value=\"{$this->lang['emajconsolidate']}\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
@@ -4727,7 +4728,7 @@ class Emaj extends Plugin {
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"rename_mark_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" value=\"{$lang['strok']}\" id=\"ok\" disabled=\"disabled\"/>\n";
+		echo "<input type=\"submit\" value=\"{$this->lang['emajrename']}\" id=\"ok\" disabled=\"disabled\"/>\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
@@ -4786,7 +4787,7 @@ class Emaj extends Plugin {
 		echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"deletemark\" value=\"{$lang['strok']}\" />\n";
+		echo "<input type=\"submit\" name=\"deletemark\" value=\"{$lang['strdelete']}\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
@@ -4827,7 +4828,7 @@ class Emaj extends Plugin {
 		echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"deletebeforemark\" value=\"{$lang['strok']}\" />\n";
+		echo "<input type=\"submit\" name=\"deletebeforemark\" value=\"{$lang['strdelete']}\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 

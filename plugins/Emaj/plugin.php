@@ -3171,17 +3171,22 @@ class Emaj extends Plugin {
 		}
 
 	// Check the supplied mark is valid
-		if ($_POST['mark'] != '' && !$this->emajdb->isNewMarkValidGroup($_POST['group'],$_POST['mark'])) {
-			if ($_POST['back']=='list') {
-				$this->show_groups('',sprintf($this->lang['emajinvalidmark'],$_POST['mark']));
-			} else {
-				$this->show_group('',sprintf($this->lang['emajinvalidmark'],$_POST['mark']));
+		if ($_POST['mark'] != '') {
+			$finalMarkName = $this->emajdb->isNewMarkValidGroups($_POST['group'],$_POST['mark']);
+			if (is_null($finalMarkName)) {
+				if ($_POST['back']=='list') {
+					$this->show_groups('',sprintf($this->lang['emajinvalidmark'],$_POST['mark']));
+				} else {
+					$this->show_group('',sprintf($this->lang['emajinvalidmark'],$_POST['mark']));
+				}
+				return;
 			}
-			return;
+		} else {
+			$finalMarkName = '';
 		}
 
 	// OK
-		$status = $this->emajdb->alterGroup($_POST['group'],$_POST['mark']);
+		$status = $this->emajdb->alterGroup($_POST['group'],$finalMarkName);
 		if ($status == 0) {
 			$_reload_browser = true;
 			if ($_POST['back'] == 'list') {
@@ -3277,13 +3282,14 @@ class Emaj extends Plugin {
 			}
 		}
 	// Check the supplied mark is valid for the groups
-		if (!$this->emajdb->isNewMarkValidGroups($_POST['groups'],$_POST['mark'])) {
+		$finalMarkName = $this->emajdb->isNewMarkValidGroups($_POST['groups'],$_POST['mark']);
+		if (is_null($finalMarkName)) {
 			$this->show_groups('',sprintf($this->lang['emajinvalidmark'],$_POST['mark']));
 			return;
 		}
 
 	// OK
-		$status = $this->emajdb->alterGroups($_POST['groups'],$_POST['mark']);
+		$status = $this->emajdb->alterGroups($_POST['groups'],$finalMarkName);
 		if ($status == 0) {
 			$_reload_browser = true;
 			if ($_POST['back'] == 'list') {
@@ -3437,8 +3443,9 @@ class Emaj extends Plugin {
 			}
 			return;
 		}
-		// If old marks are not deleted, check the supplied mark is valid for the group
-		if (!isSet($_POST['resetlog']) && !$this->emajdb->isNewMarkValidGroup($_POST['group'],$_POST['mark'])) {
+		// check the supplied mark is valid for the group
+		$finalMarkName = $this->emajdb->isNewMarkValidGroups($_POST['group'],$_POST['mark']);
+		if (is_null($finalMarkName)) {
 			if ($_POST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajinvalidmark'],$_POST['mark']));
 			} else {
@@ -3447,18 +3454,18 @@ class Emaj extends Plugin {
 			return;
 		}
 		// OK
-		$status = $this->emajdb->startGroup($_POST['group'],$_POST['mark'],isSet($_POST['resetlog']));
+		$status = $this->emajdb->startGroup($_POST['group'],$finalMarkName,isSet($_POST['resetlog']));
 		if ($status == 0)
 			if ($_POST['back']=='list') {
-				$this->show_groups(sprintf($this->lang['emajstartgroupok'],$_POST['group'],$_POST['mark']));
+				$this->show_groups(sprintf($this->lang['emajstartgroupok'],$_POST['group'],$finalMarkName));
 			} else {
-				$this->show_group(sprintf($this->lang['emajstartgroupok'],$_POST['group'],$_POST['mark']));
+				$this->show_group(sprintf($this->lang['emajstartgroupok'],$_POST['group'],$finalMarkName));
 			}
 		else
 			if ($_POST['back']=='list') {
-				$this->show_groups('',sprintf($this->lang['emajstartgrouperr'],$_POST['group']));
+				$this->show_groups('',sprintf($this->lang['emajstartgrouperr'],$finalMarkName));
 			} else {
-				$this->show_group('',sprintf($this->lang['emajstartgrouperr'],$_POST['group']));
+				$this->show_group('',sprintf($this->lang['emajstartgrouperr'],$finalMarkName));
 			}
 	}
 
@@ -3536,8 +3543,9 @@ class Emaj extends Plugin {
 				return;
 			}
 		}
-		// If old marks are not deleted, check the supplied mark is valid for the groups
-		if (!isSet($_POST['resetlog']) && !$this->emajdb->isNewMarkValidGroups($_POST['groups'],$_POST['mark'])) {
+		// check the supplied mark is valid for the groups
+		$finalMarkName = $this->emajdb->isNewMarkValidGroups($_POST['groups'],$_POST['mark']);
+		if (is_null($finalMarkName)) {
 			if ($_POST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajinvalidmark'],$_POST['mark']));
 			} else {
@@ -3546,13 +3554,13 @@ class Emaj extends Plugin {
 			return;
 		}
 		// OK
-		$status = $this->emajdb->startGroups($_POST['groups'],$_POST['mark'],isSet($_POST['resetlog']));
+		$status = $this->emajdb->startGroups($_POST['groups'],$finalMarkName,isSet($_POST['resetlog']));
 		if ($status == 0)
 			if ($_POST['back']=='list')
-				$this->show_groups(sprintf($this->lang['emajstartgroupsok'],$_POST['groups'],$_POST['mark']));
+				$this->show_groups(sprintf($this->lang['emajstartgroupsok'],$_POST['groups'],$finalMarkName));
 		else
 			if ($_POST['back']=='list')
-				$this->show_groups('',sprintf($this->lang['emajstartgroupserr'],$_POST['groups']));
+				$this->show_groups('',sprintf($this->lang['emajstartgroupserr'],$finalMarkName));
 	}
 
 	/**
@@ -3908,7 +3916,8 @@ class Emaj extends Plugin {
 			return;
 		}
 		// Check the supplied mark group is valid
-		if (!$this->emajdb->isNewMarkValidGroup($_POST['group'],$_POST['mark'])) {
+		$finalMarkName = $this->emajdb->isNewMarkValidGroups($_POST['group'],$_POST['mark']);
+		if (is_null($finalMarkName)) {
 			if ($_POST['back']=='list') {
 				$this->show_groups('',sprintf($this->lang['emajinvalidmark'],$_POST['mark']));
 			} else {
@@ -3917,18 +3926,18 @@ class Emaj extends Plugin {
 			return;
 		}
 		// OK
-		$status = $this->emajdb->setMarkGroup($_POST['group'],$_POST['mark']);
+		$status = $this->emajdb->setMarkGroup($_POST['group'],$finalMarkName);
 		if ($status == 0)
 			if ($_POST['back']=='list') {
-				$this->show_groups(sprintf($this->lang['emajsetmarkgroupok'],$_POST['mark'],$_POST['group']));
+				$this->show_groups(sprintf($this->lang['emajsetmarkgroupok'],$finalMarkName,$_POST['group']));
 			} else {
-				$this->show_group(sprintf($this->lang['emajsetmarkgroupok'],$_POST['mark'],$_POST['group']));
+				$this->show_group(sprintf($this->lang['emajsetmarkgroupok'],$finalMarkName,$_POST['group']));
 			}
 		else
 			if ($_POST['back']=='list') {
-				$this->show_groups('',sprintf($this->lang['emajsetmarkgrouperr'],$_POST['mark'],$_POST['group']));
+				$this->show_groups('',sprintf($this->lang['emajsetmarkgrouperr'],$finalMarkName,$_POST['group']));
 			} else {
-				$this->show_group('',sprintf($this->lang['emajsetmarkgrouperr'],$_POST['mark'],$_POST['group']));
+				$this->show_group('',sprintf($this->lang['emajsetmarkgrouperr'],$finalMarkName,$_POST['group']));
 			}
 	}
 
@@ -4006,16 +4015,17 @@ class Emaj extends Plugin {
 			}
 		}
 		// Check the supplied mark group is valid
-		if (!$this->emajdb->isNewMarkValidGroups($_POST['groups'],$_POST['mark'])) {
+		$finalMarkName = $this->emajdb->isNewMarkValidGroups($_POST['groups'],$_POST['mark']);
+		if (is_null($finalMarkName)) {
 			$this->show_groups('',sprintf($this->lang['emajinvalidmark'],$_POST['mark']));
 			return;
 		}
 		// OK
-		$status = $this->emajdb->setMarkGroups($_POST['groups'],$_POST['mark']);
+		$status = $this->emajdb->setMarkGroups($_POST['groups'],$finalMarkName);
 		if ($status == 0)
-			$this->show_groups(sprintf($this->lang['emajsetmarkgroupok'],$_POST['mark'],$_POST['groups']));
+			$this->show_groups(sprintf($this->lang['emajsetmarkgroupok'],$finalMarkName,$_POST['groups']));
 		else
-			$this->show_groups('',sprintf($this->lang['emajsetmarkgrouperr'],$_POST['mark'],$_POST['groups']));
+			$this->show_groups('',sprintf($this->lang['emajsetmarkgrouperr'],$finalMarkName,$_POST['groups']));
 	}
 
 	/**
@@ -4766,15 +4776,16 @@ class Emaj extends Plugin {
 		if (isset($_POST['cancel'])) { $this->show_group(); exit(); }
 
 		// Check the supplied mark group is valid
-		if (!$this->emajdb->isNewMarkValidGroup($_POST['group'],$_POST['newmark']))
+		$finalMarkName = $this->emajdb->isNewMarkValidGroups($_POST['group'],$_POST['newmark']);
+		if (is_null($finalMarkName)) {
 			$this->show_group('',sprintf($this->lang['emajinvalidmark'],$_POST['newmark']));
-		else {
+		} else {
 		// OK
-			$status = $this->emajdb->renameMarkGroup($_POST['group'],$_POST['mark'],$_POST['newmark']);
+			$status = $this->emajdb->renameMarkGroup($_POST['group'],$_POST['mark'],$finalMarkName);
 			if ($status >= 0)
-				$this->show_group(sprintf($this->lang['emajrenamemarkok'],$_POST['mark'],$_POST['group'],$_POST['newmark']));
+				$this->show_group(sprintf($this->lang['emajrenamemarkok'],$_POST['mark'],$_POST['group'],$finalMarkName));
 			else
-				$this->show_group('',sprintf($this->lang['emajrenamemarkerr'],$_POST['mark'],$_POST['group'],$_POST['newmark']));
+				$this->show_group('',sprintf($this->lang['emajrenamemarkerr'],$_POST['mark'],$_POST['group'],$finalMarkName));
 		}
 	}
 

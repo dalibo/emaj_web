@@ -45,7 +45,7 @@ class Emaj extends Plugin {
 	/**
 	 * Add some code in page's head
 	 */
-    function add_plugin_head(&$args) {
+    function add_plugin_head($args) {
 		global $conf;
 
         $args['heads']['plugin_name'] = 
@@ -59,7 +59,7 @@ class Emaj extends Plugin {
 	/**
 	 * Insert the E-Maj tabs in the tabs structure
 	 */
-	function add_plugin_tabs(&$plugin_functions_parameters) {
+	function add_plugin_tabs($plugin_functions_parameters) {
 		global $lang;
 
 		$tabs = &$plugin_functions_parameters['tabs'];
@@ -165,7 +165,7 @@ class Emaj extends Plugin {
 	/**
 	 * Insert the E-Maj trail in the trail structure
 	 */
-	function add_plugin_trail(&$plugin_functions_parameters) {
+	function add_plugin_trail($plugin_functions_parameters) {
 		global $misc; 
 
 		$trail = &$plugin_functions_parameters['trail'];

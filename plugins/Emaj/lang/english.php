@@ -6,8 +6,7 @@
 
 	// Basic strings 
 	$plugin_lang['emajplugin'] = 'E-Maj plugin';
-	$plugin_lang['emajnotavail'] = 'Sorry, E-Maj is not available for this database.';
-	$plugin_lang['emajtooold'] = 'Sorry, this E-Maj version (%s) is too old. The minimum version supported by this plugin is %s.';
+	$plugin_lang['emajnotavail'] = 'Sorry, E-Maj is not available or accessible for this database. More details in the %s tab.';
 	$plugin_lang['emajstate'] = 'State';
 	$plugin_lang['emajnoselectedgroup'] = 'No tables group has been selected!';
 	$plugin_lang['emajgroup'] = 'Group';
@@ -44,8 +43,17 @@
 
 	// E-Maj environment
 	$plugin_lang['emajenvironment'] = 'E-Maj environment';
+	$plugin_lang['emajextnotavailable'] = 'The E-Maj software is not installed on this PostgreSQL instance. Contact your database administrator.';
+	$plugin_lang['emajextnotcreated'] = 'The emaj extension is not created in this database. Contact your database administrator.';
+	$plugin_lang['emajnogrant'] = 'Your connection role has no E-Maj rights. Use another role or contact your database administrator.';
 	$plugin_lang['emajcharacteristics'] = 'Characteristics';
+	$plugin_lang['emajversions'] = 'Versions';
 	$plugin_lang['emajversion'] = 'E-Maj version: ';
+	$plugin_lang['emajasextension'] = 'installed as extension';
+	$plugin_lang['emajasscript'] = 'installed by script';
+	$plugin_lang['emajtooold'] = 'Sorry, this E-Maj version (%s) is too old. The minimum version supported by this plugin is %s.';
+	$plugin_lang['emajversionmorerecent'] = 'A more recent E-Maj version exists. Contact your database administrator.';
+	$plugin_lang['emajwebversionmorerecent'] = 'A more recent Emaj_web version probably exists. Contact your database administrator.';
 	$plugin_lang['emajdiskspace'] = 'Disk space used by the E-Maj environment: %s of the current database.';
 	$plugin_lang['emajchecking'] = 'E-Maj environment consistency';
 	$plugin_lang['emajdiagnostics'] = 'Diagnostics';

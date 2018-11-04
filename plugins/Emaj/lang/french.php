@@ -6,8 +6,7 @@
 
 	// Basic strings
 	$plugin_lang['emajplugin'] = 'Plugin E-Maj';
-	$plugin_lang['emajnotavail'] = 'Désolé, E-Maj n\'est pas disponible sur cette base de données.';
-	$plugin_lang['emajtooold'] = 'Désolé, cette version d\'E-Maj (%s) est trop ancienne. La version minimum supportée par ce plugin est %s.';
+	$plugin_lang['emajnotavail'] = 'Désolé, E-Maj n\'est pas disponible ou accessible sur cette base de données. Plus de détails sur l\'onglet %s.';
 	$plugin_lang['emajstate'] = 'Etat';
 	$plugin_lang['emajnoselectedgroup'] = 'Aucun groupe de tables n\'a été sélectionné !';
 	$plugin_lang['emajgroup'] = 'Groupe';
@@ -44,8 +43,17 @@
 
 	// E-Maj environment
 	$plugin_lang['emajenvironment'] = 'Environnement E-Maj';
+	$plugin_lang['emajextnotavailable'] = 'Le logiciel E-Maj n\'est pas installé sur cette instance PostgreSQL. Contactez votre administrateur des bases de données.';
+	$plugin_lang['emajextnotcreated'] = 'L\'extension emaj n\'est pas créée dans cette base de données. Contactez votre administrateur des bases de données.';
+	$plugin_lang['emajnogrant'] = 'Votre rôle de connexion n\'a pas les droits d\'utilisation d\'E-Maj. Utilisez un autre rôle ou contactez votre administrateur des bases de données.';
 	$plugin_lang['emajcharacteristics'] = 'Caractéristiques';
+	$plugin_lang['emajversions'] = 'Versions';
 	$plugin_lang['emajversion'] = 'Version E-Maj : ';
+	$plugin_lang['emajasextension'] = 'installée comme extension';
+	$plugin_lang['emajasscript'] = 'installée par script';
+	$plugin_lang['emajtooold'] = 'Désolé, cette version d\'E-Maj (%s) est trop ancienne. La version minimum supportée par ce plugin est %s.';
+	$plugin_lang['emajversionmorerecent'] = 'Une version plus récente d\'E-Maj existe. Contactez votre administrateur des bases de données.';
+	$plugin_lang['emajwebversionmorerecent'] = 'Une version plus récente d\'Emaj_web existe probablement. Contactez votre administrateur des bases de données.';
 	$plugin_lang['emajdiskspace'] = 'Place disque occupée par l\'environnement E-Maj : %s de la base de données courante.';
 	$plugin_lang['emajchecking'] = 'Intégrité de l\'environnement E-Maj';
 	$plugin_lang['emajdiagnostics'] = 'Diagnostics';

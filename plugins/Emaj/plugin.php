@@ -11,8 +11,10 @@ class Emaj extends Plugin {
 	protected $lang;
 	protected $conf = array();
 	protected $emajdb = null;
-	protected $oldest_supported_emaj_version = '0.11.0';		// Oldest emaj version supported by the plugin = 0.11.0
+	protected $oldest_supported_emaj_version = '0.11.0';		// Oldest emaj version supported by the plugin
 	protected $oldest_supported_emaj_version_num = 1100;
+	protected $last_known_emaj_version = '2.3.1';				// Most recent emaj version known by the plugin
+	protected $last_known_emaj_version_num = 20301;
 	protected $previous_cumlogrows;								// used to compute accumulated updates in marks'table
 
 /********************************************************************************************************
@@ -74,7 +76,6 @@ class Emaj extends Plugin {
 						'subject' => 'database',
 						'action' => 'show_groups'
 					),
-					'hide' => !($this->emajdb->isEnabled()&&$this->emajdb->isAccessible()),
 					'icon' => $this->icon('Emaj')
 				);
 				break;
@@ -90,18 +91,17 @@ class Emaj extends Plugin {
 					),
 					'icon' => $this->icon('EmajGroup')
 				);
-				if ($this->emajdb->isEmaj_Adm()) {
-					$tabs['emajconfiguregroups'] = array (
-						'title' => $this->lang['emajgroupsconf'],
-						'url' => 'plugin.php',
-						'urlvars' => array(
-							'plugin' => $this->name,
-							'subject' => 'emaj',
-							'action' => 'configure_groups'
-						),
-						'icon' => 'Admin'
-					);
-				}
+				$tabs['emajconfiguregroups'] = array (
+					'title' => $this->lang['emajgroupsconf'],
+					'url' => 'plugin.php',
+					'urlvars' => array(
+						'plugin' => $this->name,
+						'subject' => 'emaj',
+						'action' => 'configure_groups'
+					),
+					'hide' => !($this->emajdb->isEmaj_Adm()),
+					'icon' => 'Admin'
+				);
 				$tabs['emajmonitorrlbk'] = array (
 					'title' => $this->lang['emajrlbkop'],
 					'url' => 'plugin.php',
@@ -110,7 +110,6 @@ class Emaj extends Plugin {
 						'subject' => 'emaj',
 						'action' => 'show_rollbacks'
 					),
-					'hide' => ($this->emajdb->getNumEmajVersion() < 10100),
 					'icon' => $this->icon('EmajRollback')
 				);
 				$tabs['emajenvir'] = array (
@@ -119,7 +118,7 @@ class Emaj extends Plugin {
 					'urlvars' => array(
 						'plugin' => $this->name,
 						'subject' => 'emaj',
-						'action' => 'show_emaj_envir'
+						'action' => 'emaj_envir'
 					),
 					'icon' => $this->icon('Emaj')
 				);
@@ -217,6 +216,7 @@ class Emaj extends Plugin {
 		'delete_mark_ok',
 		'drop_group',
 		'drop_group_ok',
+		'emaj_envir',
 		'filterrlbk',
 		'log_stat_group',
 		'protect_group',
@@ -238,7 +238,6 @@ class Emaj extends Plugin {
 		'set_mark_groups',
 		'set_mark_groups_ok',
 		'show_content_group',
-		'show_emaj_envir',
 		'show_group',
 		'show_groups',
 		'show_rollbacks',
@@ -1168,7 +1167,7 @@ class Emaj extends Plugin {
 
 		$emajOK = $this->printEmajHeader("action=show_rollbacks",$this->lang['emajrlbkoperations']);
 
-		if ($emajOK) {
+		if ($emajOK && $this->emajdb->getNumEmajVersion() >= 10100) {
 			$this->printMsg($msg,$errMsg);
 
 			if (!isset($_SESSION['emaj']['RlbkNb'])) {
@@ -1440,20 +1439,59 @@ class Emaj extends Plugin {
 	}
 
 	/**
-	 * Show E-Maj environment characteristics
+	 * E-Maj environment management
 	 */
-	function show_emaj_envir() {
+	function emaj_envir() {
 		global $misc, $lang;
 
 		$this->printPageHeader('emaj','emajenvir');
 
-		$emajOK = $this->printEmajHeader("action=show_emaj_envir",$this->lang['emajenvironment']);
+		$emajOK = $this->printEmajHeader("action=emaj_envir",$this->lang['emajenvironment']);
+		// check if E-Maj is installed in the current database
+		if (! $this->emajdb->isEnabled()) {
+			// emaj is not installed, check if the extension is available
+			if (! $this->emajdb->isExtensionAvailable()) {
+				echo "<p>{$this->lang['emajextnotavailable']}</p>\n";
+			} else {
+				echo "<p>{$this->lang['emajextnotcreated']}</p>\n";
+			}
+			$emajOK= 0;
+		} else {
+			// emaj is installed, check that the user has enought rights to continue
+			if (! $this->emajdb->isAccessible()) {
+				echo "<p>{$this->lang['emajnogrant']}</p>\n";
+				$emajOK= 0;
+			}
+		}
 
 		if ($emajOK) {
+			// Version section
+			echo "<h3>{$this->lang['emajversions']}</h3>\n";
+			if ($this->emajdb->isExtension()) {
+				$installationMode = $this->lang['emajasextension'];
+			} else {
+				$installationMode = $this->lang['emajasscript'];
+			}
+			echo "<p>{$this->lang['emajversion']}{$this->emajdb->getEmajVersion()} ({$installationMode})</p>\n";
+			if ($this->emajdb->getNumEmajVersion() < $this->oldest_supported_emaj_version_num) {
+				echo "<p>" . sprintf($this->lang['emajtooold'],$this->emajdb->getEmajVersion(),$this->oldest_supported_emaj_version) . "</p>\n";
+				$emajOK= 0;
+			} else {
+				if ($this->emajdb->getNumEmajVersion() <> 999999) {
+					if ($this->emajdb->getNumEmajVersion() < $this->last_known_emaj_version_num) {
+						echo "<p>{$this->lang['emajversionmorerecent']}</p>\n";
+					}
+					if ($this->emajdb->getNumEmajVersion() > $this->last_known_emaj_version_num) {
+						echo "<p>{$this->lang['emajwebversionmorerecent']}</p>\n";
+					}
+				}
+			}
+		}
 
+		if ($emajOK) {
 			// General characteristics of the E-Maj environment
+			echo "<hr/>\n";
 			echo "<h3>{$this->lang['emajcharacteristics']}</h3>\n";
-			echo "<p>{$this->lang['emajversion']}{$this->emajdb->getEmajVersion()}</p>\n";
 			if ($this->emajdb->isEmaj_Adm()) {
 				echo "<p>".sprintf($this->lang['emajdiskspace'],$this->emajdb->getEmajSize())."</p>\n";
 			}
@@ -4906,25 +4944,31 @@ class Emaj extends Plugin {
 		global $lang, $misc;
 	// $urlvar is the piece of the url containing the variables needed to refresh the page
 
-	// If Emaj is not usable for this database, only display a message
-		if (!(isset($this->emajdb)&&$this->emajdb->isEnabled()&&$this->emajdb->isAccessible())) {
-			echo "<div class=\"topbar\"><table style=\"width: 100%\"><tr><td><span class=\"platform\">{$this->lang['emajnotavail']}</span></td></tr></table></div>";
-			return 0;
-		}
-	// If Emaj version is too old, only display a message
-		if ($this->emajdb->getNumEmajVersion() < $this->oldest_supported_emaj_version_num) {
-			echo "<div class=\"topbar\"><table style=\"width: 100%\"><tr><td><span class=\"platform\">";
-			echo sprintf($this->lang['emajtooold'],$this->emajdb->getEmajVersion(),$this->oldest_supported_emaj_version);
-			echo "</span></td></tr></table></div>";
-			return 0;
+	// For all but the emaj_envir functions,
+		if ($urlvar != 'action=emaj_envir') {
+			// if Emaj is not usable for this database, only display a message
+			if (!(isset($this->emajdb) && $this->emajdb->isEnabled() && $this->emajdb->isAccessible()
+				  && $this->emajdb->getNumEmajVersion() >= $this->oldest_supported_emaj_version_num)) {
+				echo "<div class=\"topbar\"><table style=\"width: 100%\"><tr><td><span class=\"platform\">";
+				$link = "<a href=\"plugin.php?plugin={$this->name}&amp;action=emaj_envir&amp;{$misc->href}\">\"{$this->lang['emajenvir']}\"</a>";
+				echo sprintf($this->lang['emajnotavail'], $link);
+				echo "</span></td></tr></table></div>";
+				return 0;
+			}
 		}
 
 	// generate the E-Maj header
 		$currTime = date('H:i:s');
+		if (isset($this->emajdb) && $this->emajdb->isEnabled() && $this->emajdb->isAccessible()
+			&& $this->emajdb->getNumEmajVersion() >= $this->oldest_supported_emaj_version_num) {
+			$emajVersion = "E-Maj&nbsp;{$this->emajdb->getEmajVersion()}&nbsp;&nbsp;-&nbsp;&nbsp;";
+		} else {
+			$emajVersion = '';
+		}
 		echo "<div class=\"topbar\"><table style=\"width: 100%\"><tr>\n";
 		echo "<td style=\"width:15px\"><a href=\"plugin.php?plugin={$this->name}&amp;{$urlvar}&amp;{$misc->href}\"><img src=\"{$misc->icon('Refresh')}\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\" /></a></td>\n";
 		echo "<td><span class=\"platform\">{$currTime}&nbsp;&nbsp;";
-		echo "E-Maj {$this->emajdb->getEmajVersion()}&nbsp;&nbsp;-&nbsp;&nbsp;{$title}</span></td>\n";
+		echo "{$emajVersion}{$title}</span></td>\n";
 		echo "<td style=\"width:15px\"><a href=\"#bottom\"><img src=\"{$misc->icon(array($this->name,'Bottom'))}\" alt=\"{$this->lang['emajpagebottom']}\" title=\"{$this->lang['emajpagebottom']}\" /></a></td>\n";
 		echo "</tr></table></div>\n";
 

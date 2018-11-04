@@ -116,6 +116,63 @@ class EmajDb {
 	}
 
 	/**
+	 * Determines whether or not the E-Maj extension has been installed in the instance.
+	 */
+	function isExtensionAvailable() {
+		global $data;
+
+		$sql = "SELECT 1 FROM pg_catalog.pg_available_extensions WHERE name = 'emaj'";
+		$rs = $data->selectSet($sql);
+		if ($rs->recordCount() == 1) {
+			return 1;
+		}
+		return 0;
+	}
+
+	/**
+	 * Determines whether or not E-Maj has been created as an extension.
+	 */
+	function isExtension() {
+		global $data;
+
+		$sql = "SELECT 1 FROM pg_catalog.pg_extension WHERE extname = 'emaj'";
+		$rs = $data->selectSet($sql);
+		if ($rs->recordCount() == 1) {
+			return 1;
+		}
+		return 0;
+	}
+
+////	/**
+////	 * Return the installed E-Maj extension version.
+////	 */
+////	function getExtensionVersion() {
+////		global $data,;
+////
+////		$this->extension_installed = 0;
+////		$this->extension_version ='';
+////		$sql = "SELECT extversion AS version FROM pg_catalog.pg_extension WHERE extname = 'emaj';";
+////		$rs = $data->selectSet($sql);
+////		if ($rs->recordCount() == 1) {
+////			$this->extension_installed = 1;
+////			$this->extension_version = $rs->fields['version'];
+////		}
+////		return $this->extension_installed;
+////	}
+
+////	/**
+////	 * Determines whether or not the installed emaj version is greater or equal a given version (in numeric format).
+////	 */
+////	function isVersionMin($min_version_num) {
+////
+////		if ($this->getNumEmajVersion() >= $min_version_num) {
+////			return 1;
+////		} else {
+////			return 0;
+////		}
+////	}
+
+	/**
 	 * Determines whether or not a dblink connection can be used for rollbacks (not necessarily for this user).
 	 */
 	function isDblinkUsable() {

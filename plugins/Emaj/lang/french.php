@@ -69,14 +69,14 @@
 	$plugin_lang['emajlogschemasuffix'] = 'Suffixe schéma log';
 	$plugin_lang['emajlogdattsp'] = 'Tablespace log';
 	$plugin_lang['emajlogidxtsp'] = 'Tablespace index log';
-	$plugin_lang['emajnewgroup'] = '-- nouveau groupe --';
-	$plugin_lang['emajnewsuffix'] = '-- nouveau suffixe --';
-	$plugin_lang['emajnewtsp'] = '-- nouveau tablespace --';
 	$plugin_lang['emajspecifytblseqtoassign'] = 'Spécifiez au moins une table ou séquence à affecter';
-	$plugin_lang['emajtblseqyetgroup'] = 'Erreur, " %s.%s " est déjà affecté à un groupe de tables.';
-	$plugin_lang['emajtblseqbadtype'] = 'Erreur, le type de " %s.%s " n\'est pas supporté par E-Maj.';
+	$plugin_lang['emajtblseqyetgroup'] = 'Erreur, "%s.%s" est déjà affecté à un groupe de tables.';
+	$plugin_lang['emajtblseqbadtype'] = 'Erreur, le type de "%s.%s" n\'est pas supporté par E-Maj.';
 	$plugin_lang['emajassigntblseq'] = 'E-Maj : Affecter des tables / séquences à un groupe de tables';
-	$plugin_lang['emajconfirmassigntblseq'] = 'Affecter : %s';
+	$plugin_lang['emajconfirmassigntblseq'] = 'Affecter :';
+	$plugin_lang['emajthetable'] = 'la table "%s.%s"';
+	$plugin_lang['emajthesequence'] = 'la séquence "%s.%s"';
+	$plugin_lang['emajfromgroup'] = 'du groupe "%s"';
 	$plugin_lang['emajenterpriority'] = 'Priorité de traitement';
 	$plugin_lang['emajpriorityhelp'] = 'Les tables et séquences sont traitées par ordre croissant de priorité, et par ordre alphabétique de nom si aucune priorité n\'est définie.';
 	$plugin_lang['emajenterlogschema'] = 'Suffixe du schéma de log';
@@ -87,11 +87,11 @@
 	$plugin_lang['emajenterlogidxtsp'] = 'Tablespace pour l\'index de la table de log';
 	$plugin_lang['emajspecifytblseqtoupdate'] = 'Spécifiez au moins une table ou séquence à modifier';
 	$plugin_lang['emajupdatetblseq'] = 'E-Maj : Modifier les propriétés d\'une table / séquence dans un groupe de tables';
-	$plugin_lang['emajconfirmupdatetblseq'] = 'Modifier : %s';
 	$plugin_lang['emajspecifytblseqtoremove'] = 'Spécifiez au moins une table ou séquence à retirer';
-	$plugin_lang['emajtblseqnogroup'] = 'Erreur, " %s.%s " n\'est actuellement affecté à aucun groupe de tables.';
+	$plugin_lang['emajtblseqnogroup'] = 'Erreur, "%s.%s" n\'est actuellement affecté à aucun groupe de tables.';
 	$plugin_lang['emajremovetblseq'] = 'E-Maj : Retirer des tables / séquences de groupes de tables';
-	$plugin_lang['emajconfirmremovetblseq'] = 'Etes-vous sûr de vouloir retirer "%s.%s" du groupe de tables "%s" ?';
+	$plugin_lang['emajconfirmremove1tblseq'] = 'Etes-vous sûr de vouloir retirer %s du groupe de tables "%s" ?';
+	$plugin_lang['emajconfirmremovetblseq'] = 'Etes-vous sûr de vouloir retirer :';
 	$plugin_lang['emajmodifygroupok'] = 'Le changement de configuration est enregistré. Il sera effectif après (re)création ou modification des groupes de tables concernés.';
 	$plugin_lang['emajmodifygrouperr'] = 'Erreur lors du changement de composition des groupes de tables.';
 
@@ -339,18 +339,18 @@
 	$plugin_lang['emajrlbkgroupserr'] = 'Erreur lors du rollback des groupes de tables "%s" à la marque "%s" !';
 
 	// Elementary alter group actions previously executed, reported at rollback time 
-	$plugin_lang['emajalteredremovetbl'] = 'La table %s.%s a été supprimée du groupe de tables %s';
-	$plugin_lang['emajalteredremoveseq'] = 'La séquence %s.%s a été supprimée du groupe de tables %s';
-	$plugin_lang['emajalteredrepairtbl'] = 'Les objets E-Maj pour la table %s.%s ont été reparés';
-	$plugin_lang['emajalteredrepairseq'] = 'Les objets E-Maj pour la séquence %s.%s ont été reparés';
-	$plugin_lang['emajalteredchangetbllogschema'] = 'Le schéma de log E-Maj pour la table %s.%s a été modifié';
-	$plugin_lang['emajalteredchangetblnamesprefix'] = 'Le préfixe des noms E-Maj pour la table %s.%s a été modifié';
-	$plugin_lang['emajalteredchangetbllogdatatsp'] = 'Le tablespace pour le log de la table %s.%s a été modifié';
-	$plugin_lang['emajalteredchangetbllogindextsp'] = 'Le tablespace pour les index de log de la table %s.%s a été modifié';
-	$plugin_lang['emajalteredassignrel'] = 'La table ou séquence %s.%s a été déplacée du groupe de tables %s au groupe de tables %s';
-	$plugin_lang['emajalteredchangerelpriority'] = 'La priorité E-Maj pour la table %s.%s a été modifiée';
-	$plugin_lang['emajalteredaddtbl'] = 'La table %s.%s a été ajoutée au groupe de tables %s';
-	$plugin_lang['emajalteredaddseq'] = 'La séquence %s.%s a été ajoutée au groupe de tables %s';
+	$plugin_lang['emajalteredremovetbl'] = 'La table "%s.%s" a été supprimée du groupe de tables %s';
+	$plugin_lang['emajalteredremoveseq'] = 'La séquence "%s.%s" a été supprimée du groupe de tables %s';
+	$plugin_lang['emajalteredrepairtbl'] = 'Les objets E-Maj pour la table "%s.%s" ont été reparés';
+	$plugin_lang['emajalteredrepairseq'] = 'Les objets E-Maj pour la séquence "%s.%s" ont été reparés';
+	$plugin_lang['emajalteredchangetbllogschema'] = 'Le schéma de log E-Maj pour la table "%s.%s" a été modifié';
+	$plugin_lang['emajalteredchangetblnamesprefix'] = 'Le préfixe des noms E-Maj pour la table "%s.%s" a été modifié';
+	$plugin_lang['emajalteredchangetbllogdatatsp'] = 'Le tablespace pour le log de la table "%s.%s" a été modifié';
+	$plugin_lang['emajalteredchangetbllogindextsp'] = 'Le tablespace pour les index de log de la table "%s.%s" a été modifié';
+	$plugin_lang['emajalteredassignrel'] = 'La table ou séquence "%s.%s" a été déplacée du groupe de tables "%s" au groupe de tables "%s"';
+	$plugin_lang['emajalteredchangerelpriority'] = 'La priorité E-Maj pour la table "%s.%s" a été modifiée';
+	$plugin_lang['emajalteredaddtbl'] = 'La table "%s.%s" a été ajoutée au groupe de tables "%s"';
+	$plugin_lang['emajalteredaddseq'] = 'La séquence "%s.%s" a été ajoutée au groupe de tables "%s"';
 
 	// Mark renaming
 	$plugin_lang['emajrenameamark'] = 'E-Maj : Renommer une marque';

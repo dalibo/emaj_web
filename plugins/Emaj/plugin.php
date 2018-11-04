@@ -2589,29 +2589,42 @@ class Emaj extends Plugin {
 		}
 
 		// Build the list of tables and sequences to processs and count them
-		$lst = ''; $nbTbl = 0; $nbSeq = 0;
+		$nbTbl = 0; $nbSeq = 0;
 		echo "<form action=\"plugin.php?plugin={$this->name}&amp;\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"assign_tblseq_ok\" />\n";
 
 		if (isset($_REQUEST['ma'])) {
 		// multiple assign
+			$fullList = "<ul>";
 			foreach($_REQUEST['ma'] as $t) {
 				$a = unserialize(htmlspecialchars_decode($t, ENT_QUOTES));
 				echo "<input type=\"hidden\" name=\"appschema[]\" value=\"", htmlspecialchars($a['appschema']), "\" />\n";
 				echo "<input type=\"hidden\" name=\"tblseq[]\" value=\"", htmlspecialchars($a['tblseq']), "\" />\n";
-				$lst .= "<br>- {$a['appschema']}.{$a['tblseq']}";
-				if ($a['type'] == 'r+') $nbTbl++; else $nbSeq++;
+				if ($a['type'] == 'r+') {
+					$nbTbl++;
+					$fullList .= "<li>" . sprintf($this->lang['emajthetable'],$a['appschema'],$a['tblseq']) . "</li>\n";
+				} else {
+					$nbSeq++;
+					$fullList .= "<li>" . sprintf($this->lang['emajthesequence'],$a['appschema'],$a['tblseq']) . "</li>\n";
+				}
 			}
+			$fullList .= "</ul>\n";
+			echo "<p>{$this->lang['emajconfirmassigntblseq']}{$fullList}</p>\n";
 		} else {
 
 		// single assign
 			echo "<input type=\"hidden\" name=\"appschema\" value=\"", htmlspecialchars($_REQUEST['appschema']), "\" />\n";
 			echo "<input type=\"hidden\" name=\"tblseq\" value=\"", htmlspecialchars($_REQUEST['tblseq']), "\" />\n";
-			$lst = "{$_REQUEST['appschema']}.{$_REQUEST['tblseq']}";
-			if ($_REQUEST['type'] == 'r+') $nbTbl++; else $nbSeq++;
+			if ($_REQUEST['type'] == 'r+') {
+				$nbTbl++;
+				$tblseqName = sprintf($this->lang['emajthetable'],$_REQUEST['appschema'],$_REQUEST['tblseq']);
+			} else {
+				$nbSeq++;
+				$tblseqName = sprintf($this->lang['emajthesequence'],$_REQUEST['appschema'],$_REQUEST['tblseq']);
+			}
+			echo "<p>{$this->lang['emajassign']} {$tblseqName}</p>\n";
 		}
 
-		echo "<p>", sprintf($this->lang['emajconfirmassigntblseq'], $lst), "</p>\n";
 
 		// Display the input fields depending on the context
 		echo "<table>\n";
@@ -2794,7 +2807,12 @@ class Emaj extends Plugin {
 		echo "<input type=\"hidden\" name=\"tblseq\" value=\"", htmlspecialchars($_REQUEST['tblseq']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"groupold\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 
-		echo "<p>", sprintf($this->lang['emajconfirmupdatetblseq'], "{$_REQUEST['appschema']}.{$_REQUEST['tblseq']}"), "</p>\n";
+		if ($_REQUEST['type'] == 'r+') {
+			$tblseqName = sprintf($this->lang['emajthetable'],$_REQUEST['appschema'],$_REQUEST['tblseq']);
+		} else {
+			$tblseqName = sprintf($this->lang['emajthesequence'],$_REQUEST['appschema'],$_REQUEST['tblseq']);
+		}
+		echo "<p>{$lang['strupdate']} {$tblseqName}</p>\n";
 
 		// Display the input fields depending on the context
 		echo "<table>\n";
@@ -2938,25 +2956,44 @@ class Emaj extends Plugin {
 
 		$misc->printTitle($this->lang['emajremovetblseq']);
 
+		$nbTbl = 0; $nbSeq = 0;
 		echo "<form action=\"plugin.php?plugin={$this->name}&amp;\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"remove_tblseq_ok\" />\n";
 
 		if (isset($_REQUEST['ma'])) {
 		// multiple removal
+			$fullList = "<ul>";
 			foreach($_REQUEST['ma'] as $t) {
 				$a = unserialize(htmlspecialchars_decode($t, ENT_QUOTES));
-				echo '<p>', sprintf($this->lang['emajconfirmremovetblseq'], $misc->printVal($a['appschema']), $misc->printVal($a['tblseq']), $misc->printVal($a['group'])), "</p>\n";
 				echo "<input type=\"hidden\" name=\"appschema[]\" value=\"", htmlspecialchars($a['appschema']), "\" />\n";
 				echo "<input type=\"hidden\" name=\"tblseq[]\" value=\"", htmlspecialchars($a['tblseq']), "\" />\n";
 				echo "<input type=\"hidden\" name=\"group[]\" value=\"", htmlspecialchars($a['group']), "\" />\n";
+				if ($a['type'] == 'r+') {
+					$nbTbl++;
+					$fullList .= "<li>" . sprintf($this->lang['emajthetable'],$a['appschema'],$a['tblseq']); 
+				} else {
+					$nbSeq++;
+					$fullList .= "<li>" . sprintf($this->lang['emajthesequence'],$a['appschema'],$a['tblseq']);
+				}
+				$fullList .= " " . sprintf($this->lang['emajfromgroup'],$a['group']) . "</li>\n";
 			}
-		}else {
+			$fullList .= "</ul>\n";
+			echo "<p>{$this->lang['emajconfirmremovetblseq']}{$fullList}</p>\n";
+
+		} else {
 
 		// single removal
-			echo "<p>", sprintf($this->lang['emajconfirmremovetblseq'], $misc->printVal($_REQUEST['appschema']), $misc->printVal($_REQUEST['tblseq']), $misc->printVal($_REQUEST['group'])), "</p>\n";
 			echo "<input type=\"hidden\" name=\"appschema\" value=\"", htmlspecialchars($_REQUEST['appschema']), "\" />\n";
 			echo "<input type=\"hidden\" name=\"tblseq\" value=\"", htmlspecialchars($_REQUEST['tblseq']), "\" />\n";
 			echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
+			if ($_REQUEST['type'] == 'r+') {
+				$nbTbl++;
+				$tblseqName = sprintf($this->lang['emajthetable'],$_REQUEST['appschema'],$_REQUEST['tblseq']);
+			} else {
+				$nbSeq++;
+				$tblseqName = sprintf($this->lang['emajthesequence'],$_REQUEST['appschema'],$_REQUEST['tblseq']);
+			}
+			echo "<p>" . sprintf($this->lang['emajconfirmremove1tblseq'],$tblseqName,$_REQUEST['group']) . "</p>\n";
 		}
 
 		echo $misc->form;

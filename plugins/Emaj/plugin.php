@@ -283,7 +283,7 @@ class Emaj extends Plugin {
 		return $actions;
 	}
 
-	// Functions to dynamicaly modify actions list for each table group to display
+	// Functions to dynamicaly modify actions list for each table group in logging state to display
 	function loggingGroupPre(&$rowdata, $loggingActions) {
 		global $emajdb;
 		// disable the rollback button for audit_only groups
@@ -304,6 +304,15 @@ class Emaj extends Plugin {
 			}
 		}
 		return $loggingActions;
+	}
+
+	// Functions to dynamicaly modify actions list for each configured but not yet crated table group to display
+	function configuredGroupPre(&$rowdata, $configuredActions) {
+		// disable the create button for groups with diagnostics
+		if (isset($configuredActions['create_group']) && $rowdata->fields['group_diagnostic'] != '{0,0,0,0,0}') {
+			$configuredActions['create_group']['disable'] = true;
+		}
+		return $configuredActions;
 	}
 
 	// Function to dynamicaly modify actions list for each mark
@@ -405,6 +414,30 @@ class Emaj extends Plugin {
 		return $img;
 	}
 
+	// Callback function to dynamicaly modify the diagnostic column of configured but not yet created groups
+	// It replaces the database value by an icon
+	function renderDiagnosticNewGroup($val) {
+		global $misc;
+
+		if ($val == '{0,0,0,0,0}') {
+			$icon = 'CheckConstraint';
+			return "<img src=\"".$misc->icon($icon)."\" style=\"vertical-align:bottom;\" />";
+		} else {
+			if (preg_match("/{(\d+),(\d+),(\d+),(\d+),(\d+)}/",$val,$cpt)) {
+				$msg = '';
+				if ($cpt[1] > 0) $msg .= sprintf($this->lang['emajnoschema'], $cpt[1]);
+				if ($cpt[2] > 0) $msg .= sprintf($this->lang['emajinvalidschema'], $cpt[2]);
+				if ($cpt[3] > 0) $msg .= sprintf($this->lang['emajnorelation'], $cpt[3]);
+				if ($cpt[4] > 0) $msg .= sprintf($this->lang['emajinvalidtable'], $cpt[4]);
+				if ($cpt[5] > 0) $msg .= sprintf($this->lang['emajduplicaterelation'], $cpt[5]);
+				$msg = substr($msg,0,-3);
+				return $msg;
+			} else {
+				return "$val not decoded";
+			}
+		}
+	}
+
 	// Callback function to dynamicaly modify the group state column content
 	// It replaces the database value by an icon
 	function renderGroupState($val) {
@@ -478,6 +511,7 @@ class Emaj extends Plugin {
 
 			$idleGroups = $this->emajdb->getIdleGroups();
 			$loggingGroups = $this->emajdb->getLoggingGroups();
+			$configuredGroups = $this->emajdb->getConfiguredGroups();
 
 			$columns = array(
 				'group' => array(
@@ -748,10 +782,58 @@ class Emaj extends Plugin {
 				));
 			};
 
+			$configuredColumns = array(
+				'group' => array(
+					'title' => $this->lang['emajgroup'],
+					'field' => field('grpdef_group'),
+				),
+				'actions' => array(
+					'title' => $lang['stractions'],
+				),
+				'nbtbl' => array(
+					'title' => $this->lang['emajnbtbl'],
+					'field' => field('group_nb_table'),
+					'type'  => 'numeric'
+				),
+				'nbseq' => array(
+					'title' => $this->lang['emajnbseq'],
+					'field' => field('group_nb_sequence'),
+					'type'  => 'numeric'
+				),
+				'diagnostic' => array(
+					'title' => $this->lang['emajdiagnostics'],
+					'field' => field('group_diagnostic'),
+					'type'	=> 'callback',
+					'params'=> array(
+							'function' => array($this, 'renderDiagnosticNewGroup'),
+							)
+				),
+			);
+
+			if ($this->emajdb->isEmaj_Adm()) {
+				$configuredActions = array(
+					'create_group' => array(
+						'content' => $lang['strcreate'],
+						'attr' => array (
+							'href' => array (
+								'url' => 'plugin.php',
+								'urlvars' => array_merge($urlvars, array (
+									'plugin' => $this->name,
+									'action' => 'create_group',
+									'back' => 'list',
+									'empty' => 'false',
+									'group' => field('grpdef_group'),
+								))))
+					),
+				);
+			} else {
+				$configuredActions = array();
+			}
+
 			echo "<h3>{$this->lang['emajlogginggroups']}<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajlogginggrouphelp']}\"/></h3>";
 
 			echo "<div id=\"loggingGroupsTable\">\n";
-//			$misc->printTable($loggingGroups, $columns, $loggingActions, 'loggingGroups', $this->lang['emajnologginggroup']
+//			$misc->printTable($loggingGroups, $columns, $loggingActions, 'loggingGroups', $this->lang['emajnologginggroup'], array($this, 'loggingGroupPre'));
 			$this->printTable($loggingGroups, $columns, $loggingActions, 'loggingGroups', $this->lang['emajnologginggroup'], array($this, 'loggingGroupPre'));
 			echo "</div>\n";
 
@@ -840,53 +922,51 @@ class Emaj extends Plugin {
 
 			echo "<hr>\n";
 
-			// get groups name known in emaj_group_def table but not yet created (i.e. not known in emaj_group table)
-			// for emaj_adm role only
-			if ($this->emajdb->isEmaj_Adm()) {
-				$newGroups = $this->emajdb->getNewGroups();
+			// configured but not yet created tables section
+			echo "<h3>{$this->lang['emajconfiguredgroups']}<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajconfiguredgrouphelp']}\"/></h3>\n";
 
-				if (($newGroups->recordCount() + $idleGroups->recordCount() + $loggingGroups->recordCount() == 0) 
-					and ($this->emajdb->getNumEmajVersion() >= 20100)) {			// version >= 2.1.0
-				// if there is no group already created or configured, just display an information message and a create empty group button
+			echo "<div id=\"configuredGroupsTable\">\n";
+//			$misc->printTable($configuredGroups, $configuredColumns, $configuredActions, 'configuredGroups', $this->lang['emajnoconfiguredgroups'], array($this, 'configuredGroupPre'));
+			$this->printTable($configuredGroups, $configuredColumns, $configuredActions, 'configuredGroups', $this->lang['emajnoconfiguredgroups'], array($this, 'configuredGroupPre'));
+			echo "</div>\n";
+
+			// activate tablesorter script
+			echo "<script type=\"text/javascript\">
+				$(document).ready(function() {
+					$(\"#configuredGroupsTable table\").addClass('tablesorter');
+					$(\"#configuredGroupsTable table\").tablesorter(
+						{
+						headers: {";
+			if ($this->emajdb->isEmaj_Adm()) {
+				echo "
+								1: { sorter: false, filter: false },
+								4: { filter: false },";
+			} else {
+				echo "
+								3: { filter: false },";
+			}
+			echo "
+							},
+						emptyTo: 'none',
+						widgets: [\"zebra\", \"filter\"],
+						widgetOptions: {
+							zebra : [ \"data1\", \"data2\" ],
+							filter_hideFilters : true,
+							stickyHeaders : 'tablesorter-stickyHeader', 
+							},
+						}
+					)
+				});
+				</script>";
+
+			// for emaj_adm role only, give information about how to create a group and propose the create empty group button
+			if ($this->emajdb->isEmaj_Adm()) {
+				if ($this->emajdb->getNumEmajVersion() >= 20100) {			// version >= 2.1.0
 					echo "<p>{$this->lang['emajnoconfiguredgroup']}</p>";
 					echo "<form id=\"createEmptyGroup_form\" action=\"plugin.php?plugin={$this->name}&amp;action=create_group&amp;back=list&amp;empty=true&amp;{$misc->href}\"";
 					echo " method=\"post\" enctype=\"multipart/form-data\">\n";
 					echo "\t<input type=\"submit\" value=\"{$this->lang['emajcreateemptygroup']}\" />\n";
 					echo "</form>\n";
-				} else {
-					echo "<table>\n";
-					echo "<tr>\n";
-					echo "<th class=\"data\" style=\"text-align: left\" colspan=\"3\">{$this->lang['emajcreategroup']}</th>\n";
-					echo "</tr><tr>\n";
-					if ($newGroups->recordCount() > 0) {
-
-					// form used to create a new configured group
-
-						echo "<form id=\"createGroup_form\" action=\"plugin.php?plugin={$this->name}&amp;action=create_group&amp;back=list&amp;empty=false&amp;{$misc->href}\"";
-						echo " method=\"post\" enctype=\"multipart/form-data\">\n";
-						echo "<td class=\"data1\">{$this->lang['emajcreatethegroup']}\n";
-						echo "\t<select name=\"group\">\n";
-						foreach($newGroups as $r)
-							echo "\t\t<option value=\"",htmlspecialchars($r['group_name']),"\">",htmlspecialchars($r['group_name']),"</option>\n";
-						echo "\t</select>\n";
-//						echo "<input type=\"submit\" value=\"{$lang['strcreate']}\" />\n";
-						echo "<input type=\"submit\" value=\"{$lang['strok']}\" />\n";
-						echo "</td>\n";
-						echo "</form>\n";
-					};
-
-					// Button to create a new empty group
-					if ($this->emajdb->getNumEmajVersion() >= 20100) {			// version >= 2.1.0
-						echo "<form id=\"createEmptyGroup_form\" action=\"plugin.php?plugin={$this->name}&amp;action=create_group&amp;back=list&amp;empty=true&amp;{$misc->href}\"";
-						echo " method=\"post\" enctype=\"multipart/form-data\">\n";
-						echo "<td class=\"data1\"> - </td>\n";
-						echo "<td class=\"data1\">\n";
-						echo "\t<input type=\"submit\" value=\"{$this->lang['emajcreateemptygroup']}\" />\n";
-						echo "</td>\n";
-						echo "</form>\n";
-					}
-
-					echo "</tr></table>\n";
 				}
 			}
 		}

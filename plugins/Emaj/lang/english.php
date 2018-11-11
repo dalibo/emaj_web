@@ -99,8 +99,10 @@
 	$plugin_lang['emajgrouplist'] = 'Tables groups list';
 	$plugin_lang['emajidlegroups'] = 'Tables groups in "IDLE" state ';
 	$plugin_lang['emajlogginggroups'] = 'Tables groups in "LOGGING" state ';
+	$plugin_lang['emajconfiguredgroups'] = 'Configured but not yet created tables groups ';
 	$plugin_lang['emajlogginggrouphelp'] = 'When a tables group is in \'logging\' state, the row insertions, updates and deletions on its tables are recorded.';
  	$plugin_lang['emajidlegrouphelp'] = 'When a tables group is in \'idle\' state, the row insertions, updates and deletions on its tables are NOT recorded.';
+	$plugin_lang['emajconfiguredgrouphelp'] = 'The group configuration defines the tables and sequences that will compose it. Once \'configured\', the group must be \'created\' in order to prepare all abjects that will be needed for its use (log tables, functions,...).';
 	$plugin_lang['emajcreationdatetime'] = 'Creation date/time';
 	$plugin_lang['emajnbtbl'] = '# tables';
 	$plugin_lang['emajnbseq'] = '# sequences';
@@ -108,11 +110,15 @@
 	$plugin_lang['emajdetail'] = 'Detail';
 	$plugin_lang['emajsetmark'] = 'Set a mark';
 	$plugin_lang['emajsetcomment'] = 'Set a comment';
-	$plugin_lang['emajnoidlegroup'] = 'No Emaj tables group is currently in idle state.';
-	$plugin_lang['emajnologginggroup'] = 'No Emaj tables group is currently in logging state.';
-	$plugin_lang['emajnoconfiguredgroup'] = 'No group is currently configured.<br>To create one, go first to the groups configuration tab,<br>or create an empty group and then add tables and sequences into it.';
-	$plugin_lang['emajcreategroup'] = 'Creation of a new tables group';
-	$plugin_lang['emajcreatethegroup'] = 'Create the group';
+	$plugin_lang['emajnoidlegroup'] = 'No tables group is currently in idle state.';
+	$plugin_lang['emajnologginggroup'] = 'No tables group is currently in logging state.';
+	$plugin_lang['emajnoconfiguredgroups'] = 'No tables group is currently configured but not created.';
+	$plugin_lang['emajnoschema'] = 'Schema not found (x%s) / ';
+	$plugin_lang['emajinvalidschema'] = 'Invalid schema (x%s) / ';
+	$plugin_lang['emajnorelation'] = 'Table or sequence not found (x%s) / ';
+	$plugin_lang['emajinvalidtable'] = 'Invalid table type (x%s) / ';
+	$plugin_lang['emajduplicaterelation'] = 'Table or sequence already assigned to another group (x%s) / ';
+	$plugin_lang['emajnoconfiguredgroup'] = 'To create a (another) tables group, go first to the groups configuration tab.<br>Alternatively, you can create an empty group, then add tables and sequences into it, and \'modify\' it to take the configuration change into account.';
 	$plugin_lang['emajcreateemptygroup'] = 'Create an empty group';
 
 	// Rollback activity

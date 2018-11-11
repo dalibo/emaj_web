@@ -484,15 +484,46 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets all groups referenced in emaj_group_def but not in emaj_group table
+	 * Gets all configured but not yet created groups.
+	 * They are referenced in emaj_group_def but not in emaj_group tables.
+	 * Also return counters: number of tables, sequences and bad relations.
 	 */
-	function getNewGroups() {
+	function getConfiguredGroups() {
 		global $data;
 
-		$sql = "SELECT DISTINCT grpdef_group AS group_name FROM \"{$this->emaj_schema}\".emaj_group_def
-				EXCEPT
-				SELECT group_name FROM \"{$this->emaj_schema}\".emaj_group
-				ORDER BY 1";
+		$sql = "WITH
+				grp AS (
+				    SELECT DISTINCT grpdef_group AS group_name FROM emaj.emaj_group_def
+				  EXCEPT
+				    SELECT group_name FROM emaj.emaj_group
+				),
+				rel AS (
+				  SELECT d.grpdef_group, d.grpdef_schema, d.grpdef_tblseq, relkind,
+					CASE WHEN nspname IS NULL THEN true ELSE false END as no_schema,                -- the schema doesn't exist
+					CASE WHEN d.grpdef_schema like 'emaj%' THEN true ELSE false END as bad_schema,  -- the schema is an emaj_schema
+					CASE WHEN relname IS NULL THEN true ELSE false END as no_relation,              -- the relation doesn't exist
+					CASE WHEN relkind = 'r' AND (c.relpersistence <> 'p' OR c.relhasoids) 
+							THEN true ELSE false END as bad_type,                                   -- the table has not the right type
+					CASE WHEN rel_group IS NOT NULL THEN true ELSE false END as duplicate           -- the relation is already assigned to another created group
+				  FROM emaj.emaj_group_def d
+					JOIN grp ON d.grpdef_group = group_name
+					LEFT OUTER JOIN pg_catalog.pg_namespace n ON d.grpdef_schema = nspname
+					LEFT OUTER JOIN pg_catalog.pg_class c ON n.oid = c.relnamespace AND d.grpdef_tblseq = c.relname
+					LEFT OUTER JOIN emaj.emaj_relation ON d.grpdef_schema = rel_schema AND d.grpdef_tblseq = rel_tblseq AND upper_inf(rel_time_range)
+				)
+				SELECT grpdef_group,
+					   count(CASE WHEN relkind = 'r' and not (no_schema OR no_relation OR bad_type OR bad_schema OR duplicate) THEN 1 END) AS group_nb_table,
+					   count(CASE WHEN relkind = 'S' and not (no_schema OR no_relation OR bad_type OR bad_schema OR duplicate) THEN 1 END) AS group_nb_sequence,
+					   ARRAY[count(CASE WHEN no_schema THEN 1 END)
+							,count(CASE WHEN bad_schema THEN 1 END)
+							,count(CASE WHEN no_relation THEN 1 END)
+							,count(CASE WHEN bad_type THEN 1 END)
+							,count(CASE WHEN duplicate THEN 1 END)
+							] as group_diagnostic
+				FROM rel
+				GROUP BY 1
+				ORDER BY 1
+				";
 		return $data->selectSet($sql);
 	}
 

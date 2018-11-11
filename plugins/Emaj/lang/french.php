@@ -99,8 +99,10 @@
 	$plugin_lang['emajgrouplist'] = 'Liste des groupes de tables';
 	$plugin_lang['emajidlegroups'] = 'Groupes de tables en état "arrêté" ';
 	$plugin_lang['emajlogginggroups'] = 'Groupes de tables en état "démarré" ';
+	$plugin_lang['emajconfiguredgroups'] = 'Groupes de tables "configurés" mais non encore "créés" ';
 	$plugin_lang['emajlogginggrouphelp'] = 'Quand un groupe de tables est dans l\'état \'démarré\', les insertions, modifications et suppression de lignes sur ses tables sont enregistrées.';
  	$plugin_lang['emajidlegrouphelp'] = 'Quand un groupe de tables est dans l\'état \'arrêté\', les insertions, modifications et suppressions de lignes sur ses tables ne sont PAS enregistrées.';
+	$plugin_lang['emajconfiguredgrouphelp'] = 'La configuration d\'un groupe définit les tables et séquences qui vont le constituer. Une fois \'configuré\', le groupe doit être \'créé\', afin de préparer tous les objets nécessaires à son utilisation (tables de log, fonctions,...).';
 	$plugin_lang['emajcreationdatetime'] = 'Date/heure de création';
 	$plugin_lang['emajnbtbl'] = 'Nb tables';
 	$plugin_lang['emajnbseq'] = 'Nb séquences';
@@ -110,9 +112,13 @@
 	$plugin_lang['emajsetcomment'] = 'Commenter';
 	$plugin_lang['emajnoidlegroup'] = 'Il n\'y a actuellement aucun groupe de tables en état "arrêté".';
 	$plugin_lang['emajnologginggroup'] = 'Il n\'y a actuellement aucun groupe de tables en état "démarré".';
-	$plugin_lang['emajnoconfiguredgroup'] = 'Aucun groupe n\'est configuré.<br>Pour en créer un, allez d\'abord dans l\'onglet de configuration des groupes,<br>ou créez un groupe vide puis ajoutez-y des tables et séquences.';
-	$plugin_lang['emajcreategroup'] = 'Création d\'un nouveau groupe de tables';
-	$plugin_lang['emajcreatethegroup'] = 'Créer le groupe';
+	$plugin_lang['emajnoconfiguredgroups'] = 'Il n\'y a actuellement aucun groupe de tables configuré mais non créé.';
+	$plugin_lang['emajnoschema'] = 'Schéma inexistant (x%s) / ';
+	$plugin_lang['emajinvalidschema'] = 'Schéma invalide (x%s) / ';
+	$plugin_lang['emajnorelation'] = 'Table ou séquence inexistante (x%s) / ';
+	$plugin_lang['emajinvalidtable'] = 'Type de table invalide (x%s) / ';
+	$plugin_lang['emajduplicaterelation'] = 'Table ou séquence déjà affectée à un groupe (x%s) / ';
+	$plugin_lang['emajnoconfiguredgroup'] = 'Pour créer un (autre) groupe de tables, allez d\'abord dans l\'onglet de configuration des groupes.<br>Vous pouvez aussi créer un groupe vide puis y ajouter des tables et séquences puis le \'modifier\' pour prendre en compte le changement de configuration.';
 	$plugin_lang['emajcreateemptygroup'] = 'Créer un groupe vide';
 
 	// Rollback activity

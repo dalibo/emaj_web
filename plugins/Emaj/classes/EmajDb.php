@@ -843,7 +843,6 @@ class EmajDb {
 	function getKnownGroups() {
 		global $data;
 
-		$data->fieldClean($schema);
 		$sql = "SELECT group_name
 				  FROM \"{$this->emaj_schema}\".emaj_group
 				UNION
@@ -859,7 +858,6 @@ class EmajDb {
 	function getKnownSuffix() {
 		global $data;
 
-		$data->fieldClean($schema);
 		$sql = "SELECT DISTINCT grpdef_log_schema_suffix AS known_suffix 
 				FROM \"{$this->emaj_schema}\".emaj_group_def
 				WHERE grpdef_log_schema_suffix <> '' AND grpdef_log_schema_suffix IS NOT NULL
@@ -1069,6 +1067,8 @@ class EmajDb {
 	function createGroup($group,$isRollbackable,$isEmpty) {
 		global $data;
 
+		$data->clean($group);
+
 		if ($isEmpty) {
 			if ($isRollbackable){
 				$sql = "SELECT \"{$this->emaj_schema}\".emaj_create_group('{$group}',true,true) AS nbtblseq";
@@ -1090,6 +1090,8 @@ class EmajDb {
 	 */
 	function dropGroup($group) {
 		global $data;
+
+		$data->clean($group);
 
 		$sql = "SELECT \"{$this->emaj_schema}\".emaj_drop_group('{$group}') AS nbtblseq";
 
@@ -1154,6 +1156,9 @@ class EmajDb {
 	function alterGroup($group,$mark) {
 		global $data;
 
+		$data->clean($group);
+		$data->clean($mark);
+
 		if ($mark == '') {
 			$sql = "SELECT \"{$this->emaj_schema}\".emaj_alter_group('{$group}') AS nbtblseq";
 		} else {
@@ -1169,6 +1174,7 @@ class EmajDb {
 		global $data;
 
 		$data->clean($groups);
+		$data->clean($mark);
 		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
 
 		if ($mark == '') {
@@ -1321,7 +1327,7 @@ class EmajDb {
 	/**
 	 * Stops several groups at once
 	 */
-	function stopGroups($groups) {
+	function stopGroups($groups,$mark) {
 		global $data;
 
 		$data->clean($groups);
@@ -1411,7 +1417,6 @@ class EmajDb {
 	function getMark($group,$mark) {
 		global $data;
 
-		$data->fieldClean($schema);
 		$data->clean($group);
 		$data->clean($mark);
 
@@ -1856,6 +1861,7 @@ class EmajDb {
 		$data->clean($groups);
 		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
 		$data->clean($mark);
+
 		$nbGroups = substr_count($groupsArray,',') + 1;
 
 		// check the mark is active (i.e. not deleted)

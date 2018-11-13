@@ -1,0 +1,23 @@
+button {
+	background: #c4ba95 url('../../images/themes/cappuccino/inputbckg.png') repeat-x top left;
+	border: 1px solid #887f5c;
+	cursor: pointer;
+}
+button:disabled,
+button[disabled]{
+	cursor: default;
+}
+table.multiactions {
+	margin-top: 0px;
+}
+th.multiactions {
+	text-align: left;
+	color: #fff;
+	background-color: #706050;
+	border: 1px dotted #887f5c;
+	font-size: 0.9em;
+	padding: 2px 10px;
+}
+tr.row1 {
+	border: 1px dotted #887f5c;
+}

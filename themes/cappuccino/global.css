@@ -62,6 +62,7 @@ input[type=checkbox], input[type=password], input[type=text], input[type=radio] 
 input[type=submit], input[type=button], select {
 	background: #c4ba95 url('../../images/themes/cappuccino/inputbckg.png') repeat-x top left;
 	border: 1px solid #887f5c;
+	cursor: pointer;
 }
 table.error {
 	background-color: #dec9d0;

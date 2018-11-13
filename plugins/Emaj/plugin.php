@@ -54,6 +54,8 @@ class Emaj extends Plugin {
 			"<script type=\"text/javascript\" src=\"plugins/Emaj/js/jquery.keyfilter-1.7.min.js\"></script>\n" .
 			"<script type=\"text/javascript\" src=\"plugins/Emaj/js/jquery.tablesorter.min.js\"></script>\n" .
 			"<script type=\"text/javascript\" src=\"plugins/Emaj/js/jquery.tablesorter.widgets.min.js\"></script>\n" .
+			"<script type=\"text/javascript\" src=\"plugins/Emaj/js/multiactionform.js\"></script>\n" .
+			"<link rel=\"stylesheet\" href=\"plugins/Emaj/themes/{$conf['theme']}/emaj.css\" type=\"text/css\" />\n" .
 			"<link rel=\"stylesheet\" href=\"plugins/Emaj/themes/{$conf['theme']}/tablesorter.css\" type=\"text/css\" />\n";
         return;
     }
@@ -581,7 +583,6 @@ class Emaj extends Plugin {
 					'multiactions' => array(
 						'keycols' => array('group' => 'group_name'),
 						'url' => "plugin.php?plugin={$this->name}&amp;back=list",
-						'default' => 'set_mark_group',
 					),
 					'set_mark_group' => array(
 						'content' => $this->lang['emajsetmark'],
@@ -707,7 +708,6 @@ class Emaj extends Plugin {
 					'multiactions' => array(
 						'keycols' => array('group' => 'group_name'),
 						'url' => "plugin.php?plugin={$this->name}&amp;back=list",
-						'default' => 'start_group',
 					),
 					'start_group' => array(
 						'content' => $lang['strstart'],
@@ -962,7 +962,7 @@ class Emaj extends Plugin {
 			// for emaj_adm role only, give information about how to create a group and propose the create empty group button
 			if ($this->emajdb->isEmaj_Adm()) {
 				if ($this->emajdb->getNumEmajVersion() >= 20100) {			// version >= 2.1.0
-					echo "<p>{$this->lang['emajnoconfiguredgroup']}</p>";
+					echo "<p>{$this->lang['emajnoconfiguredgroup']}</p>\n";
 					echo "<form id=\"createEmptyGroup_form\" action=\"plugin.php?plugin={$this->name}&amp;action=create_group&amp;back=list&amp;empty=true&amp;{$misc->href}\"";
 					echo " method=\"post\" enctype=\"multipart/form-data\">\n";
 					echo "\t<input type=\"submit\" value=\"{$this->lang['emajcreateemptygroup']}\" />\n";
@@ -1123,7 +1123,6 @@ class Emaj extends Plugin {
 					'multiactions' => array(
 						'keycols' => array('appschema' => 'nspname', 'tblseq' => 'relname', 'group' => 'grpdef_group', 'type' => 'relkind'),
 						'url' => "plugin.php?plugin={$this->name}&amp;back=define",
-						'default' => 'assign',
 					),
 					'assign' => array(
 						'content' => $this->lang['emajassign'],
@@ -5074,7 +5073,7 @@ class Emaj extends Plugin {
 			}
 		}
 
-	// generate the E-Maj header
+		// generate the E-Maj header
 		$currTime = date('H:i:s');
 		if (isset($this->emajdb) && $this->emajdb->isEnabled() && $this->emajdb->isAccessible()
 			&& $this->emajdb->getNumEmajVersion() >= $this->oldest_supported_emaj_version_num) {
@@ -5173,8 +5172,8 @@ class Emaj extends Plugin {
 				}
 
 				if ($has_ma) {
-					echo "<script src=\"multiactionform.js\" type=\"text/javascript\"></script>\n";
-					echo "<form id=\"multi_form\" action=\"{$ma['url']}\" method=\"post\" enctype=\"multipart/form-data\">\n";
+//					echo "<script src=\"multiactionform.js\" type=\"text/javascript\"></script>\n";
+					echo "<form id=\"{$place}\" action=\"{$ma['url']}\" method=\"post\" enctype=\"multipart/form-data\">\n";
 					if (isset($ma['vars']))
 						foreach ($ma['vars'] as $k => $v)
 							echo "<input type=\"hidden\" name=\"$k\" value=\"$v\" />";
@@ -5230,7 +5229,7 @@ class Emaj extends Plugin {
 						foreach ($ma['keycols'] as $k => $v)
 							$a[$k] = $tabledata->fields[$v];
 						echo "<td>";
-						echo "<input type=\"checkbox\" name=\"ma[]\" value=\"". htmlentities(serialize($a), ENT_COMPAT, 'UTF-8') ."\" />";
+						echo "<input type=\"checkbox\" name=\"ma[]\" value=\"". htmlentities(serialize($a), ENT_COMPAT, 'UTF-8') ."\" onclick=\"javascript:countChecked('{$place}');\"/>";
 						echo "</td>\n";
 					}
 
@@ -5285,28 +5284,21 @@ class Emaj extends Plugin {
 
 				// Multi action table footer w/ options & [un]check'em all
 				if ($has_ma) {
-					// if default is not set or doesn't exist, set it to null
-					if (!isset($ma['default']) || !isset($actions[$ma['default']]))
-						$ma['default'] = null;
-					echo "<br />\n";
-					echo "<table>\n";
+//					echo "<br />\n";
+					echo "<table class=\"multiactions\">\n";
 					echo "<tr>\n";
-					echo "<th class=\"data\" style=\"text-align: left\" colspan=\"3\">{$lang['stractionsonmultiplelines']}</th>\n";
+					echo "<th class=\"multiactions\">{$this->lang['emajselect']}</th>\n";
+					echo "<th class=\"multiactions\" id=\"selectedcounter\">{$this->lang['emajactionsonselectedobjects']}</th>\n";
 					echo "</tr>\n";
 					echo "<tr class=\"row1\">\n";
 					echo "<td>";
-					echo "<a href=\"#\" onclick=\"javascript:checkAll(true);\">{$lang['strselectall']}</a> / ";
-					echo "<a href=\"#\" onclick=\"javascript:checkAll(false);\">{$lang['strunselectall']}</a></td>\n";
-					echo "<td>&nbsp;--->&nbsp;</td>\n";
-					echo "<td>\n";
-					echo "\t<select name=\"action\">\n";
-					if ($ma['default'] == null)
-						echo "\t\t<option value=\"\">--</option>\n";
+					echo "&nbsp;<a href=\"#\" onclick=\"javascript:checkSelect('all','{$place}');countChecked('{$place}');\">{$this->lang['emajall']}</a>&nbsp;/";
+					echo "&nbsp;<a href=\"#\" onclick=\"javascript:checkSelect('none','{$place}');countChecked('{$place}');\">{$this->lang['emajnone']}</a>&nbsp;/";
+					echo "&nbsp;<a href=\"#\" onclick=\"javascript:checkSelect('invert','{$place}');countChecked('{$place}');\">{$this->lang['emajinvert']}</a>\n";
+					echo "&nbsp;</td><td>\n";
 					foreach($actions as $k => $a)
 						if (isset($a['multiaction']))
-							echo "\t\t<option value=\"{$a['multiaction']}\"", ($ma['default']  == $k? ' selected="selected"': ''), ">{$a['content']}</option>\n";
-					echo "\t</select>\n";
-					echo "<input type=\"submit\" value=\"{$lang['strexecute']}\" />\n";
+							echo "\t\t<button id=\"{$a['multiaction']}\" name=\"action\" value=\"{$a['multiaction']}\" disabled=\"true\" >{$a['content']}</button>\n";
 					echo $misc->form;
 					echo "</td>\n";
 					echo "</tr>\n";
@@ -5322,6 +5314,7 @@ class Emaj extends Plugin {
 				return false;
 			}
 		}
+
 		function printVal($str, $type = null, $params = array()) {
 			global $lang, $conf, $data;
 

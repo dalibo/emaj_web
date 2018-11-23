@@ -671,7 +671,7 @@ class Emaj extends Plugin {
 				if ($this->emajdb->getNumEmajVersion() >= 20100) {	// version >= 2.1.0
 					$loggingActions = array_merge($loggingActions, array(
 						'alter_group' => array(
-							'content' => $lang['stralter'],
+							'content' => $this->lang['emajApplyConfChanges'],
 							'attr' => array (
 								'href' => array (
 									'url' => 'plugin.php',
@@ -750,7 +750,7 @@ class Emaj extends Plugin {
 				if ($this->emajdb->getNumEmajVersion() >= 10000) {	// version >= 1.0.0
 					$idleActions = array_merge($idleActions, array(
 						'alter_group' => array(
-							'content' => $lang['stralter'],
+							'content' => $this->lang['emajApplyConfChanges'],
 							'attr' => array (
 								'href' => array (
 									'url' => 'plugin.php',
@@ -1742,7 +1742,7 @@ class Emaj extends Plugin {
 				if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
 					if (($groupState == 'IDLE' || $this->emajdb->getNumEmajVersion() >= 20100)) {
 						echo "<form id=\"alter_group_form\" action=\"plugin.php?plugin={$this->name}&amp;action=alter_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
-						echo "  <input type=\"submit\" name=\"altergroup\" value=\"{$lang['stralter']}\" />";
+						echo "  <input type=\"submit\" name=\"altergroup\" value=\"{$this->lang['emajApplyConfChanges']}\" />";
 						echo "</form>\n";
 					}
 				}
@@ -3262,7 +3262,7 @@ class Emaj extends Plugin {
 			$this->printPageHeader('emaj','emajgroups');
 		else
 			$this->printPageHeader('emajgroup','emajgroupproperties');
-		$misc->printTitle($this->lang['emajalteragroup']);
+		$misc->printTitle($this->lang['emajaltergroups']);
 
 		$isGroupLogging = $this->emajdb->isGroupLogging($_REQUEST['group']);
 
@@ -3273,7 +3273,7 @@ class Emaj extends Plugin {
 				echo "<p>", sprintf($this->lang['emajalteraloggingroup'], $misc->printVal($_REQUEST['group'])), "</p>";
 				echo "<table>\n";
 				echo "<tr><th class=\"data left\">{$this->lang['emajmark']}</th>\n";
-				echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"\" id=\"mark\">\n";
+				echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"ALTER_%\" id=\"mark\">\n";
 				echo "<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajmarknamehelp']}\"/></td></tr>";
 				echo "</table>\n";
 			} else {
@@ -3289,7 +3289,7 @@ class Emaj extends Plugin {
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"altergroup\" value=\"{$lang['stralter']}\" />\n";
+		echo "<input type=\"submit\" name=\"altergroup\" value=\"{$this->lang['emajApplyConfChanges']}\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
@@ -3388,7 +3388,7 @@ class Emaj extends Plugin {
 				echo "<p>", sprintf($this->lang['emajalterallloggingroups'], $misc->printVal($groupsList)), "</p>";
 				echo "<table>\n";
 				echo "<tr><th class=\"data left\">{$this->lang['emajmark']}</th>\n";
-				echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"\" id=\"mark\">\n";
+				echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"ALTER_%\" id=\"mark\">\n";
 				echo "<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajmarknamemultihelp']}\"/></td></tr>";
 				echo "</table>\n";
 			} else {
@@ -3404,7 +3404,7 @@ class Emaj extends Plugin {
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"altergroups\" value=\"{$lang['stralter']}\" />\n";
+		echo "<input type=\"submit\" name=\"altergroups\" value=\"{$this->lang['emajApplyConfChanges']}\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
@@ -3436,10 +3436,14 @@ class Emaj extends Plugin {
 			}
 		}
 	// Check the supplied mark is valid for the groups
-		$finalMarkName = $this->emajdb->isNewMarkValidGroups($_POST['groups'],$_POST['mark']);
-		if (is_null($finalMarkName)) {
-			$this->show_groups('',sprintf($this->lang['emajinvalidmark'],$_POST['mark']));
-			return;
+		if ($_POST['mark'] != '') {
+			$finalMarkName = $this->emajdb->isNewMarkValidGroups($_POST['groups'],$_POST['mark']);
+			if (is_null($finalMarkName)) {
+				$this->show_groups('',sprintf($this->lang['emajinvalidmark'],$_POST['mark']));
+				return;
+			}
+		} else {
+			$finalMarkName = '';
 		}
 
 	// OK

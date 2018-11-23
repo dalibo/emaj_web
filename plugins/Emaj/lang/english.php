@@ -115,6 +115,7 @@
 	$plugin_lang['emajdetail'] = 'Detail';
 	$plugin_lang['emajsetmark'] = 'Set a mark';
 	$plugin_lang['emajsetcomment'] = 'Set a comment';
+	$plugin_lang['emajApplyConfChanges'] = 'Apply conf changes';
 	$plugin_lang['emajnoidlegroup'] = 'No tables group is currently in idle state.';
 	$plugin_lang['emajnologginggroup'] = 'No tables group is currently in logging state.';
 	$plugin_lang['emajnoconfiguredgroups'] = 'No tables group is currently configured but not created.';
@@ -226,19 +227,18 @@
 	$plugin_lang['emajdropgrouperr'] = 'Error during tables group "%s" drop!';
 
 	// Group alter
-	$plugin_lang['emajalteragroup'] = 'E-Maj: Alter a tables group';
+	$plugin_lang['emajaltergroups'] = 'E-Maj: Apply configuration changes';
 	$plugin_lang['emajalteraloggingroup'] = 'The group "%s" is in LOGGING state. You can specify a mark name.';
-	$plugin_lang['emajconfirmaltergroup'] = 'Are you sure you want to alter the tables group "%s"?';
-	$plugin_lang['emajcantaltergroup'] = 'Altering the group "%s" would generate actions that cannot be executed on LOGGING group. Stop the group before altering it.';
-	$plugin_lang['emajaltergroupok'] = 'The tables group "%s" has been altered.';
-	$plugin_lang['emajaltergrouperr'] = 'Error during tables group "%s" alter!';
+	$plugin_lang['emajconfirmaltergroup'] = 'Are you sure you want to apply the configuraiton changes for the tables group "%s"?';
+	$plugin_lang['emajcantaltergroup'] = 'Applying the configuration changes for the group "%s" would generate actions that cannot be executed on LOGGING group. Stop the group before altering it.';
+	$plugin_lang['emajaltergroupok'] = 'The configuration changes for the tables group "%s" have been applied.';
+	$plugin_lang['emajaltergrouperr'] = 'Error during tables group "%s" configuration change!';
 
 	// Groups alter
-	$plugin_lang['emajaltergroups'] = 'E-Maj: Alter tables groups';
 	$plugin_lang['emajalterallloggingroups'] = 'The groups "%s" are in LOGGING state. You can specify a mark name.';
-	$plugin_lang['emajconfirmaltergroups'] = 'Are you sure you want to alter the tables groups "%s"?';
-	$plugin_lang['emajaltergroupsok'] = 'The tables groups "%s" have been altered.';
-	$plugin_lang['emajaltergroupserr'] = 'Error during tables groups "%s" alter!';
+	$plugin_lang['emajconfirmaltergroups'] = 'Are you sure you want to apply the configuraiton changes for the tables groups "%s"?';
+	$plugin_lang['emajaltergroupsok'] = 'The configuration changes for the tables groups "%s" have been applied.';
+	$plugin_lang['emajaltergroupserr'] = 'Error during tables groups "%s" configuration change!';
 
 	// Group comment
 	$plugin_lang['emajcommentagroup'] = 'E-Maj: Record a comment for a tables group';

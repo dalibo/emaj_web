@@ -1853,6 +1853,10 @@ class Emaj extends Plugin {
 									'mark' => field('mark_name'),
 								))))
 					),
+				));
+			}
+			if ($this->emajdb->isEmaj_Adm() && ($nbMarks > 1)) {
+				$actions = array_merge($actions, array(
 					'deletemark' => array(
 						'content' => $lang['strdelete'],
 						'attr' => array (
@@ -1866,6 +1870,10 @@ class Emaj extends Plugin {
 									'mark' => field('mark_name'),
 								))))
 					),
+				));
+			}
+			if ($this->emajdb->isEmaj_Adm()) {
+				$actions = array_merge($actions, array(
 					'deletebeforemark' => array(
 						'content' => $this->lang['emajfirstmark'],
 						'attr' => array (

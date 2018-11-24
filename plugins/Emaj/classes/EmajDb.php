@@ -899,7 +899,6 @@ class EmajDb {
 	function assignTblSeq($schema,$tblseq,$group,$priority,$logSchemaSuffix,$emajNamesPrefix,$logDatTsp,$logIdxTsp) {
 		global $data;
 
-print $group;
 		$data->clean($schema);
 		$data->clean($tblseq);
 		$data->clean($group);
@@ -908,7 +907,6 @@ print $group;
 		$data->clean($emajNamesPrefix);
 		$data->clean($logDatTsp);
 		$data->clean($logIdxTsp);
-print "->" . $group;
 
 		// get the relkind of the tblseq to process
 		$sql = "SELECT relkind 

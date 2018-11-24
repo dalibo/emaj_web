@@ -426,6 +426,7 @@ class EmajDb {
 					  CASE WHEN length(group_comment) > 100 THEN substr(group_comment,1,97) || '...' ELSE group_comment END 
 						as abbr_comment, 
 					  to_char(group_creation_datetime,'DD/MM/YYYY HH24:MI:SS') as creation_datetime,
+					  1 as has_waiting_changes,
 					  (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
 					FROM \"{$this->emaj_schema}\".emaj_group
 					WHERE ";
@@ -519,8 +520,11 @@ class EmajDb {
 					JOIN grp ON d.grpdef_group = group_name
 					LEFT OUTER JOIN pg_catalog.pg_namespace n ON d.grpdef_schema = nspname
 					LEFT OUTER JOIN pg_catalog.pg_class c ON n.oid = c.relnamespace AND d.grpdef_tblseq = c.relname
-					LEFT OUTER JOIN emaj.emaj_relation ON d.grpdef_schema = rel_schema AND d.grpdef_tblseq = rel_tblseq AND upper_inf(rel_time_range)
-				)
+					LEFT OUTER JOIN emaj.emaj_relation ON d.grpdef_schema = rel_schema AND d.grpdef_tblseq = rel_tblseq ";
+		if ($this->getNumEmajVersion() >= 20200){	// version >= 2.2.0
+			$sql .=	"AND upper_inf(rel_time_range) ";
+		}
+		$sql .= ")
 				SELECT grpdef_group,
 					   count(CASE WHEN relkind = 'r' and not (no_schema OR no_relation OR bad_type OR bad_schema OR duplicate) THEN 1 END) AS group_nb_table,
 					   count(CASE WHEN relkind = 'S' and not (no_schema OR no_relation OR bad_type OR bad_schema OR duplicate) THEN 1 END) AS group_nb_sequence,

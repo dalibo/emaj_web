@@ -97,7 +97,7 @@
 	$plugin_lang['emajremovetblseq'] = 'E-Maj : Retirer des tables / séquences de groupes de tables';
 	$plugin_lang['emajconfirmremove1tblseq'] = 'Etes-vous sûr de vouloir retirer %s du groupe de tables "%s" ?';
 	$plugin_lang['emajconfirmremovetblseq'] = 'Etes-vous sûr de vouloir retirer :';
-	$plugin_lang['emajmodifygroupok'] = 'Le changement de configuration est enregistré. Il sera effectif après (re)création ou modification des groupes de tables concernés.';
+	$plugin_lang['emajmodifygroupok'] = 'Le changement de configuration est enregistré. Il sera effectif après (re)création des groupes de tables concernés ou application des changements de configuration pour ces groupes.';
 	$plugin_lang['emajmodifygrouperr'] = 'Erreur lors du changement de composition des groupes de tables.';
 
 	// List Groups
@@ -124,7 +124,7 @@
 	$plugin_lang['emajnorelation'] = 'Table ou séquence inexistante (x%s) / ';
 	$plugin_lang['emajinvalidtable'] = 'Type de table invalide (x%s) / ';
 	$plugin_lang['emajduplicaterelation'] = 'Table ou séquence déjà affectée à un groupe (x%s) / ';
-	$plugin_lang['emajnoconfiguredgroup'] = 'Pour créer un (autre) groupe de tables, allez d\'abord dans l\'onglet de configuration des groupes.<br>Vous pouvez aussi créer un groupe vide puis y ajouter des tables et séquences puis le \'modifier\' pour prendre en compte le changement de configuration.';
+	$plugin_lang['emajnoconfiguredgroup'] = 'Pour créer un (autre) groupe de tables, allez d\'abord dans l\'onglet de configuration des groupes.<br>Vous pouvez aussi créer un groupe vide puis y ajouter des tables et séquences puis appliquer le changement de configuration.';
 	$plugin_lang['emajcreateemptygroup'] = 'Créer un groupe vide';
 
 	// Rollback activity

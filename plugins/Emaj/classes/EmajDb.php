@@ -408,8 +408,13 @@ class EmajDb {
 						as group_type, 
 					  CASE WHEN length(group_comment) > 100 THEN substr(group_comment,1,97) || '...' ELSE group_comment END 
 						as abbr_comment, 
-					  to_char(time_tx_timestamp,'DD/MM/YYYY HH24:MI:SS') as creation_datetime,
-					  (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
+					  to_char(time_tx_timestamp,'DD/MM/YYYY HH24:MI:SS') as creation_datetime,";
+			if ($this->getNumEmajVersion() >= 30000){	// version >= 3.0.0
+				$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes,";
+			} else {
+				$sql .=	"1 as has_waiting_changes,";
+			}
+			$sql .= " (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
 					FROM \"{$this->emaj_schema}\".emaj_group, \"{$this->emaj_schema}\".emaj_time_stamp
 					WHERE NOT group_is_logging
 					  AND time_id = group_creation_time_id
@@ -448,8 +453,13 @@ class EmajDb {
 						   ELSE 'ROLLBACKABLE-PROTECTED' END as group_type,
 					  CASE WHEN length(group_comment) > 100 THEN substr(group_comment,1,97) || '...' ELSE group_comment END
 						as abbr_comment,
-					  to_char(time_tx_timestamp,'DD/MM/YYYY HH24:MI:SS') as creation_datetime,
-					  (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
+					  to_char(time_tx_timestamp,'DD/MM/YYYY HH24:MI:SS') as creation_datetime,";
+			if ($this->getNumEmajVersion() >= 30000){	// version >= 3.0.0
+				$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes,";
+			} else {
+				$sql .=	"1 as has_waiting_changes,";
+			}
+			$sql .= " (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
 					FROM \"{$this->emaj_schema}\".emaj_group, \"{$this->emaj_schema}\".emaj_time_stamp
 					WHERE group_is_logging
 					  AND time_id = group_creation_time_id
@@ -544,8 +554,13 @@ class EmajDb {
 					group_comment, 
 					pg_size_pretty((SELECT sum(pg_total_relation_size('\"' || rel_log_schema || '\".\"' || rel_log_table || '\"'))
 						FROM \"{$this->emaj_schema}\".emaj_relation 
-						WHERE rel_group = group_name AND rel_kind = 'r')::bigint) as log_size,
-					(SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
+						WHERE rel_group = group_name AND rel_kind = 'r')::bigint) as log_size,";
+			if ($this->getNumEmajVersion() >= 30000){	// version >= 3.0.0
+				$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes,";
+			} else {
+				$sql .=	"1 as has_waiting_changes,";
+			}
+			$sql .= " (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
 					FROM \"{$this->emaj_schema}\".emaj_group, \"{$this->emaj_schema}\".emaj_time_stamp
 					WHERE group_name = '{$group}'
 					  AND time_id = group_creation_time_id";
@@ -884,6 +899,7 @@ class EmajDb {
 	function assignTblSeq($schema,$tblseq,$group,$priority,$logSchemaSuffix,$emajNamesPrefix,$logDatTsp,$logIdxTsp) {
 		global $data;
 
+print $group;
 		$data->clean($schema);
 		$data->clean($tblseq);
 		$data->clean($group);
@@ -892,6 +908,7 @@ class EmajDb {
 		$data->clean($emajNamesPrefix);
 		$data->clean($logDatTsp);
 		$data->clean($logIdxTsp);
+print "->" . $group;
 
 		// get the relkind of the tblseq to process
 		$sql = "SELECT relkind 

@@ -305,7 +305,25 @@ class Emaj extends Plugin {
 				$loggingActions['unprotect_group']['disable'] = true;
 			}
 		}
+		if ($this->emajdb->getNumEmajVersion() >= 30000) {
+		// disable the alter_group button when there is no configuration change to apply
+			if (isset($loggingActions['alter_group']) && (!$rowdata->fields['has_waiting_changes'])) {
+				$loggingActions['alter_group']['disable'] = true;
+			}
+		}
 		return $loggingActions;
+	}
+
+	// Functions to dynamicaly modify actions list for each table group in idle state to display
+	function idleGroupPre(&$rowdata, $idleActions) {
+		global $emajdb;
+		if ($this->emajdb->getNumEmajVersion() >= 30000) {
+		// disable the alter_group button when there is no configuration change to apply
+			if (isset($idleActions['alter_group']) && (!$rowdata->fields['has_waiting_changes'])) {
+				$idleActions['alter_group']['disable'] = true;
+			}
+		}
+		return $idleActions;
 	}
 
 	// Functions to dynamicaly modify actions list for each configured but not yet crated table group to display
@@ -882,7 +900,7 @@ class Emaj extends Plugin {
 
 			echo "<div id=\"idleGroupsTable\">\n";
 //			$misc->printTable($idleGroups, $columns, $idleActions, 'idleGroups', $this->lang['emajnoidlegroup']);
-			$this->printTable($idleGroups, $columns, $idleActions, 'idleGroups', $this->lang['emajnoidlegroup']);
+			$this->printTable($idleGroups, $columns, $idleActions, 'idleGroups', $this->lang['emajnoidlegroup'], array($this, 'idleGroupPre'));
 			echo "</div>\n";
 
 			// activate tablesorter script
@@ -1621,6 +1639,7 @@ class Emaj extends Plugin {
 			$nbMarks = $group->fields['nb_mark'];
 			$groupState = $group->fields['group_state'];
 			$groupType = $group->fields['group_type'];
+			$hasWaitingChanges = $group->fields['has_waiting_changes'];
 
 			$columns = array(
 				'state' => array(
@@ -1740,7 +1759,7 @@ class Emaj extends Plugin {
 
 				// alter_group
 				if ($this->emajdb->getNumEmajVersion() >= 10000) {			// version >= 1.0.0
-					if (($groupState == 'IDLE' || $this->emajdb->getNumEmajVersion() >= 20100)) {
+					if ($hasWaitingChanges && ($groupState == 'IDLE' || $this->emajdb->getNumEmajVersion() >= 20100)) {
 						echo "<form id=\"alter_group_form\" action=\"plugin.php?plugin={$this->name}&amp;action=alter_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
 						echo "  <input type=\"submit\" name=\"altergroup\" value=\"{$this->lang['emajApplyConfChanges']}\" />";
 						echo "</form>\n";

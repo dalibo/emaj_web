@@ -97,7 +97,7 @@
 	$plugin_lang['emajremovetblseq'] = 'E-Maj: Remove tables / sequences from tables groups';
 	$plugin_lang['emajconfirmremove1tblseq'] = 'Are you sure you want to remove %s from the tables group "%s"?';
 	$plugin_lang['emajconfirmremovetblseq'] = 'Are you sure you want to remove:';
-	$plugin_lang['emajmodifygroupok'] = 'The configuration change is recorded. It will take effect when the concerned tables groups will be (re)created or altered.';
+	$plugin_lang['emajmodifygroupok'] = 'The configuration change is recorded. It will take effect when the concerned tables groups will be (re)created or when the configuration changes will be applied for these groups.';
 	$plugin_lang['emajmodifygrouperr'] = 'Error while updating tables groups content.';
 
 	// List Groups
@@ -124,7 +124,7 @@
 	$plugin_lang['emajnorelation'] = 'Table or sequence not found (x%s) / ';
 	$plugin_lang['emajinvalidtable'] = 'Invalid table type (x%s) / ';
 	$plugin_lang['emajduplicaterelation'] = 'Table or sequence already assigned to another group (x%s) / ';
-	$plugin_lang['emajnoconfiguredgroup'] = 'To create a (another) tables group, go first to the groups configuration tab.<br>Alternatively, you can create an empty group, then add tables and sequences into it, and \'modify\' it to take the configuration change into account.';
+	$plugin_lang['emajnoconfiguredgroup'] = 'To create a (another) tables group, go first to the groups configuration tab.<br>Alternatively, you can create an empty group, then add tables and sequences into it, and apply the configuration change.';
 	$plugin_lang['emajcreateemptygroup'] = 'Create an empty group';
 
 	// Rollback activity

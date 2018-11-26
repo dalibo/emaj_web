@@ -562,7 +562,9 @@ class Emaj extends Plugin {
 					'params'=> array(
 							'function' => array($this, 'renderGroupType'),
 							'align' => 'center'
-							)
+							),
+					'sorter_text_extraction' => 'img_alt',
+					'filter' => false,
 				),
 			);
 			$columns = array_merge($columns, array(
@@ -850,132 +852,19 @@ class Emaj extends Plugin {
 
 			echo "<h3>{$this->lang['emajlogginggroups']}<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajlogginggrouphelp']}\"/></h3>";
 
-			echo "<div id=\"loggingGroupsTable\">\n";
-//			$misc->printTable($loggingGroups, $columns, $loggingActions, 'loggingGroups', $this->lang['emajnologginggroup'], array($this, 'loggingGroupPre'));
-			$this->printTable($loggingGroups, $columns, $loggingActions, 'loggingGroups', $this->lang['emajnologginggroup'], array($this, 'loggingGroupPre'));
-			echo "</div>\n";
-
-			// activate tablesorter script
-			echo "<script type=\"text/javascript\">
-				$(document).ready(function() {
-					$(\"#loggingGroupsTable table\").addClass('tablesorter');
-					$(\"#loggingGroupsTable table\").tablesorter(
-						{
-						headers: {
-							0: { sorter: false, filter: false },
-							5: { sorter: false },
-							7: { sorter: false, filter: false },
-							8: { filter: false },
-							},
-						emptyTo: 'none',
-						widgets: [\"zebra\", \"filter\"],
-						widgetOptions: {
-							zebra : [ \"data1\", \"data2\" ],
-							filter_hideFilters : true,
-							filter_functions : { 5: true },
-							stickyHeaders : 'tablesorter-stickyHeader', 
-							},
-						}
-					)
-					// disable filters on all but first actions columns
-					$('#loggingGroupsTable input[data-column=\"8\"]').addClass(\"disabled\");
-					$('#loggingGroupsTable input[data-column=\"8\"]').attr(\"disabled\",\"\");
-					$('#loggingGroupsTable input[data-column=\"9\"]').addClass(\"disabled\");
-					$('#loggingGroupsTable input[data-column=\"9\"]').attr(\"disabled\",\"\");
-					$('#loggingGroupsTable input[data-column=\"10\"]').addClass(\"disabled\");
-					$('#loggingGroupsTable input[data-column=\"10\"]').attr(\"disabled\",\"\");
-					$('#loggingGroupsTable input[data-column=\"11\"]').addClass(\"disabled\");
-					$('#loggingGroupsTable input[data-column=\"11\"]').attr(\"disabled\",\"\");
-					$('#loggingGroupsTable input[data-column=\"12\"]').addClass(\"disabled\");
-					$('#loggingGroupsTable input[data-column=\"12\"]').attr(\"disabled\",\"\");
-					$('#loggingGroupsTable input[data-column=\"13\"]').addClass(\"disabled\");
-					$('#loggingGroupsTable input[data-column=\"13\"]').attr(\"disabled\",\"\");
-					$('#loggingGroupsTable input[data-column=\"14\"]').addClass(\"disabled\");
-					$('#loggingGroupsTable input[data-column=\"14\"]').attr(\"disabled\",\"\");
-				});
-				</script>";
+			$this->printTable($loggingGroups, $columns, $loggingActions, 'loggingGroups', $this->lang['emajnologginggroup'], array($this, 'loggingGroupPre'), array('sorter' => true, 'filter' => true));
 
 			echo "<hr>";
 			echo "<h3>{$this->lang['emajidlegroups']}<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajidlegrouphelp']}\"/></h3>\n";
 
-			echo "<div id=\"idleGroupsTable\">\n";
-//			$misc->printTable($idleGroups, $columns, $idleActions, 'idleGroups', $this->lang['emajnoidlegroup']);
-			$this->printTable($idleGroups, $columns, $idleActions, 'idleGroups', $this->lang['emajnoidlegroup'], array($this, 'idleGroupPre'));
-			echo "</div>\n";
-
-			// activate tablesorter script
-			echo "<script type=\"text/javascript\">
-				$(document).ready(function() {
-					$(\"#idleGroupsTable table\").addClass('tablesorter');
-					$(\"#idleGroupsTable table\").tablesorter(
-						{
-						headers: {
-							0: { sorter: false, filter: false },
-							7: { sorter: false, filter: false },
-							8: { filter: false },
-							},
-						emptyTo: 'none',
-						widgets: [\"zebra\", \"filter\"],
-						widgetOptions: {
-							zebra : [ \"data1\", \"data2\" ],
-							filter_hideFilters : true,
-							filter_functions : { 5: true },
-							stickyHeaders : 'tablesorter-stickyHeader', 
-							},
-						}
-					)
-					// disable filters on all but first actions columns
-					$('#idleGroupsTable input[data-column=\"8\"]').addClass(\"disabled\");
-					$('#idleGroupsTable input[data-column=\"8\"]').attr(\"disabled\",\"\");
-					$('#idleGroupsTable input[data-column=\"9\"]').addClass(\"disabled\");
-					$('#idleGroupsTable input[data-column=\"9\"]').attr(\"disabled\",\"\");
-					$('#idleGroupsTable input[data-column=\"10\"]').addClass(\"disabled\");
-					$('#idleGroupsTable input[data-column=\"10\"]').attr(\"disabled\",\"\");
-					$('#idleGroupsTable input[data-column=\"11\"]').addClass(\"disabled\");
-					$('#idleGroupsTable input[data-column=\"11\"]').attr(\"disabled\",\"\");
-					$('#idleGroupsTable input[data-column=\"12\"]').addClass(\"disabled\");
-					$('#idleGroupsTable input[data-column=\"12\"]').attr(\"disabled\",\"\");
-				});
-				</script>";
+			$this->printTable($idleGroups, $columns, $idleActions, 'idleGroups', $this->lang['emajnoidlegroup'], array($this, 'idleGroupPre'), array('sorter' => true, 'filter' => true));
 
 			echo "<hr>\n";
 
 			// configured but not yet created tables section
 			echo "<h3>{$this->lang['emajconfiguredgroups']}<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajconfiguredgrouphelp']}\"/></h3>\n";
 
-			echo "<div id=\"configuredGroupsTable\">\n";
-//			$misc->printTable($configuredGroups, $configuredColumns, $configuredActions, 'configuredGroups', $this->lang['emajnoconfiguredgroups'], array($this, 'configuredGroupPre'));
-			$this->printTable($configuredGroups, $configuredColumns, $configuredActions, 'configuredGroups', $this->lang['emajnoconfiguredgroups'], array($this, 'configuredGroupPre'));
-			echo "</div>\n";
-
-			// activate tablesorter script
-			echo "<script type=\"text/javascript\">
-				$(document).ready(function() {
-					$(\"#configuredGroupsTable table\").addClass('tablesorter');
-					$(\"#configuredGroupsTable table\").tablesorter(
-						{
-						headers: {";
-			if ($this->emajdb->isEmaj_Adm()) {
-				echo "
-								1: { sorter: false, filter: false },
-								4: { filter: false },";
-			} else {
-				echo "
-								3: { filter: false },";
-			}
-			echo "
-							},
-						emptyTo: 'none',
-						widgets: [\"zebra\", \"filter\"],
-						widgetOptions: {
-							zebra : [ \"data1\", \"data2\" ],
-							filter_hideFilters : true,
-							stickyHeaders : 'tablesorter-stickyHeader', 
-							},
-						}
-					)
-				});
-				</script>";
+			$this->printTable($configuredGroups, $configuredColumns, $configuredActions, 'configuredGroups', $this->lang['emajnoconfiguredgroups'], array($this, 'configuredGroupPre'), array('sorter' => true, 'filter' => true));
 
 			// for emaj_adm role only, give information about how to create a group and propose the create empty group button
 			if ($this->emajdb->isEmaj_Adm()) {
@@ -1035,27 +924,8 @@ class Emaj extends Plugin {
 
 			$actions = array ();
 
-			echo "<div id=\"schemasTable\">\n";
-//			$misc->printTable($schemas, $columns, $actions, 'defineGroupSchemas', $lang['strnoschemas']);
-			$this->printTable($schemas, $columns, $actions, 'defineGroupSchemas', $lang['strnoschemas']);
-			echo "</div>\n";
+			$this->printTable($schemas, $columns, $actions, 'defineGroupSchemas', $lang['strnoschemas'], null, array('sorter' => true, 'filter' => true));
 
-			// activate tablesorter script
-			echo "<script type=\"text/javascript\">
-				$(document).ready(function() {
-					$(\"#schemasTable table\").addClass('tablesorter');
-					$(\"#schemasTable table\").tablesorter(
-						{	
-							emptyTo: 'none',
-							widgets: [\"zebra\"],
-							widgetOptions: {
-								zebra : [ \"data1\", \"data2\" ],
-								filter_hideFilters : true,
-								stickyHeaders : 'tablesorter-stickyHeader', 
-							},
-						})
-					});
-				</script>";
 			echo "<hr>\n";
 
 		// Tables and sequences for the selected schema, if any
@@ -1069,7 +939,9 @@ class Emaj extends Plugin {
 						'title' => $lang['strtype'],
 						'field' => field('relkind'),
 						'type'	=> 'callback',
-						'params'=> array('function' => array($this, 'renderTblSeq'),'align' => 'center')
+						'params'=> array('function' => array($this, 'renderTblSeq'),'align' => 'center'),
+						'sorter_text_extraction' => 'img_alt',
+						'filter'=> false,
 					),
 					'appschema' => array(
 						'title' => $lang['strschema'],
@@ -1193,43 +1065,8 @@ class Emaj extends Plugin {
 					),
 				);
 
-				echo "<div id=\"tablesSeqTable\">\n";
-//				$misc->printTable($tblseq, $columns, $actions, 'defineGroupTblseq', $lang['strnotables'],'tablePre');
-				$this->printTable($tblseq, $columns, $actions, 'defineGroupTblseq', $lang['strnotables'],array($this,'tblseqPre'));
-				echo "</div>\n";
+				$this->printTable($tblseq, $columns, $actions, 'defineGroupTblseq', $lang['strnotables'],array($this,'tblseqPre'), array('sorter' => true, 'filter' => true));
 
-				// activate tablesorter script
-				echo "<script type=\"text/javascript\">
-					$(document).ready(function() {
-						$(\"#tablesSeqTable table\").addClass('tablesorter');
-						$(\"#tablesSeqTable table\").tablesorter(
-							{
-							textExtraction: { 
-								1: function(s) {
-									if($(s).find('img').length == 0) return $(s).text();
-									return $(s).find('img').attr('alt');
-								}},
-							headers: { 	0: { sorter: false, filter: false },
-										1: { filter: false },
-										2: { sorter: false, filter: false },
-										4: { sorter: false, filter: false } },
-							emptyTo: 'none',
-							widgets: [\"zebra\", \"filter\"],
-							widgetOptions: {
-								zebra : [ \"data1\", \"data2\" ],
-								filter_hideFilters : true,
-								filter_functions : { 13: true, 14: true, 15: true },
-								stickyHeaders : 'tablesorter-stickyHeader', 
-								},
-							}
-						);
-						// disable filters on all but first actions columns
-						$('#tablesSeqTable input[data-column=\"5\"]').addClass(\"disabled\");
-						$('#tablesSeqTable input[data-column=\"5\"]').attr(\"disabled\",\"\");
-						$('#tablesSeqTable input[data-column=\"6\"]').addClass(\"disabled\");
-						$('#tablesSeqTable input[data-column=\"6\"]').attr(\"disabled\",\"\");
-					});
-					</script>";
 			}
 		}
 
@@ -1610,7 +1447,6 @@ class Emaj extends Plugin {
 
 			$actions = array ();
 
-//			$misc->printTable($messages, $columns, $actions, 'checks');
 			$this->printTable($messages, $columns, $actions, 'checks');
 		}
 
@@ -1693,7 +1529,6 @@ class Emaj extends Plugin {
 
 		// print group's characteristics
 			echo "<h3>".sprintf($this->lang['emajgroupproperties'], htmlspecialchars($_REQUEST['group']))."</h3>\n";
-//			$misc->printTable($group, $columns, $groupActions, 'detailGroup', 'no group, internal error !');
 			$this->printTable($group, $columns, $groupActions, 'detailGroup', 'no group, internal error !');
 
 		// display group's comment if exists
@@ -1797,7 +1632,8 @@ class Emaj extends Plugin {
 					'title' => $this->lang['emajstate'],
 					'field' => field('mark_state'),
 					'type'	=> 'callback',
-					'params'=> array('function' => array($this,'renderMarkState'),'align' => 'center')
+					'params'=> array('function' => array($this,'renderMarkState'),'align' => 'center'),
+					'filter'=> false,
 				),
 				'logrows' => array(
 					'title' => $this->lang['emajnbupdates'],
@@ -1944,51 +1780,7 @@ class Emaj extends Plugin {
 			$this->protected_mark_flag = 0;
 
 			// display the marks list
-			echo "<div id=\"marksTable\">\n";
-//			$misc->printTable($marks, $columns, $actions, 'marks', $this->lang['emajnomark'],'markPre');
-			$this->printTable($marks, $columns, $actions, 'marks', $this->lang['emajnomark'],array($this,'markPre'));
-			echo "</div>\n";
-
-			// activate tablesorter script
-			echo "<script type=\"text/javascript\">
-				$(document).ready(function() {
-					$(\"#marksTable table\").addClass('tablesorter');
-					$(\"#marksTable table\").tablesorter(
-						{
-						headers: {
-							0: { sorter: false },
-							1: { sorter: false },
-							2: { sorter: false, filter: false },
-							3: { sorter: false },
-							4: { sorter: false },
-							5: { sorter: false, filter: false },
-							6: { sorter: false },
-							7: { sorter: false },
-							},
-						emptyTo: 'none',
-						widgets: [\"zebra\", \"filter\"],
-						widgetOptions: {
-							zebra : [ \"data1\", \"data2\" ],
-							filter_hideFilters : true,
-							stickyHeaders : 'tablesorter-stickyHeader', 
-							},
-						}
-					)
-					// disable filters on all but first actions columns
-					$('#marksTable input[data-column=\"6\"]').addClass(\"disabled\");
-					$('#marksTable input[data-column=\"6\"]').attr(\"disabled\",\"\");
-					$('#marksTable input[data-column=\"7\"]').addClass(\"disabled\");
-					$('#marksTable input[data-column=\"7\"]').attr(\"disabled\",\"\");
-					$('#marksTable input[data-column=\"8\"]').addClass(\"disabled\");
-					$('#marksTable input[data-column=\"8\"]').attr(\"disabled\",\"\");
-					$('#marksTable input[data-column=\"9\"]').addClass(\"disabled\");
-					$('#marksTable input[data-column=\"9\"]').attr(\"disabled\",\"\");
-					$('#marksTable input[data-column=\"10\"]').addClass(\"disabled\");
-					$('#marksTable input[data-column=\"10\"]').attr(\"disabled\",\"\");
-					$('#marksTable input[data-column=\"11\"]').addClass(\"disabled\");
-					$('#marksTable input[data-column=\"11\"]').attr(\"disabled\",\"\");
-				});
-				</script>";
+			$this->printTable($marks, $columns, $actions, 'marks', $this->lang['emajnomark'],array($this,'markPre'), array('sorter' => false, 'filter' => true));
 
 			// JQuery to remove the last deleteBeforeMark button as it is meaningless on the first set mark
 			echo "<script type=\"text/javascript\">\n";
@@ -2286,37 +2078,13 @@ class Emaj extends Plugin {
 				),
 			);
 
-			echo "<div id=\"statTable\">\n";
-//			$misc->printTable($stats, $columns, $actions, 'stats');
-			$this->printTable($stats, $columns, $actions, 'stats');
-			echo "</div>\n";
+			$this->printTable($stats, $columns, $actions, 'logStats', null, null, array('sorter' => true, 'filter' => true));
 
-			// activate tablesorter script
-			echo "<script type=\"text/javascript\">
-				$(document).ready(function() {
-					$(\"#statTable table\").addClass('tablesorter');
-					$(\"#statTable table\").tablesorter(
-						{	headers: { 
-								7: { sorter: false, filter: false } 
-							},
-							emptyTo: 'none',
-							widgets: [\"zebra\", \"filter\"],
-							widgetOptions: {
-								zebra : [ \"data1\", \"data2\" ],
-								filter_hideFilters : true,
-								filter_functions : {  0: true },
-								stickyHeaders : 'tablesorter-stickyHeader', 
-							},
-						})
-					});
-			</script>";
-
-			// dynamicly change the behaviour of the SQL link using JQuery code: open a new window
-			$sql_window_id = htmlentities('sqledit:'.$_REQUEST['server']);
+			// dynamicaly change the behaviour of the SQL link using JQuery code: open a new window
+			$sql_window_id = htmlentities('emaj_sqledit:'.$_REQUEST['server']);
 				echo "<script type=\"text/javascript\">
-				$(\"#statTable a:contains('SQL')\").attr('target','emaj_sqledit');
-				$(\"#statTable a:contains('SQL')\").click(function() {
-					window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();
+				$(\"#logStats a:contains('SQL')\").click(function() {
+					window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=400,resizable=yes,scrollbars=yes').focus();
 					return false;
 				});
 				</script>";
@@ -2464,37 +2232,13 @@ class Emaj extends Plugin {
 				),
 			);
 
-			echo "<div id=\"statTable\">\n";
-//			$misc->printTable($stats, $columns, $actions, 'stats');
-			$this->printTable($stats, $columns, $actions, 'stats');
-			echo "</div>\n";
-
-			// activate tablesorter script
-			echo "<script type=\"text/javascript\">
-				$(document).ready(function() {
-					$(\"#statTable table\").addClass('tablesorter');
-					$(\"#statTable table\").tablesorter(
-						{	headers: { 
-								9: { sorter: false, filter: false } 
-							},
-							emptyTo: 'none',
-							widgets: [\"zebra\", \"filter\"],
-							widgetOptions: {
-								zebra : [ \"data1\", \"data2\" ],
-								filter_hideFilters : true,
-								filter_functions : {  0: true, 2: true, 3: true },
-								stickyHeaders : 'tablesorter-stickyHeader', 
-							},
-						})
-					});
-			</script>";
+			$this->printTable($stats, $columns, $actions, 'detailedLogStats', null, null, array('sorter' => true, 'filter' => true));
 
 			// dynamicly change the behaviour of the SQL link using JQuery code: open a new window
-			$sql_window_id = htmlentities('sqledit:'.$_REQUEST['server']);
+			$sql_window_id = htmlentities('emaj_sqledit:'.$_REQUEST['server']);
 			echo "<script type=\"text/javascript\">
-				$(\"#statTable a:contains('SQL')\").attr('target','emaj_sqledit');
-				$(\"#statTable a:contains('SQL')\").click(function() {
-					window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();
+				$(\"#detailedLogStats a:contains('SQL')\").click(function() {
+					window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=400,resizable=yes,scrollbars=yes').focus();
 					return false;
 				});
 				</script>";
@@ -2527,7 +2271,9 @@ class Emaj extends Plugin {
 						'title' => $lang['strtype'],
 						'field' => field('relkind'),
 						'type'	=> 'callback',
-						'params'=> array('function' => array($this, 'renderTblSeq'),'align' => 'center')
+						'params'=> array('function' => array($this, 'renderTblSeq'),'align' => 'center'),
+						'sorter_text_extraction' => 'img_alt',
+						'filter'=> false,
 					),
 					'schema' => array(
 						'title' => $lang['strschema'],
@@ -2576,48 +2322,20 @@ class Emaj extends Plugin {
 						'title' => $this->lang['emajlogsize'],
 						'field' => field('byte_log_size'),
 						'params'=> array('align' => 'right'),
+						'filter'=> false,
 					),
 					'prettylogsize' => array(
 						'title' => $this->lang['emajlogsize'],
 						'field' => field('pretty_log_size'),
 						'params'=> array('align' => 'center'),
+						'sorter'=> false,
 					),
 				));
 	
 				$actions = array ();
 	
-//				$misc->printTable($groupContent, $columns, $actions, 'groupContent');
-				echo "<div id=\"groupContentTable\" style=\"margin-top:15px;margin-bottom:15px\" >\n";
-				$this->printTable($groupContent, $columns, $actions, 'groupContent');
-				echo "</div>\n";
-	
-				// activate tablesorter script
-				echo "<script type=\"text/javascript\">
-					$(document).ready(function() {
-						$(\"#groupContentTable table\").addClass('tablesorter');
-						$(\"#groupContentTable table\").tablesorter(
-							{ 	
-								textExtraction: { 
-									0: function(s) {
-										if($(s).find('img').length == 0) return $(s).text();
-										return $(s).find('img').attr('alt');
-									}},
-								headers: { 
-									0: { filter: false }, 
-									8: { sorter: false, filter: false } 
-								},
-								emptyTo: 'none',
-								widgets: [\"zebra\", \"filter\"],
-								widgetOptions: {
-									zebra : [ \"data1\", \"data2\" ],
-									filter_hideFilters : true,
-									filter_functions : {  1: true, 4: true, 5: true, 6: true },
-									stickyHeaders : 'tablesorter-stickyHeader', 
-								},
-							}
-						);
-					});
-					</script>";
+				echo "<p></p>";
+				$this->printTable($groupContent, $columns, $actions, 'groupContent', null, null, array('sorter' => true, 'filter' => true));
 			}
 		}
 		$this->printEmajFooter();
@@ -4461,7 +4179,6 @@ class Emaj extends Plugin {
 
 				echo "<p>" . sprintf($this->lang['emajreachaltergroup'], htmlspecialchars($_REQUEST['group']), htmlspecialchars($_REQUEST['mark'])) . "</p>\n";
 
-//				$misc->printTable($alterGroupSteps, $columns, $actions, 'alterGroupStep');
 				echo "<div id=\"alterGroupStep\" style=\"margin-top:15px;margin-bottom:15px\" >\n";
 				$this->printTable($alterGroupSteps, $columns, $actions, 'alterGroupStep');
 				echo "</div>\n";
@@ -4745,7 +4462,6 @@ class Emaj extends Plugin {
 
 				echo "<p>" . sprintf($this->lang['emajreachaltergroups'], htmlspecialchars($_REQUEST['groups']), htmlspecialchars($_REQUEST['mark'])) . "</p>\n";
 
-//				$misc->printTable($alterGroupSteps, $columns, $actions, 'alterGroupStep');
 				echo "<div id=\"alterGroupStep\" style=\"margin-top:15px;margin-bottom:15px\" >\n";
 				$this->printTable($alterGroupSteps, $columns, $actions, 'alterGroupStep');
 				echo "</div>\n";
@@ -5173,7 +4889,7 @@ class Emaj extends Plugin {
 		exit;
 	}
 
-		function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null) {
+		function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null, $tablesorter = null) {
 			global $data, $conf, $misc, $lang, $plugin_manager;
 //phb: 1 line added
 			global $misc;
@@ -5188,6 +4904,11 @@ class Emaj extends Plugin {
 			if ($has_ma = isset($actions['multiactions']))
 				$ma = $actions['multiactions'];
 			unset($actions['multiactions']);
+
+			// The 7th parameter defines if the tablesorter JQuery plugin is used for this table, with the sorter and/or the filter functionalities
+			$sorter = 0; $filter = 0;
+			if (!is_null($tablesorter) && isset($tablesorter['sorter'])) { $sorter = $tablesorter['sorter']; }
+			if (!is_null($tablesorter) && isset($tablesorter['filter'])) { $filter = $tablesorter['filter']; }
 
 			if ($tabledata->recordCount() > 0) {
 
@@ -5208,21 +4929,39 @@ class Emaj extends Plugin {
 					if (isset($ma['vars']))
 						foreach ($ma['vars'] as $k => $v)
 							echo "<input type=\"hidden\" name=\"$k\" value=\"$v\" />";
+				} else {
+					echo "<div id=\"{$place}\">\n";
 				}
 
 				echo "<table>\n";
-//phb: 1 line added
 				echo "<thead>\n";
 				echo "<tr>\n";
+
 				// Display column headings
-				if ($has_ma) echo "<th></th>";
+				$colnum = 0; $filterDisabledJs = ''; $textExtractionJS = '';
+				if ($has_ma) {
+					echo "<th class=\"sorter-false\"></th>";
+					if ($filter) {$filterDisabledJs .= "\t\t$('#{$place} input[data-column=\"{$colnum}\"]').addClass(\"disabled\");\n";}
+					$colnum++;
+				}
 				foreach ($columns as $column_id => $column) {
 					switch ($column_id) {
 						case 'actions':
-							if (sizeof($actions) > 0) echo "<th class=\"data\" colspan=\"", count($actions), "\">{$column['title']}</th>\n";
+							if (sizeof($actions) > 0) echo "<th class=\"data sorter-false\" colspan=\"", count($actions), "\">{$column['title']}</th>\n";
+							// actions columns have neither sorter nor filter capabilities
+							for ($i = 0; $i < count($actions); ++$i) {
+								if ($filter) {$filterDisabledJs .= "\t\t$('#{$place} input[data-column=\"{$colnum}\"]').addClass(\"disabled\");\n";}
+								$colnum++;
+							}
 							break;
 						default:
-							echo "<th class=\"data\">";
+							// add a sorter_false class to the data column if a 'sorter' attribute is set to false
+							if ((isset($column['sorter']) && !$column['sorter']) || ($filter && ! $sorter)) {
+								$class_sorter = ' sorter-false';
+							} else {
+								$class_sorter = '';
+							}
+							echo "<th class=\"data{$class_sorter}\">";
 							if (isset($column['help']))
 //phb: 1 line modified
 //								$this->printHelp($column['title'], $column['help']);
@@ -5230,11 +4969,20 @@ class Emaj extends Plugin {
 							else
 								echo $column['title'];
 							echo "</th>\n";
+							// add a "disabled" class to the data column if the 'filter' attribute is set to false
+							if ($filter && isset($column['filter']) && !$column['filter']) {
+								$filterDisabledJs .= "\t\t$('#{$place} input[data-column=\"{$colnum}\"]').addClass(\"disabled\");\n";
+							}
+							// when the data column has a 'sorter_text_extraction' attribute set to 'img_alt',
+							//   add a function to extract the alt attribute of images to build the text that tablesorter will use to sort
+							if ($sorter && isset($column['sorter_text_extraction']) && $column['sorter_text_extraction'] = 'img_alt') {
+								$textExtractionJS .= "\t\t\t\t$colnum: function(s) {return $(s).find('img').attr('alt');}\n";
+							}
+							$colnum++;
 							break;
 					}
 				}
 				echo "</tr>\n";
-//phb: 2 lines added
 				echo "</thead>\n";
 				echo "<tbody>\n";
 
@@ -5244,8 +4992,6 @@ class Emaj extends Plugin {
 					$id = ($i % 2) + 1;
 
 					unset($alt_actions);
-//phb: 1 line replaced by 7 lines
-//					if (!is_null($pre_fn)) $alt_actions = $pre_fn($tabledata, $actions);
 					if (!is_null($pre_fn)) {
 						if (is_string($pre_fn)) {
 							$alt_actions = $pre_fn($tabledata, $actions);
@@ -5309,13 +5055,11 @@ class Emaj extends Plugin {
 					$tabledata->moveNext();
 					$i++;
 				}
-//phb: 1 line added
 				echo "</tbody>\n";
 				echo "</table>\n";
 
 				// Multi action table footer w/ options & [un]check'em all
 				if ($has_ma) {
-//					echo "<br />\n";
 					echo "<table class=\"multiactions\">\n";
 					echo "<tr>\n";
 					echo "<th class=\"multiactions\">{$this->lang['emajselect']}</th>\n";
@@ -5335,7 +5079,36 @@ class Emaj extends Plugin {
 					echo "</tr>\n";
 					echo "</table>\n";
 					echo '</form>';
+				} else {
+					echo "</div>\n";
 				};
+
+				// generate the javascript for the tablesorter JQuery plugin
+				if ($sorter || $filter) {
+					echo "<script type=\"text/javascript\">\n";
+					echo "\t$(document).ready(function() {\n";
+					echo "\t\t$(\"#{$place} table\").addClass('tablesorter');\n";
+					echo "\t\t$(\"#{$place} table\").tablesorter( {\n";
+					if ($textExtractionJS <> '') {
+						echo "\t\t\ttextExtraction: {\n";
+						echo $textExtractionJS;
+						echo "\t\t\t\t},\n";
+					}
+					echo "\t\t\temptyTo: 'none',\n";
+					echo "\t\t\twidgets: [\"zebra\"";
+					if ($filter) { echo ", \"filter\""; }
+					echo "],\n";
+					echo "\t\t\twidgetOptions: {\n";
+					echo "\t\t\t\tzebra : [ \"data1\", \"data2\" ],\n";
+					echo "\t\t\t\tfilter_hideFilters : true,\n";
+					echo "\t\t\t\tstickyHeaders : 'tablesorter-stickyHeader',\n";
+					echo "\t\t\t\t},\n";
+					echo "\t\t\t}\n";
+					echo "\t\t);\n";
+					echo $filterDisabledJs;
+					echo "\t});\n";
+					echo "</script>\n";
+				}
 
 				return true;
 			} else {

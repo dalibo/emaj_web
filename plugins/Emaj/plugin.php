@@ -1343,22 +1343,24 @@ class Emaj extends Plugin {
 						'title' => $lang['stractions'],
 					),
 				);
-
-				$actions = array(
-					'consolidate' => array(
-						'content' => $this->lang['emajconsolidate'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'plugin.php',
-								'urlvars' => array (
-									'plugin' => $this->name,
-									'action' => 'consolidate_rollback',
-									'group' => field('cons_group'),
-									'mark' => field('cons_end_rlbk_mark_name'),
-								)))
-					),
-				);
-
+				if ($this->emajdb->isEmaj_Adm()) {
+					$actions = array(
+						'consolidate' => array(
+							'content' => $this->lang['emajconsolidate'],
+							'attr' => array (
+								'href' => array (
+									'url' => 'plugin.php',
+									'urlvars' => array (
+										'plugin' => $this->name,
+										'action' => 'consolidate_rollback',
+										'group' => field('cons_group'),
+										'mark' => field('cons_end_rlbk_mark_name'),
+									)))
+						),
+					);
+				} else {
+					$actions = array();
+				}
 				// Get rollback information from the database
 				$consolidableRlbks = $this->emajdb->getConsolidableRlbk();
 

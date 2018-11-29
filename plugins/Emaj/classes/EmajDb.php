@@ -668,8 +668,12 @@ class EmajDb {
 						 0 AS mark_cumlogrows
 					FROM \"{$this->emaj_schema}\".emaj_mark, \"{$this->emaj_schema}\".emaj_time_stamp 
 					WHERE mark_group = '{$group}'
-					  AND time_id = mark_time_id
-					ORDER BY mark_id DESC";
+					  AND time_id = mark_time_id ";
+			if ($this->getNumEmajVersion() >= 24000){	// version >= 2.4.0
+				$sql .= "ORDER BY mark_time_id DESC";
+			}else{
+				$sql .=	"ORDER BY mark_id DESC";
+			}
 		}else{
 			$sql = "SELECT mark_group, mark_name, mark_datetime, mark_comment, ";
 			if ($this->getNumEmajVersion() >= 10300){	// version >= 1.3.0
@@ -1275,11 +1279,19 @@ class EmajDb {
 		$data->clean($group);
 		$data->clean($mark);
 
-		$sql = "SELECT CASE WHEN mark_id = 
-						(SELECT MIN (mark_id) FROM \"{$this->emaj_schema}\".emaj_mark WHERE mark_group = '{$group}')
-						THEN 1 ELSE 0 END AS result
-				FROM \"{$this->emaj_schema}\".emaj_mark
-				WHERE mark_group = '{$group}' AND mark_name = '{$mark}'";
+		if ($this->getNumEmajVersion() >= 24000){	// version >= 2.4.0
+			$sql = "SELECT CASE WHEN mark_time_id = 
+							(SELECT MIN (mark_time_id) FROM \"{$this->emaj_schema}\".emaj_mark WHERE mark_group = '{$group}')
+							THEN 1 ELSE 0 END AS result
+					FROM \"{$this->emaj_schema}\".emaj_mark
+					WHERE mark_group = '{$group}' AND mark_name = '{$mark}'";
+		}else{
+			$sql = "SELECT CASE WHEN mark_id = 
+							(SELECT MIN (mark_id) FROM \"{$this->emaj_schema}\".emaj_mark WHERE mark_group = '{$group}')
+							THEN 1 ELSE 0 END AS result
+					FROM \"{$this->emaj_schema}\".emaj_mark
+					WHERE mark_group = '{$group}' AND mark_name = '{$mark}'";
+		}
 
 		return $data->selectField($sql,'result');
 	}
@@ -1545,8 +1557,12 @@ class EmajDb {
 					FROM \"{$this->emaj_schema}\".emaj_mark, \"{$this->emaj_schema}\".emaj_time_stamp 
 					WHERE mark_group = '{$group}'
 					  AND NOT mark_is_deleted
-					  AND time_id = mark_time_id
-					ORDER BY mark_id DESC";
+					  AND time_id = mark_time_id ";
+			if ($this->getNumEmajVersion() >= 24000){	// version >= 2.4.0
+				$sql .= "ORDER BY mark_time_id DESC";
+			}else{
+				$sql .=	"ORDER BY mark_id DESC";
+			}
 		}else{
 			$sql = "SELECT mark_name, mark_datetime, ";
 			if ($this->getNumEmajVersion() >= 10300){	// version >= 1.3.0
@@ -1613,14 +1629,24 @@ class EmajDb {
 
 		if ($result == 1) {
 			// the mark is active, so now check there is no intermediate protected mark
-			if ($this->getNumEmajVersion() >= 10300){	// version >= 1.3.0
-				$sql = "SELECT CASE WHEN 
-						(SELECT count(*) FROM \"{$this->emaj_schema}\".emaj_mark 
-						  WHERE mark_group = '{$group}' AND mark_id > 
-							(SELECT mark_id FROM \"{$this->emaj_schema}\".emaj_mark 
-							 WHERE mark_group = '{$group}' AND mark_name = '{$mark}'
-						    ) AND mark_is_rlbk_protected
-						) = 0 THEN 1 ELSE 0 END AS result";
+			if ($this->getNumEmajVersion() >= 10300){	// version >= 1.3.0	
+				if ($this->getNumEmajVersion() >= 24000){	// version >= 2.4.0
+					$sql = "SELECT CASE WHEN 
+							(SELECT count(*) FROM \"{$this->emaj_schema}\".emaj_mark 
+							  WHERE mark_group = '{$group}' AND mark_time_id > 
+								(SELECT mark_time_id FROM \"{$this->emaj_schema}\".emaj_mark 
+								 WHERE mark_group = '{$group}' AND mark_name = '{$mark}'
+								) AND mark_is_rlbk_protected
+							) = 0 THEN 1 ELSE 0 END AS result";				
+				}else{
+					$sql = "SELECT CASE WHEN 
+							(SELECT count(*) FROM \"{$this->emaj_schema}\".emaj_mark 
+							  WHERE mark_group = '{$group}' AND mark_id > 
+								(SELECT mark_id FROM \"{$this->emaj_schema}\".emaj_mark 
+								 WHERE mark_group = '{$group}' AND mark_name = '{$mark}'
+								) AND mark_is_rlbk_protected
+							) = 0 THEN 1 ELSE 0 END AS result";
+				}
 				$result = $data->selectField($sql,'result');
 			}
 		}
@@ -1901,13 +1927,23 @@ class EmajDb {
 		if ($result == 1) {
 			// the mark is active, so now check there is no intermediate protected mark
 			if ($this->getNumEmajVersion() >= 10300){	// version >= 1.3.0
-				$sql = "SELECT CASE WHEN 
-						(SELECT count(*) FROM \"{$this->emaj_schema}\".emaj_mark 
-						  WHERE mark_group = ANY ({$groupsArray}) AND mark_id > 
-							(SELECT mark_id FROM \"{$this->emaj_schema}\".emaj_mark 
-							 WHERE mark_group = ANY({$groupsArray}) AND mark_name = '{$mark}' LIMIT 1
-						    ) AND mark_is_rlbk_protected
-						) = 0 THEN 1 ELSE 0 END AS result";
+				if ($this->getNumEmajVersion() >= 24000){	// version >= 2.4.0
+					$sql = "SELECT CASE WHEN 
+							(SELECT count(*) FROM \"{$this->emaj_schema}\".emaj_mark 
+							  WHERE mark_group = ANY ({$groupsArray}) AND mark_time_id > 
+								(SELECT mark_time_id FROM \"{$this->emaj_schema}\".emaj_mark 
+								 WHERE mark_group = ANY({$groupsArray}) AND mark_name = '{$mark}' LIMIT 1
+								) AND mark_is_rlbk_protected
+							) = 0 THEN 1 ELSE 0 END AS result";
+				}else{
+					$sql = "SELECT CASE WHEN 
+							(SELECT count(*) FROM \"{$this->emaj_schema}\".emaj_mark 
+							  WHERE mark_group = ANY ({$groupsArray}) AND mark_id > 
+								(SELECT mark_id FROM \"{$this->emaj_schema}\".emaj_mark 
+								 WHERE mark_group = ANY({$groupsArray}) AND mark_name = '{$mark}' LIMIT 1
+								) AND mark_is_rlbk_protected
+							) = 0 THEN 1 ELSE 0 END AS result";
+				}
 				$result = $data->selectField($sql,'result');
 			}
 		}
@@ -2043,16 +2079,28 @@ class EmajDb {
 	function getConsolidableRlbk() {
 		global $data;
 
-		$sql = "SELECT cons_group, cons_target_rlbk_mark_name, tt.time_tx_timestamp AS cons_target_rlbk_mark_datetime, 
-					cons_end_rlbk_mark_name, rt.time_tx_timestamp AS cons_end_rlbk_mark_datetime, cons_rows, cons_marks
-				FROM emaj.emaj_get_consolidable_rollbacks(),
-					 emaj.emaj_mark tm, emaj.emaj_time_stamp tt, 
-					 emaj.emaj_mark rm, emaj.emaj_time_stamp rt
-				WHERE tt.time_id = tm.mark_time_id AND tm.mark_id = cons_target_rlbk_mark_id
-				  AND rt.time_id = rm.mark_time_id AND rm.mark_id = cons_end_rlbk_mark_id
-				  AND (cons_rows > 0 OR cons_marks > 0)
-				ORDER BY cons_end_rlbk_mark_id";
-
+		if ($this->getNumEmajVersion() >= 24000){	// version >= 2.4.0
+			$sql = "SELECT cons_group, cons_target_rlbk_mark_name, tt.time_tx_timestamp AS cons_target_rlbk_mark_datetime, 
+						cons_end_rlbk_mark_name, rt.time_tx_timestamp AS cons_end_rlbk_mark_datetime, cons_rows, cons_marks
+					FROM emaj.emaj_get_consolidable_rollbacks(),
+						 emaj.emaj_time_stamp tt, 
+						 emaj.emaj_time_stamp rt
+					WHERE tt.time_id = cons_target_rlbk_mark_time_id
+					  AND rt.time_id = cons_end_rlbk_mark_time_id
+					  AND (cons_rows > 0 OR cons_marks > 0)
+					ORDER BY cons_end_rlbk_mark_time_id";
+		}else{
+			$sql = "SELECT cons_group, cons_target_rlbk_mark_name, tt.time_tx_timestamp AS cons_target_rlbk_mark_datetime, 
+						cons_end_rlbk_mark_name, rt.time_tx_timestamp AS cons_end_rlbk_mark_datetime, cons_rows, cons_marks
+					FROM emaj.emaj_get_consolidable_rollbacks(),
+						 emaj.emaj_mark tm, emaj.emaj_time_stamp tt, 
+						 emaj.emaj_mark rm, emaj.emaj_time_stamp rt
+					WHERE tt.time_id = tm.mark_time_id AND tm.mark_id = cons_target_rlbk_mark_id
+					  AND rt.time_id = rm.mark_time_id AND rm.mark_id = cons_end_rlbk_mark_id
+					  AND (cons_rows > 0 OR cons_marks > 0)
+					ORDER BY cons_end_rlbk_mark_id";
+		}
+		
 		return $data->selectSet($sql);
 	}
 

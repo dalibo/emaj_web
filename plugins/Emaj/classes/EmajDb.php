@@ -324,48 +324,34 @@ class EmajDb {
 		global $data;
 
 		if ($this->emaj_adm){
-			if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
 // The E-Maj size = size of all relations in emaj primary and secondary schemas + size of linked toast tables
-				$sql = "SELECT coalesce(pg_size_pretty(t.emajtotalsize) || 
-								to_char(t.emajtotalsize * 100 / pg_database_size(current_database())::float,' = FM990D0%'), '0 B = 0%') as emajsize 
-						FROM 
-						(SELECT ((t1.totalpages + t2.totalpages) * setting::integer)::bigint as emajtotalsize
-							FROM pg_catalog.pg_settings, 
-								(
-								SELECT sum(relpages) as totalpages
-								  FROM pg_catalog.pg_class, pg_catalog.pg_namespace 
-								  WHERE relnamespace = pg_namespace.oid 
-									AND nspname IN ";
-				if ($this->getNumEmajVersion() >= 20200){	// version >= 2.2.0
-					$sql .= "			(SELECT sch_name FROM emaj.emaj_schema)";
-				} else {
-					$sql .= "			(SELECT DISTINCT rel_log_schema FROM emaj.emaj_relation)";
-				}
-				$sql .= "		) as t1,
-								(
-								SELECT sum(c2.relpages) as totalpages
-								  FROM pg_catalog.pg_class c1, pg_catalog.pg_namespace, emaj.emaj_relation,
-									   pg_catalog.pg_class c2 
-								  WHERE c1.relnamespace = pg_namespace.oid 
-									AND c2.oid = c1.reltoastrelid
-									AND nspname = rel_log_schema ";
-				if ($this->getNumEmajVersion() >= 10200){	// version >= 1.2.0
-					$sql .= "		AND c1.relname = rel_log_table";
-				} else {
-					$sql .= "		AND c1.relname = rel_schema || '_' || rel_tblseq || '_log' AND rel_kind = 'r'";
-				}
-				$sql .= "		) as t2
-							WHERE pg_settings.name = 'block_size'
-						) as t";
-			}else{
-				$sql = "SELECT pg_size_pretty(
-							(SELECT sum(pg_relation_size(pg_class.oid)) FROM pg_catalog.pg_class, pg_catalog.pg_namespace 
-								WHERE relnamespace=pg_namespace.oid AND nspname = 'emaj')::bigint
-							) || to_char(
-							(SELECT sum(pg_relation_size(pg_class.oid)) FROM pg_catalog.pg_class, pg_catalog.pg_namespace 
-								WHERE relnamespace=pg_namespace.oid AND nspname = 'emaj')
-							*100 / pg_database_size(current_database())::float,' = FM990D0%') as emajsize";
+			$sql = "SELECT coalesce(pg_size_pretty(t.emajtotalsize) || 
+							to_char(t.emajtotalsize * 100 / pg_database_size(current_database())::float,' = FM990D0%'), '0 B = 0%') as emajsize 
+					FROM 
+					(SELECT ((t1.totalpages + t2.totalpages) * setting::integer)::bigint as emajtotalsize
+						FROM pg_catalog.pg_settings, 
+							(
+							SELECT sum(relpages) as totalpages
+							  FROM pg_catalog.pg_class, pg_catalog.pg_namespace 
+							  WHERE relnamespace = pg_namespace.oid 
+								AND nspname IN ";
+			if ($this->getNumEmajVersion() >= 20200){	// version >= 2.2.0
+				$sql .= "			(SELECT sch_name FROM emaj.emaj_schema)";
+			} else {
+				$sql .= "			(SELECT DISTINCT rel_log_schema FROM emaj.emaj_relation)";
 			}
+			$sql .= "		) as t1,
+							(
+							SELECT sum(c2.relpages) as totalpages
+							  FROM pg_catalog.pg_class c1, pg_catalog.pg_namespace, emaj.emaj_relation,
+								   pg_catalog.pg_class c2 
+							  WHERE c1.relnamespace = pg_namespace.oid 
+								AND c2.oid = c1.reltoastrelid
+								AND nspname = rel_log_schema 
+								AND c1.relname = rel_log_table
+							) as t2
+						WHERE pg_settings.name = 'block_size'
+					) as t";
 			return $data->selectField($sql,'emajsize');
 		}else{
 			return '?';
@@ -429,13 +415,8 @@ class EmajDb {
 					  1 as has_waiting_changes,
 					  (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
 					FROM emaj.emaj_group
-					WHERE ";
-			if ($this->getNumEmajVersion() >= 10100){	// version >= 1.1.0
-				$sql .=	"NOT group_is_logging ";
-			}else{
-				$sql .=	"group_state = 'IDLE' ";
-			}
-			$sql .=	"ORDER BY group_name";
+					WHERE NOT group_is_logging 
+					ORDER BY group_name";
 		}
 
 		return $data->selectSet($sql);
@@ -466,29 +447,16 @@ class EmajDb {
 					  AND time_id = group_creation_time_id
 					ORDER BY group_name";
 		}else{
-			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, ";
-			if ($this->getNumEmajVersion() >= 10300){	// version >= 1.3.0
-				$sql .=	"
+			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, 
 						CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
 							 WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
-							 ELSE 'ROLLBACKABLE-PROTECTED' END as group_type, ";
-			}else{
-				$sql .=	"
-						CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END as group_type, ";
-			}
-			$sql .=	"
-					 CASE WHEN length(group_comment) > 100 THEN substr(group_comment,1,97) || '...' ELSE group_comment END
-						as abbr_comment, 
-					 to_char(group_creation_datetime,'DD/MM/YYYY HH24:MI:SS') as creation_datetime,
-					 (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
+							 ELSE 'ROLLBACKABLE-PROTECTED' END as group_type, 
+						CASE WHEN length(group_comment) > 100 THEN substr(group_comment,1,97) || '...' ELSE group_comment END as abbr_comment, 
+						to_char(group_creation_datetime,'DD/MM/YYYY HH24:MI:SS') as creation_datetime,
+						(SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
 					FROM emaj.emaj_group
-					WHERE ";
-			if ($this->getNumEmajVersion() >= 10100){	// version >= 1.1.0
-				$sql .=	"group_is_logging ";
-			}else{
-				$sql .=	"group_state = 'LOGGING' ";
-			}
-			$sql .=	"ORDER BY group_name";
+					WHERE group_is_logging 
+					ORDER BY group_name";
 		}
 
 		return $data->selectSet($sql);
@@ -568,36 +536,19 @@ class EmajDb {
 					FROM emaj.emaj_group, emaj.emaj_time_stamp
 					WHERE group_name = '{$group}'
 					  AND time_id = group_creation_time_id";
-		}else{
-			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, group_creation_datetime, ";
-			if ($this->getNumEmajVersion() >= 10100){	// version >= 1.1.0
-				$sql .=	"CASE WHEN group_is_logging THEN 'LOGGING' ELSE 'IDLE' END as group_state, ";
-			}else{
-				$sql .=	"group_state, ";
-			}
-			if ($this->getNumEmajVersion() >= 10300){	// version >= 1.3.0
-				$sql .=	"
+		} else {
+			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, group_creation_datetime, 
+						CASE WHEN group_is_logging THEN 'LOGGING' ELSE 'IDLE' END as group_state, 
 						CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
 							 WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE' 
-							 ELSE 'ROLLBACKABLE-PROTECTED' END as group_type, ";
-			}else{
-				$sql .=	"
-						CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END as group_type, ";
-			}
-			$sql .=	"
-					group_comment, 
-					pg_size_pretty((SELECT sum(pg_total_relation_size('";
-			if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
-				$sql .=	"\"' || rel_log_schema || '\"";
-			}else{
-				$sql .=	"emaj";
-			}
-			$sql .=
-					".\"' || rel_schema || '_' || rel_tblseq || '_log\"')) 
-						FROM emaj.emaj_relation WHERE rel_group = group_name AND rel_kind = 'r')::bigint) as log_size,
-					(SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
-					FROM emaj.emaj_group
-					WHERE group_name = '{$group}'";
+							 ELSE 'ROLLBACKABLE-PROTECTED' END as group_type, 
+						group_comment, 
+						pg_size_pretty((SELECT sum(pg_total_relation_size(
+										'\"' || rel_log_schema || '\".\"' || rel_schema || '_' || rel_tblseq || '_log\"')) 
+										FROM emaj.emaj_relation WHERE rel_group = group_name AND rel_kind = 'r')::bigint) as log_size,
+						(SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
+							FROM emaj.emaj_group
+							WHERE group_name = '{$group}'";
 		}
 		return $data->selectSet($sql);
 	}
@@ -655,8 +606,8 @@ class EmajDb {
 
 		$data->clean($group);
 
+		// mark_cumlogrows is computed later, at results display
 		if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-			// mark_cumlogrows is computed later, at results display
 			$sql = "SELECT mark_group, mark_name, time_tx_timestamp as mark_datetime, mark_comment,
 						CASE WHEN mark_is_deleted THEN 'DELETED'
 							 WHEN NOT mark_is_deleted AND mark_is_rlbk_protected THEN 'ACTIVE-PROTECTED'
@@ -671,21 +622,14 @@ class EmajDb {
 					  AND time_id = mark_time_id
 					ORDER BY mark_time_id DESC";
 		}else{
-			$sql = "SELECT mark_group, mark_name, mark_datetime, mark_comment, ";
-			if ($this->getNumEmajVersion() >= 10300){	// version >= 1.3.0
-				$sql .= "CASE WHEN mark_is_deleted THEN 'DELETED' 
-							  WHEN NOT mark_is_deleted AND mark_is_rlbk_protected THEN 'ACTIVE-PROTECTED'
-							  ELSE 'ACTIVE' END as mark_state, ";
-			} elseif ($this->getNumEmajVersion() >= 10100){	// version >= 1.1.0
-				$sql .= "CASE WHEN mark_is_deleted THEN 'DELETED' ELSE 'ACTIVE' END as mark_state, ";
-			} else {
-				$sql .= "mark_state, ";
-			}
-			$sql .=							// mark_cumlogrows is computed later, at results display
-					"coalesce(mark_log_rows_before_next,
-						(SELECT SUM(stat_rows) 
-							FROM emaj.emaj_log_stat_group(emaj_mark.mark_group,emaj_mark.mark_name,NULL)))
-					 AS mark_logrows, 0 AS mark_cumlogrows
+			$sql = "SELECT mark_group, mark_name, mark_datetime, mark_comment, 
+						CASE WHEN mark_is_deleted THEN 'DELETED' 
+							 WHEN NOT mark_is_deleted AND mark_is_rlbk_protected THEN 'ACTIVE-PROTECTED'
+							 ELSE 'ACTIVE' END as mark_state, 
+						coalesce(mark_log_rows_before_next,
+							(SELECT SUM(stat_rows) 
+								FROM emaj.emaj_log_stat_group(emaj_mark.mark_group,emaj_mark.mark_name,NULL)))
+						AS mark_logrows, 0 AS mark_cumlogrows
 					FROM emaj.emaj_mark
 					WHERE mark_group = '{$group}'
 					ORDER BY mark_id DESC";
@@ -702,50 +646,21 @@ class EmajDb {
 
 		$data->clean($group);
 
-		if ($this->getNumEmajVersion() >= 10200){	// version >= 1.2.0
-			$sql = "SELECT rel_schema, rel_tblseq, rel_kind || '+' AS relkind, rel_priority,
-						rel_log_schema, rel_log_dat_tsp, rel_log_idx_tsp,
-						substring(rel_log_function FROM '(.*)\_log\_fnct') AS emaj_names_prefix,
-						CASE WHEN rel_kind = 'r' THEN 
-							pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table))
-						END AS byte_log_size,
-						CASE WHEN rel_kind = 'r' THEN 
-							pg_size_pretty(pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table)))
-						END AS pretty_log_size 
-					FROM emaj.emaj_relation
-					WHERE rel_group = '{$group}'";
-			if ($this->getNumEmajVersion() >= 22000){	// version >= 2.2.0
-				$sql .= " AND upper_inf(rel_time_range)";
-			}
-			$sql .= "		ORDER BY rel_schema, rel_tblseq";
-		} else {
-			$sql = "SELECT rel_schema, rel_tblseq, rel_kind || '+' AS relkind, rel_priority";
-			if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
-				$sql .=
-					", rel_log_schema, rel_log_dat_tsp, rel_log_idx_tsp";
-			}
-			$sql .= ", CASE WHEN rel_kind = 'r' THEN 
-						pg_total_relation_size(";
-			if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
-				$sql .= "quote_ident(rel_log_schema)";
-			}else{
-				$sql .= "'emaj'";
-			}
-			$sql .= " || '.\"' || rel_schema || '_' || rel_tblseq || '_log\"')
-						END as byte_log_size
-					, CASE WHEN rel_kind = 'r' THEN 
-						pg_size_pretty(pg_total_relation_size(";
-			if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
-				$sql .= "quote_ident(rel_log_schema)";
-			}else{
-				$sql .= "'emaj'";
-			}
-			$sql .= " || '.\"' || rel_schema || '_' || rel_tblseq || '_log\"'))
-						END as pretty_log_size 
-					FROM emaj.emaj_relation
-					WHERE rel_group = '{$group}'
-					ORDER BY rel_schema, rel_tblseq";
+		$sql = "SELECT rel_schema, rel_tblseq, rel_kind || '+' AS relkind, rel_priority,
+					rel_log_schema, rel_log_dat_tsp, rel_log_idx_tsp,
+					substring(rel_log_function FROM '(.*)\_log\_fnct') AS emaj_names_prefix,
+					CASE WHEN rel_kind = 'r' THEN 
+						pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table))
+					END AS byte_log_size,
+					CASE WHEN rel_kind = 'r' THEN 
+						pg_size_pretty(pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table)))
+					END AS pretty_log_size 
+				FROM emaj.emaj_relation
+				WHERE rel_group = '{$group}'";
+		if ($this->getNumEmajVersion() >= 22000){	// version >= 2.2.0
+			$sql .= " AND upper_inf(rel_time_range)";
 		}
+		$sql .= "		ORDER BY rel_schema, rel_tblseq";
 
 		return $data->selectSet($sql);
 	}
@@ -763,14 +678,12 @@ class EmajDb {
 					 LEFT JOIN pg_catalog.pg_roles pu ON (pn.nspowner = pu.oid)
 				WHERE nspname NOT LIKE 'pg@_%' ESCAPE '@' AND 
 					  nspname != 'information_schema' AND nspname != 'emaj' ";
-		if ($this->getNumEmajVersion() >= 10000){			// version >= 1.0.0
-			if ($this->getNumEmajVersion() >= 22000){			// version >= 2.2.0
-				$sql .=
-					"AND nspname NOT IN (SELECT sch_name FROM emaj.emaj_schema) ";
-			} else {
-				$sql .=
-					"AND nspname NOT IN (SELECT DISTINCT rel_log_schema FROM emaj.emaj_relation WHERE rel_log_schema IS NOT NULL) ";
-			}
+		if ($this->getNumEmajVersion() >= 22000){			// version >= 2.2.0
+			$sql .=
+				"AND nspname NOT IN (SELECT sch_name FROM emaj.emaj_schema) ";
+		} else {
+			$sql .=
+				"AND nspname NOT IN (SELECT DISTINCT rel_log_schema FROM emaj.emaj_relation WHERE rel_log_schema IS NOT NULL) ";
 		}
 		$sql .= "UNION
 				SELECT DISTINCT 2, grpdef_schema AS nspname, '!' AS nspowner, NULL AS nspcomment
@@ -794,63 +707,18 @@ class EmajDb {
 					c.relkind || case when relkind = 'S' or (relkind = 'r' and c.relpersistence = 'p' and not c.relhasoids) then '+' else '-' end as relkind,
 					pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
 					pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment, spcname AS tablespace,
-					grpdef_group, grpdef_priority ";
-		if ($this->getNumEmajVersion() >= 10000){			// version >= 1.0.0
-			$sql .=
-				", grpdef_log_schema_suffix ";
-		} else {
-			$sql .=
-				", NULL AS grpdef_log_schema_suffix ";
-		}
-		if ($this->getNumEmajVersion() >= 10200){			// version >= 1.2.0
-			$sql .=
-				", grpdef_emaj_names_prefix ";
-		} else {
-			$sql .=
-				", NULL AS grpdef_emaj_names_prefix ";
-		}
-		if ($this->getNumEmajVersion() >= 10000){			// version >= 1.0.0
-			$sql .=
-				", grpdef_log_dat_tsp, grpdef_log_idx_tsp ";
-		} else {
-			$sql .=
-				", NULL AS grpdef_log_dat_tsp, NULL AS grpdef_log_idx_tsp ";
-		}
-		$sql .=
-			   "FROM pg_catalog.pg_class c
-					LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
-					LEFT JOIN emaj.emaj_group_def ON grpdef_schema = nspname AND grpdef_tblseq = c.relname
-					LEFT JOIN pg_catalog.pg_tablespace pt ON pt.oid = c.reltablespace
-				WHERE c.relkind IN ('r','S','p') AND nspname='{$schema}'
+					grpdef_group, grpdef_priority, grpdef_log_schema_suffix, grpdef_emaj_names_prefix, grpdef_log_dat_tsp, grpdef_log_idx_tsp 			   FROM pg_catalog.pg_class c
+						LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+						LEFT JOIN emaj.emaj_group_def ON grpdef_schema = nspname AND grpdef_tblseq = c.relname
+						LEFT JOIN pg_catalog.pg_tablespace pt ON pt.oid = c.reltablespace
+					WHERE c.relkind IN ('r','S','p') AND nspname='{$schema}'
 				UNION
 				SELECT 2, grpdef_schema AS nspname, grpdef_tblseq AS relname, '!' AS relkind, NULL, NULL, NULL, 
-					grpdef_group , grpdef_priority ";
-		if ($this->getNumEmajVersion() >= 10000){			// version >= 1.0.0
-			$sql .=
-				", grpdef_log_schema_suffix ";
-		} else {
-			$sql .=
-				", NULL AS grpdef_log_schema_suffix ";
-		}
-		if ($this->getNumEmajVersion() >= 10200){			// version >= 1.2.0
-			$sql .=
-				", grpdef_emaj_names_prefix ";
-		} else {
-			$sql .=
-				", NULL AS grpdef_emaj_names_prefix ";
-		}
-		if ($this->getNumEmajVersion() >= 10000){			// version >= 1.0.0
-			$sql .=
-				", grpdef_log_dat_tsp, grpdef_log_idx_tsp ";
-		} else {
-			$sql .=
-				", NULL AS grpdef_log_dat_tsp, NULL AS grpdef_log_idx_tsp ";
-		}
-		$sql .=
-			   "FROM emaj.emaj_group_def
-				WHERE grpdef_schema = '{$schema}' AND grpdef_tblseq NOT IN 
-					( SELECT relname FROM pg_catalog.pg_class, pg_catalog.pg_namespace
-						WHERE relnamespace = pg_namespace.oid AND nspname = '{$schema}' AND relkind IN ('r','S') )
+					grpdef_group , grpdef_priority, grpdef_log_schema_suffix, grpdef_emaj_names_prefix, grpdef_log_dat_tsp, grpdef_log_idx_tsp 
+					FROM emaj.emaj_group_def
+					WHERE grpdef_schema = '{$schema}' AND grpdef_tblseq NOT IN 
+						(SELECT relname FROM pg_catalog.pg_class, pg_catalog.pg_namespace
+							WHERE relnamespace = pg_namespace.oid AND nspname = '{$schema}' AND relkind IN ('r','S'))
 				ORDER BY 1, relname";
 
 		return $data->selectSet($sql);
@@ -924,47 +792,29 @@ class EmajDb {
 		}
 
 		// Insert the new row into the emaj_group_def table
-		$sql = "INSERT INTO emaj.emaj_group_def (grpdef_schema, grpdef_tblseq, grpdef_group, grpdef_priority ";
-		if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
-			$sql .=
-				", grpdef_log_schema_suffix ";
-		}
-		if ($this->getNumEmajVersion() >= 10200){	// version >= 1.2.0
-			$sql .=
-				", grpdef_emaj_names_prefix ";
-		}
-		if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
-			$sql .=
-				", grpdef_log_dat_tsp, grpdef_log_idx_tsp ";
-		}
-		$sql .=
-				") VALUES ('{$schema}', '{$tblseq}', '{$group}' ";
+		$sql = "INSERT INTO emaj.emaj_group_def (grpdef_schema, grpdef_tblseq, grpdef_group, grpdef_priority, 
+						grpdef_log_schema_suffix, grpdef_emaj_names_prefix, grpdef_log_dat_tsp, grpdef_log_idx_tsp) 
+					VALUES ('{$schema}', '{$tblseq}', '{$group}' ";
 		if ($priority == '')
 			$sql .= ", NULL";
 		else
 			$sql .= ", {$priority}";
-		if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
-			if ($logSchemaSuffix == '' || $relkind == 'S')
-				$sql .= ", NULL";
-			else
-				$sql .= ", '{$logSchemaSuffix}'";
-		}
-		if ($this->getNumEmajVersion() >= 10200){	// version >= 1.2.0
-			if ($emajNamesPrefix == '' || $relkind == 'S')
-				$sql .= ", NULL";
-			else
-				$sql .= ", '{$emajNamesPrefix}'";
-		}
-		if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
-			if ($logDatTsp == '' || $relkind == 'S')
-				$sql .= ", NULL";
-			else
-				$sql .= ", '{$logDatTsp}'";
-			if ($logIdxTsp == '' || $relkind == 'S')
-				$sql .= ", NULL";
-			else
-				$sql .= ", '{$logIdxTsp}'";
-		}
+		if ($logSchemaSuffix == '' || $relkind == 'S')
+			$sql .= ", NULL";
+		else
+			$sql .= ", '{$logSchemaSuffix}'";
+		if ($emajNamesPrefix == '' || $relkind == 'S')
+			$sql .= ", NULL";
+		else
+			$sql .= ", '{$emajNamesPrefix}'";
+		if ($logDatTsp == '' || $relkind == 'S')
+			$sql .= ", NULL";
+		else
+			$sql .= ", '{$logDatTsp}'";
+		if ($logIdxTsp == '' || $relkind == 'S')
+			$sql .= ", NULL";
+		else
+			$sql .= ", '{$logIdxTsp}'";
 		$sql .= ")";
 
 		return $data->execute($sql);
@@ -1004,30 +854,23 @@ class EmajDb {
 			$sql .= ", grpdef_priority = NULL";
 		else
 			$sql .= ", grpdef_priority = {$priority}";
-		if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
-			if ($logSchemaSuffix == '' || $relkind == 'S')
-				$sql .= ", grpdef_log_schema_suffix = NULL";
-			else
-				$sql .= ", grpdef_log_schema_suffix = '{$logSchemaSuffix}'";
-		}
-		if ($this->getNumEmajVersion() >= 10200){	// version >= 1.2.0
-			if ($emajNamesPrefix == '' || $relkind == 'S')
-				$sql .= ", grpdef_emaj_names_prefix = NULL";
-			else
-				$sql .= ", grpdef_emaj_names_prefix = '{$emajNamesPrefix}'";
-		}
-		if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
-			if ($logDatTsp == '' || $relkind == 'S')
-				$sql .= ", grpdef_log_dat_tsp = NULL";
-			else
-				$sql .= ", grpdef_log_dat_tsp = '{$logDatTsp}'";
-			if ($logIdxTsp == '' || $relkind == 'S')
-				$sql .= ", grpdef_log_idx_tsp = NULL";
-			else
-				$sql .= ", grpdef_log_idx_tsp = '{$logIdxTsp}'";
-		}
-		$sql .=
-               " WHERE grpdef_schema = '{$schema}' AND grpdef_tblseq = '{$tblseq}' AND grpdef_group = '{$groupOld}'";
+		if ($logSchemaSuffix == '' || $relkind == 'S')
+			$sql .= ", grpdef_log_schema_suffix = NULL";
+		else
+			$sql .= ", grpdef_log_schema_suffix = '{$logSchemaSuffix}'";
+		if ($emajNamesPrefix == '' || $relkind == 'S')
+			$sql .= ", grpdef_emaj_names_prefix = NULL";
+		else
+			$sql .= ", grpdef_emaj_names_prefix = '{$emajNamesPrefix}'";
+		if ($logDatTsp == '' || $relkind == 'S')
+			$sql .= ", grpdef_log_dat_tsp = NULL";
+		else
+			$sql .= ", grpdef_log_dat_tsp = '{$logDatTsp}'";
+		if ($logIdxTsp == '' || $relkind == 'S')
+			$sql .= ", grpdef_log_idx_tsp = NULL";
+		else
+			$sql .= ", grpdef_log_idx_tsp = '{$logIdxTsp}'";
+		$sql .= " WHERE grpdef_schema = '{$schema}' AND grpdef_tblseq = '{$tblseq}' AND grpdef_group = '{$groupOld}'";
 
 		return $data->execute($sql);
 	}
@@ -1556,23 +1399,12 @@ class EmajDb {
 					  AND time_id = mark_time_id
 					ORDER BY mark_time_id DESC";
 		}else{
-			$sql = "SELECT mark_name, mark_datetime, ";
-			if ($this->getNumEmajVersion() >= 10300){	// version >= 1.3.0
-				$sql .= "mark_is_rlbk_protected";
-			}else{
-				$sql .= "'f' AS mark_is_rlbk_protected";
-			}
-			$sql .= " FROM emaj.emaj_mark 
-					WHERE ";
-			if ($this->getNumEmajVersion() >= 10100){	// version >= 1.1.0
-				$sql .= "NOT mark_is_deleted";
-			}else{
-				$sql .= "mark_state = 'ACTIVE'";
-			}
-			$sql .= " AND mark_group = '$group'
-					ORDER BY mark_id DESC";
+			$sql = "SELECT mark_name, mark_datetime, mark_is_rlbk_protected 
+					  FROM emaj.emaj_mark 
+					  WHERE NOT mark_is_deleted
+						AND mark_group = '$group'
+					  ORDER BY mark_id DESC";
 		}
-
 		return $data->selectSet($sql);
 	}
 
@@ -1591,13 +1423,8 @@ class EmajDb {
 		// check the mark is active
 		$sql = "SELECT CASE WHEN EXISTS
 				 (SELECT 0 FROM emaj.emaj_mark 
-                   WHERE mark_group = '{$group}' AND mark_name = '{$mark}' AND ";
-		if ($this->getNumEmajVersion() >= 10100){	// version >= 1.1.0
-			$sql .= "NOT mark_is_deleted";
-		}else{
-			$sql .= "mark_state = 'ACTIVE'";
-		}
-		$sql .= ") THEN 1 ELSE 0 END AS is_active";
+                   WHERE mark_group = '{$group}' AND mark_name = '{$mark}' AND NOT mark_is_deleted
+				  ) THEN 1 ELSE 0 END AS is_active";
 
 		return $data->selectField($sql,'is_active');
 	}
@@ -1629,8 +1456,7 @@ class EmajDb {
 							WHERE mark_group = '{$group}' AND mark_name = '{$mark}'
 							) AND mark_is_rlbk_protected
 						) = 0 THEN 1 ELSE 0 END AS result";
-				$result = $data->selectField($sql,'result');
-			} elseif ($this->getNumEmajVersion() >= 10300){	// version >= 1.3.0
+			} else {
 				$sql = "SELECT CASE WHEN 
 						(SELECT count(*) FROM emaj.emaj_mark 
 						WHERE mark_group = '{$group}' AND mark_id > 
@@ -1638,8 +1464,8 @@ class EmajDb {
 							WHERE mark_group = '{$group}' AND mark_name = '{$mark}'
 							) AND mark_is_rlbk_protected
 						) = 0 THEN 1 ELSE 0 END AS result";
-				$result = $data->selectField($sql,'result');
 			}
+			$result = $data->selectField($sql,'result');
 		}
 
 		return $result;
@@ -1814,21 +1640,10 @@ class EmajDb {
 					ORDER BY t.mark_datetime DESC";
 		}else{
 			$sql = "SELECT t.mark_name, t.mark_datetime, t.mark_is_rlbk_protected 
-					FROM (SELECT mark_name, mark_datetime, ";
-			if ($this->getNumEmajVersion() >= 10300){	// version >= 1.3.0
-				$sql .= "        mark_is_rlbk_protected, ";
-			}else{
-				$sql .= "        'f' AS mark_is_rlbk_protected, ";
-			}
-			$sql .= "            array_agg (mark_group) AS groups 
-						FROM emaj.emaj_mark,emaj.emaj_group 
-						WHERE mark_group = group_name AND ";
-			if ($this->getNumEmajVersion() >= 10100){	// version >= 1.1.0
-				$sql .= "NOT mark_is_deleted";
-			}else{
-				$sql .= "mark_state = 'ACTIVE'";
-			}
-			$sql .= " AND group_is_rollbackable GROUP BY 1,2,3) AS t 
+					FROM (SELECT mark_name, mark_datetime, mark_is_rlbk_protected, array_agg (mark_group) AS groups 
+							FROM emaj.emaj_mark,emaj.emaj_group 
+							WHERE mark_group = group_name AND NOT mark_is_deleted
+							  AND group_is_rollbackable GROUP BY 1,2,3) AS t 
 					WHERE t.groups @> $groupsArray
 					ORDER BY t.mark_datetime DESC";
 		}
@@ -1868,10 +1683,6 @@ class EmajDb {
 
 		global $data;
 
-		if ($this->getNumEmajVersion() < 10300){	// version < 1.3.0
-			return '';
-		}
-
 		$data->clean($groups);
 		$groups="'".str_replace(', ',"','",$groups)."'";
 
@@ -1905,13 +1716,8 @@ class EmajDb {
 				(SELECT COUNT(*) FROM emaj.emaj_mark, emaj.emaj_group 
 					WHERE mark_group = group_name 
 						AND mark_group = ANY ({$groupsArray}) AND group_is_rollbackable AND mark_name = '{$mark}' 
-						AND ";
-		if ($this->getNumEmajVersion() >= 10100){	// version >= 1.1.0
-			$sql .= "NOT mark_is_deleted";
-		}else{
-			$sql .= "mark_state = 'ACTIVE'";
-		}
-		$sql .= ") = {$nbGroups} THEN 1 ELSE 0 END AS result";
+						AND NOT mark_is_deleted
+				) = {$nbGroups} THEN 1 ELSE 0 END AS result";
 
 		$result = $data->selectField($sql,'result');
 
@@ -1925,8 +1731,7 @@ class EmajDb {
 							 WHERE mark_group = ANY({$groupsArray}) AND mark_name = '{$mark}' LIMIT 1
 						    ) AND mark_is_rlbk_protected
 						) = 0 THEN 1 ELSE 0 END AS result";
-				$result = $data->selectField($sql,'result');
-			} elseif ($this->getNumEmajVersion() >= 10300){  // version >= 1.3.0
+			} else{
 				$sql = "SELECT CASE WHEN 
 						(SELECT count(*) FROM emaj.emaj_mark 
 						  WHERE mark_group = ANY ({$groupsArray}) AND mark_id > 
@@ -1934,8 +1739,8 @@ class EmajDb {
 							 WHERE mark_group = ANY({$groupsArray}) AND mark_name = '{$mark}' LIMIT 1
 						    ) AND mark_is_rlbk_protected
 						) = 0 THEN 1 ELSE 0 END AS result";
-				$result = $data->selectField($sql,'result');
 			}
+			$result = $data->selectField($sql,'result');
 		}
 
 		return $result;
@@ -1997,13 +1802,7 @@ class EmajDb {
 		$data->clean($group);
 		$data->clean($mark);
 
-		$sql = "SELECT to_char(emaj.";
-		if ($this->getNumEmajVersion() >= 10100){	// version >= 1.1.0
-			$sql .= "emaj_estimate_rollback_group('{$group}','{$mark}',false)";
-		}else{
-			$sql .= "emaj_estimate_rollback_duration('{$group}','{$mark}')";
-		}
-		$sql .= "+'1 second'::interval,'HH24:MI:SS') as duration";
+		$sql = "SELECT to_char(emaj.emaj_estimate_rollback_group('{$group}','{$mark}',false) + '1 second'::interval,'HH24:MI:SS') as duration";
 
 		return $data->selectField($sql,'duration');
 	}
@@ -2138,12 +1937,7 @@ class EmajDb {
 					$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
 				}
 				$sql .= "stat_rows, 
-						'select * from ' || ";
-				if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
-					$sql .= "quote_ident(rel_log_schema)";
-				}else{
-					$sql .= "'emaj'";
-				}
+						'select * from ' || quote_ident(rel_log_schema)";
 				if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
 					$sql .= " || '.' || quote_ident(rel_log_table) || 
 								' where emaj_gid > ' || strttime.time_last_emaj_gid ||
@@ -2175,12 +1969,7 @@ class EmajDb {
 					$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
 				}
 				$sql .= "stat_rows, 
-						'select * from ' || ";
-				if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
-					$sql .= "quote_ident(rel_log_schema)";
-				}else{
-					$sql .= "'emaj'";
-				}
+						'select * from ' || quote_ident(rel_log_schema)";
 				if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
 					$sql .= " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') ||
 								' where emaj_gid > ' || strttime.time_last_emaj_gid ||
@@ -2272,12 +2061,7 @@ class EmajDb {
 					$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
 				}
 				$sql .= "stat_role, stat_verb, stat_rows, 
-						'select * from ' || ";
-				if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
-					$sql .= "quote_ident(rel_log_schema)";
-				}else{
-					$sql .= "'emaj'";
-				}
+						'select * from ' || quote_ident(rel_log_schema)";
 				if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
 					$sql .=    " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') || 
 								' where emaj_gid > ' || strttime.time_last_emaj_gid ||
@@ -2310,12 +2094,7 @@ class EmajDb {
 					$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
 				}
 				$sql .= "stat_role, stat_verb, stat_rows, 
-						'select * from ' || ";
-				if ($this->getNumEmajVersion() >= 10000){	// version >= 1.0.0
-					$sql .= "quote_ident(rel_log_schema)";
-				}else{
-					$sql .= "'emaj'";
-				}
+						'select * from ' || quote_ident(rel_log_schema)";
 				if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
 					$sql .=    " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') || 
 								' where emaj_gid > ' || strttime.time_last_emaj_gid ||

@@ -9,7 +9,8 @@
 	$lang['applangdir'] = 'ltr';
 
 	// Basic strings
-	$lang['strintro'] = 'Bienvenue dans Emaj_web.';
+	$lang['strintro'] = 'Bienvenue dans %s %s, le client web pour';
+	$lang['strlink'] = 'Quelques liens :';
 	$lang['strpgsqlhome'] = 'Page d\'accueil de PostgreSQL';
 	$lang['strpgsqlhome_url'] = 'http://www.postgresql.org/';
 	$lang['stremajdoc'] = 'Documentation E-Maj';

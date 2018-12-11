@@ -489,7 +489,7 @@
 				// Theme
 				echo "<link rel=\"stylesheet\" href=\"themes/{$conf['theme']}/global.css\" type=\"text/css\" />\n";
 				echo "<link rel=\"shortcut icon\" href=\"images/themes/{$conf['theme']}/Favicon.ico\" type=\"image/vnd.microsoft.icon\" />\n";
-				echo "<link rel=\"icon\" type=\"image/png\" href=\"images/themes/{$conf['theme']}/Introduction.png\" />\n";
+				echo "<link rel=\"icon\" type=\"image/png\" href=\"images/themes/{$conf['theme']}/EmajwebIcon.png\" />\n";
 				echo "<script type=\"text/javascript\" src=\"libraries/js/jquery.js\"></script>";
 				echo "<title>", htmlspecialchars($appName);
 				if ($title != '') echo htmlspecialchars(" - {$title}");
@@ -668,7 +668,7 @@
 						'intro' => array (
 							'title' => $lang['strintroduction'],
 							'url'   => "intro.php",
-							'icon'  => 'Introduction',
+							'icon'  => 'EmajwebIcon',
 						),
 						'servers' => array (
 							'title' => $lang['strservers'],
@@ -950,7 +950,7 @@
 			$trail['root'] = array(
 				'text'  => $appName,
 				'url'   => 'redirect.php?subject=root',
-				'icon'  => 'Introduction'
+				'icon'  => 'EmajwebIcon'
 			);
 
 			if ($subject == 'root') $done = true;

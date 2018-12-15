@@ -216,6 +216,8 @@ class Emaj extends Plugin {
 		'delete_before_mark_ok',
 		'delete_mark',
 		'delete_mark_ok',
+		'delete_marks',
+		'delete_marks_ok',
 		'drop_group',
 		'drop_group_ok',
 		'emaj_envir',
@@ -1037,8 +1039,7 @@ class Emaj extends Plugin {
 					),
 				);
 
-				$this->printTable($tblseq, $columns, $actions, 'defineGroupTblseq', $lang['strnotables'],array($this,'tblseqPre'), array('sorter' => true, 'filter' => true));
-
+				$this->printTable($tblseq, $columns, $actions, 'defineGroupTblseq', $lang['strnotables'], array($this,'tblseqPre'), array('sorter' => true, 'filter' => true));
 			}
 		}
 
@@ -1293,7 +1294,7 @@ class Emaj extends Plugin {
 					'field' => field('cons_target_rlbk_mark_datetime'),
 				),
 				'rlbkNbRow' => array(
-					'title' => $this->lang['emajnbupdates'],
+					'title' => $this->lang['emajnbchanges'],
 					'field' => field('cons_rows'),
 					'params'=> array('align' => 'right'),
 				),
@@ -1461,6 +1462,15 @@ class Emaj extends Plugin {
 					'field' => field('group_creation_datetime'),
 					'params'=> array('align' => 'center'),
 				),
+				'rollbackable' => array(
+					'title' => $lang['strtype'],
+					'field' => field('group_type'),
+					'type'	=> 'callback',
+					'params'=> array(
+							'function' => array($this,'renderGroupType'),
+							'align' => 'center',
+							),
+				),
 				'nbtbl' => array(
 					'title' => $this->lang['emajnbtbl'],
 					'field' => field('group_nb_table'),
@@ -1470,15 +1480,6 @@ class Emaj extends Plugin {
 					'title' => $this->lang['emajnbseq'],
 					'field' => field('group_nb_sequence'),
 					'type'  => 'numeric'
-				),
-				'rollbackable' => array(
-					'title' => $lang['strtype'],
-					'field' => field('group_type'),
-					'type'	=> 'callback',
-					'params'=> array(
-							'function' => array($this,'renderGroupType'),
-							'align' => 'center',
-							),
 				),
 				'nbmark' => array(
 					'title' => $this->lang['emajnbmark'],
@@ -1590,10 +1591,6 @@ class Emaj extends Plugin {
 					'title' => $this->lang['emajmark'],
 					'field' => field('mark_name'),
 				),
-				'datetime' => array(
-					'title' => $this->lang['emajtimestamp'],
-					'field' => field('mark_datetime'),
-				),
 				'state' => array(
 					'title' => $this->lang['emajstate'],
 					'field' => field('mark_state'),
@@ -1601,20 +1598,24 @@ class Emaj extends Plugin {
 					'params'=> array('function' => array($this,'renderMarkState'),'align' => 'center'),
 					'filter'=> false,
 				),
+				'datetime' => array(
+					'title' => $this->lang['emajtimestamp'],
+					'field' => field('mark_datetime'),
+				),
 				'logrows' => array(
-					'title' => $this->lang['emajnbupdates'],
+					'title' => $this->lang['emajnbchanges'],
 					'field' => field('mark_logrows'),
 					'type'  => 'numeric'
 				),
 				'cumlogrows' => array(
-					'title' => $this->lang['emajcumupdates'],
+					'title' => $this->lang['emajcumchanges'],
 					'field' => field('mark_cumlogrows'),
 					'type'  => 'numeric'
 				),
 				'actions' => array(
 					'title' => $lang['stractions'],
 				),
-					'comment' => array(
+				'comment' => array(
 					'title' => $lang['strcomment'],
 					'field' => field('mark_comment'),
 				),
@@ -1623,6 +1624,14 @@ class Emaj extends Plugin {
 			$urlvars = $misc->getRequestVars();
 
 			$actions = array();
+			if ($this->emajdb->isEmaj_Adm() && ($nbMarks > 1)) {
+				$actions = array_merge($actions, array(
+					'multiactions' => array(
+						'keycols' => array('group' => 'mark_group', 'mark' => 'mark_name'),
+						'url' => "plugin.php?plugin={$this->name}&amp;group={$_REQUEST['group']}&amp;back=detail&amp;",
+					),
+				));
+			}
 			if ($this->emajdb->isEmaj_Adm() && $groupType == "ROLLBACKABLE") {
 				$actions = array_merge($actions, array(
 					'rollbackgroup' => array(
@@ -1670,7 +1679,8 @@ class Emaj extends Plugin {
 									'back' => 'detail',
 									'group' => field('mark_group'),
 									'mark' => field('mark_name'),
-								))))
+								)))),
+						'multiaction' => 'delete_marks',
 					),
 				));
 			}
@@ -1744,12 +1754,12 @@ class Emaj extends Plugin {
 			$this->protected_mark_flag = 0;
 
 			// display the marks list
-			$this->printTable($marks, $columns, $actions, 'marks', $this->lang['emajnomark'],array($this,'markPre'), array('sorter' => false, 'filter' => true));
+			$this->printTable($marks, $columns, $actions, 'marks', $this->lang['emajnomark'], array($this,'markPre'), array('sorter' => false, 'filter' => true));
 
 			// JQuery to remove the last deleteBeforeMark button as it is meaningless on the first set mark
 			echo "<script type=\"text/javascript\">\n";
-			echo "  $(\"tr:last td:contains('{$this->lang['emajfirstmark']}')\").removeClass()\n";
-			echo "  $(\"tr:last a:contains('{$this->lang['emajfirstmark']}')\").remove()\n";
+			echo "  $(\"table.data tr:last td:contains('{$this->lang['emajfirstmark']}')\").removeClass()\n";
+			echo "  $(\"table.data tr:last a:contains('{$this->lang['emajfirstmark']}')\").remove()\n";
 			echo "</script>\n";
 		}
 
@@ -1793,7 +1803,7 @@ class Emaj extends Plugin {
 			if ($marks->recordCount() < 1) {
 
 				// No mark recorded for the group => no update logged => no stat to display
-				echo "<p>{$this->lang['emajnoupdate']}</p>\n"; 
+				echo "<p>{$this->lang['emajnomark']}</p>\n"; 
 
 			} else {
 
@@ -1959,7 +1969,7 @@ class Emaj extends Plugin {
 		echo "<th class=\"data\" colspan=2>{$this->lang['emajestimates']}</th>\n";
 		echo "</tr><tr>\n";
 		echo "<th class=\"data\">{$this->lang['emajnbtbl']}</th>";
-		echo "<th class=\"data\">{$this->lang['emajnbupdates']}</th>";
+		echo "<th class=\"data\">{$this->lang['emajnbchanges']}</th>";
 		echo "</tr><tr class=\"data1\">\n";
 		echo "<td><div style=\"text-align: center\">{$summary->fields['nb_tables']}</div></td>";
 		echo "<td><div style=\"text-align: center\">{$summary->fields['sum_rows']}</div></td>";
@@ -2093,7 +2103,7 @@ class Emaj extends Plugin {
 		echo "<div style=\"margin-bottom:15px\">\n";
 		echo "<table><tr>\n";
 		echo "<th class=\"data\">{$this->lang['emajnbtbl']}</th>";
-		echo "<th class=\"data\">{$this->lang['emajnbupdates']}</th>";
+		echo "<th class=\"data\">{$this->lang['emajnbchanges']}</th>";
 		echo "<th class=\"data\">{$this->lang['emajnbinsert']}</th>";
 		echo "<th class=\"data\">{$this->lang['emajnbupdate']}</th>";
 		echo "<th class=\"data\">{$this->lang['emajnbdelete']}</th>";
@@ -2505,7 +2515,7 @@ class Emaj extends Plugin {
 					$status = $this->emajdb->assignTblSeq($_POST['appschema'][$i],$_POST['tblseq'][$i],$_POST['group'],
 								$_POST['priority'], $_POST['suffix'], $_POST['nameprefix'], $_POST['logdattsp'], $_POST['logidxtsp']);
 					if ($status != 0) {
-						$data->endTransaction();
+						$data->rollbackTransaction();
 						$this->configure_groups('', $this->lang['emajmodifygrouperr']);
 						return;
 					}
@@ -2768,7 +2778,7 @@ class Emaj extends Plugin {
 				{
 					$status = $this->emajdb->removeTblSeq($_POST['appschema'][$i],$_POST['tblseq'][$i],$_POST['group'][$i]);
 					if ($status != 0) {
-						$data->endTransaction();
+						$data->rollbackTransaction();
 						$this->configure_groups('', $this->lang['emajmodifygrouperr']);
 						return;
 					}
@@ -4638,6 +4648,72 @@ class Emaj extends Plugin {
 	}
 
 	/**
+	 * Prepare delete mark group for several marks: ask for confirmation
+	 */
+	function delete_marks() {
+		global $misc, $lang;
+
+		$this->printPageHeader('emajgroup','emajgroupproperties');
+
+		$misc->printTitle($this->lang['emajdelmarks']);
+
+		// build the marks list
+		$marksList=''; $nbMarks=0;
+		foreach($_REQUEST['ma'] as $v) {
+			$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
+			$marksList.=$a['mark'].', ';
+			$nbMarks++;
+		}
+		$marksList=substr($marksList,0,strlen($marksList)-2);
+
+		// Chech that at least 1 mark will remain
+		if ($nbMarks >= $this->emajdb->getNbMarks($_REQUEST['group'])) {
+			$this->show_group('',sprintf($this->lang['emajdelmarkserr2'], htmlspecialchars($_POST['marks']), htmlspecialchars($_POST['group'])));
+			return;
+		}
+
+		echo "<p>", sprintf($this->lang['emajconfirmdelmarks'], htmlspecialchars($marksList), htmlspecialchars($_REQUEST['group'])), "</p>\n";
+		echo "<form action=\"plugin.php?plugin={$this->name}&amp;\" method=\"post\">\n";
+		echo "<p><input type=\"hidden\" name=\"action\" value=\"delete_marks_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
+		echo "<input type=\"hidden\" name=\"marks\" value=\"", htmlspecialchars($marksList), "\" />\n";
+		echo $misc->form;
+		echo "<input type=\"submit\" name=\"deletemarks\" value=\"{$lang['strdelete']}\" />\n";
+		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+		echo "</form>\n";
+
+		$this->printEmajFooter();
+		$misc->printFooter();
+	}
+
+	/**
+	 * Perform delete mark group for several marks
+	 */
+	function delete_marks_ok() {
+		global $data, $lang;
+
+		// process the click on the <cancel> button
+		if (isset($_POST['cancel'])) { $this->show_group(); exit(); }
+
+		$marks = explode(', ',$_POST['marks']);
+		$status = $data->beginTransaction();
+		if ($status == 0) {
+			foreach($marks as $m) {
+				$status = $this->emajdb->deleteMarkGroup($_POST['group'],$m);
+				if ($status != 0) {
+					$data->rollbackTransaction();
+					$this->show_group('',sprintf($this->lang['emajdelmarkserr'], htmlspecialchars($_POST['marks']), htmlspecialchars($_POST['group'])));
+					return;
+				}
+			}
+		}
+		if($data->endTransaction() == 0)
+			$this->show_group(sprintf($this->lang['emajdelmarksok'], htmlspecialchars($_POST['marks']), htmlspecialchars($_POST['group'])));
+		else
+			$this->show_group('',sprintf($this->lang['emajdelmarkserr'], htmlspecialchars($_POST['marks']), htmlspecialchars($_POST['group'])));
+	}
+
+	/**
 	 * Prepare delete before mark group: ask for confirmation
 	 */
 	function delete_before_mark() {
@@ -4645,9 +4721,9 @@ class Emaj extends Plugin {
 
 		$this->printPageHeader('emajgroup','emajgroupproperties');
 
-		$misc->printTitle($this->lang['emajdelmarks']);
+		$misc->printTitle($this->lang['emajdelmarksprior']);
 
-		echo "<p>", sprintf($this->lang['emajconfirmdelmarks'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])), "</p>\n";
+		echo "<p>", sprintf($this->lang['emajconfirmdelmarksprior'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"plugin.php?plugin={$this->name}&amp;\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"delete_before_mark_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -4673,9 +4749,9 @@ class Emaj extends Plugin {
 
 		$status = $this->emajdb->deleteBeforeMarkGroup($_POST['group'],$_POST['mark']);
 		if ($status > 0)
-			$this->show_group(sprintf($this->lang['emajdelmarksok'],$status, htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group'])));
+			$this->show_group(sprintf($this->lang['emajdelmarkspriorok'],$status, htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group'])));
 		else
-			$this->show_group('',sprintf($this->lang['emajdelmarkserr'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group'])));
+			$this->show_group('',sprintf($this->lang['emajdelmarkspriorerr'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group'])));
 	}
 
 	/**
@@ -4807,8 +4883,9 @@ class Emaj extends Plugin {
 			);
 			$plugin_manager->do_hook('actionbuttons', $plugin_functions_parameters);
 
-			if ($has_ma = isset($actions['multiactions']))
+			if ($has_ma = isset($actions['multiactions'])) {
 				$ma = $actions['multiactions'];
+			}
 			unset($actions['multiactions']);
 
 			// The 7th parameter defines if the tablesorter JQuery plugin is used for this table, with the sorter and/or the filter functionalities
@@ -4839,14 +4916,14 @@ class Emaj extends Plugin {
 					echo "<div id=\"{$place}\">\n";
 				}
 
-				echo "<table>\n";
+				echo "<table class=\"data\">\n";
 				echo "<thead>\n";
 				echo "<tr>\n";
 
 				// Display column headings
 				$colnum = 0; $filterDisabledJs = ''; $textExtractionJS = '';
 				if ($has_ma) {
-					echo "<th class=\"sorter-false\"></th>";
+					echo "<th class=\"sorter-false\"></th>\n";
 					if ($filter) {$filterDisabledJs .= "\t\t$('#{$place} input[data-column=\"{$colnum}\"]').addClass(\"disabled\");\n";}
 					$colnum++;
 				}
@@ -4972,11 +5049,11 @@ class Emaj extends Plugin {
 					echo "<th class=\"multiactions\" id=\"selectedcounter\">{$this->lang['emajactionsonselectedobjects']}</th>\n";
 					echo "</tr>\n";
 					echo "<tr class=\"row1\">\n";
-					echo "<td>";
-					echo "&nbsp;<a href=\"#\" onclick=\"javascript:checkSelect('all','{$place}');countChecked('{$place}');\">{$this->lang['emajall']}</a>&nbsp;/";
-					echo "&nbsp;<a href=\"#\" onclick=\"javascript:checkSelect('none','{$place}');countChecked('{$place}');\">{$this->lang['emajnone']}</a>&nbsp;/";
-					echo "&nbsp;<a href=\"#\" onclick=\"javascript:checkSelect('invert','{$place}');countChecked('{$place}');\">{$this->lang['emajinvert']}</a>\n";
-					echo "&nbsp;</td><td>\n";
+					echo "\t<td>\n";
+					echo "\t\t&nbsp;<a href=\"#\" onclick=\"javascript:checkSelect('all','{$place}');countChecked('{$place}');\">{$this->lang['emajall']}</a>&nbsp;/\n";
+					echo "\t\t&nbsp;<a href=\"#\" onclick=\"javascript:checkSelect('none','{$place}');countChecked('{$place}');\">{$this->lang['emajnone']}</a>&nbsp;/\n";
+					echo "\t\t&nbsp;<a href=\"#\" onclick=\"javascript:checkSelect('invert','{$place}');countChecked('{$place}');\">{$this->lang['emajinvert']}</a>&nbsp;\n";
+					echo "\t</td><td>\n";
 					foreach($actions as $k => $a)
 						if (isset($a['multiaction']))
 							echo "\t\t<button id=\"{$a['multiaction']}\" name=\"action\" value=\"{$a['multiaction']}\" disabled=\"true\" >{$a['content']}</button>\n";

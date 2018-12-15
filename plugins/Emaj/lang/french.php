@@ -168,8 +168,8 @@
 	$plugin_lang['emajcontent'] = 'Contenu';
 	$plugin_lang['emajgroupmarks'] = 'Marques du groupe de tables "%s"';
 	$plugin_lang['emajtimestamp'] = 'Date-Heure';
-	$plugin_lang['emajnbupdates'] = 'Nb mises à jour';	
-	$plugin_lang['emajcumupdates'] = 'Cumul mises à jour';	
+	$plugin_lang['emajnbchanges'] = 'Nb<br>mises à jour';	
+	$plugin_lang['emajcumchanges'] = 'Cumul<br>mises à jour';	
 	$plugin_lang['emajsimrlbk'] = 'Simuler Rollback';
 	$plugin_lang['emajrlbk'] = 'Rollback';
 	$plugin_lang['emajfirstmark'] = 'Première marque';
@@ -180,7 +180,6 @@
 
 	// Statistics
 	$plugin_lang['emajshowstat'] = 'Statistiques issues du log E-Maj pour le groupe "%s"';
-	$plugin_lang['emajnoupdate'] = 'Aucune mise à jour pour ce groupe de tables';
 	$plugin_lang['emajcurrentsituation'] = 'Situation courante';
 	$plugin_lang['emajdetailedstat'] = 'Stats détaillées';
 	$plugin_lang['emajdetailedlogstatwarning'] = 'Attention, le parcours des tables de log nécessaires à l\'obtention des statistiques détaillées peut être long';
@@ -376,9 +375,16 @@
 	$plugin_lang['emajdelmarkok'] = 'La marque "%s" a été effacée pour le groupe de tables "%s".';
 	$plugin_lang['emajdelmarkerr'] = 'Erreur lors de l\'effacement de la marque "%s" pour le groupe de tables "%s" !';
 
+	// Marks deletion
+	$plugin_lang['emajdelmarks'] = 'E-Maj : Effacer des marques';
+	$plugin_lang['emajconfirmdelmarks'] = 'Etes-vous sûr de vouloir effacer les marques "%s" pour le groupe de tables "%s" ?';
+	$plugin_lang['emajdelmarksok'] = 'Les marques "%s" ont été effacées pour le groupe de tables "%s".';
+	$plugin_lang['emajdelmarkserr'] = 'Erreur lors de l\'effacement des marques "%s" pour le groupe de tables "%s" !';
+	$plugin_lang['emajdelmarkserr2'] = 'On ne peut pas effacer toutes les marques d\'une groupe de tables. Un groupe de tables actif doit avoir au moins une marque.';
+
 	// Marks before mark deletion
-	$plugin_lang['emajdelmarks'] = 'E-Maj : Supprimer des marques';
-	$plugin_lang['emajconfirmdelmarks'] = 'Etes-vous sûr de vouloir supprimer toutes les marques et log antérieurs à la marque "%s" pour le groupe de tables "%s" ?';
-	$plugin_lang['emajdelmarksok'] = 'Les (%s) marques antérieures à la marque "%s" ont été supprimées pour le groupe de tables "%s".';
-	$plugin_lang['emajdelmarkserr'] = 'Erreur lors de la suppression des marques antérieures à la marque "%s" pour le groupe de tables "%s" !';
+	$plugin_lang['emajdelmarksprior'] = 'E-Maj : Supprimer des marques';
+	$plugin_lang['emajconfirmdelmarksprior'] = 'Etes-vous sûr de vouloir supprimer toutes les marques et log antérieurs à la marque "%s" pour le groupe de tables "%s" ?';
+	$plugin_lang['emajdelmarkspriorok'] = 'Les (%s) marques antérieures à la marque "%s" ont été supprimées pour le groupe de tables "%s".';
+	$plugin_lang['emajdelmarkspriorerr'] = 'Erreur lors de la suppression des marques antérieures à la marque "%s" pour le groupe de tables "%s" !';
 ?>

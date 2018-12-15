@@ -639,6 +639,19 @@ class EmajDb {
 	}
 
 	/**
+	 * Gets number of marks for a group
+	 */
+	function getNbMarks($group) {
+		global $data;
+
+		$data->clean($group);
+
+		$sql = "SELECT count(*) as nb_marks FROM emaj.emaj_mark WHERE mark_group = '{$group}'";
+
+		return $data->selectField($sql,'nb_marks');
+	}
+
+	/**
 	 * Gets the content of one emaj_group 
 	 */
 	function getContentGroup($group) {

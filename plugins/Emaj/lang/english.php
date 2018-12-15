@@ -168,8 +168,8 @@
 	$plugin_lang['emajcontent'] = 'Content';
 	$plugin_lang['emajgroupmarks'] = 'Tables group "%s" marks';
 	$plugin_lang['emajtimestamp'] = 'Date/Time';
-	$plugin_lang['emajnbupdates'] = '# row updates';	
-	$plugin_lang['emajcumupdates'] = 'Cumulative updates';
+	$plugin_lang['emajnbchanges'] = '# row<br>changes';	
+	$plugin_lang['emajcumchanges'] = 'Cumulative<br>changes';
 	$plugin_lang['emajsimrlbk'] = 'Simulate Rollback';
 	$plugin_lang['emajrlbk'] = 'Rollback';
 	$plugin_lang['emajfirstmark'] = 'First mark';
@@ -180,13 +180,12 @@
 
 	// Statistics
 	$plugin_lang['emajshowstat'] = 'Statistics from E-Maj log for group "%s"';
-	$plugin_lang['emajnoupdate'] = 'No update for this tables group'; 
 	$plugin_lang['emajcurrentsituation'] = 'Current situation';
 	$plugin_lang['emajdetailedstat'] = 'Detailed stats';
 	$plugin_lang['emajdetailedlogstatwarning'] = 'Attention, scanning the log tables needed to get detailed statistics may take a long time';
 	$plugin_lang['emajlogstatcurrentsituation'] = 'the current situation';
 	$plugin_lang['emajlogstatmark'] = 'mark "%s"';
-	$plugin_lang['emajlogstattittle'] = 'Table updates between mark "%s" and %s for tables group "%s"';
+	$plugin_lang['emajlogstattittle'] = 'Table changes between mark "%s" and %s for tables group "%s"';
 	$plugin_lang['emajnosimrlbkduration'] = 'The start mark cannot be used for a rollback. No rollback duration can be estimated.';
 	$plugin_lang['emajsimrlbkduration'] = 'Rolling the tables group "%s" back to mark "%s" would take about %s.';
 	$plugin_lang['emajstatfirstmark'] = 'First mark';
@@ -199,7 +198,7 @@
 	$plugin_lang['emajnbdelete'] = '# DELETE';
 	$plugin_lang['emajnbtruncate'] = '# TRUNCATE';
 	$plugin_lang['emajnbrole'] = '# roles';
-	$plugin_lang['emajstatrows'] = '# row updates';
+	$plugin_lang['emajstatrows'] = '# row changes';
 	$plugin_lang['emajbackgroup'] = 'Go back to the tables group';
 
 	// Group's content
@@ -373,12 +372,19 @@
 	// Mark deletion
 	$plugin_lang['emajdelamark'] = 'E-Maj: Delete a mark';
 	$plugin_lang['emajconfirmdelmark'] = 'Are you sure you want to delete the mark "%s" for the tables group "%s"?';
-	$plugin_lang['emajdelmarkok'] = 'Mark "%s" has been deleted for the tables group "%s".';
+	$plugin_lang['emajdelmarkok'] = 'The mark "%s" has been deleted for the tables group "%s".';
 	$plugin_lang['emajdelmarkerr'] = 'Error during mark "%s" deletion for the tables group "%s"!';
 
-	// Marks before mark deletion
+	// Marks deletion
 	$plugin_lang['emajdelmarks'] = 'E-Maj: Delete marks';
-	$plugin_lang['emajconfirmdelmarks'] = 'Are you sure you want to delete all marks and logs preceeding the mark "%s" for the tables group "%s"?';
-	$plugin_lang['emajdelmarksok'] = 'All (%s) marks preceeding mark "%s" have been deleted for the tables group "%s".';
-	$plugin_lang['emajdelmarkserr'] = 'Error during the deletion of marks preceeding mark "%s" for the tables group "%s"!';
+	$plugin_lang['emajconfirmdelmarks'] = 'Are you sure you want to delete the marks "%s" for the tables group "%s"?';
+	$plugin_lang['emajdelmarksok'] = 'The marks "%s" have been deleted for the tables group "%s".';
+	$plugin_lang['emajdelmarkserr'] = 'Error during marks "%s" deletion for the tables group "%s"!';
+	$plugin_lang['emajdelmarkserr2'] = 'It is not allowed to delete all marks of a tables group. A tables group in LOGGING state must have at least one mark.';
+
+	// Marks before mark deletion
+	$plugin_lang['emajdelmarksprior'] = 'E-Maj: Delete marks';
+	$plugin_lang['emajconfirmdelmarksprior'] = 'Are you sure you want to delete all marks and logs preceeding the mark "%s" for the tables group "%s"?';
+	$plugin_lang['emajdelmarkspriorok'] = 'All (%s) marks preceeding mark "%s" have been deleted for the tables group "%s".';
+	$plugin_lang['emajdelmarkspriorerr'] = 'Error during the deletion of marks preceeding mark "%s" for the tables group "%s"!';
 ?>

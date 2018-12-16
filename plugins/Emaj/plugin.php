@@ -51,9 +51,6 @@ class Emaj extends Plugin {
 		global $conf;
 
         $args['heads']['plugin_name'] = 
-			"<script type=\"text/javascript\" src=\"plugins/Emaj/js/jquery.keyfilter-1.7.min.js\"></script>\n" .
-			"<script type=\"text/javascript\" src=\"plugins/Emaj/js/jquery.tablesorter.min.js\"></script>\n" .
-			"<script type=\"text/javascript\" src=\"plugins/Emaj/js/jquery.tablesorter.widgets.min.js\"></script>\n" .
 			"<script type=\"text/javascript\" src=\"plugins/Emaj/js/multiactionform.js\"></script>\n" .
 			"<link rel=\"stylesheet\" href=\"plugins/Emaj/themes/{$conf['theme']}/emaj.css\" type=\"text/css\" />\n" .
 			"<link rel=\"stylesheet\" href=\"plugins/Emaj/themes/{$conf['theme']}/tablesorter.css\" type=\"text/css\" />\n";
@@ -1239,17 +1236,16 @@ class Emaj extends Plugin {
 		echo "<form action=\"plugin.php?plugin={$this->name}&amp;action=filterrlbk\" method=\"post\">\n";
 		echo "{$this->lang['emajfilterrlbk1']} :&nbsp;&nbsp;\n";
 
-			// mask-pnum class is used by jquery.filter to only accept digits
 		echo "<input type=checkbox name=\"emajnbrlbkchecked\" id=\"nbrlbkchecked\"";
 		if (isset($_SESSION['emaj']['NbRlbkChecked'])) echo " checked";
-		echo "/>\n<input name=\"emajRlbkNb\" size=\"2\" id=\"rlbkNb\" class=\"mask-pnum\" value=\"{$_SESSION['emaj']['RlbkNb']}\"";
+		echo "/>\n<input type=\"number\" name=\"emajRlbkNb\" style=\"width: 3em;\" id=\"rlbkNb\" min=\"1\" value=\"{$_SESSION['emaj']['RlbkNb']}\"";
 		if (!isset($_SESSION['emaj']['NbRlbkChecked'])) echo " disabled";
 		echo "/>\n{$this->lang['emajfilterrlbk2']}&nbsp;&nbsp;&nbsp;";
 
 		echo "<input type=checkbox name=\"emajdurationchecked\" id=\"durationchecked\"";
 		if (isset($_SESSION['emaj']['DurationChecked'])) echo " checked";
 		echo "/>\n {$this->lang['emajfilterrlbk3']} \n";
-		echo "<input name=\"emajRlbkRetention\" size=\"3\" id=\"rlbkRetention\" class=\"mask-pnum\" value=\"{$_SESSION['emaj']['RlbkRetention']}\"";
+		echo "<input type=\"number\" name=\"emajRlbkRetention\" style=\"width: 4em;\" id=\"rlbkRetention\" min=\"1\" value=\"{$_SESSION['emaj']['RlbkRetention']}\"";
 		if (!isset($_SESSION['emaj']['DurationChecked'])) echo " disabled";
 		echo "/>\n {$this->lang['emajfilterrlbk4']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
@@ -2429,8 +2425,7 @@ class Emaj extends Plugin {
 		// priority level
 		echo "<tr><th class=\"data left\" style=\"text-align:right\">{$this->lang['emajenterpriority']}</th>";
 		echo "<td class=\"data1\">";
-		// mask-pnum class is used by jquery.filter to only accept digits
-		echo "<input type=\"text\" name=\"priority\" size=6 maxlength=9 style=\"text-align: right;\" value=\"\" class=\"mask-pnum\"/>";
+		echo "<input type=\"number\" name=\"priority\" style=\"width:6em; text-align:right;\" min=\"0\" max=\"2147483647\" value=\"\" />";
 		echo "</td><td><img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajpriorityhelp']}\"/>";
 		echo "</td></tr>\n";
 
@@ -2598,10 +2593,9 @@ class Emaj extends Plugin {
 		echo "</datalist>\n";
 
 		// priority level
-		// mask-pnum class is used by jquery.filter to only accept digits
 		echo "<tr><th class=\"data left\" style=\"text-align:right\">{$this->lang['emajenterpriority']}</th>";
 		echo "<td class=\"data1\">";
-		echo "<input type=\"text\" name=\"priority\" size=6 maxlength=9 style=\"text-align: right;\" value=\"{$_REQUEST['priority']}\" class=\"mask-pnum\"/>";
+		echo "<input type=\"number\" name=\"priority\" style=\"width:6em; text-align:right;\" min=\"0\" max=\"2147483647\" value=\"{$_REQUEST['priority']}\" />";
 		echo "</td><td><img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajpriorityhelp']}\"/>";
 		echo "</td></tr>\n";
 

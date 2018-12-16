@@ -1,7 +1,0 @@
-phpPgAdmin E-Maj Plugin Installation Guide
-------------------------------------------
-1. E-Maj Plugin activation
-
-   Open conf/config.inc.php and add the 'Emaj' value in the $conf['plugins'] array:
-
-   $conf['plugins'] = array('Emaj');

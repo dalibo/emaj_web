@@ -4,10 +4,11 @@ CREDITS
 Major developer:
 
 - Philippe Beaudoin
+- Thibaud Walkowiak
 
 Contributors:
 
-
+- Regis Haubourg
 
 
 A large part of the infrastruture components has been borrowed to the phpPgAdmin project, 
@@ -15,10 +16,9 @@ an open source project available at http://phppgadmin.sourceforge.net under GPL 
 
 Third Party Libraries:
 
-- Highlight.php (Jacob D. Cohen of rafb.net)
 - XLoadTree2 (Erik Arvidsson & Emil A Eklund of webfx.eae.net)
 - jQuery (http://jquery.com/)
-
+- jQuery Tablesorter plugin (https://mottie.github.io/tablesorter)
 
 Project resources:
 

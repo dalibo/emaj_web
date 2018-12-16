@@ -5078,7 +5078,6 @@ class Emaj extends Plugin {
 					echo "\t\t\twidgetOptions: {\n";
 					echo "\t\t\t\tzebra : [ \"data1\", \"data2\" ],\n";
 					echo "\t\t\t\tfilter_hideFilters : true,\n";
-					echo "\t\t\t\tstickyHeaders : 'tablesorter-stickyHeader',\n";
 					echo "\t\t\t\t},\n";
 					echo "\t\t\t}\n";
 					echo "\t\t);\n";

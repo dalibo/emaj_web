@@ -59,7 +59,7 @@
 <h3><?php echo $lang['strlink'] ?></h3>
 <ul class="intro">
 	<li><a href="http://emaj.readthedocs.io/en/stable/" target=blank ><?php echo $lang['stremajdoc'] ?></a></li>
-	<li><a href="https://github.com/beaud76/emaj" target=blank ><?php echo $lang['stremajproject'] ?></a></li>
+	<li><a href="https://github.com/dalibo/emaj" target=blank ><?php echo $lang['stremajproject'] ?></a></li>
 </ul>
 <ul class="intro">
 	<li><a href="<?php echo $lang['strpgsqlhome_url'] ?>" target=blank ><?php echo $lang['strpgsqlhome'] ?></a></li>

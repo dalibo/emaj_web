@@ -10,7 +10,7 @@ This software is distributed under the GNU General Public License.
 2- Objectives
 -------------
 
-Emaj_web is a php web client that interfaces the E-Maj PostgreSQL extension (available on https://github.com/beaud76/emaj).
+Emaj_web is a php web client that interfaces the E-Maj PostgreSQL extension (available on https://github.com/dalibo/emaj).
 
 The main goals of E-Maj are:
 * log updates performed on one or several sets of tables.

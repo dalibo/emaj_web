@@ -277,7 +277,11 @@
 					$out = $str;
 					break;
 				case 'callback':
-					$out = $params['function']($str, $params);
+					if (is_string($params['function'])) {
+						$out = $params['function']($str, $params);
+					} else {
+						$out = $params['function'][0]->{$params['function'][1]}($str, $params);
+					}
 					break;
 				case 'prettysize':
 					if ($str == -1) 
@@ -1283,9 +1287,14 @@
 		 *					 (see tblproperties.php and constraints.php for examples)
 		 *					 The function must not must not store urls because
 		 *					 they are relative and won't work out of context.
+		 * @param $tablesorter (optional) array of jquery tablesorter plugin option. It may take 2 values:
+		 *					 - sorter: to activate the sort feature on columns
+		 *					 - filter: to activate the filter feature on columns
+		 *					 This defines a default behaviour for the entire table (excepting for actions).
+		 *					 Some specific behavious can be defined at column level.
 		 */
-		function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null) {
-			global $data, $conf, $misc, $lang, $plugin_manager;
+		function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null, $tablesorter = null) {
+			global $data, $conf, $lang, $plugin_manager;
 
 			// Action buttons hook's place
 			$plugin_functions_parameters = array(
@@ -1294,9 +1303,15 @@
 			);
 			$plugin_manager->do_hook('actionbuttons', $plugin_functions_parameters);
 
-			if ($has_ma = isset($actions['multiactions']))
+			if ($has_ma = isset($actions['multiactions'])) {
 				$ma = $actions['multiactions'];
+			}
 			unset($actions['multiactions']);
+
+			// The 7th parameter defines if the tablesorter JQuery plugin is used for this table, with the sorter and/or the filter functionalities
+			$sorter = 0; $filter = 0;
+			if (!is_null($tablesorter) && isset($tablesorter['sorter'])) { $sorter = $tablesorter['sorter']; }
+			if (!is_null($tablesorter) && isset($tablesorter['filter'])) { $filter = $tablesorter['filter']; }
 
 			if ($tabledata->recordCount() > 0) {
 
@@ -1312,30 +1327,65 @@
 				}
 
 				if ($has_ma) {
-					echo "<script src=\"multiactionform.js\" type=\"text/javascript\"></script>\n";
-					echo "<form id=\"multi_form\" action=\"{$ma['url']}\" method=\"post\" enctype=\"multipart/form-data\">\n";
+//					echo "<script src=\"multiactionform.js\" type=\"text/javascript\"></script>\n";
+					echo "<form id=\"{$place}\" action=\"{$ma['url']}\" method=\"post\" enctype=\"multipart/form-data\">\n";
 					if (isset($ma['vars']))
 						foreach ($ma['vars'] as $k => $v)
 							echo "<input type=\"hidden\" name=\"$k\" value=\"$v\" />";
+				} else {
+					echo "<div id=\"{$place}\">\n";
 				}
 
-				echo "<table>\n";
+				echo "<table class=\"data\">\n";
+				echo "<thead>\n";
 				echo "<tr>\n";
+
 				// Display column headings
-				if ($has_ma) echo "<th></th>";
+				$colnum = 0; $filterDisabledJs = ''; $textExtractionJS = '';
+				if ($has_ma) {
+					echo "<th class=\"sorter-false\"></th>\n";
+					if ($filter) {$filterDisabledJs .= "\t\t$('#{$place} input[data-column=\"{$colnum}\"]').addClass(\"disabled\");\n";}
+					$colnum++;
+				}
 				foreach ($columns as $column_id => $column) {
 					switch ($column_id) {
 						case 'actions':
-							if (sizeof($actions) > 0) echo "<th class=\"data\" colspan=\"", count($actions), "\">{$column['title']}</th>\n";
+							if (sizeof($actions) > 0) echo "<th class=\"data sorter-false\" colspan=\"", count($actions), "\">{$column['title']}</th>\n";
+							// actions columns have neither sorter nor filter capabilities
+							for ($i = 0; $i < count($actions); ++$i) {
+								if ($filter) {$filterDisabledJs .= "\t\t$('#{$place} input[data-column=\"{$colnum}\"]').addClass(\"disabled\");\n";}
+								$colnum++;
+							}
 							break;
 						default:
-							echo "<th class=\"data\">";
-							echo $column['title'];
+							// add a sorter_false class to the data column if a 'sorter' attribute is set to false
+							if ((isset($column['sorter']) && !$column['sorter']) || ($filter && ! $sorter)) {
+								$class_sorter = ' sorter-false';
+							} else {
+								$class_sorter = '';
+							}
+							echo "<th class=\"data{$class_sorter}\">";
+							if (isset($column['help']))
+								$this->printHelp($column['title'], $column['help']);
+							else
+								echo $column['title'];
 							echo "</th>\n";
+							// add a "disabled" class to the data column if the 'filter' attribute is set to false
+							if ($filter && isset($column['filter']) && !$column['filter']) {
+								$filterDisabledJs .= "\t\t$('#{$place} input[data-column=\"{$colnum}\"]').addClass(\"disabled\");\n";
+							}
+							// when the data column has a 'sorter_text_extraction' attribute set to 'img_alt',
+							//   add a function to extract the alt attribute of images to build the text that tablesorter will use to sort
+							if ($sorter && isset($column['sorter_text_extraction']) && $column['sorter_text_extraction'] = 'img_alt') {
+								$textExtractionJS .= "\t\t\t\t$colnum: function(s) {return $(s).find('img').attr('alt');}\n";
+							}
+							$colnum++;
 							break;
 					}
 				}
 				echo "</tr>\n";
+				echo "</thead>\n";
+				echo "<tbody>\n";
 
 				// Display table rows
 				$i = 0;
@@ -1343,7 +1393,13 @@
 					$id = ($i % 2) + 1;
 
 					unset($alt_actions);
-					if (!is_null($pre_fn)) $alt_actions = $pre_fn($tabledata, $actions);
+					if (!is_null($pre_fn)) {
+						if (is_string($pre_fn)) {
+							$alt_actions = $pre_fn($tabledata, $actions);
+						} else {
+							$alt_actions = $pre_fn[0]->{$pre_fn[1]}($tabledata, $actions);
+						}
+					}
 					if (!isset($alt_actions)) $alt_actions =& $actions;
 
 					echo "<tr class=\"data{$id}\">\n";
@@ -1351,7 +1407,7 @@
 						foreach ($ma['keycols'] as $k => $v)
 							$a[$k] = $tabledata->fields[$v];
 						echo "<td>";
-						echo "<input type=\"checkbox\" name=\"ma[]\" value=\"". htmlentities(serialize($a), ENT_COMPAT, 'UTF-8') ."\" />";
+						echo "<input type=\"checkbox\" name=\"ma[]\" value=\"". htmlentities(serialize($a), ENT_COMPAT, 'UTF-8') ."\" onclick=\"javascript:countChecked('{$place}');\"/>";
 						echo "</td>\n";
 					}
 
@@ -1379,12 +1435,12 @@
 								if (!is_null($val)) {
 									if (isset($column['url'])) {
 										echo "<a href=\"{$column['url']}";
-										$misc->printUrlVars($column['vars'], $tabledata->fields);
+										$this->printUrlVars($column['vars'], $tabledata->fields);
 										echo "\">";
 									}
 									$type = isset($column['type']) ? $column['type'] : null;
 									$params = isset($column['params']) ? $column['params'] : array();
-									echo $misc->printVal($val, $type, $params);
+									echo $this->printVal($val, $type, $params);
 									if (isset($column['url'])) echo "</a>";
 								}
 
@@ -1397,38 +1453,59 @@
 					$tabledata->moveNext();
 					$i++;
 				}
+				echo "</tbody>\n";
 				echo "</table>\n";
 
 				// Multi action table footer w/ options & [un]check'em all
 				if ($has_ma) {
-					// if default is not set or doesn't exist, set it to null
-					if (!isset($ma['default']) || !isset($actions[$ma['default']]))
-						$ma['default'] = null;
-					echo "<br />\n";
-					echo "<table>\n";
+					echo "<table class=\"multiactions\">\n";
 					echo "<tr>\n";
-					echo "<th class=\"data\" style=\"text-align: left\" colspan=\"3\">{$lang['stractionsonmultiplelines']}</th>\n";
+					echo "<th class=\"multiactions\">{$lang['strselect']}</th>\n";
+					echo "<th class=\"multiactions\" id=\"selectedcounter\">{$lang['stractionsonselectedobjects']}</th>\n";
 					echo "</tr>\n";
 					echo "<tr class=\"row1\">\n";
-					echo "<td>";
-					echo "<a href=\"#\" onclick=\"javascript:checkAll(true);\">{$lang['strselectall']}</a> / ";
-					echo "<a href=\"#\" onclick=\"javascript:checkAll(false);\">{$lang['strunselectall']}</a></td>\n";
-					echo "<td>&nbsp;--->&nbsp;</td>\n";
-					echo "<td>\n";
-					echo "\t<select name=\"action\">\n";
-					if ($ma['default'] == null)
-						echo "\t\t<option value=\"\">--</option>\n";
+					echo "\t<td>\n";
+					echo "\t\t&nbsp;<a href=\"#\" onclick=\"javascript:checkSelect('all','{$place}');countChecked('{$place}');\">{$lang['strall']}</a>&nbsp;/\n";
+					echo "\t\t&nbsp;<a href=\"#\" onclick=\"javascript:checkSelect('none','{$place}');countChecked('{$place}');\">{$lang['strnone']}</a>&nbsp;/\n";
+					echo "\t\t&nbsp;<a href=\"#\" onclick=\"javascript:checkSelect('invert','{$place}');countChecked('{$place}');\">{$lang['strinvert']}</a>&nbsp;\n";
+					echo "\t</td><td>\n";
 					foreach($actions as $k => $a)
 						if (isset($a['multiaction']))
-							echo "\t\t<option value=\"{$a['multiaction']}\"", ($ma['default']  == $k? ' selected="selected"': ''), ">{$a['content']}</option>\n";
-					echo "\t</select>\n";
-					echo "<input type=\"submit\" value=\"{$lang['strexecute']}\" />\n";
-					echo $misc->form;
+							echo "\t\t<button id=\"{$a['multiaction']}\" name=\"action\" value=\"{$a['multiaction']}\" disabled=\"true\" >{$a['content']}</button>\n";
+					echo $this->form;
 					echo "</td>\n";
 					echo "</tr>\n";
 					echo "</table>\n";
 					echo '</form>';
+				} else {
+					echo "</div>\n";
 				};
+
+				// generate the javascript for the tablesorter JQuery plugin
+				if ($sorter || $filter) {
+					echo "<script type=\"text/javascript\">\n";
+					echo "\t$(document).ready(function() {\n";
+					echo "\t\t$(\"#{$place} table\").addClass('tablesorter');\n";
+					echo "\t\t$(\"#{$place} table\").tablesorter( {\n";
+					if ($textExtractionJS <> '') {
+						echo "\t\t\ttextExtraction: {\n";
+						echo $textExtractionJS;
+						echo "\t\t\t\t},\n";
+					}
+					echo "\t\t\temptyTo: 'none',\n";
+					echo "\t\t\twidgets: [\"zebra\"";
+					if ($filter) { echo ", \"filter\""; }
+					echo "],\n";
+					echo "\t\t\twidgetOptions: {\n";
+					echo "\t\t\t\tzebra : [ \"data1\", \"data2\" ],\n";
+					echo "\t\t\t\tfilter_hideFilters : true,\n";
+					echo "\t\t\t\t},\n";
+					echo "\t\t\t}\n";
+					echo "\t\t);\n";
+					echo $filterDisabledJs;
+					echo "\t});\n";
+					echo "</script>\n";
+				}
 
 				return true;
 			} else {
@@ -1438,6 +1515,160 @@
 				return false;
 			}
 		}
+//		function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null) {
+//			global $data, $conf, $misc, $lang, $plugin_manager;
+//
+//			// Action buttons hook's place
+//			$plugin_functions_parameters = array(
+//				'actionbuttons' => &$actions,
+//				'place' => $place
+//			);
+//			$plugin_manager->do_hook('actionbuttons', $plugin_functions_parameters);
+//
+//			if ($has_ma = isset($actions['multiactions']))
+//				$ma = $actions['multiactions'];
+//			unset($actions['multiactions']);
+//
+//			if ($tabledata->recordCount() > 0) {
+//
+//				// Remove the 'comment' column if they have been disabled
+//				if (!$conf['show_comments']) {
+//					unset($columns['comment']);
+//				}
+//
+//				if (isset($columns['comment'])) {
+//					// Uncomment this for clipped comments.
+//					// TODO: This should be a user option.
+//					//$columns['comment']['params']['clip'] = true;
+//				}
+//
+//				if ($has_ma) {
+//					echo "<script src=\"multiactionform.js\" type=\"text/javascript\"></script>\n";
+//					echo "<form id=\"multi_form\" action=\"{$ma['url']}\" method=\"post\" enctype=\"multipart/form-data\">\n";
+//					if (isset($ma['vars']))
+//						foreach ($ma['vars'] as $k => $v)
+//							echo "<input type=\"hidden\" name=\"$k\" value=\"$v\" />";
+//				}
+//
+//				echo "<table>\n";
+//				echo "<tr>\n";
+//				// Display column headings
+//				if ($has_ma) echo "<th></th>";
+//				foreach ($columns as $column_id => $column) {
+//					switch ($column_id) {
+//						case 'actions':
+//							if (sizeof($actions) > 0) echo "<th class=\"data\" colspan=\"", count($actions), "\">{$column['title']}</th>\n";
+//							break;
+//						default:
+//							echo "<th class=\"data\">";
+//							echo $column['title'];
+//							echo "</th>\n";
+//							break;
+//					}
+//				}
+//				echo "</tr>\n";
+//
+//				// Display table rows
+//				$i = 0;
+//				while (!$tabledata->EOF) {
+//					$id = ($i % 2) + 1;
+//
+//					unset($alt_actions);
+//					if (!is_null($pre_fn)) $alt_actions = $pre_fn($tabledata, $actions);
+//					if (!isset($alt_actions)) $alt_actions =& $actions;
+//
+//					echo "<tr class=\"data{$id}\">\n";
+//					if ($has_ma) {
+//						foreach ($ma['keycols'] as $k => $v)
+//							$a[$k] = $tabledata->fields[$v];
+//						echo "<td>";
+//						echo "<input type=\"checkbox\" name=\"ma[]\" value=\"". htmlentities(serialize($a), ENT_COMPAT, 'UTF-8') ."\" />";
+//						echo "</td>\n";
+//					}
+//
+//					foreach ($columns as $column_id => $column) {
+//
+//						// Apply default values for missing parameters
+//						if (isset($column['url']) && !isset($column['vars'])) $column['vars'] = array();
+//
+//						switch ($column_id) {
+//							case 'actions':
+//								foreach ($alt_actions as $action) {
+//									if (isset($action['disable']) && $action['disable'] === true) {
+//										echo "<td></td>\n";
+//									} else {
+//										echo "<td class=\"opbutton{$id}\">";
+//										$action['fields'] = $tabledata->fields;
+//										$this->printLink($action);
+//										echo "</td>\n";
+//									}
+//								}
+//								break;
+//							default:
+//								echo "<td>";
+//								$val = value($column['field'], $tabledata->fields);
+//								if (!is_null($val)) {
+//									if (isset($column['url'])) {
+//										echo "<a href=\"{$column['url']}";
+//										$misc->printUrlVars($column['vars'], $tabledata->fields);
+//										echo "\">";
+//									}
+//									$type = isset($column['type']) ? $column['type'] : null;
+//									$params = isset($column['params']) ? $column['params'] : array();
+//									echo $misc->printVal($val, $type, $params);
+//									if (isset($column['url'])) echo "</a>";
+//								}
+//
+//								echo "</td>\n";
+//								break;
+//						}
+//					}
+//					echo "</tr>\n";
+//
+//					$tabledata->moveNext();
+//					$i++;
+//				}
+//				echo "</table>\n";
+//
+//				// Multi action table footer w/ options & [un]check'em all
+//				if ($has_ma) {
+//					// if default is not set or doesn't exist, set it to null
+//					if (!isset($ma['default']) || !isset($actions[$ma['default']]))
+//						$ma['default'] = null;
+//					echo "<br />\n";
+//					echo "<table>\n";
+//					echo "<tr>\n";
+//					echo "<th class=\"data\" style=\"text-align: left\" colspan=\"3\">{$lang['stractionsonmultiplelines']}</th>\n";
+//					echo "</tr>\n";
+//					echo "<tr class=\"row1\">\n";
+//					echo "<td>";
+//					echo "<a href=\"#\" onclick=\"javascript:checkAll(true);\">{$lang['strselectall']}</a> / ";
+//					echo "<a href=\"#\" onclick=\"javascript:checkAll(false);\">{$lang['strunselectall']}</a></td>\n";
+//					echo "<td>&nbsp;--->&nbsp;</td>\n";
+//					echo "<td>\n";
+//					echo "\t<select name=\"action\">\n";
+//					if ($ma['default'] == null)
+//						echo "\t\t<option value=\"\">--</option>\n";
+//					foreach($actions as $k => $a)
+//						if (isset($a['multiaction']))
+//							echo "\t\t<option value=\"{$a['multiaction']}\"", ($ma['default']  == $k? ' selected="selected"': ''), ">{$a['content']}</option>\n";
+//					echo "\t</select>\n";
+//					echo "<input type=\"submit\" value=\"{$lang['strexecute']}\" />\n";
+//					echo $misc->form;
+//					echo "</td>\n";
+//					echo "</tr>\n";
+//					echo "</table>\n";
+//					echo '</form>';
+//				};
+//
+//				return true;
+//			} else {
+//				if (!is_null($nodata)) {
+//					echo "<p>{$nodata}</p>\n";
+//				}
+//				return false;
+//			}
+//		}
 
 		/** Produce XML data for the browser tree
 		 * @param $treedata A set of records to populate the tree.

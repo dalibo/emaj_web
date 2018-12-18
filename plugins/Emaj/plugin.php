@@ -837,19 +837,19 @@ class Emaj extends Plugin {
 
 			echo "<h3>{$this->lang['emajlogginggroups']}<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajlogginggrouphelp']}\"/></h3>";
 
-			$this->printTable($loggingGroups, $columns, $loggingActions, 'loggingGroups', $this->lang['emajnologginggroup'], array($this, 'loggingGroupPre'), array('sorter' => true, 'filter' => true));
+			$misc->printTable($loggingGroups, $columns, $loggingActions, 'loggingGroups', $this->lang['emajnologginggroup'], array($this, 'loggingGroupPre'), array('sorter' => true, 'filter' => true));
 
 			echo "<hr>";
 			echo "<h3>{$this->lang['emajidlegroups']}<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajidlegrouphelp']}\"/></h3>\n";
 
-			$this->printTable($idleGroups, $columns, $idleActions, 'idleGroups', $this->lang['emajnoidlegroup'], array($this, 'idleGroupPre'), array('sorter' => true, 'filter' => true));
+			$misc->printTable($idleGroups, $columns, $idleActions, 'idleGroups', $this->lang['emajnoidlegroup'], array($this, 'idleGroupPre'), array('sorter' => true, 'filter' => true));
 
 			echo "<hr>\n";
 
 			// configured but not yet created tables section
 			echo "<h3>{$this->lang['emajconfiguredgroups']}<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$this->lang['emajconfiguredgrouphelp']}\"/></h3>\n";
 
-			$this->printTable($configuredGroups, $configuredColumns, $configuredActions, 'configuredGroups', $this->lang['emajnoconfiguredgroups'], array($this, 'configuredGroupPre'), array('sorter' => true, 'filter' => true));
+			$misc->printTable($configuredGroups, $configuredColumns, $configuredActions, 'configuredGroups', $this->lang['emajnoconfiguredgroups'], array($this, 'configuredGroupPre'), array('sorter' => true, 'filter' => true));
 
 			// for emaj_adm role only, give information about how to create a group and propose the create empty group button
 			if ($this->emajdb->isEmaj_Adm()) {
@@ -909,7 +909,7 @@ class Emaj extends Plugin {
 
 			$actions = array ();
 
-			$this->printTable($schemas, $columns, $actions, 'defineGroupSchemas', $lang['strnoschemas'], null, array('sorter' => true, 'filter' => true));
+			$misc->printTable($schemas, $columns, $actions, 'defineGroupSchemas', $lang['strnoschemas'], null, array('sorter' => true, 'filter' => true));
 
 			echo "<hr>\n";
 
@@ -1036,7 +1036,7 @@ class Emaj extends Plugin {
 					),
 				);
 
-				$this->printTable($tblseq, $columns, $actions, 'defineGroupTblseq', $lang['strnotables'], array($this,'tblseqPre'), array('sorter' => true, 'filter' => true));
+				$misc->printTable($tblseq, $columns, $actions, 'defineGroupTblseq', $lang['strnotables'], array($this,'tblseqPre'), array('sorter' => true, 'filter' => true));
 			}
 		}
 
@@ -1224,7 +1224,7 @@ class Emaj extends Plugin {
 		echo "<h3>{$this->lang['emajinprogressrlbk']}</h3>\n";
 		if ($this->emajdb->isDblinkUsable()) {
 			$inProgressRlbks = $this->emajdb->getInProgressRlbk();
-			$this->printTable($inProgressRlbks, $columnsInProgressRlbk, $actions, 'inProgressRlbk', $this->lang['emajnorlbk']);
+			$misc->printTable($inProgressRlbks, $columnsInProgressRlbk, $actions, 'inProgressRlbk', $this->lang['emajnorlbk']);
 		} else {
 			echo "<p>{$this->lang['emajrlbkmonitornotavailable']}</p>\n";
 		}
@@ -1253,7 +1253,7 @@ class Emaj extends Plugin {
 		echo "<input type=\"submit\" name=\"filterrlbk\" value=\"{$this->lang['emajfilter']}\" />\n";
 		echo "</form></div>\n";
 
-		$this->printTable($completedRlbks, $columnsCompletedRlbk, $actions, 'completedRlbk', $this->lang['emajnorlbk']);
+		$misc->printTable($completedRlbks, $columnsCompletedRlbk, $actions, 'completedRlbk', $this->lang['emajnorlbk']);
 
 		// JQuery script to disable input field if the associated checkbox is not checked
 		echo "<script type=\"text/javascript\">\n";
@@ -1334,7 +1334,7 @@ class Emaj extends Plugin {
 
 			echo "<h3>{$this->lang['emajconsolidablerlbk']}</h3>\n";
 			$inProgressRlbks = $this->emajdb->getInProgressRlbk();
-			$this->printTable($consolidableRlbks, $columnsConsRlbk, $actions, 'consolidableRlbk', $this->lang['emajnorlbk']);
+			$misc->printTable($consolidableRlbks, $columnsConsRlbk, $actions, 'consolidableRlbk', $this->lang['emajnorlbk']);
 		}
 
 		$this->printEmajFooter();
@@ -1416,7 +1416,7 @@ class Emaj extends Plugin {
 
 			$actions = array ();
 
-			$this->printTable($messages, $columns, $actions, 'checks');
+			$misc->printTable($messages, $columns, $actions, 'checks');
 		}
 
 		$this->printEmajFooter();
@@ -1498,7 +1498,7 @@ class Emaj extends Plugin {
 
 		// print group's characteristics
 			echo "<h3>".sprintf($this->lang['emajgroupproperties'], htmlspecialchars($_REQUEST['group']))."</h3>\n";
-			$this->printTable($group, $columns, $groupActions, 'detailGroup', 'no group, internal error !');
+			$misc->printTable($group, $columns, $groupActions, 'detailGroup', 'no group, internal error !');
 
 		// display group's comment if exists
 			if ($comment<>'') {
@@ -1750,7 +1750,7 @@ class Emaj extends Plugin {
 			$this->protected_mark_flag = 0;
 
 			// display the marks list
-			$this->printTable($marks, $columns, $actions, 'marks', $this->lang['emajnomark'], array($this,'markPre'), array('sorter' => false, 'filter' => true));
+			$misc->printTable($marks, $columns, $actions, 'marks', $this->lang['emajnomark'], array($this,'markPre'), array('sorter' => false, 'filter' => true));
 
 			// JQuery to remove the last deleteBeforeMark button as it is meaningless on the first set mark
 			echo "<script type=\"text/javascript\">\n";
@@ -2048,7 +2048,7 @@ class Emaj extends Plugin {
 				),
 			);
 
-			$this->printTable($stats, $columns, $actions, 'logStats', null, null, array('sorter' => true, 'filter' => true));
+			$misc->printTable($stats, $columns, $actions, 'logStats', null, null, array('sorter' => true, 'filter' => true));
 
 			// dynamicaly change the behaviour of the SQL link using JQuery code: open a new window
 			$sql_window_id = htmlentities('emaj_sqledit:'.$_REQUEST['server']);
@@ -2202,7 +2202,7 @@ class Emaj extends Plugin {
 				),
 			);
 
-			$this->printTable($stats, $columns, $actions, 'detailedLogStats', null, null, array('sorter' => true, 'filter' => true));
+			$misc->printTable($stats, $columns, $actions, 'detailedLogStats', null, null, array('sorter' => true, 'filter' => true));
 
 			// dynamicly change the behaviour of the SQL link using JQuery code: open a new window
 			$sql_window_id = htmlentities('emaj_sqledit:'.$_REQUEST['server']);
@@ -2295,7 +2295,7 @@ class Emaj extends Plugin {
 				$actions = array ();
 	
 				echo "<p></p>";
-				$this->printTable($groupContent, $columns, $actions, 'groupContent', null, null, array('sorter' => true, 'filter' => true));
+				$misc->printTable($groupContent, $columns, $actions, 'groupContent', null, null, array('sorter' => true, 'filter' => true));
 			}
 		}
 		$this->printEmajFooter();
@@ -4096,7 +4096,7 @@ class Emaj extends Plugin {
 				echo "<p>" . sprintf($this->lang['emajreachaltergroup'], htmlspecialchars($_REQUEST['group']), htmlspecialchars($_REQUEST['mark'])) . "</p>\n";
 
 				echo "<div id=\"alterGroupStep\" style=\"margin-top:15px;margin-bottom:15px\" >\n";
-				$this->printTable($alterGroupSteps, $columns, $actions, 'alterGroupStep');
+				$misc->printTable($alterGroupSteps, $columns, $actions, 'alterGroupStep');
 				echo "</div>\n";
 	
 				echo "<form action=\"plugin.php?plugin={$this->name}&amp;\" method=\"post\">\n";
@@ -4373,7 +4373,7 @@ class Emaj extends Plugin {
 				echo "<p>" . sprintf($this->lang['emajreachaltergroups'], htmlspecialchars($_REQUEST['groups']), htmlspecialchars($_REQUEST['mark'])) . "</p>\n";
 
 				echo "<div id=\"alterGroupStep\" style=\"margin-top:15px;margin-bottom:15px\" >\n";
-				$this->printTable($alterGroupSteps, $columns, $actions, 'alterGroupStep');
+				$misc->printTable($alterGroupSteps, $columns, $actions, 'alterGroupStep');
 				echo "</div>\n";
 	
 				echo "<form action=\"plugin.php?plugin={$this->name}&amp;\" method=\"post\">\n";
@@ -4864,402 +4864,5 @@ class Emaj extends Plugin {
 		$misc->printTree($groups, $attrs,'emajgroups');
 		exit;
 	}
-
-		function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null, $tablesorter = null) {
-			global $data, $conf, $misc, $lang, $plugin_manager;
-//phb: 1 line added
-			global $misc;
-
-			// Action buttons hook's place
-			$plugin_functions_parameters = array(
-				'actionbuttons' => &$actions,
-				'place' => $place
-			);
-			$plugin_manager->do_hook('actionbuttons', $plugin_functions_parameters);
-
-			if ($has_ma = isset($actions['multiactions'])) {
-				$ma = $actions['multiactions'];
-			}
-			unset($actions['multiactions']);
-
-			// The 7th parameter defines if the tablesorter JQuery plugin is used for this table, with the sorter and/or the filter functionalities
-			$sorter = 0; $filter = 0;
-			if (!is_null($tablesorter) && isset($tablesorter['sorter'])) { $sorter = $tablesorter['sorter']; }
-			if (!is_null($tablesorter) && isset($tablesorter['filter'])) { $filter = $tablesorter['filter']; }
-
-			if ($tabledata->recordCount() > 0) {
-
-				// Remove the 'comment' column if they have been disabled
-				if (!$conf['show_comments']) {
-					unset($columns['comment']);
-				}
-
-				if (isset($columns['comment'])) {
-					// Uncomment this for clipped comments.
-					// TODO: This should be a user option.
-					//$columns['comment']['params']['clip'] = true;
-				}
-
-				if ($has_ma) {
-//					echo "<script src=\"multiactionform.js\" type=\"text/javascript\"></script>\n";
-					echo "<form id=\"{$place}\" action=\"{$ma['url']}\" method=\"post\" enctype=\"multipart/form-data\">\n";
-					if (isset($ma['vars']))
-						foreach ($ma['vars'] as $k => $v)
-							echo "<input type=\"hidden\" name=\"$k\" value=\"$v\" />";
-				} else {
-					echo "<div id=\"{$place}\">\n";
-				}
-
-				echo "<table class=\"data\">\n";
-				echo "<thead>\n";
-				echo "<tr>\n";
-
-				// Display column headings
-				$colnum = 0; $filterDisabledJs = ''; $textExtractionJS = '';
-				if ($has_ma) {
-					echo "<th class=\"sorter-false\"></th>\n";
-					if ($filter) {$filterDisabledJs .= "\t\t$('#{$place} input[data-column=\"{$colnum}\"]').addClass(\"disabled\");\n";}
-					$colnum++;
-				}
-				foreach ($columns as $column_id => $column) {
-					switch ($column_id) {
-						case 'actions':
-							if (sizeof($actions) > 0) echo "<th class=\"data sorter-false\" colspan=\"", count($actions), "\">{$column['title']}</th>\n";
-							// actions columns have neither sorter nor filter capabilities
-							for ($i = 0; $i < count($actions); ++$i) {
-								if ($filter) {$filterDisabledJs .= "\t\t$('#{$place} input[data-column=\"{$colnum}\"]').addClass(\"disabled\");\n";}
-								$colnum++;
-							}
-							break;
-						default:
-							// add a sorter_false class to the data column if a 'sorter' attribute is set to false
-							if ((isset($column['sorter']) && !$column['sorter']) || ($filter && ! $sorter)) {
-								$class_sorter = ' sorter-false';
-							} else {
-								$class_sorter = '';
-							}
-							echo "<th class=\"data{$class_sorter}\">";
-							if (isset($column['help']))
-//phb: 1 line modified
-//								$this->printHelp($column['title'], $column['help']);
-								$misc->printHelp($column['title'], $column['help']);
-							else
-								echo $column['title'];
-							echo "</th>\n";
-							// add a "disabled" class to the data column if the 'filter' attribute is set to false
-							if ($filter && isset($column['filter']) && !$column['filter']) {
-								$filterDisabledJs .= "\t\t$('#{$place} input[data-column=\"{$colnum}\"]').addClass(\"disabled\");\n";
-							}
-							// when the data column has a 'sorter_text_extraction' attribute set to 'img_alt',
-							//   add a function to extract the alt attribute of images to build the text that tablesorter will use to sort
-							if ($sorter && isset($column['sorter_text_extraction']) && $column['sorter_text_extraction'] = 'img_alt') {
-								$textExtractionJS .= "\t\t\t\t$colnum: function(s) {return $(s).find('img').attr('alt');}\n";
-							}
-							$colnum++;
-							break;
-					}
-				}
-				echo "</tr>\n";
-				echo "</thead>\n";
-				echo "<tbody>\n";
-
-				// Display table rows
-				$i = 0;
-				while (!$tabledata->EOF) {
-					$id = ($i % 2) + 1;
-
-					unset($alt_actions);
-					if (!is_null($pre_fn)) {
-						if (is_string($pre_fn)) {
-							$alt_actions = $pre_fn($tabledata, $actions);
-						} else {
-							$alt_actions = $pre_fn[0]->{$pre_fn[1]}($tabledata, $actions);
-						}
-					}
-					if (!isset($alt_actions)) $alt_actions =& $actions;
-
-					echo "<tr class=\"data{$id}\">\n";
-					if ($has_ma) {
-						foreach ($ma['keycols'] as $k => $v)
-							$a[$k] = $tabledata->fields[$v];
-						echo "<td>";
-						echo "<input type=\"checkbox\" name=\"ma[]\" value=\"". htmlentities(serialize($a), ENT_COMPAT, 'UTF-8') ."\" onclick=\"javascript:countChecked('{$place}');\"/>";
-						echo "</td>\n";
-					}
-
-					foreach ($columns as $column_id => $column) {
-
-						// Apply default values for missing parameters
-						if (isset($column['url']) && !isset($column['vars'])) $column['vars'] = array();
-
-						switch ($column_id) {
-							case 'actions':
-								foreach ($alt_actions as $action) {
-									if (isset($action['disable']) && $action['disable'] === true) {
-										echo "<td></td>\n";
-									} else {
-										echo "<td class=\"opbutton{$id}\">";
-										$action['fields'] = $tabledata->fields;
-//phb: 1 line modified					$this->printLink($action);
-										$misc->printLink($action);
-										echo "</td>\n";
-									}
-								}
-								break;
-							default:
-								echo "<td>";
-								$val = value($column['field'], $tabledata->fields);
-								if (!is_null($val)) {
-									if (isset($column['url'])) {
-										echo "<a href=\"{$column['url']}";
-										$misc->printUrlVars($column['vars'], $tabledata->fields);
-										echo "\">";
-									}
-									$type = isset($column['type']) ? $column['type'] : null;
-									$params = isset($column['params']) ? $column['params'] : array();
-//phb: 1 line modified
-//									echo $misc->printVal($val, $type, $params);
-									echo $this->printVal($val, $type, $params);
-									if (isset($column['url'])) echo "</a>";
-								}
-
-								echo "</td>\n";
-								break;
-						}
-					}
-					echo "</tr>\n";
-
-					$tabledata->moveNext();
-					$i++;
-				}
-				echo "</tbody>\n";
-				echo "</table>\n";
-
-				// Multi action table footer w/ options & [un]check'em all
-				if ($has_ma) {
-					echo "<table class=\"multiactions\">\n";
-					echo "<tr>\n";
-					echo "<th class=\"multiactions\">{$this->lang['emajselect']}</th>\n";
-					echo "<th class=\"multiactions\" id=\"selectedcounter\">{$this->lang['emajactionsonselectedobjects']}</th>\n";
-					echo "</tr>\n";
-					echo "<tr class=\"row1\">\n";
-					echo "\t<td>\n";
-					echo "\t\t&nbsp;<a href=\"#\" onclick=\"javascript:checkSelect('all','{$place}');countChecked('{$place}');\">{$this->lang['emajall']}</a>&nbsp;/\n";
-					echo "\t\t&nbsp;<a href=\"#\" onclick=\"javascript:checkSelect('none','{$place}');countChecked('{$place}');\">{$this->lang['emajnone']}</a>&nbsp;/\n";
-					echo "\t\t&nbsp;<a href=\"#\" onclick=\"javascript:checkSelect('invert','{$place}');countChecked('{$place}');\">{$this->lang['emajinvert']}</a>&nbsp;\n";
-					echo "\t</td><td>\n";
-					foreach($actions as $k => $a)
-						if (isset($a['multiaction']))
-							echo "\t\t<button id=\"{$a['multiaction']}\" name=\"action\" value=\"{$a['multiaction']}\" disabled=\"true\" >{$a['content']}</button>\n";
-					echo $misc->form;
-					echo "</td>\n";
-					echo "</tr>\n";
-					echo "</table>\n";
-					echo '</form>';
-				} else {
-					echo "</div>\n";
-				};
-
-				// generate the javascript for the tablesorter JQuery plugin
-				if ($sorter || $filter) {
-					echo "<script type=\"text/javascript\">\n";
-					echo "\t$(document).ready(function() {\n";
-					echo "\t\t$(\"#{$place} table\").addClass('tablesorter');\n";
-					echo "\t\t$(\"#{$place} table\").tablesorter( {\n";
-					if ($textExtractionJS <> '') {
-						echo "\t\t\ttextExtraction: {\n";
-						echo $textExtractionJS;
-						echo "\t\t\t\t},\n";
-					}
-					echo "\t\t\temptyTo: 'none',\n";
-					echo "\t\t\twidgets: [\"zebra\"";
-					if ($filter) { echo ", \"filter\""; }
-					echo "],\n";
-					echo "\t\t\twidgetOptions: {\n";
-					echo "\t\t\t\tzebra : [ \"data1\", \"data2\" ],\n";
-					echo "\t\t\t\tfilter_hideFilters : true,\n";
-					echo "\t\t\t\t},\n";
-					echo "\t\t\t}\n";
-					echo "\t\t);\n";
-					echo $filterDisabledJs;
-					echo "\t});\n";
-					echo "</script>\n";
-				}
-
-				return true;
-			} else {
-				if (!is_null($nodata)) {
-					echo "<p>{$nodata}</p>\n";
-				}
-				return false;
-			}
-		}
-
-		function printVal($str, $type = null, $params = array()) {
-			global $lang, $conf, $data;
-
-			// Shortcircuit for a NULL value
-			if (is_null($str))
-				return isset($params['null'])
-						? ($params['null'] === true ? '<i>NULL</i>' : $params['null'])
-						: '';
-
-			if (isset($params['map']) && isset($params['map'][$str])) $str = $params['map'][$str];
-
-			// Clip the value if the 'clip' parameter is true.
-			if (isset($params['clip']) && $params['clip'] === true) {
-				$maxlen = isset($params['cliplen']) && is_integer($params['cliplen']) ? $params['cliplen'] : $conf['max_chars'];
-				$ellipsis = isset($params['ellipsis']) ? $params['ellipsis'] : $lang['strellipsis'];
-				if (strlen($str) > $maxlen) {
-					$str = substr($str, 0, $maxlen-1) . $ellipsis;
-				}
-			}
-
-			$out = '';
-
-			switch ($type) {
-				case 'int2':
-				case 'int4':
-				case 'int8':
-				case 'float4':
-				case 'float8':
-				case 'money':
-				case 'numeric':
-				case 'oid':
-				case 'xid':
-				case 'cid':
-				case 'tid':
-					$align = 'right';
-					$out = nl2br(htmlspecialchars($str));
-					break;
-				case 'yesno':
-					if (!isset($params['true'])) $params['true'] = $lang['stryes'];
-					if (!isset($params['false'])) $params['false'] = $lang['strno'];
-					// No break - fall through to boolean case.
-				case 'bool':
-				case 'boolean':
-					if (is_bool($str)) $str = $str ? 't' : 'f';
-					switch ($str) {
-						case 't':
-							$out = (isset($params['true']) ? $params['true'] : $lang['strtrue']);
-							$align = 'center';
-							break;
-						case 'f':
-							$out = (isset($params['false']) ? $params['false'] : $lang['strfalse']);
-							$align = 'center';
-							break;
-						default:
-							$out = htmlspecialchars($str);
-					}
-					break;
-				case 'bytea':
-					$tag = 'div';
-					$class = 'pre';
-					$out = $data->escapeBytea($str);
-					break;
-				case 'errormsg':
-					$tag = 'pre';
-					$class = 'error';
-					$out = htmlspecialchars($str);
-					break;
-				case 'pre':
-					$tag = 'pre';
-					$out = htmlspecialchars($str);
-					break;
-				case 'prenoescape':
-					$tag = 'pre';
-					$out = $str;
-					break;
-				case 'nbsp':
-					$out = nl2br(str_replace(' ', '&nbsp;', htmlspecialchars($str)));
-					break;
-				case 'verbatim':
-					$out = $str;
-					break;
-				case 'callback':
-//phb: 1 row replaced by 5 rows
-//					$out = $params['function']($str, $params);
-					if (is_string($params['function'])) {
-						$out = $params['function']($str, $params);
-					} else {
-						$out = $params['function'][0]->{$params['function'][1]}($str, $params);
-					}
-					break;
-				case 'prettysize':
-					if ($str == -1) 
-						$out = $lang['strnoaccess'];
-					else
-					{
-						$limit = 10 * 1024;
-						$mult = 1;
-						if ($str < $limit * $mult)
-							$out = $str.' '.$lang['strbytes'];
-						else
-						{
-							$mult *= 1024;
-							if ($str < $limit * $mult)
-								$out = floor(($str + $mult / 2) / $mult).' '.$lang['strkb'];
-							else
-							{
-								$mult *= 1024;
-								if ($str < $limit * $mult)
-									$out = floor(($str + $mult / 2) / $mult).' '.$lang['strmb'];
-								else
-								{
-									$mult *= 1024;
-									if ($str < $limit * $mult)
-										$out = floor(($str + $mult / 2) / $mult).' '.$lang['strgb'];
-									else
-									{
-										$mult *= 1024;
-										if ($str < $limit * $mult)
-											$out = floor(($str + $mult / 2) / $mult).' '.$lang['strtb'];
-									}
-								}
-							}
-						}
-					}
-					break;
-				default:
-					// If the string contains at least one instance of >1 space in a row, a tab
-					// character, a space at the start of a line, or a space at the start of
-					// the whole string then render within a pre-formatted element (<pre>).
-					if (preg_match('/(^ |  |\t|\n )/m', $str)) {
-						$tag = 'pre';
-						$class = 'data';
-						$out = htmlspecialchars($str);
-					} else {
-						$out = nl2br(htmlspecialchars($str));
-					}
-			}
-
-			if (isset($params['class'])) $class = $params['class'];
-			if (isset($params['align'])) $align = $params['align'];
-
-			if (!isset($tag) && (isset($class) || isset($align))) $tag = 'div';
-
-			if (isset($tag)) {
-				$alignattr = isset($align) ? " style=\"text-align: {$align}\"" : '';
-				$classattr = isset($class) ? " class=\"{$class}\"" : '';
-				$out = "<{$tag}{$alignattr}{$classattr}>{$out}</{$tag}>";
-			}
-
-			// Add line numbers if 'lineno' param is true
-			if (isset($params['lineno']) && $params['lineno'] === true) {
-				$lines = explode("\n", $str);
-				$num = count($lines);
-				if ($num > 0) {
-					$temp = "<table>\n<tr><td class=\"{$class}\" style=\"vertical-align: top; padding-right: 10px;\"><pre class=\"{$class}\">";
-					for ($i = 1; $i <= $num; $i++) {
-						$temp .= $i . "\n";
-					}
-					$temp .= "</pre></td><td class=\"{$class}\" style=\"vertical-align: top;\">{$out}</td></tr></table>\n";
-					$out = $temp;
-				}
-				unset($lines);
-			}
-
-			return $out;
-		}
 }
 ?>

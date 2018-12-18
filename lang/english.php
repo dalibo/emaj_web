@@ -89,8 +89,11 @@
 	$lang['strstop'] = 'Stop';
 	$lang['strgotoppage'] = 'back to top';
 	$lang['strtheme'] = 'Theme';
-	
-	// Admin
+	$lang['strselect'] = 'Select';
+	$lang['stractionsonselectedobjects'] = 'Actions on selected objects (0)';
+	$lang['strall'] = 'All';
+	$lang['strnone'] = 'None';
+	$lang['strinvert'] = 'Invert';
 	
 	// User-supplied SQL history
 	$lang['strhistory'] = 'History';
@@ -137,8 +140,6 @@
 	$lang['strselectunary'] = 'Unary operators cannot have values.';
 	$lang['strestimatedrowcount'] = 'Estimated row count';
 
-	// Columns
-		
 	// Users
 	$lang['strusername'] = 'Username';
 	$lang['strpassword'] = 'Password';
@@ -150,8 +151,6 @@
 	// Roles
 	$lang['strrole'] = 'Role';
 	$lang['strroles'] = 'Roles';
-
-	// Privileges
 
 	// Databases
 	$lang['strdatabase'] = 'Database';
@@ -204,8 +203,6 @@
 	$lang['strnoschemas'] = 'No schemas found.';
 	$lang['strsearchpath'] = 'Schema search path';
 
-	// Reports
-
 	// Domains
 	$lang['strdomains'] = 'Domains';
 
@@ -213,23 +210,17 @@
 	$lang['stroperator'] = 'Operator';
 	$lang['stroperators'] = 'Operators';
 
-	// Casts
-	
 	// Conversions
 	$lang['strconversions'] = 'Conversions';
 	
 	// Languages
 	$lang['strlanguages'] = 'Languages';
 	
-	// Info
-
 	// Aggregates
 	$lang['straggregates'] = 'Aggregates';
 
 	// Operator Classes
 	$lang['stropclasses'] = 'Op Classes';
-
-	// Stats and performance
 
 	// Tablespaces
 	$lang['strtablespace'] = 'Tablespace';
@@ -242,16 +233,9 @@
 	$lang['strerrorloading'] = 'Error Loading';
 	$lang['strclicktoreload'] = 'Click to reload';
 
-	// Autovacuum
-
-	// Table-level Locks
-
-	// Prepared transactions
-	
-	// Fulltext search
-
 	//Plugins
 	$lang['strpluginnotfound'] = 'Error: plugin \'%s\' not found. Check if this plugin exists in the plugins/ directory, or if this plugins has a plugin.php file. Plugin\'s names are case sensitive';
 	$lang['stractionnotfound'] = 'Error: action \'%s\' not found in the \'%s\' plugin, or it was not specified as an action.';
 	$lang['strhooknotfound'] = 'Error: hook \'%s\' is not avaliable.';
+
 ?>

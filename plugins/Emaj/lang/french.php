@@ -25,16 +25,11 @@
 	$plugin_lang['emajdeleted'] = 'Supprimée';
 	$plugin_lang['emajprotected'] = 'Protégé contre les rollbacks';
 	$plugin_lang['emajpagebottom'] = 'Bas de la page';
-	$plugin_lang['emajselect'] = 'Sélectionner';
-	$plugin_lang['emajactionsonselectedobjects'] = 'Actions sur les objets sélectionnés (0)';
 	$plugin_lang['emajlogsize'] = 'Taille du log';
 	$plugin_lang['emajrequiredfield'] = 'Champ requis';
 	$plugin_lang['emajestimates'] = 'Estimations';
 	$plugin_lang['emajfrom'] = 'De';
 	$plugin_lang['emajto'] = 'A';
-	$plugin_lang['emajall'] = 'Tous';
-	$plugin_lang['emajnone'] = 'Aucun';
-	$plugin_lang['emajinvert'] = 'Inverser';
 
 	// E-Maj tabs
 	$plugin_lang['emajenvir'] = 'Environnement E-Maj';

@@ -89,8 +89,11 @@
 	$lang['strstop'] = 'Arrêter';
 	$lang['strgotoppage'] = 'Haut de la page';
 	$lang['strtheme'] = 'Thème';
-
-	// Admin
+	$lang['strselect'] = 'Sélectionner';
+	$lang['stractionsonselectedobjects'] = 'Actions sur les objets sélectionnés (0)';
+	$lang['strall'] = 'Tous';
+	$lang['strnone'] = 'Aucun';
+	$lang['strinvert'] = 'Inverser';
 
 	// User-supplied SQL history
 	$lang['strhistory'] = 'Historique';
@@ -137,8 +140,6 @@
 	$lang['strselectunary'] = 'Les opérateurs unaires ne peuvent avoir de valeurs.';
 	$lang['strestimatedrowcount'] = 'Nombre d\'enregistrements estimés';
 
-	// Columns
-
 	// Users
 	$lang['strusername'] = 'Utilisateur';
 	$lang['strpassword'] = 'Mot de passe';
@@ -150,8 +151,6 @@
 	// Roles
 	$lang['strrole'] = 'Rôle';
 	$lang['strroles'] = 'Rôles';
-
-	// Privileges
 
 	// Databases
 	$lang['strdatabase'] = 'Base de données';
@@ -204,8 +203,6 @@
 	$lang['strnoschemas'] = 'Aucun schéma trouvé.';
 	$lang['strsearchpath'] = 'Chemin de recherche du schéma';
 
-	// Reports
-
 	// Domains
 	$lang['strdomains'] = 'Domaines';
 
@@ -213,23 +210,17 @@
 	$lang['stroperator'] = 'Opérateur';
 	$lang['stroperators'] = 'Opérateurs';
 
-	// Casts
-
 	// Conversions
 	$lang['strconversions'] = 'Conversions';
 
 	// Languages
 	$lang['strlanguages'] = 'Langages';
 
-	// Info
-
 	// Aggregates
 	$lang['straggregates'] = 'Agrégats';
 
 	// Operator Classes
 	$lang['stropclasses'] = 'Classes d\'opérateur';
-
-	// Stats and performance
 
 	// Tablespaces
 	$lang['strtablespace'] = 'Tablespace';
@@ -242,16 +233,9 @@
 	$lang['strerrorloading'] = 'Erreur lors du chargement';
 	$lang['strclicktoreload'] = 'Cliquer pour recharger';
 
-	//Autovacuum
-
-	//Table-level Locks
-
-	// Prepared transactions
-
-	// Fulltext search
-
 	//Plugins
 	$lang['strpluginnotfound'] = 'Error: plugin \'%s\' not found. Check if this plugin exists in the plugins/ directory, or if this plugins has a plugin.php file. Plugin\'s names are case sensitive';
 	$lang['stractionnotfound'] = 'Error: action \'%s\' not found in the \'%s\' plugin, or it was not specified as an action.';
 	$lang['strhooknotfound'] = 'Error: hook \'%s\' is not avaliable.';
+
 ?>

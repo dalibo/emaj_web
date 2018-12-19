@@ -127,20 +127,17 @@
 				if ($c['p_field'] == $s)
 					switch ($c['contype']) {
 						case 'p':
-							$str .= '<a href="constraints.php?'. $misc->href ."&amp;table=". urlencode($c['p_table']) ."&amp;schema=". urlencode($c['p_schema']) ."\"><img src=\"".
-								$misc->icon('PrimaryKey') .'" alt="[pk]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" /></a>';
+							$str .= '<img src="'. $misc->icon('PrimaryKey') .'" alt="[pk]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" />';
 						break;
 						case 'f':
 							$str .= '<a href="tblproperties.php?'. $misc->href ."&amp;table=". urlencode($c['f_table']) ."&amp;schema=". urlencode($c['f_schema']) ."\"><img src=\"".
 								$misc->icon('ForeignKey') .'" alt="[fk]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" /></a>';
 						break;
 						case 'u':
-							$str .= '<a href="constraints.php?'. $misc->href ."&amp;table=". urlencode($c['p_table']) ."&amp;schema=". urlencode($c['p_schema']) ."\"><img src=\"".
-								$misc->icon('UniqueConstraint') .'" alt="[uniq]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" /></a>';
+							$str .= '<img src="'. $misc->icon('UniqueConstraint') .'" alt="[uniq]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" />';
 						break;
 						case 'c':
-							$str .= '<a href="constraints.php?'. $misc->href ."&amp;table=". urlencode($c['p_table']) ."&amp;schema=". urlencode($c['p_schema']) ."\"><img src=\"".
-								$misc->icon('CheckConstraint') .'" alt="[check]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" /></a>';
+							$str .= '<img src="'. $misc->icon('CheckConstraint') .'" alt="[check]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" /></a>';
 					}
 			}
 
@@ -165,21 +162,6 @@
 					)
 				),
 				'content' => $lang['strbrowse']
-			),
-			'select' => array (
-				'attr'=> array (
-					'href' => array (
-						'url' => 'tables.php',
-						'urlvars' => array (
-							'action' => 'confselectrows',
-							'server' => $_REQUEST['server'],
-							'database' => $_REQUEST['database'],
-							'schema' => $_REQUEST['schema'],
-							'table' => $_REQUEST['table']
-						)
-					)
-				),
-				'content' => $lang['strselect']
 			),
 		);
 		$misc->printNavLinks($navlinks,

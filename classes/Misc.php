@@ -702,13 +702,6 @@
 							'urlvars' => array('subject' => 'database'),
 							'icon'  => 'Schemas',
 						),
-						'sql' => array (
-							'title' => $lang['strsql'],
-							'url'   => 'database.php',
-							'urlvars' => array('subject' => 'database', 'action' => 'sql', 'new' => 1),
-							'tree'  => false,
-							'icon'  => 'SqlEditor'
-						),
 					);
 					break;
 

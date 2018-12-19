@@ -382,21 +382,6 @@
 			);
 		}
 
-		// Edit SQL link
-		if ($type == 'QUERY')
-			$navlinks['edit'] = array (
-				'attr'=> array (
-					'href' => array (
-						'url' => 'database.php',
-						'urlvars' => array_merge($fields, array (
-							'action' => 'sql',
-							'paginate' => 'on',
-						))
-					)
-				),
-				'content' => $lang['streditsql']
-			);
-
 		// Expand/Collapse
 		if ($_REQUEST['strings'] == 'expanded')
 			$navlinks['collapse'] = array (

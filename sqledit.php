@@ -2,8 +2,6 @@
 
 	/**
 	 * Alternative SQL editing window
-	 *
-	 * $Id: sqledit.php,v 1.40 2008/01/10 19:37:07 xzilla Exp $
 	 */
 
 	// Include application functions

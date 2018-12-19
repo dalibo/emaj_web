@@ -213,53 +213,6 @@
 		);
 	}
 
-	// Edit		
-	$navlinks['alter'] = array (
-		'attr'=> array (
-			'href' => array (
-				'url' => 'database.php',
-				'urlvars' => array_merge($fields, array (
-					'action' => 'sql',
-				))
-			)
-		),
-		'content' => $lang['streditsql']
-	);
-
-	// Create view and download
-	if (isset($_SESSION['sqlquery']) && isset($rs) && is_object($rs) && $rs->recordCount() > 0) {
-		// Report views don't set a schema, so we need to disable create view in that case
-		if (isset($_REQUEST['schema'])) {
-			$navlinks['createview'] = array (
-				'attr'=> array (
-					'href' => array (
-						'url' => 'views.php',
-						'urlvars' => array_merge($fields, array (
-							'action' => 'create',
-							'formDefinition' => $_SESSION['sqlquery']
-						))
-					)
-				),
-				'content' => $lang['strcreateview']
-			);
-		}
-
-		if (isset($_REQUEST['search_path']))
-			$fields['search_path'] = $_REQUEST['search_path'];
-
-		$navlinks['download'] = array (
-			'attr'=> array (
-				'href' => array (
-					'url' => 'dataexport.php',
-					'urlvars' => array_merge($fields, array(
-						'query' => $_SESSION['sqlquery']
-					))
-				)
-			),
-			'content' => $lang['strdownload']
-		);
-	}
-
 	$misc->printNavLinks($navlinks, 'sql-form', get_defined_vars());
 	
 	$misc->printFooter();

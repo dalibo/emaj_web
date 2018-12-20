@@ -41,7 +41,6 @@
 			global $plugin_manager;
 
 			$vars = array();
-
 			switch($subject) {
 				case 'root':
 					$vars = array (
@@ -93,7 +92,6 @@
 					));
 					break;
 				case 'column':
-					if (isset($_REQUEST['table']))
 						$vars = array('params' => array(
 							'server' => $_REQUEST['server'],
 							'subject' => 'column',
@@ -102,27 +100,17 @@
 							'table' => $_REQUEST['table'],
 							'column' => $_REQUEST['column']
 						));
-					else
-						$vars = array('params' => array(
-							'server' => $_REQUEST['server'],
-							'subject' => 'column',
-							'database' => $_REQUEST['database'],
-							'schema' => $_REQUEST['schema'],
-							'view' => $_REQUEST['view'],
-							'column' => $_REQUEST['column']
-						));
 					break;
-				case 'plugin':
-					$vars = array(
+				case 'emaj':
+					$vars = array (
 						'url' => 'plugin.php',
-						'params' => array(
+						'params' => array (
 							'server' => $_REQUEST['server'],
 							'subject' => 'plugin',
-							'plugin' => $_REQUEST['plugin'],
+							'plugin' => 'Emaj',
+							'action' => 'show_groups',
+							'database' => $_REQUEST['database'],
 					));
-
-					if (!is_null($plugin_manager->getPlugin($_REQUEST['plugin'])))
-						$vars['params'] = array_merge($vars['params'], $plugin_manager->getPlugin($_REQUEST['plugin'])->get_subject_params());
 					break;
 				default:
 					return false;
@@ -1068,6 +1056,16 @@
 				);
 			}
 			if ($subject == 'table') $done = true;
+
+			if (isset($_REQUEST['group']) && !$done) {
+				$trail['emaj'] = array(
+					'title' => 'E-Maj',
+					'text'  => 'E-Maj',
+					'url'   => $this->getHREFSubject('emaj'),
+					'icon'  => array ('Emaj', 'Emaj')
+				);
+			}
+			if ($subject == 'group') $done = true;
 
 			if (!$done && !is_null($subject)) {
 				switch ($subject) {

@@ -37,37 +37,8 @@ class Emaj extends Plugin {
 
 	function get_hooks() {
 		$hooks = array(
-			'trail' => array('add_plugin_trail')
 		);
 		return $hooks;
-	}
-
-	/**
-	 * Insert the E-Maj trail in the trail structure
-	 */
-	function add_plugin_trail($plugin_functions_parameters) {
-		global $misc; 
-
-		$trail = &$plugin_functions_parameters['trail'];
-
-		switch ($plugin_functions_parameters['section']) {
-			case 'emaj':
-				$url = array (
-					'url' => 'plugin.php',
-					'urlvars' => array (
-						'plugin' => $this->name,
-						'subject' => 'emaj',
-						'action' => 'show_groups'
-					)
-				);
-				$trail['emaj'] = array (
-					'tittle' => 'E-Maj',
-					'text' => 'E-Maj',
-					'url' => $misc->getActionUrl($url, $_REQUEST, null, false),
-					'icon' => $this->icon('Emaj')
-				);
-				break;
-		}
 	}
 
 	/**

@@ -238,4 +238,16 @@
 	$lang['stractionnotfound'] = 'Error: action \'%s\' not found in the \'%s\' plugin, or it was not specified as an action.';
 	$lang['strhooknotfound'] = 'Error: hook \'%s\' is not avaliable.';
 
+	// E-Maj Basic strings
+	$lang['emajgroups'] = 'Groupes';
+
+	// E-Maj tabs
+	$lang['emajenvir'] = 'Environnement E-Maj';
+	$lang['emajgroupsconf'] = 'Configuration groupes';
+	$lang['emajrlbkop'] = 'Rollbacks';
+	$lang['emajlogstat'] = 'Statistiques log';
+
+	// Group's properties and marks
+	$lang['emajcontent'] = 'Contenu';
+
 ?>

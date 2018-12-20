@@ -2,7 +2,7 @@
 
 /**
  * A class that implements the database access for the E-Maj ppa plugin.
- * It currently covers E-Maj versions starting from 0.11.x
+ * It currently covers E-Maj versions starting from 1.3.x
  */
 
 class EmajDb {

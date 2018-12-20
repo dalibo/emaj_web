@@ -14,16 +14,6 @@
 		}
 
 		/**
-		 * Checks if dumps are properly set up
-		 * @param $all (optional) True to check pg_dumpall, false to just check pg_dump
-		 * @return True, dumps are set up, false otherwise
-		 */
-		function isDumpEnabled($all = false) {
-			$info = $this->getServerInfo();
-			return !empty($info[$all ? 'pg_dumpall_path' : 'pg_dump_path']);
-		}
-
-		/**
 		 * Sets the href tracking variable
 		 */
 		function setHREF() {
@@ -492,25 +482,21 @@
 				echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
 				// Theme
 				echo "<link rel=\"stylesheet\" href=\"themes/{$conf['theme']}/global.css\" type=\"text/css\" />\n";
+				echo "<link rel=\"stylesheet\" href=\"plugins/Emaj/themes/{$conf['theme']}/emaj.css\" type=\"text/css\" />\n";
+				echo "<link rel=\"stylesheet\" href=\"plugins/Emaj/themes/{$conf['theme']}/tablesorter.css\" type=\"text/css\" />\n";
 				echo "<link rel=\"shortcut icon\" href=\"images/themes/{$conf['theme']}/Favicon.ico\" type=\"image/vnd.microsoft.icon\" />\n";
 				echo "<link rel=\"icon\" type=\"image/png\" href=\"images/themes/{$conf['theme']}/EmajwebIcon.png\" />\n";
+				// Javascript
+				echo "<script type=\"text/javascript\" src=\"plugins/Emaj/js/multiactionform.js\"></script>\n";
 				echo "<script type=\"text/javascript\" src=\"libraries/js/jquery-3.3.1.min.js\"></script>\n";
 				echo "<script type=\"text/javascript\" src=\"libraries/js/jquery.tablesorter.min.js\"></script>\n";
 				echo "<script type=\"text/javascript\" src=\"libraries/js/jquery.tablesorter.widgets.min.js\"></script>\n";
+				// Title
 				echo "<title>", htmlspecialchars($appName);
 				if ($title != '') echo htmlspecialchars(" - {$title}");
 				echo "</title>\n";
 
 				if ($script) echo "{$script}\n";
-
-				$plugins_head = array();
-				$_params = array('heads' => &$plugins_head);
-
-				$plugin_manager->do_hook('head', $_params);
-
-				foreach($plugins_head as $tag) {
-					echo $tag;
-				}
 
 				echo "</head>\n";
 			}
@@ -664,7 +650,7 @@
 		 * @param $section The name of the tab bar.
 		 */
 		function getNavTabs($section) {
-			global $data, $lang, $conf, $plugin_manager;
+			global $data, $lang, $conf, $plugin_manager, $emajdb;
 
 			$tabs = array();
 
@@ -694,6 +680,7 @@
 						)
 					);
 					break;
+
 				case 'database':
 					$tabs = array (
 						'schemas' => array (
@@ -701,6 +688,100 @@
 							'url'   => 'schemas.php',
 							'urlvars' => array('subject' => 'database'),
 							'icon'  => 'Schemas',
+						),
+						'emaj' => array (
+							'title' => 'E-Maj',
+							'url' => 'plugin.php',
+							'urlvars' => array(
+								'plugin' => 'Emaj',
+								'subject' => 'database',
+								'action' => 'show_groups'
+							),
+							'icon' => array ('Emaj', 'Emaj')		// point to the 'Emaj' plugin and 'Emaj' icon
+						),
+					);
+					break;
+
+				case 'emaj':
+					$tabs = array (
+						'emajgroups' => array (
+							'title' => $lang['emajgroups'],
+							'url' => 'plugin.php',
+							'urlvars' => array(
+								'plugin' => 'Emaj',
+								'subject' => 'emaj',
+								'action' => 'show_groups'
+							),
+							'icon' => array ('Emaj', 'EmajGroup')
+						),
+						'emajconfiguregroups' => array (
+							'title' => $lang['emajgroupsconf'],
+							'url' => 'plugin.php',
+							'urlvars' => array(
+								'plugin' => 'Emaj',
+								'subject' => 'emaj',
+								'action' => 'configure_groups'
+							),
+							'hide' => !($emajdb->isEmaj_Adm()),
+							'icon' => 'Admin'
+						),
+						'emajmonitorrlbk' => array (
+							'title' => $lang['emajrlbkop'],
+							'url' => 'plugin.php',
+							'urlvars' => array(
+								'plugin' => 'Emaj',
+								'subject' => 'emaj',
+								'action' => 'show_rollbacks'
+							),
+							'icon' => array ('Emaj', 'EmajRollback')
+						),
+						'emajenvir' => array (
+							'title' => $lang['emajenvir'],
+							'url' => 'plugin.php',
+							'urlvars' => array(
+								'plugin' => 'Emaj',
+								'subject' => 'emaj',
+								'action' => 'emaj_envir'
+							),
+							'icon' => array ('Emaj', 'Emaj')
+						)
+					);
+					break;
+
+				case 'emajgroup':
+					$tabs = array (
+						'emajgroupproperties' => array (
+							'title' => $lang['strproperties'],
+							'url' => 'plugin.php',
+							'urlvars' => array(
+								'plugin' => 'Emaj',
+								'subject' => 'emajgroups',
+								'action' => 'show_group',
+								'group' => $_REQUEST['group']
+							),
+							'icon' => 'Property'
+						),
+						'emajlogstat' => array (
+							'title' => $lang['emajlogstat'],
+							'url' => 'plugin.php',
+							'urlvars' => array(
+								'plugin' => 'Emaj',
+								'subject' => 'emajgroups',
+								'action' => 'log_stat_group',
+								'group' => $_REQUEST['group']
+							),
+							'icon' => array ('Emaj', 'EmajStat')
+						),
+						'emajcontent' => array (
+							'title' => $lang['emajcontent'],
+							'url' => 'plugin.php',
+							'urlvars' => array(
+								'plugin' => 'Emaj',
+								'subject' => 'emajgroups',
+								'action' => 'show_content_group',
+								'group' => $_REQUEST['group']
+							),
+							'icon' => 'Tablespace'
 						),
 					);
 					break;
@@ -735,13 +816,6 @@
 					break;
 
 			}
-
-			// Tabs hook's place
-			$plugin_functions_parameters = array(
-				'tabs' => &$tabs,
-				'section' => $section
-			);
-			$plugin_manager->do_hook('tabs', $plugin_functions_parameters);
 
 			return $tabs;
 		}

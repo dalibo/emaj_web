@@ -2,8 +2,6 @@
 
 	/**
 	 * Function library read in upon startup
-	 *
-	 * $Id: lib.inc.php,v 1.123 2008/04/06 01:10:35 xzilla Exp $
 	 */
 
 	include_once('./libraries/decorator.inc.php');
@@ -49,6 +47,10 @@
 	// Create Misc class references
 	require_once('./classes/Misc.php');
 	$misc = new Misc();
+
+	// Create EmajDb class references
+	require_once('./plugins/Emaj/classes/EmajDb.php');
+	$emajdb = new EmajDb();
 
 	// Start session (if not auto-started)
 	if (!ini_get('session.auto_start')) {

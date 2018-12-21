@@ -1,7 +1,7 @@
 <?php
 
 /**
- * A class that implements the database access for the E-Maj ppa plugin.
+ * A class that implements the database access for Emaj_web.
  * It currently covers E-Maj versions starting from 1.3.x
  */
 

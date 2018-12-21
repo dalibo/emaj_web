@@ -49,7 +49,7 @@
 	$misc = new Misc();
 
 	// Create EmajDb class references
-	require_once('./plugins/Emaj/classes/EmajDb.php');
+	require_once('./classes/database/EmajDb.php');
 	$emajdb = new EmajDb();
 
 	// Start session (if not auto-started)

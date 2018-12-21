@@ -154,6 +154,16 @@
 	// Time in seconds. If set to 0, refreshing data using ajax will be disabled (locks and activity pages)
 	$conf['ajax_refresh'] = 3;
 
+    /* Uncomment and adjust the value of both parameters */
+
+	/* Pathname for the psql executable file (used to submit batch rollback operations */
+//	$conf['psql_path'] = 'C:\\Bitnami\\wappstack-5.5.30-0\\postgresql\\bin\\psql.exe';
+	$conf['psql_path'] = '/usr/bin/psql';
+
+	/* Directory containing temporary files (used to submit batch rollback operations */
+//	$conf['temp_dir'] = 'C:\\Users\\Default\\AppData\\Local\\Temp';
+	$conf['temp_dir'] = '/tmp';
+
 	/*****************************************
 	 * Don't modify anything below this line *
 	 *****************************************/

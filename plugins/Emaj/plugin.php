@@ -3813,7 +3813,7 @@ class Emaj extends Plugin {
 	 * Prepare rollback group: ask for confirmation
 	 */
 	function rollback_group() {
-		global $misc, $lang, $emajdb;
+		global $misc, $lang, $emajdb, $conf;
 
 		if ($_REQUEST['back']=='list')
 			$this->printPageHeader('emaj','emajgroups');
@@ -3851,7 +3851,7 @@ class Emaj extends Plugin {
 		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"logged\">{$lang['emajlogged']}\n";
 		echo "</p><p>";
 		echo "<input type=\"submit\" name=\"rollbackgroup\" value=\"{$lang['emajrlbk']}\" />\n";
-		if ($emajdb->isAsyncRlbkUsable($this->conf) ) {
+		if ($emajdb->isAsyncRlbkUsable($conf) ) {
 			echo "<input type=\"submit\" name=\"async\" value=\"{$lang['emajrlbkthenmonitor']}\" />\n";
 		}
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -3975,7 +3975,7 @@ class Emaj extends Plugin {
 	 * Perform rollback_group
 	 */
 	function rollback_group_ok() {
-		global $lang, $misc, $emajdb;
+		global $lang, $misc, $emajdb, $conf;
 
 		// process the click on the <cancel> button
 		if (isset($_POST['cancel'])) {
@@ -4017,29 +4017,29 @@ class Emaj extends Plugin {
 		if (isset($_POST['async'])) {
 		// perform the rollback in asynchronous mode and switch to the rollback monitoring page
 
-			$psqlExe = $misc->escapeShellCmd($this->conf['psql_path']);
+			$psqlExe = $misc->escapeShellCmd($conf['psql_path']);
 
 			// re-check the psql exe path and the temp directory supplied in the config file
 			$version = array();
 			preg_match("/(\d+(?:\.\d+)?)(?:\.\d+)?.*$/", exec($psqlExe . " --version"), $version);
 			if (empty($version)) {
 				if ($_POST['back']=='list') {
-					$this->show_groups('',sprintf($lang['emajbadpsqlpath'], $this->conf['psql_path']));
+					$this->show_groups('',sprintf($lang['emajbadpsqlpath'], $conf['psql_path']));
 				} else {
-					$this->show_group('',sprintf($lang['emajbadpsqlpath'], $this->conf['psql_path']));
+					$this->show_group('',sprintf($lang['emajbadpsqlpath'], $conf['psql_path']));
 				}
 				exit;
 			}
 
 			// re-check the file can be written into the temp directory supplied in the config file 
 			$sep = (substr(php_uname(), 0, 3) == "Win") ? '\\' : '/';
-			$testFileName = $this->conf['temp_dir'] . $sep . 'rlbk_report_test';
+			$testFileName = $conf['temp_dir'] . $sep . 'rlbk_report_test';
 			$f = fopen($testFileName,'w');
 			if (!$f) {
 				if ($_POST['back']=='list') {
-					$this->show_groups('',sprintf($lang['emajbadtempdir'], $this->conf['temp_dir']));
+					$this->show_groups('',sprintf($lang['emajbadtempdir'], $conf['temp_dir']));
 				} else {
-					$this->show_group('',sprintf($lang['emajbadtempdir'], $this->conf['temp_dir']));
+					$this->show_group('',sprintf($lang['emajbadtempdir'], $conf['temp_dir']));
 				}
 				exit;
 			} else {
@@ -4047,7 +4047,7 @@ class Emaj extends Plugin {
 				unlink($testFileName);
 			}
 
-			$rlbkId = $emajdb->asyncRollbackGroups($_POST['group'],$_POST['mark'],$_POST['rollbacktype']=='logged', $psqlExe, $this->conf['temp_dir'].$sep, false);
+			$rlbkId = $emajdb->asyncRollbackGroups($_POST['group'],$_POST['mark'],$_POST['rollbacktype']=='logged', $psqlExe, $conf['temp_dir'].$sep, false);
 			$this->show_rollbacks(sprintf($lang['emajasyncrlbkstarted'],$rlbkId));
 			exit;
 		}
@@ -4252,7 +4252,7 @@ class Emaj extends Plugin {
 	 * Perform rollback_groups
 	 */
 	function rollback_groups_ok() {
-		global $lang, $misc, $emajdb;
+		global $lang, $misc, $emajdb, $conf;
 
 		// process the click on the <cancel> button
 		if (isset($_POST['cancel'])) { $this->show_groups(); exit(); }
@@ -4285,29 +4285,29 @@ class Emaj extends Plugin {
 		if (isset($_POST['async'])) {
 		// perform the rollback in asynchronous mode and switch to the rollback monitoring page
 
-			$psqlExe = $misc->escapeShellCmd($this->conf['psql_path']);
+			$psqlExe = $misc->escapeShellCmd($conf['psql_path']);
 
 			// re-check the psql exe path and the temp directory supplied in the config file
 			$version = array();
 			preg_match("/(\d+(?:\.\d+)?)(?:\.\d+)?.*$/", exec($psqlExe . " --version"), $version);
 			if (empty($version)) {
 				if ($_POST['back']=='list') {
-					$this->show_groups('',sprintf($lang['emajbadpsqlpath'], $this->conf['psql_path']));
+					$this->show_groups('',sprintf($lang['emajbadpsqlpath'], $conf['psql_path']));
 				} else {
-					$this->show_group('',sprintf($lang['emajbadpsqlpath'], $this->conf['psql_path']));
+					$this->show_group('',sprintf($lang['emajbadpsqlpath'], $conf['psql_path']));
 				}
 				exit;
 			}
 
 			// re-check the file can be written into the temp directory supplied in the config file 
 			$sep = (substr(php_uname(), 0, 3) == "Win") ? '\\' : '/';
-			$testFileName = $this->conf['temp_dir'] . $sep . 'rlbk_report_test';
+			$testFileName = $conf['temp_dir'] . $sep . 'rlbk_report_test';
 			$f = fopen($testFileName,'w');
 			if (!$f) {
 				if ($_POST['back']=='list') {
-					$this->show_groups('',sprintf($lang['emajbadtempdir'], $this->conf['temp_dir']));
+					$this->show_groups('',sprintf($lang['emajbadtempdir'], $conf['temp_dir']));
 				} else {
-					$this->show_group('',sprintf($lang['emajbadtempdir'], $this->conf['temp_dir']));
+					$this->show_group('',sprintf($lang['emajbadtempdir'], $conf['temp_dir']));
 				}
 				exit;
 			} else {
@@ -4315,7 +4315,7 @@ class Emaj extends Plugin {
 				unlink($testFileName);
 			}
 
-			$rlbkId = $emajdb->asyncRollbackGroups($_POST['groups'],$_POST['mark'],$_POST['rollbacktype']=='logged', $psqlExe, $this->conf['temp_dir'].$sep, true);
+			$rlbkId = $emajdb->asyncRollbackGroups($_POST['groups'],$_POST['mark'],$_POST['rollbacktype']=='logged', $psqlExe, $conf['temp_dir'].$sep, true);
 			$this->show_rollbacks(sprintf($lang['emajasyncrlbkstarted'],$rlbkId));
 			exit;
 		}

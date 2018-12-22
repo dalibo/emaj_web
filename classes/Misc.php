@@ -470,8 +470,6 @@
 				echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
 				// Theme
 				echo "<link rel=\"stylesheet\" href=\"themes/{$conf['theme']}/global.css\" type=\"text/css\" />\n";
-				echo "<link rel=\"stylesheet\" href=\"plugins/Emaj/themes/{$conf['theme']}/emaj.css\" type=\"text/css\" />\n";
-				echo "<link rel=\"stylesheet\" href=\"plugins/Emaj/themes/{$conf['theme']}/tablesorter.css\" type=\"text/css\" />\n";
 				echo "<link rel=\"shortcut icon\" href=\"images/themes/{$conf['theme']}/Favicon.ico\" type=\"image/vnd.microsoft.icon\" />\n";
 				echo "<link rel=\"icon\" type=\"image/png\" href=\"images/themes/{$conf['theme']}/EmajwebIcon.png\" />\n";
 				// Javascript

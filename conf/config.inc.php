@@ -83,29 +83,11 @@
 	/* Groups definition */
 	/* Groups allow administrators to logicaly group servers together under
 	 * group nodes in the left browser tree
-	 *
-	 * The group '0' description
 	 */
-	//$conf['srv_groups'][0]['desc'] = 'group one';
-
-	/* Add here servers indexes belonging to the group '0' seperated by comma */
-	//$conf['srv_groups'][0]['servers'] = '0,1,2'; 
-
-	/* A server can belong to multi groups. Here server 1 is referenced in both
-	 * 'group one' and 'group two'*/
-	//$conf['srv_groups'][1]['desc'] = 'group two';
-	//$conf['srv_groups'][1]['servers'] = '3,1';
-
-	/* A group can be nested in one or more existing groups using the 'parents'
-	 * parameter. Here the group 'group three' contains only one server and will
-	 * appear as a subgroup in both 'group one' and 'group two':
-	 */
-	//$conf['srv_groups'][2]['desc'] = 'group three';
-	//$conf['srv_groups'][2]['servers'] = '4';
-	//$conf['srv_groups'][2]['parents'] = '0,1';
-
-	/* Warning: Only groups with no parents appears at the root of the tree. */
-	
+	$conf['srv_groups'][0]['desc'] = 'Production';
+	$conf['srv_groups'][0]['servers'] = '0'; 
+	$conf['srv_groups'][1]['desc'] = 'Test';
+	$conf['srv_groups'][1]['servers'] = '1,2,3,4,5,6,7,8';
 
 	// Default language. E.g.: 'english'.  See lang/ directory
 	// for all possibilities. If you specify 'auto' (the default) it will use 

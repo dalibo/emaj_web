@@ -4,9 +4,10 @@
 	 */
 
 	// List of themes
-	
+
 	$appThemes = array(
 		'default' => 'Default',
-		'cappuccino' => 'Cappuccino'
+		'cappuccino' => 'Cappuccino',
+		'ppa' => 'PhpPgAdmin'
 	);
 ?>

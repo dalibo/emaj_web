@@ -367,9 +367,9 @@ class Emaj extends Plugin {
 	function show_groups($msg = '', $errMsg = '') {
 		global $lang, $misc, $emajdb;
 
-		$this->printPageHeader('emaj','emajgroups');
+		$this->printPageHeader('emaj', 'emajgroups', 'action=show_groups');
 
-		$emajOK = $this->printEmajHeader("action=show_groups",$lang['emajgrouplist']);
+		$emajOK = $this->checkEmajExtension();
 
 		if ($emajOK) {
 			$this->printMsg($msg,$errMsg);
@@ -711,7 +711,6 @@ class Emaj extends Plugin {
 			}
 		}
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -721,12 +720,12 @@ class Emaj extends Plugin {
 	function configure_groups($msg = '', $errMsg = '', $prevSchema = '') {
 		global $misc, $lang, $emajdb;
 
-		$this->printPageHeader('emaj','emajconfiguregroups');
-
 		if (!isset($_REQUEST['appschema'])) $_REQUEST['appschema'] = $prevSchema;
 		if (is_array($_REQUEST['appschema'])) $_REQUEST['appschema'] = $_REQUEST['appschema'][0];
 
-		$emajOK = $this->printEmajHeader("action=configure_groups&amp;appschema=".urlencode($_REQUEST['appschema']),$lang['emajgroupsconfiguration']);
+		$this->printPageHeader('emaj', 'emajconfiguregroups', 'action=configure_groups&amp;appschema='.urlencode($_REQUEST['appschema']));
+
+		$emajOK = $this->checkEmajExtension();
 
 		if ($emajOK) {
 			$this->printMsg($msg,$errMsg);
@@ -888,7 +887,6 @@ class Emaj extends Plugin {
 			}
 		}
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -915,277 +913,278 @@ class Emaj extends Plugin {
 //		echo "\t};\n";
 //		echo "</script>\n";
 
-		$this->printPageHeader('emaj','emajmonitorrlbk');
+		$this->printPageHeader('emaj', 'emajmonitorrlbk', 'action=show_rollbacks');
 
-		$emajOK = $this->printEmajHeader("action=show_rollbacks",$lang['emajrlbkoperations']);
+		$emajOK = $this->checkEmajExtension();
 
-		$this->printMsg($msg,$errMsg);
-
-		if (!isset($_SESSION['emaj']['RlbkNb'])) {
-			$_SESSION['emaj']['RlbkNb'] = 3;
-			$_SESSION['emaj']['NbRlbkChecked'] = 1;
-		}
-		if (!isset($_SESSION['emaj']['RlbkRetention'])) {
-			$_SESSION['emaj']['RlbkRetention'] = 24;
-		}
-		if (!isset($_SESSION['emaj']['NbRlbkChecked'])) {
-			$nbRlbk = -1;
-		} else {
-			$nbRlbk = $_SESSION['emaj']['RlbkNb'];
-		}
-		if (!isset($_SESSION['emaj']['DurationChecked'])) {
-			$rlbkRetention = -1;
-		} else {
-			$rlbkRetention = $_SESSION['emaj']['RlbkRetention'];
-		}
-
-		$columnsInProgressRlbk = array(
-			'rlbkId' => array(
-				'title' => $lang['emajrlbkid'],
-				'field' => field('rlbk_id'),
-				'params'=> array('align' => 'right'),
-			),
-			'rlbkGroups' => array(
-				'title' => $lang['emajgroups'],
-				'field' => field('rlbk_groups_list'),
-			),
-			'rlbkStatus' => array(
-				'title' => $lang['emajstate'],
-				'field' => field('rlbk_status'),
-			),
-			'rlbkStartDateTime' => array(
-				'title' => $lang['emajrlbkstart'],
-				'field' => field('rlbk_start_datetime'),
-				'params'=> array('align' => 'center'),
-			),
-			'rlbkElapse' => array(
-				'title' => $lang['emajcurrentduration'],
-				'field' => field('rlbk_current_elapse'),
-				'params'=> array('align' => 'center'),
-			),
-			'rlbkRemaining' => array(
-				'title' => $lang['emajestimremaining'],
-				'field' => field('rlbk_remaining'),
-				'params'=> array('align' => 'center'),
-			),
-			'rlbkCompletionPct' => array(
-				'title' => $lang['emajpctcompleted'],
-				'field' => field('rlbk_completion_pct'),
-				'params'=> array('align' => 'right'),
-			),
-			'rlbkMark' => array(
-				'title' => $lang['emajtargetmark'],
-				'field' => field('rlbk_mark'),
-			),
-			'rlbkMarkDateTime' => array(
-				'title' => $lang['emajmarksetat'],
-				'field' => field('rlbk_mark_datetime'),
-			),
-			'isLogged' => array(
-				'title' => $lang['emajislogged'],
-				'field' => field('rlbk_is_logged'),
-				'type'	=> 'callback',
-				'params'=> array('function' => array($this,'renderBoolean'),'align' => 'center')
-			),
-			'rlbkNbSession' => array(
-				'title' => $lang['emajnbsession'],
-				'field' => field('rlbk_nb_session'),
-				'params'=> array('align' => 'right'),
-			),
-			'rlbkNbTable' => array(
-				'title' => $lang['emajnbtabletoprocess'],
-				'field' => field('rlbk_eff_nb_table'),
-				'params'=> array('align' => 'right'),
-			),
-			'rlbkNbSeq' => array(
-				'title' => $lang['emajnbseqtoprocess'],
-				'field' => field('rlbk_nb_sequence'),
-				'params'=> array('align' => 'right'),
-			),
-		);
-
-		$columnsCompletedRlbk = array(
-			'rlbkId' => array(
-				'title' => $lang['emajrlbkid'],
-				'field' => field('rlbk_id'),
-				'params'=> array('align' => 'right'),
-			),
-			'rlbkGroups' => array(
-				'title' => $lang['emajgroups'],
-				'field' => field('rlbk_groups_list'),
-			),
-			'rlbkStatus' => array(
-				'title' => $lang['emajstate'],
-				'field' => field('rlbk_status'),
-			),
-			'rlbkStartDateTime' => array(
-				'title' => $lang['emajrlbkstart'],
-				'field' => field('rlbk_start_datetime'),
-				'params'=> array('align' => 'center'),
-			),
-			'rlbkEndDateTime' => array(
-				'title' => $lang['emajrlbkend'],
-				'field' => field('rlbk_end_datetime'),
-				'params'=> array('align' => 'center'),
-			),
-			'rlbkDuration' => array(
-				'title' => $lang['emajduration'],
-				'field' => field('rlbk_duration'),
-				'params'=> array('align' => 'center'),
-			),
-			'rlbkMark' => array(
-				'title' => $lang['emajtargetmark'],
-				'field' => field('rlbk_mark'),
-			),
-			'rlbkMarkDateTime' => array(
-				'title' => $lang['emajmarksetat'],
-				'field' => field('rlbk_mark_datetime'),
-			),
-			'isLogged' => array(
-				'title' => $lang['emajislogged'],
-				'field' => field('rlbk_is_logged'),
-				'type'	=> 'callback',
-				'params'=> array('function' => array($this,'renderBoolean'),'align' => 'center')
-			),
-			'rlbkNbSession' => array(
-				'title' => $lang['emajnbsession'],
-				'field' => field('rlbk_nb_session'),
-				'params'=> array('align' => 'right'),
-			),
-			'rlbkNbTable' => array(
-				'title' => $lang['emajnbproctable'],
-				'field' => field('rlbk_eff_nb_table'),
-				'params'=> array('align' => 'right'),
-			),
-			'rlbkNbSeq' => array(
-				'title' => $lang['emajnbprocseq'],
-				'field' => field('rlbk_nb_sequence'),
-				'params'=> array('align' => 'right'),
-			),
-		);
-
-		$actions = array();
-
-		// Get rollback information from the database
-		$completedRlbks = $emajdb->getCompletedRlbk($nbRlbk, $rlbkRetention);
-
-		echo "<h3>{$lang['emajinprogressrlbk']}</h3>\n";
-		if ($emajdb->isDblinkUsable()) {
-			$inProgressRlbks = $emajdb->getInProgressRlbk();
-			$misc->printTable($inProgressRlbks, $columnsInProgressRlbk, $actions, 'inProgressRlbk', $lang['emajnorlbk']);
-		} else {
-			echo "<p>{$lang['emajrlbkmonitornotavailable']}</p>\n";
-		}
-
-		echo "<h3>{$lang['emajcompletedrlbk']}</h3>\n";
-
-		// Form to setup parameters for completed rollback operations filtering
-		echo "<div style=\"margin-bottom:10px;\">\n";
-		echo "<form action=\"plugin.php?plugin={$this->name}&amp;action=filterrlbk\" method=\"post\">\n";
-		echo "{$lang['emajfilterrlbk1']} :&nbsp;&nbsp;\n";
-
-		echo "<input type=checkbox name=\"emajnbrlbkchecked\" id=\"nbrlbkchecked\"";
-		if (isset($_SESSION['emaj']['NbRlbkChecked'])) echo " checked";
-		echo "/>\n<input type=\"number\" name=\"emajRlbkNb\" style=\"width: 3em;\" id=\"rlbkNb\" min=\"1\" value=\"{$_SESSION['emaj']['RlbkNb']}\"";
-		if (!isset($_SESSION['emaj']['NbRlbkChecked'])) echo " disabled";
-		echo "/>\n{$lang['emajfilterrlbk2']}&nbsp;&nbsp;&nbsp;";
-
-		echo "<input type=checkbox name=\"emajdurationchecked\" id=\"durationchecked\"";
-		if (isset($_SESSION['emaj']['DurationChecked'])) echo " checked";
-		echo "/>\n {$lang['emajfilterrlbk3']} \n";
-		echo "<input type=\"number\" name=\"emajRlbkRetention\" style=\"width: 4em;\" id=\"rlbkRetention\" min=\"1\" value=\"{$_SESSION['emaj']['RlbkRetention']}\"";
-		if (!isset($_SESSION['emaj']['DurationChecked'])) echo " disabled";
-		echo "/>\n {$lang['emajfilterrlbk4']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-
-		echo $misc->form;
-		echo "<input type=\"submit\" name=\"filterrlbk\" value=\"{$lang['emajfilter']}\" />\n";
-		echo "</form></div>\n";
-
-		$misc->printTable($completedRlbks, $columnsCompletedRlbk, $actions, 'completedRlbk', $lang['emajnorlbk']);
-
-		// JQuery script to disable input field if the associated checkbox is not checked
-		echo "<script type=\"text/javascript\">\n";
-		echo "  $(\"#nbrlbkchecked\").bind('click', function () {\n";
-		echo "    if ($(this).prop('checked')) {\n";
-		echo "      $(\"#rlbkNb\").removeAttr('disabled');\n";
-		echo "    } else {\n";
-		echo "      $(\"#rlbkNb\").attr('disabled', true);\n";
-		echo "    }\n";
-		echo "  });\n";
-		echo "  $(\"#durationchecked\").bind('click', function () {\n";
-		echo "    if ($(this).prop('checked')) {\n";
-		echo "      $(\"#rlbkRetention\").removeAttr('disabled');\n";
-		echo "    } else {\n";
-		echo "      $(\"#rlbkRetention\").attr('disabled', true);\n";
-		echo "    }\n";
-		echo "  });\n";
-		echo "</script>\n";
-
-		// Display the E-Maj logged rollback operations that may be consolidated (i.e. transformed into unlogged rollback)
-		if ($emajdb->getNumEmajVersion() >= 20000) {			// version >= 2.0.0
-
-			$columnsConsRlbk = array(
-				'consGroup' => array(
-					'title' => $lang['emajgroup'],
-					'field' => field('cons_group'),
+		if ($emajOK) {
+			$this->printMsg($msg,$errMsg);
+	
+			if (!isset($_SESSION['emaj']['RlbkNb'])) {
+				$_SESSION['emaj']['RlbkNb'] = 3;
+				$_SESSION['emaj']['NbRlbkChecked'] = 1;
+			}
+			if (!isset($_SESSION['emaj']['RlbkRetention'])) {
+				$_SESSION['emaj']['RlbkRetention'] = 24;
+			}
+			if (!isset($_SESSION['emaj']['NbRlbkChecked'])) {
+				$nbRlbk = -1;
+			} else {
+				$nbRlbk = $_SESSION['emaj']['RlbkNb'];
+			}
+			if (!isset($_SESSION['emaj']['DurationChecked'])) {
+				$rlbkRetention = -1;
+			} else {
+				$rlbkRetention = $_SESSION['emaj']['RlbkRetention'];
+			}
+	
+			$columnsInProgressRlbk = array(
+				'rlbkId' => array(
+					'title' => $lang['emajrlbkid'],
+					'field' => field('rlbk_id'),
+					'params'=> array('align' => 'right'),
 				),
-				'consTargetMark' => array(
+				'rlbkGroups' => array(
+					'title' => $lang['emajgroups'],
+					'field' => field('rlbk_groups_list'),
+				),
+				'rlbkStatus' => array(
+					'title' => $lang['emajstate'],
+					'field' => field('rlbk_status'),
+				),
+				'rlbkStartDateTime' => array(
+					'title' => $lang['emajrlbkstart'],
+					'field' => field('rlbk_start_datetime'),
+					'params'=> array('align' => 'center'),
+				),
+				'rlbkElapse' => array(
+					'title' => $lang['emajcurrentduration'],
+					'field' => field('rlbk_current_elapse'),
+					'params'=> array('align' => 'center'),
+				),
+				'rlbkRemaining' => array(
+					'title' => $lang['emajestimremaining'],
+					'field' => field('rlbk_remaining'),
+					'params'=> array('align' => 'center'),
+				),
+				'rlbkCompletionPct' => array(
+					'title' => $lang['emajpctcompleted'],
+					'field' => field('rlbk_completion_pct'),
+					'params'=> array('align' => 'right'),
+				),
+				'rlbkMark' => array(
 					'title' => $lang['emajtargetmark'],
-					'field' => field('cons_target_rlbk_mark_name'),
+					'field' => field('rlbk_mark'),
 				),
-				'consTargetMarkDateTime' => array(
+				'rlbkMarkDateTime' => array(
 					'title' => $lang['emajmarksetat'],
-					'field' => field('cons_target_rlbk_mark_datetime'),
+					'field' => field('rlbk_mark_datetime'),
 				),
-				'rlbkNbRow' => array(
-					'title' => $lang['emajnbchanges'],
-					'field' => field('cons_rows'),
+				'isLogged' => array(
+					'title' => $lang['emajislogged'],
+					'field' => field('rlbk_is_logged'),
+					'type'	=> 'callback',
+					'params'=> array('function' => array($this,'renderBoolean'),'align' => 'center')
+				),
+				'rlbkNbSession' => array(
+					'title' => $lang['emajnbsession'],
+					'field' => field('rlbk_nb_session'),
 					'params'=> array('align' => 'right'),
 				),
-				'rlbkNbMark' => array(
-					'title' => $lang['emajnbintermediatemark'],
-					'field' => field('cons_marks'),
+				'rlbkNbTable' => array(
+					'title' => $lang['emajnbtabletoprocess'],
+					'field' => field('rlbk_eff_nb_table'),
 					'params'=> array('align' => 'right'),
 				),
-				'consEndMark' => array(
-					'title' => $lang['emajendrollbackmark'],
-					'field' => field('cons_end_rlbk_mark_name'),
-				),
-				'consEndMarkDateTime' => array(
-					'title' => $lang['emajmarksetat'],
-					'field' => field('cons_end_rlbk_mark_datetime'),
-				),
-				'actions' => array(
-					'title' => $lang['stractions'],
+				'rlbkNbSeq' => array(
+					'title' => $lang['emajnbseqtoprocess'],
+					'field' => field('rlbk_nb_sequence'),
+					'params'=> array('align' => 'right'),
 				),
 			);
-			if ($emajdb->isEmaj_Adm()) {
-				$actions = array(
-					'consolidate' => array(
-						'content' => $lang['emajconsolidate'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'plugin.php',
-								'urlvars' => array (
-									'plugin' => $this->name,
-									'action' => 'consolidate_rollback',
-									'group' => field('cons_group'),
-									'mark' => field('cons_end_rlbk_mark_name'),
-								)))
+	
+			$columnsCompletedRlbk = array(
+				'rlbkId' => array(
+					'title' => $lang['emajrlbkid'],
+					'field' => field('rlbk_id'),
+					'params'=> array('align' => 'right'),
+				),
+				'rlbkGroups' => array(
+					'title' => $lang['emajgroups'],
+					'field' => field('rlbk_groups_list'),
+				),
+				'rlbkStatus' => array(
+					'title' => $lang['emajstate'],
+					'field' => field('rlbk_status'),
+				),
+				'rlbkStartDateTime' => array(
+					'title' => $lang['emajrlbkstart'],
+					'field' => field('rlbk_start_datetime'),
+					'params'=> array('align' => 'center'),
+				),
+				'rlbkEndDateTime' => array(
+					'title' => $lang['emajrlbkend'],
+					'field' => field('rlbk_end_datetime'),
+					'params'=> array('align' => 'center'),
+				),
+				'rlbkDuration' => array(
+					'title' => $lang['emajduration'],
+					'field' => field('rlbk_duration'),
+					'params'=> array('align' => 'center'),
+				),
+				'rlbkMark' => array(
+					'title' => $lang['emajtargetmark'],
+					'field' => field('rlbk_mark'),
+				),
+				'rlbkMarkDateTime' => array(
+					'title' => $lang['emajmarksetat'],
+					'field' => field('rlbk_mark_datetime'),
+				),
+				'isLogged' => array(
+					'title' => $lang['emajislogged'],
+					'field' => field('rlbk_is_logged'),
+					'type'	=> 'callback',
+					'params'=> array('function' => array($this,'renderBoolean'),'align' => 'center')
+				),
+				'rlbkNbSession' => array(
+					'title' => $lang['emajnbsession'],
+					'field' => field('rlbk_nb_session'),
+					'params'=> array('align' => 'right'),
+				),
+				'rlbkNbTable' => array(
+					'title' => $lang['emajnbproctable'],
+					'field' => field('rlbk_eff_nb_table'),
+					'params'=> array('align' => 'right'),
+				),
+				'rlbkNbSeq' => array(
+					'title' => $lang['emajnbprocseq'],
+					'field' => field('rlbk_nb_sequence'),
+					'params'=> array('align' => 'right'),
+				),
+			);
+	
+			$actions = array();
+	
+			// Get rollback information from the database
+			$completedRlbks = $emajdb->getCompletedRlbk($nbRlbk, $rlbkRetention);
+	
+			echo "<h3>{$lang['emajinprogressrlbk']}</h3>\n";
+			if ($emajdb->isDblinkUsable()) {
+				$inProgressRlbks = $emajdb->getInProgressRlbk();
+				$misc->printTable($inProgressRlbks, $columnsInProgressRlbk, $actions, 'inProgressRlbk', $lang['emajnorlbk']);
+			} else {
+				echo "<p>{$lang['emajrlbkmonitornotavailable']}</p>\n";
+			}
+	
+			echo "<h3>{$lang['emajcompletedrlbk']}</h3>\n";
+	
+			// Form to setup parameters for completed rollback operations filtering
+			echo "<div style=\"margin-bottom:10px;\">\n";
+			echo "<form action=\"plugin.php?plugin={$this->name}&amp;action=filterrlbk\" method=\"post\">\n";
+			echo "{$lang['emajfilterrlbk1']} :&nbsp;&nbsp;\n";
+	
+			echo "<input type=checkbox name=\"emajnbrlbkchecked\" id=\"nbrlbkchecked\"";
+			if (isset($_SESSION['emaj']['NbRlbkChecked'])) echo " checked";
+			echo "/>\n<input type=\"number\" name=\"emajRlbkNb\" style=\"width: 3em;\" id=\"rlbkNb\" min=\"1\" value=\"{$_SESSION['emaj']['RlbkNb']}\"";
+			if (!isset($_SESSION['emaj']['NbRlbkChecked'])) echo " disabled";
+			echo "/>\n{$lang['emajfilterrlbk2']}&nbsp;&nbsp;&nbsp;";
+	
+			echo "<input type=checkbox name=\"emajdurationchecked\" id=\"durationchecked\"";
+			if (isset($_SESSION['emaj']['DurationChecked'])) echo " checked";
+			echo "/>\n {$lang['emajfilterrlbk3']} \n";
+			echo "<input type=\"number\" name=\"emajRlbkRetention\" style=\"width: 4em;\" id=\"rlbkRetention\" min=\"1\" value=\"{$_SESSION['emaj']['RlbkRetention']}\"";
+			if (!isset($_SESSION['emaj']['DurationChecked'])) echo " disabled";
+			echo "/>\n {$lang['emajfilterrlbk4']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+	
+			echo $misc->form;
+			echo "<input type=\"submit\" name=\"filterrlbk\" value=\"{$lang['emajfilter']}\" />\n";
+			echo "</form></div>\n";
+	
+			$misc->printTable($completedRlbks, $columnsCompletedRlbk, $actions, 'completedRlbk', $lang['emajnorlbk']);
+	
+			// JQuery script to disable input field if the associated checkbox is not checked
+			echo "<script type=\"text/javascript\">\n";
+			echo "  $(\"#nbrlbkchecked\").bind('click', function () {\n";
+			echo "    if ($(this).prop('checked')) {\n";
+			echo "      $(\"#rlbkNb\").removeAttr('disabled');\n";
+			echo "    } else {\n";
+			echo "      $(\"#rlbkNb\").attr('disabled', true);\n";
+			echo "    }\n";
+			echo "  });\n";
+			echo "  $(\"#durationchecked\").bind('click', function () {\n";
+			echo "    if ($(this).prop('checked')) {\n";
+			echo "      $(\"#rlbkRetention\").removeAttr('disabled');\n";
+			echo "    } else {\n";
+			echo "      $(\"#rlbkRetention\").attr('disabled', true);\n";
+			echo "    }\n";
+			echo "  });\n";
+			echo "</script>\n";
+	
+			// Display the E-Maj logged rollback operations that may be consolidated (i.e. transformed into unlogged rollback)
+			if ($emajdb->getNumEmajVersion() >= 20000) {			// version >= 2.0.0
+	
+				$columnsConsRlbk = array(
+					'consGroup' => array(
+						'title' => $lang['emajgroup'],
+						'field' => field('cons_group'),
+					),
+					'consTargetMark' => array(
+						'title' => $lang['emajtargetmark'],
+						'field' => field('cons_target_rlbk_mark_name'),
+					),
+					'consTargetMarkDateTime' => array(
+						'title' => $lang['emajmarksetat'],
+						'field' => field('cons_target_rlbk_mark_datetime'),
+					),
+					'rlbkNbRow' => array(
+						'title' => $lang['emajnbchanges'],
+						'field' => field('cons_rows'),
+						'params'=> array('align' => 'right'),
+					),
+					'rlbkNbMark' => array(
+						'title' => $lang['emajnbintermediatemark'],
+						'field' => field('cons_marks'),
+						'params'=> array('align' => 'right'),
+					),
+					'consEndMark' => array(
+						'title' => $lang['emajendrollbackmark'],
+						'field' => field('cons_end_rlbk_mark_name'),
+					),
+					'consEndMarkDateTime' => array(
+						'title' => $lang['emajmarksetat'],
+						'field' => field('cons_end_rlbk_mark_datetime'),
+					),
+					'actions' => array(
+						'title' => $lang['stractions'],
 					),
 				);
-			} else {
-				$actions = array();
+				if ($emajdb->isEmaj_Adm()) {
+					$actions = array(
+						'consolidate' => array(
+							'content' => $lang['emajconsolidate'],
+							'attr' => array (
+								'href' => array (
+									'url' => 'plugin.php',
+									'urlvars' => array (
+										'plugin' => $this->name,
+										'action' => 'consolidate_rollback',
+										'group' => field('cons_group'),
+										'mark' => field('cons_end_rlbk_mark_name'),
+									)))
+						),
+					);
+				} else {
+					$actions = array();
+				}
+				// Get rollback information from the database
+				$consolidableRlbks = $emajdb->getConsolidableRlbk();
+	
+				echo "<h3>{$lang['emajconsolidablerlbk']}</h3>\n";
+				$inProgressRlbks = $emajdb->getInProgressRlbk();
+				$misc->printTable($consolidableRlbks, $columnsConsRlbk, $actions, 'consolidableRlbk', $lang['emajnorlbk']);
 			}
-			// Get rollback information from the database
-			$consolidableRlbks = $emajdb->getConsolidableRlbk();
-
-			echo "<h3>{$lang['emajconsolidablerlbk']}</h3>\n";
-			$inProgressRlbks = $emajdb->getInProgressRlbk();
-			$misc->printTable($consolidableRlbks, $columnsConsRlbk, $actions, 'consolidableRlbk', $lang['emajnorlbk']);
 		}
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -1195,9 +1194,10 @@ class Emaj extends Plugin {
 	function emaj_envir() {
 		global $misc, $lang, $emajdb;
 
-		$this->printPageHeader('emaj','emajenvir');
+		$this->printPageHeader('emaj', 'emajenvir', 'action=emaj_envir');
 
-		$emajOK = $this->printEmajHeader("action=emaj_envir",$lang['emajenvironment']);
+		$emajOK = 1;
+
 		// check if E-Maj is installed in the current database
 		if (! $emajdb->isEnabled()) {
 			// emaj is not installed, check if the extension is available
@@ -1267,7 +1267,6 @@ class Emaj extends Plugin {
 			$misc->printTable($messages, $columns, $actions, 'checks');
 		}
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -1277,9 +1276,9 @@ class Emaj extends Plugin {
 	function show_group($msg = '', $errMsg = '') {
 		global $misc, $lang, $emajdb;
 
-		$this->printPageHeader('emajgroup','emajgroupproperties');
+		$this->printPageHeader('emajgroup', 'emajgroupproperties', 'action=show_group&amp;group='.urlencode($_REQUEST['group']));
 
-		$emajOK = $this->printEmajHeader("action=show_group&amp;group=".urlencode($_REQUEST['group']),sprintf($lang['emajgrouppropertiesmarks'],htmlspecialchars($_REQUEST['group'])));
+		$emajOK = $this->checkEmajExtension();
 
 		if ($emajOK) {
 			$this->printMsg($msg,$errMsg);
@@ -1607,7 +1606,6 @@ class Emaj extends Plugin {
 			echo "</script>\n";
 		}
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -1617,26 +1615,28 @@ class Emaj extends Plugin {
 	function log_stat_group() {
 		global $misc, $lang, $emajdb;
 
-		$this->printPageHeader('emajgroup','emajlogstat');
+		$this->printPageHeader('emajgroup', 'emajlogstat', 'action=log_stat_group&amp;group='.urlencode($_REQUEST['group']));
 
-		$globalStat = false; $detailedStat = false; $simRlbk = false;
-		if (isset($_REQUEST['simrlbk'])) {
-			$simRlbk = true;
-		}
-		if (isset($_REQUEST['globalstatgroup'])) {
-			$globalStat = true;
-			$urlExt = 'globalstatgroup='.urlencode($_REQUEST['globalstatgroup']);
-		}
-		if (isset($_REQUEST['detailedstatgroup'])) {
-			$detailedStat = true;
-			$urlExt = 'detailedstatgroup='.urlencode($_REQUEST['detailedstatgroup']);
-		}
+		echo "<h3>" . sprintf($lang['emajshowstat'], htmlspecialchars($_REQUEST['group'])) . "</h3>\n";
 
-		$emajOK = $this->printEmajHeader("action=log_stat_group&amp;group=".urlencode($_REQUEST['group']),sprintf($lang['emajshowstat'], htmlspecialchars($_REQUEST['group'])));
+		$emajOK = $this->checkEmajExtension();
 
 		if ($emajOK) {
 
-		// display the stat form
+			// display the stat form
+
+			$globalStat = false; $detailedStat = false; $simRlbk = false;
+			if (isset($_REQUEST['simrlbk'])) {
+				$simRlbk = true;
+			}
+			if (isset($_REQUEST['globalstatgroup'])) {
+				$globalStat = true;
+				$urlExt = 'globalstatgroup='.urlencode($_REQUEST['globalstatgroup']);
+			}
+			if (isset($_REQUEST['detailedstatgroup'])) {
+				$detailedStat = true;
+				$urlExt = 'detailedstatgroup='.urlencode($_REQUEST['detailedstatgroup']);
+			}
 
 			// get marks from database
 			$marks = $emajdb->getMarks($_REQUEST['group']);
@@ -1782,7 +1782,6 @@ class Emaj extends Plugin {
 			}
 		}
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -2069,9 +2068,11 @@ class Emaj extends Plugin {
 	function show_content_group() {
 		global $misc, $lang, $emajdb;
 
-		$this->printPageHeader('emajgroup','emajcontent');
+		$this->printPageHeader('emajgroup', 'emajcontent', 'action=show_content_group&amp;group='.urlencode($_REQUEST['group']));
 
-		$emajOK = $this->printEmajHeader("action=show_content_group&amp;group=".urlencode($_REQUEST['group']),sprintf($lang['emajgroupcontent'],htmlspecialchars($_REQUEST['group'])));
+		echo "<h3>" . sprintf($lang['emajgroupcontent'],htmlspecialchars($_REQUEST['group'])) . "</h3>\n";
+
+		$emajOK = $this->checkEmajExtension();
 
 		if ($emajOK) {
 
@@ -2146,7 +2147,6 @@ class Emaj extends Plugin {
 				$misc->printTable($groupContent, $columns, $actions, 'groupContent', null, null, array('sorter' => true, 'filter' => true));
 			}
 		}
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -2336,7 +2336,6 @@ class Emaj extends Plugin {
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";
 		echo "</form>\n";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -2507,7 +2506,6 @@ class Emaj extends Plugin {
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate /></p>\n";
 		echo "</form>\n";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -2599,7 +2597,6 @@ class Emaj extends Plugin {
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -2681,7 +2678,6 @@ class Emaj extends Plugin {
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -2731,7 +2727,6 @@ class Emaj extends Plugin {
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -2812,7 +2807,6 @@ class Emaj extends Plugin {
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -2927,7 +2921,6 @@ class Emaj extends Plugin {
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -3012,7 +3005,6 @@ class Emaj extends Plugin {
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -3091,7 +3083,6 @@ class Emaj extends Plugin {
 		echo "  });\n";
 		echo "</script>";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -3199,7 +3190,6 @@ class Emaj extends Plugin {
 		echo "  });\n";
 		echo "</script>";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -3269,7 +3259,6 @@ class Emaj extends Plugin {
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -3352,7 +3341,6 @@ class Emaj extends Plugin {
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -3404,7 +3392,6 @@ class Emaj extends Plugin {
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -3555,7 +3542,6 @@ class Emaj extends Plugin {
 		echo "  });\n";
 		echo "</script>";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -3662,7 +3648,6 @@ class Emaj extends Plugin {
 		echo "  });\n";
 		echo "</script>";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -3789,7 +3774,6 @@ class Emaj extends Plugin {
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -3857,7 +3841,6 @@ class Emaj extends Plugin {
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -3961,7 +3944,6 @@ class Emaj extends Plugin {
 				echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 				echo "</form>\n";
 
-				$this->printEmajFooter();
 				$misc->printFooter();
 
 			} else {
@@ -4143,7 +4125,6 @@ class Emaj extends Plugin {
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -4238,7 +4219,6 @@ class Emaj extends Plugin {
 				echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 				echo "</form>\n";
 
-				$this->printEmajFooter();
 				$misc->printFooter();
 
 			} else {
@@ -4356,7 +4336,6 @@ class Emaj extends Plugin {
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -4421,7 +4400,6 @@ class Emaj extends Plugin {
 		echo "  });\n";
 		echo "</script>";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -4469,7 +4447,6 @@ class Emaj extends Plugin {
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -4524,7 +4501,6 @@ class Emaj extends Plugin {
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -4576,7 +4552,6 @@ class Emaj extends Plugin {
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 
-		$this->printEmajFooter();
 		$misc->printFooter();
 	}
 
@@ -4610,66 +4585,37 @@ class Emaj extends Plugin {
 	/**
 	 * Generate the page header including the trail and the tabs
 	 */
-	function printPageHeader($tabs ='emaj',$tab = 'emajgroups') {
+	function printPageHeader($tabs = 'emaj', $tab = 'emajgroups', $urlvar = '') {
 		global $misc, $lang;
 
 		$misc->printHeader($lang['emajplugin']);
 		$misc->printBody();
 		if ($tabs == 'emaj') {
-			$misc->printTrail('database');
+			$misc->printTrail('database', $urlvar);
 		} else {
-			$misc->printTrail('emaj');
+			$misc->printTrail('emaj', $urlvar);
 		}
 		$misc->printTabs($tabs,$tab);
 		return ;
 	}
 
 	/**
-	 * Display the emaj header line including the version number
+	 * Check that the emaj extension exists in the current database, is accessible by the current user and is not too old
 	 */
-	function printEmajHeader($urlvar,$title) {
+	function checkEmajExtension() {
 		global $lang, $misc, $emajdb;
-	// $urlvar is the piece of the url containing the variables needed to refresh the page
 
 	// For all but the emaj_envir functions,
-		if ($urlvar != 'action=emaj_envir') {
-			// if Emaj is not usable for this database, only display a message
-			if (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
-				  && $emajdb->getNumEmajVersion() >= $this->oldest_supported_emaj_version_num)) {
-				echo "<div class=\"topbar\"><table style=\"width: 100%\"><tr><td><span class=\"platform\">";
-				$link = "<a href=\"plugin.php?plugin={$this->name}&amp;action=emaj_envir&amp;{$misc->href}\">\"{$lang['emajenvir']}\"</a>";
-				echo sprintf($lang['emajnotavail'], $link);
-				echo "</span></td></tr></table></div>";
-				return 0;
-			}
+		// if Emaj is not usable for this database, only display a message
+		if (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
+			  && $emajdb->getNumEmajVersion() >= $this->oldest_supported_emaj_version_num)) {
+			echo "<div class=\"topbar\"><table style=\"width: 100%\"><tr><td><span class=\"platform\">";
+			$link = "<a href=\"plugin.php?plugin={$this->name}&amp;action=emaj_envir&amp;{$misc->href}\">\"{$lang['emajenvir']}\"</a>";
+			echo sprintf($lang['emajnotavail'], $link);
+			echo "</span></td></tr></table></div>";
+			return 0;
 		}
-
-		// generate the E-Maj header
-		$currTime = date('H:i:s');
-		if (isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
-			&& $emajdb->getNumEmajVersion() >= $this->oldest_supported_emaj_version_num) {
-			$emajVersion = "E-Maj&nbsp;{$emajdb->getEmajVersion()}&nbsp;&nbsp;-&nbsp;&nbsp;";
-		} else {
-			$emajVersion = '';
-		}
-		echo "<div class=\"topbar\"><table style=\"width: 100%\"><tr>\n";
-		echo "<td style=\"width:15px\"><a href=\"plugin.php?plugin={$this->name}&amp;{$urlvar}&amp;{$misc->href}\"><img src=\"{$misc->icon('Refresh')}\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\" /></a></td>\n";
-		echo "<td><span class=\"platform\">{$currTime}&nbsp;&nbsp;";
-		echo "{$emajVersion}{$title}</span></td>\n";
-		echo "<td style=\"width:15px\"><a href=\"#bottom\"><img src=\"{$misc->icon(array($this->name,'Bottom'))}\" alt=\"{$lang['emajpagebottom']}\" title=\"{$lang['emajpagebottom']}\" /></a></td>\n";
-		echo "</tr></table></div>\n";
-
 		return 1;
-	}
-
-	/**
-	 * Display the emaj footer
-	 */
-	function printEmajFooter() {
-
-		echo "<div class=\"footer\"><a name=\"bottom\">&nbsp;</a></div>\n";
-
-		return;
 	}
 
 	/**

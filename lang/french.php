@@ -69,7 +69,7 @@
 	$lang['strexecute'] = 'Lancer';
 	$lang['strconfirm'] = 'Confirmer';
 	$lang['strellipsis'] = '...';
-	$lang['strseparator'] = ' :';
+	$lang['strseparator'] = ' : ';
 	$lang['strexpand'] = 'Étendre';
 	$lang['strcollapse'] = 'Réduire';
 	$lang['strfind'] = 'Rechercher';
@@ -226,7 +226,7 @@
 	$lang['strtablespace'] = 'Tablespace';
 
 	// Miscellaneous
-	$lang['strtopbar'] = '%s lancé sur %s:%s -- Vous êtes connecté avec le profil « %s »';
+	$lang['strtopbar'] = 'Connexion : %s:%s (%s) - rôle « %s »';
 	$lang['strlogintitle'] = 'Se connecter à %s';
 	$lang['strlogoutmsg'] = 'Déconnecté de %s';
 	$lang['strloading'] = 'Chargement...';

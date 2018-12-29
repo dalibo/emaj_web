@@ -441,7 +441,6 @@
 			return $data;
 		}
 
-
 		/**
 		 * Prints the page header.  If global variable $_no_output is
 		 * set then no header is drawn.
@@ -499,9 +498,9 @@
 			if ($doBody) {
 				if (isset($_reload_browser)) $this->printReload(false);
 				elseif (isset($_reload_drop_database)) $this->printReload(true);
-				if (!isset($_no_bottom_link)) 
-					echo "<a href=\"#\" class=\"bottom_link\">".$lang['strgotoppage']."</a>";
-
+				if (!isset($_no_bottom_link))
+					echo "<a href=\"#\" class=\"bottom_link\"><img src=\"{$this->icon('Top')}\" alt=\"{$lang['strgotoppage']}\" title=\"{$lang['strgotoppage']}\"/></a>";
+				echo "<div class=\"footer\"><a name=\"bottom\">&nbsp;</a></div>\n";
 				echo "</body>\n";
 			}
 			echo "</html>\n";
@@ -833,11 +832,10 @@
 			if ($server_info && isset($server_info['platform']) && isset($server_info['username'])) {
 				/* top left informations when connected */
 				echo sprintf($lang['strtopbar'],
-					'<span class="platform">'.htmlspecialchars($server_info['platform']).'</span>',
 					'<span class="host">'.htmlspecialchars((empty($server_info['host'])) ? 'localhost':$server_info['host']).'</span>',
 					'<span class="port">'.htmlspecialchars($server_info['port']).'</span>',
+					'<span class="platform">'.htmlspecialchars($server_info['platform']).'</span>',
 					'<span class="username">'.htmlspecialchars($server_info['username']).'</span>');
-
 				echo "</td>";
 
 				/* top right informations when connected */
@@ -883,11 +881,6 @@
 					)
 				);
 
-				// Toplink hook's place
-				$plugin_functions_parameters = array(
-					'toplinks' => &$toplinks
-				);
-
 				$plugin_manager->do_hook('toplinks', $plugin_functions_parameters);
 
 				echo "<td style=\"text-align: right\">";
@@ -927,7 +920,7 @@
 			else {
 				echo "<span class=\"appname\">{$appName}</span> <span class=\"version\">{$appVersion}</span>";
 			}
-/*
+
 			echo "<td style=\"text-align: right; width: 1%\">";
 
 			echo "<form method=\"get\"><select name=\"language\" onchange=\"this.form.submit()\">\n";
@@ -946,14 +939,15 @@
 			echo "</form>\n";
 
 			echo "</td>";
-*/
+
 			echo "</tr></table></div>\n";
 		}
 
 		/**
 		 * Display a bread crumb trail.
+		 * ... and the buttons to refresh the page and to go to the page bottom
 		 */
-		function printTrail($trail = array()) {
+		function printTrail($trail = array(), $urlvar = '') {
 			global $lang;
 
 			$this->printTopbar();
@@ -962,10 +956,16 @@
 				$trail = $this->getTrail($trail);
 			}
 
-			echo "<div class=\"trail\"><table><tr>";
+			echo "<div class=\"trail\" style=\"display:flex; justify-content:space-between; padding: 5px;\">\n";
+			echo "  <div class=\"crumb\">\n";
 
+			$firstElement = 1;
 			foreach ($trail as $crumb) {
-				echo "<td class=\"crumb\">";
+				if (!$firstElement)
+					echo " &gt; ";
+
+				$firstElement = 0;
+
 				$crumblink = "<a";
 
 				if (isset($crumb['url']))
@@ -987,12 +987,22 @@
 				$crumblink .= "<span class=\"label\">" . htmlspecialchars($crumb['text']) . "</span></a>";
 
 				echo $crumblink;
-
-				echo "{$lang['strseparator']}";
-				echo "</td>";
 			}
+			echo "  </div>\n";
 
-			echo "</tr></table></div>\n";
+			// right cell containing the refresh and bottom buttons
+			$uri = $_SERVER['REQUEST_URI'];
+			if ($uri != '' && strpos($uri,html_entity_decode($urlvar)) === false) {
+				$uri .= '&amp;' . $urlvar;
+			}
+			if (strpos($uri,'server=') === false) {
+				$uri .= '&amp;' . $this->href ;
+			}
+			echo "<div>\n";
+			echo "<a href=\"{$uri}\"><img src=\"{$this->icon('Refresh')}\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\" style=\"cursor:pointer; padding:1px 5px 1px 5px;\"/></a>\n";
+			echo "<a href=\"#bottom\"><img src=\"{$this->icon('Bottom')}\" alt=\"{$lang['emajpagebottom']}\" title=\"{$lang['emajpagebottom']}\"  style=\"padding:1px 5px 1px 5px;\"/></a>\n";
+			echo "</div>\n";
+			echo "</div>\n";
 		}
 
 		/**
@@ -1578,160 +1588,6 @@
 				return false;
 			}
 		}
-//		function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null) {
-//			global $data, $conf, $misc, $lang, $plugin_manager;
-//
-//			// Action buttons hook's place
-//			$plugin_functions_parameters = array(
-//				'actionbuttons' => &$actions,
-//				'place' => $place
-//			);
-//			$plugin_manager->do_hook('actionbuttons', $plugin_functions_parameters);
-//
-//			if ($has_ma = isset($actions['multiactions']))
-//				$ma = $actions['multiactions'];
-//			unset($actions['multiactions']);
-//
-//			if ($tabledata->recordCount() > 0) {
-//
-//				// Remove the 'comment' column if they have been disabled
-//				if (!$conf['show_comments']) {
-//					unset($columns['comment']);
-//				}
-//
-//				if (isset($columns['comment'])) {
-//					// Uncomment this for clipped comments.
-//					// TODO: This should be a user option.
-//					//$columns['comment']['params']['clip'] = true;
-//				}
-//
-//				if ($has_ma) {
-//					echo "<script src=\"multiactionform.js\" type=\"text/javascript\"></script>\n";
-//					echo "<form id=\"multi_form\" action=\"{$ma['url']}\" method=\"post\" enctype=\"multipart/form-data\">\n";
-//					if (isset($ma['vars']))
-//						foreach ($ma['vars'] as $k => $v)
-//							echo "<input type=\"hidden\" name=\"$k\" value=\"$v\" />";
-//				}
-//
-//				echo "<table>\n";
-//				echo "<tr>\n";
-//				// Display column headings
-//				if ($has_ma) echo "<th></th>";
-//				foreach ($columns as $column_id => $column) {
-//					switch ($column_id) {
-//						case 'actions':
-//							if (sizeof($actions) > 0) echo "<th class=\"data\" colspan=\"", count($actions), "\">{$column['title']}</th>\n";
-//							break;
-//						default:
-//							echo "<th class=\"data\">";
-//							echo $column['title'];
-//							echo "</th>\n";
-//							break;
-//					}
-//				}
-//				echo "</tr>\n";
-//
-//				// Display table rows
-//				$i = 0;
-//				while (!$tabledata->EOF) {
-//					$id = ($i % 2) + 1;
-//
-//					unset($alt_actions);
-//					if (!is_null($pre_fn)) $alt_actions = $pre_fn($tabledata, $actions);
-//					if (!isset($alt_actions)) $alt_actions =& $actions;
-//
-//					echo "<tr class=\"data{$id}\">\n";
-//					if ($has_ma) {
-//						foreach ($ma['keycols'] as $k => $v)
-//							$a[$k] = $tabledata->fields[$v];
-//						echo "<td>";
-//						echo "<input type=\"checkbox\" name=\"ma[]\" value=\"". htmlentities(serialize($a), ENT_COMPAT, 'UTF-8') ."\" />";
-//						echo "</td>\n";
-//					}
-//
-//					foreach ($columns as $column_id => $column) {
-//
-//						// Apply default values for missing parameters
-//						if (isset($column['url']) && !isset($column['vars'])) $column['vars'] = array();
-//
-//						switch ($column_id) {
-//							case 'actions':
-//								foreach ($alt_actions as $action) {
-//									if (isset($action['disable']) && $action['disable'] === true) {
-//										echo "<td></td>\n";
-//									} else {
-//										echo "<td class=\"opbutton{$id}\">";
-//										$action['fields'] = $tabledata->fields;
-//										$this->printLink($action);
-//										echo "</td>\n";
-//									}
-//								}
-//								break;
-//							default:
-//								echo "<td>";
-//								$val = value($column['field'], $tabledata->fields);
-//								if (!is_null($val)) {
-//									if (isset($column['url'])) {
-//										echo "<a href=\"{$column['url']}";
-//										$misc->printUrlVars($column['vars'], $tabledata->fields);
-//										echo "\">";
-//									}
-//									$type = isset($column['type']) ? $column['type'] : null;
-//									$params = isset($column['params']) ? $column['params'] : array();
-//									echo $misc->printVal($val, $type, $params);
-//									if (isset($column['url'])) echo "</a>";
-//								}
-//
-//								echo "</td>\n";
-//								break;
-//						}
-//					}
-//					echo "</tr>\n";
-//
-//					$tabledata->moveNext();
-//					$i++;
-//				}
-//				echo "</table>\n";
-//
-//				// Multi action table footer w/ options & [un]check'em all
-//				if ($has_ma) {
-//					// if default is not set or doesn't exist, set it to null
-//					if (!isset($ma['default']) || !isset($actions[$ma['default']]))
-//						$ma['default'] = null;
-//					echo "<br />\n";
-//					echo "<table>\n";
-//					echo "<tr>\n";
-//					echo "<th class=\"data\" style=\"text-align: left\" colspan=\"3\">{$lang['stractionsonmultiplelines']}</th>\n";
-//					echo "</tr>\n";
-//					echo "<tr class=\"row1\">\n";
-//					echo "<td>";
-//					echo "<a href=\"#\" onclick=\"javascript:checkAll(true);\">{$lang['strselectall']}</a> / ";
-//					echo "<a href=\"#\" onclick=\"javascript:checkAll(false);\">{$lang['strunselectall']}</a></td>\n";
-//					echo "<td>&nbsp;--->&nbsp;</td>\n";
-//					echo "<td>\n";
-//					echo "\t<select name=\"action\">\n";
-//					if ($ma['default'] == null)
-//						echo "\t\t<option value=\"\">--</option>\n";
-//					foreach($actions as $k => $a)
-//						if (isset($a['multiaction']))
-//							echo "\t\t<option value=\"{$a['multiaction']}\"", ($ma['default']  == $k? ' selected="selected"': ''), ">{$a['content']}</option>\n";
-//					echo "\t</select>\n";
-//					echo "<input type=\"submit\" value=\"{$lang['strexecute']}\" />\n";
-//					echo $misc->form;
-//					echo "</td>\n";
-//					echo "</tr>\n";
-//					echo "</table>\n";
-//					echo '</form>';
-//				};
-//
-//				return true;
-//			} else {
-//				if (!is_null($nodata)) {
-//					echo "<p>{$nodata}</p>\n";
-//				}
-//				return false;
-//			}
-//		}
 
 		/** Produce XML data for the browser tree
 		 * @param $treedata A set of records to populate the tree.

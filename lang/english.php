@@ -226,7 +226,7 @@
 	$lang['strtablespace'] = 'Tablespace';
 
 	// Miscellaneous
-	$lang['strtopbar'] = '%s running on %s:%s -- You are logged in as user "%s"';
+	$lang['strtopbar'] = 'Connection: %s:%s (%s) - role "%s"';
 	$lang['strlogintitle'] = 'Login to %s';
 	$lang['strlogoutmsg'] = 'Logged out of %s';
 	$lang['strloading'] = 'Loading...';

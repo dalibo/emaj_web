@@ -23,21 +23,6 @@
 
 <form method="get" action="intro.php">
 <table>
-	<tr class="data1">
-		<th class="data"><?php echo $lang['strlanguage'] ?></th>
-		<td>
-			<select name="language" onchange="this.form.submit()">
-			<?php
-			$language = isset($_SESSION['webdbLanguage']) ? $_SESSION['webdbLanguage'] : 'english';
-			foreach ($appLangFiles as $k => $v) {
-				echo "\t<option value=\"{$k}\"",
-					($k == $language) ? ' selected="selected"' : '',
-					">{$v}</option>\n";
-			}
-			?>
-			</select>
-		</td>
-	</tr>
 	<tr class="data2">
 		<th class="data"><?php echo $lang['strtheme'] ?></th>
 		<td>

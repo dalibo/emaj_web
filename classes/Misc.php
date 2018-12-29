@@ -834,7 +834,6 @@
 				echo sprintf($lang['strtopbar'],
 					'<span class="host">'.htmlspecialchars((empty($server_info['host'])) ? 'localhost':$server_info['host']).'</span>',
 					'<span class="port">'.htmlspecialchars($server_info['port']).'</span>',
-					'<span class="platform">'.htmlspecialchars($server_info['platform']).'</span>',
 					'<span class="username">'.htmlspecialchars($server_info['username']).'</span>');
 				echo "</td>";
 

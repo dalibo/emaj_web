@@ -1215,9 +1215,15 @@ class Emaj extends Plugin {
 			}
 		}
 
+		// Version section
+		echo "<h3>{$lang['emajversions']}</h3>\n";
+
+		// display the postgres version
+		$server_info = $misc->getServerInfo();
+		preg_match('/PostgreSQL (.*)/',$server_info['platform'], $pgVersion);
+		echo "<p>{$lang['emajpgversion']}{$pgVersion[1]}</p>\n";
+
 		if ($emajOK) {
-			// Version section
-			echo "<h3>{$lang['emajversions']}</h3>\n";
 			if ($emajdb->isExtension()) {
 				$installationMode = $lang['emajasextension'];
 			} else {

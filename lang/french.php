@@ -226,7 +226,7 @@
 	$lang['strtablespace'] = 'Tablespace';
 
 	// Miscellaneous
-	$lang['strtopbar'] = 'Connexion : %s:%s (%s) - rôle « %s »';
+	$lang['strtopbar'] = 'Connexion : %s:%s - rôle « %s »';
 	$lang['strlogintitle'] = 'Se connecter à %s';
 	$lang['strlogoutmsg'] = 'Déconnecté de %s';
 	$lang['strloading'] = 'Chargement...';
@@ -284,6 +284,7 @@
 	$lang['emajnogrant'] = 'Votre rôle de connexion n\'a pas les droits d\'utilisation d\'E-Maj. Utilisez un autre rôle ou contactez votre administrateur des bases de données.';
 	$lang['emajcharacteristics'] = 'Caractéristiques';
 	$lang['emajversions'] = 'Versions';
+	$lang['emajpgversion'] = 'Version PostgreSQL : ';
 	$lang['emajversion'] = 'Version E-Maj : ';
 	$lang['emajasextension'] = 'installée comme extension';
 	$lang['emajasscript'] = 'installée par script';

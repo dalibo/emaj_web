@@ -1699,7 +1699,7 @@ class Emaj extends Plugin {
 				// JQuery to set the selected start mark by default 
 				// (the previous requested start mark or the first mark if no stat are already displayed)
 				if (isset($_REQUEST['rangestart'])) {
-					echo "  $(\"#rangestart option[value={$_REQUEST['rangestart']}]\").attr(\"selected\", true);\n";
+					echo "  $(\"#rangestart option[value='{$_REQUEST['rangestart']}']\").attr(\"selected\", true);\n";
 				} else {
 					echo "  $(\"#rangestart option:first-child\").attr(\"selected\", true);\n";
 				}
@@ -1707,7 +1707,7 @@ class Emaj extends Plugin {
 				// JQuery to set the selected end mark by default 
 				// (the previous requested end mark or the current situation if no stat are already displayed)
 				if (isset($_REQUEST['rangeend'])) {
-					echo "  $(\"#rangeend option[value={$_REQUEST['rangeend']}]\").attr(\"selected\", true);\n";
+					echo "  $(\"#rangeend option[value='{$_REQUEST['rangeend']}']\").attr(\"selected\", true);\n";
 				} else {
 					echo "  $(\"#rangeend option:first-child\").attr(\"selected\", true);\n";
 				}

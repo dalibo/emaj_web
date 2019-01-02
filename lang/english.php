@@ -391,8 +391,8 @@
 	$lang['emajconsolidate'] = 'Consolidate';
 	$lang['emajconsolidaterlbk'] = 'Consolidate a logged rollback';
 	$lang['emajconfirmconsolidaterlbk'] = 'Are you sure you want to consolidate the rollback ended with the mark "%s" of the tables group "%s"?';
-	$lang['emajconsolidaterlbkok'] = 'The rollback ended with the mark "%s" of tables group "%s" has been consolidated.';
-	$lang['emajconsolidaterlbkerr'] = 'Error while consolidating the rollback ended by the mark "%s" of tables group "%s"!';
+	$lang['emajconsolidaterlbkok'] = 'The rollback ended with the mark "%s" of the tables group "%s" has been consolidated.';
+	$lang['emajconsolidaterlbkerr'] = 'Error while consolidating the rollback ended by the mark "%s" of the tables group "%s"!';
 
 	// Group's properties and marks
 	$lang['emajgrouppropertiesmarks'] = 'Tables group "%s" properties and marks';
@@ -411,15 +411,15 @@
 	$lang['emajunprotect'] = 'Unprotect';
 
 	// Statistics
-	$lang['emajshowstat'] = 'Statistics from E-Maj log for group "%s"';
-	$lang['emajcurrentsituation'] = 'Current situation';
+	$lang['emajshowstat'] = 'Statistics from E-Maj logs for the group "%s"';
+	$lang['emajcurrentsituation'] = 'Current state';
 	$lang['emajdetailedstat'] = 'Detailed stats';
 	$lang['emajdetailedlogstatwarning'] = 'Attention, scanning the log tables needed to get detailed statistics may take a long time';
-	$lang['emajlogstatcurrentsituation'] = 'the current situation';
-	$lang['emajlogstatmark'] = 'mark "%s"';
-	$lang['emajlogstattittle'] = 'Table changes between mark "%s" and %s for tables group "%s"';
+	$lang['emajlogstatcurrentsituation'] = 'the current state';
+	$lang['emajlogstatmark'] = 'the mark "%s"';
+	$lang['emajlogstattittle'] = 'Table changes between the mark "%s" and %s for the tables group "%s"';
 	$lang['emajnosimrlbkduration'] = 'The start mark cannot be used for a rollback. No rollback duration can be estimated.';
-	$lang['emajsimrlbkduration'] = 'Rolling the tables group "%s" back to mark "%s" would take about %s.';
+	$lang['emajsimrlbkduration'] = 'Rolling the tables group "%s" back to the mark "%s" would take about %s.';
 	$lang['emajstatfirstmark'] = 'First mark';
 	$lang['emajstatfirstmarkdatetime'] = 'First mark date/time';
 	$lang['emajstatlastmark'] = 'Last mark';
@@ -434,7 +434,7 @@
 	$lang['emajbackgroup'] = 'Go back to the tables group';
 
 	// Group's content
-	$lang['emajgroupcontent'] = 'Content of tables group "%s"';
+	$lang['emajgroupcontent'] = 'Content of the tables group "%s"';
 	$lang['emajemptygroup'] = 'The tables group "%s" is currently empty.';
 	$lang['emajpriority'] = 'Priority';
 	$lang['emajlogschema'] = 'Log schema';
@@ -475,7 +475,7 @@
 	$lang['emajcommentagroup'] = 'E-Maj: Record a comment for a tables group';
 	$lang['emajcommentgroup'] = 'Enter, modify or erase the comment for tables group "%s".';
 	$lang['emajcommentgroupok'] = 'The comment for the tables group "%s" has been recorded.';
-	$lang['emajcommentgrouperr'] = 'Error during comment recording for tables group "%s"!';
+	$lang['emajcommentgrouperr'] = 'Error during comment recording for the tables group "%s"!';
 
 	// Group protect
 	$lang['emajcantprotectgroup'] = 'Protecting the tables group "%s" is not possible. The group is stopped.';
@@ -554,7 +554,7 @@
 	// Group rollback
 	$lang['emajrlbkagroup'] = 'E-Maj: Rollback a tables group';
 	$lang['emajconfirmrlbkgroup'] = 'Rollbacking the tables group "%s" to the mark "%s"';
-	$lang['emajselectmarkgroup'] = 'Rollbacking tables group "%s" to mark: ';
+	$lang['emajselectmarkgroup'] = 'Rollbacking the tables group "%s" to the mark: ';
 	$lang['emajrlbkthenmonitor'] = 'Rollback and monitor';
 	$lang['emajcantrlbkidlegroup'] = 'Rollbacking the tables group "%s" is not possible. The group is stopped.';
 	$lang['emajcantrlbkprotgroup'] = 'Rollbacking the tables group "%s" is not possible. The group is protected.';
@@ -563,7 +563,7 @@
 	$lang['emajautorolledback'] = 'Automatically rolled back?';
 	$lang['emajgroupisprotected'] = 'The group "%s" is protected.';
 	$lang['emajinvalidrlbkmark'] = 'Mark "%s" is not valid anymore.';
-	$lang['emajrlbkgroupok'] = 'the tables group "%s" has been rollbacked to the mark "%s".';
+	$lang['emajrlbkgroupok'] = 'The tables group "%s" has been rollbacked to the mark "%s".';
 	$lang['emajrlbkgrouperr'] = 'Error during tables group "%s" rollback to the mark "%s"!';
 	$lang['emajbadpsqlpath'] = 'Asynchronous rollback not possible: the configured pathname of the psql command (%s) is not valid.';
 	$lang['emajbadtempdir'] = 'Asynchronous rollback not possible: the configured temporary directory (%s) is not valid.';
@@ -574,10 +574,10 @@
 	$lang['emajselectmarkgroups'] = 'Rollbacking the tables groups "%s" to the mark: ';
 	$lang['emajcantrlbkidlegroups'] = 'Rollbacking the tables groups "%s" is not possible. The group "%s" is stopped.';
 	$lang['emajcantrlbkprotgroups'] = 'Rollbacking the tables groups "%s" is not possible. The groups "%s" are protected.';
-	$lang['emajnomarkgroups'] = 'No common mark for tables groups "%s" can be used for a rollback.';
+	$lang['emajnomarkgroups'] = 'No common mark for the tables groups "%s" can be used for a rollback.';
 	$lang['emajcantrlbkinvalidmarkgroups'] = 'Rollbacking the tables groups "%s" is not possible. The mark "%s" is not valid.';
 	$lang['emajreachaltergroups'] = 'Rollbacking the tables groups "%s" to the mark "%s" would reach a point in time prior alter_group operations. Please confirm the rollback.';
-	$lang['emajrlbkgroupsok'] = 'Tables groups "%s" have been rollbacked to mark "%s".';
+	$lang['emajrlbkgroupsok'] = 'The tables groups "%s" have been rollbacked to mark "%s".';
 	$lang['emajrlbkgroupserr'] = 'Error during tables groups "%s" rollback to mark "%s"!';
 
 	// Elementary alter group actions previously executed, reported at rollback time 

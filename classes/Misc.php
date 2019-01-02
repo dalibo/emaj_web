@@ -991,11 +991,13 @@
 
 			// right cell containing the refresh and bottom buttons
 			$uri = $_SERVER['REQUEST_URI'];
-			if ($uri != '' && strpos($uri,html_entity_decode($urlvar)) === false) {
-				$uri .= '&amp;' . $urlvar;
-			}
-			if (strpos($uri,'server=') === false) {
-				$uri .= '&amp;' . $this->href ;
+			if (strpos($uri,'?') === true) {
+				if ($urlvar != '' && strpos($uri,html_entity_decode($urlvar)) === false) {
+					$uri .= '&amp;' . $urlvar;
+				}
+				if (strpos($uri,'server=') === false) {
+					$uri .= '&amp;' . $this->href ;
+				}
 			}
 			echo "<div>\n";
 			echo "<a href=\"{$uri}\"><img src=\"{$this->icon('Refresh')}\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\" style=\"cursor:pointer; padding:1px 5px 1px 5px;\"/></a>\n";

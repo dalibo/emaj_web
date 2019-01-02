@@ -1,8 +1,8 @@
 <?php
 
 	/**
-	 * English language file for Emaj_web.  Use this as a basis
-	 * for new translations.
+	 * English language file for Emaj_web.
+	 * Use this as a basis for new translations.
 	 */
 
 	// Language and character set
@@ -24,6 +24,7 @@
 	$lang['strlogindisallowed'] = 'Login disallowed for security reasons.';
 	$lang['strserver'] = 'Server';
 	$lang['strservers'] = 'Servers';
+	$lang['strconfiguredservers'] = 'Configured PostgreSQL servers';
 	$lang['strgroupservers'] = 'Servers in group "%s"';
 	$lang['strallservers'] = 'All servers';
 	$lang['strintroduction'] = 'Introduction';

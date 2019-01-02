@@ -2,13 +2,14 @@
 
 	/**
 	* French Language file for Emaj_web.
+	*
 	*/
 
 	// Language and character set
 	$lang['applocale'] = 'fr-FR';
 	$lang['applangdir'] = 'ltr';
 
-	// Basic strings
+	// Welcome
 	$lang['strintro'] = 'Bienvenue dans %s %s, le client web pour';
 	$lang['strlink'] = 'Quelques liens :';
 	$lang['strpgsqlhome'] = 'Page d\'accueil de PostgreSQL';
@@ -23,6 +24,7 @@
 	$lang['strlogindisallowed'] = 'Connexion désactivée pour raison de sécurité';
 	$lang['strserver'] = 'Serveur';
 	$lang['strservers'] = 'Serveurs';
+	$lang['strconfiguredservers'] = 'Serveurs PostgreSQL configurés';
 	$lang['strgroupservers'] = 'Serveurs du groupe "%s"';
 	$lang['strallservers'] = 'Tous les serveurs';
 	$lang['strintroduction'] = 'Introduction';

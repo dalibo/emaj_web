@@ -47,13 +47,21 @@ h2 {
 }
 h3 {
 	font-size: 1.2em;
-	font-weight: normal;
-	padding: 1px 0.5em;
-	margin-top: 1em;
-	margin-bottom: 1em;
+	font-weight: bold;
+	padding: 4px 10px 4px 10px;
+	margin: 1em;
 	color: #3c424c;
+	color: #ffffff;
+	background-color: #308ac5;
+	border-radius: 7px;
+}
+
+hr {
+	color: #ffffff;
 	background-color: #ffffff;
-	border-bottom: 1px solid #9ea1a6;
+	height: 0px;
+	margin-top: 20px;
+	border: 0;
 }
 
 table {
@@ -64,7 +72,7 @@ td, th {
 	padding: 1px 8px;
 }
 a {
-	color: #003380;
+	color: #308ac5;
 	text-decoration: none;
 }
 a:hover {
@@ -74,9 +82,17 @@ input[type=checkbox], input[type=password], input[type=text], input[type=radio] 
 	background: #ffffff;
 	border: 1px solid #5090c1;
 }
-input[type=submit], input[type=button] {
+input[type=submit], input[type=button], button {
 	background: #ffffff;
 	border: 2px solid #8aafce;
+	border-radius: 7px;
+}
+input[type=submit]:hover, input[type=button]:hover, button:hover {
+	background: #eeeeee;
+}
+button:disabled {
+	background: #ffffff;
+	border: 2px solid #d0d0d0;
 }
 select {
 	background: #ffffff;
@@ -89,15 +105,15 @@ table.error {
 }
 th.data {
 	color: #3c424c;
-	background-color: #e6e6e6;
+	background-color: #e0e0e0;
     font-weight: normal;
 	font-size: 1.0em;
 	padding: 3px 7px;
 }
 tr th.data{
-	border-right: 1px solid #dedede;
-	border-left: 1px solid #dedede;
-	border-bottom: 1px solid #dedede;
+	border-right: 1px solid #d0d0d0;
+	border-left: 1px solid #d0d0d0;
+	border-bottom: 1px solid #d0d0d0;
 }
 tr th.data:first-child {
 	border-left: 0;
@@ -159,14 +175,16 @@ th.data a:hover {
 table.tabs {
 	width: 100%;
 	border-collapse: collapse;
-	margin: 15px 0 20px 0;
+	margin: 0 0 20px 0;
 }
 .tab {
+	background-color: #f8f8f8;
 	text-align: center;
 	vertical-align: top;
-	font-size: 1.2em;
-	border-bottom: 1px solid #eeeeee;
-	padding: 2px 10px;
+	font-size: 1.1em;
+	border: 1px solid #dddddd;
+	border-top: #ffffff;
+	padding: 15px 10px 5px 10px;
 	white-space: nowrap;
 }
 .tab a {
@@ -215,7 +233,7 @@ ul.toplink li:first-child, ul.navlink li:first-child {
 	padding-left:0;
 }
 tr.data1, tr.data2, tr.data3 {
-	color: #5a5a5a;
+	color: #484848;
 	font-size: 0.9em;
 }
 tr.data1:hover, tr.data2:hover, tr.data3:hover {
@@ -267,13 +285,12 @@ tr td.data1:last-child, tr td.data2:last-child, tr td.data3:last-child {
 .row3, .data3 {background-color: #d4c8a1}
 td.opbutton1, td.opbutton2 {
 	color: #000000;
-	cursor:	pointer;
 	padding: 2px 6px;
 	text-align: center;
-	font-style: italic;
+/*	font-style: italic;*/
 }
 td.opbutton1 a, td.opbutton2 a {
-	color: #306EFF;
+	color: #308ac5;
 }
 td.opbutton1 a:hover, td.opbutton2 a:hover {
 	color: #ff0000;

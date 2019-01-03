@@ -683,19 +683,19 @@ class Emaj extends Plugin {
 				$configuredActions = array();
 			}
 
-			echo "<h3>{$lang['emajlogginggroups']}<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajlogginggrouphelp']}\"/></h3>";
+			$misc->printTitle("{$lang['emajlogginggroups']}<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajlogginggrouphelp']}\"/>");
 
 			$misc->printTable($loggingGroups, $columns, $loggingActions, 'loggingGroups', $lang['emajnologginggroup'], array($this, 'loggingGroupPre'), array('sorter' => true, 'filter' => true));
 
 			echo "<hr>";
-			echo "<h3>{$lang['emajidlegroups']}<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajidlegrouphelp']}\"/></h3>\n";
+			$misc->printTitle("{$lang['emajidlegroups']}<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajidlegrouphelp']}\"/>");
 
 			$misc->printTable($idleGroups, $columns, $idleActions, 'idleGroups', $lang['emajnoidlegroup'], array($this, 'idleGroupPre'), array('sorter' => true, 'filter' => true));
 
 			echo "<hr>\n";
 
 			// configured but not yet created tables section
-			echo "<h3>{$lang['emajconfiguredgroups']}<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajconfiguredgrouphelp']}\"/></h3>\n";
+			$misc->printTitle("{$lang['emajconfiguredgroups']}<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajconfiguredgrouphelp']}\"/>");
 
 			$misc->printTable($configuredGroups, $configuredColumns, $configuredActions, 'configuredGroups', $lang['emajnoconfiguredgroups'], array($this, 'configuredGroupPre'), array('sorter' => true, 'filter' => true));
 
@@ -731,7 +731,7 @@ class Emaj extends Plugin {
 			$this->printMsg($msg,$errMsg);
 
 		// Schemas list
-			echo "<h3>{$lang['emajschemaslist']}</h3>\n";
+			$misc->printTitle($lang['emajschemaslist']);
 
 			$schemas = $emajdb->getSchemas();
 
@@ -763,7 +763,7 @@ class Emaj extends Plugin {
 		// Tables and sequences for the selected schema, if any
 			if (isset($_REQUEST['appschema']) && $_REQUEST['appschema'] != '') {
 
-				echo "<h3>".sprintf($lang['emajtblseqofschema'],$_REQUEST['appschema'])."</h3>\n";
+				$misc->printTitle(sprintf($lang['emajtblseqofschema'],$_REQUEST['appschema']));
 				$tblseq = $emajdb->getTablesSequences($_REQUEST['appschema']);
 
 				$columns = array(
@@ -1068,7 +1068,7 @@ class Emaj extends Plugin {
 			// Get rollback information from the database
 			$completedRlbks = $emajdb->getCompletedRlbk($nbRlbk, $rlbkRetention);
 	
-			echo "<h3>{$lang['emajinprogressrlbk']}</h3>\n";
+			$misc->printTitle($lang['emajinprogressrlbk']);
 			if ($emajdb->isDblinkUsable()) {
 				$inProgressRlbks = $emajdb->getInProgressRlbk();
 				$misc->printTable($inProgressRlbks, $columnsInProgressRlbk, $actions, 'inProgressRlbk', $lang['emajnorlbk']);
@@ -1076,7 +1076,7 @@ class Emaj extends Plugin {
 				echo "<p>{$lang['emajrlbkmonitornotavailable']}</p>\n";
 			}
 	
-			echo "<h3>{$lang['emajcompletedrlbk']}</h3>\n";
+			$misc->printTitle($lang['emajcompletedrlbk']);
 	
 			// Form to setup parameters for completed rollback operations filtering
 			echo "<div style=\"margin-bottom:10px;\">\n";
@@ -1179,7 +1179,7 @@ class Emaj extends Plugin {
 				// Get rollback information from the database
 				$consolidableRlbks = $emajdb->getConsolidableRlbk();
 	
-				echo "<h3>{$lang['emajconsolidablerlbk']}</h3>\n";
+				$misc->printTitle($lang['emajconsolidablerlbk']);
 				$inProgressRlbks = $emajdb->getInProgressRlbk();
 				$misc->printTable($consolidableRlbks, $columnsConsRlbk, $actions, 'consolidableRlbk', $lang['emajnorlbk']);
 			}
@@ -1216,7 +1216,7 @@ class Emaj extends Plugin {
 		}
 
 		// Version section
-		echo "<h3>{$lang['emajversions']}</h3>\n";
+		$misc->printTitle($lang['emajversions']);
 
 		// display the postgres version
 		$server_info = $misc->getServerInfo();
@@ -1248,14 +1248,14 @@ class Emaj extends Plugin {
 		if ($emajOK) {
 			// General characteristics of the E-Maj environment
 			echo "<hr/>\n";
-			echo "<h3>{$lang['emajcharacteristics']}</h3>\n";
+			$misc->printTitle($lang['emajcharacteristics']);
 			if ($emajdb->isEmaj_Adm()) {
 				echo "<p>".sprintf($lang['emajdiskspace'],$emajdb->getEmajSize())."</p>\n";
 			}
 
 			// E-Maj environment checking
 			echo "<hr/>\n";
-			echo "<h3>{$lang['emajchecking']}</h3>\n";
+			$misc->printTitle($lang['emajchecking']);
 
 			$messages = $emajdb->checkEmaj();
 
@@ -1350,7 +1350,7 @@ class Emaj extends Plugin {
 			$groupActions = array();
 
 		// print group's characteristics
-			echo "<h3>".sprintf($lang['emajgroupproperties'], htmlspecialchars($_REQUEST['group']))."</h3>\n";
+			$misc->printTitle(sprintf($lang['emajgroupproperties'], htmlspecialchars($_REQUEST['group'])));
 			$misc->printTable($group, $columns, $groupActions, 'detailGroup', 'no group, internal error !');
 
 		// display group's comment if exists
@@ -1433,7 +1433,7 @@ class Emaj extends Plugin {
 			$marks = $emajdb->getMarks($_REQUEST['group']);
 
 			echo "<hr/>\n";
-			echo "<h3>".sprintf($lang['emajgroupmarks'], htmlspecialchars($_REQUEST['group']))."</h3>\n";
+			$misc->printTitle(sprintf($lang['emajgroupmarks'], htmlspecialchars($_REQUEST['group'])));
 
 			$columns = array(
 				'mark' => array(
@@ -1623,7 +1623,7 @@ class Emaj extends Plugin {
 
 		$this->printPageHeader('emajgroup', 'emajlogstat', 'action=log_stat_group&amp;group='.urlencode($_REQUEST['group']));
 
-		echo "<h3>" . sprintf($lang['emajshowstat'], htmlspecialchars($_REQUEST['group'])) . "</h3>\n";
+		$misc->printTitle(sprintf($lang['emajshowstat'], htmlspecialchars($_REQUEST['group'])));
 
 		$emajOK = $this->checkEmajExtension();
 
@@ -1810,7 +1810,7 @@ class Emaj extends Plugin {
 
 		// Title
 		echo "<hr/>\n";
-		echo "<h3>".sprintf($lang['emajlogstattittle'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($w1), htmlspecialchars($_REQUEST['group']))."</h3>\n";
+		$misc->printTitle(sprintf($lang['emajlogstattittle'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($w1), htmlspecialchars($_REQUEST['group'])));
 
 		// Display summary statistics
 		echo "<div style=\"margin-bottom:15px\">\n";
@@ -1946,7 +1946,7 @@ class Emaj extends Plugin {
 
 		// Title
 		echo "<hr/>\n";
-		echo "<h3>".sprintf($lang['emajlogstattittle'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($w1), htmlspecialchars($_REQUEST['group']))."</h3>\n";
+		$misc->printTitle(sprintf($lang['emajlogstattittle'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($w1), htmlspecialchars($_REQUEST['group'])));
 
 		// Display summary statistics
 		echo "<div style=\"margin-bottom:15px\">\n";
@@ -2076,7 +2076,7 @@ class Emaj extends Plugin {
 
 		$this->printPageHeader('emajgroup', 'emajcontent', 'action=show_content_group&amp;group='.urlencode($_REQUEST['group']));
 
-		echo "<h3>" . sprintf($lang['emajgroupcontent'],htmlspecialchars($_REQUEST['group'])) . "</h3>\n";
+		$misc->printTitle(sprintf($lang['emajgroupcontent'],htmlspecialchars($_REQUEST['group'])));
 
 		$emajOK = $this->checkEmajExtension();
 

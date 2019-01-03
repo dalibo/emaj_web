@@ -142,7 +142,7 @@
         		// Bring to the front always
 	        	echo "<body onload=\"window.focus();\">\n";
 			
-			echo "<h3>{$lang['strdelhistory']}</h3>\n";
+			$misc->printTitle($lang['strdelhistory']);
 			echo "<p>{$lang['strconfdelhistory']}</p>\n";
 
 			echo "<pre>", htmlentities($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$qid]['query'], ENT_QUOTES, 'UTF-8'), "</pre>";
@@ -167,7 +167,7 @@
         		// Bring to the front always
 	        	echo "<body onload=\"window.focus();\">\n";
 
-			echo "<h3>{$lang['strclearhistory']}</h3>\n";
+			$misc->printTitle($lang['strclearhistory']);
 			echo "<p>{$lang['strconfclearhistory']}</p>\n";
 
 			echo "<form action=\"history.php\" method=\"post\">\n";

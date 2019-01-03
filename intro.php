@@ -40,7 +40,8 @@
 <noscript><p><input type="submit" value="<?php echo $lang['stralter'] ?>" /></p></noscript>
 </form>
 
-<h3><?php echo $lang['strlink'] ?></h3>
+<?php $misc->printTitle($lang['strlink']); ?>
+
 <ul class="intro">
 	<li><a href="http://emaj.readthedocs.io/en/stable/" target=blank ><?php echo $lang['stremajdoc'] ?></a></li>
 	<li><a href="https://github.com/dalibo/emaj" target=blank ><?php echo $lang['stremajproject'] ?></a></li>

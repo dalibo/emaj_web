@@ -261,18 +261,18 @@ class Emaj extends Plugin {
 	function renderGroupType($val) {
 		global $misc, $lang;
 		if ($val == 'ROLLBACKABLE') {
-			$icon = $misc->icon(array($this->name,'EmajRollbackable'));
+			$icon = $misc->icon('EmajRollbackable');
 			$alt = $lang['emajrollbackable'];
 			$img = "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 		} elseif ($val == 'AUDIT_ONLY') {
-			$icon = $misc->icon(array($this->name,'EmajAuditOnly'));
+			$icon = $misc->icon($this->name,'EmajAuditOnly');
 			$alt = $lang['emajauditonly'];
 			$img = "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 		} elseif ($val == 'ROLLBACKABLE-PROTECTED') {
-			$icon = $misc->icon(array($this->name,'EmajRollbackable'));
+			$icon = $misc->icon('EmajRollbackable');
 			$alt = $lang['emajrollbackable'];
 			$img = "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
-			$icon = $misc->icon(array($this->name,'EmajPadlock'));
+			$icon = $misc->icon('EmajPadlock');
 			$alt = $lang['emajprotected'];
 			$img .= "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 		}
@@ -308,10 +308,10 @@ class Emaj extends Plugin {
 	function renderGroupState($val) {
 		global $misc, $lang;
 		if ($val == 'IDLE') {
-			$icon = $misc->icon(array($this->name,'EmajIdle'));
+			$icon = $misc->icon('EmajIdle');
 			$alt = $lang['emajidle'];
 		} else {
-			$icon = $misc->icon(array($this->name,'EmajLogging'));
+			$icon = $misc->icon('EmajLogging');
 			$alt = $lang['emajlogging'];
 		}
 		return "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
@@ -339,7 +339,7 @@ class Emaj extends Plugin {
 	function renderMarkState($val) {
 		global $misc, $lang;
 		if ($val == 'ACTIVE') {
-			$icon = $misc->icon(array($this->name,'EmajMark'));
+			$icon = $misc->icon('EmajMark');
 			$alt = $lang['emajactive'];
 			$img = "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 		} elseif ($val == 'DELETED') {
@@ -347,10 +347,10 @@ class Emaj extends Plugin {
 			$alt = $lang['emajdeleted'];
 			$img = "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 		} elseif ($val == 'ACTIVE-PROTECTED') {
-			$icon = $misc->icon(array($this->name,'EmajMark'));
+			$icon = $misc->icon('EmajMark');
 			$alt = $lang['emajactive'];
 			$img = "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
-			$icon = $misc->icon(array($this->name,'EmajPadlock'));
+			$icon = $misc->icon('EmajPadlock');
 			$alt = $lang['emajprotected'];
 			$img .= "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 		}
@@ -683,19 +683,19 @@ class Emaj extends Plugin {
 				$configuredActions = array();
 			}
 
-			$misc->printTitle("{$lang['emajlogginggroups']}<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajlogginggrouphelp']}\"/>");
+			$misc->printTitle("{$lang['emajlogginggroups']}<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajlogginggrouphelp']}\"/>");
 
 			$misc->printTable($loggingGroups, $columns, $loggingActions, 'loggingGroups', $lang['emajnologginggroup'], array($this, 'loggingGroupPre'), array('sorter' => true, 'filter' => true));
 
 			echo "<hr>";
-			$misc->printTitle("{$lang['emajidlegroups']}<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajidlegrouphelp']}\"/>");
+			$misc->printTitle("{$lang['emajidlegroups']}<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajidlegrouphelp']}\"/>");
 
 			$misc->printTable($idleGroups, $columns, $idleActions, 'idleGroups', $lang['emajnoidlegroup'], array($this, 'idleGroupPre'), array('sorter' => true, 'filter' => true));
 
 			echo "<hr>\n";
 
 			// configured but not yet created tables section
-			$misc->printTitle("{$lang['emajconfiguredgroups']}<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajconfiguredgrouphelp']}\"/>");
+			$misc->printTitle("{$lang['emajconfiguredgroups']}<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajconfiguredgrouphelp']}\"/>");
 
 			$misc->printTable($configuredGroups, $configuredColumns, $configuredActions, 'configuredGroups', $lang['emajnoconfiguredgroups'], array($this, 'configuredGroupPre'), array('sorter' => true, 'filter' => true));
 
@@ -1687,7 +1687,7 @@ class Emaj extends Plugin {
 
 				echo "  <input type=\"submit\" name=\"globalstatgroup\" value=\"{$lang['emajestimates']}\" />\n";
 				echo "  <input type=\"submit\" name=\"detailedstatgroup\" value=\"{$lang['emajdetailedstat']}\" />\n";
-				echo "  <img src=\"{$misc->icon(array($this->name,'EmajWarning'))}\" alt=\"warning\" title=\"{$lang['emajdetailedlogstatwarning']}\" style=\"vertical-align:middle\"/>";
+				echo "  <img src=\"{$misc->icon('EmajWarning')}\" alt=\"warning\" title=\"{$lang['emajdetailedlogstatwarning']}\" style=\"vertical-align:middle\"/>";
 				echo "</p></form>\n";
 
 				// JQuery scripts
@@ -2280,7 +2280,7 @@ class Emaj extends Plugin {
 		echo "<tr><th class=\"data left\" style=\"text-align:right\">{$lang['emajenterpriority']}</th>";
 		echo "<td class=\"data1\">";
 		echo "<input type=\"number\" name=\"priority\" style=\"width:6em; text-align:right;\" min=\"0\" max=\"2147483647\" value=\"\" />";
-		echo "</td><td><img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajpriorityhelp']}\"/>";
+		echo "</td><td><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajpriorityhelp']}\"/>";
 		echo "</td></tr>\n";
 
 		// log schema name suffix
@@ -2288,7 +2288,7 @@ class Emaj extends Plugin {
 			echo "<tr><th class=\"data left\" style=\"text-align:right\">{$lang['emajenterlogschema']}</th>";
 			echo "<td class=\"data1\">";
 			echo "<input type=\"text\" name=\"suffix\" list=\"suffixList\" value=\"\"/ autocomplete=\"off\">";
-			echo "</td><td><img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajlogschemahelp']}\"/>";
+			echo "</td><td><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajlogschemahelp']}\"/>";
 			echo "</td></tr>\n";
 			echo "<datalist id=\"suffixList\">\n";
 			if ($knownSuffix->recordCount() > 0) {
@@ -2306,7 +2306,7 @@ class Emaj extends Plugin {
 			echo "<tr><th class=\"data left\" style=\"text-align:right\">{$lang['emajenternameprefix']}</th>";
 			echo "<td class=\"data1\">";
 			echo "<input type=\"text\" name=\"nameprefix\" value=\"\"/>";
-			echo "</td><td><img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajnameprefixhelp']}\"/>";
+			echo "</td><td><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajnameprefixhelp']}\"/>";
 			echo "</td></tr>\n";
 		} else {
 			echo "<p><input type=\"hidden\" name=\"nameprefix\" value=\"\" />\n";
@@ -2449,7 +2449,7 @@ class Emaj extends Plugin {
 		echo "<tr><th class=\"data left\" style=\"text-align:right\">{$lang['emajenterpriority']}</th>";
 		echo "<td class=\"data1\">";
 		echo "<input type=\"number\" name=\"priority\" style=\"width:6em; text-align:right;\" min=\"0\" max=\"2147483647\" value=\"{$_REQUEST['priority']}\" />";
-		echo "</td><td><img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajpriorityhelp']}\"/>";
+		echo "</td><td><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajpriorityhelp']}\"/>";
 		echo "</td></tr>\n";
 
 		// log schema name suffix (only for tables)
@@ -2457,7 +2457,7 @@ class Emaj extends Plugin {
 			echo "<tr><th class=\"data left\" style=\"text-align:right\">{$lang['emajenterlogschema']}</th>";
 			echo "<td class=\"data1\">";
 			echo "<input type=\"text\" name=\"suffix\" list=\"suffixList\" value=\"", htmlspecialchars($_REQUEST['logschemasuffix']), "\"/ autocomplete=\"off\">";
-			echo "</td><td><img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajlogschemahelp']}\"/>";
+			echo "</td><td><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajlogschemahelp']}\"/>";
 			echo "</td></tr>\n";
 			echo "<datalist id=\"suffixList\">\n";
 			if ($knownSuffix->recordCount() > 0) {
@@ -2475,7 +2475,7 @@ class Emaj extends Plugin {
 			echo "<tr><th class=\"data left\" style=\"text-align:right\">{$lang['emajenternameprefix']}</th>";
 			echo "<td class=\"data1\">";
 			echo "<input type=\"text\" name=\"nameprefix\" value=\"", htmlspecialchars($_REQUEST['emajnamesprefix']), "\"/>";
-			echo "</td><td><img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajnameprefixhelp']}\"/>";
+			echo "</td><td><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajnameprefixhelp']}\"/>";
 			echo "</td></tr>\n";
 		} else {
 			echo "<p><input type=\"hidden\" name=\"nameprefix\" value=\"\" />\n";
@@ -2794,7 +2794,7 @@ class Emaj extends Plugin {
 				echo "<table>\n";
 				echo "<tr><th class=\"data left\">{$lang['emajmark']}</th>\n";
 				echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"ALTER_%\" id=\"mark\">\n";
-				echo "<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></td></tr>";
+				echo "<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></td></tr>";
 				echo "</table>\n";
 			} else {
 				echo "<p>", sprintf($lang['emajconfirmaltergroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
@@ -2908,7 +2908,7 @@ class Emaj extends Plugin {
 				echo "<table>\n";
 				echo "<tr><th class=\"data left\">{$lang['emajmark']}</th>\n";
 				echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"ALTER_%\" id=\"mark\">\n";
-				echo "<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></td></tr>";
+				echo "<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></td></tr>";
 				echo "</table>\n";
 			} else {
 				echo "<p>", sprintf($lang['emajconfirmaltergroups'], htmlspecialchars($groupsList)), "</p>\n";
@@ -3066,7 +3066,7 @@ class Emaj extends Plugin {
 		echo "<tr><th class=\"data left required\" style=\"width: 100px\">{$lang['emajinitmark']}</th>\n";
 		echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"",
 			htmlspecialchars($_POST['mark']), "\" id=\"mark\" />\n";
-		echo "<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></td></tr>";
+		echo "<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></td></tr>";
 		echo "</table>\n";
 		echo "<p><input type=checkbox name=\"resetlog\" checked/>{$lang['emajoldlogsdeletion']}</p>\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -3173,7 +3173,7 @@ class Emaj extends Plugin {
 		echo "<tr><th class=\"data left required\" style=\"width: 100px\">{$lang['emajinitmark']}</th>\n";
 		echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"",
 			htmlspecialchars($_POST['mark']), "\" id=\"mark\" />\n";
-		echo "<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></td></tr>";
+		echo "<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></td></tr>";
 		echo "</table>\n";
 		echo "<p><input type=checkbox name=\"resetlog\" checked/>{$lang['emajoldlogsdeletion']}</p>\n";
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
@@ -3254,7 +3254,7 @@ class Emaj extends Plugin {
 		echo "<table>\n";
 		echo "<tr><th class=\"data left\" style=\"width: 100px\">{$lang['emajstopmark']}</th>\n";
 		echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"STOP_%\" />\n";
-		echo "<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></td></tr>";
+		echo "<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></td></tr>";
 		echo "</table>\n";
 		echo "<p><input type=checkbox name=\"forcestop\" />{$lang['emajforcestop']}</p>\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"stop_group_ok\" />\n";
@@ -3337,7 +3337,7 @@ class Emaj extends Plugin {
 		echo "<table>\n";
 		echo "<tr><th class=\"data left\" style=\"width: 100px\">{$lang['emajstopmark']}</th>\n";
 		echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"STOP_%\" />\n";
-		echo "<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></td></tr>";
+		echo "<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></td></tr>";
 		echo "</table>\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"stop_groups_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
@@ -3526,7 +3526,7 @@ class Emaj extends Plugin {
 		echo "<tr><th class=\"data left required\">{$lang['emajmark']}</th>\n";
 		echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"",
 			htmlspecialchars($_POST['mark']), "\" id=\"mark\"/>\n";
-		echo "<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></td></tr>";
+		echo "<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></td></tr>";
 		echo "</table>\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"set_mark_group_ok\" />\n";
@@ -3632,7 +3632,7 @@ class Emaj extends Plugin {
 		echo "<tr><th class=\"data left required\">{$lang['emajmark']}</th>\n";
 		echo "<td class=\"data1\"><input name=\"mark\" size=\"32\" value=\"",
 			htmlspecialchars($_POST['mark']), "\" id=\"mark\"/>\n";
-		echo "<img src=\"{$misc->icon(array($this->name,'Info'))}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></td></tr>";
+		echo "<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></td></tr>";
 		echo "</table>\n";
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"set_mark_groups_ok\" />\n";

@@ -818,7 +818,7 @@
 								'subject' => 'emaj',
 								'action' => 'show_groups'
 							),
-							'icon' => array ('Emaj', 'EmajGroup')
+							'icon' => 'EmajGroup'
 						),
 						'emajconfiguregroups' => array (
 							'title' => $lang['emajgroupsconf'],
@@ -839,7 +839,7 @@
 								'subject' => 'emaj',
 								'action' => 'show_rollbacks'
 							),
-							'icon' => array ('Emaj', 'EmajRollback')
+							'icon' => 'EmajRollback'
 						),
 						'schemas' => array (
 							'title' => $lang['strschemas'],
@@ -855,7 +855,7 @@
 								'subject' => 'emaj',
 								'action' => 'emaj_envir'
 							),
-							'icon' => array ('Emaj', 'Emaj')
+							'icon' => 'Emaj'
 						)
 					);
 					break;
@@ -882,7 +882,7 @@
 								'action' => 'log_stat_group',
 								'group' => $_REQUEST['group']
 							),
-							'icon' => array ('Emaj', 'EmajStat')
+							'icon' => 'EmajStat'
 						),
 						'emajcontent' => array (
 							'title' => $lang['emajcontent'],
@@ -1079,7 +1079,7 @@
 					'title' => 'E-Maj',
 					'text'  => $_REQUEST['group'],
 					'url'   => $this->getHREFSubject('emaj'),
-					'icon'  => array ('Emaj', 'Emaj')
+					'icon'  => 'Emaj'
 				);
 			}
 			if ($subject == 'group') $done = true;
@@ -1702,18 +1702,9 @@
 		}
 
 		function icon($icon) {
-			if (is_string($icon)) {
-				global $conf;
-				$path = "images/{$icon}";
-				if (file_exists($path.'.png')) return $path.'.png';
-				if (file_exists($path.'.gif')) return $path.'.gif';
-			}
-			else {
-				// Icon from plugins
-				$path = "plugins/{$icon[0]}/images/{$icon[1]}";
-				if (file_exists($path.'.png')) return $path.'.png';
-				if (file_exists($path.'.gif')) return $path.'.gif';
-			}
+			$path = "images/{$icon}";
+			if (file_exists($path.'.png')) return $path.'.png';
+			if (file_exists($path.'.gif')) return $path.'.gif';
 			return '';
 		}
 

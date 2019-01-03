@@ -17,8 +17,7 @@
 		global $data, $misc, $conf;
 		global $lang;
 
-		$misc->printTrail('database');
-		$misc->printTabs('database','schemas');
+		$misc->printHeader('database', '', 'database', 'schemas');
 		$misc->printMsg($msg);
 
 		// Check that the DB actually supports schemas
@@ -111,7 +110,7 @@
 	if ($action == 'tree') doTree();
 	if ($action == 'subtree') doSubTree();
 
-	$misc->printHeader($lang['strschemas']);
+	$misc->printHtmlHeader($lang['strschemas']);
 	$misc->printBody();
 
 	if (isset($_POST['cancel'])) $action = '';

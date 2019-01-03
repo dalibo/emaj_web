@@ -30,7 +30,7 @@
 		global $conf, $misc;
 		global $lang;
 		
-		$misc->printTabs('root','servers');
+		$misc->printHeader('root', '', 'root', 'servers');
 		$misc->printMsg($msg);
 		$group = isset($_GET['group']) ? $_GET['group'] : false;
 
@@ -159,9 +159,8 @@
 		else doTree(false);
 	}
 
-	$misc->printHeader($lang['strservers']);
+	$misc->printHtmlHeader($lang['strservers']);
 	$misc->printBody();
-	$misc->printTrail('root');
 
 	switch ($action) {
 		case 'logout':

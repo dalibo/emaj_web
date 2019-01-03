@@ -16,8 +16,7 @@
 		global $data, $conf, $misc, $data;
 		global $lang;
 
-		$misc->printTrail('schema');
-		$misc->printTabs('schema','tables');
+		$misc->printHeader('schema', '', 'schema', 'tables');
 		$misc->printMsg($msg);
 
 		$tables = $data->getTables();
@@ -103,7 +102,7 @@
 
 	if ($action == 'tree') doTree();
 
-	$misc->printHeader($lang['strtables']);
+	$misc->printHtmlHeader($lang['strtables']);
 	$misc->printBody();
 
 	switch ($action) {

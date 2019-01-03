@@ -12,9 +12,9 @@
 	if (!isset($plugin_manager))
 		$plugin_manager = new PluginManager($_SESSION['webdbLanguage']);
 
-	$misc->printHeader($lang['strlogin']);
+	$misc->printHtmlHeader($lang['strlogin']);
 	$misc->printBody();
-	$misc->printTrail('root');
+	$misc->printHeader('root', '', '', '');
 	
 	$server_info = $misc->getServerInfo($_REQUEST['server']);
 	

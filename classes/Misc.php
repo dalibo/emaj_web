@@ -442,49 +442,207 @@
 		}
 
 		/**
-		 * Prints the page header.  If global variable $_no_output is
-		 * set then no header is drawn.
+		 * Prints the html page header.
 		 * @param $title The title of the page
 		 * @param $script script tag
 		 */
-		function printHeader($title = '', $script = null, $frameset = false) {
-			global $appName, $lang, $_no_output, $conf, $plugin_manager;
+		function printHtmlHeader($title = '', $script = null, $frameset = false) {
+			global $appName, $lang, $conf, $plugin_manager;
 
-			if (!isset($_no_output)) {
-				header("Content-Type: text/html; charset=utf-8");
-				// Send XHTML headers, or regular XHTML strict headers
-				echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
-				if ($frameset == true) {
-					echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Frameset//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd\">\n";
-				} else if (isset($conf['use_xhtml_strict']) && $conf['use_xhtml_strict']) {
-					echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-Strict.dtd\">\n";
-				} else {
-					echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
-				}
-				echo "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"{$lang['applocale']}\" lang=\"{$lang['applocale']}\"";
-				if (strcasecmp($lang['applangdir'], 'ltr') != 0) echo " dir=\"", htmlspecialchars($lang['applangdir']), "\"";
-				echo ">\n";
-
-				echo "<head>\n";
-				echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
-				// Theme
-				echo "<link rel=\"stylesheet\" href=\"themes/{$conf['theme']}/global.css\" type=\"text/css\" />\n";
-				echo "<link rel=\"shortcut icon\" href=\"images/themes/{$conf['theme']}/Favicon.ico\" type=\"image/vnd.microsoft.icon\" />\n";
-				echo "<link rel=\"icon\" type=\"image/png\" href=\"images/themes/{$conf['theme']}/EmajwebIcon.png\" />\n";
-				// Javascript
-				echo "<script type=\"text/javascript\" src=\"js/multiactionform.js\"></script>\n";
-				echo "<script type=\"text/javascript\" src=\"libraries/js/jquery-3.3.1.min.js\"></script>\n";
-				echo "<script type=\"text/javascript\" src=\"libraries/js/jquery.tablesorter.min.js\"></script>\n";
-				echo "<script type=\"text/javascript\" src=\"libraries/js/jquery.tablesorter.widgets.min.js\"></script>\n";
-				// Title
-				echo "<title>", htmlspecialchars($appName);
-				if ($title != '') echo htmlspecialchars(" - {$title}");
-				echo "</title>\n";
-
-				if ($script) echo "{$script}\n";
-
-				echo "</head>\n";
+			header("Content-Type: text/html; charset=utf-8");
+			// Send XHTML headers, or regular XHTML strict headers
+			echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+			if ($frameset == true) {
+				echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Frameset//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd\">\n";
+			} else if (isset($conf['use_xhtml_strict']) && $conf['use_xhtml_strict']) {
+				echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-Strict.dtd\">\n";
+			} else {
+				echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
 			}
+			echo "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"{$lang['applocale']}\" lang=\"{$lang['applocale']}\"";
+			if (strcasecmp($lang['applangdir'], 'ltr') != 0) echo " dir=\"", htmlspecialchars($lang['applangdir']), "\"";
+			echo ">\n";
+
+			echo "<head>\n";
+			echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
+			// Theme
+			echo "<link rel=\"stylesheet\" href=\"themes/{$conf['theme']}/global.css\" type=\"text/css\" />\n";
+			echo "<link rel=\"shortcut icon\" href=\"images/themes/{$conf['theme']}/Favicon.ico\" type=\"image/vnd.microsoft.icon\" />\n";
+			echo "<link rel=\"icon\" type=\"image/png\" href=\"images/themes/{$conf['theme']}/EmajwebIcon.png\" />\n";
+			// Javascript
+			echo "<script type=\"text/javascript\" src=\"js/multiactionform.js\"></script>\n";
+			echo "<script type=\"text/javascript\" src=\"libraries/js/jquery-3.3.1.min.js\"></script>\n";
+			echo "<script type=\"text/javascript\" src=\"libraries/js/jquery.tablesorter.min.js\"></script>\n";
+			echo "<script type=\"text/javascript\" src=\"libraries/js/jquery.tablesorter.widgets.min.js\"></script>\n";
+			// Title
+			echo "<title>", htmlspecialchars($appName);
+			if ($title != '') echo htmlspecialchars(" - {$title}");
+			echo "</title>\n";
+
+			if ($script) echo "{$script}\n";
+
+			echo "</head>\n";
+		}
+
+		/**
+		 * Prints the page body.
+		 * @param $doBody True to output body tag, false otherwise
+		 * @param $bodyClass - name of body class
+		 */
+		function printBody($bodyClass = '', $doBody = true ) {
+
+			if ($doBody) {
+				$bodyClass = htmlspecialchars($bodyClass);
+				echo "<body", ($bodyClass == '' ? '' : " class=\"{$bodyClass}\"");
+				echo ">\n";
+			}
+		}
+
+		/**
+		 * Prints the page header
+		 * @param $trail = trail name, $urlvar = variables to add to the url for the refresh button
+		 *        $tabs = name of the tabs bar to display, $activetab = name of ... the active tab
+		 */
+		function printHeader($trail, $urlvar = '', $tabs, $activetab) {
+			global $lang;
+
+			echo "<header>\n";
+
+			$this->printTopbar();
+
+			if ($trail != '') {
+				$this->printTrail($trail, $urlvar);
+			}
+
+			if ($tabs != '') {
+				$this->printTabs($tabs, $activetab);
+			};
+
+			echo "</header>\n";
+		}
+
+		/**
+		 * Prints the top bar
+		 */
+		function printTopbar() {
+			global $lang, $conf, $plugin_manager, $appName, $appVersion, $appLangFiles;
+
+			$server_info = $this->getServerInfo();
+			$reqvars = $this->getRequestVars('table');
+
+			echo "<div class=\"topbar\"><table style=\"width: 100%\"><tr><td>";
+
+			if ($server_info && isset($server_info['platform']) && isset($server_info['username'])) {
+				/* top left informations when connected */
+				echo sprintf($lang['strtopbar'],
+					'<span class="host">'.htmlspecialchars((empty($server_info['host'])) ? 'localhost':$server_info['host']).'</span>',
+					'<span class="port">'.htmlspecialchars($server_info['port']).'</span>',
+					'<span class="username">'.htmlspecialchars($server_info['username']).'</span>');
+				echo "</td>";
+
+				/* top right informations when connected */
+
+				$toplinks = array (
+					'sql' => array (
+						'attr' => array (
+							'href' => array (
+								'url' => 'sqledit.php',
+								'urlvars' => array_merge($reqvars, array (
+									'action' => 'sql'
+								))
+							),
+							'target' => "sqledit",
+							'id' => 'toplink_sql',
+						),
+						'content' => $lang['strsql']
+					),
+					'history' => array (
+						'attr'=> array (
+							'href' => array (
+								'url' => 'history.php',
+								'urlvars' => array_merge($reqvars, array (
+									'action' => 'pophistory'
+								))
+							),
+							'id' => 'toplink_history',
+						),
+						'content' => $lang['strhistory']
+					),
+					'logout' => array(
+						'attr' => array (
+							'href' => array (
+								'url' => 'servers.php',
+								'urlvars' => array (
+									'action' => 'logout',
+									'logoutServer' => "{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}"
+								)
+							),
+							'id' => 'toplink_logout',
+						),
+						'content' => $lang['strlogout']
+					)
+				);
+
+				$plugin_manager->do_hook('toplinks', $plugin_functions_parameters);
+
+				echo "<td style=\"text-align: right\">";
+				$this->printLinksList($toplinks, 'toplink');
+				echo "</td>";
+
+				$sql_window_id = htmlentities('sqledit:'.$_REQUEST['server']);
+				$history_window_id = htmlentities('history:'.$_REQUEST['server']);
+
+				echo "<script type=\"text/javascript\">
+						$('#toplink_sql').click(function() {
+							window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();
+							return false;
+						});
+
+						$('#toplink_history').click(function() {
+							window.open($(this).attr('href'),'{$history_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();
+							return false;
+						});
+
+						$('#toplink_find').click(function() {
+							window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();
+							return false;
+						});
+						";
+
+				if (isset($_SESSION['sharedUsername'])) {
+					printf("
+						$('#toplink_logout').click(function() {
+							return confirm('%s');
+						});", str_replace("'", "\'", $lang['strconfdropcred']));
+				}
+
+				echo "
+				</script>";
+			}
+			else {
+				echo "<span class=\"appname\">{$appName}</span> <span class=\"version\">{$appVersion}</span>";
+			}
+
+			echo "<td style=\"text-align: right; width: 1%\">";
+
+			echo "<form method=\"get\"><select name=\"language\" onchange=\"this.form.submit()\">\n";
+			$language = isset($_SESSION['webdbLanguage']) ? $_SESSION['webdbLanguage'] : 'english';
+			foreach ($appLangFiles as $k => $v) {
+				echo "<option value=\"{$k}\"",
+					($k == $language) ? ' selected="selected"' : '',
+					">{$v}</option>\n";
+			}
+			echo "</select>\n";
+			echo "<noscript><input type=\"submit\" value=\"Set Language\"></noscript>\n";
+			foreach ($_GET as $key => $val) {
+				if ($key == 'language') continue;
+				echo "<input type=\"hidden\" name=\"$key\" value=\"", htmlspecialchars($val), "\" />\n";
+			}
+			echo "</form>\n";
+
+			echo "</td>";
+
+			echo "</tr></table></div>\n";
 		}
 
 		/**
@@ -498,29 +656,14 @@
 			if ($doBody) {
 				if (isset($_reload_browser)) $this->printReload(false);
 				elseif (isset($_reload_drop_database)) $this->printReload(true);
+				echo "<footer>\n";
+				echo "\t<a name=\"bottom\">&nbsp;</a>\n";
 				if (!isset($_no_bottom_link))
-					echo "<a href=\"#\" class=\"bottom_link\"><img src=\"{$this->icon('Top')}\" alt=\"{$lang['strgotoppage']}\" title=\"{$lang['strgotoppage']}\"/></a>";
-				echo "<div class=\"footer\"><a name=\"bottom\">&nbsp;</a></div>\n";
+					echo "\t<a href=\"#\" class=\"bottom_link\"><img src=\"{$this->icon('Top')}\" alt=\"{$lang['strgotoppage']}\" title=\"{$lang['strgotoppage']}\"/></a>\n";
+				echo "</footer>\n";
 				echo "</body>\n";
 			}
 			echo "</html>\n";
-		}
-
-		/**
-		 * Prints the page body.
-		 * @param $doBody True to output body tag, false otherwise
-		 * @param $bodyClass - name of body class
-		 */
-		function printBody($bodyClass = '', $doBody = true ) {
-			global $_no_output;
-
-			if (!isset($_no_output)) {
-				if ($doBody) {
-					$bodyClass = htmlspecialchars($bodyClass);
-					echo "<body", ($bodyClass == '' ? '' : " class=\"{$bodyClass}\"");
-					echo ">\n";
-				}
-			}
 		}
 
 		/**
@@ -599,7 +742,6 @@
 			}
 
 			echo "<table class=\"tabs\"><tr>\n";
-			#echo "<div class=\"tabs\">\n";
 
 			# FIXME: don't count hidden tabs
 			$width = (int)(100 / count($tabs)).'%';
@@ -627,7 +769,6 @@
 			}
 
 			echo "</tr></table>\n";
-			#echo "</div>\n";
 		}
 
 		/**
@@ -821,127 +962,6 @@
 			return isset($tab['url']) ? $tab : null;
 		}
 
-		function printTopbar() {
-			global $lang, $conf, $plugin_manager, $appName, $appVersion, $appLangFiles;
-
-			$server_info = $this->getServerInfo();
-			$reqvars = $this->getRequestVars('table');
-
-			echo "<div class=\"topbar\"><table style=\"width: 100%\"><tr><td>";
-
-			if ($server_info && isset($server_info['platform']) && isset($server_info['username'])) {
-				/* top left informations when connected */
-				echo sprintf($lang['strtopbar'],
-					'<span class="host">'.htmlspecialchars((empty($server_info['host'])) ? 'localhost':$server_info['host']).'</span>',
-					'<span class="port">'.htmlspecialchars($server_info['port']).'</span>',
-					'<span class="username">'.htmlspecialchars($server_info['username']).'</span>');
-				echo "</td>";
-
-				/* top right informations when connected */
-
-				$toplinks = array (
-					'sql' => array (
-						'attr' => array (
-							'href' => array (
-								'url' => 'sqledit.php',
-								'urlvars' => array_merge($reqvars, array (
-									'action' => 'sql'
-								))
-							),
-							'target' => "sqledit",
-							'id' => 'toplink_sql',
-						),
-						'content' => $lang['strsql']
-					),
-					'history' => array (
-						'attr'=> array (
-							'href' => array (
-								'url' => 'history.php',
-								'urlvars' => array_merge($reqvars, array (
-									'action' => 'pophistory'
-								))
-							),
-							'id' => 'toplink_history',
-						),
-						'content' => $lang['strhistory']
-					),
-					'logout' => array(
-						'attr' => array (
-							'href' => array (
-								'url' => 'servers.php',
-								'urlvars' => array (
-									'action' => 'logout',
-									'logoutServer' => "{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}"
-								)
-							),
-							'id' => 'toplink_logout',
-						),
-						'content' => $lang['strlogout']
-					)
-				);
-
-				$plugin_manager->do_hook('toplinks', $plugin_functions_parameters);
-
-				echo "<td style=\"text-align: right\">";
-				$this->printLinksList($toplinks, 'toplink');
-				echo "</td>";
-
-				$sql_window_id = htmlentities('sqledit:'.$_REQUEST['server']);
-				$history_window_id = htmlentities('history:'.$_REQUEST['server']);
-
-				echo "<script type=\"text/javascript\">
-						$('#toplink_sql').click(function() {
-							window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();
-							return false;
-						});
-
-						$('#toplink_history').click(function() {
-							window.open($(this).attr('href'),'{$history_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();
-							return false;
-						});
-
-						$('#toplink_find').click(function() {
-							window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();
-							return false;
-						});
-						";
-
-				if (isset($_SESSION['sharedUsername'])) {
-					printf("
-						$('#toplink_logout').click(function() {
-							return confirm('%s');
-						});", str_replace("'", "\'", $lang['strconfdropcred']));
-				}
-
-				echo "
-				</script>";
-			}
-			else {
-				echo "<span class=\"appname\">{$appName}</span> <span class=\"version\">{$appVersion}</span>";
-			}
-
-			echo "<td style=\"text-align: right; width: 1%\">";
-
-			echo "<form method=\"get\"><select name=\"language\" onchange=\"this.form.submit()\">\n";
-			$language = isset($_SESSION['webdbLanguage']) ? $_SESSION['webdbLanguage'] : 'english';
-			foreach ($appLangFiles as $k => $v) {
-				echo "<option value=\"{$k}\"",
-					($k == $language) ? ' selected="selected"' : '',
-					">{$v}</option>\n";
-			}
-			echo "</select>\n";
-			echo "<noscript><input type=\"submit\" value=\"Set Language\"></noscript>\n";
-			foreach ($_GET as $key => $val) {
-				if ($key == 'language') continue;
-				echo "<input type=\"hidden\" name=\"$key\" value=\"", htmlspecialchars($val), "\" />\n";
-			}
-			echo "</form>\n";
-
-			echo "</td>";
-
-			echo "</tr></table></div>\n";
-		}
-
 		/**
 		 * Display a bread crumb trail.
 		 * ... and the buttons to refresh the page and to go to the page bottom
@@ -949,7 +969,7 @@
 		function printTrail($trail = array(), $urlvar = '') {
 			global $lang;
 
-			$this->printTopbar();
+//			$this->printTopbar();
 
 			if (is_string($trail)) {
 				$trail = $this->getTrail($trail);
@@ -1004,6 +1024,8 @@
 			echo "<a href=\"#bottom\"><img src=\"{$this->icon('Bottom')}\" alt=\"{$lang['emajpagebottom']}\" title=\"{$lang['emajpagebottom']}\"  style=\"padding:1px 5px 1px 5px;\"/></a>\n";
 			echo "</div>\n";
 			echo "</div>\n";
+
+			echo "</header>\n";
 		}
 
 		/**

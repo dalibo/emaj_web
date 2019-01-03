@@ -17,8 +17,7 @@
 		global $data, $conf, $misc;
 		global $lang;
 
-		$misc->printTrail('schema');
-		$misc->printTabs('schema', 'sequences');
+		$misc->printHeader('schema', '', 'schema', 'sequences');
 		$misc->printMsg($msg);
 
 		// Get all sequences
@@ -79,7 +78,7 @@
 		global $data, $misc;
 		global $lang;
 
-		$misc->printTrail('sequence');
+		$misc->printHeader('sequence', '', '', '');
 		$misc->printTitle($lang['strproperties'],'pg.sequence');
 		$misc->printMsg($msg);
 
@@ -130,7 +129,7 @@
 	if ($action == 'tree') doTree();
 
 	// Print header
-	$misc->printHeader($lang['strsequences']);
+	$misc->printHtmlHeader($lang['strsequences']);
 	$misc->printBody();
 
 	switch($action) {

@@ -4594,14 +4594,13 @@ class Emaj extends Plugin {
 	function printPageHeader($tabs = 'emaj', $tab = 'emajgroups', $urlvar = '') {
 		global $misc, $lang;
 
-		$misc->printHeader($lang['emajplugin']);
+		$misc->printHtmlHeader($lang['emajplugin']);
 		$misc->printBody();
 		if ($tabs == 'emaj') {
-			$misc->printTrail('database', $urlvar);
+			$misc->printHeader('database', $urlvar, $tabs, $tab);
 		} else {
-			$misc->printTrail('emaj', $urlvar);
+			$misc->printHeader('emaj', $urlvar, $tabs, $tab);
 		}
-		$misc->printTabs($tabs,$tab);
 		return ;
 	}
 

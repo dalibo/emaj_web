@@ -46,7 +46,7 @@
 	/* shortcuts: these functions exit the script */
 	if ($action == 'tree') doTree();
 
-	$misc->printHeader($lang['strdatabase'], $scripts);
+	$misc->printHtmlHeader($lang['strdatabase'], $scripts);
 	$misc->printBody();
 
 	switch ($action) {

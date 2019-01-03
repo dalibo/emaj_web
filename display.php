@@ -210,7 +210,7 @@
 			$subject = '';
 		}
 
-		$misc->printTrail(isset($subject) ? $subject : 'database');
+		$misc->printHeader(isset($subject) ? $subject : 'database', '', '', '');
 
 		/* This code is used when browsing FK in pure-xHTML (without js) */
 		if (isset($_REQUEST['fkey'])) {
@@ -449,9 +449,9 @@
 
 	// If a table is specified, then set the title differently
 	if (isset($_REQUEST['subject']) && isset($_REQUEST[$_REQUEST['subject']]))
-		$misc->printHeader($lang['strtables'], $scripts);
+		$misc->printHtmlHeader($lang['strtables'], $scripts);
 	else	
-		$misc->printHeader($lang['strqueryresults']);
+		$misc->printHtmlHeader($lang['strqueryresults']);
 
 	$misc->printBody();
 

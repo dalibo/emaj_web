@@ -9,11 +9,10 @@
 	include_once('./libraries/lib.inc.php');
 	include_once('./themes/themes.php');
 
-	$misc->printHeader();
+	$misc->printHtmlHeader();
 	$misc->printBody();
 
-	$misc->printTrail('root');
-	$misc->printTabs('root','intro');
+	$misc->printHeader('root', '', 'root', 'intro');
 ?>
 
 <div id="welcome">

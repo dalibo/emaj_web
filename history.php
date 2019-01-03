@@ -16,7 +16,7 @@
 
 		$onchange = "onchange=\"location.href='history.php?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + '&amp;'\"";
 
-		$misc->printHeader($lang['strhistory']);
+		$misc->printHtmlHeader($lang['strhistory']);
 		
 		// Bring to the front always
 		echo "<body onload=\"window.focus();\">\n";
@@ -137,7 +137,7 @@
 		global $misc, $lang;
 
 		if ($confirm) {
-			$misc->printHeader($lang['strhistory']);
+			$misc->printHtmlHeader($lang['strhistory']);
 
         		// Bring to the front always
 	        	echo "<body onload=\"window.focus();\">\n";
@@ -162,7 +162,7 @@
 		global $misc, $lang;
 
 		if ($confirm) {
-			$misc->printHeader($lang['strhistory']);
+			$misc->printHtmlHeader($lang['strhistory']);
 
         		// Bring to the front always
 	        	echo "<body onload=\"window.focus();\">\n";

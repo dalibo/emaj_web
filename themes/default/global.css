@@ -31,6 +31,10 @@ div.logo {
 	border: none;
 	margin-bottom: 12px;
 }
+header {
+	margin: 0px;
+	width: 100%;
+}
 #welcome {
 	margin: 20px 20px 40px 20px;
 	text-align:center;

@@ -63,8 +63,7 @@
 			return $actions;
 		}
 
-		$misc->printTrail('table');
-		$misc->printTabs('table','columns');
+		$misc->printHeader('table', '', 'table', 'columns');
 		$misc->printMsg($msg);
 
 		// Get table
@@ -171,7 +170,7 @@
 
 	}
 
-	$misc->printHeader($lang['strtables'] . ' - ' . $_REQUEST['table']);
+	$misc->printHtmlHeader($lang['strtables'] . ' - ' . $_REQUEST['table']);
 	$misc->printBody();
 
 	switch ($action) {

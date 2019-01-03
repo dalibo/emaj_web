@@ -42,7 +42,7 @@
 		
 		if (!isset($_SESSION['sqlquery'])) $_SESSION['sqlquery'] = '';
 		
-		$misc->printHeader($lang['strsql']);
+		$misc->printHtmlHeader($lang['strsql']);
 		
 		// Bring to the front always
 		echo "<body onload=\"window.focus();\">\n";

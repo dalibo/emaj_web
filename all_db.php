@@ -17,8 +17,7 @@
 		global $data, $conf, $misc;
 		global $lang;
 
-		$misc->printTrail('server');
-		$misc->printTabs('server','databases');
+		$misc->printHeader('server', '', 'server', 'databases');
 		$misc->printMsg($msg);
 
 		$databases = $data->getDatabases();
@@ -90,7 +89,7 @@
 
 	if ($action == 'tree') doTree();
 
-	$misc->printHeader($lang['strdatabases']);
+	$misc->printHtmlHeader($lang['strdatabases']);
 	$misc->printBody();
 
 	switch ($action) {

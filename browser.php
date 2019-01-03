@@ -14,7 +14,7 @@
 	include_once('./libraries/lib.inc.php');
 	
 	// Output header
-	$misc->printHeader('', '
+	$misc->printHtmlHeader('', '
 		<script src="xloadtree/xtree2.js" type="text/javascript"></script>
 		<script src="xloadtree/xloadtree2.js" type="text/javascript"></script>
 		<style type="text/css">

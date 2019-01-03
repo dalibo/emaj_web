@@ -95,28 +95,6 @@
 		$_reload_browser = true;
 	}
 
-	/* select the theme */
-	unset($_theme);
-	if (!isset($conf['theme']))
-		$conf['theme'] = 'default';
-
-	// 1. Check for the theme from a request var
-	if (isset($_REQUEST['theme']) && is_file("./themes/{$_REQUEST['theme']}/global.css")) {
-		/* save the selected theme in cookie for a year */
-		setcookie('ppaTheme', $_REQUEST['theme'], time()+31536000);
-		$_theme = $_SESSION['ppaTheme'] = $conf['theme'] = $_REQUEST['theme'];
-	}
-
-	// 2. Check for theme session var
-	if (!isset($_theme) && isset($_SESSION['ppaTheme']) && is_file("./themes/{$_SESSION['ppaTheme']}/global.css")) {
-		$conf['theme']  = $_SESSION['ppaTheme'];
-	}
-
-	// 3. Check for theme in cookie var
-	if (!isset($_theme) && isset($_COOKIE['ppaTheme']) && is_file("./themes/{$_COOKIE['ppaTheme']}/global.css")) {
-		$conf['theme']  = $_COOKIE['ppaTheme'];
-	}
-
 	// Determine language file to import:
 	unset($_language);
 

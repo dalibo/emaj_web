@@ -67,7 +67,7 @@
 	$conf['servers'][6]['port'] = 5496;
 	$conf['servers'][6]['sslmode'] = 'allow';
 	$conf['servers'][6]['defaultdb'] = 'postgres';
-	
+
 	$conf['servers'][7]['desc'] = 'Pg 10';
 	$conf['servers'][7]['host'] = 'localhost';
 	$conf['servers'][7]['port'] = 5410;
@@ -116,13 +116,10 @@
 
 	// Width of the left frame in pixels (object browser)
 	$conf['left_width'] = 200;
-	
-	// Which look & feel theme to use
-	$conf['theme'] = 'default';
-	
+
 	// Show OIDs when browsing tables?
 	$conf['show_oids'] = false;
-	
+
 	// Max rows to show on a page when browsing record sets
 	$conf['max_rows'] = 30;
 
@@ -136,7 +133,7 @@
 	// Time in seconds. If set to 0, refreshing data using ajax will be disabled (locks and activity pages)
 	$conf['ajax_refresh'] = 3;
 
-    /* Uncomment and adjust the value of both parameters */
+	/* Uncomment and adjust the value of both parameters */
 
 	/* Pathname for the psql executable file (used to submit batch rollback operations */
 //	$conf['psql_path'] = 'C:\\Bitnami\\wappstack-5.5.30-0\\postgresql\\bin\\psql.exe';

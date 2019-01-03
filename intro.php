@@ -7,7 +7,6 @@
 	// Include application functions (no db conn)
 	$_no_db_connection = true;
 	include_once('./libraries/lib.inc.php');
-	include_once('./themes/themes.php');
 
 	$misc->printHtmlHeader();
 	$misc->printBody();
@@ -19,26 +18,6 @@
   <h1><?php echo sprintf($lang['strintro'],$appName,$appVersion)?></h1>
   <img src="<?php echo $misc->icon('E-Maj_H')?>" alt="E-Maj_logo" style="width:35%;	height:35%;"/>
 </div>
-
-<form method="get" action="intro.php">
-<table>
-	<tr class="data2">
-		<th class="data"><?php echo $lang['strtheme'] ?></th>
-		<td>
-			<select name="theme" onchange="this.form.submit()">
-			<?php
-			foreach ($appThemes as $k => $v) {
-				echo "\t<option value=\"{$k}\"",
-					($k == $conf['theme']) ? ' selected="selected"' : '',
-					">{$v}</option>\n";
-			}
-			?>
-			</select>
-		</td>
-	</tr>
-</table>
-<noscript><p><input type="submit" value="<?php echo $lang['stralter'] ?>" /></p></noscript>
-</form>
 
 <?php $misc->printTitle($lang['strlink']); ?>
 

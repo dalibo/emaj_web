@@ -89,7 +89,6 @@
 	$lang['strstart'] = 'Start';
 	$lang['strstop'] = 'Stop';
 	$lang['strgotoppage'] = 'back to top';
-	$lang['strtheme'] = 'Theme';
 	$lang['strselect'] = 'Select';
 	$lang['stractionsonselectedobjects'] = 'Actions on selected objects (0)';
 	$lang['strall'] = 'All';

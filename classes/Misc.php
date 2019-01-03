@@ -467,9 +467,9 @@
 			echo "<head>\n";
 			echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
 			// Theme
-			echo "<link rel=\"stylesheet\" href=\"themes/{$conf['theme']}/global.css\" type=\"text/css\" />\n";
-			echo "<link rel=\"shortcut icon\" href=\"images/themes/{$conf['theme']}/Favicon.ico\" type=\"image/vnd.microsoft.icon\" />\n";
-			echo "<link rel=\"icon\" type=\"image/png\" href=\"images/themes/{$conf['theme']}/EmajwebIcon.png\" />\n";
+			echo "<link rel=\"stylesheet\" href=\"css/global.css\" type=\"text/css\" />\n";
+			echo "<link rel=\"shortcut icon\" type=\"image/vnd.microsoft.icon\" href=\"images/Favicon.ico\" />\n";
+			echo "<link rel=\"icon\" type=\"image/png\" href=\"images/EmajwebIcon.png\" />\n";
 			// Javascript
 			echo "<script type=\"text/javascript\" src=\"js/multiactionform.js\"></script>\n";
 			echo "<script type=\"text/javascript\" src=\"libraries/js/jquery-3.3.1.min.js\"></script>\n";
@@ -1704,10 +1704,7 @@
 		function icon($icon) {
 			if (is_string($icon)) {
 				global $conf;
-				$path = "images/themes/{$conf['theme']}/{$icon}";
-				if (file_exists($path.'.png')) return $path.'.png';
-				if (file_exists($path.'.gif')) return $path.'.gif';
-				$path = "images/themes/default/{$icon}";
+				$path = "images/{$icon}";
 				if (file_exists($path.'.png')) return $path.'.png';
 				if (file_exists($path.'.gif')) return $path.'.gif';
 			}

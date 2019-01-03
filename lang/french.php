@@ -82,7 +82,6 @@
 	$lang['strpaginate'] = 'Paginer les résultats';
 	$lang['struploadscript'] = 'ou importer un script SQL :';
 	$lang['strtrycred'] = 'Utilisez ces identifiants pour tous les serveurs';
-	$lang['strconfdropcred'] = 'For security reason, disconnecting will destroy your shared login information. Are you sure you want to disconnect ?';
 	$lang['strconfdropcred'] = 'Par mesure de sécurité, la déconnexion supprimera le partage de vos identifiants pour tous les serveurs. Êtes-vous certain de vouloir vous déconnecter ?';
 	$lang['stractionsonmultiplelines'] = 'Actions sur plusieurs lignes';
 	$lang['strselectall'] = 'Sélectionner tout';
@@ -90,7 +89,6 @@
 	$lang['strstart'] = 'Démarrer';
 	$lang['strstop'] = 'Arrêter';
 	$lang['strgotoppage'] = 'Haut de la page';
-	$lang['strtheme'] = 'Thème';
 	$lang['strselect'] = 'Sélectionner';
 	$lang['stractionsonselectedobjects'] = 'Actions sur les objets sélectionnés (0)';
 	$lang['strall'] = 'Tous';

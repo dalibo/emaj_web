@@ -34,8 +34,8 @@
 	//$conf['servers'][1]['port'] = 5432;
 	//$conf['servers'][1]['sslmode'] = 'allow';
 	//$conf['servers'][1]['defaultdb'] = 'template1';
-	
-	
+
+
 	/* Groups definition */
 	/* Groups allow administrators to logicaly group servers together under
 	 * group nodes in the left browser tree
@@ -61,7 +61,7 @@
 	//$conf['srv_groups'][2]['parents'] = '0,1';
 
 	/* Warning: Only groups with no parents appears at the root of the tree. */
-	
+
 
 	// Default language. E.g.: 'english'.  See lang/ directory
 	// for all possibilities. If you specify 'auto' (the default) it will use 
@@ -90,13 +90,10 @@
 
 	// Width of the left frame in pixels (object browser)
 	$conf['left_width'] = 200;
-	
-	// Which look & feel theme to use
-	$conf['theme'] = 'default';
-	
+
 	// Show OIDs when browsing tables?
 	$conf['show_oids'] = false;
-	
+
 	// Max rows to show on a page when browsing record sets
 	$conf['max_rows'] = 30;
 
@@ -110,7 +107,7 @@
 	// Time in seconds. If set to 0, refreshing data using ajax will be disabled (locks and activity pages)
 	$conf['ajax_refresh'] = 3;
 
-    /* Uncomment and adjust the value of both parameters */
+	/* Uncomment and adjust the value of both parameters */
 
 	/* Pathname for the psql executable file (used to submit batch rollback operations */
 //	$conf['psql_path'] = '/usr/local/postgresql/9.4/bin/psql';                    // unix style path

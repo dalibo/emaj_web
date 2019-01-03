@@ -269,7 +269,7 @@
 	$lang['emajto'] = 'To';
 
 	// E-Maj tabs
-	$lang['emajenvir'] = 'E-Maj environment';
+	$lang['emajenvir'] = 'E-Maj';
 	$lang['emajgroupsconf'] = 'Groups configuration';
 	$lang['emajrlbkop'] = 'Rollback operations';
 	$lang['emajlogstat'] = 'Log statistics';
@@ -283,7 +283,7 @@
 	$lang['emajextnotavailable'] = 'The E-Maj software is not installed on this PostgreSQL instance. Contact your database administrator.';
 	$lang['emajextnotcreated'] = 'The emaj extension is not created in this database. Contact your database administrator.';
 	$lang['emajnogrant'] = 'Your connection role has no E-Maj rights. Use another role or contact your database administrator.';
-	$lang['emajcharacteristics'] = 'Characteristics';
+	$lang['emajcharacteristics'] = 'E-Maj environment characteristics';
 	$lang['emajversions'] = 'Versions';
 	$lang['emajpgversion'] = 'PostgreSQL version: ';
 	$lang['emajversion'] = 'E-Maj version: ';

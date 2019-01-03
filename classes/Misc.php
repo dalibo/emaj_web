@@ -108,8 +108,9 @@
 							'server' => $_REQUEST['server'],
 							'subject' => 'plugin',
 							'plugin' => 'Emaj',
-							'action' => 'show_groups',
+							'action' => $_REQUEST['action'],
 							'database' => $_REQUEST['database'],
+							'group' => $_REQUEST['group'],
 					));
 					break;
 				default:
@@ -809,27 +810,6 @@
 
 				case 'database':
 					$tabs = array (
-						'schemas' => array (
-							'title' => $lang['strschemas'],
-							'url'   => 'schemas.php',
-							'urlvars' => array('subject' => 'database'),
-							'icon'  => 'Schemas',
-						),
-						'emaj' => array (
-							'title' => 'E-Maj',
-							'url' => 'plugin.php',
-							'urlvars' => array(
-								'plugin' => 'Emaj',
-								'subject' => 'database',
-								'action' => 'show_groups'
-							),
-							'icon' => array ('Emaj', 'Emaj')		// point to the 'Emaj' plugin and 'Emaj' icon
-						),
-					);
-					break;
-
-				case 'emaj':
-					$tabs = array (
 						'emajgroups' => array (
 							'title' => $lang['emajgroups'],
 							'url' => 'plugin.php',
@@ -860,6 +840,12 @@
 								'action' => 'show_rollbacks'
 							),
 							'icon' => array ('Emaj', 'EmajRollback')
+						),
+						'schemas' => array (
+							'title' => $lang['strschemas'],
+							'url'   => 'schemas.php',
+							'urlvars' => array('subject' => 'database'),
+							'icon'  => 'Schemas',
 						),
 						'emajenvir' => array (
 							'title' => $lang['emajenvir'],
@@ -1091,7 +1077,7 @@
 			if (isset($_REQUEST['group']) && !$done) {
 				$trail['emaj'] = array(
 					'title' => 'E-Maj',
-					'text'  => 'E-Maj',
+					'text'  => $_REQUEST['group'],
 					'url'   => $this->getHREFSubject('emaj'),
 					'icon'  => array ('Emaj', 'Emaj')
 				);
@@ -1329,6 +1315,9 @@
 					$v['database'] = $_REQUEST['database'];
 					if (isset($_REQUEST['schema']) && $subject != 'database') {
 						$v['schema'] = $_REQUEST['schema'];
+						if (isset($_REQUEST['group']) && $subject != 'emaj') {
+							$v['group'] = $_REQUEST['group'];
+						}
 					}
 				}
 			}

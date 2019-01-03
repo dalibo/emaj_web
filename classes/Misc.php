@@ -467,6 +467,7 @@
 			echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
 			// Theme
 			echo "<link rel=\"stylesheet\" href=\"css/global.css\" type=\"text/css\" />\n";
+			echo "<link rel=\"stylesheet\" href=\"css/tablesorter.css\" type=\"text/css\" />\n";
 			echo "<link rel=\"shortcut icon\" type=\"image/vnd.microsoft.icon\" href=\"images/Favicon.ico\" />\n";
 			echo "<link rel=\"icon\" type=\"image/png\" href=\"images/EmajwebIcon.png\" />\n";
 			// Javascript

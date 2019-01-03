@@ -38,7 +38,6 @@
 		}
 
 		function getSubjectParams($subject) {
-			global $plugin_manager;
 
 			$vars = array();
 			switch($subject) {
@@ -448,7 +447,7 @@
 		 * @param $script script tag
 		 */
 		function printHtmlHeader($title = '', $script = null, $frameset = false) {
-			global $appName, $lang, $conf, $plugin_manager;
+			global $appName, $lang, $conf;
 
 			header("Content-Type: text/html; charset=utf-8");
 			// Send XHTML headers, or regular XHTML strict headers
@@ -526,7 +525,7 @@
 		 * Prints the top bar
 		 */
 		function printTopbar() {
-			global $lang, $conf, $plugin_manager, $appName, $appVersion, $appLangFiles;
+			global $lang, $conf, $appName, $appVersion, $appLangFiles;
 
 			$server_info = $this->getServerInfo();
 			$reqvars = $this->getRequestVars('table');
@@ -583,8 +582,6 @@
 						'content' => $lang['strlogout']
 					)
 				);
-
-				$plugin_manager->do_hook('toplinks', $plugin_functions_parameters);
 
 				echo "<td style=\"text-align: right\">";
 				$this->printLinksList($toplinks, 'toplink');
@@ -777,7 +774,7 @@
 		 * @param $section The name of the tab bar.
 		 */
 		function getNavTabs($section) {
-			global $data, $lang, $conf, $plugin_manager, $emajdb;
+			global $data, $lang, $conf, $emajdb;
 
 			$tabs = array();
 
@@ -1019,7 +1016,7 @@
 		 * @param $object The type of object at the end of the trail.
 		 */
 		function getTrail($subject = null) {
-			global $lang, $conf, $data, $appName, $plugin_manager;
+			global $lang, $conf, $data, $appName;
 
 			$trail = array();
 			$vars = '';
@@ -1109,14 +1106,6 @@
 				}
 			}
 
-			// Trail hook's place
-			$plugin_functions_parameters = array(
-				'trail' => &$trail,
-				'section' => $subject
-			);
-
-			$plugin_manager->do_hook('trail', $plugin_functions_parameters);
-
 			return $trail;
 		}
 
@@ -1130,15 +1119,6 @@
 		* and 'browse' is the place inside that code (doBrowse).
 		*/
 		function printNavLinks($navlinks, $place, $env = array()) {
-			global $plugin_manager;
-
-			// Navlinks hook's place
-			$plugin_functions_parameters = array(
-				'navlinks' => &$navlinks,
-				'place' => $place,
-				'env' => $env
-			);
-			$plugin_manager->do_hook('navlinks', $plugin_functions_parameters);
 
 			if (count($navlinks) > 0) {
 				$this->printLinksList($navlinks, 'navlink');
@@ -1379,14 +1359,7 @@
 		 *					 Some specific behavious can be defined at column level.
 		 */
 		function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null, $tablesorter = null) {
-			global $data, $conf, $lang, $plugin_manager;
-
-			// Action buttons hook's place
-			$plugin_functions_parameters = array(
-				'actionbuttons' => &$actions,
-				'place' => $place
-			);
-			$plugin_manager->do_hook('actionbuttons', $plugin_functions_parameters);
+			global $data, $conf, $lang;
 
 			if ($has_ma = isset($actions['multiactions'])) {
 				$ma = $actions['multiactions'];
@@ -1616,7 +1589,6 @@
 		 * @param $section The section where the branch is linked in the tree
 		 */
 		function printTree(&$_treedata, &$attrs, $section) {
-			global $plugin_manager;
 
 			$treedata = array();
 
@@ -1632,8 +1604,6 @@
 				'attrs' => &$attrs,
 				'section' => $section
 			);
-
-			$plugin_manager->do_hook('tree', $tree_params);
 
 			$this->printTreeXML($treedata, $attrs);
 		}

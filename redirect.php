@@ -24,6 +24,6 @@
 		$_REQUEST = array_merge($_REQUEST, $urlvars);
 		$_GET = array_merge($_GET, $urlvars);
 	}
-	
+
 	require $url['url'];
 ?>

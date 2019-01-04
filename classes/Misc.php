@@ -531,7 +531,7 @@
 			$server_info = $this->getServerInfo();
 			$reqvars = $this->getRequestVars('table');
 
-			echo "<div class=\"topbar\"><table style=\"width: 100%\"><tr><td>";
+			echo "<div class=\"topbar\">\n\t<div class=\"conninfo\">";
 
 			if ($server_info && isset($server_info['platform']) && isset($server_info['username'])) {
 				/* top left informations when connected */
@@ -539,9 +539,9 @@
 					'<span class="host">'.htmlspecialchars((empty($server_info['host'])) ? 'localhost':$server_info['host']).'</span>',
 					'<span class="port">'.htmlspecialchars($server_info['port']).'</span>',
 					'<span class="username">'.htmlspecialchars($server_info['username']).'</span>');
-				echo "</td>";
+				echo "</div>\n";
 
-				/* top right informations when connected */
+				/* top right links when connected */
 
 				$toplinks = array (
 					'sql' => array (
@@ -584,29 +584,21 @@
 					)
 				);
 
-				echo "<td style=\"text-align: right\">";
+				echo "\t<div class=\"connlinks\">";
 				$this->printLinksList($toplinks, 'toplink');
-				echo "</td>";
 
 				$sql_window_id = htmlentities('sqledit:'.$_REQUEST['server']);
 				$history_window_id = htmlentities('history:'.$_REQUEST['server']);
 
-				echo "<script type=\"text/javascript\">
+				echo "\t<script type=\"text/javascript\">
 						$('#toplink_sql').click(function() {
 							window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();
 							return false;
 						});
-
 						$('#toplink_history').click(function() {
 							window.open($(this).attr('href'),'{$history_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();
 							return false;
-						});
-
-						$('#toplink_find').click(function() {
-							window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();
-							return false;
-						});
-						";
+						});";
 
 				if (isset($_SESSION['sharedUsername'])) {
 					printf("
@@ -615,15 +607,15 @@
 						});", str_replace("'", "\'", $lang['strconfdropcred']));
 				}
 
-				echo "
-				</script>";
+				echo "\n\t</script>\n";
 			}
 			else {
 				echo "<span class=\"appname\">{$appName}</span> <span class=\"version\">{$appVersion}</span>";
 			}
+			echo "</div>\n";
 
-			echo "<td style=\"text-align: right; width: 1%\">";
-
+			// language selection
+			echo "\t<div class=\"language\">";
 			echo "<form method=\"get\"><select name=\"language\" onchange=\"this.form.submit()\">\n";
 			$language = isset($_SESSION['webdbLanguage']) ? $_SESSION['webdbLanguage'] : 'english';
 			foreach ($appLangFiles as $k => $v) {
@@ -638,10 +630,9 @@
 				echo "<input type=\"hidden\" name=\"$key\" value=\"", htmlspecialchars($val), "\" />\n";
 			}
 			echo "</form>\n";
+			echo "\t</div>\n";
 
-			echo "</td>";
-
-			echo "</tr></table></div>\n";
+			echo "</div>\n";
 		}
 
 		/**
@@ -706,7 +697,7 @@
 					$tag.= htmlentities($attr).'="'. value($value, $link['fields'], 'html') .'" ';
 				}
 			}
-			$tag.= ">". value($link['content'], $link['fields'], 'html') ."</a>\n";
+			$tag.= ">". value($link['content'], $link['fields'], 'html') ."</a>";
 			echo $tag;
 		}
 
@@ -720,11 +711,11 @@
 		function printLinksList($links, $class='') {
 			echo "<ul class=\"{$class}\">\n";
 			foreach ($links as $link) {
-				echo "\t<li>";
+				echo "\t\t<li>";
 				$this->printLink($link);
 				echo "</li>\n";
 			}
-			echo "</ul>\n";
+			echo "\t</ul>";
 		}
 
 		/**
@@ -740,34 +731,29 @@
 				$tabs = $this->getNavTabs($tabs);
 			}
 
-			echo "<table class=\"tabs\"><tr>\n";
-
 			# FIXME: don't count hidden tabs
 			$width = (int)(100 / count($tabs)).'%';
 
+			echo "<nav>\n";
 			foreach ($tabs as $tab_id => $tab) {
 				$active = ($tab_id == $activetab) ? ' active' : '';
 
 				if (!isset($tab['hide']) || $tab['hide'] !== true) {
 
-					$tablink = '<a href="' . htmlentities($this->getActionUrl($tab, $_REQUEST)) . '">';
+					$tablink = "\t\t<a href=\"" . htmlentities($this->getActionUrl($tab, $_REQUEST)) . "\">";
 
 					if (isset($tab['icon']) && $icon = $this->icon($tab['icon']))
 						$tablink .= "<span class=\"icon\"><img src=\"{$icon}\" alt=\"{$tab['title']}\" /></span>";
 
-					$tablink .= "<span class=\"label\">{$tab['title']}</span></a>";
+					$tablink .= "{$tab['title']}</a>\n";
 
-					echo "<td style=\"width: {$width}\" class=\"tab{$active}\">";
-					#echo "<span class=\"tab{$active}\" style=\"white-space:nowrap;\">";
-
+					echo "\t<div style=\"width: {$width}\" class=\"tab{$active}\">\n";
 					echo $tablink;
-
-					echo "</td>\n";
-					#echo "</span>\n";
+					echo "\t</div>\n";
 				}
 			}
 
-			echo "</tr></table>\n";
+			echo "</nav>\n";
 		}
 
 		/**
@@ -813,7 +799,7 @@
 							'url' => 'plugin.php',
 							'urlvars' => array(
 								'plugin' => 'Emaj',
-								'subject' => 'emaj',
+								'subject' => 'database',
 								'action' => 'show_groups'
 							),
 							'icon' => 'EmajGroup'
@@ -823,7 +809,7 @@
 							'url' => 'plugin.php',
 							'urlvars' => array(
 								'plugin' => 'Emaj',
-								'subject' => 'emaj',
+								'subject' => 'database',
 								'action' => 'configure_groups'
 							),
 							'hide' => !($emajdb->isEmaj_Adm()),
@@ -834,7 +820,7 @@
 							'url' => 'plugin.php',
 							'urlvars' => array(
 								'plugin' => 'Emaj',
-								'subject' => 'emaj',
+								'subject' => 'database',
 								'action' => 'show_rollbacks'
 							),
 							'icon' => 'EmajRollback'
@@ -850,7 +836,7 @@
 							'url' => 'plugin.php',
 							'urlvars' => array(
 								'plugin' => 'Emaj',
-								'subject' => 'emaj',
+								'subject' => 'database',
 								'action' => 'emaj_envir'
 							),
 							'icon' => 'Emaj'
@@ -953,13 +939,11 @@
 		function printTrail($trail = array(), $urlvar = '') {
 			global $lang;
 
-//			$this->printTopbar();
-
 			if (is_string($trail)) {
 				$trail = $this->getTrail($trail);
 			}
 
-			echo "<div class=\"trail\" style=\"display:flex; justify-content:space-between; padding: 5px;\">\n";
+			echo "<div class=\"trail\">\n";
 			echo "  <div class=\"crumb\">\n";
 
 			$firstElement = 1;
@@ -1003,13 +987,11 @@
 					$uri .= '&amp;' . $this->href ;
 				}
 			}
-			echo "<div>\n";
-			echo "<a href=\"{$uri}\"><img src=\"{$this->icon('Refresh')}\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\" style=\"cursor:pointer; padding:1px 5px 1px 5px;\"/></a>\n";
-			echo "<a href=\"#bottom\"><img src=\"{$this->icon('Bottom')}\" alt=\"{$lang['emajpagebottom']}\" title=\"{$lang['emajpagebottom']}\"  style=\"padding:1px 5px 1px 5px;\"/></a>\n";
+			echo "\t<div class=\"trailicons\">\n";
+			echo "\t\t<a href=\"{$uri}\"><img src=\"{$this->icon('Refresh')}\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\" /></a>\n";
+			echo "\t\t<a href=\"#bottom\"><img src=\"{$this->icon('Bottom')}\" alt=\"{$lang['emajpagebottom']}\" title=\"{$lang['emajpagebottom']}\"  /></a>\n";
+			echo "\t</div>\n";
 			echo "</div>\n";
-			echo "</div>\n";
-
-			echo "</header>\n";
 		}
 
 		/**

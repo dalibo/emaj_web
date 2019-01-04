@@ -4614,10 +4614,10 @@ class Emaj extends Plugin {
 		// if Emaj is not usable for this database, only display a message
 		if (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
 			  && $emajdb->getNumEmajVersion() >= $this->oldest_supported_emaj_version_num)) {
-			echo "<div class=\"topbar\"><table style=\"width: 100%\"><tr><td><span class=\"platform\">";
+			echo "<p>";
 			$link = "<a href=\"plugin.php?plugin={$this->name}&amp;action=emaj_envir&amp;{$misc->href}\">\"{$lang['emajenvir']}\"</a>";
 			echo sprintf($lang['emajnotavail'], $link);
-			echo "</span></td></tr></table></div>";
+			echo "</p>";
 			return 0;
 		}
 		return 1;
@@ -4636,13 +4636,13 @@ class Emaj extends Plugin {
 	function tree() {
 		global $misc, $emajdb;
 
-		$reqvars = $misc->getRequestVars('emaj');
+		$reqvars = $misc->getRequestVars('database');
 
 		$groups = $emajdb->getGroups();
 
 		$attrs = array(
 			'text' => field('group_name'),
-			'icon' => $this->icon('EmajGroup'),
+			'icon' => $misc->icon('EmajGroup'),
 			'iconaction' => url	('plugin.php',$reqvars,
 				array(
 					'action'  => 'show_group',

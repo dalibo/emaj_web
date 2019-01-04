@@ -1,114 +1,22 @@
-img { border: none; }
-p.message {color: blue}
-p.comment {font-style: italic}
+/* global.css
+ *
+ * main css file
+ */
+
+/** general formating **/
+
+img {
+	border: none;
+}
+p.message {
+	color: blue;
+}
+p.comment {
+	font-style: italic
+}
 .left{text-align: left}
 .pre {white-space: pre}
 
-.arg_icon {
-	padding-right:5pt;
-	padding-left:5pt;
-}
-
-/** Browser Tree using XLoadTree 2 **/
-body.browser {
-	height:	100%;
-	margin:	0px;
-	padding: 0px;
-	text-align: left;
-}
-.refreshTree {
-	float:right;
-	text-align:right;
-	padding: 0 3px;
-}
-.webfx-tree-row {white-space: nowrap}
-.webfx-tree-children {
-	background-repeat: repeat-y;
-	background-position-y: 1px !important;	/* IE only */
-}
-.webfx-tree-row img {vertical-align: middle}
-.webfx-tree-item-label {margin-left: 0.5ex}
-.webfx-tree-icon {margin-left: 1px}
-.webfx-tree-hide-root {display: none}
-
-/** auto-complete on insert **/
-#fkbg {
-	display:none;
-	position:fixed;
-	top:0;left:0;
-	width:100%;
-	height:100%;
-	z-index:10;
-}
-#fklist {
-	display:none;
-	position:absolute;
-	background:#fff;
-	border:1px solid #000;
-	overflow:auto;
-	z-index:15;
-}
-#fklist table {
-	border-collapse:collapse;
-	border: 1px solid #aaa;
-}
-#fklist th {border: 1px solid #aaa}
-#fklist td,
-#fklist th {
-	padding: 3px 10px;
-	border-right: 1px solid #aaa;
-	font-size: 12px;
-}
-#fklist td a {
-	display:block;
-	color:#000;
-}
-#fklist td a.fkval, p.errmsg {
-	color:red;
-}
-.ac_values {width:100%}
-
-/** bottom link back to top **/
-.bottom_link {
-	position: fixed; 
-	bottom: 0;
-	right: 0;
-	margin: 0;
-	padding: 4px;
-	background: #eee;
-	border-top: 1px dotted #999;
-	border-left: 1px dotted #999;
-	font-size: smaller;
-}
-
-/** FK browsing **/
-div#root {
-	position: absolute;
-}
-div.fk {
-    margin-left: 20px;
-}
-div#fkcontainer {
-    margin: 0;
-    position: relative;
-    width: 100%; 
-    background: none;
-    border:0px;
-}
-div.fk_value {
-	display:inline-block;
-}
-.highlight {
-	background-color: #FFFF00;
-}
-/** Syntax highlighting **/
-.comment {color: #008080}
-.keyword {color: #FF8000}
-.literal {color: #808080}
-
-/**
- * E-maj style sheet
- */
 body {
 	background-color: #ffffff;
 	margin:	4px;
@@ -119,32 +27,6 @@ body {
 }
 body > * {
 	margin-left: 20px;
-}
-body.browser {
-	font-size: 0.9em;
-	background-color: #f8f8f8;
-	color: #555555;
-}
-body.browser > * {
-	margin: 0;
-}
-body.browser div.webfx-tree-row:hover {
-	background: #eeeeee;
-}
-div.logo {
-	margin:	0px;
-	padding: 0px;
-	font-size: smaller; 
-	border: none;
-	margin-bottom: 12px;
-}
-header {
-	margin: 0px;
-	width: 100%;
-}
-#welcome {
-	margin: 20px 20px 40px 20px;
-	text-align:center;
 }
 h1 {
 	font-size: 1.5em;
@@ -182,9 +64,11 @@ table {
 	border: 0;
 	border-collapse: collapse;
 }
+
 td, th {
 	padding: 1px 8px;
 }
+
 a {
 	color: #308ac5;
 	text-decoration: none;
@@ -192,6 +76,7 @@ a {
 a:hover {
 	color: #cc0000;
 }
+
 input[type=checkbox], input[type=password], input[type=text], input[type=radio] {
 	background: #ffffff;
 	border: 1px solid #5090c1;
@@ -212,11 +97,13 @@ select {
 	background: #ffffff;
 	border: 1px solid #d5d5d5;
 }
+
 table.error {
 	margin: auto;
 	color: #d72b3f;
 	background-color: #f9f9f9;
 }
+
 th.data {
 	color: #3c424c;
 	background-color: #e0e0e0;
@@ -235,71 +122,94 @@ tr th.data:first-child {
 tr th.data:last-child {
 	border-right: 0;
 }
-th.required {text-decoration: underline}
-.trail {
-	background-color: #3c424c;
-	color: #9ea1a6;
-	margin: 0;
-	padding: 0;
-	text-align: left;
+th.required {
+	text-decoration: underline
 }
-.topbar {
-	background-color: #3c424c;
-	color: #9ea1a6;
-	margin: 0;
-	padding: 0;
-	text-align: left;
-}
-body.browser a {
-	color: #555555;
-}
-.trail a:hover, body.browser a:hover {
-	color: #cc0000;
-}
-th.data a {
-	color: #3c424c;
-}
-th.data a:hover {
-	color: #cc0000;
-}
-.trail a {
+
+/**
+ ** Page header
+ **/
+
+header {
+	background-color: #383840;
 	color: #cfcfcf;
+	margin: 0px 0px 20px 0px;
+	width: 100%;
+}
+
+/** Top bar */
+
+.topbar {
+	margin: 0;
+	padding: 5px 1ex;
+	text-align: left;
+	display: flex;
+	flex-flow: row wrap;
+}
+.conninfo {
+	flex:1;
+}
+.connlinks {
+	padding-left:20px;
+	padding-right:30px;
+}
+.language {
+	padding-right:5px;
+}
+.topbar .platform, .topbar .host, .topbar .username, .topbar .port {
+	color: #ffffff;
 }
 .topbar a {
 	color: #cfcfcf;
 }
 .topbar a:hover {
 	color: #ffffff;
+	text-decoration: underline;
 }
-.trail a:hover {
+.topbar select {
+	background-color: #484850;
+	color: #cfcfcf;
+}
+
+/** Trail **/
+.trail {
+	margin: 0;
+	padding: 5px;
+	text-align: left;
+	display:flex;
+	flex-flow: row wrap;
+}
+.crumb {
+	flex:1;
+	padding-left: 3px;
+}
+.crumb a {
+	color: #cfcfcf;
+	text-decoration: none;
+}
+.crumb a:hover {
 	color: #ffffff;
-}
-.topbar .platform, .topbar .host, .topbar .username, .topbar .port {
-	color: #ffffff;
-}
-.topbar, .trail, .tab {
-	padding: 2px 1ex;
-}
-.trail td {
-	padding: 2px;
+	text-decoration: underline;
 }
 .crumb .icon {
 	margin-right: 5px;
 }
-table.tabs {
-	width: 100%;
-	border-collapse: collapse;
-	margin: 0 0 20px 0;
+.trailicons img {
+	padding: 1px 5px 1px 5px;
+}
+
+/** nav tabs **/
+nav {
+	display:flex;
 }
 .tab {
-	background-color: #f8f8f8;
+	background-color: #f4f4f4;
 	text-align: center;
 	vertical-align: top;
 	font-size: 1.1em;
 	border: 1px solid #dddddd;
 	border-top: #ffffff;
 	padding: 15px 10px 5px 10px;
-	white-space: nowrap;
 }
 .tab a {
 	color: #828d94;
@@ -311,16 +221,41 @@ table.tabs {
 	background-color: #ffffff;
 	border-bottom: 1px solid #9ea1a6;
 }
-.tabs .active a {
+.tab .icon {
+	display: block;
+}
+nav .active a {
 	color: #3c424c;
 	text-decoration: none;
 }
-.tabs .active {
+nav .active {
 	background-color: #ffffff;
 	border-bottom: 1px solid #308ac5;
 }
-.tab .icon {
-	display: block;
+
+/** footer **/
+
+footer {
+}
+.bottom_link {
+	position: fixed; 
+	bottom: 0;
+	right: 0;
+	margin: 0;
+	padding: 4px;
+	background: #383840;
+	border-top: 1px dotted #999;
+	border-left: 1px dotted #999;
+	font-size: smaller;
+}
+
+
+
+th.data a {
+	color: #3c424c;
+}
+th.data a:hover {
+	color: #cc0000;
 }
 .active a {
 	/*font-weight: bold;
@@ -430,11 +365,11 @@ pre.error {
 .intro li {
 	font-weight: normal;
 }
-.ac_field {
+/*.ac_field {
 	border:1px solid #363330;
 	background: url('../images/openListe.png') no-repeat right;
 	padding-right: 20px;
-}
+}*/
 .bottom_link {
 	background-color: #3c424c;
 	color: #cfcfcf;
@@ -460,7 +395,10 @@ p.message {
 	color: #306EFF;
 }
 
-/** emaj specific **/
+#welcome {
+	margin: 20px 20px 40px 20px;
+	text-align:center;
+}
 
 button {
 	cursor: pointer;
@@ -488,3 +426,119 @@ th.multiactions {
 tr.row1 {
 	border: 1px solid #d8d8d8;
 }
+
+/** FK browsing **/
+div#root {
+	position: absolute;
+}
+div.fk {
+    margin-left: 20px;
+}
+div#fkcontainer {
+    margin: 0;
+    position: relative;
+    width: 100%; 
+    background: none;
+    border:0px;
+}
+div.fk_value {
+	display:inline-block;
+}
+.highlight {
+	background-color: #FFFF00;
+}
+
+/** Browser frame **/
+
+body.browser {
+	font-size: 0.9em;
+	background-color: #f8f8f8;
+	color: #555555;
+}
+body.browser > * {
+	margin: 0;
+}
+body.browser div.webfx-tree-row:hover {
+	background: #eeeeee;
+}
+body.browser a {
+	color: #555555;
+}
+body.browser a:hover {
+	color: #cc0000;
+}
+div.logo {
+	margin:	0px;
+	padding: 0px;
+	font-size: smaller; 
+	border: none;
+	margin-bottom: 12px;
+}
+
+/** Browser Tree using XLoadTree 2 **/
+
+body.browser {
+	height:	100%;
+	margin:	0px;
+	padding: 0px;
+	text-align: left;
+}
+.refreshTree {
+	float:right;
+	text-align:right;
+	padding: 0 3px;
+}
+.webfx-tree-row {white-space: nowrap}
+.webfx-tree-children {
+	background-repeat: repeat-y;
+	background-position-y: 1px !important;	/* IE only */
+}
+.webfx-tree-row img {vertical-align: middle}
+.webfx-tree-item-label {margin-left: 0.5ex}
+.webfx-tree-icon {margin-left: 1px}
+.webfx-tree-hide-root {display: none}
+
+/** Auto-complete on insert **/
+/*
+#fkbg {
+	display:none;
+	position:fixed;
+	top:0;left:0;
+	width:100%;
+	height:100%;
+	z-index:10;
+}
+#fklist {
+	display:none;
+	position:absolute;
+	background:#fff;
+	border:1px solid #000;
+	overflow:auto;
+	z-index:15;
+}
+#fklist table {
+	border-collapse:collapse;
+	border: 1px solid #aaa;
+}
+#fklist th {border: 1px solid #aaa}
+#fklist td,
+#fklist th {
+	padding: 3px 10px;
+	border-right: 1px solid #aaa;
+	font-size: 12px;
+}
+#fklist td a {
+	display:block;
+	color:#000;
+}
+#fklist td a.fkval, p.errmsg {
+	color:red;
+}
+*/
+/*.ac_values {width:100%}*/
+
+/** Syntax highlighting **/
+/*.comment {color: #008080}
+.keyword {color: #FF8000}
+.literal {color: #808080}
+*/

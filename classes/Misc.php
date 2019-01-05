@@ -446,7 +446,7 @@
 		 * @param $title The title of the page
 		 * @param $script script tag
 		 */
-		function printHtmlHeader($title = '', $script = null, $frameset = false) {
+		function printHtmlHeader($title = '', $script = null, $css = null, $frameset = false) {
 			global $appName, $lang, $conf;
 
 			header("Content-Type: text/html; charset=utf-8");
@@ -467,7 +467,8 @@
 			echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
 			// Theme
 			echo "<link rel=\"stylesheet\" href=\"css/global.css\" type=\"text/css\" />\n";
-			echo "<link rel=\"stylesheet\" href=\"css/tablesorter.css\" type=\"text/css\" />\n";
+			if ($css)
+				echo "<link rel=\"stylesheet\" href=\"css/{$css}.css\" type=\"text/css\" />\n";
 			echo "<link rel=\"shortcut icon\" type=\"image/vnd.microsoft.icon\" href=\"images/Favicon.ico\" />\n";
 			echo "<link rel=\"icon\" type=\"image/png\" href=\"images/EmajwebIcon.png\" />\n";
 			// Javascript

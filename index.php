@@ -7,7 +7,7 @@
 	// Include application functions
 	$_no_db_connection = true;
 	include_once('./libraries/lib.inc.php');
-	$misc->printHtmlHeader('', null, true);
+	$misc->printHtmlHeader('', null, null, true);
 
 	$rtl = (strcasecmp($lang['applangdir'], 'rtl') == 0);
 

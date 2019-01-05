@@ -1,0 +1,53 @@
+/* browser.css
+ *
+ * CSS descriptions specific to the browser frame
+ *
+ */
+
+body.browser {
+	font-size: 0.9em;
+	background-color: #f8f8f8;
+	color: #555555;
+}
+body.browser > * {
+	margin: 0;
+}
+body.browser div.webfx-tree-row:hover {
+	background: #eeeeee;
+}
+body.browser a {
+	color: #555555;
+}
+body.browser a:hover {
+	color: #cc0000;
+}
+div.logo {
+	margin:	0px;
+	padding: 0px;
+	font-size: smaller; 
+	border: none;
+	margin-bottom: 12px;
+}
+
+/** Browser Tree using XLoadTree 2 **/
+
+body.browser {
+	height:	100%;
+	margin:	0px;
+	padding: 0px;
+	text-align: left;
+}
+.refreshTree {
+	float:right;
+	text-align:right;
+	padding: 0 3px;
+}
+.webfx-tree-row {white-space: nowrap}
+.webfx-tree-children {
+	background-repeat: repeat-y;
+	background-position-y: 1px !important;	/* IE only */
+}
+.webfx-tree-row img {vertical-align: middle}
+.webfx-tree-item-label {margin-left: 0.5ex}
+.webfx-tree-icon {margin-left: 1px}
+.webfx-tree-hide-root {display: none}

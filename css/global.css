@@ -5,18 +5,6 @@
 
 /** general formating **/
 
-img {
-	border: none;
-}
-p.message {
-	color: blue;
-}
-p.comment {
-	font-style: italic
-}
-.left{text-align: left}
-.pre {white-space: pre}
-
 body {
 	background-color: #ffffff;
 	margin:	4px;
@@ -51,6 +39,19 @@ h3 {
 	background-color: #308ac5;
 	border-radius: 7px;
 }
+
+img {
+	border: none;
+}
+
+p.message {
+	color: blue;
+}
+p.comment {
+	font-style: italic
+}
+.left{text-align: left}
+.pre {white-space: pre}
 
 hr {
 	color: #ffffff;
@@ -248,8 +249,16 @@ footer {
 	border-left: 1px dotted #999;
 	font-size: smaller;
 }
+.bottom_link {
+	background-color: #3c424c;
+	color: #cfcfcf;
+}
+.bottom_link:hover {
+	color: #ffffff;
+}
 
 
+/** Other content formating **/
 
 th.data a {
 	color: #3c424c;
@@ -365,18 +374,7 @@ pre.error {
 .intro li {
 	font-weight: normal;
 }
-/*.ac_field {
-	border:1px solid #363330;
-	background: url('../images/openListe.png') no-repeat right;
-	padding-right: 20px;
-}*/
-.bottom_link {
-	background-color: #3c424c;
-	color: #cfcfcf;
-}
-.bottom_link:hover {
-	color: #ffffff;
-}
+
 div.fk {
     background: #fff;
 	border-left: 1px dotted #000;
@@ -393,11 +391,6 @@ div.fk {
 }
 p.message {
 	color: #306EFF;
-}
-
-#welcome {
-	margin: 20px 20px 40px 20px;
-	text-align:center;
 }
 
 button {
@@ -427,6 +420,12 @@ tr.row1 {
 	border: 1px solid #d8d8d8;
 }
 
+/** div specific to the intro.php page **/
+#welcome {
+	margin: 20px 20px 40px 20px;
+	text-align:center;
+}
+
 /** FK browsing **/
 div#root {
 	position: absolute;
@@ -448,97 +447,86 @@ div.fk_value {
 	background-color: #FFFF00;
 }
 
-/** Browser frame **/
-
-body.browser {
-	font-size: 0.9em;
-	background-color: #f8f8f8;
-	color: #555555;
-}
-body.browser > * {
-	margin: 0;
-}
-body.browser div.webfx-tree-row:hover {
-	background: #eeeeee;
-}
-body.browser a {
-	color: #555555;
-}
-body.browser a:hover {
-	color: #cc0000;
-}
-div.logo {
-	margin:	0px;
-	padding: 0px;
-	font-size: smaller; 
-	border: none;
-	margin-bottom: 12px;
-}
-
-/** Browser Tree using XLoadTree 2 **/
-
-body.browser {
-	height:	100%;
-	margin:	0px;
-	padding: 0px;
-	text-align: left;
-}
-.refreshTree {
-	float:right;
-	text-align:right;
-	padding: 0 3px;
-}
-.webfx-tree-row {white-space: nowrap}
-.webfx-tree-children {
-	background-repeat: repeat-y;
-	background-position-y: 1px !important;	/* IE only */
-}
-.webfx-tree-row img {vertical-align: middle}
-.webfx-tree-item-label {margin-left: 0.5ex}
-.webfx-tree-icon {margin-left: 1px}
-.webfx-tree-hide-root {display: none}
-
-/** Auto-complete on insert **/
 /*
-#fkbg {
-	display:none;
-	position:fixed;
-	top:0;left:0;
-	width:100%;
-	height:100%;
-	z-index:10;
-}
-#fklist {
-	display:none;
-	position:absolute;
-	background:#fff;
-	border:1px solid #000;
-	overflow:auto;
-	z-index:15;
-}
-#fklist table {
-	border-collapse:collapse;
-	border: 1px solid #aaa;
-}
-#fklist th {border: 1px solid #aaa}
-#fklist td,
-#fklist th {
-	padding: 3px 10px;
-	border-right: 1px solid #aaa;
-	font-size: 12px;
-}
-#fklist td a {
-	display:block;
-	color:#000;
-}
-#fklist td a.fkval, p.errmsg {
-	color:red;
-}
-*/
-/*.ac_values {width:100%}*/
+** tablesorter JQuery plugin css description
+ */
 
-/** Syntax highlighting **/
-/*.comment {color: #008080}
-.keyword {color: #FF8000}
-.literal {color: #808080}
-*/
+/* tables */
+
+.tablesorter-default thead tr th {
+	padding-right: 18px;
+}
+.tablesorter-default .header,
+.tablesorter-default .tablesorter-header {
+	background-image: url(../images/bg.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+.tablesorter-default thead .headerSortUp,
+.tablesorter-default thead .tablesorter-headerSortUp,
+.tablesorter-default thead .tablesorter-headerAsc {
+	background-image: url(../images/asc.gif);
+}
+.tablesorter-default thead .headerSortDown,
+.tablesorter-default thead .tablesorter-headerSortDown,
+.tablesorter-default thead .tablesorter-headerDesc {
+	background-image: url(../images/desc.gif);
+}
+.tablesorter-default thead tr .tablesorter-headerDesc, table.tablesorter thead tr .tablesorter-headerAsc {
+	background-color: #d0d0d0;
+}
+.tablesorter-default thead .sorter-false {
+	background-image: none;
+	padding: 4px;
+	cursor: default;
+}
+
+/* hidden filter row */
+
+.tablesorter-default .tablesorter-filter-row.hideme td {
+	/*** *********************************************** ***/
+	/*** change this padding to modify the thickness     ***/
+	/*** of the closed filter row (height = padding x 2) ***/
+	padding: 2px;
+	/*** *********************************************** ***/
+	margin: 0;
+	line-height: 0;
+	cursor: pointer;
+}
+.tablesorter-default .tablesorter-filter-row.hideme .tablesorter-filter {
+	height: 1px;
+	min-height: 0;
+	border: 0;
+	padding: 0;
+	margin: 0;
+	/* don't use visibility: hidden because it disables tabbing */
+	opacity: 0;
+	filter: alpha(opacity=0);
+}
+
+/* filter widget */
+
+.tablesorter-default .tablesorter-filter-row td {
+	background: #ffffff;
+	border-bottom: #ccc 1px solid;
+	line-height: normal;
+	text-align: center; /* center the input */
+	padding: 1px 3px 1px 3px;
+	-webkit-transition: line-height 0.1s ease;
+	-moz-transition: line-height 0.1s ease;
+	-o-transition: line-height 0.1s ease;
+	transition: line-height 0.1s ease;
+}
+
+.tablesorter-default input.tablesorter-filter {
+	width: 5em;
+	font-size: 0.8em;
+    border: 1px solid #887F5C;
+}
+.tablesorter-default select.tablesorter-filter {
+	font-size: 0.8em;
+}
+.tablesorter-default input.disabled {
+	display: none;
+}

@@ -411,8 +411,6 @@ class Emaj extends Plugin {
 					'sorter_text_extraction' => 'img_alt',
 					'filter' => false,
 				),
-			);
-			$columns = array_merge($columns, array(
 				'nbmark' => array(
 					'title' => $lang['emajnbmark'],
 					'field' => field('nb_mark'),
@@ -425,24 +423,11 @@ class Emaj extends Plugin {
 					'title' => $lang['strcomment'],
 					'field' => field('abbr_comment'),
 				),
-			));
+			);
 
 			$urlvars = $misc->getRequestVars();
 
-			$loggingActions = array(
-				'show_group' => array(
-					'content' => $lang['emajdetail'],
-					'attr' => array (
-						'href' => array (
-							'url' => 'plugin.php',
-							'urlvars' => array_merge($urlvars, array (
-								'plugin' => $this->name,
-								'action' => 'show_group',
-								'back' => 'list',
-								'group' => field('group_name'),
-							)))),
-				),
-			);
+			$loggingActions = array();
 			if ($emajdb->isEmaj_Adm()) {
 				$loggingActions = array_merge($loggingActions, array(
 					'multiactions' => array(
@@ -546,20 +531,7 @@ class Emaj extends Plugin {
 				};
 			};
 
-			$idleActions = array(
-				'show_group' => array(
-					'content' => $lang['emajdetail'],
-					'attr' => array (
-						'href' => array (
-							'url' => 'plugin.php',
-							'urlvars' => array_merge($urlvars, array (
-								'plugin' => $this->name,
-								'action' => 'show_group',
-								'back' => 'list',
-								'group' => field('group_name'),
-							))))
-				),
-			);
+			$idleActions = array();
 			if ($emajdb->isEmaj_Adm()) {
 				$idleActions = array_merge($idleActions, array(
 					'multiactions' => array(

@@ -350,7 +350,6 @@
 	$lang['emajnbtbl'] = 'Nb tables';
 	$lang['emajnbseq'] = 'Nb séquences';
 	$lang['emajnbmark'] = 'Nb marques';
-	$lang['emajdetail'] = 'Détail';	
 	$lang['emajsetmark'] = 'Poser une marque';
 	$lang['emajsetcomment'] = 'Commenter';
 	$lang['emajApplyConfChanges'] = 'Appliquer changements conf';

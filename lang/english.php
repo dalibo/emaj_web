@@ -350,7 +350,6 @@
 	$lang['emajnbtbl'] = '# tables';
 	$lang['emajnbseq'] = '# sequences';
 	$lang['emajnbmark'] = '# marks';
-	$lang['emajdetail'] = 'Detail';
 	$lang['emajsetmark'] = 'Set a mark';
 	$lang['emajsetcomment'] = 'Set a comment';
 	$lang['emajApplyConfChanges'] = 'Apply conf changes';

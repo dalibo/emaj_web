@@ -229,7 +229,7 @@
 				$type = 'SELECT';
 			}
 			else {
-				$misc->printTitle($lang['strbrowse']);
+				$misc->printTitle(sprintf($lang['strtblbrowse'], $_REQUEST['table']));
 				$type = 'TABLE';
 			}
 		} else {
@@ -432,7 +432,6 @@
 
 		$misc->printNavLinks($navlinks, 'display-browse', get_defined_vars());
 	}
-
 
 	/* shortcuts: this function exit the script for ajax purpose */
 	if ($action == 'dobrowsefk') {

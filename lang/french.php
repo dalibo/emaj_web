@@ -133,12 +133,15 @@
 	// Tables
 	$lang['strtable'] = 'Table';
 	$lang['strtables'] = 'Tables';
+	$lang['strtableslist'] = 'Tables du schéma "%s"';
 	$lang['strnotables'] = 'Aucune table trouvée.';
 	$lang['strnofkref'] = 'Aucune valeur correspondate pour la clé étrangère %s.';
 	$lang['strselectallfields'] = 'Sélectionner tous les champs';
 	$lang['strselectneedscol'] = 'Vous devez sélectionner au moins une colonne.';
 	$lang['strselectunary'] = 'Les opérateurs unaires ne peuvent avoir de valeurs.';
 	$lang['strestimatedrowcount'] = 'Nombre d\'enregistrements estimés';
+	$lang['strtblproperties'] = 'Propriétés de la table "%s"';
+	$lang['strtblbrowse'] = 'Parcours de la table "%s"';
 
 	// Users
 	$lang['strusername'] = 'Utilisateur';
@@ -155,6 +158,7 @@
 	// Databases
 	$lang['strdatabase'] = 'Base de données';
 	$lang['strdatabases'] = 'Bases de données';
+	$lang['strdatabaseslist'] = 'Databases du serveur';
 	$lang['strnodatabases'] = 'Aucune base de données trouvée.';
 	$lang['strentersql'] = 'Veuillez saisir ci-dessous la requête SQL à exécuter :';
 	$lang['strsqlexecuted'] = 'Requête SQL exécutée.';
@@ -167,6 +171,7 @@
 	// Sequences
 	$lang['strsequence'] = 'Séquence';
 	$lang['strsequences'] = 'Séquences';
+	$lang['strsequenceslist'] = 'Séquences du schéma "%s"';
 	$lang['strnosequences'] = 'Aucune séquence trouvée.';
 	$lang['strlastvalue'] = 'Dernière valeur';
 	$lang['strincrementby'] = 'Incrémenter par ';
@@ -200,6 +205,7 @@
 	// Schemas
 	$lang['strschema'] = 'Schéma';
 	$lang['strschemas'] = 'Schémas';
+	$lang['strallschemas'] = 'Tous les schémas';
 	$lang['strnoschemas'] = 'Aucun schéma trouvé.';
 	$lang['strsearchpath'] = 'Chemin de recherche du schéma';
 
@@ -297,7 +303,7 @@
 
 	// Groups' content setup
 	$lang['emajgroupsconfiguration'] = 'Configuration des groupes de tables';
-	$lang['emajschemaslist'] = 'Liste des schémas applicatifs';
+	$lang['emajappschemas'] = 'Les schémas applicatifs';
 	$lang['emajunknownobject'] = 'Cet objet est référencé dans la table emaj_group_def mais n\'est pas créé.';
 	$lang['emajunsupportedobject'] = 'Ce type d\'objet n\'est pas supporté par E-Maj (unlogged table, table avec OIDS, table partitionnée,...).';
 	$lang['emajtblseqofschema'] = 'Tables et séquences du schéma "%s"';

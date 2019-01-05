@@ -19,6 +19,7 @@
 
 		$misc->printHeader('server', '', 'server', 'databases');
 		$misc->printMsg($msg);
+		$misc->printTitle($lang['strdatabaseslist']);
 
 		$databases = $data->getDatabases();
 
@@ -50,10 +51,7 @@
 
 		$actions = array();
 
-		if (!$data->hasTablespaces()) unset($columns['tablespace']);
 		if (!$data->hasServerAdminFuncs()) unset($columns['dbsize']);
-		if (!$data->hasDatabaseCollation()) unset($columns['lc_collate'], $columns['lc_ctype']);
-		if (!isset($data->privlist['database'])) unset($actions['privileges']);
 
 		$misc->printTable($databases, $columns, $actions, 'all_db-databases', $lang['strnodatabases']);
 

@@ -133,12 +133,15 @@
 	// Tables
 	$lang['strtable'] = 'Table';
 	$lang['strtables'] = 'Tables';
+	$lang['strtableslist'] = 'Schema "%s" tables';
 	$lang['strnotables'] = 'No tables found.';
 	$lang['strnofkref'] = 'There is no matching value in the foreign key %s.';
 	$lang['strselectallfields'] = 'Select all fields';
 	$lang['strselectneedscol'] = 'You must show at least one column.';
 	$lang['strselectunary'] = 'Unary operators cannot have values.';
 	$lang['strestimatedrowcount'] = 'Estimated row count';
+	$lang['strtblproperties'] = 'Table "%s" properties';
+	$lang['strtblbrowse'] = 'Table "%s" browse';
 
 	// Users
 	$lang['strusername'] = 'Username';
@@ -155,6 +158,7 @@
 	// Databases
 	$lang['strdatabase'] = 'Database';
 	$lang['strdatabases'] = 'Databases';
+	$lang['strdatabaseslist'] = 'Server\'s databases';
 	$lang['strnodatabases'] = 'No databases found.';
 	$lang['strentersql'] = 'Enter the SQL to execute below:';
 	$lang['strsqlexecuted'] = 'SQL executed.';
@@ -167,6 +171,7 @@
 	// Sequences
 	$lang['strsequence'] = 'Sequence';
 	$lang['strsequences'] = 'Sequences';
+	$lang['strsequenceslist'] = 'Schema "%s" sequences';
 	$lang['strnosequences'] = 'No sequences found.';
 	$lang['strlastvalue'] = 'Last value';
 	$lang['strincrementby'] = 'Increment by';	
@@ -200,6 +205,7 @@
 	// Schemas
 	$lang['strschema'] = 'Schema';
 	$lang['strschemas'] = 'Schemas';
+	$lang['strallschemas'] = 'All schemas';
 	$lang['strnoschemas'] = 'No schemas found.';
 	$lang['strsearchpath'] = 'Schema search path';
 
@@ -297,7 +303,7 @@
 
 	// Groups' content setup
 	$lang['emajgroupsconfiguration'] = 'Tables groups\' configuration';
-	$lang['emajschemaslist'] = 'Application schemas list';
+	$lang['emajappschemas'] = 'Application schemas';
 	$lang['emajunknownobject'] = 'This object is referenced in the emaj_group_def table but is not created.';
 	$lang['emajunsupportedobject'] = 'This object type is not supported by E-Maj (unlogged table, table with OIDS, partition table,...).';
 	$lang['emajtblseqofschema'] = 'Tables and sequences in schema "%s"';

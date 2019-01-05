@@ -731,7 +731,7 @@ class Emaj extends Plugin {
 			$this->printMsg($msg,$errMsg);
 
 		// Schemas list
-			$misc->printTitle($lang['emajschemaslist']);
+			$misc->printTitle($lang['emajappschemas']);
 
 			$schemas = $emajdb->getSchemas();
 

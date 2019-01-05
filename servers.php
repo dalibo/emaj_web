@@ -35,6 +35,7 @@
 		$group = isset($_GET['group']) ? $_GET['group'] : false;
 
 		$misc->printTitle($lang['strconfiguredservers']);
+
 		$groups = $misc->getServersGroups(true,$group);
 
 		$columns = array(

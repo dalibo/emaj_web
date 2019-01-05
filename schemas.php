@@ -19,6 +19,7 @@
 
 		$misc->printHeader('database', '', 'database', 'schemas');
 		$misc->printMsg($msg);
+		$misc->printTitle($lang['strallschemas']);
 
 		// Check that the DB actually supports schemas
 		$schemas = $data->getSchemas();

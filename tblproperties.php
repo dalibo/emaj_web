@@ -9,39 +9,6 @@
 
 	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 
-	function doTree() {
-		global $misc, $data;
-
-		$columns = $data->getTableAttributes($_REQUEST['table']);
-		$reqvars = $misc->getRequestVars('column');
-
-		$attrs = array (
-			'text'   => field('attname'),
-			'icon'   => 'Column',
-			'iconAction' => url('display.php',
-								$reqvars,
-								array(
-									'table'		=> $_REQUEST['table'],
-									'column'	=> field('attname'),
-									'query'		=> replace(
-														'SELECT "%column%", count(*) AS "count" FROM "%table%" GROUP BY "%column%" ORDER BY "%column%"',
-														array (
-															'%column%' => field('attname'),
-															'%table%' => $_REQUEST['table']
-														)
-													)
-								)
-							),
-			'toolTip'=> field('comment')
-		);
-
-		$misc->printTree($columns, $attrs, 'tblcolumns');
-
-		exit;
-	}
-
-	if ($action == 'tree') doTree();
-
 	/**
 	 * Show default list of columns in the table
 	 */
@@ -65,6 +32,8 @@
 
 		$misc->printHeader('table', '', 'table', 'columns');
 		$misc->printMsg($msg);
+		$misc->printTitle(sprintf($lang['strtblproperties'], $_REQUEST['table']));
+
 
 		// Get table
 		$tdata = $data->getTable($_REQUEST['table']);
@@ -169,6 +138,39 @@
 		);
 
 	}
+
+	function doTree() {
+		global $misc, $data;
+
+		$columns = $data->getTableAttributes($_REQUEST['table']);
+		$reqvars = $misc->getRequestVars('column');
+
+		$attrs = array (
+			'text'   => field('attname'),
+			'icon'   => 'Column',
+			'iconAction' => url('display.php',
+								$reqvars,
+								array(
+									'table'		=> $_REQUEST['table'],
+									'column'	=> field('attname'),
+									'query'		=> replace(
+														'SELECT "%column%", count(*) AS "count" FROM "%table%" GROUP BY "%column%" ORDER BY "%column%"',
+														array (
+															'%column%' => field('attname'),
+															'%table%' => $_REQUEST['table']
+														)
+													)
+								)
+							),
+			'toolTip'=> field('comment')
+		);
+
+		$misc->printTree($columns, $attrs, 'tblcolumns');
+
+		exit;
+	}
+
+	if ($action == 'tree') doTree();
 
 	$misc->printHtmlHeader($lang['strtables'] . ' - ' . $_REQUEST['table']);
 	$misc->printBody();

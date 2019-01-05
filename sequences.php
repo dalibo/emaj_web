@@ -19,6 +19,7 @@
 
 		$misc->printHeader('schema', '', 'schema', 'sequences');
 		$misc->printMsg($msg);
+		$misc->printTitle(sprintf($lang['strsequenceslist'], $_REQUEST['schema']));
 
 		// Get all sequences
 		$sequences = $data->getSequences();

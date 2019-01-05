@@ -18,6 +18,7 @@
 
 		$misc->printHeader('schema', '', 'schema', 'tables');
 		$misc->printMsg($msg);
+		$misc->printTitle(sprintf($lang['strtableslist'], $_REQUEST['schema']));
 
 		$tables = $data->getTables();
 

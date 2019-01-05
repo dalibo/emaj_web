@@ -732,8 +732,14 @@
 				$tabs = $this->getNavTabs($tabs);
 			}
 
-			# FIXME: don't count hidden tabs
-			$width = (int)(100 / count($tabs)).'%';
+			$nbTabs = 0;
+			foreach ($tabs as $tab_id => $tab) {
+				if (!isset($tab['hide']) || $tab['hide'] !== true) $nbTabs++;
+			}
+			if ($nbTabs != 0)
+				$width = (int)(100 / $nbTabs) . '%';
+			else
+				$width = '100%';
 
 			echo "<nav>\n";
 			foreach ($tabs as $tab_id => $tab) {

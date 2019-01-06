@@ -990,18 +990,8 @@
 			}
 			echo "  </div>\n";
 
-			// right cell containing the refresh and bottom buttons
-			$uri = $_SERVER['REQUEST_URI'];
-			if (strpos($uri,'?') === true) {
-				if ($urlvar != '' && strpos($uri,html_entity_decode($urlvar)) === false) {
-					$uri .= '&amp;' . $urlvar;
-				}
-				if (strpos($uri,'server=') === false) {
-					$uri .= '&amp;' . $this->href ;
-				}
-			}
+			// right cell containing the bottom button
 			echo "\t<div class=\"trailicons\">\n";
-			echo "\t\t<a href=\"{$uri}\"><img src=\"{$this->icon('Refresh')}\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\" /></a>\n";
 			echo "\t\t<a href=\"#bottom\"><img src=\"{$this->icon('Bottom')}\" alt=\"{$lang['emajpagebottom']}\" title=\"{$lang['emajpagebottom']}\"  /></a>\n";
 			echo "\t</div>\n";
 			echo "</div>\n";

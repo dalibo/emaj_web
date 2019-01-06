@@ -139,7 +139,7 @@
 	$lang['strselectallfields'] = 'Sélectionner tous les champs';
 	$lang['strselectneedscol'] = 'Vous devez sélectionner au moins une colonne.';
 	$lang['strselectunary'] = 'Les opérateurs unaires ne peuvent avoir de valeurs.';
-	$lang['strestimatedrowcount'] = 'Nombre d\'enregistrements estimés';
+	$lang['strestimatedrowcount'] = 'Nombre estimé de lignes';
 	$lang['strtblproperties'] = 'Propriétés de la table "%s"';
 	$lang['strtblbrowse'] = 'Parcours de la table "%s"';
 

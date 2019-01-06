@@ -293,6 +293,79 @@
 		if ($save_history && is_object($rs) && ($type == 'QUERY')) //{
 			$misc->saveScriptHistory($_REQUEST['query']);
 
+		// Prepare and generate the navigation links at the page top
+		$navlinks = array();
+
+		$fields = array(
+			'server' => $_REQUEST['server'],
+			'database' => $_REQUEST['database'],
+		);
+
+		if (isset($_REQUEST['schema']))
+			$fields['schema'] = $_REQUEST['schema'];
+		// Return
+		if (isset($_REQUEST['return'])) {
+			$urlvars = $misc->getSubjectParams($_REQUEST['return']);
+
+			$navlinks['back'] = array (
+				'attr'=> array (
+					'href' => array (
+						'url' => $urlvars['url'],
+						'urlvars' => $urlvars['params']
+					)
+				),
+				'content' => $lang['strback']
+			);
+		}
+		// Expand/Collapse
+		if ($_REQUEST['strings'] == 'expanded')
+			$navlinks['collapse'] = array (
+				'attr'=> array (
+					'href' => array (
+						'url' => 'display.php',
+						'urlvars' => array_merge(
+							$_gets,
+							array (
+								'strings' => 'collapsed',
+								'page' => $_REQUEST['page']
+						))
+					)
+				),
+				'content' => $lang['strcollapse']
+			);
+		else
+			$navlinks['collapse'] = array (
+				'attr'=> array (
+					'href' => array (
+						'url' => 'display.php',
+						'urlvars' => array_merge(
+							$_gets,
+							array (
+								'strings' => 'expanded',
+								'page' => $_REQUEST['page']
+						))
+					)
+				),
+				'content' => $lang['strexpand']
+			);
+		// Refresh
+		$navlinks['refresh'] = array (
+			'attr'=> array (
+				'href' => array (
+					'url' => 'display.php',
+					'urlvars' => array_merge(
+						$_gets,
+						array(
+							'strings' => $_REQUEST['strings'],
+							'page' => $_REQUEST['page']
+					))
+				)
+			),
+			'content' => $lang['strrefresh']
+		);
+		$misc->printNavLinks($navlinks, 'display-browse', get_defined_vars());
+
+
 		if (is_object($rs) && $rs->recordCount() > 0) {
 			// Show page navigation
 			$misc->printPages($_REQUEST['page'], $max_pages, $_gets);
@@ -356,79 +429,7 @@
 		}
 		else echo "<p>{$lang['strnodata']}</p>\n";
 
-		// Navigation links
-		$navlinks = array();
-
-		$fields = array(
-			'server' => $_REQUEST['server'],
-			'database' => $_REQUEST['database'],
-		);
-
-		if (isset($_REQUEST['schema']))
-			$fields['schema'] = $_REQUEST['schema'];
-
-		// Return
-		if (isset($_REQUEST['return'])) {
-			$urlvars = $misc->getSubjectParams($_REQUEST['return']);
-
-			$navlinks['back'] = array (
-				'attr'=> array (
-					'href' => array (
-						'url' => $urlvars['url'],
-						'urlvars' => $urlvars['params']
-					)
-				),
-				'content' => $lang['strback']
-			);
-		}
-
-		// Expand/Collapse
-		if ($_REQUEST['strings'] == 'expanded')
-			$navlinks['collapse'] = array (
-				'attr'=> array (
-					'href' => array (
-						'url' => 'display.php',
-						'urlvars' => array_merge(
-							$_gets,
-							array (
-								'strings' => 'collapsed',
-								'page' => $_REQUEST['page']
-						))
-					)
-				),
-				'content' => $lang['strcollapse']
-			);
-		else
-			$navlinks['collapse'] = array (
-				'attr'=> array (
-					'href' => array (
-						'url' => 'display.php',
-						'urlvars' => array_merge(
-							$_gets,
-							array (
-								'strings' => 'expanded',
-								'page' => $_REQUEST['page']
-						))
-					)
-				),
-				'content' => $lang['strexpand']
-			);
-
-		// Refresh
-		$navlinks['refresh'] = array (
-			'attr'=> array (
-				'href' => array (
-					'url' => 'display.php',
-					'urlvars' => array_merge(
-						$_gets,
-						array(
-							'strings' => $_REQUEST['strings'],
-							'page' => $_REQUEST['page']
-					))
-				)
-			),
-			'content' => $lang['strrefresh']
-		);
+		// regenerate the navigation links at the page bottom
 
 		$misc->printNavLinks($navlinks, 'display-browse', get_defined_vars());
 	}

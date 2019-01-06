@@ -399,21 +399,6 @@
 			while (!$rs->EOF) {
 				$id = (($i % 2) == 0 ? '1' : '2');
 				echo "<tr class=\"data{$id}\">\n";
-				// Display edit and delete links if we have a key
-				if ($colspan > 0 and count($key) > 0) {
-					$keys_array = array();
-					$has_nulls = false;
-					foreach ($key as $v) {
-						if ($rs->fields[$v] === null) {
-							$has_nulls = true;
-							break;
-						}
-						$keys_array["key[{$v}]"] = $rs->fields[$v];
-					}
-					if ($has_nulls) {
-						echo "<td colspan=\"{$colspan}\">&nbsp;</td>\n";
-					}
-				}
 
 				print printTableRowCells($rs, $fkey_information, isset($object));
 

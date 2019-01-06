@@ -46,38 +46,10 @@
 	}
 
 	/**
-	 * Generate XML for the browser tree.
-	 */
-	function doTree() {
-		global $misc, $data;
-
-		$sequences = $data->getSequences();
-
-		$reqvars = $misc->getRequestVars('sequence');
-
-		$attrs = array(
-			'text'   => field('seqname'),
-			'icon'   => 'Sequence',
-			'toolTip'=> field('seqcomment'),
-			'action' => url('sequences.php',
-							$reqvars,
-							array (
-								'action' => 'properties',
-								'sequence' => field('seqname')
-							)
-						)
-		);
-
-		$misc->printTree($sequences, $attrs, 'sequences');
-		exit;
-	}
-
-	/**
 	 * Display the properties of a sequence
 	 */
 	function doProperties($msg = '') {
-		global $data, $misc;
-		global $lang;
+		global $data, $misc, $lang;
 
 		$misc->printHeader('sequence', '', '', '');
 		$misc->printTitle($lang['strproperties'],'pg.sequence');
@@ -123,8 +95,49 @@
 			echo "</tr>";
 			echo "</table>";
 
+			// Navigation links
+			$navlinks = array();
+	
+			// Refresh
+			$navlinks['refresh'] = array (
+				'attr'=> array (
+					'href' => array (
+						'url' => 'sequences.php',
+						'urlvars' => $_REQUEST,
+					)
+				),
+				'content' => $lang['strrefresh']
+			);
+			$misc->printNavLinks($navlinks, 'sequences-properties', get_defined_vars());
 		}
 		else echo "<p>{$lang['strnodata']}</p>\n";
+	}
+
+	/**
+	 * Generate XML for the browser tree.
+	 */
+	function doTree() {
+		global $misc, $data;
+
+		$sequences = $data->getSequences();
+
+		$reqvars = $misc->getRequestVars('sequence');
+
+		$attrs = array(
+			'text'   => field('seqname'),
+			'icon'   => 'Sequence',
+			'toolTip'=> field('seqcomment'),
+			'action' => url('sequences.php',
+							$reqvars,
+							array (
+								'action' => 'properties',
+								'sequence' => field('seqname')
+							)
+						)
+		);
+
+		$misc->printTree($sequences, $attrs, 'sequences');
+		exit;
 	}
 
 	if ($action == 'tree') doTree();

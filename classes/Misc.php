@@ -527,7 +527,7 @@
 		 * Prints the top bar
 		 */
 		function printTopbar() {
-			global $lang, $conf, $appName, $appVersion, $appLangFiles;
+			global $lang, $conf, $appName, $appVersion, $appLangFiles, $_reload_browser;
 
 			$server_info = $this->getServerInfo();
 			$reqvars = $this->getRequestVars('table');
@@ -615,9 +615,18 @@
 			}
 			echo "</div>\n";
 
+			// language change management
+			// if the language has just been changed, set the flag that will force the browser reload at the end of the page processing on client side 
+			if (isset($_GET['language']))
+				$_reload_browser = true;
+
 			// language selection
 			echo "\t<div class=\"language\">";
-			echo "<form method=\"get\"><select name=\"language\" onchange=\"this.form.submit()\">\n";
+			if ($_SERVER["REQUEST_METHOD"] == 'GET')
+				echo "<form method=\"get\">";
+			else
+				echo "<form method=\"get\" action=\"intro.php\">";
+			echo "<select name=\"language\" onchange=\"this.form.submit()\">\n";
 			$language = isset($_SESSION['webdbLanguage']) ? $_SESSION['webdbLanguage'] : 'english';
 			foreach ($appLangFiles as $k => $v) {
 				echo "<option value=\"{$k}\"",
@@ -626,9 +635,11 @@
 			}
 			echo "</select>\n";
 			echo "<noscript><input type=\"submit\" value=\"Set Language\"></noscript>\n";
-			foreach ($_GET as $key => $val) {
-				if ($key == 'language') continue;
-				echo "<input type=\"hidden\" name=\"$key\" value=\"", htmlspecialchars($val), "\" />\n";
+			if ($_SERVER["REQUEST_METHOD"] == 'GET') {
+				foreach ($_GET as $key => $val) {
+					if ($key == 'language') continue;
+					echo "<input type=\"hidden\" name=\"{$key}\" value=\"", htmlspecialchars($val), "\" />\n";
+				}
 			}
 			echo "</form>\n";
 			echo "\t</div>\n";
@@ -641,33 +652,28 @@
 		 * @param $doBody True to output body tag, false otherwise
 		 */
 		function printFooter($doBody = true) {
-			global $_reload_browser, $_reload_drop_database;
+			global $_reload_browser;
 			global $lang, $_no_bottom_link;
 
 			if ($doBody) {
-				if (isset($_reload_browser)) $this->printReload(false);
-				elseif (isset($_reload_drop_database)) $this->printReload(true);
 				echo "<footer>\n";
+
+				// reload the browser if requested
+				if (isset($_reload_browser)) {
+					echo "<script type=\"text/javascript\">\n";
+					echo "\tparent.frames.browser.location.reload();\n";
+					echo "</script>\n";
+				}
+
+				// the button to reach the page top
 				echo "\t<a name=\"bottom\">&nbsp;</a>\n";
 				if (!isset($_no_bottom_link))
 					echo "\t<a href=\"#\" class=\"bottom_link\"><img src=\"{$this->icon('Top')}\" alt=\"{$lang['strgotoppage']}\" title=\"{$lang['strgotoppage']}\"/></a>\n";
+
 				echo "</footer>\n";
 				echo "</body>\n";
 			}
 			echo "</html>\n";
-		}
-
-		/**
-		 * Outputs JavaScript code that will reload the browser
-		 * @param $database True if dropping a database, false otherwise
-		 */
-		function printReload($database) {
-			echo "<script type=\"text/javascript\">\n";
-			if ($database)
-				echo "\tparent.frames.browser.location.href=\"browser.php\";\n";
-			else
-				echo "\tparent.frames.browser.location.reload();\n";
-			echo "</script>\n";
 		}
 
 		/**

@@ -32,6 +32,5 @@
 
 <?php
     echo "<p style=\"font-style: italic; color: grey; font-size: 12px;\">Powered by PHP " . phpversion() . "</p>\n";
-	if (isset($_GET['language'])) $_reload_browser = true;
 	$misc->printFooter();
 ?>

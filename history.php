@@ -132,7 +132,7 @@
 			);
 		}
 
-		$misc->printNavLinks($navlinks, 'history-history', get_defined_vars());
+		$misc->printNavLinks($navlinks);
 	}
 
 	function doDelHistory($qid, $confirm) {

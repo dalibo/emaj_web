@@ -108,7 +108,7 @@
 				),
 				'content' => $lang['strrefresh']
 			);
-			$misc->printNavLinks($navlinks, 'sequences-properties', get_defined_vars());
+			$misc->printNavLinks($navlinks);
 		}
 		else echo "<p>{$lang['strnodata']}</p>\n";
 	}

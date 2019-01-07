@@ -363,7 +363,7 @@
 			),
 			'content' => $lang['strrefresh']
 		);
-		$misc->printNavLinks($navlinks, 'display-browse', get_defined_vars());
+		$misc->printNavLinks($navlinks);
 
 
 		if (is_object($rs) && $rs->recordCount() > 0) {
@@ -416,7 +416,7 @@
 
 		// regenerate the navigation links at the page bottom
 
-		$misc->printNavLinks($navlinks, 'display-browse', get_defined_vars());
+		$misc->printNavLinks($navlinks);
 	}
 
 	/* shortcuts: this function exit the script for ajax purpose */

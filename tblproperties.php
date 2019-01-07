@@ -132,10 +132,7 @@
 				'content' => $lang['strbrowse']
 			),
 		);
-		$misc->printNavLinks($navlinks,
-			'tblproperties-tblproperties'
-			, get_defined_vars()
-		);
+		$misc->printNavLinks($navlinks);
 
 	}
 

@@ -1101,12 +1101,8 @@
 		* Display the navlinks
 		*
 		* @param $navlinks - An array with the the attributes and values that will be shown. See printLinksList for array format.
-		* @param $place - Place where the $navlinks are displayed. Like 'display-browse', where 'display' is the file (display.php)
-		*                 and 'browse' is the place inside that code (doBrowse).
-		* @param $env - Associative array of defined variables in the scope of the caller.
-		*               Allows to give some environnement details to plugins.
 		*/
-		function printNavLinks($navlinks, $place, $env = array()) {
+		function printNavLinks($navlinks) {
 
 			if (count($navlinks) > 0) {
 				$this->printLinksList($navlinks, 'navlink');

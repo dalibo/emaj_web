@@ -957,7 +957,6 @@
 			if (is_string($trail)) {
 				$trail = $this->getTrail($trail);
 			}
-
 			echo "<div class=\"trail\">\n";
 			echo "  <div class=\"crumb\">\n";
 

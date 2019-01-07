@@ -95,8 +95,13 @@
 	$lang['strnone'] = 'Aucun';
 	$lang['strinvert'] = 'Inverser';
 
+	// User-supplied SQL editing
+	$lang['strsqledit'] = 'Edition de requête SQL';
+	$lang['strsearchpath'] = 'Chemin de recherche des schémas ';
+
 	// User-supplied SQL history
 	$lang['strhistory'] = 'Historique';
+	$lang['strsqlhistory'] = 'Historique des requêtes SQL';
 	$lang['strnohistory'] = 'Pas d\'historique.';
 	$lang['strclearhistory'] = 'Éffacer l\'historique';
 	$lang['strdelhistory'] = 'Supprimer de l\'historique';
@@ -207,7 +212,6 @@
 	$lang['strschemas'] = 'Schémas';
 	$lang['strallschemas'] = 'Tous les schémas';
 	$lang['strnoschemas'] = 'Aucun schéma trouvé.';
-	$lang['strsearchpath'] = 'Chemin de recherche du schéma';
 
 	// Domains
 	$lang['strdomains'] = 'Domaines';

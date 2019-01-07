@@ -94,9 +94,14 @@
 	$lang['strall'] = 'All';
 	$lang['strnone'] = 'None';
 	$lang['strinvert'] = 'Invert';
-	
+
+	// User-supplied SQL editing
+	$lang['strsqledit'] = 'SQL statement editing';
+	$lang['strsearchpath'] = 'Schemas search path';
+
 	// User-supplied SQL history
 	$lang['strhistory'] = 'History';
+	$lang['strsqlhistory'] = 'SQL Statements history';
 	$lang['strnohistory'] = 'No history.';
 	$lang['strclearhistory'] = 'Clear history';
 	$lang['strdelhistory'] = 'Delete from history';
@@ -207,7 +212,6 @@
 	$lang['strschemas'] = 'Schemas';
 	$lang['strallschemas'] = 'All schemas';
 	$lang['strnoschemas'] = 'No schemas found.';
-	$lang['strsearchpath'] = 'Schema search path';
 
 	// Domains
 	$lang['strdomains'] = 'Domains';

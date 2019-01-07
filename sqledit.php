@@ -42,32 +42,43 @@
 		
 		if (!isset($_SESSION['sqlquery'])) $_SESSION['sqlquery'] = '';
 		
-		$misc->printHtmlHeader($lang['strsql']);
-		
+		$misc->printHtmlHeader($lang['strsql'], null, 'sqledit');
+
 		// Bring to the front always
 		echo "<body onload=\"window.focus();\">\n";
-		
-		$misc->printTabs($misc->getNavTabs('popup'), 'sql');
-		
-		echo "<form action=\"sql.php\" method=\"post\" target=\"detail\">\n";
+		echo "<div id=\"flex-container\">";
+
+		$misc->printTitle($lang['strsqledit']);
+
+		echo "<div>\n";
+		echo "\t<form action=\"sql.php\" method=\"post\" target=\"detail\">\n";
 		_printConnection();
 		echo "\n";
 		if (!isset($_REQUEST['search_path']))
 			$_REQUEST['search_path'] = implode(',',$data->getSearchPath());
-		
-		echo "<p><label>{$lang['strsearchpath']}: <input type=\"text\" name=\"search_path\" size=\"50\" value=\"",
+
+		echo "\t<p><label>{$lang['strsearchpath']}:<br><input type=\"text\" name=\"search_path\" value=\"",
 			htmlspecialchars($_REQUEST['search_path']), "\" /></label></p>\n";
-		
-		echo "<textarea style=\"width:98%;\" rows=\"10\" cols=\"50\" name=\"query\">",
+		echo "</div>\n";
+
+		// The SQL text area
+		echo "<div class=\"flex-1\">\n";
+		echo "\t<textarea name=\"query\">",
 			htmlspecialchars($_SESSION['sqlquery']), "</textarea>\n";
-		echo "<p><label for=\"paginate\"><input type=\"checkbox\" id=\"paginate\" name=\"paginate\"", (isset($_REQUEST['paginate']) ? ' checked="checked"' : ''), " />&nbsp;{$lang['strpaginate']}</label></p>\n";
-		
-		echo "<p><input type=\"submit\" value=\"{$lang['strexecute']}\" />\n";
-		echo "<input type=\"reset\" value=\"{$lang['strreset']}\" /></p>\n";
-		echo "</form>\n";
-		
+		echo "</div>\n";
+
+		echo "<div id=\"last-block\">\n";
+		echo "\t<p><label for=\"paginate\"><input type=\"checkbox\" id=\"paginate\" name=\"paginate\"", (isset($_REQUEST['paginate']) ? ' checked="checked"' : ''), " />&nbsp;{$lang['strpaginate']}</label></p>\n";
+
+		echo "\t<p><input type=\"submit\" value=\"{$lang['strexecute']}\" />\n";
+		echo "\t<input type=\"reset\" value=\"{$lang['strreset']}\" /></p>\n";
+		echo "\t</form>\n";
+		echo "</div>\n";
+
 		// Default focus
 		$misc->setFocus('forms[0].query');
+
+		echo "</div>\n";
 	}
 
 	switch ($action) {
@@ -79,7 +90,8 @@
 	
 	// Set the name of the window
 	$misc->setWindowName('sqledit');
-	
-	$misc->printFooter();
+
+	// Do not print the bottom link
+	$misc->printFooter(true, false);
 	
 ?>

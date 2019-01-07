@@ -651,7 +651,7 @@
 		 * Prints the page footer
 		 * @param $doBody True to output body tag, false otherwise
 		 */
-		function printFooter($doBody = true) {
+		function printFooter($doBody = true, $doBottomLink = true) {
 			global $_reload_browser;
 			global $lang, $_no_bottom_link;
 
@@ -665,10 +665,12 @@
 					echo "</script>\n";
 				}
 
-				// the button to reach the page top
-				echo "\t<a name=\"bottom\">&nbsp;</a>\n";
-				if (!isset($_no_bottom_link))
-					echo "\t<a href=\"#\" class=\"bottom_link\"><img src=\"{$this->icon('Top')}\" alt=\"{$lang['strgotoppage']}\" title=\"{$lang['strgotoppage']}\"/></a>\n";
+				// the button to reach the page top if requested
+				if ($doBottomLink) {
+					echo "\t<a name=\"bottom\">&nbsp;</a>\n";
+					if (!isset($_no_bottom_link))
+						echo "\t<a href=\"#\" class=\"bottom_link\"><img src=\"{$this->icon('Top')}\" alt=\"{$lang['strgotoppage']}\" title=\"{$lang['strgotoppage']}\"/></a>\n";
+				}
 
 				echo "</footer>\n";
 				echo "</body>\n";
@@ -1110,7 +1112,6 @@
 				$this->printLinksList($navlinks, 'navlink');
 			}
 		}
-
 
 		/**
 		 * Do multi-page navigation.  Displays the prev, next and page options.

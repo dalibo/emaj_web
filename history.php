@@ -21,6 +21,8 @@
 		// Bring to the front always
 		echo "<body onload=\"window.focus();\">\n";
 	
+		$misc->printTitle($lang['strsqlhistory']);
+
 		echo "<form action=\"history.php\" method=\"post\">\n";
 		$misc->printConnection($onchange);
 		echo "</form><br />";
@@ -218,9 +220,10 @@
 		default:
 			doDefault();
 	}
-																					
+
 	// Set the name of the window
 	$misc->setWindowName('history');
-	$misc->printFooter();
+	// Do not print the bottom link
+	$misc->printFooter(true, false);
 	
 ?>

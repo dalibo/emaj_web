@@ -507,6 +507,10 @@ div.fk_value {
 
 /* filter widget */
 
+.tablesorter .filtered {
+  display: none;
+}
+
 .tablesorter-default .tablesorter-filter-row td {
 	background: #ffffff;
 	border-bottom: #ccc 1px solid;

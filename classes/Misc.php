@@ -724,7 +724,7 @@
 				$this->printLink($link);
 				echo "</li>\n";
 			}
-			echo "\t</ul>";
+			echo "\t</ul>\n";
 		}
 
 		/**
@@ -1366,7 +1366,6 @@
 				}
 
 				if ($has_ma) {
-//					echo "<script src=\"multiactionform.js\" type=\"text/javascript\"></script>\n";
 					echo "<form id=\"{$place}\" action=\"{$ma['url']}\" method=\"post\" enctype=\"multipart/form-data\">\n";
 					if (isset($ma['vars']))
 						foreach ($ma['vars'] as $k => $v)
@@ -1375,44 +1374,43 @@
 					echo "<div id=\"{$place}\">\n";
 				}
 
-				echo "<table class=\"data\">\n";
+				if ($sorter || $filter)
+					echo "<table class=\"data table-sorter\">\n";
+				else
+					echo "<table class=\"data\">\n";
 				echo "<thead>\n";
 				echo "<tr>\n";
 
 				// Display column headings
-				$colnum = 0; $filterDisabledJs = ''; $textExtractionJS = '';
+				$colnum = 0; $textExtractionJS = '';
 				if ($has_ma) {
-					echo "<th class=\"sorter-false\"></th>\n";
-					if ($filter) {$filterDisabledJs .= "\t\t$('#{$place} input[data-column=\"{$colnum}\"]').addClass(\"disabled\");\n";}
+					echo "<th class=\"sorter-false filter-false\"></th>\n";
 					$colnum++;
 				}
 				foreach ($columns as $column_id => $column) {
 					switch ($column_id) {
 						case 'actions':
-							if (sizeof($actions) > 0) echo "<th class=\"data sorter-false\" colspan=\"", count($actions), "\">{$column['title']}</th>\n";
+							if (sizeof($actions) > 0) echo "<th class=\"data sorter-false filter-false\" colspan=\"", count($actions), "\">{$column['title']}</th>\n";
 							// actions columns have neither sorter nor filter capabilities
 							for ($i = 0; $i < count($actions); ++$i) {
-								if ($filter) {$filterDisabledJs .= "\t\t$('#{$place} input[data-column=\"{$colnum}\"]').addClass(\"disabled\");\n";}
 								$colnum++;
 							}
 							break;
 						default:
-							// add a sorter_false class to the data column if a 'sorter' attribute is set to false
-							if ((isset($column['sorter']) && !$column['sorter']) || ($filter && ! $sorter)) {
+							// add a sorter_false class to the data column header if a 'sorter' attribute is set to false
+							$class_sorter = '';
+							if ((isset($column['sorter']) && !$column['sorter']) || ($filter && ! $sorter))
 								$class_sorter = ' sorter-false';
-							} else {
-								$class_sorter = '';
-							}
-							echo "<th class=\"data{$class_sorter}\">";
+							// add a filter_false class to the data column header if a 'filter' attribute is set to false
+							$class_filter = '';
+							if ($filter && (isset($column['filter']) && !$column['filter']))
+								$class_filter = ' filter-false';
+							echo "<th class=\"data{$class_sorter}{$class_filter}\">";
 							if (isset($column['help']))
 								$this->printHelp($column['title'], $column['help']);
 							else
 								echo $column['title'];
 							echo "</th>\n";
-							// add a "disabled" class to the data column if the 'filter' attribute is set to false
-							if ($filter && isset($column['filter']) && !$column['filter']) {
-								$filterDisabledJs .= "\t\t$('#{$place} input[data-column=\"{$colnum}\"]').addClass(\"disabled\");\n";
-							}
 							// when the data column has a 'sorter_text_extraction' attribute set to 'img_alt',
 							//   add a function to extract the alt attribute of images to build the text that tablesorter will use to sort
 							if ($sorter && isset($column['sorter_text_extraction']) && $column['sorter_text_extraction'] = 'img_alt') {
@@ -1524,7 +1522,6 @@
 				if ($sorter || $filter) {
 					echo "<script type=\"text/javascript\">\n";
 					echo "\t$(document).ready(function() {\n";
-					echo "\t\t$(\"#{$place} table\").addClass('tablesorter');\n";
 					echo "\t\t$(\"#{$place} table\").tablesorter( {\n";
 					if ($textExtractionJS <> '') {
 						echo "\t\t\ttextExtraction: {\n";
@@ -1541,7 +1538,6 @@
 					echo "\t\t\t\t},\n";
 					echo "\t\t\t}\n";
 					echo "\t\t);\n";
-					echo $filterDisabledJs;
 					echo "\t});\n";
 					echo "</script>\n";
 				}

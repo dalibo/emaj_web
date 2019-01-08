@@ -20,6 +20,12 @@
 	$postgresqlMinVer = '9.1';
 	$phpMinVer = '5.0';
 
+	// E-Maj versions
+	$oldest_supported_emaj_version = '1.3.0';			// Oldest emaj version supported by the plugin
+	$oldest_supported_emaj_version_num = 10300;
+	$last_known_emaj_version = '3.0.0';				// Most recent emaj version known by the plugin
+	$last_known_emaj_version_num = 30000;
+
 	// Check the version of PHP
 	if (version_compare(phpversion(), $phpMinVer, '<'))
 		exit(sprintf('Version of PHP not supported. Please upgrade to version %s or later.', $phpMinVer));
@@ -172,13 +178,6 @@
 	if (!isset($_no_db_connection)) {
 		if (!isset($_REQUEST['server'])) {
 			echo $lang['strnoserversupplied'];
-//echo "<p>get: ";
-//var_dump($_GET);
-//echo "</p><p>post: ";
-//var_dump($_POST);
-//echo "</p><p>server: ";
-//var_dump($_SERVER);
-//echo "</p>";
 			exit;
 	    }
 		$_server_info = $misc->getServerInfo();

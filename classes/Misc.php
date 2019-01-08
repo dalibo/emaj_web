@@ -817,7 +817,7 @@
 								'subject' => 'database',
 								'action' => 'show_groups'
 							),
-							'icon' => 'EmajGroup'
+							'icon' => 'EmajGroup',
 						),
 						'emajconfiguregroups' => array (
 							'title' => $lang['emajgroupsconf'],
@@ -828,7 +828,8 @@
 								'action' => 'configure_groups'
 							),
 							'hide' => !($emajdb->isEmaj_Adm()),
-							'icon' => 'Admin'
+							'icon' => 'Admin',
+							'tree' => false,
 						),
 						'emajmonitorrlbk' => array (
 							'title' => $lang['emajrlbkop'],
@@ -838,7 +839,8 @@
 								'subject' => 'database',
 								'action' => 'show_rollbacks'
 							),
-							'icon' => 'EmajRollback'
+							'icon' => 'EmajRollback',
+							'tree' => false,
 						),
 						'schemas' => array (
 							'title' => $lang['strschemas'],
@@ -848,13 +850,10 @@
 						),
 						'emajenvir' => array (
 							'title' => $lang['emajenvir'],
-							'url' => 'plugin.php',
-							'urlvars' => array(
-								'plugin' => 'Emaj',
-								'subject' => 'database',
-								'action' => 'emaj_envir'
-							),
-							'icon' => 'Emaj'
+							'url' => 'emajenvir.php',
+							'urlvars' => array('subject' => 'database'),
+							'icon' => 'Emaj',
+							'tree' => false,
 						)
 					);
 					break;

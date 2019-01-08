@@ -8,11 +8,6 @@
 class EmajDb {
 
 	/**
-	 * Constant
-	 */
-	private $emaj_schema = "emaj";
-
-	/**
 	 * Cache of static data
 	 */
 	private $emaj_version = '?';

@@ -65,7 +65,6 @@ class Emaj extends Plugin {
 		'delete_marks_ok',
 		'drop_group',
 		'drop_group_ok',
-		'emaj_envir',
 		'filterrlbk',
 		'log_stat_group',
 		'protect_group',
@@ -1155,94 +1154,6 @@ class Emaj extends Plugin {
 				$inProgressRlbks = $emajdb->getInProgressRlbk();
 				$misc->printTable($consolidableRlbks, $columnsConsRlbk, $actions, 'consolidableRlbk', $lang['emajnorlbk']);
 			}
-		}
-
-		$misc->printFooter();
-	}
-
-	/**
-	 * E-Maj environment management
-	 */
-	function emaj_envir() {
-		global $misc, $lang, $emajdb;
-
-		$this->printPageHeader('database', 'emajenvir', 'action=emaj_envir');
-
-		$emajOK = 1;
-
-		// check if E-Maj is installed in the current database
-		if (! $emajdb->isEnabled()) {
-			// emaj is not installed, check if the extension is available
-			if (! $emajdb->isExtensionAvailable()) {
-				echo "<p>{$lang['emajextnotavailable']}</p>\n";
-			} else {
-				echo "<p>{$lang['emajextnotcreated']}</p>\n";
-			}
-			$emajOK= 0;
-		} else {
-			// emaj is installed, check that the user has enought rights to continue
-			if (! $emajdb->isAccessible()) {
-				echo "<p>{$lang['emajnogrant']}</p>\n";
-				$emajOK= 0;
-			}
-		}
-
-		// Version section
-		$misc->printTitle($lang['emajversions']);
-
-		// display the postgres version
-		$server_info = $misc->getServerInfo();
-		preg_match('/PostgreSQL (.*)/',$server_info['platform'], $pgVersion);
-		echo "<p>{$lang['emajpgversion']}{$pgVersion[1]}</p>\n";
-
-		if ($emajOK) {
-			if ($emajdb->isExtension()) {
-				$installationMode = $lang['emajasextension'];
-			} else {
-				$installationMode = $lang['emajasscript'];
-			}
-			echo "<p>{$lang['emajversion']}{$emajdb->getEmajVersion()} ({$installationMode})</p>\n";
-			if ($emajdb->getNumEmajVersion() < $this->oldest_supported_emaj_version_num) {
-				echo "<p>" . sprintf($lang['emajtooold'],$emajdb->getEmajVersion(),$this->oldest_supported_emaj_version) . "</p>\n";
-				$emajOK= 0;
-			} else {
-				if ($emajdb->getNumEmajVersion() <> 999999) {
-					if ($emajdb->getNumEmajVersion() < $this->last_known_emaj_version_num) {
-						echo "<p>{$lang['emajversionmorerecent']}</p>\n";
-					}
-					if ($emajdb->getNumEmajVersion() > $this->last_known_emaj_version_num) {
-						echo "<p>{$lang['emajwebversionmorerecent']}</p>\n";
-					}
-				}
-			}
-		}
-
-		if ($emajOK) {
-			// General characteristics of the E-Maj environment
-			echo "<hr/>\n";
-			$misc->printTitle($lang['emajcharacteristics']);
-			if ($emajdb->isEmaj_Adm()) {
-				echo "<p>".sprintf($lang['emajdiskspace'],$emajdb->getEmajSize())."</p>\n";
-			}
-
-			// E-Maj environment checking
-			echo "<hr/>\n";
-			$misc->printTitle($lang['emajchecking']);
-
-			$messages = $emajdb->checkEmaj();
-
-			$columns = array(
-				'message' => array(
-					'title' => $lang['emajdiagnostics'],
-					'field' => field('emaj_verify_all'),
-					'type'	=> 'callback',
-					'params'=> array('function' => array($this, 'renderDiagnostic'))
-				),
-			);
-
-			$actions = array ();
-
-			$misc->printTable($messages, $columns, $actions, 'checks');
 		}
 
 		$misc->printFooter();
@@ -4587,7 +4498,7 @@ class Emaj extends Plugin {
 		if (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
 			  && $emajdb->getNumEmajVersion() >= $this->oldest_supported_emaj_version_num)) {
 			echo "<p>";
-			$link = "<a href=\"plugin.php?plugin={$this->name}&amp;action=emaj_envir&amp;{$misc->href}\">\"{$lang['emajenvir']}\"</a>";
+			$link = "<a href=\"emajenvir.php?{$misc->href}\">\"{$lang['emajenvir']}\"</a>";
 			echo sprintf($lang['emajnotavail'], $link);
 			echo "</p>";
 			return 0;
@@ -4614,7 +4525,7 @@ class Emaj extends Plugin {
 
 		$attrs = array(
 			'text' => field('group_name'),
-			'icon' => $misc->icon('EmajGroup'),
+			'icon' => 'EmajGroup',
 			'iconaction' => url	('plugin.php',$reqvars,
 				array(
 					'action'  => 'show_group',
@@ -4632,7 +4543,7 @@ class Emaj extends Plugin {
 				),
 		);
 
-		$misc->printTree($groups, $attrs,'emajgroups');
+		$misc->printTree($groups, $attrs, 'emajgroups');
 		exit;
 	}
 }

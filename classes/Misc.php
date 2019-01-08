@@ -374,11 +374,13 @@
 		}
 
 		/**
-		 * Print out a message
-		 * @param $msg The message to print
-		 */
-		function printMsg($msg) {
+		* Print out a standart message and/or and error message
+		* @param $msg			A (non error) message to print, if supplied
+		*        $errMsg		An error message to print, if supplied
+		*/
+		function printMsg($msg, $errMsg) {
 			if ($msg != '') echo "<p class=\"message\">{$msg}</p>\n";
+			if ($errMsg != '') echo "<p class=\"error-message\">{$errMsg}</p>\n";
 		}
 
 		/**
@@ -831,11 +833,10 @@
 							'icon' => 'Admin',
 							'tree' => false,
 						),
-						'emajmonitorrlbk' => array (
+						'emajrollbacks' => array (
 							'title' => $lang['emajrlbkop'],
-							'url' => 'plugin.php',
+							'url' => 'emajrollbacks.php',
 							'urlvars' => array(
-								'plugin' => 'Emaj',
 								'subject' => 'database',
 								'action' => 'show_rollbacks'
 							),
@@ -1974,5 +1975,27 @@
 			
 			echo "</td></tr></table>\n";
 		}
+
+		/**
+		* Check that the emaj extension exists in the current database, is accessible by the current user and is not too old
+		*/
+		function checkEmajExtension() {
+			global $lang, $emajdb, $oldest_supported_emaj_version_num;
+	
+		// For all but the emaj_envir functions,
+			// if Emaj is not usable for this database, only display a message
+			if (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
+				&& $emajdb->getNumEmajVersion() >= $oldest_supported_emaj_version_num)) {
+				echo "<p>";
+				$href = $this->getHREF();
+				$link = "<a href=\"emajenvir.php?{$href}\">\"{$lang['emajenvir']}\"</a>";
+				echo sprintf($lang['emajnotavail'], $link);
+				echo "</p>";
+				return 0;
+			}
+			return 1;
+
+		}
+
 	}
 ?>

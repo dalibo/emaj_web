@@ -47,6 +47,9 @@ img {
 p.message {
 	color: blue;
 }
+p.error-message {
+	color: red;
+}
 p.comment {
 	font-style: italic
 }

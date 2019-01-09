@@ -823,9 +823,8 @@
 						),
 						'emajconfiguregroups' => array (
 							'title' => $lang['emajgroupsconf'],
-							'url' => 'plugin.php',
+							'url' => 'emajgroupsconf.php',
 							'urlvars' => array(
-								'plugin' => 'Emaj',
 								'subject' => 'database',
 								'action' => 'configure_groups'
 							),

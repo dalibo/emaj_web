@@ -19,7 +19,7 @@
 	/**
 	 * Display the status of past and in progress rollback operations
 	 */
-	function show_rollbacks($msg = '', $errMsg = '') {
+	function show_rollbacks() {
 		global $lang, $misc, $emajdb;
 
 		$misc->printHeader('database', 'action=show_rollbacks', 'database', 'emajrollbacks');
@@ -27,8 +27,11 @@
 		$emajOK = $misc->checkEmajExtension();
 
 		if ($emajOK) {
-			$misc->printMsg($msg,$errMsg);
 	
+			if (isset($_REQUEST['rlbkId']))
+				// An asynchronous rollbakc has just been spawned, report the rollback id
+				$misc->printMsg(sprintf($lang['emajasyncrlbkstarted'], $_REQUEST['rlbkId']));
+
 			if (!isset($_SESSION['emaj']['RlbkNb'])) {
 				$_SESSION['emaj']['RlbkNb'] = 3;
 				$_SESSION['emaj']['NbRlbkChecked'] = 1;

@@ -574,8 +574,7 @@
 	$lang['emajinvalidrlbkmark'] = 'La marque "%s" n\'est plus valide.';
 	$lang['emajrlbkgroupok'] = 'Le rollback du groupe de tables "%s" à la marque "%s" est effectué.';
 	$lang['emajrlbkgrouperr'] = 'Erreur lors du rollback du groupe de tables "%s" à la marque "%s" !';
-	$lang['emajbadpsqlpath'] = 'Rollback asynchrone impossible : le chemin de la commande psql configurée (%s) est invalide.';
-	$lang['emajbadtempdir'] = 'Rollback asynchrone impossible : le répertoire temporaire configuré (%s) est invalide.';
+	$lang['emajbadconfparam'] = 'Erreur : le rollback asynchrone n\'est plus possible. Vérifiez l\'existence de l\'extension dblink et la valeur des deux paramètres de configuration du chemin de la commande psql (%s) et du répertoire temporaire (%s).';
 	$lang['emajasyncrlbkstarted'] = 'Rollback démarré (id = %s).';
 
 	// Groups rollback

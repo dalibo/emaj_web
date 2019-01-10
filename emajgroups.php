@@ -2704,7 +2704,7 @@
 	}
 
 	/**
-	 * Perform rollback_group
+	 * Perform rollback_group (in synchronous mode)
 	 */
 	function rollback_group_ok() {
 		global $lang, $misc, $emajdb, $conf;
@@ -2749,38 +2749,28 @@
 		if (isset($_POST['async'])) {
 		// perform the rollback in asynchronous mode and switch to the rollback monitoring page
 
+			if (!$emajdb->isAsyncRlbkUsable(false)) {
+				if ($_POST['back']=='list') {
+					show_groups('',sprintf($lang['emajbadconfparam'], $conf['psql_path'], $conf['temp_dir']));
+				} else {
+					show_group('',sprintf($lang['emajbadconfparam'], $conf['psql_path'], $conf['temp_dir']));
+				}
+				exit;
+			}
+
+			// perform the rollback in asynchronous mode and switch to the rollback monitoring page
 			$psqlExe = $misc->escapeShellCmd($conf['psql_path']);
-
-			// re-check the psql exe path and the temp directory supplied in the config file
-			$version = array();
-			preg_match("/(\d+(?:\.\d+)?)(?:\.\d+)?.*$/", exec($psqlExe . " --version"), $version);
-			if (empty($version)) {
-				if ($_POST['back']=='list') {
-					show_groups('',sprintf($lang['emajbadpsqlpath'], $conf['psql_path']));
-				} else {
-					show_group('',sprintf($lang['emajbadpsqlpath'], $conf['psql_path']));
-				}
-				exit;
-			}
-
-			// re-check the file can be written into the temp directory supplied in the config file 
 			$sep = (substr(php_uname(), 0, 3) == "Win") ? '\\' : '/';
-			$testFileName = $conf['temp_dir'] . $sep . 'rlbk_report_test';
-			$f = fopen($testFileName,'w');
-			if (!$f) {
-				if ($_POST['back']=='list') {
-					show_groups('',sprintf($lang['emajbadtempdir'], $conf['temp_dir']));
-				} else {
-					show_group('',sprintf($lang['emajbadtempdir'], $conf['temp_dir']));
-				}
-				exit;
-			} else {
-				fclose($f);
-				unlink($testFileName);
-			}
-
 			$rlbkId = $emajdb->asyncRollbackGroups($_POST['group'],$_POST['mark'],$_POST['rollbacktype']=='logged', $psqlExe, $conf['temp_dir'].$sep, false);
-			show_rollbacks(sprintf($lang['emajasyncrlbkstarted'],$rlbkId));
+
+			// automatic form to go to the emajrollbacks.php page
+			echo "<form id=\"auto\" action=\"emajrollbacks.php\" method=\"get\">\n";
+			echo "<input type=\"hidden\" name=\"action\" value=\"show_rollbacks\" />\n";
+			echo "<input type=\"hidden\" name=\"rlbkId\" value=\"", htmlspecialchars($rlbkId), "\" />\n";
+			echo $misc->form;
+			echo "</form>\n";
+			echo "<script type=\"text/javascript\">document.forms[\"auto\"].submit();</script>";
+
 			exit;
 		}
 
@@ -3009,40 +2999,19 @@
 		// OK
 
 		if (isset($_POST['async'])) {
-		// perform the rollback in asynchronous mode and switch to the rollback monitoring page
 
+			// perform the rollback in asynchronous mode and switch to the rollback monitoring page
 			$psqlExe = $misc->escapeShellCmd($conf['psql_path']);
-
-			// re-check the psql exe path and the temp directory supplied in the config file
-			$version = array();
-			preg_match("/(\d+(?:\.\d+)?)(?:\.\d+)?.*$/", exec($psqlExe . " --version"), $version);
-			if (empty($version)) {
-				if ($_POST['back']=='list') {
-					show_groups('',sprintf($lang['emajbadpsqlpath'], $conf['psql_path']));
-				} else {
-					show_group('',sprintf($lang['emajbadpsqlpath'], $conf['psql_path']));
-				}
-				exit;
-			}
-
-			// re-check the file can be written into the temp directory supplied in the config file 
 			$sep = (substr(php_uname(), 0, 3) == "Win") ? '\\' : '/';
-			$testFileName = $conf['temp_dir'] . $sep . 'rlbk_report_test';
-			$f = fopen($testFileName,'w');
-			if (!$f) {
-				if ($_POST['back']=='list') {
-					show_groups('',sprintf($lang['emajbadtempdir'], $conf['temp_dir']));
-				} else {
-					show_group('',sprintf($lang['emajbadtempdir'], $conf['temp_dir']));
-				}
-				exit;
-			} else {
-				fclose($f);
-				unlink($testFileName);
-			}
-
 			$rlbkId = $emajdb->asyncRollbackGroups($_POST['groups'],$_POST['mark'],$_POST['rollbacktype']=='logged', $psqlExe, $conf['temp_dir'].$sep, true);
-			show_rollbacks(sprintf($lang['emajasyncrlbkstarted'],$rlbkId));
+
+			// automatic form to go to the emajrollbacks.php page
+			echo "<form id=\"auto\" action=\"emajrollbacks.php\" method=\"get\">\n";
+			echo "<input type=\"hidden\" name=\"action\" value=\"show_rollbacks\" />\n";
+			echo "<input type=\"hidden\" name=\"rlbkId\" value=\"", htmlspecialchars($rlbkId), "\" />\n";
+			echo $misc->form;
+			echo "</form>\n";
+			echo "<script type=\"text/javascript\">document.forms[\"auto\"].submit();</script>";
 			exit;
 		}
 

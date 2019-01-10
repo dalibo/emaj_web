@@ -46,11 +46,9 @@
 	$lang['strcreate'] = 'Créer';
 	$lang['strcomment'] = 'Commentaire';
 	$lang['strdefault'] = 'Défaut';
-	$lang['stralter'] = 'Modifier';
 	$lang['strok'] = 'OK';
 	$lang['strcancel'] = 'Annuler';
 	$lang['strreset'] = 'Réinitialiser';
-	$lang['strselect'] = 'Sélectionner';
 	$lang['strdelete'] = 'Effacer';
 	$lang['strupdate'] = 'Modifier';
 	$lang['stryes'] = 'Oui';
@@ -63,29 +61,19 @@
 	$lang['strrowsaff'] = 'ligne(s) affectée(s).';
 	$lang['strback'] = 'Retour';
 	$lang['strqueryresults'] = 'Résultats de la requête';
-	$lang['strshow'] = 'Voir';
-	$lang['strlanguage'] = 'Langage';
 	$lang['strencoding'] = 'Codage';
-	$lang['strvalue'] = 'Valeur';
 	$lang['strsql'] = 'SQL';
 	$lang['strexecute'] = 'Lancer';
 	$lang['strconfirm'] = 'Confirmer';
 	$lang['strellipsis'] = '...';
-	$lang['strseparator'] = ' : ';
 	$lang['strexpand'] = 'Étendre';
 	$lang['strcollapse'] = 'Réduire';
-	$lang['strfind'] = 'Rechercher';
 	$lang['strrefresh'] = 'Rafraichir';
 	$lang['strdownload'] = 'Télécharger';
-	$lang['streditsql'] = 'Éditer SQL';
 	$lang['strruntime'] = 'Temps d\'exécution total : %s ms';
 	$lang['strpaginate'] = 'Paginer les résultats';
-	$lang['struploadscript'] = 'ou importer un script SQL :';
 	$lang['strtrycred'] = 'Utilisez ces identifiants pour tous les serveurs';
 	$lang['strconfdropcred'] = 'Par mesure de sécurité, la déconnexion supprimera le partage de vos identifiants pour tous les serveurs. Êtes-vous certain de vouloir vous déconnecter ?';
-	$lang['stractionsonmultiplelines'] = 'Actions sur plusieurs lignes';
-	$lang['strselectall'] = 'Sélectionner tout';
-	$lang['strunselectall'] = 'Desélectionner tout';
 	$lang['strstart'] = 'Démarrer';
 	$lang['strstop'] = 'Arrêter';
 	$lang['strgotoppage'] = 'Haut de la page';
@@ -127,7 +115,6 @@
 	$lang['strbadschema'] = 'Schéma spécifié invalide.';
 	$lang['strsqlerror'] = 'Erreur SQL :';
 	$lang['strinstatement'] = 'Dans l\'instruction :';
-	$lang['strinvalidparam'] = 'Paramètres de script invalides.';
 	$lang['strnodata'] = 'Pas de résultats.';
 	$lang['strnoobjects'] = 'Aucun objet trouvé.';
 	$lang['strcannotdumponwindows'] = 'La sauvegarde de table complexe et des noms de schémas n\'est pas supporté sur Windows.';
@@ -140,10 +127,6 @@
 	$lang['strtables'] = 'Tables';
 	$lang['strtableslist'] = 'Tables du schéma "%s"';
 	$lang['strnotables'] = 'Aucune table trouvée.';
-	$lang['strnofkref'] = 'Aucune valeur correspondate pour la clé étrangère %s.';
-	$lang['strselectallfields'] = 'Sélectionner tous les champs';
-	$lang['strselectneedscol'] = 'Vous devez sélectionner au moins une colonne.';
-	$lang['strselectunary'] = 'Les opérateurs unaires ne peuvent avoir de valeurs.';
 	$lang['strestimatedrowcount'] = 'Nombre estimé de lignes';
 	$lang['strtblproperties'] = 'Propriétés de la table "%s"';
 	$lang['strtblbrowse'] = 'Parcours de la table "%s"';
@@ -165,13 +148,7 @@
 	$lang['strdatabases'] = 'Bases de données';
 	$lang['strdatabaseslist'] = 'Databases du serveur';
 	$lang['strnodatabases'] = 'Aucune base de données trouvée.';
-	$lang['strentersql'] = 'Veuillez saisir ci-dessous la requête SQL à exécuter :';
 	$lang['strsqlexecuted'] = 'Requête SQL exécutée.';
-	$lang['strallobjects'] = 'Tous les objets';
-
-	// Views
-	$lang['strviews'] = 'Vues';
-	$lang['strcreateview'] = 'Créer une vue';
 
 	// Sequences
 	$lang['strsequence'] = 'Séquence';
@@ -188,49 +165,17 @@
 	$lang['strcancycle'] = 'Peut boucler?';
 	$lang['striscalled'] = 'Incrémentera la dernière valeur avant de retourner la prochaine valeur (is_called) ?';
 
-	// Indexes
-	$lang['strindexes'] = 'Index';
-
-	// Rules
-	$lang['strrules'] = 'Règles';
-
 	// Constraints
 	$lang['strconstraints'] = 'Contraintes';
 
-	// Functions
-	$lang['strfunctions'] = 'Fonctions';
-
-	// Triggers
-	$lang['strtriggers'] = 'Triggers';
-
 	// Types
 	$lang['strtype'] = 'Type';
-	$lang['strtypes'] = 'Types';
 
 	// Schemas
 	$lang['strschema'] = 'Schéma';
 	$lang['strschemas'] = 'Schémas';
 	$lang['strallschemas'] = 'Tous les schémas';
 	$lang['strnoschemas'] = 'Aucun schéma trouvé.';
-
-	// Domains
-	$lang['strdomains'] = 'Domaines';
-
-	// Operators
-	$lang['stroperator'] = 'Opérateur';
-	$lang['stroperators'] = 'Opérateurs';
-
-	// Conversions
-	$lang['strconversions'] = 'Conversions';
-
-	// Languages
-	$lang['strlanguages'] = 'Langages';
-
-	// Aggregates
-	$lang['straggregates'] = 'Agrégats';
-
-	// Operator Classes
-	$lang['stropclasses'] = 'Classes d\'opérateur';
 
 	// Tablespaces
 	$lang['strtablespace'] = 'Tablespace';
@@ -253,7 +198,6 @@
 	$lang['emajgroup'] = 'Groupe';
 	$lang['emajgroups'] = 'Groupes';
 	$lang['emajmark'] = 'Marque';
-	$lang['emajmarks'] = 'Marques';
 	$lang['emajgrouptype'] = 'Type de groupe';
 	$lang['emajrollbacktype'] = 'Type de rollback';
 	$lang['emajauditonly'] = 'Audit-seul';
@@ -340,7 +284,6 @@
 	$lang['emajmodifygrouperr'] = 'Erreur lors du changement de composition des groupes de tables.';
 
 	// List Groups
-	$lang['emajgrouplist'] = 'Liste des groupes de tables';
 	$lang['emajidlegroups'] = 'Groupes de tables en état "arrêté" ';
 	$lang['emajlogginggroups'] = 'Groupes de tables en état "démarré" ';
 	$lang['emajconfiguredgroups'] = 'Groupes de tables "configurés" mais non encore "créés" ';
@@ -366,7 +309,6 @@
 	$lang['emajcreateemptygroup'] = 'Créer un groupe vide';
 
 	// Rollback activity
-	$lang['emajrlbkoperations'] = 'Rollbacks E-Maj';
 	$lang['emajrlbkid'] = 'Id. Rlbk';
 	$lang['emajrlbkstart'] = 'Début rollback';
 	$lang['emajrlbkend'] = 'Fin rollback';
@@ -401,7 +343,6 @@
 	$lang['emajconsolidaterlbkerr'] = 'Erreur lors de la consolidation du rollback terminé par la marque "%s" du groupe de tables "%s" !';
 
 	// Group's properties and marks
-	$lang['emajgrouppropertiesmarks'] = 'Propriétés et marques du groupe de tables "%s"';
 	$lang['emajgroupproperties'] = 'Propriétés du groupe de tables "%s"';
 	$lang['emajcontent'] = 'Contenu';
 	$lang['emajgroupmarks'] = 'Marques du groupe de tables "%s"';
@@ -437,15 +378,12 @@
 	$lang['emajnbtruncate'] = 'Nb TRUNCATE';
 	$lang['emajnbrole'] = 'Nb rôles';
 	$lang['emajstatrows'] = 'Nb mises à jour';
-	$lang['emajbackgroup'] = 'Revenir au groupe de tables';
 
 	// Group's content
 	$lang['emajgroupcontent'] = 'Contenu du groupe de tables "%s"';
 	$lang['emajemptygroup'] = 'Le groupe de tables "%s" est actuellement vide.';
 	$lang['emajpriority'] = 'Priorité';
 	$lang['emajlogschema'] = 'Schéma de log';
-	$lang['emajlogdattsp'] = 'Tablespace log';
-	$lang['emajlogidxtsp'] = 'Tablespace index log';
 	$lang['emajnamesprefix'] = 'Préfixe nom objets';
 
 	// Group creation
@@ -568,8 +506,6 @@
 	$lang['emajreachaltergroup'] = 'Le rollback du groupe de tables "%s" à la marque "%s" remonterait à un point dans le temps antérieur à des opérations de modification du groupe. Veuillez confirmer le rollback.';
 	$lang['emajautorolledback'] = 'Annulé automatiquement ?';
 	$lang['emajgroupisprotected'] = 'Le groupe "%s" est protégé.';
-	$lang['emajinvalidrlbkmark'] = 'La marque "%s" n\'est plus valide.';
-	$lang['emajrlbkgroupok'] = 'Le rollback du groupe de tables "%s" à la marque "%s" est effectué.';
 	$lang['emajrlbkgrouperr'] = 'Erreur lors du rollback du groupe de tables "%s" à la marque "%s" !';
 	$lang['emajbadconfparam'] = 'Erreur : le rollback asynchrone n\'est plus possible. Vérifiez l\'existence de l\'extension dblink et la valeur des deux paramètres de configuration du chemin de la commande psql (%s) et du répertoire temporaire (%s).';
 	$lang['emajasyncrlbkstarted'] = 'Rollback démarré (id = %s).';

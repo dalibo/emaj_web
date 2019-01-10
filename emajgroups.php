@@ -3278,7 +3278,7 @@
 	/* shortcuts: these functions exit the script */
 	if ($action == 'tree') doTree();
 
-	$misc->printHtmlHeader($lang['emajplugin']);
+	$misc->printHtmlHeader($lang['emajgroupsmanagement']);
 	$misc->printBody();
 
 	switch ($action) {

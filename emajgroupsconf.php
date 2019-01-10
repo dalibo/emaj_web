@@ -692,7 +692,7 @@
 		}
 	}
 
-	$misc->printHtmlHeader($lang['emajplugin']);
+	$misc->printHtmlHeader($lang['emajgroupsconfiguration']);
 	$misc->printBody();
 
 	switch ($action) {

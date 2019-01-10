@@ -247,7 +247,6 @@
 // E-Maj strings
 //
 	// Basic strings 
-	$lang['emajplugin'] = 'Emaj_web';
 	$lang['emajnotavail'] = 'Sorry, E-Maj is not available or accessible for this database. More details in the %s tab.';
 	$lang['emajstate'] = 'State';
 	$lang['emajnoselectedgroup'] = 'No tables group has been selected!';
@@ -273,10 +272,14 @@
 	$lang['emajfrom'] = 'From';
 	$lang['emajto'] = 'To';
 
-	// E-Maj tabs
-	$lang['emajenvir'] = 'E-Maj';
+	// E-Maj html titles and tabs
+	$lang['emajgroupsmanagement'] = 'E-Maj groups management';
+	$lang['emajgroupsconfiguration'] = 'Tables groups\' configuration';
 	$lang['emajgroupsconf'] = 'Groups configuration';
+	$lang['emajrollbacksmanagement'] = 'E-Maj rollbacks management';
 	$lang['emajrlbkop'] = 'Rollback operations';
+	$lang['emajenvironment'] = 'E-Maj environment';
+	$lang['emajenvir'] = 'E-Maj';
 	$lang['emajlogstat'] = 'Log statistics';
 
 	// Common help messages
@@ -284,7 +287,6 @@
 	$lang['emajmarknamemultihelp'] = 'The mark name must be unique within the concerned groups. A % character represents the current time (format hh.mn.ss.ms).';
 
 	// E-Maj environment
-	$lang['emajenvironment'] = 'E-Maj environment';
 	$lang['emajextnotavailable'] = 'The E-Maj software is not installed on this PostgreSQL instance. Contact your database administrator.';
 	$lang['emajextnotcreated'] = 'The emaj extension is not created in this database. Contact your database administrator.';
 	$lang['emajnogrant'] = 'Your connection role has no E-Maj rights. Use another role or contact your database administrator.';
@@ -302,7 +304,6 @@
 	$lang['emajdiagnostics'] = 'Diagnostics';
 
 	// Groups' content setup
-	$lang['emajgroupsconfiguration'] = 'Tables groups\' configuration';
 	$lang['emajappschemas'] = 'Application schemas';
 	$lang['emajunknownobject'] = 'This object is referenced in the emaj_group_def table but is not created.';
 	$lang['emajunsupportedobject'] = 'This object type is not supported by E-Maj (unlogged table, table with OIDS, partition table,...).';

@@ -491,7 +491,6 @@
 			if ($title != '') echo htmlspecialchars(" - {$title}");
 			echo "</title>\n";
 
-
 			echo "</head>\n";
 		}
 

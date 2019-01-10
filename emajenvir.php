@@ -108,7 +108,7 @@
 		}
 	}
 
-	$misc->printHtmlHeader($lang['emajplugin']);
+	$misc->printHtmlHeader($lang['emajenvironment']);
 	$misc->printBody();
 
 	switch ($action) {

@@ -364,7 +364,7 @@
 			show_rollbacks('',sprintf($lang['emajconsolidaterlbkerr'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group'])));
 	}
 
-	$misc->printHtmlHeader($lang['emajplugin']);
+	$misc->printHtmlHeader($lang['emajrollbacksmanagement']);
 	$misc->printBody();
 
 	switch ($action) {

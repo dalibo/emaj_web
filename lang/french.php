@@ -247,7 +247,6 @@
 // E-Maj strings
 //
 	// Basic strings
-	$lang['emajplugin'] = 'Emaj_web';
 	$lang['emajnotavail'] = 'Désolé, E-Maj n\'est pas disponible ou accessible sur cette base de données. Plus de détails sur l\'onglet %s.';
 	$lang['emajstate'] = 'Etat';
 	$lang['emajnoselectedgroup'] = 'Aucun groupe de tables n\'a été sélectionné !';
@@ -273,10 +272,14 @@
 	$lang['emajfrom'] = 'De';
 	$lang['emajto'] = 'A';
 
-	// E-Maj tabs
-	$lang['emajenvir'] = 'E-Maj';
+	// E-Maj html titles and tabs
+	$lang['emajgroupsmanagement'] = 'Gestion des groupes E-Maj';
+	$lang['emajgroupsconfiguration'] = 'Configuration des groupes de tables';
 	$lang['emajgroupsconf'] = 'Configuration groupes';
-	$lang['emajrlbkop'] = 'Rollbacks';
+	$lang['emajrollbacksmanagement'] = 'Gestion des rollbacks E-Maj';
+	$lang['emajrlbkop'] = 'Rollback';
+	$lang['emajenvironment'] = 'Environnement E-Maj';
+	$lang['emajenvir'] = 'E-Maj';
 	$lang['emajlogstat'] = 'Statistiques log';
 
 	// Common help messages
@@ -284,7 +287,6 @@
 	$lang['emajmarknamemultihelp'] = 'Le nom de la marque doit être unique pour les groupes concernés. Un caractère % représente l\'heure courante (format hh.mn.ss.ms).';
 
 	// E-Maj environment
-	$lang['emajenvironment'] = 'Environnement E-Maj';
 	$lang['emajextnotavailable'] = 'Le logiciel E-Maj n\'est pas installé sur cette instance PostgreSQL. Contactez votre administrateur des bases de données.';
 	$lang['emajextnotcreated'] = 'L\'extension emaj n\'est pas créée dans cette base de données. Contactez votre administrateur des bases de données.';
 	$lang['emajnogrant'] = 'Votre rôle de connexion n\'a pas les droits d\'utilisation d\'E-Maj. Utilisez un autre rôle ou contactez votre administrateur des bases de données.';
@@ -302,7 +304,6 @@
 	$lang['emajdiagnostics'] = 'Diagnostics';
 
 	// Groups' content setup
-	$lang['emajgroupsconfiguration'] = 'Configuration des groupes de tables';
 	$lang['emajappschemas'] = 'Les schémas applicatifs';
 	$lang['emajunknownobject'] = 'Cet objet est référencé dans la table emaj_group_def mais n\'est pas créé.';
 	$lang['emajunsupportedobject'] = 'Ce type d\'objet n\'est pas supporté par E-Maj (unlogged table, table avec OIDS, table partitionnée,...).';

@@ -102,11 +102,10 @@
 					break;
 				case 'emaj':
 					$vars = array (
-						'url' => 'plugin.php',
+						'url' => 'emajgroups.php',
 						'params' => array (
 							'server' => $_REQUEST['server'],
 							'subject' => 'plugin',
-							'plugin' => 'Emaj',
 							'action' => $_REQUEST['action'],
 							'database' => $_REQUEST['database'],
 							'group' => $_REQUEST['group'],
@@ -378,7 +377,7 @@
 		* @param $msg			A (non error) message to print, if supplied
 		*        $errMsg		An error message to print, if supplied
 		*/
-		function printMsg($msg, $errMsg) {
+		function printMsg($msg, $errMsg = '') {
 			if ($msg != '') echo "<p class=\"message\">{$msg}</p>\n";
 			if ($errMsg != '') echo "<p class=\"error-message\">{$errMsg}</p>\n";
 		}
@@ -467,23 +466,31 @@
 
 			echo "<head>\n";
 			echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
+
 			// Theme
-			echo "<link rel=\"stylesheet\" href=\"css/global.css\" type=\"text/css\" />\n";
-			if ($css)
-				echo "<link rel=\"stylesheet\" href=\"css/{$css}.css\" type=\"text/css\" />\n";
-			echo "<link rel=\"shortcut icon\" type=\"image/vnd.microsoft.icon\" href=\"images/Favicon.ico\" />\n";
-			echo "<link rel=\"icon\" type=\"image/png\" href=\"images/EmajwebIcon.png\" />\n";
+			if (!$frameset) {
+				echo "<link rel=\"stylesheet\" href=\"css/global.css\" type=\"text/css\" />\n";
+				if ($css)
+					echo "<link rel=\"stylesheet\" href=\"css/{$css}.css\" type=\"text/css\" />\n";
+			} else {
+				echo "<link rel=\"shortcut icon\" type=\"image/vnd.microsoft.icon\" href=\"images/Favicon.ico\" />\n";
+				echo "<link rel=\"icon\" type=\"image/png\" href=\"images/EmajwebIcon.png\" />\n";
+			}
+
 			// Javascript
-			echo "<script type=\"text/javascript\" src=\"js/multiactionform.js\"></script>\n";
-			echo "<script type=\"text/javascript\" src=\"libraries/js/jquery-3.3.1.min.js\"></script>\n";
-			echo "<script type=\"text/javascript\" src=\"libraries/js/jquery.tablesorter.min.js\"></script>\n";
-			echo "<script type=\"text/javascript\" src=\"libraries/js/jquery.tablesorter.widgets.min.js\"></script>\n";
+			if (!$frameset) {
+				echo "<script type=\"text/javascript\" src=\"js/multiactionform.js\"></script>\n";
+				echo "<script type=\"text/javascript\" src=\"libraries/js/jquery-3.3.1.min.js\"></script>\n";
+				echo "<script type=\"text/javascript\" src=\"libraries/js/jquery.tablesorter.min.js\"></script>\n";
+				echo "<script type=\"text/javascript\" src=\"libraries/js/jquery.tablesorter.widgets.min.js\"></script>\n";
+			}
+			if ($script) echo "{$script}\n";
+
 			// Title
 			echo "<title>", htmlspecialchars($appName);
 			if ($title != '') echo htmlspecialchars(" - {$title}");
 			echo "</title>\n";
 
-			if ($script) echo "{$script}\n";
 
 			echo "</head>\n";
 		}
@@ -813,9 +820,8 @@
 					$tabs = array (
 						'emajgroups' => array (
 							'title' => $lang['emajgroups'],
-							'url' => 'plugin.php',
+							'url' => 'emajgroups.php',
 							'urlvars' => array(
-								'plugin' => 'Emaj',
 								'subject' => 'database',
 								'action' => 'show_groups'
 							),
@@ -862,9 +868,8 @@
 					$tabs = array (
 						'emajgroupproperties' => array (
 							'title' => $lang['strproperties'],
-							'url' => 'plugin.php',
+							'url' => 'emajgroups.php',
 							'urlvars' => array(
-								'plugin' => 'Emaj',
 								'subject' => 'emajgroups',
 								'action' => 'show_group',
 								'group' => $_REQUEST['group']
@@ -873,9 +878,8 @@
 						),
 						'emajlogstat' => array (
 							'title' => $lang['emajlogstat'],
-							'url' => 'plugin.php',
+							'url' => 'emajgroups.php',
 							'urlvars' => array(
-								'plugin' => 'Emaj',
 								'subject' => 'emajgroups',
 								'action' => 'log_stat_group',
 								'group' => $_REQUEST['group']
@@ -884,9 +888,8 @@
 						),
 						'emajcontent' => array (
 							'title' => $lang['emajcontent'],
-							'url' => 'plugin.php',
+							'url' => 'emajgroups.php',
 							'urlvars' => array(
-								'plugin' => 'Emaj',
 								'subject' => 'emajgroups',
 								'action' => 'show_content_group',
 								'group' => $_REQUEST['group']

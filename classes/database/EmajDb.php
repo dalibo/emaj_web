@@ -189,17 +189,17 @@ class EmajDb {
 	}
 
 	/**
-	 * Determines whether or not the asynchronous rollback can be used by the plugin for the current user.
+	 * Determines whether or not the asynchronous rollback can be used for the current user.
 	 * It checks that:
 	 * - dblink is effectively usable
 	 * - the psql_path and temp_dir parameters from the plugin configuration file are set and usable
 	 * If they are set, one tries to use them.
 	 */
-	function isAsyncRlbkUsable($conf) {
+	function isAsyncRlbkUsable() {
 		// Access cache
 		if ($this->asyncRlbkUsable !== null) return $this->asyncRlbkUsable;
 
-		global $misc, $data;
+		global $misc, $data, $conf;
 
 		$this->asyncRlbkUsable = 0;
 

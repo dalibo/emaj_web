@@ -45,13 +45,18 @@ img {
 }
 
 p.message {
-	color: blue;
+	font-size: 1.05em;
+	font-weight: bold;
+	color: #308ac5;
 }
 p.error-message {
+	font-size: 1.05em;
+	font-weight: bold;
 	color: red;
 }
 .comment {
-	font-style: italic
+	font-style: italic;
+	color: #555555;
 }
 .left {
 	text-align: left
@@ -386,18 +391,6 @@ div.fk {
     background: #fff;
 	border-left: 1px dotted #000;
 	padding: 5px;
-}
-.comment {
-	color: #555555;
-}
-.keyword {
-	color: #FF8000;
-}
-.literal {
-	color: #808080;
-}
-p.message {
-	color: #306EFF;
 }
 
 button {

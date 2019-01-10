@@ -105,7 +105,7 @@
 						'url' => 'emajgroups.php',
 						'params' => array (
 							'server' => $_REQUEST['server'],
-							'subject' => 'plugin',
+							'subject' => 'emaj',
 							'action' => $_REQUEST['action'],
 							'database' => $_REQUEST['database'],
 							'group' => $_REQUEST['group'],

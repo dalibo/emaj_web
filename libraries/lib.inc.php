@@ -21,9 +21,9 @@
 	$phpMinVer = '5.0';
 
 	// E-Maj versions
-	$oldest_supported_emaj_version = '1.3.0';			// Oldest emaj version supported by the plugin
+	$oldest_supported_emaj_version = '1.3.0';			// Oldest supported emaj version
 	$oldest_supported_emaj_version_num = 10300;
-	$last_known_emaj_version = '3.0.0';				// Most recent emaj version known by the plugin
+	$last_known_emaj_version = '3.0.0';				// Most recent known emaj version
 	$last_known_emaj_version_num = 30000;
 
 	// Check the version of PHP
@@ -171,9 +171,6 @@
 		exit;
 	}
 
-	// Manage the plugins
-	require_once('./classes/PluginManager.php');
-
 	// Create data accessor object, if necessary
 	if (!isset($_no_db_connection)) {
 		if (!isset($_REQUEST['server'])) {
@@ -221,5 +218,4 @@
 		}
 	}
 
-	$plugin_manager = new PluginManager($_language);
 ?>

@@ -12,9 +12,7 @@
 	if (!isset($msg)) $msg = '';
 	
 	function doLogout() {
-		global $misc, $lang, $_reload_browser, $plugin_manager;
-
-		$plugin_manager->do_hook('logout', $_REQUEST['logoutServer']);
+		global $misc, $lang, $_reload_browser;
 
 		$server_info = $misc->getServerInfo($_REQUEST['logoutServer']);
 		$misc->setServerInfo(null, null, $_REQUEST['logoutServer']);

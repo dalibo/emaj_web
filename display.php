@@ -193,7 +193,7 @@
 	 * Displays requested data
 	 */
 	function doBrowse($msg = '') {
-		global $data, $conf, $misc, $lang, $plugin_manager;
+		global $data, $conf, $misc, $lang;
 
 		$save_history = false;
 		// If current page is not set, default to first page

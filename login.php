@@ -3,14 +3,11 @@
 	/*
 	 * Login screen
 	 */
-	global $conf, $plugin_manager;
+	global $conf;
 	
 	// This needs to be an include once to prevent lib.inc.php infinite recursive includes.
 	// Check to see if the configuration file exists, if not, explain
 	require_once('./libraries/lib.inc.php');
-
-	if (!isset($plugin_manager))
-		$plugin_manager = new PluginManager($_SESSION['webdbLanguage']);
 
 	$misc->printHtmlHeader($lang['strlogin']);
 	$misc->printBody();

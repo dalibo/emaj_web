@@ -193,7 +193,7 @@ class EmajDb {
 	 * Parameter: $useCache = boolean to be explicitely set to false to force the check
 	 * It checks that:
 	 * - dblink is effectively usable
-	 * - the psql_path and temp_dir parameters from the plugin configuration file are set and usable
+	 * - the psql_path and temp_dir parameters from the configuration file are set and usable
 	 * If they are set, one tries to use them.
 	 */
 	function isAsyncRlbkUsable($useCache = true) {
@@ -220,7 +220,7 @@ class EmajDb {
 				$sql = "SELECT emaj._dblink_close_cnx('test')";
 				$data->execute($sql);
 
-				// check if the plugin parameters are set
+				// check if the parameters are set
 				if (isset($conf['psql_path']) && isset($conf['temp_dir'])) {
 
 					// check the psql exe path supplied in the config file, 

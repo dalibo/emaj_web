@@ -243,15 +243,11 @@
 	$lang['strerrorloading'] = 'Error Loading';
 	$lang['strclicktoreload'] = 'Click to reload';
 
-	//Plugins
-	$lang['strpluginnotfound'] = 'Error: plugin \'%s\' not found. Check if this plugin exists in the plugins/ directory, or if this plugins has a plugin.php file. Plugin\'s names are case sensitive';
-	$lang['stractionnotfound'] = 'Error: action \'%s\' not found in the \'%s\' plugin, or it was not specified as an action.';
-	$lang['strhooknotfound'] = 'Error: hook \'%s\' is not avaliable.';
 //
 // E-Maj strings
 //
 	// Basic strings 
-	$lang['emajplugin'] = 'E-Maj plugin';
+	$lang['emajplugin'] = 'Emaj_web';
 	$lang['emajnotavail'] = 'Sorry, E-Maj is not available or accessible for this database. More details in the %s tab.';
 	$lang['emajstate'] = 'State';
 	$lang['emajnoselectedgroup'] = 'No tables group has been selected!';
@@ -298,7 +294,7 @@
 	$lang['emajversion'] = 'E-Maj version: ';
 	$lang['emajasextension'] = 'installed as extension';
 	$lang['emajasscript'] = 'installed by script';
-	$lang['emajtooold'] = 'Sorry, this E-Maj version (%s) is too old. The minimum version supported by this plugin is %s.';
+	$lang['emajtooold'] = 'Sorry, this E-Maj version (%s) is too old. The minimum version supported by Emaj_web is %s.';
 	$lang['emajversionmorerecent'] = 'A more recent E-Maj version exists. Contact your database administrator.';
 	$lang['emajwebversionmorerecent'] = 'A more recent Emaj_web version probably exists. Contact your database administrator.';
 	$lang['emajdiskspace'] = 'Disk space used by the E-Maj environment: %s of the current database.';

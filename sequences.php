@@ -64,7 +64,7 @@
 
 			// Show comment if any
 			if ($sequence->fields['seqcomment'] !== null)
-				echo "<p class=\"comment\">", $misc->printVal($sequence->fields['seqcomment']), "</p>\n";
+				echo "<p>{$lang['strcommentlabel']}<span class=\"comment\">{$misc->printVal($sequence->fields['seqcomment'])}</span></p>\n";
 
 			echo "<table border=\"0\">";
 			echo "<tr><th class=\"data\">{$lang['strname']}</th>";

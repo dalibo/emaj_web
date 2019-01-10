@@ -45,6 +45,7 @@
 	$lang['strlast'] = 'Last >>';
 	$lang['strcreate'] = 'Create';
 	$lang['strcomment'] = 'Comment';
+	$lang['strcommentlabel'] = 'Comment: ';
 	$lang['strdefault'] = 'Default';
 	$lang['strok'] = 'OK';
 	$lang['strcancel'] = 'Cancel';

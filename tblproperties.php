@@ -34,7 +34,6 @@
 		$misc->printMsg($msg);
 		$misc->printTitle(sprintf($lang['strtblproperties'], $_REQUEST['table']));
 
-
 		// Get table
 		$tdata = $data->getTable($_REQUEST['table']);
 		// Get columns
@@ -44,7 +43,7 @@
 
 		// Show comment if any
 		if ($tdata->fields['relcomment'] !== null)
-			echo '<p class="comment">', $misc->printVal($tdata->fields['relcomment']), "</p>\n";
+			echo "<p>{$lang['strcommentlabel']}<span class=\"comment\">{$misc->printVal($tdata->fields['relcomment'])}</span></p>\n";
 
 		$columns = array(
 			'column' => array(

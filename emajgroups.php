@@ -628,7 +628,7 @@
 
 		// display group's comment if exists
 			if ($comment<>'') {
-				echo "<p>{$lang['strcomment']} : ",$comment,"</p>\n";
+				echo "<p>{$lang['strcommentlabel']}<span class=\"comment\">{$comment}</span></p>\n";
 			}
 
 		// display the buttons corresponding to the available functions for the group, depending on its state

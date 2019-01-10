@@ -211,9 +211,9 @@
 		}
 
 		if ($subject == '')
-			$misc->printHeader('database', '', '', '');
+			$misc->printHeader('database', '', '');
 		else
-			$misc->printHeader($subject, '', '', '');
+			$misc->printHeader($subject, '', '');
 
 		/* This code is used when browsing FK in pure-xHTML (without js) */
 		if (isset($_REQUEST['fkey'])) {

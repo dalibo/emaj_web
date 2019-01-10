@@ -66,7 +66,7 @@
 		if (!isset($_REQUEST['appschema'])) $_REQUEST['appschema'] = $prevSchema;
 		if (is_array($_REQUEST['appschema'])) $_REQUEST['appschema'] = $_REQUEST['appschema'][0];
 
-		$misc->printHeader('database', 'action=configure_groups&amp;appschema='.urlencode($_REQUEST['appschema']), 'database', 'emajconfiguregroups');
+		$misc->printHeader('database', 'database', 'emajconfiguregroups');
 
 		$emajOK = $misc->checkEmajExtension();
 
@@ -256,7 +256,7 @@
 			}
 		}
 
-		$misc->printHeader('database', '', 'database', 'emajconfiguregroups');
+		$misc->printHeader('database', 'database', 'emajconfiguregroups');
 
 		$misc->printTitle($lang['emajassigntblseq']);
 
@@ -450,7 +450,7 @@
 			exit();
 		}
 
-		$misc->printHeader('database', '', 'database', 'emajconfiguregroups');
+		$misc->printHeader('database', 'database', 'emajconfiguregroups');
 
 		$misc->printTitle($lang['emajupdatetblseq']);
 
@@ -601,7 +601,7 @@
 			}
 		}
 
-		$misc->printHeader('database', '', 'database', 'emajconfiguregroups');
+		$misc->printHeader('database', 'database', 'emajconfiguregroups');
 
 		$misc->printTitle($lang['emajremovetblseq']);
 

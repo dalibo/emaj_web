@@ -17,7 +17,7 @@
 		global $data, $conf, $misc;
 		global $lang;
 
-		$misc->printHeader('server', '', 'server', 'databases');
+		$misc->printHeader('server', 'server', 'databases');
 		$misc->printMsg($msg);
 		$misc->printTitle($lang['strdatabaseslist']);
 

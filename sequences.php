@@ -17,7 +17,7 @@
 		global $data, $conf, $misc;
 		global $lang;
 
-		$misc->printHeader('schema', '', 'schema', 'sequences');
+		$misc->printHeader('schema', 'schema', 'sequences');
 		$misc->printMsg($msg);
 		$misc->printTitle(sprintf($lang['strsequenceslist'], $_REQUEST['schema']));
 
@@ -51,7 +51,7 @@
 	function doProperties($msg = '') {
 		global $data, $misc, $lang;
 
-		$misc->printHeader('sequence', '', '', '');
+		$misc->printHeader('sequence', '', '');
 		$misc->printTitle($lang['strproperties'],'pg.sequence');
 		$misc->printMsg($msg);
 

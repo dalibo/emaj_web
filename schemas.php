@@ -17,7 +17,7 @@
 		global $data, $misc, $conf;
 		global $lang;
 
-		$misc->printHeader('database', '', 'database', 'schemas');
+		$misc->printHeader('database', 'database', 'schemas');
 		$misc->printMsg($msg);
 		$misc->printTitle($lang['strallschemas']);
 

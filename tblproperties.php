@@ -30,7 +30,7 @@
 			return $actions;
 		}
 
-		$misc->printHeader('table', '', 'table', 'columns');
+		$misc->printHeader('table',  'table', 'columns');
 		$misc->printMsg($msg);
 		$misc->printTitle(sprintf($lang['strtblproperties'], $_REQUEST['table']));
 

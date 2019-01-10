@@ -28,7 +28,7 @@
 		global $misc, $lang, $emajdb;
 		global $oldest_supported_emaj_version_num, $oldest_supported_emaj_version, $last_known_emaj_version_num;
 
-		$misc->printHeader('database', '', 'database', 'emajenvir');
+		$misc->printHeader('database', 'database', 'emajenvir');
 
 		$emajOK = 1;
 

@@ -106,7 +106,7 @@
 	$subject = isset($_REQUEST['subject'])? $_REQUEST['subject'] : '';
 	$misc->printHtmlHeader($lang['strqueryresults']);
 	$misc->printBody();
-	$misc->printHeader('database', '', '', '');
+	$misc->printHeader('database', '', '');
 	$misc->printTitle($lang['strqueryresults']);
 
 	// Set the schema search path

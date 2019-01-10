@@ -11,7 +11,7 @@
 	$misc->printHtmlHeader();
 	$misc->printBody();
 
-	$misc->printHeader('root', '', 'root', 'intro');
+	$misc->printHeader('root', 'root', 'intro');
 ?>
 
 <div id="welcome">

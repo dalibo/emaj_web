@@ -16,7 +16,7 @@
 		global $data, $conf, $misc, $data;
 		global $lang;
 
-		$misc->printHeader('schema', '', 'schema', 'tables');
+		$misc->printHeader('schema', 'schema', 'tables');
 		$misc->printMsg($msg);
 		$misc->printTitle(sprintf($lang['strtableslist'], $_REQUEST['schema']));
 

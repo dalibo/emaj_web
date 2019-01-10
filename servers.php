@@ -28,7 +28,7 @@
 		global $conf, $misc;
 		global $lang;
 		
-		$misc->printHeader('root', '', 'root', 'servers');
+		$misc->printHeader('root', 'root', 'servers');
 		$misc->printMsg($msg);
 		$group = isset($_GET['group']) ? $_GET['group'] : false;
 

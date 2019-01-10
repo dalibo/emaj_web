@@ -245,7 +245,7 @@
 	function show_groups($msg = '', $errMsg = '') {
 		global $lang, $misc, $emajdb;
 
-		$misc->printHeader('database', 'action=show_groups', 'database', 'emajgroups');
+		$misc->printHeader('database', 'database', 'emajgroups');
 
 		$emajOK = $misc->checkEmajExtension();
 
@@ -555,7 +555,7 @@
 	function show_group($msg = '', $errMsg = '') {
 		global $misc, $lang, $emajdb, $previous_cumlogrows;
 
-		$misc->printHeader('emaj', 'action=show_group&amp;group='.urlencode($_REQUEST['group']), 'emajgroup', 'emajgroupproperties');
+		$misc->printHeader('emaj', 'emajgroup', 'emajgroupproperties');
 
 		$emajOK = $misc->checkEmajExtension();
 
@@ -885,7 +885,7 @@
 	function log_stat_group() {
 		global $misc, $lang, $emajdb;
 
-		$misc->printHeader('emaj', 'action=log_stat_group&amp;group='.urlencode($_REQUEST['group']), 'emajgroup', 'emajlogstat');
+		$misc->printHeader('emaj', 'emajgroup', 'emajlogstat');
 
 		$misc->printTitle(sprintf($lang['emajshowstat'], htmlspecialchars($_REQUEST['group'])));
 
@@ -1334,7 +1334,7 @@
 	function show_content_group() {
 		global $misc, $lang, $emajdb;
 
-		$misc->printHeader('emaj', 'action=show_content_group&amp;group='.urlencode($_REQUEST['group']), 'emajgroup', 'emajcontent');
+		$misc->printHeader('emaj', 'emajgroup', 'emajcontent');
 
 		$misc->printTitle(sprintf($lang['emajgroupcontent'],htmlspecialchars($_REQUEST['group'])));
 
@@ -1425,7 +1425,7 @@
 	function create_group() {
 		global $misc, $lang;
 
-		$misc->printHeader('database','', 'database','emajgroups');
+		$misc->printHeader('database', 'database','emajgroups');
 
 		$misc->printTitle($lang['emajcreateagroup']);
 
@@ -1490,9 +1490,9 @@
 		global $misc, $lang;
 
 		if ($_REQUEST['back']=='list')
-			$misc->printHeader('database','', 'database','emajgroups');
+			$misc->printHeader('database', 'database','emajgroups');
 		else
-			$misc->printHeader('emaj','','emajgroup','emajgroupproperties');
+			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
 		$misc->printTitle($lang['emajdropagroup']);
 
@@ -1550,9 +1550,9 @@
 		global $misc, $lang, $emajdb;
 
 		if ($_REQUEST['back']=='list')
-			$misc->printHeader('database','', 'database','emajgroups');
+			$misc->printHeader('database', 'database','emajgroups');
 		else
-			$misc->printHeader('emaj','','emajgroup','emajgroupproperties');
+			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 		$misc->printTitle($lang['emajaltergroups']);
 
 		$isGroupLogging = $emajdb->isGroupLogging($_REQUEST['group']);
@@ -1655,7 +1655,7 @@
 			return;
 		}
 
-		$misc->printHeader('database','', 'database','emajgroups');
+		$misc->printHeader('database', 'database','emajgroups');
 		$misc->printTitle($lang['emajaltergroups']);
 
 		// build the groups list and the global state of this list 
@@ -1755,9 +1755,9 @@
 		global $misc, $lang, $emajdb;
 
 		if ($_REQUEST['back']=='list')
-			$misc->printHeader('database','', 'database','emajgroups');
+			$misc->printHeader('database', 'database','emajgroups');
 		else
-			$misc->printHeader('emaj','','emajgroup','emajgroupproperties');
+			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
 		$misc->printTitle($lang['emajcommentagroup']);
 
@@ -1819,9 +1819,9 @@
 		if (!isset($_POST['mark'])) $_POST['mark'] = '';
 
 		if ($_REQUEST['back']=='list')
-			$misc->printHeader('database','', 'database','emajgroups');
+			$misc->printHeader('database', 'database','emajgroups');
 		else
-			$misc->printHeader('emaj','','emajgroup','emajgroupproperties');
+			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
 		$misc->printTitle($lang['emajstartagroup']);
 
@@ -1918,7 +1918,7 @@
 		}
 		if (!isset($_POST['mark'])) $_POST['mark'] = '';
 
-		$misc->printHeader('database','' , 'database','emajgroups');
+		$misc->printHeader('database', 'database','emajgroups');
 		$misc->printTitle($lang['emajstartgroups']);
 
 		// build the groups list
@@ -2003,9 +2003,9 @@
 		global $misc, $lang;
 
 		if ($_REQUEST['back']=='list')
-			$misc->printHeader('database','', 'database','emajgroups');
+			$misc->printHeader('database', 'database','emajgroups');
 		else
-			$misc->printHeader('emaj','','emajgroup','emajgroupproperties');
+			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
 		$misc->printTitle($lang['emajstopagroup']);
 
@@ -2078,7 +2078,7 @@
 			return;
 		}
 
-		$misc->printHeader('database','', 'database','emajgroups');
+		$misc->printHeader('database', 'database','emajgroups');
 
 		$misc->printTitle($lang['emajstopgroups']);
 
@@ -2138,9 +2138,9 @@
 		global $misc, $lang;
 
 		if ($_REQUEST['back']=='list')
-			$misc->printHeader('database','', 'database','emajgroups');
+			$misc->printHeader('database', 'database','emajgroups');
 		else
-			$misc->printHeader('emaj','','emajgroup','emajgroupproperties');
+			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
 		$misc->printTitle($lang['emajresetagroup']);
 
@@ -2269,9 +2269,9 @@
 		if (!isset($_POST['mark'])) $_POST['mark'] = '';
 
 		if ($_REQUEST['back']=='list')
-			$misc->printHeader('database','', 'database','emajgroups');
+			$misc->printHeader('database', 'database','emajgroups');
 		else
-			$misc->printHeader('emaj','','emajgroup','emajgroupproperties');
+			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
 		$misc->printTitle($lang['emajsetamark']);
 		echo "<p>", sprintf($lang['emajconfirmsetmarkgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
@@ -2366,7 +2366,7 @@
 		}
 		if (!isset($_POST['mark'])) $_POST['mark'] = '';
 
-		$misc->printHeader('database','', 'database','emajgroups');
+		$misc->printHeader('database', 'database','emajgroups');
 
 		$misc->printTitle($lang['emajsetamark']);
 
@@ -2508,7 +2508,7 @@
 	function comment_mark_group() {
 		global $misc, $lang, $emajdb;
 
-		$misc->printHeader('emaj','','emajgroup','emajgroupproperties');
+		$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
 		$misc->printTitle($lang['emajcommentamark']);
 
@@ -2554,9 +2554,9 @@
 		global $misc, $lang, $emajdb, $conf;
 
 		if ($_REQUEST['back']=='list')
-			$misc->printHeader('database','', 'database','emajgroups');
+			$misc->printHeader('database', 'database','emajgroups');
 		else
-			$misc->printHeader('emaj','','emajgroup','emajgroupproperties');
+			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
 		$misc->printTitle($lang['emajrlbkagroup']);
 
@@ -2670,9 +2670,9 @@
 				$actions = array ();
 	
 				if ($_REQUEST['back']=='list')
-					$misc->printHeader('database','', 'database','emajgroups');
+					$misc->printHeader('database', 'database','emajgroups');
 				else
-					$misc->printHeader('emaj','','emajgroup','emajgroupproperties');
+					$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
 				$misc->printTitle($lang['emajrlbkagroup']);
 
@@ -2835,7 +2835,7 @@
 		// get the youngest timestamp protected mark for all groups
 			$youngestProtectedMarkTimestamp=$emajdb->getYoungestProtectedMarkTimestamp($groupsList);
 		}
-		$misc->printHeader('database','', 'database','emajgroups');
+		$misc->printHeader('database', 'database','emajgroups');
 
 		$misc->printTitle($lang['emajrlbkgroups']);
 
@@ -2933,7 +2933,7 @@
 
 				$actions = array ();
 
-				$misc->printHeader('database','', 'database','emajgroups');
+				$misc->printHeader('database', 'database','emajgroups');
 
 				$misc->printTitle($lang['emajrlbkgroups']);
 
@@ -3040,7 +3040,7 @@
 		if (!isset($_POST['group'])) $_POST['group'] = '';
 		if (!isset($_POST['mark'])) $_POST['mark'] = '';
 
-		$misc->printHeader('emaj','','emajgroup','emajgroupproperties');
+		$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
 		$misc->printTitle($lang['emajrenameamark']);
 
@@ -3102,7 +3102,7 @@
 	function delete_mark() {
 		global $misc, $lang;
 
-		$misc->printHeader('emaj','','emajgroup','emajgroupproperties');
+		$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
 		$misc->printTitle($lang['emajdelamark']);
 
@@ -3140,7 +3140,7 @@
 	function delete_marks() {
 		global $misc, $lang, $emajdb;
 
-		$misc->printHeader('emaj','','emajgroup','emajgroupproperties');
+		$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
 		$misc->printTitle($lang['emajdelmarks']);
 
@@ -3203,7 +3203,7 @@
 	function delete_before_mark() {
 		global $misc, $lang;
 
-		$misc->printHeader('emaj','','emajgroup','emajgroupproperties');
+		$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
 		$misc->printTitle($lang['emajdelmarksprior']);
 

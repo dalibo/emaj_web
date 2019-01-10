@@ -513,7 +513,7 @@
 		 * @param $trail = trail name, $urlvar = variables to add to the url for the refresh button
 		 *        $tabs = name of the tabs bar to display, $activetab = name of ... the active tab
 		 */
-		function printHeader($trail, $urlvar = '', $tabs, $activetab) {
+		function printHeader($trail, $tabs, $activetab) {
 			global $lang;
 
 			echo "<header>\n";
@@ -521,7 +521,7 @@
 			$this->printTopbar();
 
 			if ($trail != '') {
-				$this->printTrail($trail, $urlvar);
+				$this->printTrail($trail);
 			}
 
 			if ($tabs != '') {
@@ -952,7 +952,7 @@
 		 * Display a bread crumb trail.
 		 * ... and the buttons to refresh the page and to go to the page bottom
 		 */
-		function printTrail($trail = array(), $urlvar = '') {
+		function printTrail($trail = array()) {
 			global $lang;
 
 			if (is_string($trail)) {

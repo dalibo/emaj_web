@@ -22,7 +22,7 @@
 	function show_rollbacks() {
 		global $lang, $misc, $emajdb;
 
-		$misc->printHeader('database', 'action=show_rollbacks', 'database', 'emajrollbacks');
+		$misc->printHeader('database', 'database', 'emajrollbacks');
 
 		$emajOK = $misc->checkEmajExtension();
 
@@ -305,7 +305,7 @@
 	function consolidate_rollback() {
 		global $misc, $lang;
 
-		$misc->printHeader('database', '', 'database', 'emajrollbacks');
+		$misc->printHeader('database', 'database', 'emajrollbacks');
 
 		$misc->printTitle($lang['emajconsolidaterlbk']);
 

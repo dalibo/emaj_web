@@ -1386,7 +1386,7 @@
 				// Display column headings
 				$colnum = 0; $textExtractionJS = '';
 				if ($has_ma) {
-					echo "<th class=\"sorter-false filter-false\"></th>\n";
+					echo "<th class=\"data sorter-false filter-false\"></th>\n";
 					$colnum++;
 				}
 				foreach ($columns as $column_id => $column) {

@@ -311,11 +311,10 @@
 		echo "<table>\n";
 
 		// group name
-		echo "<tr><th class=\"data left\" style=\"text-align:right\">{$lang['emajgroup']}</th>";
-		echo "<td class=\"data1\">";
+		echo "<tr><th class=\"data left required\" style=\"text-align:right\">{$lang['emajgroup']}</th>";
+		echo "<td>";
 		echo "<input type=\"text\" name=\"group\" list=\"groupList\" required pattern=\"\S+.*\" value=\"\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\"/>\n";
-		echo "</td><td style=\"text-align:center\">*\n";
-		echo "</td></tr>\n";
+		echo "</td><td style=\"text-align:center\"></td></tr>\n";
 		echo "<datalist id=\"groupList\">\n";
 		if ($knownGroups->recordCount() > 0) {
 			foreach($knownGroups as $r)
@@ -325,7 +324,7 @@
 
 		// priority level
 		echo "<tr><th class=\"data left\" style=\"text-align:right\">{$lang['emajenterpriority']}</th>";
-		echo "<td class=\"data1\">";
+		echo "<td>";
 		echo "<input type=\"number\" name=\"priority\" style=\"width:6em; text-align:right;\" min=\"0\" max=\"2147483647\" value=\"\" />";
 		echo "</td><td><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajpriorityhelp']}\"/>";
 		echo "</td></tr>\n";
@@ -333,7 +332,7 @@
 		// log schema name suffix
 		if ($nbTbl >= 1) {
 			echo "<tr><th class=\"data left\" style=\"text-align:right\">{$lang['emajenterlogschema']}</th>";
-			echo "<td class=\"data1\">";
+			echo "<td>";
 			echo "<input type=\"text\" name=\"suffix\" list=\"suffixList\" value=\"\"/ autocomplete=\"off\">";
 			echo "</td><td><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajlogschemahelp']}\"/>";
 			echo "</td></tr>\n";
@@ -351,7 +350,7 @@
 		if ($nbTbl == 1) {
 			// the names prefix is accessible only for a single table assignment
 			echo "<tr><th class=\"data left\" style=\"text-align:right\">{$lang['emajenternameprefix']}</th>";
-			echo "<td class=\"data1\">";
+			echo "<td>";
 			echo "<input type=\"text\" name=\"nameprefix\" value=\"\"/>";
 			echo "</td><td><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajnameprefixhelp']}\"/>";
 			echo "</td></tr>\n";
@@ -362,12 +361,12 @@
 		if ($nbTbl >= 1) {
 			// data log tablespace
 			echo "<tr><th class=\"data left\" style=\"text-align:right\">{$lang['emajenterlogdattsp']}</th>";
-			echo "<td class=\"data1\">";
+			echo "<td>";
 			echo "<input type=\"text\" name=\"logdattsp\" list=\"tspList\" value=\"\" autocomplete=\"off\"/>";
 			echo "</td><td></td></tr>\n";
 			// index log tablespace
 			echo "<tr><th class=\"data left\" style=\"text-align:right\">{$lang['emajenterlogidxtsp']}</th>";
-			echo "<td class=\"data1\">";
+			echo "<td>";
 			echo "<input type=\"text\" name=\"logidxtsp\"  list=\"tspList\" value=\"\" autocomplete=\"off\"/>";
 			echo "</td><td></td></tr>\n";
 			echo "<datalist id=\"tspList\">\n";
@@ -382,7 +381,6 @@
 		}
 		echo "</table>\n";
 
-		echo "<br>* = {$lang['emajrequiredfield']}";
 		echo"</p>\n";
 		echo $misc->form;
 		echo "<p><input type=\"submit\" name=\"assigntblseq\" value=\"{$lang['emajassign']}\" id=\"ok\" />\n";
@@ -480,11 +478,10 @@
 		// Display the input fields depending on the context
 		echo "<table>\n";
 		// group name
-		echo "<tr><th class=\"data left\" style=\"text-align:right\">{$lang['emajgroup']}</th>";
-		echo "<td class=\"data1\">";
+		echo "<tr><th class=\"data right required\" style=\"text-align:right\">{$lang['emajgroup']}</th>";
+		echo "<td>";
 		echo "<input type=\"text\" name=\"groupnew\" list=\"groupList\" required pattern=\"\S+.*\" value=\"", htmlspecialchars($_REQUEST['group']), "\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\"/>\n";
-		echo "</td><td style=\"text-align:center\">*\n";
-		echo "</td></tr>\n";
+		echo "</td><td style=\"text-align:center\"></td></tr>\n";
 		echo "<datalist id=\"groupList\">\n";
 		if ($knownGroups->recordCount() > 0) {
 			foreach($knownGroups as $r)
@@ -493,16 +490,16 @@
 		echo "</datalist>\n";
 
 		// priority level
-		echo "<tr><th class=\"data left\" style=\"text-align:right\">{$lang['emajenterpriority']}</th>";
-		echo "<td class=\"data1\">";
+		echo "<tr><th class=\"data right\" style=\"text-align:right\">{$lang['emajenterpriority']}</th>";
+		echo "<td>";
 		echo "<input type=\"number\" name=\"priority\" style=\"width:6em; text-align:right;\" min=\"0\" max=\"2147483647\" value=\"{$_REQUEST['priority']}\" />";
 		echo "</td><td><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajpriorityhelp']}\"/>";
 		echo "</td></tr>\n";
 
 		// log schema name suffix (only for tables)
 		if ($_REQUEST['type'] == 'r+') {
-			echo "<tr><th class=\"data left\" style=\"text-align:right\">{$lang['emajenterlogschema']}</th>";
-			echo "<td class=\"data1\">";
+			echo "<tr><th class=\"data right\" style=\"text-align:right\">{$lang['emajenterlogschema']}</th>";
+			echo "<td>";
 			echo "<input type=\"text\" name=\"suffix\" list=\"suffixList\" value=\"", htmlspecialchars($_REQUEST['logschemasuffix']), "\"/ autocomplete=\"off\">";
 			echo "</td><td><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajlogschemahelp']}\"/>";
 			echo "</td></tr>\n";
@@ -519,8 +516,8 @@
 		// objects name prefix (only for tables)
 		if ($_REQUEST['type'] == 'r+') {
 			// the names prefix is accessible only for a table
-			echo "<tr><th class=\"data left\" style=\"text-align:right\">{$lang['emajenternameprefix']}</th>";
-			echo "<td class=\"data1\">";
+			echo "<tr><th class=\"data right\" style=\"text-align:right\">{$lang['emajenternameprefix']}</th>";
+			echo "<td>";
 			echo "<input type=\"text\" name=\"nameprefix\" value=\"", htmlspecialchars($_REQUEST['emajnamesprefix']), "\"/>";
 			echo "</td><td><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajnameprefixhelp']}\"/>";
 			echo "</td></tr>\n";
@@ -531,13 +528,13 @@
 		// log tablespaces (only for tables)
 		if ($_REQUEST['type'] == 'r+') {
 			// data log tablespace
-			echo "<tr><th class=\"data left\" style=\"text-align:right\">{$lang['emajenterlogdattsp']}</th>";
-			echo "<td class=\"data1\">";
+			echo "<tr><th class=\"data right\" style=\"text-align:right\">{$lang['emajenterlogdattsp']}</th>";
+			echo "<td>";
 			echo "<input type=\"text\" name=\"logdattsp\" list=\"tspList\" value=\"", htmlspecialchars($_REQUEST['logdattsp']), "\" autocomplete=\"off\"/>";
 			echo "</td><td></td></tr>\n";
 			// index log tablespace
-			echo "<tr><th class=\"data left\" style=\"text-align:right\">{$lang['emajenterlogidxtsp']}</th>";
-			echo "<td class=\"data1\">";
+			echo "<tr><th class=\"data right\" style=\"text-align:right\">{$lang['emajenterlogidxtsp']}</th>";
+			echo "<td>";
 			echo "<input type=\"text\" name=\"logidxtsp\"  list=\"tspList\" value=\"", htmlspecialchars($_REQUEST['logidxtsp']), "\" autocomplete=\"off\"/>";
 			echo "</td><td></td></tr>\n";
 			echo "<datalist id=\"tspList\">\n";
@@ -552,7 +549,6 @@
 		}
 		echo "</table>\n";
 
-		echo "<br>* = {$lang['emajrequiredfield']}";
 		echo $misc->form;
 		echo"</p>\n";
 		echo "<p><input type=\"submit\" name=\"updatetblseq\" value=\"{$lang['strupdate']}\" id=\"ok\" />\n";

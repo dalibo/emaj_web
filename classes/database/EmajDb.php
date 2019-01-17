@@ -603,32 +603,40 @@ class EmajDb {
 
 		$data->clean($group);
 
-		// mark_cumlogrows is computed later, at results display
-		if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-			$sql = "SELECT mark_group, mark_name, time_tx_timestamp as mark_datetime, mark_comment,
-						CASE WHEN mark_is_deleted THEN 'DELETED'
-							 WHEN NOT mark_is_deleted AND mark_is_rlbk_protected THEN 'ACTIVE-PROTECTED'
-							 ELSE 'ACTIVE' END as mark_state, 
-						coalesce(mark_log_rows_before_next,
-						(SELECT SUM(stat_rows) 
-							FROM emaj.emaj_log_stat_group(emaj_mark.mark_group,emaj_mark.mark_name,NULL)),0)
-						 AS mark_logrows, 
-						 0 AS mark_cumlogrows
-					FROM emaj.emaj_mark, emaj.emaj_time_stamp 
-					WHERE mark_group = '{$group}'
-					  AND time_id = mark_time_id
-					ORDER BY mark_time_id DESC";
-		}else{
-			$sql = "SELECT mark_group, mark_name, mark_datetime, mark_comment, 
-						CASE WHEN mark_is_deleted THEN 'DELETED' 
-							 WHEN NOT mark_is_deleted AND mark_is_rlbk_protected THEN 'ACTIVE-PROTECTED'
-							 ELSE 'ACTIVE' END as mark_state, 
-						coalesce(mark_log_rows_before_next,
+		if ($this->getNumEmajVersion() >= 20000) {	// version >= 2.0.0
+			$sql = "WITH mark_1 as (
+						SELECT mark_time_id, mark_group, mark_name, time_tx_timestamp as mark_datetime, mark_comment,
+							CASE WHEN mark_is_deleted THEN 'DELETED'
+								 WHEN NOT mark_is_deleted AND mark_is_rlbk_protected THEN 'ACTIVE-PROTECTED'
+								 ELSE 'ACTIVE' END as mark_state, 
+							coalesce(mark_log_rows_before_next,
 							(SELECT SUM(stat_rows) 
-								FROM emaj.emaj_log_stat_group(emaj_mark.mark_group,emaj_mark.mark_name,NULL)))
-						AS mark_logrows, 0 AS mark_cumlogrows
-					FROM emaj.emaj_mark
-					WHERE mark_group = '{$group}'
+								FROM emaj.emaj_log_stat_group(emaj_mark.mark_group,emaj_mark.mark_name,NULL)),0)
+							 AS mark_logrows
+						FROM emaj.emaj_mark, emaj.emaj_time_stamp 
+						WHERE mark_group = '{$group}'
+						  AND time_id = mark_time_id
+						)
+					SELECT mark_group, mark_name, mark_datetime, mark_comment, mark_state, mark_logrows, 
+						   sum(mark_logrows) OVER (ORDER BY mark_time_id DESC) AS mark_cumlogrows
+					FROM mark_1
+					ORDER BY mark_time_id DESC";
+		} else {
+			$sql = "WITH mark_1 as (
+						SELECT mark_id, mark_group, mark_name, mark_datetime, mark_comment,
+							CASE WHEN mark_is_deleted THEN 'DELETED'
+								 WHEN NOT mark_is_deleted AND mark_is_rlbk_protected THEN 'ACTIVE-PROTECTED'
+								 ELSE 'ACTIVE' END as mark_state, 
+							coalesce(mark_log_rows_before_next,
+							(SELECT SUM(stat_rows) 
+								FROM emaj.emaj_log_stat_group(emaj_mark.mark_group,emaj_mark.mark_name,NULL)),0)
+							 AS mark_logrows
+						FROM emaj.emaj_mark
+						WHERE mark_group = '{$group}'
+						)
+					SELECT mark_group, mark_name, mark_datetime, mark_comment, mark_state, mark_logrows, 
+						   sum(mark_logrows) OVER (ORDER BY mark_id DESC) AS mark_cumlogrows
+					FROM mark_1
 					ORDER BY mark_id DESC";
 		}
 

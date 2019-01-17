@@ -70,7 +70,7 @@
 
 	// Function to dynamicaly modify actions list for each mark
 	function markPre(&$rowdata, $actions) {
-		global $emajdb, $previous_cumlogrows, $protected_mark_flag;
+		global $emajdb, $protected_mark_flag;
 
 		// disable the rollback button if the mark is deleted
 		if (isset($actions['rollbackgroup']) && $rowdata->fields['mark_state'] == 'DELETED') {
@@ -93,10 +93,6 @@
 		if ($rowdata->fields['mark_state']== 'ACTIVE-PROTECTED') {
 			$protected_mark_flag = 1;
 		}
-		// compute the cumulative number of log rows
-		// (this is not done in SQL because windowing functions are not available with pg version 8.3-)
-		$previous_cumlogrows = $previous_cumlogrows + $rowdata->fields['mark_logrows'];
-		$rowdata->fields['mark_cumlogrows'] = $previous_cumlogrows;
 		return $actions;
 	}
 
@@ -864,8 +860,7 @@
 				));
 			};
 
-			// reset previous_cumlogrows and the flag for protected marks that will be used in markPre function
-			$previous_cumlogrows = 0;
+			// reset the flag for protected marks that will be used in the markPre function
 			$protected_mark_flag = 0;
 
 			// display the marks list

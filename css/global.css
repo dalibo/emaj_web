@@ -90,9 +90,11 @@ a:hover {
 	color: #cc0000;
 }
 
-input[type=checkbox], input[type=password], input[type=text], input[type=radio] {
+input[type=checkbox], input[type=password], input[type=text], input[type=number], input[type=radio] {
 	background: #ffffff;
 	border: 1px solid #5090c1;
+	border-radius: 5px;
+	padding: 3px 5px 3px 5px;
 }
 input[type=submit], input[type=button], input[type=reset], button {
 	background: #ffffff;
@@ -100,11 +102,13 @@ input[type=submit], input[type=button], input[type=reset], button {
 	border-radius: 7px;
 }
 input[type=submit]:hover, input[type=button]:hover, input[type=reset]:hover, button:hover {
-	background: #eeeeee;
+/*	color: #5090c1;*/
+	color: #ff0000;
 }
 button:disabled {
 	background: #ffffff;
 	border: 2px solid #d0d0d0;
+	cursor: not-allowed;
 }
 select {
 	background: #ffffff;
@@ -359,7 +363,7 @@ td.opbutton1 a, td.opbutton2 a {
 	color: #308ac5;
 }
 td.opbutton1 a:hover, td.opbutton2 a:hover {
-	color: #ff0000;
+	color: #cc0000;
 }
 td.opbutton1:hover, td.opbutton2:hover {
 	text-decoration: none;
@@ -416,7 +420,31 @@ tr.row1 {
 	border: 1px solid #d8d8d8;
 }
 
-/** div specific to the intro.php page **/
+/** Grid div for forms */
+div.form-container {
+	display: grid;
+	grid-template-columns: minmax(70px, min-content) min-content min-content;
+	grid-gap: 7px;
+}
+div.form-label {
+	white-space: nowrap;
+	background-color: #e6e6e6;
+	border-radius: 5px;
+	padding-right: 10px;
+	padding-left: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: right;
+}
+div.form-comment {
+	display: flex;
+	align-items: center;
+}
+div.required {
+	text-decoration: underline
+}
+
+/** Specific div for the intro.php page **/
 #welcome {
 	margin: 20px 20px 40px 20px;
 	text-align:center;

@@ -1444,10 +1444,11 @@
 		if (htmlspecialchars($_REQUEST['empty']) == 'false') {
 			echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		} else {
-			echo "<table>\n";
-			echo "<tr><th class=\"data right required\">{$lang['emajgroup']}</th>\n";
-			echo "<td><input name=\"group\" size=\"32\" value=\"\" id=\"group\"></td></tr>\n";
-			echo "</table>\n";
+			echo "<div class=\"form-container\">\n";
+			echo "\t<div class=\"form-label required\">{$lang['emajgroup']}</div>\n";
+			echo "\t<div class=\"form-input\"><input type=\"text\" id=\"group\" name=\"group\" size=\"32\" required pattern=\"\S+.*\" value=\"\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\"></div>\n";
+			echo "\t<div class=\"form-comment\"></div>\n";
+			echo "</div>\n";
 		}
 
 		echo "<p>{$lang['emajgrouptype']} : ";
@@ -1455,7 +1456,7 @@
 		echo "<input type=\"radio\" name=\"grouptype\" value=\"auditonly\">{$lang['emajauditonly']}\n";
 		echo "</p><p>";
 		echo "<input type=\"submit\" name=\"creategroup\" value=\"{$lang['strcreate']}\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";
 		echo "</form>\n";
 
 	}
@@ -1562,11 +1563,11 @@
 		if ($emajdb->getNumEmajVersion() >= 20100) {			// version >= 2.1.0
 			if ($isGroupLogging) {
 				echo "<p>", sprintf($lang['emajalteraloggingroup'], htmlspecialchars($_REQUEST['group'])), "</p>";
-				echo "<table>\n";
-				echo "<tr><th class=\"data right required\">{$lang['emajmark']}</th>\n";
-				echo "<td><input name=\"mark\" size=\"32\" value=\"ALTER_%\" id=\"mark\">\n";
-				echo "<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></td></tr>";
-				echo "</table>\n";
+				echo "<div class=\"form-container\">\n";
+				echo "\t<div class=\"form-label required\">{$lang['emajmark']}</div>\n";
+				echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"ALTER_%\" id=\"mark\"></div>\n";
+				echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+				echo "</div>\n";
 			} else {
 				echo "<p>", sprintf($lang['emajconfirmaltergroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
 				echo "<input type=\"hidden\" name=\"mark\" value=\"\">";
@@ -1674,11 +1675,11 @@
 		if ($emajdb->getNumEmajVersion() >= 20100) {			// version >= 2.1.0
 			if ($anyGroupLogging) {
 				echo "<p>", sprintf($lang['emajalterallloggingroups'], htmlspecialchars($groupsList)), "</p>";
-				echo "<table>\n";
-				echo "<tr><th class=\"data right required\">{$lang['emajmark']}</th>\n";
-				echo "<td><input name=\"mark\" size=\"32\" value=\"ALTER_%\" id=\"mark\">\n";
-				echo "<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></td></tr>";
-				echo "</table>\n";
+				echo "<div class=\"form-container\">\n";
+				echo "\t<div class=\"form-label required\">{$lang['emajmark']}</div>\n";
+				echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"ALTER_%\" id=\"mark\"></div>\n";
+				echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></div>\n";
+				echo "</div>\n";
 			} else {
 				echo "<p>", sprintf($lang['emajconfirmaltergroups'], htmlspecialchars($groupsList)), "</p>\n";
 				echo "<input type=\"hidden\" name=\"mark\" value=\"\">";
@@ -1765,10 +1766,11 @@
 
 		echo "<p>", sprintf($lang['emajcommentgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-		echo "<table>\n";
-		echo "<tr><th class=\"data right\">{$lang['strcomment']}</th>\n";
-		echo "<td><input name=\"comment\" size=\"100\" value=\"", htmlspecialchars($group->fields['group_comment']), "\" /></td></tr>\n";
-		echo "</table>\n";
+		echo "<div class=\"form-container\">\n";
+		echo "\t<div class=\"form-label required\">{$lang['strcomment']}</div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"comment\" size=\"100\" value=\"", htmlspecialchars($group->fields['group_comment']), "\" /></div>\n";
+		echo "\t<div class=\"form-comment\"></div>\n";
+		echo "</div>\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"comment_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
@@ -1826,18 +1828,18 @@
 
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<p>", sprintf($lang['emajconfirmstartgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
-		echo "<table>\n";
-		echo "<tr><th class=\"data right required\" style=\"width: 100px\">{$lang['emajinitmark']}</th>\n";
-		echo "<td><input name=\"mark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"mark\" />\n";
-		echo "<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></td></tr>";
-		echo "</table>\n";
+		echo "<div class=\"form-container\">\n";
+		echo "\t<div class=\"form-label required\">{$lang['emajinitmark']}</div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"mark\" required pattern=\"\S+.*\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\"/></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+		echo "</div>\n";
 		echo "<p><input type=checkbox name=\"resetlog\" checked/>{$lang['emajoldlogsdeletion']}</p>\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"start_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
 		echo "<input type=\"submit\" value=\"{$lang['strstart']}\" id=\"ok\" disabled=\"disabled\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate /></p>\n";
 		echo "</form>\n";
 
 		echo "<script type=\"text/javascript\">\n";
@@ -1929,18 +1931,18 @@
 		// send form
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<p>", sprintf($lang['emajconfirmstartgroups'], htmlspecialchars($groupsList)), "</p>\n";
-		echo "<table>\n";
-		echo "<tr><th class=\"data right required\" style=\"width: 100px\">{$lang['emajinitmark']}</th>\n";
-		echo "<td><input name=\"mark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"mark\" />\n";
-		echo "<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></td></tr>";
-		echo "</table>\n";
+		echo "<div class=\"form-container\">\n";
+		echo "\t<div class=\"form-label required\">{$lang['emajinitmark']}</div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"mark\" required pattern=\"\S+.*\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\" /></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></div>\n";
+		echo "</div>\n";
 		echo "<p><input type=checkbox name=\"resetlog\" checked/>{$lang['emajoldlogsdeletion']}</p>\n";
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"start_groups_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
 		echo "<input type=\"submit\" value=\"{$lang['strstart']}\" id=\"ok\" disabled=\"disabled\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate /></p>\n";
 		echo "</form>\n";
 
 		echo "<script type=\"text/javascript\">\n";
@@ -2008,11 +2010,11 @@
 
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<p>", sprintf($lang['emajconfirmstopgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
-		echo "<table>\n";
-		echo "<tr><th class=\"data right\" style=\"width: 100px\">{$lang['emajstopmark']}</th>\n";
-		echo "<td><input name=\"mark\" size=\"32\" value=\"STOP_%\" />\n";
-		echo "<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></td></tr>";
-		echo "</table>\n";
+		echo "<div class=\"form-container\">\n";
+		echo "\t<div class=\"form-label required\">{$lang['emajstopmark']}</div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"STOP_%\" /></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+		echo "</div>\n";
 		echo "<p><input type=checkbox name=\"forcestop\" />{$lang['emajforcestop']}</p>\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"stop_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -2089,11 +2091,11 @@
 		// send form
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<p>", sprintf($lang['emajconfirmstopgroups'], htmlspecialchars($groupsList)), "</p>\n";
-		echo "<table>\n";
-		echo "<tr><th class=\"data right\" style=\"width: 100px\">{$lang['emajstopmark']}</th>\n";
-		echo "<td><input name=\"mark\" size=\"32\" value=\"STOP_%\"/>\n";
-		echo "<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></td></tr>";
-		echo "</table>\n";
+		echo "<div class=\"form-container\">\n";
+		echo "\t<div class=\"form-label required\">{$lang['emajstopmark']}</div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"STOP_%\" /></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></div>\n";
+		echo "</div>\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"stop_groups_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
@@ -2273,17 +2275,17 @@
 		$misc->printTitle($lang['emajsetamark']);
 		echo "<p>", sprintf($lang['emajconfirmsetmarkgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-		echo "<table>\n";
-		echo "<tr><th class=\"data right required\">{$lang['emajmark']}</th>\n";
-		echo "<td><input name=\"mark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"mark\"/>\n";
-		echo "<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></td></tr>";
-		echo "</table>\n";
+		echo "<div class=\"form-container\">\n";
+		echo "\t<div class=\"form-label required\">{$lang['emajmark']}</div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"mark\" required pattern=\"\S+.*\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\" /></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+		echo "</div>\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"set_mark_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
 		echo "<input type=\"submit\" value=\"{$lang['strok']}\" id=\"ok\" disabled=\"disabled\"/>\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate /></p>\n";
 		echo "</form>\n";
 
 		echo "<script type=\"text/javascript\">\n";
@@ -2376,17 +2378,17 @@
 		echo "<p>", sprintf($lang['emajconfirmsetmarkgroup'], htmlspecialchars($groupsList)), "</p>\n";
 		// send form
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-		echo "<table>\n";
-		echo "<tr><th class=\"data right required\">{$lang['emajmark']}</th>\n";
-		echo "<td><input name=\"mark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"mark\"/>\n";
-		echo "<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></td></tr>";
-		echo "</table>\n";
+		echo "<div class=\"form-container\">\n";
+		echo "\t<div class=\"form-label required\">{$lang['emajmark']}</div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"mark\" required pattern=\"\S+.*\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\" /></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></div>\n";
+		echo "</div>\n";
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"set_mark_groups_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
 		echo "<input type=\"submit\" value=\"{$lang['strok']}\" id=\"ok\" disabled=\"disabled\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate /></p>\n";
 		echo "</form>\n";
 
 		echo "<script type=\"text/javascript\">\n";
@@ -2511,10 +2513,11 @@
 
 		echo "<p>", sprintf($lang['emajcommentmark'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-		echo "<table>\n";
-		echo "<tr><th class=\"data right\">{$lang['strcomment']}</th>\n";
-		echo "<td><input name=\"comment\" size=\"100\" value=\"", htmlspecialchars($mark->fields['mark_comment']), "\" /></td></tr>\n";
-		echo "</table>\n";
+		echo "<div class=\"form-container\">\n";
+		echo "\t<div class=\"form-label required\">{$lang['strcomment']}</div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"comment\" size=\"100\" value=\"", htmlspecialchars($mark->fields['mark_comment']), "\" /></div>\n";
+		echo "\t<div class=\"form-comment\"></div>\n";
+		echo "</div>\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"comment_mark_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
@@ -3040,17 +3043,18 @@
 
 		echo "<p>", sprintf($lang['emajconfirmrenamemark'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-		echo "<table>\n";
-		echo "<tr><th class=\"data right required\">{$lang['emajnewnamemark']}</th>\n";
-		echo "<td><input name=\"newmark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"newmark\"/></td></tr>\n";
-		echo "</table>\n";
+		echo "<div class=\"form-container\">\n";
+		echo "\t<div class=\"form-label required\">{$lang['emajnewnamemark']}</div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"newmark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"newmark\" required pattern=\"\S+.*\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\"/ ></div>\n";
+		echo "\t<div class=\"form-comment\"></div>\n";
+		echo "</div>\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"rename_mark_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
 		echo "<input type=\"submit\" value=\"{$lang['emajrename']}\" id=\"ok\" disabled=\"disabled\"/>\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate /></p>\n";
 		echo "</form>\n";
 
 		echo "<script type=\"text/javascript\">\n";

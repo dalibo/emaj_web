@@ -295,8 +295,6 @@
 				$misc->printTable($consolidableRlbks, $columnsConsRlbk, $actions, 'consolidableRlbk', $lang['emajnorlbk']);
 			}
 		}
-
-		$misc->printFooter();
 	}
 
 	/**
@@ -318,8 +316,6 @@
 		echo "<input type=\"submit\" name=\"consolidaterlbk\" value=\"{$lang['emajconsolidate']}\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
-
-		$misc->printFooter();
 	}
 
 	/**

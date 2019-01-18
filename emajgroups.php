@@ -727,6 +727,7 @@
 				),
 				'cumlogrows' => array(
 					'title' => $lang['emajcumchanges'],
+					'info'  => $lang['emajcumchangeshelp'],
 					'field' => field('mark_cumlogrows'),
 					'type'  => 'numeric'
 				),

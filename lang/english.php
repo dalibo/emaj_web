@@ -350,6 +350,7 @@
 	$lang['emajtimestamp'] = 'Date/Time';
 	$lang['emajnbchanges'] = '# row<br>changes';	
 	$lang['emajcumchanges'] = 'Cumulative<br>changes';
+	$lang['emajcumchangeshelp'] = 'The cummulative number of row changes represents the number of row changes to cancel in case of E-Maj rollback to the corresponding mark.';
 	$lang['emajsimrlbk'] = 'Simulate Rollback';
 	$lang['emajrlbk'] = 'Rollback';
 	$lang['emajfirstmark'] = 'First mark';

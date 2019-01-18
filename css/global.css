@@ -102,8 +102,7 @@ input[type=submit], input[type=button], input[type=reset], button {
 	border-radius: 7px;
 }
 input[type=submit]:hover, input[type=button]:hover, input[type=reset]:hover, button:hover {
-/*	color: #5090c1;*/
-	color: #ff0000;
+
 }
 button:disabled {
 	background: #ffffff;
@@ -128,6 +127,11 @@ th.data {
 	font-size: 1.0em;
 	padding: 3px 7px;
 }
+
+th.data img {
+	margin-left: 3px;
+}
+
 tr th.data{
 	border-right: 1px solid #d0d0d0;
 	border-left: 1px solid #d0d0d0;

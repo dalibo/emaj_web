@@ -350,6 +350,7 @@
 	$lang['emajtimestamp'] = 'Date-Heure';
 	$lang['emajnbchanges'] = 'Nb<br>mises à jour';	
 	$lang['emajcumchanges'] = 'Cumul<br>mises à jour';	
+	$lang['emajcumchangeshelp'] = 'Le cumul du nombre de mises à jour représente le nombre de mises à jour à annuler en cas de rollback E-Maj à la marque correspondante.';
 	$lang['emajsimrlbk'] = 'Simuler Rollback';
 	$lang['emajrlbk'] = 'Rollback';
 	$lang['emajfirstmark'] = 'Première marque';

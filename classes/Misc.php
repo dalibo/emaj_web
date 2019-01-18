@@ -1301,7 +1301,7 @@
 		 *				column_id => array(
 		 *					'title' => Column heading,
 		 *					'field' => Field name for $tabledata->fields[...],
-		 *					'help'  => Help page for this column,
+		 *					'info'  => Info Icon with a help message,
 		 *				), ...
 		 *			);
 		 * @param $actions   Actions that can be performed on each object:
@@ -1408,10 +1408,11 @@
 							if ($filter && (isset($column['filter']) && !$column['filter']))
 								$class_filter = ' filter-false';
 							echo "<th class=\"data{$class_sorter}{$class_filter}\">";
-							if (isset($column['help']))
-								$this->printHelp($column['title'], $column['help']);
-							else
-								echo $column['title'];
+							// column title
+							echo $column['title'];
+							// additional info if requested
+							if (isset($column['info']))
+								echo "<img src=\"{$this->icon('Info')}\" alt=\"info\" title=\"{$column['info']}\">";
 							echo "</th>\n";
 							// when the data column has a 'sorter_text_extraction' attribute set to 'img_alt',
 							//   add a function to extract the alt attribute of images to build the text that tablesorter will use to sort

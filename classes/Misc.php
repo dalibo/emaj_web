@@ -1412,7 +1412,7 @@
 							echo $column['title'];
 							// additional info if requested
 							if (isset($column['info']))
-								echo "<img src=\"{$this->icon('Info')}\" alt=\"info\" title=\"{$column['info']}\">";
+								echo "<img src=\"{$this->icon('Info-inv')}\" alt=\"info\" title=\"{$column['info']}\">";
 							echo "</th>\n";
 							// when the data column has a 'sorter_text_extraction' attribute set to 'img_alt',
 							//   add a function to extract the alt attribute of images to build the text that tablesorter will use to sort
@@ -1653,6 +1653,7 @@
 
 		function icon($icon) {
 			$path = "images/{$icon}";
+			if (file_exists($path.'.svg')) return $path.'.svg';
 			if (file_exists($path.'.png')) return $path.'.png';
 			if (file_exists($path.'.gif')) return $path.'.gif';
 			return '';

@@ -16,6 +16,9 @@ body {
 body > * {
 	margin-left: 20px;
 }
+img {
+	border: none;
+}
 h1 {
 	font-size: 1.5em;
 	font-weight: bold;
@@ -40,8 +43,9 @@ h3 {
 	border-radius: 7px;
 }
 
-img {
-	border: none;
+h2 img, h3 img {
+	padding-top: 5px;
+	padding-left: 10px;
 }
 
 p.message {
@@ -129,7 +133,8 @@ th.data {
 }
 
 th.data img {
-	margin-left: 3px;
+	margin-top: 3px;
+	margin-left: 5px;
 }
 
 tr th.data{

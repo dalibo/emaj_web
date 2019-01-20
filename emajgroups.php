@@ -516,19 +516,19 @@
 				$configuredActions = array();
 			}
 
-			$misc->printTitle("{$lang['emajlogginggroups']}<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajlogginggrouphelp']}\"/>");
+			$misc->printTitle("{$lang['emajlogginggroups']}<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['emajlogginggrouphelp']}\"/>");
 
 			$misc->printTable($loggingGroups, $columns, $loggingActions, 'loggingGroups', $lang['emajnologginggroup'], 'loggingGroupPre', array('sorter' => true, 'filter' => true));
 
 			echo "<hr>";
-			$misc->printTitle("{$lang['emajidlegroups']}<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajidlegrouphelp']}\"/>");
+			$misc->printTitle("{$lang['emajidlegroups']}<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['emajidlegrouphelp']}\"/>");
 
 			$misc->printTable($idleGroups, $columns, $idleActions, 'idleGroups', $lang['emajnoidlegroup'], 'idleGroupPre', array('sorter' => true, 'filter' => true));
 
 			echo "<hr>\n";
 
 			// configured but not yet created tables section
-			$misc->printTitle("{$lang['emajconfiguredgroups']}<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajconfiguredgrouphelp']}\"/>");
+			$misc->printTitle("{$lang['emajconfiguredgroups']}<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['emajconfiguredgrouphelp']}\"/>");
 
 			$misc->printTable($configuredGroups, $configuredColumns, $configuredActions, 'configuredGroups', $lang['emajnoconfiguredgroups'], 'configuredGroupPre', array('sorter' => true, 'filter' => true));
 

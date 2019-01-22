@@ -1,3 +1,7 @@
+//
+// various js functions to let multiactions tables and table filters work
+//
+
 function checkSelect(action, form_id) {
 
 	var inputs = document.getElementById(form_id).getElementsByTagName('input');
@@ -10,6 +14,7 @@ function checkSelect(action, form_id) {
 		}
 	}
 }
+
 function countChecked(form_id) {
 
 	// count checked
@@ -30,6 +35,22 @@ function countChecked(form_id) {
 	// if the counter is 0, disable all buttons of the multiactions table
 	var buttons = document.getElementById(form_id).getElementsByTagName('button');
 	for (var i=0; i<buttons.length; i++) {
-		buttons[i].disabled = (cnt == 0);
+		if (! buttons[i].classList.contains('reset_'+form_id)) {
+			buttons[i].disabled = (cnt == 0);
+		}
+	}
+}
+
+function showHideFilterRow(form_id) {
+	// Hide or Display the filter row, depending on its current state. Also enable/disable the reset button.
+
+	if ( document.getElementById(form_id).getElementsByClassName('tablesorter-filter-row')[0].classList.contains("hideme") ) {
+		// display the filter row and change the sign aside the filter icon
+		document.getElementById(form_id).getElementsByClassName('tablesorter-filter-row')[0].classList.remove("hideme");
+		document.getElementById(form_id).getElementsByClassName('reset_'+form_id)[0].disabled = false;
+	} else {
+		// hide the filter row and change the sign aside the filter icon
+		document.getElementById(form_id).getElementsByClassName('tablesorter-filter-row')[0].classList.add("hideme");
+		document.getElementById(form_id).getElementsByClassName('reset_'+form_id)[0].disabled = true;
 	}
 }

@@ -1385,8 +1385,15 @@
 
 				// Display column headings
 				$colnum = 0; $textExtractionJS = '';
-				if ($has_ma) {
-					echo "<th class=\"data sorter-false filter-false\"></th>\n";
+				if ($has_ma || $filter) {
+					if ($filter) {
+						echo "<th class=\"data sorter-false filter-false\">";
+						echo "\t<img src=\"{$this->icon('Filter')}\" alt=\"filter\" class=\"action\" onclick=\"javascript:showHideFilterRow('{$place}');\" title=\"{$lang['emajfiltershelp']}\">\n";
+						echo "<br><button type=\"button\" class=\"filterreset reset_{$place}\" disabled >Reset</button>\n";
+						echo "</th>\n";
+					} else {
+						echo "<th class=\"data sorter-false filter-false\"></th>\n";
+					}
 					$colnum++;
 				}
 				foreach ($columns as $column_id => $column) {
@@ -1412,7 +1419,7 @@
 							echo $column['title'];
 							// additional info if requested
 							if (isset($column['info']))
-								echo "<img src=\"{$this->icon('Info-inv')}\" alt=\"info\" title=\"{$column['info']}\">";
+								echo "<img src=\"{$this->icon('Info-inv')}\" alt=\"info\" class=\"info\" title=\"{$column['info']}\">";
 							echo "</th>\n";
 							// when the data column has a 'sorter_text_extraction' attribute set to 'img_alt',
 							//   add a function to extract the alt attribute of images to build the text that tablesorter will use to sort
@@ -1446,9 +1453,12 @@
 					if ($has_ma) {
 						foreach ($ma['keycols'] as $k => $v)
 							$a[$k] = $tabledata->fields[$v];
-						echo "<td>";
+						echo "<td class=\"center\">";
 						echo "<input type=\"checkbox\" name=\"ma[]\" value=\"". htmlentities(serialize($a), ENT_COMPAT, 'UTF-8') ."\" onclick=\"javascript:countChecked('{$place}');\"/>";
 						echo "</td>\n";
+					} else {
+						if ($filter)
+							echo "<td></td>\n";
 					}
 
 					foreach ($columns as $column_id => $column) {
@@ -1537,10 +1547,10 @@
 					echo "],\n";
 					echo "\t\t\twidgetOptions: {\n";
 					echo "\t\t\t\tzebra : [ \"data1\", \"data2\" ],\n";
-					echo "\t\t\t\tfilter_hideFilters : true,\n";
-					echo "\t\t\t\t},\n";
-					echo "\t\t\t}\n";
-					echo "\t\t);\n";
+					echo "\t\t\t\tfilter_reset: 'button.reset_{$place}',\n";
+					echo "\t\t\t},\n";
+					echo "\t\t});\n";
+					echo "\t\tshowHideFilterRow('{$place}');\n";
 					echo "\t});\n";
 					echo "</script>\n";
 				}

@@ -63,10 +63,13 @@ p.error-message {
 	color: #555555;
 }
 .left {
-	text-align: left
+	text-align: left;
+}
+.center {
+	text-align: center;
 }
 .pre {
-	white-space: pre
+	white-space: pre;
 }
 
 hr {
@@ -132,7 +135,11 @@ th.data {
 	padding: 3px 7px;
 }
 
-th.data img {
+img.action {
+	cursor: pointer;
+}
+
+img.info {
 	margin-top: 3px;
 	margin-left: 5px;
 }
@@ -521,7 +528,7 @@ div.fk_value {
 	/*** *********************************************** ***/
 	/*** change this padding to modify the thickness     ***/
 	/*** of the closed filter row (height = padding x 2) ***/
-	padding: 2px;
+	padding: 1px;
 	/*** *********************************************** ***/
 	margin: 0;
 	line-height: 0;
@@ -566,4 +573,18 @@ div.fk_value {
 }
 .tablesorter-default input.disabled {
 	display: none;
+}
+
+button.filterreset {
+	border: none;
+	margin-top: 2px;
+	padding: 0px;
+	color: #308ac5;
+	background-color: inherit;
+}
+button.filterreset:disabled {
+	visibility:hidden;
+}
+button.filterreset:not([disabled]):hover {
+	color: #cc0000;
 }

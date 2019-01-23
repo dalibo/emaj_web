@@ -41,7 +41,7 @@
 			),
 		);
 
-		$misc->printTable($sequences, $columns, $actions, 'sequences-sequences', $lang['strnosequences']);
+		$misc->printTable($sequences, $columns, $actions, 'sequences-sequences', $lang['strnosequences'], null, array('sorter' => true, 'filter' => true));
 
 	}
 

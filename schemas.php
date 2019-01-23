@@ -42,7 +42,7 @@
 		);
 
 
-		$misc->printTable($schemas, $columns, $actions, 'schemas-schemas', $lang['strnoschemas']);
+		$misc->printTable($schemas, $columns, $actions, 'schemas-schemas', $lang['strnoschemas'], null, array('sorter' => true, 'filter' => true));
 
 	}
 

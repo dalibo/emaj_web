@@ -69,7 +69,7 @@
 
 		if (!$data->hasTablespaces()) unset($columns['tablespace']);
 
-		$misc->printTable($tables, $columns, $actions, 'tables-tables', $lang['strnotables']);
+		$misc->printTable($tables, $columns, $actions, 'tables-tables', $lang['strnotables'], null, array('sorter' => true, 'filter' => true));
 
 	}
 	

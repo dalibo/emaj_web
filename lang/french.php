@@ -334,6 +334,7 @@
 	$lang['emajfilterrlbk3'] = 'terminés depuis moins de';
 	$lang['emajfilterrlbk4'] = 'heures';
 	$lang['emajfilter'] = 'Filtrer';
+	$lang['emajvisible'] = 'Visibles';
 	$lang['emajconsolidablerlbk'] = 'Rollbacks E-Maj tracés consolidables';
 	$lang['emajconsolidate'] = 'Consolider';
 	$lang['emajtargetmark'] = 'Marque cible';

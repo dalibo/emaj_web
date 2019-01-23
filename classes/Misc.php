@@ -1515,9 +1515,12 @@
 					echo "</tr>\n";
 					echo "<tr class=\"row1\">\n";
 					echo "\t<td>\n";
-					echo "\t\t&nbsp;<a href=\"#\" onclick=\"javascript:checkSelect('all','{$place}');countChecked('{$place}');\">{$lang['strall']}</a>&nbsp;/\n";
-					echo "\t\t&nbsp;<a href=\"#\" onclick=\"javascript:checkSelect('none','{$place}');countChecked('{$place}');\">{$lang['strnone']}</a>&nbsp;/\n";
-					echo "\t\t&nbsp;<a href=\"#\" onclick=\"javascript:checkSelect('invert','{$place}');countChecked('{$place}');\">{$lang['strinvert']}</a>&nbsp;\n";
+					echo "\t\t&nbsp;<a onclick=\"javascript:checkSelect('all','{$place}');countChecked('{$place}');\" class=\"action\">{$lang['strall']}</a>&nbsp;/\n";
+					if ($filter) {
+						echo "\t\t&nbsp;<a onclick=\"javascript:checkSelect('filtered','{$place}');countChecked('{$place}');\" class=\"action\">{$lang['emajvisible']}</a>&nbsp;/\n";
+					}
+					echo "\t\t&nbsp;<a onclick=\"javascript:checkSelect('none','{$place}');countChecked('{$place}');\" class=\"action\">{$lang['strnone']}</a>&nbsp;/\n";
+					echo "\t\t&nbsp;<a onclick=\"javascript:checkSelect('invert','{$place}');countChecked('{$place}');\" class=\"action\">{$lang['strinvert']}</a>&nbsp;\n";
 					echo "\t</td><td>\n";
 					foreach($actions as $k => $a)
 						if (isset($a['multiaction']))

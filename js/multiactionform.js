@@ -9,6 +9,7 @@ function checkSelect(action, form_id) {
 	for (var i=0; i<inputs.length; i++) {
 		if (inputs[i].type == 'checkbox') {
 			if (action == 'all') inputs[i].checked = true;
+			if (action == 'filtered') inputs[i].checked = !(inputs[i].parentNode.parentNode.classList.contains("filtered"));
 			if (action == 'none') inputs[i].checked = false;
 			if (action == 'invert') inputs[i].checked = !(inputs[i].checked);
 		}

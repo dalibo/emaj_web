@@ -479,7 +479,7 @@
 
 			// Javascript
 			if (!$frameset) {
-				echo "<script type=\"text/javascript\" src=\"js/multiactionform.js\"></script>\n";
+				echo "<script type=\"text/javascript\" src=\"js/global.js\"></script>\n";
 				echo "<script type=\"text/javascript\" src=\"libraries/js/jquery-3.3.1.min.js\"></script>\n";
 				echo "<script type=\"text/javascript\" src=\"libraries/js/jquery.tablesorter.min.js\"></script>\n";
 				echo "<script type=\"text/javascript\" src=\"libraries/js/jquery.tablesorter.widgets.min.js\"></script>\n";

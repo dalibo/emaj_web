@@ -137,6 +137,11 @@ th.data {
 
 .action {
 	cursor: pointer;
+	opacity: 1;
+}
+.noaction {
+	cursor: default;
+	opacity: 0.3;
 }
 
 img.info {
@@ -582,9 +587,7 @@ button.filterreset {
 	color: #308ac5;
 	background-color: inherit;
 }
-button.filterreset:disabled {
-	visibility:hidden;
-}
-button.filterreset:not([disabled]):hover {
-	color: #cc0000;
+th.filtericon {
+	vertical-align: bottom;
+	width: 3.8em;
 }

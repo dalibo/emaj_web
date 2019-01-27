@@ -1,5 +1,9 @@
 //
-// various js functions to let multiactions tables and table filters work
+// Various js functions to let multiactions tables and table filters work
+//
+
+//
+// Functions used to handle the multi-actions tables
 //
 
 function checkSelect(action, form_id) {
@@ -42,16 +46,49 @@ function countChecked(form_id) {
 	}
 }
 
-function showHideFilterRow(form_id) {
-	// Hide or Display the filter row, depending on its current state. Also enable/disable the reset button.
+//
+// JQuery functions for the tablesorter filter feature.
+// It allows to:
+//   - display or hide the filter row on demand
+//   - have a Reset button on the filter row
+//
 
-	if ( document.getElementById(form_id).getElementsByClassName('tablesorter-filter-row')[0].classList.contains("hideme") ) {
-		// display the filter row and change the sign aside the filter icon
-		document.getElementById(form_id).getElementsByClassName('tablesorter-filter-row')[0].classList.remove("hideme");
-		document.getElementById(form_id).getElementsByClassName('reset_'+form_id)[0].disabled = false;
-	} else {
-		// hide the filter row and change the sign aside the filter icon
-		document.getElementById(form_id).getElementsByClassName('tablesorter-filter-row')[0].classList.add("hideme");
-		document.getElementById(form_id).getElementsByClassName('reset_'+form_id)[0].disabled = true;
-	}
+function addFilterResetButton(form_id) {
+	// Add the Reset button in the first column of the filter rows once it is generated
+	$("#" + form_id + " .tablesorter-filter-row td:first").html(
+		'<button type="button" class="filterreset tablesorter-filter reset_' + form_id + '" onclick="resetFilter(\'' + form_id + '\')">Reset</button>');
+}
+
+function addFilterEvent(form_id) {
+	// Add a filterStart event that disables the filter hide capability
+	$("#" + form_id + " table").on('filterStart', function(ev, filters){
+		// determine whether any filter is currently used
+		var filtersUsed = false;
+		if (filters.length > 0) {
+			for (var i = 0; i < filters.length; i++) {
+				if (filters[i] != undefined && filters[i] != '') filtersUsed = true;
+			}
+		}
+		// Depending on the result, set the action or the noaction class to the filter icon
+		if (filtersUsed)
+			$("#" + form_id + " table th img").removeClass('action').addClass('noaction');
+		else
+			$("#" + form_id + " table th img").removeClass('noaction').addClass('action');
+	});
+}
+
+function resetFilter(form_id) {
+	$("#" + form_id + " table").trigger('filterReset');
+}
+
+function showHideFilterRow(form_id) {
+	// Hide or Display the filter row, if the filter icon is active (has the 'action' class).
+
+	if ($('#' + form_id + ' table th img').hasClass('action'))
+		if ($('#' + form_id + ' .tablesorter-filter-row').hasClass('hideme'))
+		// display the filter row
+			$('#' + form_id + ' .tablesorter-filter-row').removeClass('hideme');
+		else
+		// hide the filter row
+			$('#' + form_id + ' .tablesorter-filter-row').addClass('hideme');
 }

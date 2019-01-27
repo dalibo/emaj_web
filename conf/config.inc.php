@@ -112,7 +112,7 @@
 	$conf['show_comments'] = true;
 
 	// Display "system" objects?
-	$conf['show_system'] = false;
+	$conf['show_system'] = true;
 
 	// Width of the left frame in pixels (object browser)
 	$conf['left_width'] = 200;

@@ -1387,9 +1387,8 @@
 				$colnum = 0; $textExtractionJS = '';
 				if ($has_ma || $filter) {
 					if ($filter) {
-						echo "<th class=\"data sorter-false filter-false\">";
+						echo "<th class=\"data sorter-false filter-false filtericon\">";
 						echo "\t<img src=\"{$this->icon('Filter')}\" alt=\"filter\" class=\"action\" onclick=\"javascript:showHideFilterRow('{$place}');\" title=\"{$lang['emajfiltershelp']}\">\n";
-						echo "<br><button type=\"button\" class=\"filterreset reset_{$place}\" disabled >Reset</button>\n";
 						echo "</th>\n";
 					} else {
 						echo "<th class=\"data sorter-false filter-false\"></th>\n";
@@ -1539,6 +1538,7 @@
 					echo "<script type=\"text/javascript\">\n";
 					echo "\t$(document).ready(function() {\n";
 					echo "\t\t$(\"#{$place} table\").tablesorter( {\n";
+					echo "\t\t\twidthFixed : true,\n";
 					if ($textExtractionJS <> '') {
 						echo "\t\t\ttextExtraction: {\n";
 						echo $textExtractionJS;
@@ -1550,9 +1550,10 @@
 					echo "],\n";
 					echo "\t\t\twidgetOptions: {\n";
 					echo "\t\t\t\tzebra : [ \"data1\", \"data2\" ],\n";
-					echo "\t\t\t\tfilter_reset: 'button.reset_{$place}',\n";
 					echo "\t\t\t},\n";
 					echo "\t\t});\n";
+					echo "\t\taddFilterResetButton('{$place}');\n";
+					echo "\t\taddFilterEvent('{$place}');\n";
 					echo "\t\tshowHideFilterRow('{$place}');\n";
 					echo "\t});\n";
 					echo "</script>\n";

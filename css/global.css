@@ -241,10 +241,11 @@ nav {
 	font-size: 1.1em;
 	border: 1px solid #dddddd;
 	border-top: #ffffff;
-	padding: 15px 10px 5px 10px;
+	padding: 5px 5px 5px 5px;
 }
 .tab a {
 	color: #828d94;
+	display: block;
 }
 .tab a:hover {
 	color: #3c424c;
@@ -255,6 +256,7 @@ nav {
 }
 .tab .icon {
 	display: block;
+	padding-top: 10px;
 }
 nav .active a {
 	color: #3c424c;

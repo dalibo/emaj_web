@@ -164,7 +164,7 @@
 		$rs = $data->browseQuery('SELECT', $_REQUEST['table'], $_REQUEST['query'],  
 			null, null, 1, 1, $max_pages);
 
-		echo "<a href=\"\" style=\"display:table-cell;\" class=\"fk_delete\"><img alt=\"[delete]\" src=\"". $misc->icon('Delete') ."\" /></a>\n";
+		echo "<a href=\"\" class=\"fk_delete\"><img alt=\"{$lang['strdelete']}\" src=\"". $misc->icon('Delete') ."\" /></a>\n";
 		echo "<div style=\"display:table-cell;\">";
 
 		if (is_object($rs) && $rs->recordCount() > 0) {
@@ -427,8 +427,8 @@
 		doBrowseFK();
 	}
 
-	$scripts = "<script src=\"js/display.js\" type=\"text/javascript\"></script>";
-
+	$scripts = "<script src=\"libraries/js/jquery-ui.min.js\" type=\"text/javascript\"></script>";
+	$scripts .= "<script src=\"js/display.js\" type=\"text/javascript\"></script>";
 	$scripts .= "<script type=\"text/javascript\">\n";
 	$scripts .= "var Display = {\n";
 	$scripts .= "errmsg: '". str_replace("'", "\'", $lang['strconnectionfail']) ."'\n";

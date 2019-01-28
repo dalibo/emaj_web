@@ -1,15 +1,20 @@
+// display.js
+// This javascript file is used by the display.php page.
+// It manages the display of rows referenced by foreign keys
+
 $(document).ready(function() {
 	
 	/* init some needed tags and values */
 	
 	$('table#data').wrap('<div id="fkcontainer" class="fk" />');
 	$('#fkcontainer').append('<div id="root" />');
-	
+
 	jQuery.ppa = { 
 		root: $('#root')
 	};
-	
-	$("a.fk").live('click', function (event) {
+
+	// use delegated events to handle fk on several levels
+	$("#fkcontainer").on('click', 'a.fk', function (event) {
 		/* make the cursor being a waiting cursor */
 		$('body').css('cursor','wait');
 
@@ -80,11 +85,18 @@ $(document).ready(function() {
 		return false; // do not refresh the page
 	});
 
-	$(".fk_delete").live('click', function (event) {
+	$("fkcontainer").on('click', '.fk_delete', function (event) {
 		with($(this).closest('div')) {
 			data('ref').closest('tr').find('a.'+data('refclass')).closest('div').removeClass('highlight');
 			remove();
 		}
 		return false; // do not refresh the page
 	});
+
+	// Let the whole fkey block draggable using any table header
+	$('#root').draggable({
+		cursor: "move",
+		handle: "th",
+	});
+
 });

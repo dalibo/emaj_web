@@ -207,9 +207,10 @@
 	$lang['emajlogged'] = 'logged';
 	$lang['emajlogging'] = 'Logging';
 	$lang['emajidle'] = 'Idle';
-	$lang['emajactive'] = 'Active';
-	$lang['emajdeleted'] = 'Deleted';
-	$lang['emajprotected'] = 'Protected against rollback';
+	$lang['emajactivemark'] = 'Active mark, thus usable for an E-Maj rollback.';
+	$lang['emajdeletedmark'] = 'A stop of the changes recording has left the mark inactive, thus unusable for an E-Maj rollback.';
+	$lang['emajprotectedmark'] = 'The protection set on the mark blocks any E-Maj rollbacks on prior marks.';
+	$lang['emajprotected'] = 'Protected against E-Maj rollbacks';
 	$lang['emajpagebottom'] = 'Go to bottom';
 	$lang['emajlogsize'] = 'Log size';
 	$lang['emajrequiredfield'] = 'Required field';

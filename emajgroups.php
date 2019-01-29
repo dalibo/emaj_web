@@ -213,20 +213,12 @@
 	function renderMarkState($val) {
 		global $misc, $lang;
 		if ($val == 'ACTIVE') {
-			$icon = $misc->icon('EmajMark');
-			$alt = $lang['emajactive'];
-			$img = "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
+			$img = "<img src=\"{$misc->icon('ActiveMark')}\" style=\"vertical-align:bottom;\" alt=\"active_mark\" title=\"{$lang['emajactivemark']}\"/>";
 		} elseif ($val == 'DELETED') {
-			$icon = $misc->icon('Delete');
-			$alt = $lang['emajdeleted'];
-			$img = "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
+			$img = "<img src=\"{$misc->icon('DeletedMark')}\" style=\"vertical-align:bottom;\" alt=\"deleted_mark\" title=\"{$lang['emajdeletedmark']}\"/>";
 		} elseif ($val == 'ACTIVE-PROTECTED') {
-			$icon = $misc->icon('EmajMark');
-			$alt = $lang['emajactive'];
-			$img = "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
-			$icon = $misc->icon('EmajPadlock');
-			$alt = $lang['emajprotected'];
-			$img .= "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
+			$img = "<img src=\"{$misc->icon('ActiveMark')}\" style=\"vertical-align:bottom;\" alt=\"active_mark\" title=\"{$lang['emajactivemark']}\"/>";
+			$img .= "<img src=\"{$misc->icon('EmajPadlock')}\" style=\"vertical-align:bottom;\" alt=\"protected\" title=\"{$lang['emajprotectedmark']}\"/>";
 		}
 		return $img;
 	}

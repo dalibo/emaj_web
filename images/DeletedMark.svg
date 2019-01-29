@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="4.2333331mm"
+   height="4.2333331mm"
+   viewBox="0 0 4.2333331 4.2333331"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="DeletedMark.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="35.593619"
+     inkscape:cx="15.222419"
+     inkscape:cy="8.2433592"
+     inkscape:document-units="mm"
+     inkscape:current-layer="svg8"
+     showgrid="true"
+     showguides="false"
+     inkscape:guide-bbox="true"
+     inkscape:snap-nodes="true"
+     inkscape:lockguides="false"
+     inkscape:window-width="1697"
+     inkscape:window-height="926"
+     inkscape:window-x="55"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1">
+    <sodipodi:guide
+       position="-118.45171,247.74239"
+       orientation="0,1"
+       id="guide5632"
+       inkscape:locked="false" />
+    <inkscape:grid
+       type="xygrid"
+       id="grid5641" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-22.445759,-106.59237)" />
+  <path
+     style="fill:#308ac5;fill-opacity:1;stroke:none;stroke-width:0.08018251;stroke-opacity:1"
+     d="m 0.79375,4.2333331 -0.79375,0 V -2.2252401e-7 l 0.79375,0"
+     id="rect5638"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="cccc" />
+  <path
+     transform="matrix(1.0517327,0,0,0.78512816,-1.9502173,-1.0431113)"
+     style="fill:#ff4100;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-opacity:1"
+     inkscape:transform-center-x="-0.093203049"
+     inkscape:transform-center-y="-0.51932953"
+     d="M 5.8793937,3.0135561 2.6089968,4.6985252 V 1.328587 Z"
+     id="path1974"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="cccc" />
+</svg>

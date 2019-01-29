@@ -207,9 +207,10 @@
 	$lang['emajlogged'] = 'tracé';
 	$lang['emajlogging'] = 'Démarré';
 	$lang['emajidle'] = 'Arrêté';
-	$lang['emajactive'] = 'Active';
-	$lang['emajdeleted'] = 'Supprimée';
-	$lang['emajprotected'] = 'Protégé contre les rollbacks';
+	$lang['emajactivemark'] = 'Marque active, donc utilisable pour un rollback E-Maj.';
+	$lang['emajdeletedmark'] = 'Un arrêt de l\'enregistrement des mises à jour a rendu la marque inactive, donc inutilisable pour un rollback E-Maj.';
+	$lang['emajprotectedmark'] = 'La protection mise sur la marque bloque les rollbacks E-Maj sur des marques antérieures.';
+	$lang['emajprotected'] = 'Protégé contre les rollbacks E-Maj';
 	$lang['emajpagebottom'] = 'Bas de la page';
 	$lang['emajlogsize'] = 'Taille du log';
 	$lang['emajrequiredfield'] = 'Champ requis';

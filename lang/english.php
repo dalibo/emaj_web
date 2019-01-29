@@ -129,8 +129,10 @@
 	$lang['strtableslist'] = 'Schema "%s" tables';
 	$lang['strnotables'] = 'No tables found.';
 	$lang['strestimatedrowcount'] = 'Estimated row count';
-	$lang['strtblproperties'] = 'Table "%s" properties';
-	$lang['strtblbrowse'] = 'Table "%s" browse';
+	$lang['strtblproperties'] = 'Table "%s.%s" properties';
+	$lang['strtblcontent'] = 'Table "%s.%s" content';
+	$lang['emajtblgroupownership'] = 'E-Maj: the table currently belongs to the tables group "%s".';
+	$lang['emajtblnogroupownership'] = 'E-Maj: the table does not currently belong to any tables group.';
 
 	// Users
 	$lang['strusername'] = 'Username';
@@ -156,6 +158,9 @@
 	$lang['strsequences'] = 'Sequences';
 	$lang['strsequenceslist'] = 'Schema "%s" sequences';
 	$lang['strnosequences'] = 'No sequences found.';
+	$lang['strseqproperties'] = 'Sequence "%s.%s" properties';
+	$lang['emajseqgroupownership'] = 'E-Maj: the sequence currently belongs to the tables group "%s".';
+	$lang['emajseqnogroupownership'] = 'E-Maj: the sequence does not currently belong to any tables group.';
 	$lang['strlastvalue'] = 'Last value';
 	$lang['strincrementby'] = 'Increment by';	
 	$lang['strstartvalue'] = 'Start value';

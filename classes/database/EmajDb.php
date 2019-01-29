@@ -2191,5 +2191,24 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 		return $data->selectSet($sql);
 	}
 
+	/**
+	 * Gets the tables group that currently owns a given table or sequence. Returns '' if it is not currently assigned to a group.
+	 */
+	function getTableGroupTblSeq($schema, $tblseq) {
+		global $data;
+
+		$data->clean($schema);
+		$data->clean($tblseq);
+
+		$sql = "SELECT rel_group FROM emaj.emaj_relation WHERE rel_schema = '{$schema}' AND rel_tblseq = '{$tblseq}' AND upper_inf(rel_time_range)";
+
+		$rs = $data->selectSet($sql);
+		if ($rs->recordCount() == 0)
+			$group = '';
+		else
+			$group = $rs->fields['rel_group'];
+
+		return $group;
+	}
 }
 ?>

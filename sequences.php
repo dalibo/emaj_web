@@ -49,10 +49,11 @@
 	 * Display the properties of a sequence
 	 */
 	function doProperties($msg = '') {
-		global $data, $misc, $lang;
+		global $data, $misc, $lang, $emajdb;
 
-		$misc->printHeader('sequence', '', '');
-		$misc->printTitle($lang['strproperties'],'pg.sequence');
+		$misc->printHeader('sequence', 'sequence', 'properties');
+//		$misc->printTitle($lang['strproperties'], 'pg.sequence');
+		$misc->printTitle(sprintf($lang['strseqproperties'], $_REQUEST['schema'], $_REQUEST['sequence']));
 		$misc->printMsg($msg);
 
 		// Fetch the sequence information
@@ -65,6 +66,15 @@
 			// Show comment if any
 			if ($sequence->fields['seqcomment'] !== null)
 				echo "<p>{$lang['strcommentlabel']}<span class=\"comment\">{$misc->printVal($sequence->fields['seqcomment'])}</span></p>\n";
+
+			// Show tables group ownership, if any
+			if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
+				$group = $emajdb->getTableGroupTblSeq($_REQUEST['schema'], $_REQUEST['sequence']);
+				if ($group != '')
+					echo "<p>" . sprintf($lang['emajseqgroupownership'],$group) . "</p>\n";
+				else
+					echo "<p>{$lang['emajseqnogroupownership']}</p>\n";
+			}
 
 			echo "<table border=\"0\">";
 			echo "<tr><th class=\"data\">{$lang['strname']}</th>";
@@ -94,21 +104,6 @@
 			echo "<td class=\"data1\">", ($sequence->fields['is_called'] ? $lang['stryes'] : $lang['strno']), "</td>";
 			echo "</tr>";
 			echo "</table>";
-
-			// Navigation links
-			$navlinks = array();
-	
-			// Refresh
-			$navlinks['refresh'] = array (
-				'attr'=> array (
-					'href' => array (
-						'url' => 'sequences.php',
-						'urlvars' => $_REQUEST,
-					)
-				),
-				'content' => $lang['strrefresh']
-			);
-			$misc->printNavLinks($navlinks);
 		}
 		else echo "<p>{$lang['strnodata']}</p>\n";
 	}

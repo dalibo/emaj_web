@@ -917,11 +917,30 @@
 
 				case 'table':
 					$tabs = array (
-						'columns' => array (
-							'title' => $lang['strcolumns'],
+						'properties' => array (
+							'title' => $lang['strproperties'],
 							'url'   => 'tblproperties.php',
 							'urlvars' => array('subject' => 'table', 'table' => field('table')),
-							'icon'  => 'Columns',
+							'icon'  => 'Property',
+							'branch'=> true,
+						),
+						'content' => array (
+							'title' => $lang['emajcontent'],
+							'url'   => 'display.php',
+							'urlvars' => array('subject' => 'table', 'table' => field('table')),
+							'icon'  => 'Table',
+							'branch'=> true,
+						),
+					);
+					break;
+
+				case 'sequence':
+					$tabs = array (
+						'properties' => array (
+							'title' => $lang['strproperties'],
+							'url'   => 'sequences.php',
+							'urlvars' => array('action' => 'properties', 'subject' => 'sequence', 'sequence' => field('sequence')),
+							'icon'  => 'Property',
 							'branch'=> true,
 						),
 					);

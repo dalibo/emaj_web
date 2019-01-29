@@ -129,8 +129,10 @@
 	$lang['strtableslist'] = 'Tables du schéma "%s"';
 	$lang['strnotables'] = 'Aucune table trouvée.';
 	$lang['strestimatedrowcount'] = 'Nombre estimé de lignes';
-	$lang['strtblproperties'] = 'Propriétés de la table "%s"';
-	$lang['strtblbrowse'] = 'Parcours de la table "%s"';
+	$lang['strtblproperties'] = 'Propriétés de la table "%s.%s"';
+	$lang['strtblcontent'] = 'Contenu de la table "%s.%s"';
+	$lang['emajtblgroupownership'] = 'E-Maj : la table fait actuellement partie du groupe de tables "%s".';
+	$lang['emajtblnogroupownership'] = 'E-Maj : la table ne fait actuellement partie d\'aucun groupe de tables.';
 
 	// Users
 	$lang['strusername'] = 'Utilisateur';
@@ -156,6 +158,9 @@
 	$lang['strsequences'] = 'Séquences';
 	$lang['strsequenceslist'] = 'Séquences du schéma "%s"';
 	$lang['strnosequences'] = 'Aucune séquence trouvée.';
+	$lang['strseqproperties'] = 'Propriétés de la séquence "%s.%s"';
+	$lang['emajseqgroupownership'] = 'E-Maj : la séquence fait actuellement partie du groupe de tables "%s".';
+	$lang['emajseqnogroupownership'] = 'E-Maj : la séquence ne fait actuellement partie d\'aucun groupe de tables.';
 	$lang['strlastvalue'] = 'Dernière valeur';
 	$lang['strincrementby'] = 'Incrémenter par ';
 	$lang['strstartvalue'] = 'Valeur de départ';

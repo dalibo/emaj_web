@@ -1,8 +1,8 @@
 <?php
 
 	/**
-	 * Common relation browsing function that can be used for views,
-	 * tables, reports, arbitrary queries, etc. to avoid code duplication.
+	 * Common relation browsing function that is used for tables and sql statements result
+	 * to avoid code duplication.
 	 * @param $query The SQL SELECT string to execute
 	 * @param $count The same SQL query, but only retrieves the count of the rows (AS total)
 	 * @param $return The return section
@@ -213,7 +213,7 @@
 		if ($subject == '')
 			$misc->printHeader('database', '', '');
 		else
-			$misc->printHeader($subject, '', '');
+			$misc->printHeader('table', 'table', 'content');
 
 		/* This code is used when browsing FK in pure-xHTML (without js) */
 		if (isset($_REQUEST['fkey'])) {
@@ -232,7 +232,7 @@
 				$type = 'SELECT';
 			}
 			else {
-				$misc->printTitle(sprintf($lang['strtblbrowse'], $_REQUEST['table']));
+				$misc->printTitle(sprintf($lang['strtblcontent'], $_REQUEST['schema'], $_REQUEST['table']));
 				$type = 'TABLE';
 			}
 		} else {
@@ -306,20 +306,6 @@
 
 		if (isset($_REQUEST['schema']))
 			$fields['schema'] = $_REQUEST['schema'];
-		// Return
-		if (isset($_REQUEST['return'])) {
-			$urlvars = $misc->getSubjectParams($_REQUEST['return']);
-
-			$navlinks['back'] = array (
-				'attr'=> array (
-					'href' => array (
-						'url' => $urlvars['url'],
-						'urlvars' => $urlvars['params']
-					)
-				),
-				'content' => $lang['strback']
-			);
-		}
 		// Expand/Collapse
 		if ($_REQUEST['strings'] == 'expanded')
 			$navlinks['collapse'] = array (

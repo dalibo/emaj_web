@@ -13,8 +13,7 @@
 	 * Show default list of columns in the table
 	 */
 	function doDefault($msg = '') {
-		global $data, $conf, $misc;
-		global $lang;
+		global $data, $conf, $misc, $lang, $emajdb;
 
 		function attPre(&$rowdata, $actions) {
 			global $data;
@@ -30,9 +29,9 @@
 			return $actions;
 		}
 
-		$misc->printHeader('table',  'table', 'columns');
+		$misc->printHeader('table', 'table', 'properties');
 		$misc->printMsg($msg);
-		$misc->printTitle(sprintf($lang['strtblproperties'], $_REQUEST['table']));
+		$misc->printTitle(sprintf($lang['strtblproperties'], $_REQUEST['schema'], $_REQUEST['table']));
 
 		// Get table
 		$tdata = $data->getTable($_REQUEST['table']);
@@ -41,9 +40,18 @@
 		// Get constraints keys
 		$ck = $data->getConstraintsWithFields($_REQUEST['table']);
 
-		// Show comment if any
+		// Show comment, if any
 		if ($tdata->fields['relcomment'] !== null)
 			echo "<p>{$lang['strcommentlabel']}<span class=\"comment\">{$misc->printVal($tdata->fields['relcomment'])}</span></p>\n";
+
+		// Show tables group ownership, if any
+		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
+			$group = $emajdb->getTableGroupTblSeq($_REQUEST['schema'], $_REQUEST['table']);
+			if ($group != '')
+				echo "<p>" . sprintf($lang['emajtblgroupownership'],$group) . "</p>\n";
+			else
+				echo "<p>{$lang['emajtblnogroupownership']}</p>\n";
+		}
 
 		$columns = array(
 			'column' => array(
@@ -112,27 +120,6 @@
 		}
 
 		$misc->printTable($attrs, $columns, $actions, 'tblproperties-tblproperties', null, 'attPre');
-
-		$navlinks = array (
-			'browse' => array (
-				'attr'=> array (
-					'href' => array (
-						'url' => 'display.php',
-						'urlvars' => array (
-							'server' => $_REQUEST['server'],
-							'database' => $_REQUEST['database'],
-							'schema' => $_REQUEST['schema'],
-							'table' => $_REQUEST['table'],
-							'subject' => 'table',
-							'return' => 'table'
-						)
-					)
-				),
-				'content' => $lang['strbrowse']
-			),
-		);
-		$misc->printNavLinks($navlinks);
-
 	}
 
 	function doTree() {

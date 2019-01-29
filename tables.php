@@ -26,8 +26,11 @@
 			'table' => array(
 				'title' => $lang['strtable'],
 				'field' => field('relname'),
-				'url'	=> "redirect.php?subject=table&amp;{$misc->href}&amp;",
+				'url'	=> "tblproperties.php?subject=table&amp;{$misc->href}&amp;",
 				'vars'  => array('table' => 'relname'),
+			),
+			'actions' => array(
+				'title' => $lang['stractions'],
 			),
 			'owner' => array(
 				'title' => $lang['strowner'],
@@ -41,9 +44,6 @@
 				'title' => $lang['strestimatedrowcount'],
 				'field' => field('reltuples'),
 				'type'  => 'numeric'
-			),
-			'actions' => array(
-				'title' => $lang['stractions'],
 			),
 			'comment' => array(
 				'title' => $lang['strcomment'],

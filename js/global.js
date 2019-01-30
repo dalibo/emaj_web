@@ -1,5 +1,6 @@
 //
 // Various js functions to let multiactions tables and table filters work
+// It mainly uses JQuery
 //
 
 //
@@ -8,42 +9,37 @@
 
 function checkSelect(action, form_id) {
 
-	var inputs = document.getElementById(form_id).getElementsByTagName('input');
+	var inputs = $("#" + form_id + " input:checkbox");
 
 	for (var i=0; i<inputs.length; i++) {
-		if (inputs[i].type == 'checkbox') {
-			if (action == 'all') inputs[i].checked = true;
-			if (action == 'filtered') inputs[i].checked = !(inputs[i].parentNode.parentNode.classList.contains("filtered"));
-			if (action == 'none') inputs[i].checked = false;
-			if (action == 'invert') inputs[i].checked = !(inputs[i].checked);
-		}
+		if (action == 'all') inputs[i].checked = true;
+		if (action == 'filtered') inputs[i].checked = !(inputs[i].parentNode.parentNode.classList.contains("filtered"));
+		if (action == 'none') inputs[i].checked = false;
+		if (action == 'invert') inputs[i].checked = !(inputs[i].checked);
 	}
 }
 
 function countChecked(form_id) {
 
 	// count checked
-	var inputs = document.getElementById(form_id).getElementsByTagName('input');
-	var cnt = 0;
-	for (var i=0; i<inputs.length; i++) {
-		if (inputs[i].type == 'checkbox' && inputs[i].checked) {
-			cnt++;
-		}
-	}
+	var cnt = $("#" + form_id + " input:checkbox:checked").length;
+
 	// insert the counter into the selectcounter th of the form
-	var textTitle = document.getElementById(form_id).getElementsByTagName('th');
-	for (var i=0; i<textTitle.length; i++) {
-		if (textTitle[i].id == 'selectedcounter') {
-			textTitle[i].innerHTML = textTitle[i].innerHTML.replace(/\(\d+\)/,"("+cnt+")");
+	$("#" + form_id + " .selectedcounter").each(function(i, elem) {
+		// There should be only one selected element here
+		$(elem).html( $(elem).html().replace(/\(\d+\)/,"("+cnt+")") );
+	});
+
+	// for each multiaction button, disable the button if:
+	// - either the number of checked rows is 0
+	// - or at least one checked row has its related button disabled (empty cell in the table for the associated action column
+	var buttons = $("#" + form_id + " button:not(.reset_" + form_id + ")").each(function(i,elem) {
+		nbHiddenButtons = 0;
+		if (cnt > 0) {
+			nbHiddenButtons = $("#" + form_id + " input:checkbox:checked").parents("tr").find(".multi_" + $(elem).attr("value") + ":empty").length;
 		}
-	}
-	// if the counter is 0, disable all buttons of the multiactions table
-	var buttons = document.getElementById(form_id).getElementsByTagName('button');
-	for (var i=0; i<buttons.length; i++) {
-		if (! buttons[i].classList.contains('reset_'+form_id)) {
-			buttons[i].disabled = (cnt == 0);
-		}
-	}
+		$(elem).attr("disabled", (cnt == 0 || nbHiddenButtons > 0));
+	});
 }
 
 //

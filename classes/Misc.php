@@ -1488,9 +1488,16 @@
 							case 'actions':
 								foreach ($alt_actions as $action) {
 									if (isset($action['disable']) && $action['disable'] === true) {
-										echo "<td></td>\n";
+										if (isset($action['multiaction']))
+											echo "<td class=\"multi_{$action['multiaction']}\"></td>\n";
+										else
+											echo "<td></td>\n";
 									} else {
-										echo "<td class=\"opbutton{$id}\">";
+										if (isset($action['multiaction']))
+											echo "<td class=\"opbutton{$id} multi_{$action['multiaction']}\">";
+										else
+											echo "<td class=\"opbutton{$id}\">";
+
 										$action['fields'] = $tabledata->fields;
 										$this->printLink($action);
 										echo "</td>\n";
@@ -1529,7 +1536,7 @@
 					echo "<table class=\"multiactions\">\n";
 					echo "<tr>\n";
 					echo "<th class=\"multiactions\">{$lang['strselect']}</th>\n";
-					echo "<th class=\"multiactions\" id=\"selectedcounter\">{$lang['stractionsonselectedobjects']}</th>\n";
+					echo "<th class=\"multiactions selectedcounter\">{$lang['stractionsonselectedobjects']}</th>\n";
 					echo "</tr>\n";
 					echo "<tr class=\"row1\">\n";
 					echo "\t<td>\n";

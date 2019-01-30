@@ -12,10 +12,17 @@ function checkSelect(action, form_id) {
 	var inputs = $("#" + form_id + " input:checkbox");
 
 	for (var i=0; i<inputs.length; i++) {
+		// general selectors
 		if (action == 'all') inputs[i].checked = true;
 		if (action == 'filtered') inputs[i].checked = !(inputs[i].parentNode.parentNode.classList.contains("filtered"));
 		if (action == 'none') inputs[i].checked = false;
 		if (action == 'invert') inputs[i].checked = !(inputs[i].checked);
+
+		// specific selectors
+		if (action == 'notassigned') {
+			// look for .multi_assign_tblseq td on the same row and check if not empty
+			inputs[i].checked = (inputs[i].parentNode.parentNode.getElementsByClassName('multi_assign_tblseq')[0].innerHTML != '');
+		}
 	}
 }
 

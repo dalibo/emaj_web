@@ -1531,7 +1531,7 @@
 				echo "</tbody>\n";
 				echo "</table>\n";
 
-				// Multi action table footer w/ options & [un]check'em all
+				// Multi action table footer with selectors and action buttons
 				if ($has_ma) {
 					echo "<table class=\"multiactions\">\n";
 					echo "<tr>\n";
@@ -1546,6 +1546,10 @@
 					}
 					echo "\t\t&nbsp;<a onclick=\"javascript:checkSelect('none','{$place}');countChecked('{$place}');\" class=\"action\">{$lang['strnone']}</a>&nbsp;/\n";
 					echo "\t\t&nbsp;<a onclick=\"javascript:checkSelect('invert','{$place}');countChecked('{$place}');\" class=\"action\">{$lang['strinvert']}</a>&nbsp;\n";
+					if ($place == 'defineGroupTblseq') {
+						// This selector is specific to the groups configuration page
+						echo "\t\t/&nbsp;<a onclick=\"javascript:checkSelect('notassigned','{$place}');countChecked('{$place}');\" class=\"action\">{$lang['emajnotassigned']}</a>&nbsp;\n";
+					}
 					echo "\t</td><td>\n";
 					foreach($actions as $k => $a)
 						if (isset($a['multiaction']))

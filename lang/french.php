@@ -83,6 +83,7 @@
 	$lang['strall'] = 'Tous';
 	$lang['strnone'] = 'Aucun';
 	$lang['strinvert'] = 'Inverser';
+	$lang['emajnotassigned'] = 'Non affectés';
 
 	// User-supplied SQL editing
 	$lang['strsqledit'] = 'Edition de requête SQL';

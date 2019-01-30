@@ -83,6 +83,7 @@
 	$lang['strall'] = 'All';
 	$lang['strnone'] = 'None';
 	$lang['strinvert'] = 'Invert';
+	$lang['emajnotassigned'] = 'Not assigned';
 
 	// User-supplied SQL editing
 	$lang['strsqledit'] = 'SQL statement editing';

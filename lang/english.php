@@ -24,8 +24,8 @@
 	$lang['strlogindisallowed'] = 'Login disallowed for security reasons.';
 	$lang['strserver'] = 'Server';
 	$lang['strservers'] = 'Servers';
-	$lang['strconfiguredservers'] = 'Configured PostgreSQL servers';
-	$lang['strgroupservers'] = 'Servers in group "%s"';
+	$lang['strconfiguredservers'] = 'PostgreSQL servers';
+	$lang['strgroupservers'] = 'PostgreSQL servers in group "%s"';
 	$lang['strallservers'] = 'All servers';
 	$lang['strintroduction'] = 'Introduction';
 	$lang['strhost'] = 'Host';
@@ -142,6 +142,7 @@
 	// Groups
 	$lang['strgroup'] = 'Group';
 	$lang['strgroupgroups'] = 'Groups in group "%s"';
+	$lang['strserversgroups'] = 'Servers groups';
 
 	// Roles
 	$lang['strrole'] = 'Role';

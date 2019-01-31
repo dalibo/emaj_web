@@ -24,8 +24,8 @@
 	$lang['strlogindisallowed'] = 'Connexion désactivée pour raison de sécurité';
 	$lang['strserver'] = 'Serveur';
 	$lang['strservers'] = 'Serveurs';
-	$lang['strconfiguredservers'] = 'Serveurs PostgreSQL configurés';
-	$lang['strgroupservers'] = 'Serveurs du groupe "%s"';
+	$lang['strconfiguredservers'] = 'Serveurs PostgreSQL';
+	$lang['strgroupservers'] = 'Serveurs PostgreSQL du groupe "%s"';
 	$lang['strallservers'] = 'Tous les serveurs';
 	$lang['strintroduction'] = 'Introduction';
 	$lang['strhost'] = 'Hôte';
@@ -142,6 +142,7 @@
 	// Groups
 	$lang['strgroup'] = 'Groupe';
 	$lang['strgroupgroups'] = 'Groupes du groupe "%s"';
+	$lang['strserversgroups'] = 'Groupes de serveurs';
 
 	// Roles
 	$lang['strrole'] = 'Rôle';

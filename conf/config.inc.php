@@ -84,10 +84,16 @@
 	/* Groups allow administrators to logicaly group servers together under
 	 * group nodes in the left browser tree
 	 */
-	$conf['srv_groups'][0]['desc'] = 'Production';
+	$conf['srv_groups'][0]['desc'] = 'Test';
 	$conf['srv_groups'][0]['servers'] = '0'; 
-	$conf['srv_groups'][1]['desc'] = 'Test';
-	$conf['srv_groups'][1]['servers'] = '1,2,3,4,5,6,7,8';
+	$conf['srv_groups'][1]['desc'] = 'Production';
+	$conf['srv_groups'][1]['servers'] = '';
+	$conf['srv_groups'][2]['desc'] = 'DataCenter-1';
+	$conf['srv_groups'][2]['servers'] = '1,2,3,4';
+	$conf['srv_groups'][2]['parents'] = '1';
+	$conf['srv_groups'][3]['desc'] = 'DataCenter-2';
+	$conf['srv_groups'][3]['servers'] = '5,6,7,8';
+	$conf['srv_groups'][3]['parents'] = '1';
 
 	// Default language. E.g.: 'english'.  See lang/ directory
 	// for all possibilities. If you specify 'auto' (the default) it will use 

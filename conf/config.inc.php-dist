@@ -117,10 +117,4 @@
 //	$conf['temp_dir'] = '/tmp';                                                   // unix style path
 //	$conf['temp_dir'] = 'C:\\Users\\Default\\AppData\\Local\\Temp';               // windows style path
 
-	/*****************************************
-	 * Don't modify anything below this line *
-	 *****************************************/
-
-	$conf['version'] = 19;
-
 ?>

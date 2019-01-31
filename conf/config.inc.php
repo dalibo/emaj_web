@@ -149,10 +149,4 @@
 //	$conf['temp_dir'] = 'C:\\Users\\Default\\AppData\\Local\\Temp';
 	$conf['temp_dir'] = '/tmp';
 
-	/*****************************************
-	 * Don't modify anything below this line *
-	 *****************************************/
-
-	$conf['version'] = 19;
-
 ?>

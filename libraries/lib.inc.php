@@ -40,11 +40,6 @@
 		exit;
 	}
 
-	// Configuration file version.  If this is greater than that in config.inc.php, then
-	// the app will refuse to run.  This and $conf['version'] should be incremented whenever
-	// backwards incompatible changes are made to config.inc.php-dist.
-	$conf['base_version'] = 16;
-
 	// Always include english.php, since it's the master language file
 	if (!isset($conf['default_lang'])) $conf['default_lang'] = 'english';
 	$lang = array();
@@ -157,12 +152,6 @@
 	if (isset($_language)) {
 		include("./lang/{$_language}.php");
 		$_SESSION['webdbLanguage'] = $_language;
-	}
-
-	// Check for config file version mismatch
-	if (!isset($conf['version']) || $conf['base_version'] > $conf['version']) {
-		echo $lang['strbadconfig'];
-		exit;
 	}
 
 	// Check database support is properly compiled in

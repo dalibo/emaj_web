@@ -111,7 +111,6 @@
 	// Error handling
 	$lang['strnoframes'] = 'Cette application fonctionne mieux avec un navigateur pouvant afficher des frames mais peut être utilisée sans frames en suivant les liens ci-dessous.';
 	$lang['strnoframeslink'] = 'Utiliser sans frames';
-	$lang['strbadconfig'] = 'Le fichier de configuration config.inc.php est obsolète. Vous avez besoin de le regénérer à partir de config.inc.php-dist.';
 	$lang['strnotloaded'] = 'Vous n\'avez pas compilé correctement le support de la base de données dans votre installation de PHP.';
 	$lang['strpostgresqlversionnotsupported'] = 'Cette version de PostgreSQL n\'est pas supportée. Merci de mettre à jour PHP à la version %s ou ultérieure.';
 	$lang['strbadschema'] = 'Schéma spécifié invalide.';

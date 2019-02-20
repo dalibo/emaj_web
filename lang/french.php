@@ -400,10 +400,29 @@
 	// Group creation
 	$lang['emajcreateagroup'] = 'E-Maj : Créer un groupe de tables';
 	$lang['emajcreateanemptygroup'] = "Création d'un groupe de tables vide";
-	$lang['emajconfirmcreategroup'] = 'Etes-vous sûr de vouloir créer le groupe de tables "%s" ?';
+	$lang['emajgroupconfok'] = "La configuration actuelle du groupe de tables %s est correcte.";
+	$lang['emajgroupconfwithdiag'] = "Les contrôles sur la configuration du groupe de tables %s montrent que :";
 	$lang['emajinvalidemptygroup'] = 'Erreur, le groupe de table "%s" est déjà créé ou configuré !';
 	$lang['emajcreategroupok'] = 'Le groupe de tables "%s" a été créé.';
 	$lang['emajcreategrouperr'] = 'Erreur lors de la création du groupe de tables "%s" !';
+
+	// Groups content checks
+	$lang['emajcheckconfgroups01'] = 'Dans le groupe "%s", la table ou séquence "%s.%s" n\'existe pas.';
+	$lang['emajcheckconfgroups02'] = 'Dans le groupe "%s", la table "%s.%s" est une table partitionnée (seule les partitions élémentaires sont supportées par E-Maj).';
+	$lang['emajcheckconfgroups03'] = 'Dans le groupe "%s", la table ou séquence "%s.%s" appartient à un schéma E-Maj.';
+	$lang['emajcheckconfgroups04'] = 'Dans le groupe "%s", la table ou séquence "%s.%s" appartient déjà au groupe "%s".';
+	$lang['emajcheckconfgroups05'] = 'Dans le groupe "%s", la table "%s.%s" est une table temporaire.';
+	$lang['emajcheckconfgroups10'] = 'Dans le groupe "%s", la table "%s.%s" générerait un doublon de préfixe de noms E-Maj "%s".';
+	$lang['emajcheckconfgroups11'] = 'Dans le groupe "%s", la table "%s.%s" a un préfixe de noms E-Maj déjà utilisé ("%s").';
+	$lang['emajcheckconfgroups12'] = 'Dans le groupe "%s", pour la table "%s.%s", le tablespace de la table de log "%s" n\'existe pas.';
+	$lang['emajcheckconfgroups13'] = 'Dans le groupe "%s", pour la table "%s.%s", le tablespace de l\'index de log "%s" n\'existe pas.';
+	$lang['emajcheckconfgroups20'] = 'Dans le groupe "%s", la table "%s.%s" est une table UNLOGGED.';
+	$lang['emajcheckconfgroups21'] = 'Dans le groupe "%s", la table "%s.%s" est déclarée WITH OIDS.';
+	$lang['emajcheckconfgroups22'] = 'Dans le groupe "%s", la table "%s.%s" n\'a pas de PRIMARY KEY.';
+	$lang['emajcheckconfgroups30'] = 'Dans le groupe "%s", pour la séquence "%s.%s", le suffixe de schéma secondaire de log n\'est pas NULL.';
+	$lang['emajcheckconfgroups31'] = 'Dans le groupe "%s", pour la séquence "%s.%s", le préfixe des noms E-Maj n\'est pas NULL.';
+	$lang['emajcheckconfgroups32'] = 'Dans le groupe "%s", pour la séquence "%s.%s", le tablespace de la table de log n\'est pas NULL.';
+	$lang['emajcheckconfgroups33'] = 'Dans le groupe "%s", pour la séquence "%s.%s", le tablespace de l\'index de log n\'est pas NULL.';
 
 	// Group drop
 	$lang['emajdropagroup'] = 'E-Maj : Supprimer un groupe de tables';

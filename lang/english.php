@@ -400,10 +400,29 @@
 	// Group creation
 	$lang['emajcreateagroup'] = 'E-Maj: Create a tables group';
 	$lang['emajcreateanemptygroup'] = "Create an empty tables group";
-	$lang['emajconfirmcreategroup'] = 'Are you sure you want to create the tables group "%s"?';
+	$lang['emajgroupconfok'] = "The current configuration of the tables group %s is correct.";
+	$lang['emajgroupconfwithdiag'] = "The checks performed on the tables group %s configuration show that:";
 	$lang['emajinvalidemptygroup'] = 'Error, the tables group "%s" is already created or configured!';
 	$lang['emajcreategroupok'] = 'The tables group "%s" has been created.';
 	$lang['emajcreategrouperr'] = 'Error during group "%s" creation!';
+
+	// Groups content checks
+	$lang['emajcheckconfgroups01'] = 'In the group "%s", the table or sequence "%s.%s" does not exist.';
+	$lang['emajcheckconfgroups02'] = 'In the group "%s", the table "%s.%s" is a partitionned table (only elementary partitions are supported by E-Maj).';
+	$lang['emajcheckconfgroups03'] = 'In the group "%s", the table or sequence "%s.%s" belongs to an E-Maj schema.';
+	$lang['emajcheckconfgroups04'] = 'In the group "%s", the table or sequence "%s.%s" already belongs to the group "%s".';
+	$lang['emajcheckconfgroups05'] = 'In the group "%s", the table "%s.%s" is a TEMPORARY table.';
+	$lang['emajcheckconfgroups10'] = 'In the group "%s", the table "%s.%s" would have a duplicate emaj prefix "%s".';
+	$lang['emajcheckconfgroups11'] = 'In the group "%s", the table "%s.%s" would have an already used emaj prefix "%s".';
+	$lang['emajcheckconfgroups12'] = 'In the group "%s", for the table "%s.%s", the data log tablespace %s does not exist.';
+	$lang['emajcheckconfgroups13'] = 'In the group "%s", for the table "%s.%s", the index log tablespace %s does not exist.';
+	$lang['emajcheckconfgroups20'] = 'In the group "%s", the table "%s.%s" is an UNLOGGED table.';
+	$lang['emajcheckconfgroups21'] = 'In the group "%s", the table "%s.%s" is declared WITH OIDS.';
+	$lang['emajcheckconfgroups22'] = 'In the group "%s", the table "%s.%s" has no PRIMARY KEY.';
+	$lang['emajcheckconfgroups30'] = 'in the group "%s", for the sequence "%s.%s", the secondary log schema suffix is not NULL.';
+	$lang['emajcheckconfgroups31'] = 'In the group "%s", for the sequence "%s.%s", the emaj names prefix is not NULL.';
+	$lang['emajcheckconfgroups32'] = 'In the group "%s", for the sequence "%s.%s", the data log tablespace is not NULL.';
+	$lang['emajcheckconfgroups33'] = 'In the group "%s", for the sequence "%s.%s", the index log tablespace is not NULL.';
 
 	// Group drop
 	$lang['emajdropagroup'] = 'E-Maj: Drop a tables group';

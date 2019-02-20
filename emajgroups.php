@@ -1408,20 +1408,54 @@
  *******************************************************************************************************/
 
 	/**
-	 * Prepare create group: ask for confirmation
+	 *
+ Prepare create group: ask for confirmation
 	 */
 	function create_group() {
-		global $misc, $lang;
+		global $misc, $lang, $emajdb;
 
 		$misc->printHeader('database', 'database','emajgroups');
 
 		$misc->printTitle($lang['emajcreateagroup']);
 
-		if (htmlspecialchars($_REQUEST['empty'])=='false') {
-			echo "<p>", sprintf($lang['emajconfirmcreategroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
-		} else {
+		$rollbackable = true; $auditonly = true;
+
+		if (htmlspecialchars($_REQUEST['empty'])=='true') {
+
+		// empty group
 			echo "<p>{$lang['emajcreateanemptygroup']}</p>\n";
+
+		} else {
+
+		// non empty group
+		// check the group configuration
+			$checks = $emajdb->checkConfGroups($_REQUEST['group']);
+			if ($checks->recordCount() == 0) {
+				echo "<p>" . sprintf($lang['emajgroupconfok'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
+			} else {
+				echo "<p>" . sprintf($lang['emajgroupconfwithdiag'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
+
+				$columns = array(
+					'message' => array(
+						'title' => $lang['emajdiagnostics'],
+						'field' => field('chk_message'),
+					),
+				);
+	
+				$actions = array ();
+	
+				$misc->printTable($checks, $columns, $actions, 'checks', null, null, array('sorter' => true, 'filter' => false));
+
+				// determine whether the tables group can be audit_only
+				$rollbackable = false;
+				$checks->moveFirst();
+				while (!$checks->EOF) {
+					if ($checks->fields['chk_severity'] == 1) $auditonly = false;
+					$checks->moveNext();
+				}
+			}
 		}
+
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"create_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
@@ -1429,6 +1463,7 @@
 		echo $misc->form;
 
 	// when creating an empty group, the group name is not known, so ask
+
 		if (htmlspecialchars($_REQUEST['empty']) == 'false') {
 			echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		} else {
@@ -1439,11 +1474,16 @@
 			echo "</div>\n";
 		}
 
-		echo "<p>{$lang['emajgrouptype']} : ";
-		echo "<input type=\"radio\" name=\"grouptype\" value=\"rollbackable\" checked>{$lang['emajrollbackable']}";
-		echo "<input type=\"radio\" name=\"grouptype\" value=\"auditonly\">{$lang['emajauditonly']}\n";
+		if ($auditonly) {
+			echo "<p>{$lang['emajgrouptype']} : \n";
+			if ($rollbackable) {$attr = "checked";} else {$attr = "disabled";}
+			echo "\t<input type=\"radio\" name=\"grouptype\" value=\"rollbackable\" {$attr}>{$lang['emajrollbackable']}\n";
+			if ($rollbackable) {$attr = "";} else {$attr = "checked";}
+			echo "\t<input type=\"radio\" name=\"grouptype\" value=\"auditonly\" {$attr}>{$lang['emajauditonly']}\n";
+		}
 		echo "</p><p>";
-		echo "<input type=\"submit\" name=\"creategroup\" value=\"{$lang['strcreate']}\" />\n";
+		if ($auditonly)
+			echo "<input type=\"submit\" name=\"creategroup\" value=\"{$lang['strcreate']}\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";
 		echo "</form>\n";
 

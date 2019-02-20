@@ -59,15 +59,6 @@
 		return $idleActions;
 	}
 
-	// Functions to dynamicaly modify actions list for each configured but not yet crated table group to display
-	function configuredGroupPre(&$rowdata, $configuredActions) {
-		// disable the create button for groups with diagnostics
-		if (isset($configuredActions['create_group']) && $rowdata->fields['group_diagnostic'] != '{0,0,0,0,0}') {
-			$configuredActions['create_group']['disable'] = true;
-		}
-		return $configuredActions;
-	}
-
 	// Function to dynamicaly modify actions list for each mark
 	function markPre(&$rowdata, $actions) {
 		global $emajdb, $protected_mark_flag;
@@ -479,15 +470,19 @@
 					'field' => field('group_nb_sequence'),
 					'type'  => 'numeric'
 				),
-				'diagnostic' => array(
-					'title' => $lang['emajdiagnostics'],
-					'field' => field('group_diagnostic'),
-					'type'	=> 'callback',
-					'params'=> array(
-							'function' => 'renderDiagnosticNewGroup',
-							)
-				),
 			);
+			if ($emajdb->getNumEmajVersion() < 30000) {	// version < 3.0.0
+				$configuredColumns = array_merge($configuredColumns, array(
+					'diagnostic' => array(
+						'title' => $lang['emajdiagnostics'],
+						'field' => field('group_diagnostic'),
+						'type'	=> 'callback',
+						'params'=> array(
+								'function' => 'renderDiagnosticNewGroup',
+								)
+					),
+				));
+			}
 
 			if ($emajdb->isEmaj_Adm()) {
 				$configuredActions = array(
@@ -522,7 +517,7 @@
 			// configured but not yet created tables section
 			$misc->printTitle("{$lang['emajconfiguredgroups']}<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['emajconfiguredgrouphelp']}\"/>");
 
-			$misc->printTable($configuredGroups, $configuredColumns, $configuredActions, 'configuredGroups', $lang['emajnoconfiguredgroups'], 'configuredGroupPre', array('sorter' => true, 'filter' => true));
+			$misc->printTable($configuredGroups, $configuredColumns, $configuredActions, 'configuredGroups', $lang['emajnoconfiguredgroups'], null, array('sorter' => true, 'filter' => true));
 
 			// for emaj_adm role only, give information about how to create a group and propose the create empty group button
 			if ($emajdb->isEmaj_Adm()) {
@@ -1428,31 +1423,35 @@
 		} else {
 
 		// non empty group
-		// check the group configuration
-			$checks = $emajdb->checkConfGroups($_REQUEST['group']);
-			if ($checks->recordCount() == 0) {
-				echo "<p>" . sprintf($lang['emajgroupconfok'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
-			} else {
-				echo "<p>" . sprintf($lang['emajgroupconfwithdiag'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
-
-				$columns = array(
-					'message' => array(
-						'title' => $lang['emajdiagnostics'],
-						'field' => field('chk_message'),
-					),
-				);
+			if ($emajdb->getNumEmajVersion() >= 30000) {			// version >= 3.0.0
+			// check the group configuration
+				$checks = $emajdb->checkConfGroups($_REQUEST['group']);
+				if ($checks->recordCount() == 0) {
+					echo "<p>" . sprintf($lang['emajgroupconfok'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
+				} else {
+					echo "<p>" . sprintf($lang['emajgroupconfwithdiag'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
 	
-				$actions = array ();
+					$columns = array(
+						'message' => array(
+							'title' => $lang['emajdiagnostics'],
+							'field' => field('chk_message'),
+						),
+					);
+		
+					$actions = array ();
+		
+					$misc->printTable($checks, $columns, $actions, 'checks', null, null, array('sorter' => true, 'filter' => false));
 	
-				$misc->printTable($checks, $columns, $actions, 'checks', null, null, array('sorter' => true, 'filter' => false));
-
-				// determine whether the tables group can be audit_only
-				$rollbackable = false;
-				$checks->moveFirst();
-				while (!$checks->EOF) {
-					if ($checks->fields['chk_severity'] == 1) $auditonly = false;
-					$checks->moveNext();
+					// determine whether the tables group can be audit_only
+					$rollbackable = false;
+					$checks->moveFirst();
+					while (!$checks->EOF) {
+						if ($checks->fields['chk_severity'] == 1) $auditonly = false;
+						$checks->moveNext();
+					}
 				}
+			} else {
+				echo "<p>" . sprintf($lang['emajconfirmcreategroup'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
 			}
 		}
 

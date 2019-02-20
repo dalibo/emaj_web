@@ -402,6 +402,7 @@
 	$lang['emajcreateanemptygroup'] = "Create an empty tables group";
 	$lang['emajgroupconfok'] = "The current configuration of the tables group %s is correct.";
 	$lang['emajgroupconfwithdiag'] = "The checks performed on the tables group %s configuration show that:";
+	$lang['emajconfirmcreategroup'] = 'Are you sure you want to create the tables group "%s"?';
 	$lang['emajinvalidemptygroup'] = 'Error, the tables group "%s" is already created or configured!';
 	$lang['emajcreategroupok'] = 'The tables group "%s" has been created.';
 	$lang['emajcreategrouperr'] = 'Error during group "%s" creation!';

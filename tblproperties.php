@@ -1,7 +1,7 @@
 <?php
 
 	/*
-	 * List tables in a database
+	 * Display the properties of a table: columns and tables group ownership
 	 */
 
 	// Include application functions

@@ -2233,7 +2233,11 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 		$data->clean($schema);
 		$data->clean($tblseq);
 
-		$sql = "SELECT rel_group FROM emaj.emaj_relation WHERE rel_schema = '{$schema}' AND rel_tblseq = '{$tblseq}' AND upper_inf(rel_time_range)";
+		$sql = "SELECT rel_group FROM emaj.emaj_relation WHERE rel_schema = '{$schema}' AND rel_tblseq = '{$tblseq}'";
+
+		if ($this->getNumEmajVersion() >= 20200) {
+			$sql .= " AND upper_inf(rel_time_range)";
+		}
 
 		$rs = $data->selectSet($sql);
 		if ($rs->recordCount() == 0)

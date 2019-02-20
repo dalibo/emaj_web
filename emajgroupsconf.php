@@ -341,7 +341,7 @@
 			}
 			echo "\t</datalist>\n";
 		} else {
-			echo "<p><input type=\"hidden\" name=\"suffix\" value=\"\" />\n";
+			echo "<input type=\"hidden\" name=\"suffix\" value=\"\" />\n";
 		}
 
 		// objects name prefix (only for tables)
@@ -353,7 +353,7 @@
 			echo "</div>\n";
 			echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajnameprefixhelp']}\"/></div>\n";
 		} else {
-			echo "<p><input type=\"hidden\" name=\"nameprefix\" value=\"\" />\n";
+			echo "<input type=\"hidden\" name=\"nameprefix\" value=\"\" />\n";
 		}
 
 		// log tablespace (only for tables)
@@ -377,8 +377,8 @@
 			}
 			echo "\t</datalist>\n";
 		} else {
-			echo "<p><input type=\"hidden\" name=\"logdattsp\" value=\"\" />\n";
-			echo "<p><input type=\"hidden\" name=\"logidxtsp\" value=\"\" />\n";
+			echo "<input type=\"hidden\" name=\"logdattsp\" value=\"\" />\n";
+			echo "<input type=\"hidden\" name=\"logidxtsp\" value=\"\" />\n";
 		}
 
 		echo"</div>\n";

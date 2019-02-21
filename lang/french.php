@@ -399,15 +399,17 @@
 
 	// Group creation
 	$lang['emajcreateagroup'] = 'E-Maj : Créer un groupe de tables';
-	$lang['emajcreateanemptygroup'] = "Création d'un groupe de tables vide";
-	$lang['emajgroupconfok'] = "La configuration actuelle du groupe de tables %s est correcte.";
-	$lang['emajgroupconfwithdiag'] = "Les contrôles sur la configuration du groupe de tables %s montrent que :";
+	$lang['emajcreateanemptygroup'] = 'Création d\'un groupe de tables vide';
 	$lang['emajconfirmcreategroup'] = 'Etes-vous sûr de vouloir créer le groupe de tables "%s" ?';
 	$lang['emajinvalidemptygroup'] = 'Erreur, le groupe de table "%s" est déjà créé ou configuré !';
 	$lang['emajcreategroupok'] = 'Le groupe de tables "%s" a été créé.';
 	$lang['emajcreategrouperr'] = 'Erreur lors de la création du groupe de tables "%s" !';
 
 	// Groups content checks
+	$lang['emajgroupconfok'] = 'La configuration du groupe de tables "%s" est correcte.';
+	$lang['emajgroupconfwithdiag'] = 'Les contrôles sur la configuration du groupe de tables "%s" montrent que :';
+	$lang['emajgroupsconfok'] = 'La configuration des groupes de tables "%s" est correcte.';
+	$lang['emajgroupsconfwithdiag'] = 'Les contrôles sur la configuration des groupes de tables "%s" montrent que :';
 	$lang['emajcheckconfgroups01'] = 'Dans le groupe "%s", la table ou séquence "%s.%s" n\'existe pas.';
 	$lang['emajcheckconfgroups02'] = 'Dans le groupe "%s", la table "%s.%s" est une table partitionnée (seule les partitions élémentaires sont supportées par E-Maj).';
 	$lang['emajcheckconfgroups03'] = 'Dans le groupe "%s", la table ou séquence "%s.%s" appartient à un schéma E-Maj.';

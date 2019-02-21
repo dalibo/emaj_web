@@ -969,15 +969,15 @@ class EmajDb {
 	}
 
 	/**
-	 * Check the configuration of one or serveral groups in the emaj_group_def table
+	 * Check in the emaj_group_def table the configuration of a new group to create
 	 */
-	function checkConfGroups($groups) {
+	function checkConfNewGroup($group) {
 		global $data, $lang;
 
-		$data->clean($groups);
-		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
+		$data->clean($group);
+		$groupsArray="ARRAY['".str_replace(', ',"','",$group)."']";
 
-		$sql = "SELECT chk_msg_type, chk_severity,
+		$sql = "SELECT chk_severity,
 				CASE chk_msg_type
 					WHEN  1 THEN format('" . $data->clean($lang['emajcheckconfgroups01']) . "', chk_group, chk_schema, chk_tblseq)
 					WHEN  2 THEN format('" . $data->clean($lang['emajcheckconfgroups02']) . "', chk_group, chk_schema, chk_tblseq)
@@ -997,6 +997,42 @@ class EmajDb {
 					WHEN 33 THEN format('" . $data->clean($lang['emajcheckconfgroups33']) . "', chk_group, chk_schema, chk_tblseq)
 				END as chk_message
 			FROM emaj._check_conf_groups ($groupsArray)";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Check in the emaj_group_def table the configuration of one or serveral existing groups to alter
+	 */
+	function checkConfExistingGroups($groups) {
+		global $data, $lang;
+
+		$data->clean($groups);
+		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
+
+		$sql = "SELECT chk_severity,
+				CASE chk_msg_type
+					WHEN  1 THEN format('" . $data->clean($lang['emajcheckconfgroups01']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN  2 THEN format('" . $data->clean($lang['emajcheckconfgroups02']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN  3 THEN format('" . $data->clean($lang['emajcheckconfgroups03']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN  4 THEN format('" . $data->clean($lang['emajcheckconfgroups04']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN  5 THEN format('" . $data->clean($lang['emajcheckconfgroups05']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 10 THEN format('" . $data->clean($lang['emajcheckconfgroups10']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN 11 THEN format('" . $data->clean($lang['emajcheckconfgroups11']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN 12 THEN format('" . $data->clean($lang['emajcheckconfgroups12']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN 13 THEN format('" . $data->clean($lang['emajcheckconfgroups13']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN 20 THEN format('" . $data->clean($lang['emajcheckconfgroups20']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 21 THEN format('" . $data->clean($lang['emajcheckconfgroups21']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 22 THEN format('" . $data->clean($lang['emajcheckconfgroups22']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 30 THEN format('" . $data->clean($lang['emajcheckconfgroups30']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 31 THEN format('" . $data->clean($lang['emajcheckconfgroups31']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 32 THEN format('" . $data->clean($lang['emajcheckconfgroups32']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 33 THEN format('" . $data->clean($lang['emajcheckconfgroups33']) . "', chk_group, chk_schema, chk_tblseq)
+				END as chk_message
+			FROM emaj._check_conf_groups ($groupsArray), emaj.emaj_group
+	        WHERE 	chk_group = group_name
+				AND ((group_is_rollbackable AND chk_severity <= 2)
+				  OR (NOT group_is_rollbackable AND chk_severity <= 1))";
 
 		return $data->selectSet($sql);
 	}

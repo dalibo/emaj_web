@@ -1425,7 +1425,7 @@
 		// non empty group
 			if ($emajdb->getNumEmajVersion() >= 30000) {			// version >= 3.0.0
 			// check the group configuration
-				$checks = $emajdb->checkConfGroups($_REQUEST['group']);
+				$checks = $emajdb->checkConfNewGroup($_REQUEST['group']);
 				if ($checks->recordCount() == 0) {
 					echo "<p>" . sprintf($lang['emajgroupconfok'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
 				} else {
@@ -1583,34 +1583,67 @@
 			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 		$misc->printTitle($lang['emajaltergroups']);
 
-		$isGroupLogging = $emajdb->isGroupLogging($_REQUEST['group']);
-
-		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-
-		if ($emajdb->getNumEmajVersion() >= 20100) {			// version >= 2.1.0
-			if ($isGroupLogging) {
-				echo "<p>", sprintf($lang['emajalteraloggingroup'], htmlspecialchars($_REQUEST['group'])), "</p>";
-				echo "<div class=\"form-container\">\n";
-				echo "\t<div class=\"form-label required\">{$lang['emajmark']}</div>\n";
-				echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"ALTER_%\" id=\"mark\"></div>\n";
-				echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
-				echo "</div>\n";
+		$confOK = true;
+		if ($emajdb->getNumEmajVersion() >= 30000) {			// version >= 3.0.0
+		// check the group configuration
+			$checks = $emajdb->checkConfExistingGroups($_REQUEST['group']);
+			if ($checks->recordCount() == 0) {
+				echo "<p>" . sprintf($lang['emajgroupconfok'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
 			} else {
-				echo "<p>", sprintf($lang['emajconfirmaltergroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
-				echo "<input type=\"hidden\" name=\"mark\" value=\"\">";
+				$confOK = false;
+				echo "<p>" . sprintf($lang['emajgroupconfwithdiag'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
+
+				$columns = array(
+					'message' => array(
+						'title' => $lang['emajdiagnostics'],
+						'field' => field('chk_message'),
+					),
+				);
+	
+				$actions = array ();
+	
+				$misc->printTable($checks, $columns, $actions, 'checks', null, null, array('sorter' => true, 'filter' => false));
+
+				echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+				echo "<p><input type=\"hidden\" name=\"action\" value=\"alter_group_ok\" />\n";
+				echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
+				echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
+				echo $misc->form;
+				echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+				echo "</form>\n";
 			}
-		} else {
-				echo "<p>", sprintf($lang['emajconfirmaltergroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
-				echo "<input type=\"hidden\" name=\"mark\" value=\"\">";
 		}
 
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"alter_group_ok\" />\n";
-		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
-		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
-		echo $misc->form;
-		echo "<input type=\"submit\" name=\"altergroup\" value=\"{$lang['emajApplyConfChanges']}\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-		echo "</form>\n";
+		if ($confOK) {
+			$isGroupLogging = $emajdb->isGroupLogging($_REQUEST['group']);
+	
+			echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+	
+			if ($emajdb->getNumEmajVersion() >= 20100) {			// version >= 2.1.0
+				if ($isGroupLogging) {
+					echo "<p>", sprintf($lang['emajalteraloggingroup'], htmlspecialchars($_REQUEST['group'])), "</p>";
+					echo "<div class=\"form-container\">\n";
+					echo "\t<div class=\"form-label required\">{$lang['emajmark']}</div>\n";
+					echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"ALTER_%\" id=\"mark\"></div>\n";
+					echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+					echo "</div>\n";
+				} else {
+					echo "<p>", sprintf($lang['emajconfirmaltergroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
+					echo "<input type=\"hidden\" name=\"mark\" value=\"\">";
+				}
+			} else {
+					echo "<p>", sprintf($lang['emajconfirmaltergroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
+					echo "<input type=\"hidden\" name=\"mark\" value=\"\">";
+			}
+	
+			echo "<p><input type=\"hidden\" name=\"action\" value=\"alter_group_ok\" />\n";
+			echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
+			echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
+			echo $misc->form;
+			echo "<input type=\"submit\" name=\"altergroup\" value=\"{$lang['emajApplyConfChanges']}\" />\n";
+			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+			echo "</form>\n";
+		}
 	}
 
 	/**
@@ -1697,32 +1730,66 @@
 		}
 		$groupsList = substr($groupsList,0,strlen($groupsList)-2);
 
-		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+		$confOK = true;
+		if ($emajdb->getNumEmajVersion() >= 30000) {			// version >= 3.0.0
+		// check the groups configuration
+			$checks = $emajdb->checkConfExistingGroups($groupsList);
+			if ($checks->recordCount() == 0) {
+				echo "<p>" . sprintf($lang['emajgroupsconfok'], htmlspecialchars($groupsList)) . "</p>\n";
+			} else {
+				$confOK = false;
+				echo "<p>" . sprintf($lang['emajgroupsconfwithdiag'], htmlspecialchars($groupsList)) . "</p>\n";
 
-		if ($emajdb->getNumEmajVersion() >= 20100) {			// version >= 2.1.0
-			if ($anyGroupLogging) {
-				echo "<p>", sprintf($lang['emajalterallloggingroups'], htmlspecialchars($groupsList)), "</p>";
-				echo "<div class=\"form-container\">\n";
-				echo "\t<div class=\"form-label required\">{$lang['emajmark']}</div>\n";
-				echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"ALTER_%\" id=\"mark\"></div>\n";
-				echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></div>\n";
-				echo "</div>\n";
+				$columns = array(
+					'message' => array(
+						'title' => $lang['emajdiagnostics'],
+						'field' => field('chk_message'),
+					),
+				);
+	
+				$actions = array ();
+	
+				$misc->printTable($checks, $columns, $actions, 'checks', null, null, array('sorter' => true, 'filter' => false));
+
+				echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+				echo "<p><input type=\"hidden\" name=\"action\" value=\"alter_groups_ok\" />\n";
+				echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
+				echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
+				echo $misc->form;
+				echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+				echo "</form>\n";
+			}
+		}
+
+		if ($confOK) {
+
+			echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+	
+			if ($emajdb->getNumEmajVersion() >= 20100) {			// version >= 2.1.0
+				if ($anyGroupLogging) {
+					echo "<p>", sprintf($lang['emajalterallloggingroups'], htmlspecialchars($groupsList)), "</p>";
+					echo "<div class=\"form-container\">\n";
+					echo "\t<div class=\"form-label required\">{$lang['emajmark']}</div>\n";
+					echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"ALTER_%\" id=\"mark\"></div>\n";
+					echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></div>\n";
+					echo "</div>\n";
+				} else {
+					echo "<p>", sprintf($lang['emajconfirmaltergroups'], htmlspecialchars($groupsList)), "</p>\n";
+					echo "<input type=\"hidden\" name=\"mark\" value=\"\">";
+				}
 			} else {
 				echo "<p>", sprintf($lang['emajconfirmaltergroups'], htmlspecialchars($groupsList)), "</p>\n";
 				echo "<input type=\"hidden\" name=\"mark\" value=\"\">";
 			}
-		} else {
-			echo "<p>", sprintf($lang['emajconfirmaltergroups'], htmlspecialchars($groupsList)), "</p>\n";
-			echo "<input type=\"hidden\" name=\"mark\" value=\"\">";
+	
+			echo "<p><input type=\"hidden\" name=\"action\" value=\"alter_groups_ok\" />\n";
+			echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
+			echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
+			echo $misc->form;
+			echo "<input type=\"submit\" name=\"altergroups\" value=\"{$lang['emajApplyConfChanges']}\" />\n";
+			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+			echo "</form>\n";
 		}
-
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"alter_groups_ok\" />\n";
-		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
-		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
-		echo $misc->form;
-		echo "<input type=\"submit\" name=\"altergroups\" value=\"{$lang['emajApplyConfChanges']}\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-		echo "</form>\n";
 	}
 
 	/**

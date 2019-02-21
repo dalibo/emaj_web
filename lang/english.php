@@ -399,15 +399,17 @@
 
 	// Group creation
 	$lang['emajcreateagroup'] = 'E-Maj: Create a tables group';
-	$lang['emajcreateanemptygroup'] = "Create an empty tables group";
-	$lang['emajgroupconfok'] = "The current configuration of the tables group %s is correct.";
-	$lang['emajgroupconfwithdiag'] = "The checks performed on the tables group %s configuration show that:";
+	$lang['emajcreateanemptygroup'] = 'Create an empty tables group';
 	$lang['emajconfirmcreategroup'] = 'Are you sure you want to create the tables group "%s"?';
 	$lang['emajinvalidemptygroup'] = 'Error, the tables group "%s" is already created or configured!';
 	$lang['emajcreategroupok'] = 'The tables group "%s" has been created.';
 	$lang['emajcreategrouperr'] = 'Error during group "%s" creation!';
 
 	// Groups content checks
+	$lang['emajgroupconfok'] = 'The configuration of the tables group "%s" is correct.';
+	$lang['emajgroupconfwithdiag'] = 'The checks performed on the tables group "%s" configuration show that:';
+	$lang['emajgroupsconfok'] = 'The configuration of the tables groups "%s" is correct.';
+	$lang['emajgroupsconfwithdiag'] = 'The checks performed on the tables groups "%s" configuration show that:';
 	$lang['emajcheckconfgroups01'] = 'In the group "%s", the table or sequence "%s.%s" does not exist.';
 	$lang['emajcheckconfgroups02'] = 'In the group "%s", the table "%s.%s" is a partitionned table (only elementary partitions are supported by E-Maj).';
 	$lang['emajcheckconfgroups03'] = 'In the group "%s", the table or sequence "%s.%s" belongs to an E-Maj schema.';
@@ -435,14 +437,14 @@
 	// Group alter
 	$lang['emajaltergroups'] = 'E-Maj: Apply configuration changes';
 	$lang['emajalteraloggingroup'] = 'The group "%s" is in LOGGING state. You can specify a mark name.';
-	$lang['emajconfirmaltergroup'] = 'Are you sure you want to apply the configuraiton changes for the tables group "%s"?';
+	$lang['emajconfirmaltergroup'] = 'Are you sure you want to apply the configuration changes for the tables group "%s"?';
 	$lang['emajcantaltergroup'] = 'Applying the configuration changes for the group "%s" would generate actions that cannot be executed on LOGGING group. Stop the group before altering it.';
 	$lang['emajaltergroupok'] = 'The configuration changes for the tables group "%s" have been applied.';
 	$lang['emajaltergrouperr'] = 'Error during tables group "%s" configuration change!';
 
 	// Groups alter
 	$lang['emajalterallloggingroups'] = 'The groups "%s" are in LOGGING state. You can specify a mark name.';
-	$lang['emajconfirmaltergroups'] = 'Are you sure you want to apply the configuraiton changes for the tables groups "%s"?';
+	$lang['emajconfirmaltergroups'] = 'Are you sure you want to apply the configuration changes for the tables groups "%s"?';
 	$lang['emajaltergroupsok'] = 'The configuration changes for the tables groups "%s" have been applied.';
 	$lang['emajaltergroupserr'] = 'Error during tables groups "%s" configuration change!';
 

@@ -14,7 +14,7 @@
 	$appName = 'Emaj_web';
 
 	// Application version
-	$appVersion = '2.3';
+	$appVersion = '3.0';
 
 	// PostgreSQL and PHP minimum version
 	$postgresqlMinVer = '9.1';

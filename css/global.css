@@ -540,25 +540,8 @@ a.fk_delete {
 
 /* hidden filter row */
 
-.tablesorter-default .tablesorter-filter-row.hideme td {
-	/*** *********************************************** ***/
-	/*** change this padding to modify the thickness     ***/
-	/*** of the closed filter row (height = padding x 2) ***/
-	padding: 1px;
-	/*** *********************************************** ***/
-	margin: 0;
-	line-height: 0;
-	cursor: pointer;
-}
 .tablesorter-default .tablesorter-filter-row.hideme .tablesorter-filter {
-	height: 1px;
-	min-height: 0;
-	border: 0;
-	padding: 0;
-	margin: 0;
-	/* don't use visibility: hidden because it disables tabbing */
-	opacity: 0;
-	filter: alpha(opacity=0);
+  display: none;
 }
 
 /* filter widget */

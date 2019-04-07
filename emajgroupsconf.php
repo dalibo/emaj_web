@@ -137,15 +137,20 @@
 						'title' => $lang['emajpriority'],
 						'field' => field('grpdef_priority'),
 						'params'=> array('align' => 'center'),
-					),
-					'logschemasuffix' => array(
-						'title' => $lang['emajlogschemasuffix'],
-						'field' => field('grpdef_log_schema_suffix'),
-					),
-					'emajnamesprefix' => array(
-						'title' => $lang['emajnamesprefix'],
-						'field' => field('grpdef_emaj_names_prefix'),
-					),
+					));
+				if ($emajdb->getNumEmajVersion() < 31000) {			// version < 3.1.0
+					$columns = array_merge($columns, array(
+						'logschemasuffix' => array(
+							'title' => $lang['emajlogschemasuffix'],
+							'field' => field('grpdef_log_schema_suffix'),
+						),
+						'emajnamesprefix' => array(
+							'title' => $lang['emajnamesprefix'],
+							'field' => field('grpdef_emaj_names_prefix'),
+						),
+					));
+				}
+				$columns = array_merge($columns, array(
 					'logdattsp' => array(
 						'title' => $lang['emajlogdattsp'],
 						'field' => field('grpdef_log_dat_tsp'),
@@ -166,7 +171,7 @@
 						'title' => $lang['strcomment'],
 						'field' => field('relcomment'),
 					),
-				);
+				));
 
 				$urlvars = $misc->getRequestVars();
 
@@ -262,7 +267,9 @@
 		$knownGroups = $emajdb->getKnownGroups();
 
 		// Get log schema suffix already known in emaj_group_def table
-		$knownSuffix = $emajdb->getKnownSuffix();
+		if ($emajdb->getNumEmajVersion() < 31000) {			// version < 3.1.0
+			$knownSuffix = $emajdb->getKnownSuffix();
+		}
 
 		// Get tablespaces the current user can see
 		$knownTsp = $emajdb->getKnownTsp();
@@ -328,7 +335,7 @@
 		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajpriorityhelp']}\"/></div>\n";
 
 		// log schema name suffix
-		if ($nbTbl >= 1) {
+		if ($emajdb->getNumEmajVersion() < 31000 && $nbTbl >= 1) {			// version < 3.1.0
 			echo "\t<div class=\"form-label\">{$lang['emajenterlogschema']}</div>\n";
 			echo "\t<div class=\"form-input\">";
 			echo "<input type=\"text\" name=\"suffix\" list=\"suffixList\" value=\"\"/ autocomplete=\"off\">";
@@ -345,7 +352,7 @@
 		}
 
 		// objects name prefix (only for tables)
-		if ($nbTbl == 1) {
+		if ($emajdb->getNumEmajVersion() < 31000 && $nbTbl == 1) {			// version < 3.1.0
 			// the names prefix is accessible only for a single table assignment
 			echo "\t<div class=\"form-label\">{$lang['emajenternameprefix']}</div>\n";
 			echo "\t<div class=\"form-input\">";
@@ -454,7 +461,9 @@
 		$knownGroups = $emajdb->getKnownGroups();
 
 		// Get log schema suffix already known in emaj_group_def table
-		$knownSuffix = $emajdb->getKnownSuffix();
+		if ($emajdb->getNumEmajVersion() < 31000) {			// version < 3.1.0
+			$knownSuffix = $emajdb->getKnownSuffix();
+		}
 
 		// Get tablespaces the current user can see
 		$knownTsp = $emajdb->getKnownTsp();
@@ -497,7 +506,7 @@
 		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajpriorityhelp']}\"/></div>\n";
 
 		// log schema name suffix (only for tables)
-		if ($_REQUEST['type'] == 'r+') {
+		if ($emajdb->getNumEmajVersion() < 31000 && $_REQUEST['type'] == 'r+') {			// version < 3.1.0
 			echo "\t<div class=\"form-label\">{$lang['emajenterlogschema']}</div>\n";
 			echo "\t<div class=\"form-input\">";
 			echo "<input type=\"text\" name=\"suffix\" list=\"suffixList\" value=\"", htmlspecialchars($_REQUEST['logschemasuffix']), "\"/ autocomplete=\"off\">";
@@ -510,11 +519,11 @@
 			}
 			echo "\t</datalist>\n";
 		} else {
-			echo "<p><input type=\"hidden\" name=\"suffix\" value=\"\" />\n";
+			echo "<input type=\"hidden\" name=\"suffix\" value=\"\" />\n";
 		}
 
 		// objects name prefix (only for tables)
-		if ($_REQUEST['type'] == 'r+') {
+		if ($emajdb->getNumEmajVersion() < 31000 && $_REQUEST['type'] == 'r+') {			// version < 3.1.0
 			// the names prefix is accessible only for a table
 			echo "\t<div class=\"form-label\">{$lang['emajenternameprefix']}</div>\n";
 			echo "\t<div class=\"form-input\">";
@@ -522,7 +531,7 @@
 			echo "</div>\n";
 			echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajnameprefixhelp']}\"/></div>\n";
 		} else {
-			echo "<p><input type=\"hidden\" name=\"nameprefix\" value=\"\" />\n";
+			echo "<input type=\"hidden\" name=\"nameprefix\" value=\"\" />\n";
 		}
 
 		// log tablespaces (only for tables)
@@ -546,8 +555,8 @@
 			}
 			echo "\t</datalist>\n";
 		} else {
-			echo "<p><input type=\"hidden\" name=\"logdattsp\" value=\"\" />\n";
-			echo "<p><input type=\"hidden\" name=\"logidxtsp\" value=\"\" />\n";
+			echo "<input type=\"hidden\" name=\"logdattsp\" value=\"\" />\n";
+			echo "<input type=\"hidden\" name=\"logidxtsp\" value=\"\" />\n";
 		}
 		echo"</div>\n";
 

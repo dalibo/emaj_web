@@ -748,23 +748,44 @@ class EmajDb {
 
 		$data->clean($schema);
 
-		$sql = "SELECT 1, nspname, c.relname,
-					c.relkind || case when relkind = 'S' or (relkind = 'r' and c.relpersistence = 'p' and not c.relhasoids) then '+' else '-' end as relkind,
-					pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
-					pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment, spcname AS tablespace,
-					grpdef_group, grpdef_priority, grpdef_log_schema_suffix, grpdef_emaj_names_prefix, grpdef_log_dat_tsp, grpdef_log_idx_tsp 			   FROM pg_catalog.pg_class c
-						LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
-						LEFT JOIN emaj.emaj_group_def ON grpdef_schema = nspname AND grpdef_tblseq = c.relname
-						LEFT JOIN pg_catalog.pg_tablespace pt ON pt.oid = c.reltablespace
-					WHERE c.relkind IN ('r','S','p') AND nspname='{$schema}'
-				UNION
-				SELECT 2, grpdef_schema AS nspname, grpdef_tblseq AS relname, '!' AS relkind, NULL, NULL, NULL, 
-					grpdef_group , grpdef_priority, grpdef_log_schema_suffix, grpdef_emaj_names_prefix, grpdef_log_dat_tsp, grpdef_log_idx_tsp 
-					FROM emaj.emaj_group_def
-					WHERE grpdef_schema = '{$schema}' AND grpdef_tblseq NOT IN 
-						(SELECT relname FROM pg_catalog.pg_class, pg_catalog.pg_namespace
-							WHERE relnamespace = pg_namespace.oid AND nspname = '{$schema}' AND relkind IN ('r','S'))
-				ORDER BY 1, relname";
+		if ($this->getNumEmajVersion() >= 31000){			// version >= 3.1.0
+			$sql = "SELECT 1, nspname, c.relname,
+						c.relkind || case when relkind = 'S' or (relkind = 'r' and c.relpersistence = 'p' and not c.relhasoids) then '+' else '-' end as relkind,
+						pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
+						pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment, spcname AS tablespace,
+						grpdef_group, grpdef_priority, grpdef_log_dat_tsp, grpdef_log_idx_tsp
+						FROM pg_catalog.pg_class c
+							LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+							LEFT JOIN emaj.emaj_group_def ON grpdef_schema = nspname AND grpdef_tblseq = c.relname
+							LEFT JOIN pg_catalog.pg_tablespace pt ON pt.oid = c.reltablespace
+						WHERE c.relkind IN ('r','S','p') AND nspname='{$schema}'
+					UNION
+					SELECT 2, grpdef_schema AS nspname, grpdef_tblseq AS relname, '!' AS relkind, NULL, NULL, NULL, 
+						grpdef_group , grpdef_priority, grpdef_log_dat_tsp, grpdef_log_idx_tsp 
+						FROM emaj.emaj_group_def
+						WHERE grpdef_schema = '{$schema}' AND grpdef_tblseq NOT IN 
+							(SELECT relname FROM pg_catalog.pg_class, pg_catalog.pg_namespace
+								WHERE relnamespace = pg_namespace.oid AND nspname = '{$schema}' AND relkind IN ('r','S'))
+					ORDER BY 1, relname";
+		} else {
+			$sql = "SELECT 1, nspname, c.relname,
+						c.relkind || case when relkind = 'S' or (relkind = 'r' and c.relpersistence = 'p' and not c.relhasoids) then '+' else '-' end as relkind,
+						pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
+						pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment, spcname AS tablespace,
+						grpdef_group, grpdef_priority, grpdef_log_schema_suffix, grpdef_emaj_names_prefix, grpdef_log_dat_tsp, grpdef_log_idx_tsp 			   FROM pg_catalog.pg_class c
+							LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+							LEFT JOIN emaj.emaj_group_def ON grpdef_schema = nspname AND grpdef_tblseq = c.relname
+							LEFT JOIN pg_catalog.pg_tablespace pt ON pt.oid = c.reltablespace
+						WHERE c.relkind IN ('r','S','p') AND nspname='{$schema}'
+					UNION
+					SELECT 2, grpdef_schema AS nspname, grpdef_tblseq AS relname, '!' AS relkind, NULL, NULL, NULL, 
+						grpdef_group , grpdef_priority, grpdef_log_schema_suffix, grpdef_emaj_names_prefix, grpdef_log_dat_tsp, grpdef_log_idx_tsp 
+						FROM emaj.emaj_group_def
+						WHERE grpdef_schema = '{$schema}' AND grpdef_tblseq NOT IN 
+							(SELECT relname FROM pg_catalog.pg_class, pg_catalog.pg_namespace
+								WHERE relnamespace = pg_namespace.oid AND nspname = '{$schema}' AND relkind IN ('r','S'))
+					ORDER BY 1, relname";
+		}
 
 		return $data->selectSet($sql);
 	}
@@ -837,21 +858,26 @@ class EmajDb {
 		}
 
 		// Insert the new row into the emaj_group_def table
-		$sql = "INSERT INTO emaj.emaj_group_def (grpdef_schema, grpdef_tblseq, grpdef_group, grpdef_priority, 
-						grpdef_log_schema_suffix, grpdef_emaj_names_prefix, grpdef_log_dat_tsp, grpdef_log_idx_tsp) 
+		$sql = "INSERT INTO emaj.emaj_group_def (grpdef_schema, grpdef_tblseq, grpdef_group, grpdef_priority,";
+		if ($this->getNumEmajVersion() < 31000){			// version < 3.1.0
+			$sql .= "grpdef_log_schema_suffix, grpdef_emaj_names_prefix,";
+		}
+		$sql .= "grpdef_log_dat_tsp, grpdef_log_idx_tsp) 
 					VALUES ('{$schema}', '{$tblseq}', '{$group}' ";
 		if ($priority == '')
-			$sql .= ", NULL";
+			", NULL";
 		else
 			$sql .= ", {$priority}";
-		if ($logSchemaSuffix == '' || $relkind == 'S')
-			$sql .= ", NULL";
-		else
-			$sql .= ", '{$logSchemaSuffix}'";
-		if ($emajNamesPrefix == '' || $relkind == 'S')
-			$sql .= ", NULL";
-		else
-			$sql .= ", '{$emajNamesPrefix}'";
+		if ($this->getNumEmajVersion() < 31000){			// version < 3.1.0
+			if ($logSchemaSuffix == '' || $relkind == 'S')
+				$sql .= ", NULL";
+			else
+				$sql .= ", '{$logSchemaSuffix}'";
+			if ($emajNamesPrefix == '' || $relkind == 'S')
+				$sql .= ", NULL";
+			else
+				$sql .= ", '{$emajNamesPrefix}'";
+		}
 		if ($logDatTsp == '' || $relkind == 'S')
 			$sql .= ", NULL";
 		else
@@ -899,14 +925,16 @@ class EmajDb {
 			$sql .= ", grpdef_priority = NULL";
 		else
 			$sql .= ", grpdef_priority = {$priority}";
-		if ($logSchemaSuffix == '' || $relkind == 'S')
-			$sql .= ", grpdef_log_schema_suffix = NULL";
-		else
-			$sql .= ", grpdef_log_schema_suffix = '{$logSchemaSuffix}'";
-		if ($emajNamesPrefix == '' || $relkind == 'S')
-			$sql .= ", grpdef_emaj_names_prefix = NULL";
-		else
-			$sql .= ", grpdef_emaj_names_prefix = '{$emajNamesPrefix}'";
+		if ($this->getNumEmajVersion() < 31000){			// version < 3.1.0
+			if ($logSchemaSuffix == '' || $relkind == 'S')
+				$sql .= ", grpdef_log_schema_suffix = NULL";
+			else
+				$sql .= ", grpdef_log_schema_suffix = '{$logSchemaSuffix}'";
+			if ($emajNamesPrefix == '' || $relkind == 'S')
+				$sql .= ", grpdef_emaj_names_prefix = NULL";
+			else
+				$sql .= ", grpdef_emaj_names_prefix = '{$emajNamesPrefix}'";
+		}
 		if ($logDatTsp == '' || $relkind == 'S')
 			$sql .= ", grpdef_log_dat_tsp = NULL";
 		else

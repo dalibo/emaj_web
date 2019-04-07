@@ -264,6 +264,7 @@
 	$lang['emajassign'] = 'Affecter';
 	$lang['emajremove'] = 'Retirer';
 	$lang['emajlogschemasuffix'] = 'Suffixe schéma log';
+	$lang['emajnamesprefix'] = 'Préfixe nom objets';
 	$lang['emajlogdattsp'] = 'Tablespace log';
 	$lang['emajlogidxtsp'] = 'Tablespace index log';
 	$lang['emajspecifytblseqtoassign'] = 'Spécifiez au moins une table ou séquence à affecter';
@@ -391,11 +392,10 @@
 	$lang['emajstatrows'] = 'Nb mises à jour';
 
 	// Group's content
-	$lang['emajgroupcontent'] = 'Contenu du groupe de tables "%s"';
+	$lang['emajgroupcontent'] = 'Contenu actuel du groupe de tables "%s"';
 	$lang['emajemptygroup'] = 'Le groupe de tables "%s" est actuellement vide.';
 	$lang['emajpriority'] = 'Priorité';
-	$lang['emajlogschema'] = 'Schéma de log';
-	$lang['emajnamesprefix'] = 'Préfixe nom objets';
+	$lang['emajlogtable'] = 'Table de log';
 
 	// Group creation
 	$lang['emajcreateagroup'] = 'E-Maj : Créer un groupe de tables';

@@ -1360,10 +1360,6 @@
 						'field' => field('rel_priority'),
 						'params'=> array('align' => 'center'),
 					),
-					'log_schema' => array(
-						'title' => $lang['emajlogschema'],
-						'field' => field('rel_log_schema'),
-					),
 					'log_dat_tsp' => array(
 						'title' => $lang['emajlogdattsp'],
 						'field' => field('rel_log_dat_tsp'),
@@ -1372,9 +1368,9 @@
 						'title' => $lang['emajlogidxtsp'],
 						'field' => field('rel_log_idx_tsp'),
 					),
-					'names_prefix' => array(
-						'title' => $lang['emajnamesprefix'],
-						'field' => field('emaj_names_prefix'),
+					'log_table' => array(
+						'title' => $lang['emajlogtable'],
+						'field' => field('full_log_table'),
 					),
 					'bytelogsize' => array(
 						'title' => $lang['emajlogsize'],

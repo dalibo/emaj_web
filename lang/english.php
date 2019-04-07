@@ -264,6 +264,7 @@
 	$lang['emajassign'] = 'Assign';
 	$lang['emajremove'] = 'Remove';
 	$lang['emajlogschemasuffix'] = 'Log schema suffix';
+	$lang['emajnamesprefix'] = 'Objects name prefix';
 	$lang['emajlogdattsp'] = 'Log tablespace';
 	$lang['emajlogidxtsp'] = 'Log index tablespace';
 	$lang['emajspecifytblseqtoassign'] = 'Specify at least one table or sequence to assign';
@@ -391,11 +392,10 @@
 	$lang['emajstatrows'] = '# row changes';
 
 	// Group's content
-	$lang['emajgroupcontent'] = 'Content of the tables group "%s"';
+	$lang['emajgroupcontent'] = 'Current content of the tables group "%s"';
 	$lang['emajemptygroup'] = 'The tables group "%s" is currently empty.';
 	$lang['emajpriority'] = 'Priority';
-	$lang['emajlogschema'] = 'Log schema';
-	$lang['emajnamesprefix'] = 'Objects name prefix';
+	$lang['emajlogtable'] = 'Log table';
 
 	// Group creation
 	$lang['emajcreateagroup'] = 'E-Maj: Create a tables group';

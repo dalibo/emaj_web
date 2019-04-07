@@ -692,8 +692,8 @@ class EmajDb {
 		$data->clean($group);
 
 		$sql = "SELECT rel_schema, rel_tblseq, rel_kind || '+' AS relkind, rel_priority,
-					rel_log_schema, rel_log_dat_tsp, rel_log_idx_tsp,
-					substring(rel_log_function FROM '(.*)\_log\_fnct') AS emaj_names_prefix,
+                    rel_log_dat_tsp, rel_log_idx_tsp,
+					rel_log_schema || '.' || rel_log_table as full_log_table,
 					CASE WHEN rel_kind = 'r' THEN 
 						pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table))
 					END AS byte_log_size,

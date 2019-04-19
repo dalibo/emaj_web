@@ -2338,5 +2338,46 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 
 		return $group;
 	}
+
+	/**
+	 * Gets the list of existing triggers on a table
+	 */
+	function getTriggers($schema, $table) {
+		global $data;
+
+		$data->clean($schema);
+		$data->clean($table);
+
+		$sql = "SELECT row_number(*) OVER (ORDER BY tgorder, tgname) as tgrank, * FROM (
+					SELECT
+						substring(pg_catalog.pg_get_triggerdef(t.oid) FROM 'ON (.*?) FOR ') as tgtable,
+						t.tgname,
+						substring(pg_catalog.pg_get_triggerdef(t.oid) FROM 'FOR EACH (\S+) EXECUTE') as tglevel,
+						substring(pg_catalog.pg_get_triggerdef(t.oid) FROM 'CREATE TRIGGER \S+ (.*?) ON ') as tgevent,
+                        quote_ident(pn.nspname) || '.' || quote_ident(proname) as tgfnct,
+						CASE WHEN t.tgenabled = 'D' THEN 'Disabled' 
+							 WHEN t.tgenabled = 'O' THEN 'Enabled' 
+							 WHEN t.tgenabled = 'R' THEN 'Enabled on Replica'
+							 WHEN t.tgenabled = 'A' THEN 'Enabled Always'
+								END AS tgstate,
+						CASE WHEN tgname IN ('emaj_trunc_trg', 'emaj_log_trg') THEN true ELSE false END as tgisemaj,
+						CASE WHEN pg_catalog.pg_get_triggerdef(t.oid) ~ ' BEFORE .* EACH STATEMENT ' THEN 1
+							WHEN pg_catalog.pg_get_triggerdef(t.oid) ~ ' BEFORE .* EACH ROW ' THEN 2
+							WHEN pg_catalog.pg_get_triggerdef(t.oid) ~ ' AFTER .* EACH ROW ' THEN 3
+							WHEN pg_catalog.pg_get_triggerdef(t.oid) ~ ' AFTER .* EACH STATEMENT ' THEN 4 END as tgorder
+					FROM pg_catalog.pg_trigger t, pg_catalog.pg_class, pg_catalog.pg_namespace rn,
+						 pg_catalog.pg_proc, pg_catalog.pg_namespace pn
+					WHERE tgrelid = pg_class.oid AND relnamespace = rn.oid
+					  AND tgfoid = pg_proc.oid AND pronamespace = pn.oid
+					  AND relname='{$table}' AND rn.nspname='{$schema}'
+					  AND (tgconstraint = 0 OR NOT EXISTS
+							(SELECT 1 FROM pg_catalog.pg_depend d
+								JOIN pg_catalog.pg_constraint c	ON (d.refclassid = c.tableoid AND d.refobjid = c.oid)
+							WHERE d.classid = t.tableoid AND d.objid = t.oid AND d.deptype = 'i' AND c.contype = 'f'))
+					) as t
+				ORDER BY tgorder, tgname";
+
+		return $data->selectSet($sql);
+	}
 }
 ?>

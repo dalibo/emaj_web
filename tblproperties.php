@@ -9,6 +9,12 @@
 
 	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 
+	// Callback function to dynamicaly translate a boolean column into the user's language
+	function renderBoolean($val) {
+		global $lang;
+		return $val == 't' ? $lang['stryes'] : $lang['strno'];
+	}
+
 	/**
 	 * Show default list of columns in the table
 	 */
@@ -29,6 +35,37 @@
 			return $actions;
 		}
 
+		function cstrRender($s, $p) {
+			global $misc, $data;
+
+			$str ='';
+			foreach ($p['keys'] as $k => $c) {
+
+				if (is_null($p['keys'][$k]['consrc'])) {
+					$atts = $data->getAttributeNames($_REQUEST['table'], explode(' ', $p['keys'][$k]['indkey']));
+					$c['consrc'] = ($c['contype'] == 'u' ? "UNIQUE (" : "PRIMARY KEY (") . join(',', $atts) . ')';
+				}
+
+				if ($c['p_field'] == $s)
+					switch ($c['contype']) {
+						case 'p':
+							$str .= '<img src="'. $misc->icon('PrimaryKey') .'" alt="[pk]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" />';
+						break;
+						case 'f':
+							$str .= '<a href="tblproperties.php?'. $misc->href ."&amp;table=". urlencode($c['f_table']) ."&amp;schema=". urlencode($c['f_schema']) ."\"><img src=\"".
+								$misc->icon('ForeignKey') .'" alt="[fk]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" /></a>';
+						break;
+						case 'u':
+							$str .= '<img src="'. $misc->icon('UniqueConstraint') .'" alt="[uniq]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" />';
+						break;
+						case 'c':
+							$str .= '<img src="'. $misc->icon('CheckConstraint') .'" alt="[check]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" /></a>';
+					}
+			}
+
+			return $str;
+		}
+
 		$misc->printHeader('table', 'table', 'properties');
 		$misc->printMsg($msg);
 		$misc->printTitle(sprintf($lang['strtblproperties'], $_REQUEST['schema'], $_REQUEST['table']));
@@ -39,6 +76,8 @@
 		$attrs = $data->getTableAttributes($_REQUEST['table']);
 		// Get constraints keys
 		$ck = $data->getConstraintsWithFields($_REQUEST['table']);
+		// Get triggers
+		$triggers = $emajdb->getTriggers($_REQUEST['schema'], $_REQUEST['table']);
 
 		// Show comment, if any
 		if ($tdata->fields['relcomment'] !== null)
@@ -53,6 +92,7 @@
 				echo "<p>{$lang['emajtblnogroupownership']}</p>\n";
 		}
 
+		// Display the table structure
 		$columns = array(
 			'column' => array(
 				'title' => $lang['strcolumn'],
@@ -88,38 +128,48 @@
 			),
 		);
 
-		function cstrRender($s, $p) {
-			global $misc, $data;
+		$misc->printTable($attrs, $columns, $actions, 'tblproperties-columns', null, 'attPre');
 
-			$str ='';
-			foreach ($p['keys'] as $k => $c) {
+		// Display the table triggers
 
-				if (is_null($p['keys'][$k]['consrc'])) {
-					$atts = $data->getAttributeNames($_REQUEST['table'], explode(' ', $p['keys'][$k]['indkey']));
-					$c['consrc'] = ($c['contype'] == 'u' ? "UNIQUE (" : "PRIMARY KEY (") . join(',', $atts) . ')';
-				}
+		$misc->printTitle($lang['strtriggers']);
 
-				if ($c['p_field'] == $s)
-					switch ($c['contype']) {
-						case 'p':
-							$str .= '<img src="'. $misc->icon('PrimaryKey') .'" alt="[pk]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" />';
-						break;
-						case 'f':
-							$str .= '<a href="tblproperties.php?'. $misc->href ."&amp;table=". urlencode($c['f_table']) ."&amp;schema=". urlencode($c['f_schema']) ."\"><img src=\"".
-								$misc->icon('ForeignKey') .'" alt="[fk]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" /></a>';
-						break;
-						case 'u':
-							$str .= '<img src="'. $misc->icon('UniqueConstraint') .'" alt="[uniq]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" />';
-						break;
-						case 'c':
-							$str .= '<img src="'. $misc->icon('CheckConstraint') .'" alt="[check]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" /></a>';
-					}
-			}
+		$columns = array(
+			'tgrank' => array(
+				'title' => $lang['emajexecorder'],
+				'field' => field('tgrank'),
+				'params'=> array('align' => 'center'),
+			),
+			'tgname' => array(
+				'title' => $lang['strtrigger'],
+				'field' => field('tgname'),
+			),
+			'tglevel' => array(
+				'title' => $lang['strlevel'],
+				'field' => field('tglevel'),
+				'params'=> array('align' => 'center'),
+			),
+			'tgevent' => array(
+				'title' => $lang['emajtriggeringevent'],
+				'field' => field('tgevent'),
+			),
+			'tgfnct' => array(
+				'title' => $lang['emajcalledfunction'],
+				'field' => field('tgfnct'),
+			),
+			'tgenabled' => array(
+				'title' => $lang['emajstate'],
+				'field' => field('tgstate'),
+			),
+			'tgisemaj' => array(
+				'title' => $lang['emajisemaj'],
+				'field' => field('tgisemaj'),
+				'type'	=> 'callback',
+				'params'=> array('function' => 'renderBoolean', 'align' => 'center')
+			),
+		);
 
-			return $str;
-		}
-
-		$misc->printTable($attrs, $columns, $actions, 'tblproperties-tblproperties', null, 'attPre');
+		$misc->printTable($triggers, $columns, $actions, 'tblproperties-triggers', $lang['strnotrigger'], null, array('sorter' => true, 'filter' => true));
 	}
 
 	function doTree() {

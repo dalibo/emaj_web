@@ -84,6 +84,7 @@
 	$lang['strnone'] = 'None';
 	$lang['strinvert'] = 'Invert';
 	$lang['emajnotassigned'] = 'Not assigned';
+	$lang['strlevel'] = 'Level';
 
 	// User-supplied SQL editing
 	$lang['strsqledit'] = 'SQL statement editing';
@@ -186,6 +187,15 @@
 
 	// Tablespaces
 	$lang['strtablespace'] = 'Tablespace';
+
+	// Triggers
+	$lang['strtrigger'] = 'Trigger';
+	$lang['strtriggers'] = 'Triggers';
+	$lang['strnotrigger'] = 'No trigger found.';
+	$lang['emajexecorder'] = 'Exec. order';
+	$lang['emajtriggeringevent'] = 'Triggering event';
+	$lang['emajcalledfunction'] = 'Called function';
+	$lang['emajisemaj'] = 'E-Maj ?';
 
 	// Miscellaneous
 	$lang['strtopbar'] = 'Connection: %s:%s - role "%s"';

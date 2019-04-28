@@ -132,8 +132,9 @@
 	$lang['strestimatedrowcount'] = 'Estimated row count';
 	$lang['strtblproperties'] = 'Table "%s.%s" properties';
 	$lang['strtblcontent'] = 'Table "%s.%s" content';
-	$lang['emajtblgroupownership'] = 'E-Maj: the table currently belongs to the tables group "%s".';
-	$lang['emajtblnogroupownership'] = 'E-Maj: the table does not currently belong to any tables group.';
+	$lang['emajemajlogtable'] = 'The table is an E-Maj log table.';
+	$lang['emajinternaltable'] = 'The table is an internal E-Maj table.';
+	$lang['emajtblnogroupownership'] = 'The table does not currently belong to any tables group.';
 
 	// Users
 	$lang['strusername'] = 'Username';
@@ -161,8 +162,6 @@
 	$lang['strsequenceslist'] = 'Schema "%s" sequences';
 	$lang['strnosequences'] = 'No sequences found.';
 	$lang['strseqproperties'] = 'Sequence "%s.%s" properties';
-	$lang['emajseqgroupownership'] = 'E-Maj: the sequence currently belongs to the tables group "%s".';
-	$lang['emajseqnogroupownership'] = 'E-Maj: the sequence does not currently belong to any tables group.';
 	$lang['strlastvalue'] = 'Last value';
 	$lang['strincrementby'] = 'Increment by';	
 	$lang['strstartvalue'] = 'Start value';
@@ -172,6 +171,9 @@
 	$lang['strlogcount'] = 'Log count';
 	$lang['strcancycle'] = 'Can cycle?';
 	$lang['striscalled'] = 'Will increment last value before returning next value (is_called)?';
+	$lang['emajemajlogsequence'] = 'The sequence is an E-Maj log sequence.';
+	$lang['emajinternalsequence'] = 'The sequence is an internal E-Maj sequence.';
+	$lang['emajseqnogroupownership'] = 'The sequence does not currently belong to any tables group.';
 	
 	// Constraints
 	$lang['strconstraints'] = 'Constraints';
@@ -238,6 +240,7 @@
 	$lang['emajestimates'] = 'Estimates';
 	$lang['emajfrom'] = 'From';
 	$lang['emajto'] = 'To';
+	$lang['emajproperties'] = 'E-Maj properties';
 
 	// E-Maj html titles and tabs
 	$lang['emajgroupsmanagement'] = 'E-Maj groups management';

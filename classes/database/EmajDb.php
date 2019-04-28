@@ -2316,27 +2316,51 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 	}
 
 	/**
-	 * Gets the tables group that currently owns a given table or sequence. Returns '' if it is not currently assigned to a group.
+	 * Gets the 'E-Maj type' of a table or sequence
+	 * returns L when the table or sequence is a log object, or E if it is an internal E-Maj object, or ''
 	 */
-	function getTableGroupTblSeq($schema, $tblseq) {
+	function getEmajTypeTblSeq($schema, $tblseq) {
 		global $data;
 
 		$data->clean($schema);
 		$data->clean($tblseq);
 
-		$sql = "SELECT rel_group FROM emaj.emaj_relation WHERE rel_schema = '{$schema}' AND rel_tblseq = '{$tblseq}'";
+		$sql = "SELECT CASE WHEN EXISTS (
+									SELECT 1 FROM emaj.emaj_relation
+										WHERE rel_log_schema = '{$schema}' AND (rel_log_table = '{$tblseq}' OR rel_log_sequence = '{$tblseq}')
+									) THEN 'L'
+							WHEN '{$schema}' = 'emaj' THEN 'E'
+							ELSE '' END AS emaj_type";
+
+		return $data->selectField($sql,'emaj_type');
+	}
+
+	/**
+	 * Gets the tables groups that owned or currently owns a given table or sequence.
+	 */
+	function getTableGroupsTblSeq($schema, $tblseq) {
+		global $data;
+
+		$data->clean($schema);
+		$data->clean($tblseq);
 
 		if ($this->getNumEmajVersion() >= 20200) {
-			$sql .= " AND upper_inf(rel_time_range)";
+			// The rel_group is suffixed with a ###LINK### when a link to the group definition has to be added at page display
+			$sql = "SELECT rel_group || CASE WHEN upper_inf(rel_time_range) THEN '###LINK###' ELSE '' END AS rel_group,
+							date_trunc('SECOND', start.time_tx_timestamp)::TEXT AS start_datetime,
+							coalesce(date_trunc('SECOND',stop.time_tx_timestamp)::TEXT,'') AS stop_datetime
+					FROM emaj.emaj_relation
+						LEFT OUTER JOIN emaj.emaj_time_stamp start ON (lower(rel_time_range) = start.time_id)
+						LEFT OUTER JOIN emaj.emaj_time_stamp stop ON (upper(rel_time_range) = stop.time_id)
+					WHERE rel_schema = '{$schema}' AND rel_tblseq = '{$tblseq}'
+					ORDER BY rel_time_range";
+		} else {
+			$sql = "SELECT rel_group || '###LINK###' AS rel_group,
+					FROM emaj.emaj_relation
+					WHERE rel_schema = '{$schema}' AND rel_tblseq = '{$tblseq}'";
 		}
 
-		$rs = $data->selectSet($sql);
-		if ($rs->recordCount() == 0)
-			$group = '';
-		else
-			$group = $rs->fields['rel_group'];
-
-		return $group;
+		return $data->selectSet($sql);
 	}
 
 	/**

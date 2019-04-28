@@ -132,8 +132,9 @@
 	$lang['strestimatedrowcount'] = 'Nombre estimé de lignes';
 	$lang['strtblproperties'] = 'Propriétés de la table "%s.%s"';
 	$lang['strtblcontent'] = 'Contenu de la table "%s.%s"';
-	$lang['emajtblgroupownership'] = 'E-Maj : la table fait actuellement partie du groupe de tables "%s".';
-	$lang['emajtblnogroupownership'] = 'E-Maj : la table ne fait actuellement partie d\'aucun groupe de tables.';
+	$lang['emajemajlogtable'] = 'La table est une table de log E-Maj.';
+	$lang['emajinternaltable'] = 'La table est une table interne E-Maj.';
+	$lang['emajtblnogroupownership'] = 'La table ne fait actuellement partie d\'aucun groupe de tables.';
 
 	// Users
 	$lang['strusername'] = 'Utilisateur';
@@ -161,8 +162,6 @@
 	$lang['strsequenceslist'] = 'Séquences du schéma "%s"';
 	$lang['strnosequences'] = 'Aucune séquence trouvée.';
 	$lang['strseqproperties'] = 'Propriétés de la séquence "%s.%s"';
-	$lang['emajseqgroupownership'] = 'E-Maj : la séquence fait actuellement partie du groupe de tables "%s".';
-	$lang['emajseqnogroupownership'] = 'E-Maj : la séquence ne fait actuellement partie d\'aucun groupe de tables.';
 	$lang['strlastvalue'] = 'Dernière valeur';
 	$lang['strincrementby'] = 'Incrémenter par ';
 	$lang['strstartvalue'] = 'Valeur de départ';
@@ -172,6 +171,9 @@
 	$lang['strlogcount'] = 'Comptage';
 	$lang['strcancycle'] = 'Peut boucler?';
 	$lang['striscalled'] = 'Incrémentera la dernière valeur avant de retourner la prochaine valeur (is_called) ?';
+	$lang['emajemajlogsequence'] = 'La séquence est une séquence de log E-Maj.';
+	$lang['emajinternalsequence'] = 'La séquence est une séquence interne E-Maj.';
+	$lang['emajseqnogroupownership'] = 'La séquence ne fait actuellement partie d\'aucun groupe de tables.';
 
 	// Constraints
 	$lang['strconstraints'] = 'Contraintes';
@@ -238,6 +240,8 @@
 	$lang['emajestimates'] = 'Estimations';
 	$lang['emajfrom'] = 'De';
 	$lang['emajto'] = 'A';
+	$lang['emajproperties'] = 'Propriétés E-Maj';
+
 
 	// E-Maj html titles and tabs
 	$lang['emajgroupsmanagement'] = 'Gestion des groupes E-Maj';

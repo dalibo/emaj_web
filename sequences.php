@@ -10,6 +10,18 @@
 	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 	if (!isset($msg)) $msg = '';
 
+	// Callback function to dynamicaly add a link to the tables group's description when the group name is suffixed by "###LINK###"
+	function renderlinktogroup($val) {
+		global $misc;
+
+		if (preg_match("/(.*)###LINK###$/", $val, $matches)) {
+			$val = $matches[1];
+			return "<a href=\"emajgroups.php?action=show_group&amp;" . $misc->href . "&amp;group=". urlencode($val) . "\">" . $val . "</a>";
+		} else {
+			return $val;
+		}
+	}
+
 	/**
 	 * Display list of all sequences in the database/schema
 	 */
@@ -52,7 +64,6 @@
 		global $data, $misc, $lang, $emajdb;
 
 		$misc->printHeader('sequence', 'sequence', 'properties');
-//		$misc->printTitle($lang['strproperties'], 'pg.sequence');
 		$misc->printTitle(sprintf($lang['strseqproperties'], $_REQUEST['schema'], $_REQUEST['sequence']));
 		$misc->printMsg($msg);
 
@@ -66,15 +77,6 @@
 			// Show comment if any
 			if ($sequence->fields['seqcomment'] !== null)
 				echo "<p>{$lang['strcommentlabel']}<span class=\"comment\">{$misc->printVal($sequence->fields['seqcomment'])}</span></p>\n";
-
-			// Show tables group ownership, if any
-			if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
-				$group = $emajdb->getTableGroupTblSeq($_REQUEST['schema'], $_REQUEST['sequence']);
-				if ($group != '')
-					echo "<p>" . sprintf($lang['emajseqgroupownership'],$group) . "</p>\n";
-				else
-					echo "<p>{$lang['emajseqnogroupownership']}</p>\n";
-			}
 
 			echo "<table border=\"0\">";
 			echo "<tr><th class=\"data\">{$lang['strname']}</th>";
@@ -104,6 +106,41 @@
 			echo "<td class=\"data1\">", ($sequence->fields['is_called'] ? $lang['stryes'] : $lang['strno']), "</td>";
 			echo "</tr>";
 			echo "</table>";
+
+			// Display the E-Maj properties, if any
+			if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
+
+				$misc->printTitle($lang['emajproperties']);
+
+				$type = $emajdb->getEmajTypeTblSeq($_REQUEST['schema'], $_REQUEST['sequence']);
+	
+				if ($type == 'L') {
+					echo "<p>{$lang['emajemajlogsequence']}</p>\n";
+				} elseif ($type == 'E') {
+					echo "<p>{$lang['emajinternalsequence']}</p>\n";
+				} else {
+					$groups = $emajdb->getTableGroupsTblSeq($_REQUEST['schema'], $_REQUEST['sequence']);
+	
+					$columns = array(
+						'group' => array(
+							'title' => $lang['emajgroup'],
+							'field' => field('rel_group'),
+							'type'	=> 'callback',
+							'params'=> array('function' => 'renderlinktogroup')
+						),
+						'starttime' => array(
+							'title' => $lang['emajfrom'],
+							'field' => field('start_datetime')
+						),
+						'stoptime' => array(
+							'title' => $lang['emajto'],
+							'field' => field('stop_datetime')
+						),
+					);
+			
+					$misc->printTable($groups, $columns, $actions, 'sequences-groups', $lang['emajseqnogroupownership']);
+				}
+			}
 		}
 		else echo "<p>{$lang['strnodata']}</p>\n";
 	}

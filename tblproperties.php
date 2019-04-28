@@ -37,8 +37,19 @@
 						$str .= '<img src="'. $misc->icon('CheckConstraint') .'" alt="[check]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" /></a>';
 				}
 		}
-
 		return $str;
+	}
+
+	// Callback function to dynamicaly add a link to the tables group's description when the group name is suffixed by "###LINK###"
+	function renderlinktogroup($val) {
+		global $misc;
+
+		if (preg_match("/(.*)###LINK###$/", $val, $matches)) {
+			$val = $matches[1];
+			return "<a href=\"emajgroups.php?action=show_group&amp;" . $misc->href . "&amp;group=". urlencode($val) . "\">" . $val . "</a>";
+		} else {
+			return $val;
+		}
 	}
 
 	// Callback function to dynamicaly translate a boolean column into the user's language
@@ -95,15 +106,6 @@
 		if ($tdata->fields['relcomment'] !== null)
 			echo "<p>{$lang['strcommentlabel']}<span class=\"comment\">{$misc->printVal($tdata->fields['relcomment'])}</span></p>\n";
 
-		// Show tables group ownership, if any
-		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
-			$group = $emajdb->getTableGroupTblSeq($_REQUEST['schema'], $_REQUEST['table']);
-			if ($group != '')
-				echo "<p>" . sprintf($lang['emajtblgroupownership'],$group) . "</p>\n";
-			else
-				echo "<p>{$lang['emajtblnogroupownership']}</p>\n";
-		}
-
 		// Display the table structure
 		$columns = array(
 			'column' => array(
@@ -141,6 +143,41 @@
 		);
 
 		$misc->printTable($attrs, $columns, $actions, 'tblproperties-columns', null, 'attPre');
+
+		// Display the E-Maj properties, if any
+		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
+
+			$misc->printTitle($lang['emajproperties']);
+
+			$type = $emajdb->getEmajTypeTblSeq($_REQUEST['schema'], $_REQUEST['table']);
+
+			if ($type == 'L') {
+				echo "<p>{$lang['emajemajlogtable']}</p>\n";
+			} elseif ($type == 'E') {
+				echo "<p>{$lang['emajinternaltable']}</p>\n";
+			} else {
+				$groups = $emajdb->getTableGroupsTblSeq($_REQUEST['schema'], $_REQUEST['table']);
+
+				$columns = array(
+					'group' => array(
+						'title' => $lang['emajgroup'],
+						'field' => field('rel_group'),
+						'type'	=> 'callback',
+						'params'=> array('function' => 'renderlinktogroup')
+					),
+					'starttime' => array(
+						'title' => $lang['emajfrom'],
+						'field' => field('start_datetime')
+					),
+					'stoptime' => array(
+						'title' => $lang['emajto'],
+						'field' => field('stop_datetime')
+					),
+				);
+		
+				$misc->printTable($groups, $columns, $actions, 'tblproperties-groups', $lang['emajtblnogroupownership']);
+			}
+		}
 
 		// Display the table triggers
 

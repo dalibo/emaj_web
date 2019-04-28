@@ -196,6 +196,11 @@
 	$lang['emajtriggeringevent'] = 'Evénement déclencheur';
 	$lang['emajcalledfunction'] = 'Fonction appelée';
 	$lang['emajisemaj'] = 'E-Maj ?';
+	$lang['emajisautodisable'] = 'Désactivation<br>auto ?';
+	$lang['emajisautodisablehelp'] = 'Indique si le trigger est désactivé automatiquement lors des rollbacks E-Maj (défaut = Oui ; ne concerne que les triggers applicatifs)';
+	$lang['emajswitchautodisable'] = 'Basculer désactivation auto';
+	$lang['emajtriggerpropswitchedok'] = 'La propriété du trigger %s a été modifiée.';
+	$lang['emajtriggerpropswitchederr'] = 'Une erreur est survenue dans le traitement du trigger %s.';
 
 	// Miscellaneous
 	$lang['strtopbar'] = 'Connexion : %s:%s - rôle « %s »';

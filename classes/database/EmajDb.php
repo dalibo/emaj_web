@@ -2342,7 +2342,7 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 	/**
 	 * Gets the list of existing triggers on a table
 	 */
-	function getTriggers($schema, $table) {
+	function getTriggersTable($schema, $table) {
 		global $data;
 
 		$data->clean($schema);
@@ -2361,7 +2361,17 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 							 WHEN t.tgenabled = 'A' THEN 'Enabled Always'
 								END AS tgstate,
 						CASE WHEN tgname IN ('emaj_trunc_trg', 'emaj_log_trg') THEN true ELSE false END as tgisemaj,
-						CASE WHEN pg_catalog.pg_get_triggerdef(t.oid) ~ ' BEFORE .* EACH STATEMENT ' THEN 1
+				";
+
+		if ($this->getNumEmajVersion() >= 30100) {
+			$sql .= " 	CASE WHEN tgname IN ('emaj_trunc_trg', 'emaj_log_trg') THEN NULL 
+							 ELSE NOT EXISTS (
+								SELECT 1 FROM emaj.emaj_enabled_trigger
+									WHERE trg_schema = '{$schema}' AND trg_table = '{$table}' AND trg_name = tgname)
+							END as tgisautodisable,";
+		}
+
+		$sql .= "		CASE WHEN pg_catalog.pg_get_triggerdef(t.oid) ~ ' BEFORE .* EACH STATEMENT ' THEN 1
 							WHEN pg_catalog.pg_get_triggerdef(t.oid) ~ ' BEFORE .* EACH ROW ' THEN 2
 							WHEN pg_catalog.pg_get_triggerdef(t.oid) ~ ' AFTER .* EACH ROW ' THEN 3
 							WHEN pg_catalog.pg_get_triggerdef(t.oid) ~ ' AFTER .* EACH STATEMENT ' THEN 4 END as tgorder
@@ -2379,5 +2389,23 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 
 		return $data->selectSet($sql);
 	}
+
+	/**
+	 * Hangle the list of triggers that must not be automatically disabled at rollback time: add or remove one
+	 * It usually returns 1 (unless the list has been just modified by someone else)
+	 */
+	function keepDisabledTrigger($action, $schema,$table,$trigger) {
+		global $data;
+
+		$data->clean($action);
+		$data->clean($schema);
+		$data->clean($table);
+		$data->clean($trigger);
+
+		$sql = "SELECT emaj.emaj_keep_enabled_trigger('{$action}', '{$schema}','{$table}','{$trigger}') AS nbtriggers";
+
+		return $data->selectField($sql,'nbtriggers');
+	}
+
 }
 ?>

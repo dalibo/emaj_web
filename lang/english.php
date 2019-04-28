@@ -195,7 +195,12 @@
 	$lang['emajexecorder'] = 'Exec. order';
 	$lang['emajtriggeringevent'] = 'Triggering event';
 	$lang['emajcalledfunction'] = 'Called function';
-	$lang['emajisemaj'] = 'E-Maj ?';
+	$lang['emajisemaj'] = 'E-Maj?';
+	$lang['emajisautodisable'] = 'Auto disable?';
+	$lang['emajisautodisablehelp'] = 'Indicate whether the trigger is automatically disabled at E-maj rollback time (default = Yes ; it only concerns application triggers)';
+	$lang['emajswitchautodisable'] = 'Switch auto disable';
+	$lang['emajtriggerpropswitchedok'] = 'The trigger %s property has been changed.';
+	$lang['emajtriggerpropswitchederr'] = 'An error occured while processing the trigger %s.';
 
 	// Miscellaneous
 	$lang['strtopbar'] = 'Connection: %s:%s - role "%s"';

@@ -9,62 +9,74 @@
 
 	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 
+	// Callback function to dynamically adjust the icons and links for constraints on table columns
+	function cstrRender($s, $p) {
+		global $misc, $data;
+
+		$str ='';
+		foreach ($p['keys'] as $k => $c) {
+
+			if (is_null($p['keys'][$k]['consrc'])) {
+				$atts = $data->getAttributeNames($_REQUEST['table'], explode(' ', $p['keys'][$k]['indkey']));
+				$c['consrc'] = ($c['contype'] == 'u' ? "UNIQUE (" : "PRIMARY KEY (") . join(',', $atts) . ')';
+			}
+
+			if ($c['p_field'] == $s)
+				switch ($c['contype']) {
+					case 'p':
+						$str .= '<img src="'. $misc->icon('PrimaryKey') .'" alt="[pk]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" />';
+					break;
+					case 'f':
+						$str .= '<a href="tblproperties.php?'. $misc->href ."&amp;table=". urlencode($c['f_table']) ."&amp;schema=". urlencode($c['f_schema']) ."\"><img src=\"".
+							$misc->icon('ForeignKey') .'" alt="[fk]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" /></a>';
+					break;
+					case 'u':
+						$str .= '<img src="'. $misc->icon('UniqueConstraint') .'" alt="[uniq]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" />';
+					break;
+					case 'c':
+						$str .= '<img src="'. $misc->icon('CheckConstraint') .'" alt="[check]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" /></a>';
+				}
+		}
+
+		return $str;
+	}
+
 	// Callback function to dynamicaly translate a boolean column into the user's language
 	function renderBoolean($val) {
 		global $lang;
 		return $val == 't' ? $lang['stryes'] : $lang['strno'];
 	}
 
+	// Function to dynamicaly modify actions list for each table column description
+	function attPre(&$rowdata, $actions) {
+		global $data;
+		$rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
+		$attname = $rowdata->fields['attname'];
+		$table = $_REQUEST['table'];
+		$data->fieldClean($attname);
+		$data->fieldClean($table);
+
+		$actions['browse']['attr']['href']['urlvars']['query'] = "SELECT \"{$attname}\", count(*) AS \"count\"
+			FROM \"{$table}\" GROUP BY \"{$attname}\" ORDER BY \"{$attname}\"";
+
+		return $actions;
+	}
+
+	// Function to dynamicaly modify actions list for each trigger
+	function triggerPre(&$rowdata, $actions) {
+
+		// disable the switch button if the trigger is an E-Maj trigger
+		if (isset($actions['switchkeepenabledtrigger']) && $rowdata->fields['tgisemaj'] == 't') {
+			$actions['switchkeepenabledtrigger']['disable'] = true;
+		}
+		return $actions;
+	}
+
 	/**
-	 * Show default list of columns in the table
+	 * Show the table's properties: E-Maj group owning the table, if any, list of columns in the table, list of triggers
 	 */
-	function doDefault($msg = '') {
+	function showProperties($msg = '') {
 		global $data, $conf, $misc, $lang, $emajdb;
-
-		function attPre(&$rowdata, $actions) {
-			global $data;
-			$rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
-			$attname = $rowdata->fields['attname'];
-			$table = $_REQUEST['table'];
-			$data->fieldClean($attname);
-			$data->fieldClean($table);
-
-			$actions['browse']['attr']['href']['urlvars']['query'] = "SELECT \"{$attname}\", count(*) AS \"count\"
-				FROM \"{$table}\" GROUP BY \"{$attname}\" ORDER BY \"{$attname}\"";
-
-			return $actions;
-		}
-
-		function cstrRender($s, $p) {
-			global $misc, $data;
-
-			$str ='';
-			foreach ($p['keys'] as $k => $c) {
-
-				if (is_null($p['keys'][$k]['consrc'])) {
-					$atts = $data->getAttributeNames($_REQUEST['table'], explode(' ', $p['keys'][$k]['indkey']));
-					$c['consrc'] = ($c['contype'] == 'u' ? "UNIQUE (" : "PRIMARY KEY (") . join(',', $atts) . ')';
-				}
-
-				if ($c['p_field'] == $s)
-					switch ($c['contype']) {
-						case 'p':
-							$str .= '<img src="'. $misc->icon('PrimaryKey') .'" alt="[pk]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" />';
-						break;
-						case 'f':
-							$str .= '<a href="tblproperties.php?'. $misc->href ."&amp;table=". urlencode($c['f_table']) ."&amp;schema=". urlencode($c['f_schema']) ."\"><img src=\"".
-								$misc->icon('ForeignKey') .'" alt="[fk]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" /></a>';
-						break;
-						case 'u':
-							$str .= '<img src="'. $misc->icon('UniqueConstraint') .'" alt="[uniq]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" />';
-						break;
-						case 'c':
-							$str .= '<img src="'. $misc->icon('CheckConstraint') .'" alt="[check]" title="'. htmlentities($c['consrc'], ENT_QUOTES, 'UTF-8') .'" /></a>';
-					}
-			}
-
-			return $str;
-		}
 
 		$misc->printHeader('table', 'table', 'properties');
 		$misc->printMsg($msg);
@@ -77,7 +89,7 @@
 		// Get constraints keys
 		$ck = $data->getConstraintsWithFields($_REQUEST['table']);
 		// Get triggers
-		$triggers = $emajdb->getTriggers($_REQUEST['schema'], $_REQUEST['table']);
+		$triggers = $emajdb->getTriggersTable($_REQUEST['schema'], $_REQUEST['table']);
 
 		// Show comment, if any
 		if ($tdata->fields['relcomment'] !== null)
@@ -134,6 +146,8 @@
 
 		$misc->printTitle($lang['strtriggers']);
 
+		$urlvars = $misc->getRequestVars();
+
 		$columns = array(
 			'tgrank' => array(
 				'title' => $lang['emajexecorder'],
@@ -168,8 +182,66 @@
 				'params'=> array('function' => 'renderBoolean', 'align' => 'center')
 			),
 		);
+		if ($emajdb->getNumEmajVersion() >= 30100) {			// version >= 3.1.0
+			$columns = array_merge($columns, array(
+				'emajisautodisable' => array(
+					'title' => $lang['emajisautodisable'],
+					'field' => field('tgisautodisable'),
+					'info'  => $lang['emajisautodisablehelp'],
+					'type'	=> 'callback',
+					'params'=> array('function' => 'renderBoolean', 'align' => 'center')
+				),
+				'actions' => array(
+					'title' => $lang['stractions'],
+				),
+			));
+		}
 
-		$misc->printTable($triggers, $columns, $actions, 'tblproperties-triggers', $lang['strnotrigger'], null, array('sorter' => true, 'filter' => true));
+		$actions = array();
+		if ($emajdb->getNumEmajVersion() >= 30100) {			// version >= 3.1.0
+			if ($emajdb->isEmaj_Adm()) {
+				$actions = array_merge($actions, array(
+					'switchkeepenabledtrigger' => array(
+						'content' => $lang['emajswitchautodisable'],
+						'attr' => array (
+							'href' => array (
+								'url' => 'tblproperties.php',
+								'urlvars' => array_merge($urlvars, array (
+									'action' => 'switch_keep_enabled_trigger',
+									'schema' => $_REQUEST['schema'],
+									'table' => $_REQUEST['table'],
+									'trigger' => field('tgname'),
+									'tgisdisableauto' => field('tgisautodisable'),
+								)))))
+					)
+				);
+			}
+		}
+
+		$misc->printTable($triggers, $columns, $actions, 'tblproperties-triggers', $lang['strnotrigger'], 'triggerPre', array('sorter' => true, 'filter' => false));
+	}
+
+	/**
+	 * Switch the keep_enabled_trigger state for the selected required trigger.
+	 * Then show the updated table's properties
+	 */
+	function doSwitchKeepEnabledTrigger() {
+		global $lang, $emajdb;
+
+		if ($_REQUEST['tgisdisableauto'] == 't') {
+			// the trigger is currently NOT set as 'not to be automatically disabled at rollback', so set it
+			$action = 'ADD';
+		} else {
+			// the trigger is currently set as 'not to be automatically disabled at rollback', so unset it
+			$action = 'REMOVE';
+		}
+		$nbTriggers = $emajdb->keepDisabledTrigger($action, $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['trigger']);
+
+		if ($nbTriggers > 0) {
+			showProperties(sprintf($lang['emajtriggerpropswitchedok'], htmlspecialchars($_REQUEST['trigger'])));
+		} else {
+			showProperties(sprintf($lang['emajtriggerpropswitchederr'], htmlspecialchars($_REQUEST['trigger'])));
+		}
 	}
 
 	function doTree() {
@@ -209,12 +281,11 @@
 	$misc->printBody();
 
 	switch ($action) {
-		case 'properties':
-			if (isset($_POST['cancel'])) doDefault();
-			else doProperties();
+		case 'switch_keep_enabled_trigger':
+			doSwitchKeepEnabledTrigger();
 			break;
 		default:
-			doDefault();
+			showProperties();
 			break;
 	}
 

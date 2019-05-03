@@ -2344,7 +2344,25 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 		$data->clean($schema);
 		$data->clean($tblseq);
 
-		if ($this->getNumEmajVersion() >= 20200) {
+		if ($this->getNumEmajVersion() >= 30100) {
+			// The rel_group is suffixed with a ###LINK### when a link to the group definition has to be added at page display
+			$sql = "	SELECT rel_group || CASE WHEN upper_inf(rel_time_range) THEN '###LINK###' ELSE '' END AS rel_group,
+							   date_trunc('SECOND', start.time_tx_timestamp)::TEXT AS start_datetime,
+							   coalesce(date_trunc('SECOND',stop.time_tx_timestamp)::TEXT,'') AS stop_datetime
+						FROM emaj.emaj_relation
+							LEFT OUTER JOIN emaj.emaj_time_stamp start ON (lower(rel_time_range) = start.time_id)
+							LEFT OUTER JOIN emaj.emaj_time_stamp stop ON (upper(rel_time_range) = stop.time_id)
+						WHERE rel_schema = '{$schema}' AND rel_tblseq = '{$tblseq}'
+					UNION ALL
+						SELECT relh_group,
+							   date_trunc('SECOND', start.time_tx_timestamp)::TEXT AS start_datetime,
+							   coalesce(date_trunc('SECOND',stop.time_tx_timestamp)::TEXT,'') AS stop_datetime
+						FROM emaj.emaj_rel_hist
+							LEFT OUTER JOIN emaj.emaj_time_stamp start ON (lower(relh_time_range) = start.time_id)
+							LEFT OUTER JOIN emaj.emaj_time_stamp stop ON (upper(relh_time_range) = stop.time_id)
+						WHERE relh_schema = '{$schema}' AND relh_tblseq = '{$tblseq}'
+					ORDER BY start_datetime";
+		} elseif ($this->getNumEmajVersion() >= 20200) {
 			// The rel_group is suffixed with a ###LINK### when a link to the group definition has to be added at page display
 			$sql = "SELECT rel_group || CASE WHEN upper_inf(rel_time_range) THEN '###LINK###' ELSE '' END AS rel_group,
 							date_trunc('SECOND', start.time_tx_timestamp)::TEXT AS start_datetime,

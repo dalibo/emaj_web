@@ -219,39 +219,43 @@
 				'params'=> array('function' => 'renderBoolean', 'align' => 'center')
 			),
 		);
-		if ($emajdb->getNumEmajVersion() >= 30100) {			// version >= 3.1.0
-			$columns = array_merge($columns, array(
-				'emajisautodisable' => array(
-					'title' => $lang['emajisautodisable'],
-					'field' => field('tgisautodisable'),
-					'info'  => $lang['emajisautodisablehelp'],
-					'type'	=> 'callback',
-					'params'=> array('function' => 'renderBoolean', 'align' => 'center')
-				),
-				'actions' => array(
-					'title' => $lang['stractions'],
-				),
-			));
+		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
+			if ($emajdb->getNumEmajVersion() >= 30100) {			// version >= 3.1.0
+				$columns = array_merge($columns, array(
+					'emajisautodisable' => array(
+						'title' => $lang['emajisautodisable'],
+						'field' => field('tgisautodisable'),
+						'info'  => $lang['emajisautodisablehelp'],
+						'type'	=> 'callback',
+						'params'=> array('function' => 'renderBoolean', 'align' => 'center')
+					),
+					'actions' => array(
+						'title' => $lang['stractions'],
+					),
+				));
+			}
 		}
 
 		$actions = array();
-		if ($emajdb->getNumEmajVersion() >= 30100) {			// version >= 3.1.0
-			if ($emajdb->isEmaj_Adm()) {
-				$actions = array_merge($actions, array(
-					'switchkeepenabledtrigger' => array(
-						'content' => $lang['emajswitchautodisable'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'tblproperties.php',
-								'urlvars' => array_merge($urlvars, array (
-									'action' => 'switch_keep_enabled_trigger',
-									'schema' => $_REQUEST['schema'],
-									'table' => $_REQUEST['table'],
-									'trigger' => field('tgname'),
-									'tgisdisableauto' => field('tgisautodisable'),
-								)))))
-					)
-				);
+		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
+			if ($emajdb->getNumEmajVersion() >= 30100) {			// version >= 3.1.0
+				if ($emajdb->isEmaj_Adm()) {
+					$actions = array_merge($actions, array(
+						'switchkeepenabledtrigger' => array(
+							'content' => $lang['emajswitchautodisable'],
+							'attr' => array (
+								'href' => array (
+									'url' => 'tblproperties.php',
+									'urlvars' => array_merge($urlvars, array (
+										'action' => 'switch_keep_enabled_trigger',
+										'schema' => $_REQUEST['schema'],
+										'table' => $_REQUEST['table'],
+										'trigger' => field('tgname'),
+										'tgisdisableauto' => field('tgisautodisable'),
+									)))))
+						)
+					);
+				}
 			}
 		}
 
@@ -275,9 +279,9 @@
 		$nbTriggers = $emajdb->keepDisabledTrigger($action, $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['trigger']);
 
 		if ($nbTriggers > 0) {
-			showProperties(sprintf($lang['emajtriggerpropswitchedok'], htmlspecialchars($_REQUEST['trigger'])));
+			showProperties(sprintf($lang['emajtriggerpropswitchedok'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		} else {
-			showProperties(sprintf($lang['emajtriggerpropswitchederr'], htmlspecialchars($_REQUEST['trigger'])));
+			showProperties(sprintf($lang['emajtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		}
 	}
 

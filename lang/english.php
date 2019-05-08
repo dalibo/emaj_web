@@ -194,15 +194,20 @@
 	$lang['strtrigger'] = 'Trigger';
 	$lang['strtriggers'] = 'Triggers';
 	$lang['strnotrigger'] = 'No trigger found.';
+	$lang['emajapptriggers'] = 'Application triggers';
 	$lang['emajexecorder'] = 'Exec. order';
 	$lang['emajtriggeringevent'] = 'Triggering event';
 	$lang['emajcalledfunction'] = 'Called function';
 	$lang['emajisemaj'] = 'E-Maj?';
 	$lang['emajisautodisable'] = 'Auto disable?';
-	$lang['emajisautodisablehelp'] = 'Indicate whether the trigger is automatically disabled at E-maj rollback time (default = Yes ; it only concerns application triggers)';
+	$lang['emajisautodisablehelp'] = 'Indicate whether the trigger is automatically disabled at E-maj rollback time (default = Yes)';
 	$lang['emajswitchautodisable'] = 'Switch auto disable';
-	$lang['emajtriggerpropswitchedok'] = 'The trigger %s property has been changed.';
-	$lang['emajtriggerpropswitchederr'] = 'An error occured while processing the trigger %s.';
+	$lang['emajtriggerpropswitchedok'] = 'The trigger %s property has been changed for the table %s.%s.';
+	$lang['emajtriggerprocerr'] = 'An error occured while processing the trigger %s of the table %s.%s.';
+	$lang['emajnoselectedtriggers'] = 'No selected trigger.';
+	$lang['emajtriggerspropswitchedok'] = 'The property has been changed for %s triggers.';
+	$lang['emajorphantriggersexist'] = 'The table that contains the identifiers of triggers not to be automatically disabled at E-Maj rollbacks (emaj_enabled_trigger) references schemas, tables or triggers that do not exist anymore.';
+	$lang['emajtriggersremovedok'] = '%s triggers have been removed.';
 
 	// Miscellaneous
 	$lang['strtopbar'] = 'Connection: %s:%s - role "%s"';

@@ -853,6 +853,13 @@
 							'urlvars' => array('subject' => 'database'),
 							'icon'  => 'Schemas',
 						),
+						'triggers' => array (
+							'title' => $lang['strtriggers'],
+							'url'   => 'triggers.php',
+							'urlvars' => array('subject' => 'database'),
+							'icon'  => 'Triggers',
+							'tree' => false,
+						),
 						'emajenvir' => array (
 							'title' => $lang['emajenvir'],
 							'url' => 'emajenvir.php',

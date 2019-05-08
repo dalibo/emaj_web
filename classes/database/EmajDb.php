@@ -2336,6 +2336,68 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 	}
 
 	/**
+	 * Gets the application triggers on all application tables known in the database.
+	 */
+	function getAppTriggers() {
+		global $data;
+
+		$sql = "SELECT rn.nspname, relname,
+					substring(pg_catalog.pg_get_triggerdef(t.oid) FROM 'ON (.*?) FOR ') as tgtable,
+					t.tgname,
+					substring(pg_catalog.pg_get_triggerdef(t.oid) FROM 'FOR EACH (\S+) EXECUTE') as tglevel,
+					substring(pg_catalog.pg_get_triggerdef(t.oid) FROM 'CREATE TRIGGER \S+ (.*?) ON ') as tgevent,
+                       quote_ident(pn.nspname) || '.' || quote_ident(proname) as tgfnct,
+					CASE WHEN t.tgenabled = 'D' THEN 'Disabled' 
+						 WHEN t.tgenabled = 'O' THEN 'Enabled' 
+						 WHEN t.tgenabled = 'R' THEN 'Enabled on Replica'
+						 WHEN t.tgenabled = 'A' THEN 'Enabled Always'
+							END AS tgstate,
+				";
+		if ($this->isEnabled() && $this->isAccessible()) {
+			if ($this->getNumEmajVersion() >= 30100) {
+				$sql .= "NOT EXISTS (
+							SELECT 1 FROM emaj.emaj_enabled_trigger
+								WHERE trg_schema = rn.nspname AND trg_table = relname AND trg_name = tgname)
+						AS tgisautodisable,";
+			}
+		}
+		$sql .= "	CASE WHEN pg_catalog.pg_get_triggerdef(t.oid) ~ ' BEFORE .* EACH STATEMENT ' THEN 1
+						WHEN pg_catalog.pg_get_triggerdef(t.oid) ~ ' BEFORE .* EACH ROW ' THEN 2
+						WHEN pg_catalog.pg_get_triggerdef(t.oid) ~ ' AFTER .* EACH ROW ' THEN 3
+						WHEN pg_catalog.pg_get_triggerdef(t.oid) ~ ' AFTER .* EACH STATEMENT ' THEN 4 END as tgorder
+				FROM pg_catalog.pg_trigger t, pg_catalog.pg_class, pg_catalog.pg_namespace rn,
+					 pg_catalog.pg_proc, pg_catalog.pg_namespace pn
+				WHERE tgrelid = pg_class.oid AND relnamespace = rn.oid
+				  AND tgfoid = pg_proc.oid AND pronamespace = pn.oid
+				  AND (tgconstraint = 0 OR NOT EXISTS
+						(SELECT 1 FROM pg_catalog.pg_depend d
+							JOIN pg_catalog.pg_constraint c	ON (d.refclassid = c.tableoid AND d.refobjid = c.oid)
+						WHERE d.classid = t.tableoid AND d.objid = t.oid AND d.deptype = 'i' AND c.contype = 'f'))
+				  AND rn.nspname <> 'emaj'
+				  AND tgname NOT IN ('emaj_trunc_trg', 'emaj_log_trg')
+				ORDER BY rn.nspname, relname, tgorder, tgname";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Gets the orphan application triggers in the emaj_enabled_trigger table, i.e. not currently created.
+	 */
+	function getOrphanAppTriggers() {
+		global $data;
+
+		$sql = "	SELECT trg_schema, trg_table, trg_name
+						FROM emaj.emaj_enabled_trigger
+				EXCEPT
+					SELECT nspname, relname, tgname
+						FROM pg_catalog.pg_trigger t, pg_catalog.pg_class, pg_catalog.pg_namespace
+						WHERE relnamespace = pg_namespace.oid AND tgrelid = pg_class.oid
+				ORDER BY 1,2,3";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
 	 * Gets the tables groups that owned or currently owns a given table or sequence.
 	 */
 	function getTableGroupsTblSeq($schema, $tblseq) {
@@ -2405,12 +2467,14 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 						CASE WHEN tgname IN ('emaj_trunc_trg', 'emaj_log_trg') THEN true ELSE false END as tgisemaj,
 				";
 
-		if ($this->getNumEmajVersion() >= 30100) {
-			$sql .= " 	CASE WHEN tgname IN ('emaj_trunc_trg', 'emaj_log_trg') THEN NULL 
-							 ELSE NOT EXISTS (
-								SELECT 1 FROM emaj.emaj_enabled_trigger
-									WHERE trg_schema = '{$schema}' AND trg_table = '{$table}' AND trg_name = tgname)
-							END as tgisautodisable,";
+		if ($this->isEnabled() && $this->isAccessible()) {
+			if ($this->getNumEmajVersion() >= 30100) {
+				$sql .= " 	CASE WHEN tgname IN ('emaj_trunc_trg', 'emaj_log_trg') THEN NULL 
+								ELSE NOT EXISTS (
+									SELECT 1 FROM emaj.emaj_enabled_trigger
+										WHERE trg_schema = '{$schema}' AND trg_table = '{$table}' AND trg_name = tgname)
+								END as tgisautodisable,";
+			}
 		}
 
 		$sql .= "		CASE WHEN pg_catalog.pg_get_triggerdef(t.oid) ~ ' BEFORE .* EACH STATEMENT ' THEN 1

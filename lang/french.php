@@ -194,15 +194,20 @@
 	$lang['strtriggers'] = 'Triggers';
 	$lang['strtrigger'] = 'Trigger';
 	$lang['strnotrigger'] = 'Aucun trigger trouvé.';
+	$lang['emajapptriggers'] = 'Triggers applicatifs';
 	$lang['emajexecorder'] = 'Ordre Exec';
 	$lang['emajtriggeringevent'] = 'Evénement déclencheur';
 	$lang['emajcalledfunction'] = 'Fonction appelée';
 	$lang['emajisemaj'] = 'E-Maj ?';
 	$lang['emajisautodisable'] = 'Désactivation<br>auto ?';
-	$lang['emajisautodisablehelp'] = 'Indique si le trigger est désactivé automatiquement lors des rollbacks E-Maj (défaut = Oui ; ne concerne que les triggers applicatifs)';
+	$lang['emajisautodisablehelp'] = 'Indique si le trigger est désactivé automatiquement lors des rollbacks E-Maj (défaut = Oui)';
 	$lang['emajswitchautodisable'] = 'Basculer désactivation auto';
-	$lang['emajtriggerpropswitchedok'] = 'La propriété du trigger %s a été modifiée.';
-	$lang['emajtriggerpropswitchederr'] = 'Une erreur est survenue dans le traitement du trigger %s.';
+	$lang['emajtriggerpropswitchedok'] = 'La propriété du trigger %s de la table %s.%s a été modifiée.';
+	$lang['emajtriggerprocerr'] = 'Une erreur est survenue dans le traitement du trigger %s de la table %s.%s.';
+	$lang['emajnoselectedtriggers'] = 'Aucun trigger sélectionné.';
+	$lang['emajtriggerspropswitchedok'] = 'La propriété de %s triggers a été modifiée.';
+	$lang['emajorphantriggersexist'] = 'La table qui contient les identifiants de triggers à ne pas désactiver automatiquement lors des rollbacks E-Maj (emaj_enabled_trigger) référence des schémas, tables ou triggers qui n\'existent plus.';
+	$lang['emajtriggersremovedok'] = '%s triggers ont été retirés.';
 
 	// Miscellaneous
 	$lang['strtopbar'] = 'Connexion : %s:%s - rôle « %s »';

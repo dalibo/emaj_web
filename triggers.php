@@ -96,19 +96,19 @@
 							),
 							'url' => 'triggers.php',
 						),
-						'switchkeepenabledtrigger' => array(
+						'doSwitchIgnoredAppTriggerState' => array(
 							'content' => $lang['emajswitchautodisable'],
 							'attr' => array (
 								'href' => array (
 									'url' => 'triggers.php',
 									'urlvars' => array_merge($urlvars, array (
-										'action' => 'switch_keep_enabled_trigger',
+										'action' => 'switch_ignore_app_trigger_state',
 										'schema' => field('nspname'),
 										'table' => field('relname'),
 										'trigger' => field('tgname'),
 										'tgisdisableauto' => field('tgisautodisable'),
 									)))),
-							'multiaction' => 'switch_keep_enabled_triggers',
+							'multiaction' => 'switch_ignore_app_trigger_states',
 							)
 						)
 					);
@@ -118,7 +118,7 @@
 
 		$misc->printTable($triggers, $columns, $actions, 'triggers-triggers', $lang['strnotrigger'], null, array('sorter' => true, 'filter' => true));
 
-		// Check if orphan triggers exist in the emaj_enabled_trigger table
+		// Check if orphan triggers exist in the emaj_ignored_app_trigger table
 		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
 			if ($emajdb->getNumEmajVersion() >= 30100) {			// version >= 3.1.0
 				$orphanTriggers = $emajdb->getOrphanAppTriggers();
@@ -174,10 +174,10 @@
 	}
 
 	/**
-	 * Switch the keep_enabled_trigger state for the selected required trigger.
+	 * Switch the ignored_app_trigger state for the selected required trigger.
 	 * Then show the updated table's properties
 	 */
-	function doSwitchKeepEnabledTrigger() {
+	function doSwitchIgnoredAppTriggerState() {
 		global $lang, $emajdb;
 
 		if ($_REQUEST['tgisdisableauto'] == 't') {
@@ -187,7 +187,7 @@
 			// the trigger is currently set as 'not to be automatically disabled at rollback', so unset it
 			$action = 'REMOVE';
 		}
-		$nbTriggers = $emajdb->keepDisabledTrigger($action, $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['trigger']);
+		$nbTriggers = $emajdb->ignoreAppTrigger($action, $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['trigger']);
 
 		if ($nbTriggers > 0) {
 			showTriggers(sprintf($lang['emajtriggerpropswitchedok'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
@@ -200,7 +200,7 @@
 	 * Switch the keep_enabled_trigger state for the selected triggers.
 	 * Then show the updated table's properties
 	 */
-	function doSwitchKeepEnabledTriggers() {
+	function doSwitchIgnoredAppTriggerStates() {
 		global $lang, $data, $emajdb;
 
 		if (!isset($_REQUEST['ma'])) {
@@ -220,7 +220,7 @@
 					// the trigger is currently set as 'not to be automatically disabled at rollback', so unset it
 					$action = 'REMOVE';
 				}
-				$status = $emajdb->keepDisabledTrigger($action, $a['schema'], $a['table'], $a['trigger']);
+				$status = $emajdb->ignoreAppTrigger($action, $a['schema'], $a['table'], $a['trigger']);
 				if ($status = 0) {
 					$data->rollbackTransaction();
 					showTriggers(sprintf($lang['emajtriggerprocerr'], htmlspecialchars($a['trigger']), htmlspecialchars($a['schema']), htmlspecialchars($a['table'])));
@@ -234,7 +234,7 @@
 	}
 
 	/**
-	 * Remove an orphan trigger from the emaj_enabled_trigger table
+	 * Remove an orphan trigger from the emaj_ignored_app_trigger table
 	 */
 	function doRemoveTrigger() {
 		global $lang, $emajdb;
@@ -249,7 +249,7 @@
 	}
 
 	/**
-	 * Remove several orphan triggers from the emaj_enabled_trigger table
+	 * Remove several orphan triggers from the emaj_ignored_app_trigger table
 	 */
 	function doRemoveTriggers() {
 		global $lang, $data, $emajdb;
@@ -289,11 +289,11 @@
 		case 'remove_triggers':
 			doRemoveTriggers();
 			break;
-		case 'switch_keep_enabled_trigger':
-			doSwitchKeepEnabledTrigger();
+		case 'switch_ignore_app_trigger_state':
+			doSwitchIgnoredAppTriggerState();
 			break;
-		case 'switch_keep_enabled_triggers':
-			doSwitchKeepEnabledTriggers();
+		case 'switch_ignore_app_trigger_states':
+			doSwitchIgnoredAppTriggerStates();
 			break;
 		default:
 			showTriggers();

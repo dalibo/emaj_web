@@ -263,10 +263,10 @@
 	}
 
 	/**
-	 * Switch the keep_enabled_trigger state for the selected required trigger.
+	 * Switch the ignored_app_trigger state for the selected requested trigger.
 	 * Then show the updated table's properties
 	 */
-	function doSwitchKeepEnabledTrigger() {
+	function doSwitchIgnoredAppTriggerState() {
 		global $lang, $emajdb;
 
 		if ($_REQUEST['tgisdisableauto'] == 't') {
@@ -276,7 +276,7 @@
 			// the trigger is currently set as 'not to be automatically disabled at rollback', so unset it
 			$action = 'REMOVE';
 		}
-		$nbTriggers = $emajdb->keepDisabledTrigger($action, $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['trigger']);
+		$nbTriggers = $emajdb->ignoreAppTrigger($action, $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['trigger']);
 
 		if ($nbTriggers > 0) {
 			showProperties(sprintf($lang['emajtriggerpropswitchedok'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
@@ -323,7 +323,7 @@
 
 	switch ($action) {
 		case 'switch_keep_enabled_trigger':
-			doSwitchKeepEnabledTrigger();
+			doSwitchIgnoredAppTriggerState();
 			break;
 		default:
 			showProperties();

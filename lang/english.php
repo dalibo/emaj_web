@@ -206,7 +206,7 @@
 	$lang['emajtriggerprocerr'] = 'An error occured while processing the trigger %s of the table %s.%s.';
 	$lang['emajnoselectedtriggers'] = 'No selected trigger.';
 	$lang['emajtriggerspropswitchedok'] = 'The property has been changed for %s triggers.';
-	$lang['emajorphantriggersexist'] = 'The table that contains the identifiers of triggers not to be automatically disabled at E-Maj rollbacks (emaj_enabled_trigger) references schemas, tables or triggers that do not exist anymore.';
+	$lang['emajorphantriggersexist'] = 'The table that contains the identifiers of triggers not to be automatically disabled at E-Maj rollbacks (emaj_ignored_app_trigger) references schemas, tables or triggers that do not exist anymore.';
 	$lang['emajtriggersremovedok'] = '%s triggers have been removed.';
 
 	// Miscellaneous

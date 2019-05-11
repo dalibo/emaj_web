@@ -2356,7 +2356,7 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 		if ($this->isEnabled() && $this->isAccessible()) {
 			if ($this->getNumEmajVersion() >= 30100) {
 				$sql .= "NOT EXISTS (
-							SELECT 1 FROM emaj.emaj_enabled_trigger
+							SELECT 1 FROM emaj.emaj_ignored_app_trigger
 								WHERE trg_schema = rn.nspname AND trg_table = relname AND trg_name = tgname)
 						AS tgisautodisable,";
 			}
@@ -2381,13 +2381,13 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 	}
 
 	/**
-	 * Gets the orphan application triggers in the emaj_enabled_trigger table, i.e. not currently created.
+	 * Gets the orphan application triggers in the emaj_ignored_app_trigger table, i.e. not currently created.
 	 */
 	function getOrphanAppTriggers() {
 		global $data;
 
 		$sql = "	SELECT trg_schema, trg_table, trg_name
-						FROM emaj.emaj_enabled_trigger
+						FROM emaj.emaj_ignored_app_trigger
 				EXCEPT
 					SELECT nspname, relname, tgname
 						FROM pg_catalog.pg_trigger t, pg_catalog.pg_class, pg_catalog.pg_namespace
@@ -2471,7 +2471,7 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 			if ($this->getNumEmajVersion() >= 30100) {
 				$sql .= " 	CASE WHEN tgname IN ('emaj_trunc_trg', 'emaj_log_trg') THEN NULL 
 								ELSE NOT EXISTS (
-									SELECT 1 FROM emaj.emaj_enabled_trigger
+									SELECT 1 FROM emaj.emaj_ignored_app_trigger
 										WHERE trg_schema = '{$schema}' AND trg_table = '{$table}' AND trg_name = tgname)
 								END as tgisautodisable,";
 			}
@@ -2500,7 +2500,7 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 	 * Hangle the list of triggers that must not be automatically disabled at rollback time: add or remove one
 	 * It usually returns 1 (unless the list has been just modified by someone else)
 	 */
-	function keepDisabledTrigger($action, $schema,$table,$trigger) {
+	function ignoreAppTrigger($action, $schema, $table, $trigger) {
 		global $data;
 
 		$data->clean($action);
@@ -2508,7 +2508,7 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 		$data->clean($table);
 		$data->clean($trigger);
 
-		$sql = "SELECT emaj.emaj_keep_enabled_trigger('{$action}', '{$schema}','{$table}','{$trigger}') AS nbtriggers";
+		$sql = "SELECT emaj.emaj_ignore_app_trigger('{$action}', '{$schema}','{$table}','{$trigger}') AS nbtriggers";
 
 		return $data->selectField($sql,'nbtriggers');
 	}

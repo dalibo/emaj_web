@@ -14,7 +14,7 @@
 	$appName = 'Emaj_web';
 
 	// Application version
-	$appVersion = '3.0';
+	$appVersion = '3.1';
 
 	// PostgreSQL and PHP minimum version
 	$postgresqlMinVer = '9.1';
@@ -23,8 +23,8 @@
 	// E-Maj versions
 	$oldest_supported_emaj_version = '1.3.0';			// Oldest supported emaj version
 	$oldest_supported_emaj_version_num = 10300;
-	$last_known_emaj_version = '3.0.0';				// Most recent known emaj version
-	$last_known_emaj_version_num = 30000;
+	$last_known_emaj_version = '3.1.0';				// Most recent known emaj version
+	$last_known_emaj_version_num = 30100;
 
 	// Check the version of PHP
 	if (version_compare(phpversion(), $phpMinVer, '<'))

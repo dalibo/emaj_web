@@ -138,7 +138,7 @@
 						'field' => field('grpdef_priority'),
 						'params'=> array('align' => 'center'),
 					));
-				if ($emajdb->getNumEmajVersion() < 31000) {			// version < 3.1.0
+				if ($emajdb->getNumEmajVersion() < 30100) {			// version < 3.1.0
 					$columns = array_merge($columns, array(
 						'logschemasuffix' => array(
 							'title' => $lang['emajlogschemasuffix'],
@@ -267,7 +267,7 @@
 		$knownGroups = $emajdb->getKnownGroups();
 
 		// Get log schema suffix already known in emaj_group_def table
-		if ($emajdb->getNumEmajVersion() < 31000) {			// version < 3.1.0
+		if ($emajdb->getNumEmajVersion() < 30100) {			// version < 3.1.0
 			$knownSuffix = $emajdb->getKnownSuffix();
 		}
 
@@ -335,7 +335,7 @@
 		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajpriorityhelp']}\"/></div>\n";
 
 		// log schema name suffix
-		if ($emajdb->getNumEmajVersion() < 31000 && $nbTbl >= 1) {			// version < 3.1.0
+		if ($emajdb->getNumEmajVersion() < 30100 && $nbTbl >= 1) {			// version < 3.1.0
 			echo "\t<div class=\"form-label\">{$lang['emajenterlogschema']}</div>\n";
 			echo "\t<div class=\"form-input\">";
 			echo "<input type=\"text\" name=\"suffix\" list=\"suffixList\" value=\"\"/ autocomplete=\"off\">";
@@ -352,7 +352,7 @@
 		}
 
 		// objects name prefix (only for tables)
-		if ($emajdb->getNumEmajVersion() < 31000 && $nbTbl == 1) {			// version < 3.1.0
+		if ($emajdb->getNumEmajVersion() < 30100 && $nbTbl == 1) {			// version < 3.1.0
 			// the names prefix is accessible only for a single table assignment
 			echo "\t<div class=\"form-label\">{$lang['emajenternameprefix']}</div>\n";
 			echo "\t<div class=\"form-input\">";
@@ -461,7 +461,7 @@
 		$knownGroups = $emajdb->getKnownGroups();
 
 		// Get log schema suffix already known in emaj_group_def table
-		if ($emajdb->getNumEmajVersion() < 31000) {			// version < 3.1.0
+		if ($emajdb->getNumEmajVersion() < 30100) {			// version < 3.1.0
 			$knownSuffix = $emajdb->getKnownSuffix();
 		}
 
@@ -506,7 +506,7 @@
 		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajpriorityhelp']}\"/></div>\n";
 
 		// log schema name suffix (only for tables)
-		if ($emajdb->getNumEmajVersion() < 31000 && $_REQUEST['type'] == 'r+') {			// version < 3.1.0
+		if ($emajdb->getNumEmajVersion() < 30100 && $_REQUEST['type'] == 'r+') {			// version < 3.1.0
 			echo "\t<div class=\"form-label\">{$lang['emajenterlogschema']}</div>\n";
 			echo "\t<div class=\"form-input\">";
 			echo "<input type=\"text\" name=\"suffix\" list=\"suffixList\" value=\"", htmlspecialchars($_REQUEST['logschemasuffix']), "\"/ autocomplete=\"off\">";
@@ -523,7 +523,7 @@
 		}
 
 		// objects name prefix (only for tables)
-		if ($emajdb->getNumEmajVersion() < 31000 && $_REQUEST['type'] == 'r+') {			// version < 3.1.0
+		if ($emajdb->getNumEmajVersion() < 30100 && $_REQUEST['type'] == 'r+') {			// version < 3.1.0
 			// the names prefix is accessible only for a table
 			echo "\t<div class=\"form-label\">{$lang['emajenternameprefix']}</div>\n";
 			echo "\t<div class=\"form-input\">";

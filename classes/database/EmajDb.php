@@ -748,7 +748,7 @@ class EmajDb {
 
 		$data->clean($schema);
 
-		if ($this->getNumEmajVersion() >= 31000){			// version >= 3.1.0
+		if ($this->getNumEmajVersion() >= 30100){			// version >= 3.1.0
 			$sql = "SELECT 1, nspname, c.relname,
 						c.relkind || case when relkind = 'S' or (relkind = 'r' and c.relpersistence = 'p' and not c.relhasoids) then '+' else '-' end as relkind,
 						pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
@@ -859,7 +859,7 @@ class EmajDb {
 
 		// Insert the new row into the emaj_group_def table
 		$sql = "INSERT INTO emaj.emaj_group_def (grpdef_schema, grpdef_tblseq, grpdef_group, grpdef_priority,";
-		if ($this->getNumEmajVersion() < 31000){			// version < 3.1.0
+		if ($this->getNumEmajVersion() < 30100){			// version < 3.1.0
 			$sql .= "grpdef_log_schema_suffix, grpdef_emaj_names_prefix,";
 		}
 		$sql .= "grpdef_log_dat_tsp, grpdef_log_idx_tsp) 
@@ -868,7 +868,7 @@ class EmajDb {
 			", NULL";
 		else
 			$sql .= ", {$priority}";
-		if ($this->getNumEmajVersion() < 31000){			// version < 3.1.0
+		if ($this->getNumEmajVersion() < 30100){			// version < 3.1.0
 			if ($logSchemaSuffix == '' || $relkind == 'S')
 				$sql .= ", NULL";
 			else
@@ -925,7 +925,7 @@ class EmajDb {
 			$sql .= ", grpdef_priority = NULL";
 		else
 			$sql .= ", grpdef_priority = {$priority}";
-		if ($this->getNumEmajVersion() < 31000){			// version < 3.1.0
+		if ($this->getNumEmajVersion() < 30100){			// version < 3.1.0
 			if ($logSchemaSuffix == '' || $relkind == 'S')
 				$sql .= ", grpdef_log_schema_suffix = NULL";
 			else

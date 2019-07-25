@@ -865,7 +865,7 @@ class EmajDb {
 		$sql .= "grpdef_log_dat_tsp, grpdef_log_idx_tsp) 
 					VALUES ('{$schema}', '{$tblseq}', '{$group}' ";
 		if ($priority == '')
-			", NULL";
+			$sql .= ", NULL";
 		else
 			$sql .= ", {$priority}";
 		if ($this->getNumEmajVersion() < 30100){			// version < 3.1.0

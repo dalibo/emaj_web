@@ -17,6 +17,7 @@ class EmajDb {
 	private $emaj_adm = null;
 	private $emaj_viewer = null;
 	private $dblink_usable = null;
+	private $dblink_schema = null;
 	private $asyncRlbkUsable = null;
 
 	/**
@@ -205,22 +206,36 @@ class EmajDb {
 
 		$this->asyncRlbkUsable = 0;
 
-		// check dblink is usable
+		// check if dblink is usable
 		if ($this->isDblinkUsable()) {
 			// if the _dblink_open_cnx() function is available for the user, 
-			//   open a dblink connection and analyse the result
-			$sql = "SELECT CASE 
+			//   open a test dblink connection, analyse the result and close it if effetively opened
+			$test_cnx_ok = 0;
+			$sql = "SELECT CASE
 						WHEN pg_catalog.has_function_privilege('emaj._dblink_open_cnx(text)', 'EXECUTE')
-							AND emaj._dblink_open_cnx('test') >= 0 THEN 1 
-						ELSE 0 END as cnx_ok";
-			if ($data->selectField($sql,'cnx_ok')) {
-				// one can effectively use a dblink connection
-
-				// close the test connection
-				$sql = "SELECT emaj._dblink_close_cnx('test')";
-				$data->execute($sql);
-
-				// check if the parameters are set
+							THEN 1 ELSE 0 END as grant_open_ok";
+			if ($data->selectField($sql,'grant_open_ok')) {
+				if ($this->getNumEmajVersion() >= 30100){	// version >= 3.1.0
+					$sql = "SELECT CASE WHEN v_status >= 0 THEN 1 ELSE 0 END as cnx_ok, v_schema
+							FROM emaj._dblink_open_cnx('test')";
+					$rs = $data->selectSet($sql);
+					if ($rs->fields['cnx_ok']) {
+						$this->dblink_schema = $rs->fields['v_schema'];
+						$sql = "SELECT emaj._dblink_close_cnx('test', '{$this->dblink_schema}')";
+						$data->execute($sql);
+						$test_cnx_ok = 1;
+					}
+				} else {
+					$sql = "SELECT CASE WHEN emaj._dblink_open_cnx('test') >= 0 THEN 1 ELSE 0 END as cnx_ok";
+					if ($data->selectField($sql,'cnx_ok')) {
+						$sql = "SELECT emaj._dblink_close_cnx('test')";
+						$data->execute($sql);
+						$test_cnx_ok = 1;
+					}
+				}
+			}
+			if ($test_cnx_ok) {
+				// check if the emaj_web parameters are set
 				if (isset($conf['psql_path']) && isset($conf['temp_dir'])) {
 
 					// check the psql exe path supplied in the config file, 

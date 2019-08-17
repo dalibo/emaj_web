@@ -299,7 +299,7 @@
 	$lang['emajthesequence'] = 'the "%s.%s" sequence';
 	$lang['emajfromgroup'] = 'from the group "%s"';
 	$lang['emajenterpriority'] = 'Processing priority';
-	$lang['emajpriorityhelp'] = 'Tables and sequences are processed in priority ascending order, and in names alphabetic order if no priority is defined.';
+	$lang['emajpriorityhelp'] = 'Tables are processed in priority ascending order, and in names alphabetic order if no priority is defined.';
 	$lang['emajenterlogschema'] = 'Log schema suffix';
 	$lang['emajlogschemahelp'] = 'A log schema contains log tables, sequences and functions. The default log schema is \'emaj\'. If a suffix is defined for the table, its objects will be hosted in the schema \'emaj\' + suffix.';
 	$lang['emajenternameprefix'] = 'E-Maj objects name prefix';

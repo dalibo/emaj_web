@@ -327,12 +327,16 @@
 		}
 		echo "\t</datalist>\n";
 
-		// priority level
-		echo "\t<div class=\"form-label\">{$lang['emajenterpriority']}</div>\n";
-		echo "\t<div class=\"form-input\">";
-		echo "<input type=\"number\" name=\"priority\" style=\"width:6em; text-align:right;\" min=\"0\" max=\"2147483647\" value=\"\" />";
-		echo "</div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajpriorityhelp']}\"/></div>\n";
+		// priority level (only for tables)
+		if ($_REQUEST['type'] == 'r+') {
+			echo "\t<div class=\"form-label\">{$lang['emajenterpriority']}</div>\n";
+			echo "\t<div class=\"form-input\">";
+			echo "<input type=\"number\" name=\"priority\" style=\"width:6em; text-align:right;\" min=\"0\" max=\"2147483647\" value=\"\" />";
+			echo "</div>\n";
+			echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajpriorityhelp']}\"/></div>\n";
+		} else {
+			echo "<input type=\"hidden\" name=\"priority\" value=\"\" />\n";
+		}
 
 		// log schema name suffix
 		if ($emajdb->getNumEmajVersion() < 30100 && $nbTbl >= 1) {			// version < 3.1.0
@@ -498,12 +502,16 @@
 		}
 		echo "\t</datalist>\n";
 
-		// priority level
-		echo "\t<div class=\"form-label\">{$lang['emajenterpriority']}</div>\n";
-		echo "\t<div class=\"form-input\">";
-		echo "<input type=\"number\" name=\"priority\" style=\"width:6em; text-align:right;\" min=\"0\" max=\"2147483647\" value=\"{$_REQUEST['priority']}\" />";
-		echo "</div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajpriorityhelp']}\"/></div>\n";
+		// priority level (only for tables)
+		if ($_REQUEST['type'] == 'r+') {
+			echo "\t<div class=\"form-label\">{$lang['emajenterpriority']}</div>\n";
+			echo "\t<div class=\"form-input\">";
+			echo "<input type=\"number\" name=\"priority\" style=\"width:6em; text-align:right;\" min=\"0\" max=\"2147483647\" value=\"{$_REQUEST['priority']}\" />";
+			echo "</div>\n";
+			echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajpriorityhelp']}\"/></div>\n";
+		} else {
+			echo "<input type=\"hidden\" name=\"priority\" value=\"\" />\n";
+		}
 
 		// log schema name suffix (only for tables)
 		if ($emajdb->getNumEmajVersion() < 30100 && $_REQUEST['type'] == 'r+') {			// version < 3.1.0

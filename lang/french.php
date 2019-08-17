@@ -247,7 +247,6 @@
 	$lang['emajto'] = 'A';
 	$lang['emajproperties'] = 'Propriétés E-Maj';
 
-
 	// E-Maj html titles and tabs
 	$lang['emajgroupsmanagement'] = 'Gestion des groupes E-Maj';
 	$lang['emajgroupsconfiguration'] = 'Configuration des groupes de tables';
@@ -300,7 +299,7 @@
 	$lang['emajthesequence'] = 'la séquence "%s.%s"';
 	$lang['emajfromgroup'] = 'du groupe "%s"';
 	$lang['emajenterpriority'] = 'Priorité de traitement';
-	$lang['emajpriorityhelp'] = 'Les tables et séquences sont traitées par ordre croissant de priorité, et par ordre alphabétique de nom si aucune priorité n\'est définie.';
+	$lang['emajpriorityhelp'] = 'Les tables sont traitées par ordre croissant de priorité, et par ordre alphabétique de nom si aucune priorité n\'est définie.';
 	$lang['emajenterlogschema'] = 'Suffixe du schéma de log';
 	$lang['emajlogschemahelp'] = 'Un schéma de log contient des tables, séquences et fonctions de log. Le schéma de log par défaut est \'emaj\'. Si un suffixe est défini pour la table, ses objets iront dans le schéma \'emaj\' + suffixe.';
 	$lang['emajenternameprefix'] = 'Préfixe des noms d\'objets E-Maj';

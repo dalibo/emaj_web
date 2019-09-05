@@ -440,19 +440,9 @@ class Postgres extends ADODB_base {
 	 * @return null error
 	 **/
 	function hasObjectID($table) {
-		$c_schema = $this->_schema;
-		$this->clean($c_schema);
-		$this->clean($table);
 
-		$sql = "SELECT relhasoids FROM pg_catalog.pg_class WHERE relname='{$table}'
-			AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='{$c_schema}')";
-
-		$rs = $this->selectSet($sql);
-		if ($rs->recordCount() != 1) return null;
-		else {
-			$rs->fields['relhasoids'] = $this->phpBool($rs->fields['relhasoids']);
-			return $rs->fields['relhasoids'];
-		}
+	// Since Postgres 12, tables with OIDS do not exist anymore
+		return false;
 	}
 
 	/**
@@ -1310,6 +1300,7 @@ class Postgres extends ADODB_base {
 	function hasTablespaces() { return true; }
 	function hasDatabaseCollation() { return true; }
 	function hasByteaHexDefault() { return true; } 
+	function hasWithOids() { return false; }
 	
 }
 ?>

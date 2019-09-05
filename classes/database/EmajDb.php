@@ -380,6 +380,35 @@ class EmajDb {
 		return $data->selectSet($sql);
 	}
 
+	/**
+	 * Get the parameters stored into the emaj_param table
+	 */
+	function getExtensionParams() {
+		global $data;
+
+		if (!$this->isEmaj_Adm()) {
+			$table = 'emaj_visible_param';
+		} else {
+			$table = 'emaj_param';
+		}
+
+		$sql = "SELECT
+					param_key,
+					CASE
+						WHEN param_key IN ('dblink_user_password', 'alter_log_table') THEN coalesce(param_value_text, '')
+						WHEN param_key = 'history_retention' THEN coalesce(param_value_interval::text, '1 YEAR')
+						WHEN param_key = 'avg_row_rollback_duration' THEN coalesce(to_char(param_value_interval,'US'), '100')
+						WHEN param_key = 'avg_row_delete_log_duration' THEN coalesce(to_char(param_value_interval,'US'), '10')
+						WHEN param_key = 'avg_fkey_check_duration' THEN coalesce(to_char(param_value_interval,'US'), '20')
+						WHEN param_key = 'fixed_step_rollback_duration' THEN coalesce(to_char(param_value_interval,'US'), '2500')
+						WHEN param_key = 'fixed_table_rollback_duration' THEN coalesce(to_char(param_value_interval,'US'), '1000')
+						WHEN param_key = 'fixed_dblink_rollback_duration' THEN coalesce(to_char(param_value_interval,'US'), '4000')
+					END AS param_value
+					FROM emaj.{$table}
+					WHERE param_key <> 'emaj_version'";
+
+		return $data->selectSet($sql);
+	}
 
 	// GROUPS
 
@@ -507,6 +536,12 @@ class EmajDb {
 
 		} else {
 
+			if ($data->hasWithOids()) {
+				$badTypeConditions = "c.relpersistence <> 'p' OR c.relhasoids";
+			} else {
+				$badTypeConditions = "c.relpersistence <> 'p'";
+			}
+
 			$sql = "WITH
 					grp AS (
 						SELECT DISTINCT grpdef_group AS group_name FROM emaj.emaj_group_def
@@ -518,7 +553,7 @@ class EmajDb {
 						CASE WHEN nspname IS NULL THEN true ELSE false END as no_schema,                -- the schema doesn't exist
 						CASE WHEN d.grpdef_schema like 'emaj%' THEN true ELSE false END as bad_schema,  -- the schema is an emaj_schema
 						CASE WHEN relname IS NULL THEN true ELSE false END as no_relation,              -- the relation doesn't exist
-						CASE WHEN relkind = 'r' AND (c.relpersistence <> 'p' OR c.relhasoids) 
+						CASE WHEN relkind = 'r' AND ( ${badTypeConditions} ) 
 								THEN true ELSE false END as bad_type,                                   -- the table has not the right type
 						CASE WHEN rel_group IS NOT NULL THEN true ELSE false END as duplicate           -- the relation is already assigned to another created group
 					FROM emaj.emaj_group_def d
@@ -763,9 +798,15 @@ class EmajDb {
 
 		$data->clean($schema);
 
+		if ($data->hasWithOids()) {
+			$goodTypeConditions = "c.relpersistence = 'p' and not c.relhasoids";
+		} else {
+			$goodTypeConditions = "c.relpersistence = 'p'";
+		}
+
 		if ($this->getNumEmajVersion() >= 30100){			// version >= 3.1.0
 			$sql = "SELECT 1, nspname, c.relname,
-						c.relkind || case when relkind = 'S' or (relkind = 'r' and c.relpersistence = 'p' and not c.relhasoids) then '+' else '-' end as relkind,
+						c.relkind || case when relkind = 'S' or (relkind = 'r' and ${goodTypeConditions}) then '+' else '-' end as relkind,
 						pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
 						pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment, spcname AS tablespace,
 						grpdef_group, grpdef_priority, grpdef_log_dat_tsp, grpdef_log_idx_tsp
@@ -784,7 +825,7 @@ class EmajDb {
 					ORDER BY 1, relname";
 		} else {
 			$sql = "SELECT 1, nspname, c.relname,
-						c.relkind || case when relkind = 'S' or (relkind = 'r' and c.relpersistence = 'p' and not c.relhasoids) then '+' else '-' end as relkind,
+						c.relkind || case when relkind = 'S' or (relkind = 'r' and ${goodTypeConditions}) then '+' else '-' end as relkind,
 						pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
 						pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment, spcname AS tablespace,
 						grpdef_group, grpdef_priority, grpdef_log_schema_suffix, grpdef_emaj_names_prefix, grpdef_log_dat_tsp, grpdef_log_idx_tsp 			   FROM pg_catalog.pg_class c

@@ -467,6 +467,42 @@ div.required {
 	text-decoration: underline
 }
 
+/** Grid div for the parameters list */
+div.form-container-param {
+	display: grid;
+	grid-template-columns: minmax(70px, min-content) min-content min-content min-content;
+	grid-gap: 7px;
+}
+div.form-param-label {
+	white-space: nowrap;
+	background-color: #e6e6e6;
+	border-radius: 5px;
+	padding-right: 10px;
+	padding-left: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: right;
+}
+div.form-param-info {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+div.form-param-value {
+	white-space: nowrap;
+	border: solid 1px #e6e6e6;
+	border-radius: 5px;
+	padding-right: 10px;
+	padding-left: 10px;
+	display: flex;
+	align-items: center;
+}
+div.form-param-button {
+	white-space: nowrap;
+	display: flex;
+	align-items: center;
+}
+
 /** Specific div for the intro.php page **/
 #welcome {
 	margin: 20px 20px 40px 20px;

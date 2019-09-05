@@ -278,6 +278,27 @@
 	$lang['emajdiskspace'] = 'Place disque occupée par l\'environnement E-Maj : %s de la base de données courante.';
 	$lang['emajchecking'] = 'Intégrité de l\'environnement E-Maj';
 	$lang['emajdiagnostics'] = 'Diagnostics';
+	$lang['emajextparams'] = 'Paramètres de l\'extension';
+	$lang['emajpargeneral'] = 'Paramètres généraux';
+	$lang['emajparcostmodel'] = 'Paramètres du modèle de coûts des rollbacks E-Maj';
+	$lang['emajparhistret'] = 'Délai de rétention des historiques';
+	$lang['emajparhistretinfo'] = 'Le paramètre \'history_retention\' de la table emaj_param détermine le délai de rétention du contenu des différentes tables internes d\'historiques des opérations E-Maj. La valeur par défaut est de 1 an. Le paramètre est de type INTERVAL.';
+	$lang['emajpardblinkcon'] = 'Chaine de connexion dblink';
+	$lang['emajpardblinkconinfo'] = 'Le paramètre \'dblink_user_password\' de la table emaj_param définit la chaîne de connexion utilisée par dblink pour permettre le suivi des opérations de rollback E-Maj en cours d\'exécution. Le format du paramètre correspond aux chaînes de connexion habituelles pour PostgreSQL, par exemple \'user=<user> password=<password>\'. Par défaut le paramètre est vide, empếchant le suivi des opérations de rollback E-Maj.';
+	$lang['emajparalterlog'] = 'Modification de la structure des tables de log';
+	$lang['emajparalterloginfo'] = 'Le paramètre \'alter_log_table\' de la table emaj_param définit la modification de la structure des tables de log à leur création. Il prend la forme d\'une directive de type ALTER TABLE, par exemple \'ADD COLUMN emaj_appname TEXT DEFAULT current_setting(\'\'application_name\'\')\'. Le paramètre est vide par défaut.';
+	$lang['emajparfixedstep'] = 'Coût fixe d\'une étape de rollback';
+	$lang['emajparfixedstepinfo'] = 'Le paramètre \'fixed_step_rollback_duration\' de la table emaj_param détermine un coût fixe de traitement d\'une étape élémentaire de rollback E-Maj. Le paramètre est de type INTERVAL. La valeur par défaut est de 2,5 ms.';
+	$lang['emajparfixeddblink'] = 'Surcoût dblink d\'une étape de rollback';
+	$lang['emajparfixeddblinkinfo'] = 'Le paramètre \'fixed_dblink_rollback_duration\' de la table emaj_param détermine un surcoût pour chaque étape élémentaire de rollback E-Maj lorsqu\'une connexion dblink est utilisée. Le paramètre est de type INTERVAL. La valeur par défaut est de 4 ms.';
+	$lang['emajparfixedrlbktbl'] = 'Coût fixe de rollback d\'une table';
+	$lang['emajparfixedrlbktblinfo'] = 'Le paramètre \'fixed_table_rollback_duration\' de la table emaj_param détermine un coût fixe de rollback d\'une table ou séquence. Le paramètre est de type INTERVAL. La valeur par défaut est de 1 ms.';
+	$lang['emajparavgrowrlbk'] = 'Coût moyen de rollback d\'une mise à jour';
+	$lang['emajparavgrowrlbkinfo'] = 'Le paramètre \'avg_row_rollback_duration\' de la table emaj_param détermine le coût moyen de rollback d\'une mise à jour élémentaire. Le paramètre est de type INTERVAL. La valeur par défaut est de 100 µs.';
+	$lang['emajparavgrowdel'] = 'Coût moyen de suppression d\'une mise à jour des logs';
+	$lang['emajparavgrowdelinfo'] = 'Le paramètre \'avg_row_delete_log_duration\' de la table emaj_param détermine le coût moyen de suppression d\'une mise à jour élémentaire dans le log E-Maj. Le paramètre est de type INTERVAL. La valeur par défaut est de 10 µs.';
+	$lang['emajparavgfkcheck'] = 'Coût moyen de vérification d\'une clé étrangère';
+	$lang['emajparavgfkcheckinfo'] = 'Le paramètre \'avg_fkey_check_duration\' de la table emaj_param détermine le coût moyen de vérification d\'une clé étrangère. Le paramètre est de type INTERVAL. La valeur par défaut est de 20 µs.';
 
 	// Groups' content setup
 	$lang['emajappschemas'] = 'Les schémas applicatifs';

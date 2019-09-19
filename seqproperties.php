@@ -1,7 +1,7 @@
 <?php
 
 	/*
-	 * Manage sequences in a database
+	 * Display the properties of a given sequence
 	 */
 
 	// Include application functions
@@ -20,41 +20,6 @@
 		} else {
 			return $val;
 		}
-	}
-
-	/**
-	 * Display list of all sequences in the database/schema
-	 */
-	function doDefault($msg = '')	{
-		global $data, $conf, $misc;
-		global $lang;
-
-		$misc->printHeader('schema', 'schema', 'sequences');
-		$misc->printMsg($msg);
-		$misc->printTitle(sprintf($lang['strsequenceslist'], $_REQUEST['schema']));
-
-		// Get all sequences
-		$sequences = $data->getSequences();
-
-		$columns = array(
-			'sequence' => array(
-				'title' => $lang['strsequence'],
-				'field' => field('seqname'),
-				'url'   => "sequences.php?action=properties&amp;{$misc->href}&amp;",
-				'vars'  => array('sequence' => 'seqname'),
-			),
-			'owner' => array(
-				'title' => $lang['strowner'],
-				'field' => field('seqowner'),
-			),
-			'comment' => array(
-				'title' => $lang['strcomment'],
-				'field' => field('seqcomment'),
-			),
-		);
-
-		$misc->printTable($sequences, $columns, $actions, 'sequences-sequences', $lang['strnosequences'], null, array('sorter' => true, 'filter' => true));
-
 	}
 
 	/**
@@ -145,35 +110,6 @@
 		else echo "<p>{$lang['strnodata']}</p>\n";
 	}
 
-	/**
-	 * Generate XML for the browser tree.
-	 */
-	function doTree() {
-		global $misc, $data;
-
-		$sequences = $data->getSequences();
-
-		$reqvars = $misc->getRequestVars('sequence');
-
-		$attrs = array(
-			'text'   => field('seqname'),
-			'icon'   => 'Sequence',
-			'toolTip'=> field('seqcomment'),
-			'action' => url('sequences.php',
-							$reqvars,
-							array (
-								'action' => 'properties',
-								'sequence' => field('seqname')
-							)
-						)
-		);
-
-		$misc->printTree($sequences, $attrs, 'sequences');
-		exit;
-	}
-
-	if ($action == 'tree') doTree();
-
 	// Print header
 	$misc->printHtmlHeader($lang['strsequences']);
 	$misc->printBody();
@@ -183,7 +119,7 @@
 			doProperties();
 			break;
 		default:
-			doDefault();
+			doProperties();
 			break;
 	}
 

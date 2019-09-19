@@ -37,6 +37,9 @@
 			return htmlentities($href);
 		}
 
+		/**
+		 * Defines the links of the element of the bread crumb trail.
+		 */
 		function getSubjectParams($subject) {
 
 			$vars = array();
@@ -49,63 +52,55 @@
 					);
 					break;
 				case 'server':
-					$vars = array ('params' => array(
-						'server' => $_REQUEST['server'],
-						'subject' => 'server'
+					$vars = array (
+						'params' => array(
+							'server' => $_REQUEST['server'],
+							'subject' => 'server'
 					));
 					break;
 				case 'database':
-					$vars = array('params' => array(
-						'server' => $_REQUEST['server'],
-						'subject' => 'database',
-						'database' => $_REQUEST['database'],
+					$vars = array(
+						'params' => array(
+							'server' => $_REQUEST['server'],
+							'subject' => 'database',
+							'database' => $_REQUEST['database'],
 					));
 					break;
 				case 'schema':
-					$vars = array('params' => array(
-						'server' => $_REQUEST['server'],
-						'subject' => 'schema',
-						'database' => $_REQUEST['database'],
-						'schema' => $_REQUEST['schema']
+					$vars = array(
+						'url' => 'schemas.php',
+						'params' => array(
+							'server' => $_REQUEST['server'],
+							'subject' => 'schema',
+							'database' => $_REQUEST['database'],
+							'schema' => $_REQUEST['schema']
 					));
 					break;
 				case 'table':
-					$vars = array('params' => array(
-						'server' => $_REQUEST['server'],
-						'subject' => 'table',
-						'database' => $_REQUEST['database'],
-						'schema' => $_REQUEST['schema'],
-						'table' => $_REQUEST['table']
-					));
-					break;
-				case 'selectrows':
 					$vars = array(
-						'url' => 'tables.php',
 						'params' => array(
 							'server' => $_REQUEST['server'],
 							'subject' => 'table',
 							'database' => $_REQUEST['database'],
 							'schema' => $_REQUEST['schema'],
-							'table' => $_REQUEST['table'],
-							'action' => 'confselectrows'
+							'table' => $_REQUEST['table']
 					));
 					break;
-				case 'column':
-						$vars = array('params' => array(
+				case 'sequence':
+					$vars = array(
+						'params' => array(
 							'server' => $_REQUEST['server'],
-							'subject' => 'column',
+							'subject' => 'sequence',
 							'database' => $_REQUEST['database'],
 							'schema' => $_REQUEST['schema'],
-							'table' => $_REQUEST['table'],
-							'column' => $_REQUEST['column']
-						));
+							'sequence' => $_REQUEST['sequence']
+					));
 					break;
-				case 'emaj':
+				case 'emajgroup':
 					$vars = array (
-						'url' => 'emajgroups.php',
 						'params' => array (
 							'server' => $_REQUEST['server'],
-							'subject' => 'emaj',
+							'subject' => 'emajgroup',
 							'action' => $_REQUEST['action'],
 							'database' => $_REQUEST['database'],
 							'group' => $_REQUEST['group'],
@@ -850,20 +845,27 @@
 						'schemas' => array (
 							'title' => $lang['strschemas'],
 							'url'   => 'schemas.php',
-							'urlvars' => array('subject' => 'database'),
+							'urlvars' => array(
+								'subject' => 'database',
+								'action' => 'list_schemas'
+							),
 							'icon'  => 'Schemas',
 						),
 						'triggers' => array (
 							'title' => $lang['strtriggers'],
 							'url'   => 'triggers.php',
-							'urlvars' => array('subject' => 'database'),
+							'urlvars' => array(
+								'subject' => 'database'
+							),
 							'icon'  => 'Triggers',
 							'tree' => false,
 						),
 						'emajenvir' => array (
 							'title' => $lang['emajenvir'],
 							'url' => 'emajenvir.php',
-							'urlvars' => array('subject' => 'database'),
+							'urlvars' => array(
+								'subject' => 'database'
+							),
 							'icon' => 'Emaj',
 							'tree' => false,
 						)
@@ -905,36 +907,25 @@
 					);
 					break;
 
-				case 'schema':
-					$tabs = array (
-						'tables' => array (
-							'title' => $lang['strtables'],
-							'url'   => 'tables.php',
-							'urlvars' => array('subject' => 'schema'),
-							'icon'  => 'Tables',
-						),
-						'sequences' => array (
-							'title' => $lang['strsequences'],
-							'url'   => 'sequences.php',
-							'urlvars' => array('subject' => 'schema'),
-							'icon'  => 'Sequences',
-						),
-					);
-					break;
-
 				case 'table':
 					$tabs = array (
 						'properties' => array (
 							'title' => $lang['strproperties'],
 							'url'   => 'tblproperties.php',
-							'urlvars' => array('subject' => 'table', 'table' => field('table')),
+							'urlvars' => array(
+								'subject' => 'table',
+								'table' => field('table')
+							),
 							'icon'  => 'Property',
 							'branch'=> true,
 						),
 						'content' => array (
 							'title' => $lang['emajcontent'],
 							'url'   => 'display.php',
-							'urlvars' => array('subject' => 'table', 'table' => field('table')),
+							'urlvars' => array(
+								'subject' => 'table',
+								'table' => field('table')
+							),
 							'icon'  => 'Table',
 							'branch'=> true,
 						),
@@ -945,8 +936,11 @@
 					$tabs = array (
 						'properties' => array (
 							'title' => $lang['strproperties'],
-							'url'   => 'sequences.php',
-							'urlvars' => array('action' => 'properties', 'subject' => 'sequence', 'sequence' => field('sequence')),
+							'url'   => 'seqproperties.php',
+							'urlvars' => array(
+								'action' => 'properties',
+								'subject' => 'sequence',
+								'sequence' => field('sequence')),
 							'icon'  => 'Property',
 							'branch'=> true,
 						),
@@ -1085,38 +1079,33 @@
 			}
 			if ($subject == 'table') $done = true;
 
+			if (isset($_REQUEST['sequence']) && !$done) {
+				$trail['sequence'] = array(
+					'title' => $lang['strsequence'],
+					'text'  => $_REQUEST['sequence'],
+					'url'   => $this->getHREFSubject('sequence'),
+					'icon'  => 'Sequence'
+				);
+			}
+			if ($subject == 'sequence') $done = true;
+
 			if (isset($_REQUEST['group']) && !$done) {
 				$trail['emaj'] = array(
 					'title' => 'E-Maj',
 					'text'  => $_REQUEST['group'],
-					'url'   => $this->getHREFSubject('emaj'),
+					'url'   => $this->getHREFSubject('emajgroup'),
 					'icon'  => 'Emaj'
 				);
 			}
 			if ($subject == 'group') $done = true;
 
 			if (!$done && !is_null($subject)) {
-				switch ($subject) {
-					case 'column':
-						$trail['column'] = array (
-							'title' => $lang['strcolumn'],
-							'text'  => $_REQUEST['column'],
-							'icon'	=> 'Column',
-							'url'   => $this->getHREFSubject('column')
-						);
-						break;
-					default:
-						if (isset($_REQUEST[$subject])) {
-							switch ($subject) {
-								case 'sequence': $icon = 'Sequence'; break;
-								default: $icon = null; break;
-							}
-							$trail[$subject] = array(
-								'title' => $lang['str'.$subject],
-								'text'  => $_REQUEST[$subject],
-								'icon'  => $icon,
-							);
-						}
+				if (isset($_REQUEST[$subject])) {
+					$trail[$subject] = array(
+						'title' => $lang['str'.$subject],
+						'text'  => $_REQUEST[$subject],
+						'icon'  => null,
+					);
 				}
 			}
 

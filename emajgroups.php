@@ -3336,22 +3336,19 @@
 	function doTree() {
 		global $misc, $emajdb;
 
-		$reqvars = $misc->getRequestVars('database');
-
 		$groups = $emajdb->getGroups();
+
+		$reqvars = $misc->getRequestVars('database');
 
 		$attrs = array(
 			'text' => field('group_name'),
 			'icon' => 'EmajGroup',
-			'iconaction' => url	('emajgroups.php',$reqvars,
-				array(
-					'action'  => 'show_group',
-					'group'  => field('group_name')
-					)
-				),
 			'toolTip' => field('group_comment'),
-			'action' => url	('emajgroups.php',$reqvars,
+			'action' => url	(
+				'redirect.php',
+				$reqvars,
 				array(
+					'subject' => 'emajgroup',
 					'action'  => 'show_group',
 					'group'  => field('group_name')
 					)

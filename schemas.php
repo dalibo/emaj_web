@@ -11,24 +11,33 @@
 	if (!isset($msg)) $msg = '';
 
 	/**
-	 * Show default list of schemas in the database
+	 * Show the list of schemas in the database
+	 * and the tables and sequences lists if a schema has already been selected
 	 */
-	function doDefault($msg = '') {
+	function list_schemas($msg = '', $errMsg = '', $prevSchema = '') {
 		global $data, $misc, $conf;
 		global $lang;
 
-		$misc->printHeader('database', 'database', 'schemas');
+		if (!isset($_REQUEST['schema'])) $_REQUEST['schema'] = $prevSchema;
+		if (is_array($_REQUEST['schema'])) $_REQUEST['schema'] = $_REQUEST['schema'][0];
+
+		if (isset($_REQUEST['schema']) && $_REQUEST['schema'] != '') {	// the trail differs if a schema is selected
+			$misc->printHeader('schema', 'database', 'schemas');
+		} else {
+			$misc->printHeader('database', 'database', 'schemas');
+		};
+
 		$misc->printMsg($msg);
 		$misc->printTitle($lang['strallschemas']);
 
-		// Check that the DB actually supports schemas
+		// Get the list of schemas
 		$schemas = $data->getSchemas();
 
 		$columns = array(
 			'schema' => array(
 				'title' => $lang['strschema'],
 				'field' => field('nspname'),
-				'url'   => "redirect.php?subject=schema&amp;{$misc->href}&amp;",
+				'url'   => "schemas.php?action=list_schemas&amp;back=define&amp;{$misc->href}&amp;",
 				'vars'  => array('schema' => 'nspname'),
 			),
 			'owner' => array(
@@ -41,9 +50,96 @@
 			),
 		);
 
-
 		$misc->printTable($schemas, $columns, $actions, 'schemas-schemas', $lang['strnoschemas'], null, array('sorter' => true, 'filter' => true));
 
+		// Tables and séquences for the selected schema, if any
+
+		if (isset($_REQUEST['schema']) && $_REQUEST['schema'] != '') {
+
+			// Display the tables list
+			echo "<a name=\"tables\">&nbsp;</a>\n";
+
+			$misc->printTitle(sprintf($lang['strtableslist'], $_REQUEST['schema']));
+
+			$tables = $data->getTables();
+
+			$columns = array(
+				'table' => array(
+					'title' => $lang['strtable'],
+					'field' => field('relname'),
+					'url'	=> "tblproperties.php?subject=table&amp;{$misc->href}&amp;",
+					'vars'  => array('table' => 'relname'),
+				),
+				'actions' => array(
+					'title' => $lang['stractions'],
+				),
+				'owner' => array(
+					'title' => $lang['strowner'],
+					'field' => field('relowner'),
+				),
+				'tablespace' => array(
+					'title' => $lang['strtablespace'],
+					'field' => field('tablespace')
+				),
+				'tuples' => array(
+					'title' => $lang['strestimatedrowcount'],
+					'field' => field('reltuples'),
+					'type'  => 'numeric'
+				),
+				'comment' => array(
+					'title' => $lang['strcomment'],
+					'field' => field('relcomment'),
+				),
+			);
+
+			$actions = array(
+				'browse' => array(
+					'content' => $lang['strbrowse'],
+					'attr'=> array (
+						'href' => array (
+							'url' => 'display.php',
+							'urlvars' => array (
+								'subject' => 'table',
+								'return' => 'schema',
+								'table' => field('relname')
+							)
+						)
+					)
+				),
+			);
+
+			if (!$data->hasTablespaces()) unset($columns['tablespace']);
+
+			$misc->printTable($tables, $columns, $actions, 'tables-tables', $lang['strnotables'], null, array('sorter' => true, 'filter' => true));
+
+			// Display the sequences list
+
+			echo "<a name=\"sequences\">&nbsp;</a>\n";
+
+			$misc->printTitle(sprintf($lang['strsequenceslist'], $_REQUEST['schema']));
+
+			// Get all sequences
+			$sequences = $data->getSequences();
+
+			$columns = array(
+				'sequence' => array(
+					'title' => $lang['strsequence'],
+					'field' => field('seqname'),
+					'url'   => "seqproperties.php?action=properties&amp;{$misc->href}&amp;",
+					'vars'  => array('sequence' => 'seqname'),
+				),
+				'owner' => array(
+					'title' => $lang['strowner'],
+					'field' => field('seqowner'),
+				),
+				'comment' => array(
+					'title' => $lang['strcomment'],
+					'field' => field('seqcomment'),
+				),
+			);
+
+			$misc->printTable($sequences, $columns, $actions, 'sequences-sequences', $lang['strnosequences'], null, array('sorter' => true, 'filter' => true));
+		}
 	}
 
 	/**
@@ -60,56 +156,21 @@
 			'text'   => field('nspname'),
 			'icon'   => 'Schema',
 			'toolTip'=> field('nspcomment'),
-			'action' => url('redirect.php',
-							$reqvars,
-							array(
-								'subject' => 'schema',
-								'schema'  => field('nspname')
-							)
-						),
-			'branch' => url('schemas.php',
-							$reqvars,
-							array(
-								'action'  => 'subtree',
-								'schema'  => field('nspname')
-							)
-						),
+			'action' => url(
+				'schemas.php',
+				$reqvars,
+				array(
+					'action' => 'list_schemas',
+					'schema'  => field('nspname')
+				)
+			),
 		);
 
 		$misc->printTree($schemas, $attrs, 'schemas');
-
-		exit;
-	}
-
-	function doSubTree() {
-		global $misc, $data, $lang;
-
-		$tabs = $misc->getNavTabs('schema');
-
-		$items = $misc->adjustTabsForTree($tabs);
-
-		$reqvars = $misc->getRequestVars('schema');
-
-		$attrs = array(
-			'text'   => field('title'),
-			'icon'   => field('icon'),
-			'action' => url(field('url'),
-							$reqvars,
-							field('urlvars', array())
-						),
-			'branch' => url(field('url'),
-							$reqvars,
-							field('urlvars'),
-							array('action' => 'tree')
-						)
-		);
-
-		$misc->printTree($items, $attrs, 'schema');
 		exit;
 	}
 
 	if ($action == 'tree') doTree();
-	if ($action == 'subtree') doSubTree();
 
 	$misc->printHtmlHeader($lang['strschemas']);
 	$misc->printBody();
@@ -117,8 +178,11 @@
 	if (isset($_POST['cancel'])) $action = '';
 
 	switch ($action) {
+		case 'list_schemas':
+			list_schemas();
+			break;
 		default:
-			doDefault();
+			list_schemas();
 			break;
 	}
 

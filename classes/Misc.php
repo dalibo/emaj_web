@@ -779,7 +779,7 @@
 		 * @param $section The name of the tab bar.
 		 */
 		function getNavTabs($section) {
-			global $data, $lang, $conf, $emajdb;
+			global $data, $lang, $conf, $emajdb, $oldest_supported_emaj_version_num;
 
 			$tabs = array();
 
@@ -811,6 +811,10 @@
 					break;
 
 				case 'database':
+					$emajNotAvail = (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
+						&& $emajdb->getNumEmajVersion() >= $oldest_supported_emaj_version_num));
+					$hideGroupConf = $emajNotAvail || !($emajdb->isEmaj_Adm());
+
 					$tabs = array (
 						'emajgroups' => array (
 							'title' => $lang['emajgroups'],
@@ -819,6 +823,7 @@
 								'subject' => 'database',
 								'action' => 'show_groups'
 							),
+							'hide' => $emajNotAvail,
 							'icon' => 'EmajGroup',
 						),
 						'emajconfiguregroups' => array (
@@ -828,18 +833,8 @@
 								'subject' => 'database',
 								'action' => 'configure_groups'
 							),
-							'hide' => !($emajdb->isEmaj_Adm()),
+							'hide' => $hideGroupConf,
 							'icon' => 'Admin',
-							'tree' => false,
-						),
-						'emajrollbacks' => array (
-							'title' => $lang['emajrlbkop'],
-							'url' => 'emajrollbacks.php',
-							'urlvars' => array(
-								'subject' => 'database',
-								'action' => 'show_rollbacks'
-							),
-							'icon' => 'EmajRollback',
 							'tree' => false,
 						),
 						'schemas' => array (
@@ -858,6 +853,17 @@
 								'subject' => 'database'
 							),
 							'icon'  => 'Triggers',
+							'tree' => false,
+						),
+						'emajrollbacks' => array (
+							'title' => $lang['emajrlbkop'],
+							'url' => 'emajrollbacks.php',
+							'urlvars' => array(
+								'subject' => 'database',
+								'action' => 'show_rollbacks'
+							),
+							'hide' => $emajNotAvail,
+							'icon' => 'EmajRollback',
 							'tree' => false,
 						),
 						'emajenvir' => array (
@@ -2018,27 +2024,5 @@
 			
 			echo "</td></tr></table>\n";
 		}
-
-		/**
-		* Check that the emaj extension exists in the current database, is accessible by the current user and is not too old
-		*/
-		function checkEmajExtension() {
-			global $lang, $emajdb, $oldest_supported_emaj_version_num;
-	
-		// For all but the emaj_envir functions,
-			// if Emaj is not usable for this database, only display a message
-			if (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
-				&& $emajdb->getNumEmajVersion() >= $oldest_supported_emaj_version_num)) {
-				echo "<p>";
-				$href = $this->getHREF();
-				$link = "<a href=\"emajenvir.php?{$href}\">\"{$lang['emajenvir']}\"</a>";
-				echo sprintf($lang['emajnotavail'], $link);
-				echo "</p>";
-				return 0;
-			}
-			return 1;
-
-		}
-
 	}
 ?>

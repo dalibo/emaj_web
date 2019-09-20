@@ -226,202 +226,140 @@
 
 		$misc->printHeader('database', 'database', 'emajgroups');
 
-		$emajOK = $misc->checkEmajExtension();
+		$misc->printMsg($msg,$errMsg);
 
-		if ($emajOK) {
-			$misc->printMsg($msg,$errMsg);
+		$idleGroups = $emajdb->getIdleGroups();
+		$loggingGroups = $emajdb->getLoggingGroups();
+		$configuredGroups = $emajdb->getConfiguredGroups();
 
-			$idleGroups = $emajdb->getIdleGroups();
-			$loggingGroups = $emajdb->getLoggingGroups();
-			$configuredGroups = $emajdb->getConfiguredGroups();
+		$columns = array(
+			'group' => array(
+				'title' => $lang['emajgroup'],
+				'field' => field('group_name'),
+				'url'   => "emajgroups.php?action=show_group&amp;{$misc->href}&amp;",
+				'vars'  => array('group' => 'group_name'),
+			),
+			'creationdatetime' => array(
+				'title' => $lang['emajcreationdatetime'],
+				'field' => field('creation_datetime'),
+				'params'=> array('align' => 'center'),
+			),
+			'nbtbl' => array(
+				'title' => $lang['emajnbtbl'],
+				'field' => field('group_nb_table'),
+				'type'  => 'numeric'
+			),
+			'nbseq' => array(
+				'title' => $lang['emajnbseq'],
+				'field' => field('group_nb_sequence'),
+				'type'  => 'numeric'
+			),
+			'rollbackable' => array(
+				'title' => $lang['strtype'],
+				'field' => field('group_type'),
+				'type'	=> 'callback',
+				'params'=> array(
+						'function' => 'renderGroupType',
+						'align' => 'center'
+						),
+				'sorter_text_extraction' => 'img_alt',
+				'filter' => false,
+			),
+			'nbmark' => array(
+				'title' => $lang['emajnbmark'],
+				'field' => field('nb_mark'),
+				'type'  => 'numeric'
+			),
+			'actions' => array(
+				'title' => $lang['stractions'],
+			),
+			'comment' => array(
+				'title' => $lang['strcomment'],
+				'field' => field('abbr_comment'),
+			),
+		);
 
-			$columns = array(
-				'group' => array(
-					'title' => $lang['emajgroup'],
-					'field' => field('group_name'),
-					'url'   => "emajgroups.php?action=show_group&amp;{$misc->href}&amp;",
-					'vars'  => array('group' => 'group_name'),
+		$urlvars = $misc->getRequestVars();
+
+		$loggingActions = array();
+		if ($emajdb->isEmaj_Adm()) {
+			$loggingActions = array_merge($loggingActions, array(
+				'multiactions' => array(
+					'keycols' => array('group' => 'group_name'),
+					'url' => "emajgroups.php?back=list",
 				),
-				'creationdatetime' => array(
-					'title' => $lang['emajcreationdatetime'],
-					'field' => field('creation_datetime'),
-					'params'=> array('align' => 'center'),
+				'set_mark_group' => array(
+					'content' => $lang['emajsetmark'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'set_mark_group',
+								'back' => 'list',
+								'group' => field('group_name'),
+							)))),
+					'multiaction' => 'set_mark_groups',
 				),
-				'nbtbl' => array(
-					'title' => $lang['emajnbtbl'],
-					'field' => field('group_nb_table'),
-					'type'  => 'numeric'
+				'protect_group' => array(
+					'content' => $lang['emajprotect'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'protect_group',
+								'back' => 'list',
+								'group' => field('group_name'),
+							))))
+					),
+				'unprotect_group' => array(
+					'content' => $lang['emajunprotect'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'unprotect_group',
+								'back' => 'list',
+								'group' => field('group_name'),
+							))))
+					),
+				'rollback_group' => array(
+					'content' => $lang['emajrlbk'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'rollback_group',
+								'back' => 'list',
+								'group' => field('group_name'),
+							)))),
+					'multiaction' => 'rollback_groups',
 				),
-				'nbseq' => array(
-					'title' => $lang['emajnbseq'],
-					'field' => field('group_nb_sequence'),
-					'type'  => 'numeric'
+				'stop_group' => array(
+					'content' => $lang['strstop'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'stop_group',
+								'back' => 'list',
+								'group' => field('group_name'),
+							)))),
+					'multiaction' => 'stop_groups',
 				),
-				'rollbackable' => array(
-					'title' => $lang['strtype'],
-					'field' => field('group_type'),
-					'type'	=> 'callback',
-					'params'=> array(
-							'function' => 'renderGroupType',
-							'align' => 'center'
-							),
-					'sorter_text_extraction' => 'img_alt',
-					'filter' => false,
-				),
-				'nbmark' => array(
-					'title' => $lang['emajnbmark'],
-					'field' => field('nb_mark'),
-					'type'  => 'numeric'
-				),
-				'actions' => array(
-					'title' => $lang['stractions'],
-				),
-				'comment' => array(
-					'title' => $lang['strcomment'],
-					'field' => field('abbr_comment'),
-				),
+				'comment_group' => array(
+					'content' => $lang['emajsetcomment'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'comment_group',
+								'back' => 'list',
+								'group' => field('group_name'),
+							))))
+				))
 			);
-
-			$urlvars = $misc->getRequestVars();
-
-			$loggingActions = array();
-			if ($emajdb->isEmaj_Adm()) {
+			if ($emajdb->getNumEmajVersion() >= 20100) {	// version >= 2.1.0
 				$loggingActions = array_merge($loggingActions, array(
-					'multiactions' => array(
-						'keycols' => array('group' => 'group_name'),
-						'url' => "emajgroups.php?back=list",
-					),
-					'set_mark_group' => array(
-						'content' => $lang['emajsetmark'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'emajgroups.php',
-								'urlvars' => array_merge($urlvars, array (
-									'action' => 'set_mark_group',
-									'back' => 'list',
-									'group' => field('group_name'),
-								)))),
-						'multiaction' => 'set_mark_groups',
-					),
-					'protect_group' => array(
-						'content' => $lang['emajprotect'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'emajgroups.php',
-								'urlvars' => array_merge($urlvars, array (
-									'action' => 'protect_group',
-									'back' => 'list',
-									'group' => field('group_name'),
-								))))
-						),
-					'unprotect_group' => array(
-						'content' => $lang['emajunprotect'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'emajgroups.php',
-								'urlvars' => array_merge($urlvars, array (
-									'action' => 'unprotect_group',
-									'back' => 'list',
-									'group' => field('group_name'),
-								))))
-						),
-					'rollback_group' => array(
-						'content' => $lang['emajrlbk'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'emajgroups.php',
-								'urlvars' => array_merge($urlvars, array (
-									'action' => 'rollback_group',
-									'back' => 'list',
-									'group' => field('group_name'),
-								)))),
-						'multiaction' => 'rollback_groups',
-					),
-					'stop_group' => array(
-						'content' => $lang['strstop'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'emajgroups.php',
-								'urlvars' => array_merge($urlvars, array (
-									'action' => 'stop_group',
-									'back' => 'list',
-									'group' => field('group_name'),
-								)))),
-						'multiaction' => 'stop_groups',
-					),
-					'comment_group' => array(
-						'content' => $lang['emajsetcomment'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'emajgroups.php',
-								'urlvars' => array_merge($urlvars, array (
-									'action' => 'comment_group',
-									'back' => 'list',
-									'group' => field('group_name'),
-								))))
-					))
-				);
-				if ($emajdb->getNumEmajVersion() >= 20100) {	// version >= 2.1.0
-					$loggingActions = array_merge($loggingActions, array(
-						'alter_group' => array(
-							'content' => $lang['emajApplyConfChanges'],
-							'attr' => array (
-								'href' => array (
-									'url' => 'emajgroups.php',
-									'urlvars' => array_merge($urlvars, array (
-										'action' => 'alter_group',
-										'back' => 'list',
-										'group' => field('group_name'),
-								))))
-						),
-					));
-					if ($emajdb->getNumEmajVersion() >= 20100) {	// version >= 2.1.0
-							$loggingActions['alter_group']['multiaction'] = 'alter_groups';
-					}
-				};
-			};
-
-			$idleActions = array();
-			if ($emajdb->isEmaj_Adm()) {
-				$idleActions = array_merge($idleActions, array(
-					'multiactions' => array(
-						'keycols' => array('group' => 'group_name'),
-						'url' => "emajgroups.php?back=list",
-					),
-					'start_group' => array(
-						'content' => $lang['strstart'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'emajgroups.php',
-								'urlvars' => array_merge($urlvars, array (
-									'action' => 'start_group',
-									'back' => 'list',
-									'group' => field('group_name'),
-								)))),
-						'multiaction' => 'start_groups',
-					),
-					'reset_group' => array(
-						'content' => $lang['strreset'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'emajgroups.php',
-								'urlvars' => array_merge($urlvars, array (
-									'action' => 'reset_group',
-									'back' => 'list',
-									'group' => field('group_name'),
-								))))
-					),
-					'comment_group' => array(
-						'content' => $lang['emajsetcomment'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'emajgroups.php',
-								'urlvars' => array_merge($urlvars, array (
-									'action' => 'comment_group',
-									'back' => 'list',
-									'group' => field('group_name'),
-								))))
-					),
 					'alter_group' => array(
 						'content' => $lang['emajApplyConfChanges'],
 						'attr' => array (
@@ -435,99 +373,157 @@
 					),
 				));
 				if ($emajdb->getNumEmajVersion() >= 20100) {	// version >= 2.1.0
-						$idleActions['alter_group']['multiaction'] = 'alter_groups';
+						$loggingActions['alter_group']['multiaction'] = 'alter_groups';
 				}
-				$idleActions = array_merge($idleActions, array(
-					'drop_group' => array(
-						'content' => $lang['strdrop'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'emajgroups.php',
-								'urlvars' => array_merge($urlvars, array (
-									'action' => 'drop_group',
-									'back' => 'list',
-									'group' => field('group_name'),
-								))))
-					),
-				));
 			};
+		};
 
-			$configuredColumns = array(
-				'group' => array(
-					'title' => $lang['emajgroup'],
-					'field' => field('grpdef_group'),
+		$idleActions = array();
+		if ($emajdb->isEmaj_Adm()) {
+			$idleActions = array_merge($idleActions, array(
+				'multiactions' => array(
+					'keycols' => array('group' => 'group_name'),
+					'url' => "emajgroups.php?back=list",
 				),
-				'actions' => array(
-					'title' => $lang['stractions'],
+				'start_group' => array(
+					'content' => $lang['strstart'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'start_group',
+								'back' => 'list',
+								'group' => field('group_name'),
+							)))),
+					'multiaction' => 'start_groups',
 				),
-				'nbtbl' => array(
-					'title' => $lang['emajnbtbl'],
-					'field' => field('group_nb_table'),
-					'type'  => 'numeric'
+				'reset_group' => array(
+					'content' => $lang['strreset'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'reset_group',
+								'back' => 'list',
+								'group' => field('group_name'),
+							))))
 				),
-				'nbseq' => array(
-					'title' => $lang['emajnbseq'],
-					'field' => field('group_nb_sequence'),
-					'type'  => 'numeric'
+				'comment_group' => array(
+					'content' => $lang['emajsetcomment'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'comment_group',
+								'back' => 'list',
+								'group' => field('group_name'),
+							))))
+				),
+				'alter_group' => array(
+					'content' => $lang['emajApplyConfChanges'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'alter_group',
+								'back' => 'list',
+								'group' => field('group_name'),
+						))))
+				),
+			));
+			if ($emajdb->getNumEmajVersion() >= 20100) {	// version >= 2.1.0
+					$idleActions['alter_group']['multiaction'] = 'alter_groups';
+			}
+			$idleActions = array_merge($idleActions, array(
+				'drop_group' => array(
+					'content' => $lang['strdrop'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'drop_group',
+								'back' => 'list',
+								'group' => field('group_name'),
+							))))
+				),
+			));
+		};
+
+		$configuredColumns = array(
+			'group' => array(
+				'title' => $lang['emajgroup'],
+				'field' => field('grpdef_group'),
+			),
+			'actions' => array(
+				'title' => $lang['stractions'],
+			),
+			'nbtbl' => array(
+				'title' => $lang['emajnbtbl'],
+				'field' => field('group_nb_table'),
+				'type'  => 'numeric'
+			),
+			'nbseq' => array(
+				'title' => $lang['emajnbseq'],
+				'field' => field('group_nb_sequence'),
+				'type'  => 'numeric'
+			),
+		);
+		if ($emajdb->getNumEmajVersion() < 30000) {	// version < 3.0.0
+			$configuredColumns = array_merge($configuredColumns, array(
+				'diagnostic' => array(
+					'title' => $lang['emajdiagnostics'],
+					'field' => field('group_diagnostic'),
+					'type'	=> 'callback',
+					'params'=> array(
+							'function' => 'renderDiagnosticNewGroup',
+							)
+				),
+			));
+		}
+
+		if ($emajdb->isEmaj_Adm()) {
+			$configuredActions = array(
+				'create_group' => array(
+					'content' => $lang['strcreate'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'create_group',
+								'back' => 'list',
+								'empty' => 'false',
+								'group' => field('grpdef_group'),
+							))))
 				),
 			);
-			if ($emajdb->getNumEmajVersion() < 30000) {	// version < 3.0.0
-				$configuredColumns = array_merge($configuredColumns, array(
-					'diagnostic' => array(
-						'title' => $lang['emajdiagnostics'],
-						'field' => field('group_diagnostic'),
-						'type'	=> 'callback',
-						'params'=> array(
-								'function' => 'renderDiagnosticNewGroup',
-								)
-					),
-				));
-			}
+		} else {
+			$configuredActions = array();
+		}
 
-			if ($emajdb->isEmaj_Adm()) {
-				$configuredActions = array(
-					'create_group' => array(
-						'content' => $lang['strcreate'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'emajgroups.php',
-								'urlvars' => array_merge($urlvars, array (
-									'action' => 'create_group',
-									'back' => 'list',
-									'empty' => 'false',
-									'group' => field('grpdef_group'),
-								))))
-					),
-				);
-			} else {
-				$configuredActions = array();
-			}
+		$misc->printTitle("{$lang['emajlogginggroups']}<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['emajlogginggrouphelp']}\"/>");
 
-			$misc->printTitle("{$lang['emajlogginggroups']}<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['emajlogginggrouphelp']}\"/>");
+		$misc->printTable($loggingGroups, $columns, $loggingActions, 'loggingGroups', $lang['emajnologginggroup'], 'loggingGroupPre', array('sorter' => true, 'filter' => true));
 
-			$misc->printTable($loggingGroups, $columns, $loggingActions, 'loggingGroups', $lang['emajnologginggroup'], 'loggingGroupPre', array('sorter' => true, 'filter' => true));
+		echo "<hr>";
+		$misc->printTitle("{$lang['emajidlegroups']}<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['emajidlegrouphelp']}\"/>");
 
-			echo "<hr>";
-			$misc->printTitle("{$lang['emajidlegroups']}<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['emajidlegrouphelp']}\"/>");
+		$misc->printTable($idleGroups, $columns, $idleActions, 'idleGroups', $lang['emajnoidlegroup'], 'idleGroupPre', array('sorter' => true, 'filter' => true));
 
-			$misc->printTable($idleGroups, $columns, $idleActions, 'idleGroups', $lang['emajnoidlegroup'], 'idleGroupPre', array('sorter' => true, 'filter' => true));
+		echo "<hr>\n";
 
-			echo "<hr>\n";
+		// configured but not yet created tables section
+		$misc->printTitle("{$lang['emajconfiguredgroups']}<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['emajconfiguredgrouphelp']}\"/>");
 
-			// configured but not yet created tables section
-			$misc->printTitle("{$lang['emajconfiguredgroups']}<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['emajconfiguredgrouphelp']}\"/>");
+		$misc->printTable($configuredGroups, $configuredColumns, $configuredActions, 'configuredGroups', $lang['emajnoconfiguredgroups'], null, array('sorter' => true, 'filter' => true));
 
-			$misc->printTable($configuredGroups, $configuredColumns, $configuredActions, 'configuredGroups', $lang['emajnoconfiguredgroups'], null, array('sorter' => true, 'filter' => true));
-
-			// for emaj_adm role only, give information about how to create a group and propose the create empty group button
-			if ($emajdb->isEmaj_Adm()) {
-				if ($emajdb->getNumEmajVersion() >= 20100) {			// version >= 2.1.0
-					echo "<p>{$lang['emajnoconfiguredgroup']}</p>\n";
-					echo "<form id=\"createEmptyGroup_form\" action=\"emajgroups.php?action=create_group&amp;back=list&amp;empty=true&amp;{$misc->href}\"";
-					echo " method=\"post\" enctype=\"multipart/form-data\">\n";
-					echo "\t<input type=\"submit\" value=\"{$lang['emajcreateemptygroup']}\" />\n";
-					echo "</form>\n";
-				}
+		// for emaj_adm role only, give information about how to create a group and propose the create empty group button
+		if ($emajdb->isEmaj_Adm()) {
+			if ($emajdb->getNumEmajVersion() >= 20100) {			// version >= 2.1.0
+				echo "<p>{$lang['emajnoconfiguredgroup']}</p>\n";
+				echo "<form id=\"createEmptyGroup_form\" action=\"emajgroups.php?action=create_group&amp;back=list&amp;empty=true&amp;{$misc->href}\"";
+				echo " method=\"post\" enctype=\"multipart/form-data\">\n";
+				echo "\t<input type=\"submit\" value=\"{$lang['emajcreateemptygroup']}\" />\n";
+				echo "</form>\n";
 			}
 		}
 	}
@@ -540,326 +536,322 @@
 
 		$misc->printHeader('emaj', 'emajgroup', 'emajgroupproperties');
 
-		$emajOK = $misc->checkEmajExtension();
-
-		if ($emajOK) {
-			$misc->printMsg($msg,$errMsg);
+		$misc->printMsg($msg,$errMsg);
 
 		// general information about the group
-			$group = $emajdb->getGroup($_REQUEST['group']);
+		$group = $emajdb->getGroup($_REQUEST['group']);
 
 		// save some fields before calling printTable()
-			$comment=$group->fields['group_comment'];
-			$nbMarks = $group->fields['nb_mark'];
-			$groupState = $group->fields['group_state'];
-			$groupType = $group->fields['group_type'];
-			$hasWaitingChanges = $group->fields['has_waiting_changes'];
+		$comment=$group->fields['group_comment'];
+		$nbMarks = $group->fields['nb_mark'];
+		$groupState = $group->fields['group_state'];
+		$groupType = $group->fields['group_type'];
+		$hasWaitingChanges = $group->fields['has_waiting_changes'];
 
-			$columns = array(
-				'state' => array(
-					'title' => $lang['emajstate'],
-					'field' => field('group_state'),
-					'type'	=> 'callback',
-					'params'=> array('function' => 'renderGroupState','align' => 'center')
-				),
-				'creationdatetime' => array(
-					'title' => $lang['emajcreationdatetime'],
-					'field' => field('group_creation_datetime'),
-					'params'=> array('align' => 'center'),
-				),
-				'rollbackable' => array(
-					'title' => $lang['strtype'],
-					'field' => field('group_type'),
-					'type'	=> 'callback',
-					'params'=> array(
-							'function' => 'renderGroupType',
-							'align' => 'center',
-							),
-				),
-				'nbtbl' => array(
-					'title' => $lang['emajnbtbl'],
-					'field' => field('group_nb_table'),
-					'type'  => 'numeric'
-				),
-				'nbseq' => array(
-					'title' => $lang['emajnbseq'],
-					'field' => field('group_nb_sequence'),
-					'type'  => 'numeric'
-				),
-				'nbmark' => array(
-					'title' => $lang['emajnbmark'],
-					'field' => field('nb_mark'),
-					'type'  => 'numeric'
-				),
-				'logsize' => array(
-					'title' => $lang['emajlogsize'],
-					'field' => field('log_size'),
-					'params'=> array('align' => 'center'),
-				),
-				'actions' => array(
-					'title' => $lang['stractions'],
-				),
-			);
+		$columns = array(
+			'state' => array(
+				'title' => $lang['emajstate'],
+				'field' => field('group_state'),
+				'type'	=> 'callback',
+				'params'=> array('function' => 'renderGroupState','align' => 'center')
+			),
+			'creationdatetime' => array(
+				'title' => $lang['emajcreationdatetime'],
+				'field' => field('group_creation_datetime'),
+				'params'=> array('align' => 'center'),
+			),
+			'rollbackable' => array(
+				'title' => $lang['strtype'],
+				'field' => field('group_type'),
+				'type'	=> 'callback',
+				'params'=> array(
+						'function' => 'renderGroupType',
+						'align' => 'center',
+						),
+			),
+			'nbtbl' => array(
+				'title' => $lang['emajnbtbl'],
+				'field' => field('group_nb_table'),
+				'type'  => 'numeric'
+			),
+			'nbseq' => array(
+				'title' => $lang['emajnbseq'],
+				'field' => field('group_nb_sequence'),
+				'type'  => 'numeric'
+			),
+			'nbmark' => array(
+				'title' => $lang['emajnbmark'],
+				'field' => field('nb_mark'),
+				'type'  => 'numeric'
+			),
+			'logsize' => array(
+				'title' => $lang['emajlogsize'],
+				'field' => field('log_size'),
+				'params'=> array('align' => 'center'),
+			),
+			'actions' => array(
+				'title' => $lang['stractions'],
+			),
+		);
 
-			$urlvars = $misc->getRequestVars();
+		$urlvars = $misc->getRequestVars();
 
-			$groupActions = array();
+		$groupActions = array();
 
 		// print group's characteristics
-			$misc->printTitle(sprintf($lang['emajgroupproperties'], htmlspecialchars($_REQUEST['group'])));
-			$misc->printTable($group, $columns, $groupActions, 'detailGroup', 'no group, internal error !');
+		$misc->printTitle(sprintf($lang['emajgroupproperties'], htmlspecialchars($_REQUEST['group'])));
+		$misc->printTable($group, $columns, $groupActions, 'detailGroup', 'no group, internal error !');
 
 		// display group's comment if exists
-			if ($comment<>'') {
-				echo "<p>{$lang['strcommentlabel']}<span class=\"comment\">{$comment}</span></p>\n";
-			}
+		if ($comment<>'') {
+			echo "<p>{$lang['strcommentlabel']}<span class=\"comment\">{$comment}</span></p>\n";
+		}
 
 		// display the buttons corresponding to the available functions for the group, depending on its state
 
-			if ($emajdb->isEmaj_Adm()) {
-				echo "<p>\n";
+		if ($emajdb->isEmaj_Adm()) {
+			echo "<p>\n";
 
-				// start_group
-				if ($groupState == 'IDLE') {
-					echo "<form id=\"start_group_form\" action=\"emajgroups.php?action=start_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline;\">\n";
-					echo "  <input type=\"submit\" name=\"startgroup\" value=\"{$lang['strstart']}\" />";
-					echo "</form>\n";
-				}
-
-				// set_mark_group
-				if ($groupState == 'LOGGING') {
-					echo "<form id=\"set_mark_group_form\" action=\"emajgroups.php?action=set_mark_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline;\">\n";
-					echo "  <input type=\"submit\" name=\"setmarkgroup\" value=\"{$lang['emajsetmark']}\" />";
-					echo "</form>\n";
-				}
-
-				// reset_group
-				if ($groupState == 'IDLE') {
-					echo "<form id=\"reset_group_form\" action=\"emajgroups.php?action=reset_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
-					echo "  <input type=\"submit\" name=\"resetgroup\" value=\"{$lang['strreset']}\" />";
-					echo "</form>\n";
-				}
-
-				// protect_group
-				if ($groupState == 'LOGGING' && $groupType == "ROLLBACKABLE") {
-					echo "<form id=\"protect_group_form\" action=\"emajgroups.php?action=protect_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
-					echo "  <input type=\"submit\" name=\"protectgroup\" value=\"{$lang['emajprotect']}\" />";
-					echo "</form>\n";
-				}
-
-				// unprotect_group
-				if ($groupState == 'LOGGING' && $groupType == "ROLLBACKABLE-PROTECTED") {
-					echo "<form id=\"unprotect_group_form\" action=\"emajgroups.php?action=unprotect_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
-					echo "  <input type=\"submit\" name=\"unprotectgroup\" value=\"{$lang['emajunprotect']}\" />";
-					echo "</form>\n";
-				}
-
-				// stop_group
-				if ($groupState == 'LOGGING') {
-					echo "<form id=\"stop_group_form\" action=\"emajgroups.php?action=stop_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
-					echo "  <input type=\"submit\" name=\"stopgroup\" value=\"{$lang['strstop']}\" />";
-					echo "</form>\n";
-				}
-
-				// comment_group
-				echo "<form id=\"comment_group_form\" action=\"emajgroups.php?action=comment_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:30px;\">\n";
-				echo "  <input type=\"submit\" name=\"commentgroup\" value=\"{$lang['emajsetcomment']}\" />";
+			// start_group
+			if ($groupState == 'IDLE') {
+				echo "<form id=\"start_group_form\" action=\"emajgroups.php?action=start_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline;\">\n";
+				echo "  <input type=\"submit\" name=\"startgroup\" value=\"{$lang['strstart']}\" />";
 				echo "</form>\n";
-
-				// alter_group
-				if ($hasWaitingChanges && ($groupState == 'IDLE' || $emajdb->getNumEmajVersion() >= 20100)) {
-					echo "<form id=\"alter_group_form\" action=\"emajgroups.php?action=alter_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
-					echo "  <input type=\"submit\" name=\"altergroup\" value=\"{$lang['emajApplyConfChanges']}\" />";
-					echo "</form>\n";
-				}
-
-				// drop_group
-				if ($groupState == 'IDLE') {
-					echo "<form id=\"drop_group_form\" action=\"emajgroups.php?action=drop_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
-					echo "  <input type=\"submit\" name=\"dropgroup\" value=\"{$lang['strdrop']}\" />";
-					echo "</form>\n";
-				}
-
-				echo "</p>\n";
 			}
+
+			// set_mark_group
+			if ($groupState == 'LOGGING') {
+				echo "<form id=\"set_mark_group_form\" action=\"emajgroups.php?action=set_mark_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline;\">\n";
+				echo "  <input type=\"submit\" name=\"setmarkgroup\" value=\"{$lang['emajsetmark']}\" />";
+				echo "</form>\n";
+			}
+
+			// reset_group
+			if ($groupState == 'IDLE') {
+				echo "<form id=\"reset_group_form\" action=\"emajgroups.php?action=reset_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
+				echo "  <input type=\"submit\" name=\"resetgroup\" value=\"{$lang['strreset']}\" />";
+				echo "</form>\n";
+			}
+
+			// protect_group
+			if ($groupState == 'LOGGING' && $groupType == "ROLLBACKABLE") {
+				echo "<form id=\"protect_group_form\" action=\"emajgroups.php?action=protect_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
+				echo "  <input type=\"submit\" name=\"protectgroup\" value=\"{$lang['emajprotect']}\" />";
+				echo "</form>\n";
+			}
+
+			// unprotect_group
+			if ($groupState == 'LOGGING' && $groupType == "ROLLBACKABLE-PROTECTED") {
+				echo "<form id=\"unprotect_group_form\" action=\"emajgroups.php?action=unprotect_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
+				echo "  <input type=\"submit\" name=\"unprotectgroup\" value=\"{$lang['emajunprotect']}\" />";
+				echo "</form>\n";
+			}
+
+			// stop_group
+			if ($groupState == 'LOGGING') {
+				echo "<form id=\"stop_group_form\" action=\"emajgroups.php?action=stop_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
+				echo "  <input type=\"submit\" name=\"stopgroup\" value=\"{$lang['strstop']}\" />";
+				echo "</form>\n";
+			}
+
+			// comment_group
+			echo "<form id=\"comment_group_form\" action=\"emajgroups.php?action=comment_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:30px;\">\n";
+			echo "  <input type=\"submit\" name=\"commentgroup\" value=\"{$lang['emajsetcomment']}\" />";
+			echo "</form>\n";
+
+			// alter_group
+			if ($hasWaitingChanges && ($groupState == 'IDLE' || $emajdb->getNumEmajVersion() >= 20100)) {
+				echo "<form id=\"alter_group_form\" action=\"emajgroups.php?action=alter_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
+				echo "  <input type=\"submit\" name=\"altergroup\" value=\"{$lang['emajApplyConfChanges']}\" />";
+				echo "</form>\n";
+			}
+
+			// drop_group
+			if ($groupState == 'IDLE') {
+				echo "<form id=\"drop_group_form\" action=\"emajgroups.php?action=drop_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
+				echo "  <input type=\"submit\" name=\"dropgroup\" value=\"{$lang['strdrop']}\" />";
+				echo "</form>\n";
+			}
+
+			echo "</p>\n";
+		}
 
 		// Show marks of the groups
 
 		// get marks from database
-			$marks = $emajdb->getMarks($_REQUEST['group']);
+		$marks = $emajdb->getMarks($_REQUEST['group']);
 
-			echo "<hr/>\n";
-			$misc->printTitle(sprintf($lang['emajgroupmarks'], htmlspecialchars($_REQUEST['group'])));
+		echo "<hr/>\n";
+		$misc->printTitle(sprintf($lang['emajgroupmarks'], htmlspecialchars($_REQUEST['group'])));
 
-			$columns = array(
-				'mark' => array(
-					'title' => $lang['emajmark'],
-					'field' => field('mark_name'),
-				),
-				'state' => array(
-					'title' => $lang['emajstate'],
-					'field' => field('mark_state'),
-					'type'	=> 'callback',
-					'params'=> array('function' => 'renderMarkState','align' => 'center'),
-					'filter'=> false,
-				),
-				'datetime' => array(
-					'title' => $lang['emajtimestamp'],
-					'field' => field('mark_datetime'),
-				),
-				'logrows' => array(
-					'title' => $lang['emajnbchanges'],
-					'field' => field('mark_logrows'),
-					'type'  => 'numeric'
-				),
-				'cumlogrows' => array(
-					'title' => $lang['emajcumchanges'],
-					'info'  => $lang['emajcumchangeshelp'],
-					'field' => field('mark_cumlogrows'),
-					'type'  => 'numeric'
-				),
-				'actions' => array(
-					'title' => $lang['stractions'],
-				),
-				'comment' => array(
-					'title' => $lang['strcomment'],
-					'field' => field('mark_comment'),
-				),
-			);
+		$columns = array(
+			'mark' => array(
+				'title' => $lang['emajmark'],
+				'field' => field('mark_name'),
+			),
+			'state' => array(
+				'title' => $lang['emajstate'],
+				'field' => field('mark_state'),
+				'type'	=> 'callback',
+				'params'=> array('function' => 'renderMarkState','align' => 'center'),
+				'filter'=> false,
+			),
+			'datetime' => array(
+				'title' => $lang['emajtimestamp'],
+				'field' => field('mark_datetime'),
+			),
+			'logrows' => array(
+				'title' => $lang['emajnbchanges'],
+				'field' => field('mark_logrows'),
+				'type'  => 'numeric'
+			),
+			'cumlogrows' => array(
+				'title' => $lang['emajcumchanges'],
+				'info'  => $lang['emajcumchangeshelp'],
+				'field' => field('mark_cumlogrows'),
+				'type'  => 'numeric'
+			),
+			'actions' => array(
+				'title' => $lang['stractions'],
+			),
+			'comment' => array(
+				'title' => $lang['strcomment'],
+				'field' => field('mark_comment'),
+			),
+		);
 
-			$urlvars = $misc->getRequestVars();
+		$urlvars = $misc->getRequestVars();
 
-			$actions = array();
-			if ($emajdb->isEmaj_Adm() && ($nbMarks > 1)) {
-				$actions = array_merge($actions, array(
-					'multiactions' => array(
-						'keycols' => array('group' => 'mark_group', 'mark' => 'mark_name'),
-						'url' => "emajgroups.php?group={$_REQUEST['group']}&amp;back=detail&amp;",
-					),
-				));
-			}
-			if ($emajdb->isEmaj_Adm() && $groupType == "ROLLBACKABLE") {
-				$actions = array_merge($actions, array(
-					'rollbackgroup' => array(
-						'content' => $lang['emajrlbk'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'emajgroups.php',
-								'urlvars' => array_merge($urlvars, array (
-									'action' => 'rollback_group',
-									'back' => 'detail',
-									'group' => field('mark_group'),
-									'mark' => field('mark_name'),
-								))))
-					),
-				));
-			}
-			if ($emajdb->isEmaj_Adm()) {
-				$actions = array_merge($actions, array(
-					'renamemark' => array(
-						'content' => $lang['emajrename'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'emajgroups.php',
-								'urlvars' => array_merge($urlvars, array (
-									'action' => 'rename_mark_group',
-									'back' => 'detail',
-									'group' => field('mark_group'),
-									'mark' => field('mark_name'),
-								))))
-					),
-				));
-			}
-			if ($emajdb->isEmaj_Adm() && ($nbMarks > 1)) {
-				$actions = array_merge($actions, array(
-					'deletemark' => array(
-						'content' => $lang['strdelete'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'emajgroups.php',
-								'urlvars' => array_merge($urlvars, array (
-									'action' => 'delete_mark',
-									'back' => 'detail',
-									'group' => field('mark_group'),
-									'mark' => field('mark_name'),
-								)))),
-						'multiaction' => 'delete_marks',
-					),
-				));
-			}
-			if ($emajdb->isEmaj_Adm()) {
-				$actions = array_merge($actions, array(
-					'deletebeforemark' => array(
-						'content' => $lang['emajfirstmark'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'emajgroups.php',
-								'urlvars' => array_merge($urlvars, array (
-									'action' => 'delete_before_mark',
-									'back' => 'detail',
-									'group' => field('mark_group'),
-									'mark' => field('mark_name'),
-								))))
-					),
-				));
-			}
-			if ($emajdb->isEmaj_Adm() && $groupState == 'LOGGING' && $groupType != "AUDIT_ONLY") {
-				$actions = array_merge($actions, array(
-					'protectmark' => array(
-						'content' => $lang['emajprotect'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'emajgroups.php',
-								'urlvars' => array_merge($urlvars, array (
-									'action' => 'protect_mark_group',
-									'back' => 'detail',
-									'group' => field('mark_group'),
-									'mark' => field('mark_name'),
-								))))
-					),
-					'unprotectmark' => array(
-						'content' => $lang['emajunprotect'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'emajgroups.php',
-								'urlvars' => array_merge($urlvars, array (
-									'action' => 'unprotect_mark_group',
-									'back' => 'detail',
-									'group' => field('mark_group'),
-									'mark' => field('mark_name'),
-								))))
-					),
-				));
-			};
-			if ($emajdb->isEmaj_Adm()) {
-				$actions = array_merge($actions, array(
-					'commentmark' => array(
-						'content' => $lang['emajsetcomment'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'emajgroups.php',
-								'urlvars' => array_merge($urlvars, array (
-									'action' => 'comment_mark_group',
-									'back' => 'detail',
-									'group' => field('mark_group'),
-									'mark' => field('mark_name'),
-								))))
-					),
-				));
-			};
-
-			// reset the flag for protected marks that will be used in the markPre function
-			$protected_mark_flag = 0;
-
-			// display the marks list
-			$misc->printTable($marks, $columns, $actions, 'marks', $lang['emajnomark'], 'markPre', array('sorter' => false, 'filter' => true));
-
-			// JQuery to remove the last deleteBeforeMark button as it is meaningless on the first set mark
-			echo "<script type=\"text/javascript\">\n";
-			echo "  $(\"table.data tr:last td:contains('{$lang['emajfirstmark']}')\").removeClass()\n";
-			echo "  $(\"table.data tr:last a:contains('{$lang['emajfirstmark']}')\").remove()\n";
-			echo "</script>\n";
+		$actions = array();
+		if ($emajdb->isEmaj_Adm() && ($nbMarks > 1)) {
+			$actions = array_merge($actions, array(
+				'multiactions' => array(
+					'keycols' => array('group' => 'mark_group', 'mark' => 'mark_name'),
+					'url' => "emajgroups.php?group={$_REQUEST['group']}&amp;back=detail&amp;",
+				),
+			));
 		}
+		if ($emajdb->isEmaj_Adm() && $groupType == "ROLLBACKABLE") {
+			$actions = array_merge($actions, array(
+				'rollbackgroup' => array(
+					'content' => $lang['emajrlbk'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'rollback_group',
+								'back' => 'detail',
+								'group' => field('mark_group'),
+								'mark' => field('mark_name'),
+							))))
+				),
+			));
+		}
+		if ($emajdb->isEmaj_Adm()) {
+			$actions = array_merge($actions, array(
+				'renamemark' => array(
+					'content' => $lang['emajrename'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'rename_mark_group',
+								'back' => 'detail',
+								'group' => field('mark_group'),
+								'mark' => field('mark_name'),
+							))))
+				),
+			));
+		}
+		if ($emajdb->isEmaj_Adm() && ($nbMarks > 1)) {
+			$actions = array_merge($actions, array(
+				'deletemark' => array(
+					'content' => $lang['strdelete'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'delete_mark',
+								'back' => 'detail',
+								'group' => field('mark_group'),
+								'mark' => field('mark_name'),
+							)))),
+					'multiaction' => 'delete_marks',
+				),
+			));
+		}
+		if ($emajdb->isEmaj_Adm()) {
+			$actions = array_merge($actions, array(
+				'deletebeforemark' => array(
+					'content' => $lang['emajfirstmark'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'delete_before_mark',
+								'back' => 'detail',
+								'group' => field('mark_group'),
+								'mark' => field('mark_name'),
+							))))
+				),
+			));
+		}
+		if ($emajdb->isEmaj_Adm() && $groupState == 'LOGGING' && $groupType != "AUDIT_ONLY") {
+			$actions = array_merge($actions, array(
+				'protectmark' => array(
+					'content' => $lang['emajprotect'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'protect_mark_group',
+								'back' => 'detail',
+								'group' => field('mark_group'),
+								'mark' => field('mark_name'),
+							))))
+				),
+				'unprotectmark' => array(
+					'content' => $lang['emajunprotect'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'unprotect_mark_group',
+								'back' => 'detail',
+								'group' => field('mark_group'),
+								'mark' => field('mark_name'),
+							))))
+				),
+			));
+		};
+		if ($emajdb->isEmaj_Adm()) {
+			$actions = array_merge($actions, array(
+				'commentmark' => array(
+					'content' => $lang['emajsetcomment'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'comment_mark_group',
+								'back' => 'detail',
+								'group' => field('mark_group'),
+								'mark' => field('mark_name'),
+							))))
+				),
+			));
+		};
+
+		// reset the flag for protected marks that will be used in the markPre function
+		$protected_mark_flag = 0;
+
+		// display the marks list
+		$misc->printTable($marks, $columns, $actions, 'marks', $lang['emajnomark'], 'markPre', array('sorter' => false, 'filter' => true));
+
+		// JQuery to remove the last deleteBeforeMark button as it is meaningless on the first set mark
+		echo "<script type=\"text/javascript\">\n";
+		echo "  $(\"table.data tr:last td:contains('{$lang['emajfirstmark']}')\").removeClass()\n";
+		echo "  $(\"table.data tr:last a:contains('{$lang['emajfirstmark']}')\").remove()\n";
+		echo "</script>\n";
 	}
 
 	/**
@@ -872,166 +864,161 @@
 
 		$misc->printTitle(sprintf($lang['emajshowstat'], htmlspecialchars($_REQUEST['group'])));
 
-		$emajOK = $misc->checkEmajExtension();
+		// display the stat form
 
-		if ($emajOK) {
+		$globalStat = false; $detailedStat = false; $simRlbk = false;
+		if (isset($_REQUEST['simrlbk'])) {
+			$simRlbk = true;
+		}
+		if (isset($_REQUEST['globalstatgroup'])) {
+			$globalStat = true;
+			$urlExt = 'globalstatgroup='.urlencode($_REQUEST['globalstatgroup']);
+		}
+		if (isset($_REQUEST['detailedstatgroup'])) {
+			$detailedStat = true;
+			$urlExt = 'detailedstatgroup='.urlencode($_REQUEST['detailedstatgroup']);
+		}
 
-			// display the stat form
+		// get marks from database
+		$marks = $emajdb->getMarks($_REQUEST['group']);
 
-			$globalStat = false; $detailedStat = false; $simRlbk = false;
-			if (isset($_REQUEST['simrlbk'])) {
-				$simRlbk = true;
+		// get group's characteristics
+		$group = $emajdb->getGroup($_REQUEST['group']);
+
+		if ($marks->recordCount() < 1) {
+
+			// No mark recorded for the group => no update logged => no stat to display
+			echo "<p>{$lang['emajnomark']}</p>\n"; 
+
+		} else {
+
+			// form for statistics selection
+			echo "<style type=\"text/css\">[disabled]{color:#933;}</style>";
+			echo "<form id=\"statistics_form\" action=\"emajgroups.php?action=log_stat_group&amp;back=detail&amp;{$misc->href}\"";
+			echo "  method=\"post\" enctype=\"multipart/form-data\">\n";
+
+			// First mark defining the marks range to analyze
+			echo "<p>{$lang['emajfrom']}\n";
+			echo "  <select name=\"rangestart\" id=\"rangestart\">\n";
+			foreach($marks as $r)
+				echo "    <option value=\"", htmlspecialchars($r['mark_name']), "\" >", htmlspecialchars($r['mark_name']), " ({$r['mark_datetime']})</option>\n";
+			echo "  </select>\n";
+
+			// Last mark defining the marks range to analyze
+			echo "{$lang['emajto']}\n";
+			echo "  <select name=\"rangeend\" id=\"rangeend\" >\n";
+			echo "    <option value=\"currentsituation\">{$lang['emajcurrentsituation']}</option>\n";
+			foreach($marks as $r)
+				echo "    <option value=\"", htmlspecialchars($r['mark_name']), "\" >", htmlspecialchars($r['mark_name']), " ({$r['mark_datetime']})</option>\n";
+			echo "  </select></p>\n";
+
+			// Other elements of the form
+			echo "  <p><input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
+
+			// Rollback simulation checkbox is only available for rollbackable groups in logging state
+			if ($group->fields['group_type'] == 'ROLLBACKABLE' && $group->fields['group_state'] == 'LOGGING') {
+				echo "  {$lang['emajsimrlbk']} <input type=\"checkbox\" name=\"simrlbk\" id=\"simrlbk\"/>\n";
 			}
-			if (isset($_REQUEST['globalstatgroup'])) {
-				$globalStat = true;
-				$urlExt = 'globalstatgroup='.urlencode($_REQUEST['globalstatgroup']);
-			}
-			if (isset($_REQUEST['detailedstatgroup'])) {
-				$detailedStat = true;
-				$urlExt = 'detailedstatgroup='.urlencode($_REQUEST['detailedstatgroup']);
-			}
 
-			// get marks from database
-			$marks = $emajdb->getMarks($_REQUEST['group']);
+			echo "  <input type=\"submit\" name=\"globalstatgroup\" value=\"{$lang['emajestimates']}\" />\n";
+			echo "  <input type=\"submit\" name=\"detailedstatgroup\" value=\"{$lang['emajdetailedstat']}\" />\n";
+			echo "  <img src=\"{$misc->icon('EmajWarning')}\" alt=\"warning\" title=\"{$lang['emajdetailedlogstatwarning']}\" style=\"vertical-align:middle\"/>";
+			echo "</p></form>\n";
 
-			// get group's characteristics
-			$group = $emajdb->getGroup($_REQUEST['group']);
+			// JQuery scripts
+			echo "<script type=\"text/javascript\">\n";
 
-			if ($marks->recordCount() < 1) {
+			// JQuery to remove the last mark as it cannot be selected as end mark
+			echo "  $(\"#rangeend option:last-child\").remove();\n";
 
-				// No mark recorded for the group => no update logged => no stat to display
-				echo "<p>{$lang['emajnomark']}</p>\n"; 
-
+			// JQuery to set the selected start mark by default 
+			// (the previous requested start mark or the first mark if no stat are already displayed)
+			if (isset($_REQUEST['rangestart'])) {
+				echo "  $(\"#rangestart option[value='{$_REQUEST['rangestart']}']\").attr(\"selected\", true);\n";
 			} else {
+				echo "  $(\"#rangestart option:first-child\").attr(\"selected\", true);\n";
+			}
 
-				// form for statistics selection
-				echo "<style type=\"text/css\">[disabled]{color:#933;}</style>";
-				echo "<form id=\"statistics_form\" action=\"emajgroups.php?action=log_stat_group&amp;back=detail&amp;{$misc->href}\"";
-				echo "  method=\"post\" enctype=\"multipart/form-data\">\n";
+			// JQuery to set the selected end mark by default 
+			// (the previous requested end mark or the current situation if no stat are already displayed)
+			if (isset($_REQUEST['rangeend'])) {
+				echo "  $(\"#rangeend option[value='{$_REQUEST['rangeend']}']\").attr(\"selected\", true);\n";
+			} else {
+				echo "  $(\"#rangeend option:first-child\").attr(\"selected\", true);\n";
+			}
 
-				// First mark defining the marks range to analyze
-				echo "<p>{$lang['emajfrom']}\n";
-				echo "  <select name=\"rangestart\" id=\"rangestart\">\n";
-				foreach($marks as $r)
-					echo "    <option value=\"", htmlspecialchars($r['mark_name']), "\" >", htmlspecialchars($r['mark_name']), " ({$r['mark_datetime']})</option>\n";
-				echo "  </select>\n";
+			// JQuery script to avoid rangestart > rangeend
+				// After document loaded
+			echo "  $(document).ready(function() {\n";
+			echo "    mark = $(\"#rangestart option:selected\").val();\n";
+			echo "    todisable = false;\n";
+			echo "    $(\"#rangeend option\").each(function() {\n";
+			echo "      $(this).prop('disabled', todisable);\n";
+			echo "      if ($(this).val() == mark) {todisable = true;}\n";
+			echo "    });\n";
+			echo "    mark = $(\"#rangeend option:selected\").val();\n";
+			echo "    todisable = true;\n";
+			echo "    if (mark == \"currentsituation\") {todisable = false;}\n";
+			echo "    $(\"#rangestart option\").each(function() {\n";
+			echo "      if ($(this).val() == mark) { todisable = false; }\n";
+			echo "      $(this).prop('disabled', todisable);\n";
+			echo "    });\n";
+					// and disable the simrlbk checkbox if the rangeend is not "currentsituation"
+			echo "    if ($(\"#rangeend option:selected\").val() == \"currentsituation\") { \n";
+			echo "      $(\"#simrlbk\").removeAttr('checked');\n";
+			echo "      $(\"#simrlbk\").removeAttr('disabled');\n";
+			echo "    } else {\n";
+			echo "      $(\"#simrlbk\").prop('disabled',true);\n";
+			echo "    }\n";
+			echo "  });\n";
 
-				// Last mark defining the marks range to analyze
-				echo "{$lang['emajto']}\n";
-				echo "  <select name=\"rangeend\" id=\"rangeend\" >\n";
-				echo "    <option value=\"currentsituation\">{$lang['emajcurrentsituation']}</option>\n";
-				foreach($marks as $r)
-					echo "    <option value=\"", htmlspecialchars($r['mark_name']), "\" >", htmlspecialchars($r['mark_name']), " ({$r['mark_datetime']})</option>\n";
-				echo "  </select></p>\n";
+				// At each list box change
+			echo "  $(\"#rangestart\").change(function () {\n";
+			echo "    mark = $(\"#rangestart option:selected\").val();\n";
+			echo "    todisable = false;\n";
+			echo "    $(\"#rangeend option\").each(function() {\n";
+			echo "      $(this).prop('disabled', todisable);\n";
+			echo "      if ($(this).val() == mark) {todisable = true;}\n";
+			echo "    });\n";
+			echo "  });\n";
+			echo "  $(\"#rangeend\").change(function () {\n";
+			echo "    mark = $(\"#rangeend option:selected\").val();\n";
+			echo "    todisable = true;\n";
+			echo "    if (mark == \"currentsituation\") {todisable = false;}\n";
+			echo "    $(\"#rangestart option\").each(function() {\n";
+			echo "      if ($(this).val() == mark) { todisable = false; }\n";
+			echo "      $(this).prop('disabled', todisable);\n";
+			echo "    });\n";
+					// and disable the simrlbk checkbox if the rangeend is not "currentsituation"
+			echo "    if ($(\"#rangeend option:selected\").val() == \"currentsituation\") { \n";
+			echo "      $(\"#simrlbk\").removeAttr('checked');\n";
+			echo "      $(\"#simrlbk\").removeAttr('disabled');\n";
+			echo "    } else {\n";
+			echo "      $(\"#simrlbk\").prop('disabled',true);\n";
+			echo "    }\n";
+			echo "  });\n";
 
-				// Other elements of the form
-				echo "  <p><input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
+			echo "</script>\n";
 
-				// Rollback simulation checkbox is only available for rollbackable groups in logging state
-				if ($group->fields['group_type'] == 'ROLLBACKABLE' && $group->fields['group_state'] == 'LOGGING') {
-					echo "  {$lang['emajsimrlbk']} <input type=\"checkbox\" name=\"simrlbk\" id=\"simrlbk\"/>\n";
-				}
-
-				echo "  <input type=\"submit\" name=\"globalstatgroup\" value=\"{$lang['emajestimates']}\" />\n";
-				echo "  <input type=\"submit\" name=\"detailedstatgroup\" value=\"{$lang['emajdetailedstat']}\" />\n";
-				echo "  <img src=\"{$misc->icon('EmajWarning')}\" alt=\"warning\" title=\"{$lang['emajdetailedlogstatwarning']}\" style=\"vertical-align:middle\"/>";
-				echo "</p></form>\n";
-
-				// JQuery scripts
-				echo "<script type=\"text/javascript\">\n";
-
-				// JQuery to remove the last mark as it cannot be selected as end mark
-				echo "  $(\"#rangeend option:last-child\").remove();\n";
-
-				// JQuery to set the selected start mark by default 
-				// (the previous requested start mark or the first mark if no stat are already displayed)
-				if (isset($_REQUEST['rangestart'])) {
-					echo "  $(\"#rangestart option[value='{$_REQUEST['rangestart']}']\").attr(\"selected\", true);\n";
+			// If rollback simulation is requested, compute the duration estimate
+			$rlbkDuration = '';
+			if ($simRlbk) {
+				// check the start mark is not deleted
+				if ($emajdb->isMarkActiveGroup($_REQUEST['group'],$_REQUEST['rangestart']) == 1) {
+					$rlbkDuration = $emajdb->estimateRollbackGroup($_REQUEST['group'],$_REQUEST['rangestart']);
 				} else {
-					echo "  $(\"#rangestart option:first-child\").attr(\"selected\", true);\n";
+					$rlbkDuration = "-";
 				}
+			}
 
-				// JQuery to set the selected end mark by default 
-				// (the previous requested end mark or the current situation if no stat are already displayed)
-				if (isset($_REQUEST['rangeend'])) {
-					echo "  $(\"#rangeend option[value='{$_REQUEST['rangeend']}']\").attr(\"selected\", true);\n";
-				} else {
-					echo "  $(\"#rangeend option:first-child\").attr(\"selected\", true);\n";
-				}
+			// If global stat display is requested
+			if ($globalStat) {
+				disp_global_log_stat_section($rlbkDuration);
+			}
 
-				// JQuery script to avoid rangestart > rangeend
-					// After document loaded
-				echo "  $(document).ready(function() {\n";
-				echo "    mark = $(\"#rangestart option:selected\").val();\n";
-				echo "    todisable = false;\n";
-				echo "    $(\"#rangeend option\").each(function() {\n";
-				echo "      $(this).prop('disabled', todisable);\n";
-				echo "      if ($(this).val() == mark) {todisable = true;}\n";
-				echo "    });\n";
-				echo "    mark = $(\"#rangeend option:selected\").val();\n";
-				echo "    todisable = true;\n";
-				echo "    if (mark == \"currentsituation\") {todisable = false;}\n";
-				echo "    $(\"#rangestart option\").each(function() {\n";
-				echo "      if ($(this).val() == mark) { todisable = false; }\n";
-				echo "      $(this).prop('disabled', todisable);\n";
-				echo "    });\n";
-						// and disable the simrlbk checkbox if the rangeend is not "currentsituation"
-				echo "    if ($(\"#rangeend option:selected\").val() == \"currentsituation\") { \n";
-				echo "      $(\"#simrlbk\").removeAttr('checked');\n";
-				echo "      $(\"#simrlbk\").removeAttr('disabled');\n";
-				echo "    } else {\n";
-				echo "      $(\"#simrlbk\").prop('disabled',true);\n";
-				echo "    }\n";
-				echo "  });\n";
-
-					// At each list box change
-				echo "  $(\"#rangestart\").change(function () {\n";
-				echo "    mark = $(\"#rangestart option:selected\").val();\n";
-				echo "    todisable = false;\n";
-				echo "    $(\"#rangeend option\").each(function() {\n";
-				echo "      $(this).prop('disabled', todisable);\n";
-				echo "      if ($(this).val() == mark) {todisable = true;}\n";
-				echo "    });\n";
-				echo "  });\n";
-				echo "  $(\"#rangeend\").change(function () {\n";
-				echo "    mark = $(\"#rangeend option:selected\").val();\n";
-				echo "    todisable = true;\n";
-				echo "    if (mark == \"currentsituation\") {todisable = false;}\n";
-				echo "    $(\"#rangestart option\").each(function() {\n";
-				echo "      if ($(this).val() == mark) { todisable = false; }\n";
-				echo "      $(this).prop('disabled', todisable);\n";
-				echo "    });\n";
-						// and disable the simrlbk checkbox if the rangeend is not "currentsituation"
-				echo "    if ($(\"#rangeend option:selected\").val() == \"currentsituation\") { \n";
-				echo "      $(\"#simrlbk\").removeAttr('checked');\n";
-				echo "      $(\"#simrlbk\").removeAttr('disabled');\n";
-				echo "    } else {\n";
-				echo "      $(\"#simrlbk\").prop('disabled',true);\n";
-				echo "    }\n";
-				echo "  });\n";
-
-				echo "</script>\n";
-
-				// If rollback simulation is requested, compute the duration estimate
-				$rlbkDuration = '';
-				if ($simRlbk) {
-					// check the start mark is not deleted
-					if ($emajdb->isMarkActiveGroup($_REQUEST['group'],$_REQUEST['rangestart']) == 1) {
-						$rlbkDuration = $emajdb->estimateRollbackGroup($_REQUEST['group'],$_REQUEST['rangestart']);
-					} else {
-						$rlbkDuration = "-";
-					}
-				}
-
-				// If global stat display is requested
-				if ($globalStat) {
-					disp_global_log_stat_section($rlbkDuration);
-				}
-
-				// If detailed stat display is requested
-				if ($detailedStat) {
-					disp_detailed_log_stat_section($rlbkDuration);
-				}
+			// If detailed stat display is requested
+			if ($detailedStat) {
+				disp_detailed_log_stat_section($rlbkDuration);
 			}
 		}
 	}
@@ -1321,76 +1308,71 @@
 
 		$misc->printTitle(sprintf($lang['emajgroupcontent'],htmlspecialchars($_REQUEST['group'])));
 
-		$emajOK = $misc->checkEmajExtension();
+		$groupContent = $emajdb->getContentGroup($_REQUEST['group']);
 
-		if ($emajOK) {
+		if ($groupContent->recordCount() < 1) {
 
-			$groupContent = $emajdb->getContentGroup($_REQUEST['group']);
+			// The group is empty
+			echo "<p>" . sprintf($lang['emajemptygroup'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
 
-			if ($groupContent->recordCount() < 1) {
+		} else {
 
-				// The group is empty
-				echo "<p>" . sprintf($lang['emajemptygroup'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
+			$columns = array(
+				'type' => array(
+					'title' => $lang['strtype'],
+					'field' => field('relkind'),
+					'type'	=> 'callback',
+					'params'=> array('function' => 'renderTblSeq','align' => 'center'),
+					'sorter_text_extraction' => 'img_alt',
+					'filter'=> false,
+				),
+				'schema' => array(
+					'title' => $lang['strschema'],
+					'field' => field('rel_schema'),
+					'url'   => "redirect.php?subject=schema&amp;{$misc->href}&amp;",
+					'vars'  => array('schema' => 'rel_schema'),
+				),
+				'tblseq' => array(
+					'title' => $lang['strname'],
+					'field' => field('rel_tblseq'),
+					'url'	=> "redirect.php?subject=table&amp;{$misc->href}&amp;",
+					'vars'  => array('schema' => 'rel_schema', 'table' => 'rel_tblseq'),
+				),
+				'priority' => array(
+					'title' => $lang['emajpriority'],
+					'field' => field('rel_priority'),
+					'params'=> array('align' => 'center'),
+				),
+				'log_dat_tsp' => array(
+					'title' => $lang['emajlogdattsp'],
+					'field' => field('rel_log_dat_tsp'),
+				),
+				'log_idx_tsp' => array(
+					'title' => $lang['emajlogidxtsp'],
+					'field' => field('rel_log_idx_tsp'),
+				),
+				'log_table' => array(
+					'title' => $lang['emajlogtable'],
+					'field' => field('full_log_table'),
+				),
+				'bytelogsize' => array(
+					'title' => $lang['emajlogsize'],
+					'field' => field('byte_log_size'),
+					'params'=> array('align' => 'right'),
+					'filter'=> false,
+				),
+				'prettylogsize' => array(
+					'title' => $lang['emajlogsize'],
+					'field' => field('pretty_log_size'),
+					'params'=> array('align' => 'center'),
+					'sorter'=> false,
+				),
+			);
 
-			} else {
+			$actions = array ();
 
-				$columns = array(
-					'type' => array(
-						'title' => $lang['strtype'],
-						'field' => field('relkind'),
-						'type'	=> 'callback',
-						'params'=> array('function' => 'renderTblSeq','align' => 'center'),
-						'sorter_text_extraction' => 'img_alt',
-						'filter'=> false,
-					),
-					'schema' => array(
-						'title' => $lang['strschema'],
-						'field' => field('rel_schema'),
-						'url'   => "redirect.php?subject=schema&amp;{$misc->href}&amp;",
-						'vars'  => array('schema' => 'rel_schema'),
-					),
-					'tblseq' => array(
-						'title' => $lang['strname'],
-						'field' => field('rel_tblseq'),
-						'url'	=> "redirect.php?subject=table&amp;{$misc->href}&amp;",
-						'vars'  => array('schema' => 'rel_schema', 'table' => 'rel_tblseq'),
-					),
-					'priority' => array(
-						'title' => $lang['emajpriority'],
-						'field' => field('rel_priority'),
-						'params'=> array('align' => 'center'),
-					),
-					'log_dat_tsp' => array(
-						'title' => $lang['emajlogdattsp'],
-						'field' => field('rel_log_dat_tsp'),
-					),
-					'log_idx_tsp' => array(
-						'title' => $lang['emajlogidxtsp'],
-						'field' => field('rel_log_idx_tsp'),
-					),
-					'log_table' => array(
-						'title' => $lang['emajlogtable'],
-						'field' => field('full_log_table'),
-					),
-					'bytelogsize' => array(
-						'title' => $lang['emajlogsize'],
-						'field' => field('byte_log_size'),
-						'params'=> array('align' => 'right'),
-						'filter'=> false,
-					),
-					'prettylogsize' => array(
-						'title' => $lang['emajlogsize'],
-						'field' => field('pretty_log_size'),
-						'params'=> array('align' => 'center'),
-						'sorter'=> false,
-					),
-				);
-	
-				$actions = array ();
-	
-				echo "<p></p>";
-				$misc->printTable($groupContent, $columns, $actions, 'groupContent', null, null, array('sorter' => true, 'filter' => true));
-			}
+			echo "<p></p>";
+			$misc->printTable($groupContent, $columns, $actions, 'groupContent', null, null, array('sorter' => true, 'filter' => true));
 		}
 	}
 
@@ -3361,6 +3343,12 @@
 
 	/* shortcuts: these functions exit the script */
 	if ($action == 'tree') doTree();
+
+	// redirect to the emajenvir.php page if the emaj extension is not installed or accessible or is too old
+	if (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
+		&& $emajdb->getNumEmajVersion() >= $oldest_supported_emaj_version_num)) {
+		header('Location: emajenvir.php?' . $_SERVER["QUERY_STRING"]);
+	}
 
 	$misc->printHtmlHeader($lang['emajgroupsmanagement']);
 	$misc->printBody();

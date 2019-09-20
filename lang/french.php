@@ -252,7 +252,7 @@
 	$lang['emajgroupsconfiguration'] = 'Configuration des groupes de tables';
 	$lang['emajgroupsconf'] = 'Configuration groupes';
 	$lang['emajrollbacksmanagement'] = 'Gestion des rollbacks E-Maj';
-	$lang['emajrlbkop'] = 'Rollback';
+	$lang['emajrlbkop'] = 'Rollbacks E-Maj';
 	$lang['emajenvironment'] = 'Environnement E-Maj';
 	$lang['emajenvir'] = 'E-Maj';
 	$lang['emajlogstat'] = 'Statistiques log';

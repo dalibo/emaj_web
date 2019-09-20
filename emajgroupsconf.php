@@ -68,168 +68,164 @@
 
 		$misc->printHeader('database', 'database', 'emajconfiguregroups');
 
-		$emajOK = $misc->checkEmajExtension();
-
-		if ($emajOK) {
-			$misc->printMsg($msg,$errMsg);
+		$misc->printMsg($msg,$errMsg);
 
 		// Schemas list
-			$misc->printTitle($lang['emajappschemas']);
+		$misc->printTitle($lang['emajappschemas']);
 
-			$schemas = $emajdb->getSchemas();
+		$schemas = $emajdb->getSchemas();
+
+		$columns = array(
+			'schema' => array(
+				'title' => $lang['strschema'],
+				'field' => field('nspname'),
+				'url'   => "emajgroupsconf.php?action=configure_groups&amp;back=define&amp;{$misc->href}&amp;",
+				'vars'  => array('appschema' => 'nspname'),
+			),
+			'owner' => array(
+				'title' => $lang['strowner'],
+				'field' => field('nspowner'),
+				'type'	=> 'callback',
+				'params'=> array('function' => 'renderSchemaOwner')
+			),
+			'comment' => array(
+				'title' => $lang['strcomment'],
+				'field' => field('nspcomment'),
+			),
+		);
+
+		$actions = array ();
+
+		$misc->printTable($schemas, $columns, $actions, 'defineGroupSchemas', $lang['strnoschemas'], null, array('sorter' => true, 'filter' => true));
+
+		echo "<hr>\n";
+
+		// Tables and sequences for the selected schema, if any
+		if (isset($_REQUEST['appschema']) && $_REQUEST['appschema'] != '') {
+
+			$misc->printTitle(sprintf($lang['emajtblseqofschema'],$_REQUEST['appschema']));
+			$tblseq = $emajdb->getTablesSequences($_REQUEST['appschema']);
 
 			$columns = array(
-				'schema' => array(
+				'type' => array(
+					'title' => $lang['strtype'],
+					'field' => field('relkind'),
+					'type'	=> 'callback',
+					'params'=> array('function' => 'renderTblSeq','align' => 'center'),
+					'sorter_text_extraction' => 'img_alt',
+					'filter'=> false,
+				),
+				'appschema' => array(
 					'title' => $lang['strschema'],
 					'field' => field('nspname'),
-					'url'   => "emajgroupsconf.php?action=configure_groups&amp;back=define&amp;{$misc->href}&amp;",
-					'vars'  => array('appschema' => 'nspname'),
+				),
+				'tblseq' => array(
+					'title' => $lang['strname'],
+					'field' => field('relname'),
+				),
+				'actions' => array(
+					'title' => $lang['stractions'],
+				),
+				'group' => array(
+					'title' => $lang['emajgroup'],
+					'field' => field('grpdef_group'),
+				),
+				'priority' => array(
+					'title' => $lang['emajpriority'],
+					'field' => field('grpdef_priority'),
+					'params'=> array('align' => 'center'),
+				));
+			if ($emajdb->getNumEmajVersion() < 30100) {			// version < 3.1.0
+				$columns = array_merge($columns, array(
+					'logschemasuffix' => array(
+						'title' => $lang['emajlogschemasuffix'],
+						'field' => field('grpdef_log_schema_suffix'),
+					),
+					'emajnamesprefix' => array(
+						'title' => $lang['emajnamesprefix'],
+						'field' => field('grpdef_emaj_names_prefix'),
+					),
+				));
+			}
+			$columns = array_merge($columns, array(
+				'logdattsp' => array(
+					'title' => $lang['emajlogdattsp'],
+					'field' => field('grpdef_log_dat_tsp'),
+				),
+				'logidxtsp' => array(
+					'title' => $lang['emajlogidxtsp'],
+					'field' => field('grpdef_log_idx_tsp'),
 				),
 				'owner' => array(
 					'title' => $lang['strowner'],
-					'field' => field('nspowner'),
-					'type'	=> 'callback',
-					'params'=> array('function' => 'renderSchemaOwner')
+					'field' => field('relowner'),
+				),
+				'tablespace' => array(
+					'title' => $lang['strtablespace'],
+					'field' => field('tablespace')
 				),
 				'comment' => array(
 					'title' => $lang['strcomment'],
-					'field' => field('nspcomment'),
+					'field' => field('relcomment'),
+				),
+			));
+
+			$urlvars = $misc->getRequestVars();
+
+			$actions = array(
+				'multiactions' => array(
+					'keycols' => array('appschema' => 'nspname', 'tblseq' => 'relname', 'group' => 'grpdef_group', 'type' => 'relkind'),
+					'url' => "emajgroupsconf.php?back=define",
+				),
+				'assign' => array(
+					'content' => $lang['emajassign'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroupsconf.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'assign_tblseq',
+								'appschema' => field('nspname'),
+								'tblseq' => field('relname'),
+								'group' => field('grpdef_group'),
+								'type' => field('relkind'),
+							)))),
+					'multiaction' => 'assign_tblseq',
+				),
+				'update' => array(
+					'content' => $lang['strupdate'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroupsconf.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'update_tblseq',
+								'type' => field('relkind'),
+								'appschema' => field('nspname'),
+								'tblseq' => field('relname'),
+								'group' => field('grpdef_group'),
+								'priority' => field('grpdef_priority'),
+								'logschemasuffix' => field('grpdef_log_schema_suffix'),
+								'emajnamesprefix' => field('grpdef_emaj_names_prefix'),
+								'logdattsp' => field('grpdef_log_dat_tsp'),
+								'logidxtsp' => field('grpdef_log_idx_tsp'),
+							)))),
+				),
+				'remove' => array(
+					'content' => $lang['emajremove'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroupsconf.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'remove_tblseq',
+								'appschema' => field('nspname'),
+								'tblseq' => field('relname'),
+								'group' => field('grpdef_group'),
+								'type' => field('relkind'),
+							)))),
+					'multiaction' => 'remove_tblseq',
 				),
 			);
 
-			$actions = array ();
-
-			$misc->printTable($schemas, $columns, $actions, 'defineGroupSchemas', $lang['strnoschemas'], null, array('sorter' => true, 'filter' => true));
-
-			echo "<hr>\n";
-
-		// Tables and sequences for the selected schema, if any
-			if (isset($_REQUEST['appschema']) && $_REQUEST['appschema'] != '') {
-
-				$misc->printTitle(sprintf($lang['emajtblseqofschema'],$_REQUEST['appschema']));
-				$tblseq = $emajdb->getTablesSequences($_REQUEST['appschema']);
-
-				$columns = array(
-					'type' => array(
-						'title' => $lang['strtype'],
-						'field' => field('relkind'),
-						'type'	=> 'callback',
-						'params'=> array('function' => 'renderTblSeq','align' => 'center'),
-						'sorter_text_extraction' => 'img_alt',
-						'filter'=> false,
-					),
-					'appschema' => array(
-						'title' => $lang['strschema'],
-						'field' => field('nspname'),
-					),
-					'tblseq' => array(
-						'title' => $lang['strname'],
-						'field' => field('relname'),
-					),
-					'actions' => array(
-						'title' => $lang['stractions'],
-					),
-					'group' => array(
-						'title' => $lang['emajgroup'],
-						'field' => field('grpdef_group'),
-					),
-					'priority' => array(
-						'title' => $lang['emajpriority'],
-						'field' => field('grpdef_priority'),
-						'params'=> array('align' => 'center'),
-					));
-				if ($emajdb->getNumEmajVersion() < 30100) {			// version < 3.1.0
-					$columns = array_merge($columns, array(
-						'logschemasuffix' => array(
-							'title' => $lang['emajlogschemasuffix'],
-							'field' => field('grpdef_log_schema_suffix'),
-						),
-						'emajnamesprefix' => array(
-							'title' => $lang['emajnamesprefix'],
-							'field' => field('grpdef_emaj_names_prefix'),
-						),
-					));
-				}
-				$columns = array_merge($columns, array(
-					'logdattsp' => array(
-						'title' => $lang['emajlogdattsp'],
-						'field' => field('grpdef_log_dat_tsp'),
-					),
-					'logidxtsp' => array(
-						'title' => $lang['emajlogidxtsp'],
-						'field' => field('grpdef_log_idx_tsp'),
-					),
-					'owner' => array(
-						'title' => $lang['strowner'],
-						'field' => field('relowner'),
-					),
-					'tablespace' => array(
-						'title' => $lang['strtablespace'],
-						'field' => field('tablespace')
-					),
-					'comment' => array(
-						'title' => $lang['strcomment'],
-						'field' => field('relcomment'),
-					),
-				));
-
-				$urlvars = $misc->getRequestVars();
-
-				$actions = array(
-					'multiactions' => array(
-						'keycols' => array('appschema' => 'nspname', 'tblseq' => 'relname', 'group' => 'grpdef_group', 'type' => 'relkind'),
-						'url' => "emajgroupsconf.php?back=define",
-					),
-					'assign' => array(
-						'content' => $lang['emajassign'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'emajgroupsconf.php',
-								'urlvars' => array_merge($urlvars, array (
-									'action' => 'assign_tblseq',
-									'appschema' => field('nspname'),
-									'tblseq' => field('relname'),
-									'group' => field('grpdef_group'),
-									'type' => field('relkind'),
-								)))),
-						'multiaction' => 'assign_tblseq',
-					),
-					'update' => array(
-						'content' => $lang['strupdate'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'emajgroupsconf.php',
-								'urlvars' => array_merge($urlvars, array (
-									'action' => 'update_tblseq',
-									'type' => field('relkind'),
-									'appschema' => field('nspname'),
-									'tblseq' => field('relname'),
-									'group' => field('grpdef_group'),
-									'priority' => field('grpdef_priority'),
-									'logschemasuffix' => field('grpdef_log_schema_suffix'),
-									'emajnamesprefix' => field('grpdef_emaj_names_prefix'),
-									'logdattsp' => field('grpdef_log_dat_tsp'),
-									'logidxtsp' => field('grpdef_log_idx_tsp'),
-								)))),
-					),
-					'remove' => array(
-						'content' => $lang['emajremove'],
-						'attr' => array (
-							'href' => array (
-								'url' => 'emajgroupsconf.php',
-								'urlvars' => array_merge($urlvars, array (
-									'action' => 'remove_tblseq',
-									'appschema' => field('nspname'),
-									'tblseq' => field('relname'),
-									'group' => field('grpdef_group'),
-									'type' => field('relkind'),
-								)))),
-						'multiaction' => 'remove_tblseq',
-					),
-				);
-
-				$misc->printTable($tblseq, $columns, $actions, 'defineGroupTblseq', $lang['strnotables'], 'tblseqPre', array('sorter' => true, 'filter' => true));
-			}
+			$misc->printTable($tblseq, $columns, $actions, 'defineGroupTblseq', $lang['strnotables'], 'tblseqPre', array('sorter' => true, 'filter' => true));
 		}
 	}
 
@@ -700,6 +696,12 @@
 			else
 				configure_groups('', $lang['emajmodifygrouperr']);
 		}
+	}
+
+	// redirect to the emajenvir.php page if the emaj extension is not installed or accessible or is too old
+	if (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
+		&& $emajdb->getNumEmajVersion() >= $oldest_supported_emaj_version_num)) {
+		header('Location: emajenvir.php?' . $_SERVER["QUERY_STRING"]);
 	}
 
 	$misc->printHtmlHeader($lang['emajgroupsconfiguration']);

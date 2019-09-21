@@ -10,12 +10,24 @@
 	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 	if (!isset($msg)) $msg = '';
 
+	// Callback function to dynamicaly modify the schema type column content
+	// It replaces the database value by an icon
+	function renderSchemaType($val) {
+		global $misc, $lang;
+		if ($val == 'E') {
+			$icon = $misc->icon('EmajIcon');
+			$alt = $lang['emajschema'];
+			return "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
+		}
+		return;
+	}
+
 	/**
 	 * Show the list of schemas in the database
 	 * and the tables and sequences lists if a schema has already been selected
 	 */
 	function list_schemas($msg = '', $errMsg = '', $prevSchema = '') {
-		global $data, $misc, $conf;
+		global $data, $misc, $conf, $emajdb;
 		global $lang;
 
 		if (!isset($_REQUEST['schema'])) $_REQUEST['schema'] = $prevSchema;
@@ -31,7 +43,11 @@
 		$misc->printTitle($lang['strallschemas']);
 
 		// Get the list of schemas
-		$schemas = $data->getSchemas();
+		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
+			$schemas = $emajdb->getAllSchemas();
+		} else {
+			$schemas = $data->getSchemas();
+		}
 
 		$columns = array(
 			'schema' => array(
@@ -40,6 +56,20 @@
 				'url'   => "schemas.php?action=list_schemas&amp;back=define&amp;{$misc->href}&amp;",
 				'vars'  => array('schema' => 'nspname'),
 			),
+		);
+
+		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
+			$columns = array_merge($columns, array(
+				'type' => array(
+					'title' => $lang['strtype'],
+					'field' => field('nsptype'),
+					'type'	=> 'callback',
+					'params'=> array('function' => 'renderSchemaType','align' => 'center')
+				),
+			));
+		}
+
+		$columns = array_merge($columns, array(
 			'owner' => array(
 				'title' => $lang['strowner'],
 				'field' => field('nspowner'),
@@ -48,7 +78,7 @@
 				'title' => $lang['strcomment'],
 				'field' => field('nspcomment'),
 			),
-		);
+		));
 
 		$misc->printTable($schemas, $columns, $actions, 'schemas-schemas', $lang['strnoschemas'], null, array('sorter' => true, 'filter' => true));
 

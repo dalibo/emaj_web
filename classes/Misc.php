@@ -469,7 +469,7 @@
 					echo "<link rel=\"stylesheet\" href=\"css/{$css}.css\" type=\"text/css\" />\n";
 			} else {
 				echo "<link rel=\"shortcut icon\" type=\"image/vnd.microsoft.icon\" href=\"images/Favicon.ico\" />\n";
-				echo "<link rel=\"icon\" type=\"image/png\" href=\"images/EmajwebIcon.png\" />\n";
+				echo "<link rel=\"icon\" type=\"image/png\" href=\"images/EmajIcon.png\" />\n";
 			}
 
 			// Javascript
@@ -789,7 +789,7 @@
 						'intro' => array (
 							'title' => $lang['strintroduction'],
 							'url'   => "intro.php",
-							'icon'  => 'EmajwebIcon',
+							'icon'  => 'EmajIcon',
 						),
 						'servers' => array (
 							'title' => $lang['strservers'],
@@ -872,7 +872,8 @@
 							'urlvars' => array(
 								'subject' => 'database'
 							),
-							'icon' => 'Emaj',
+#							'icon' => 'Emaj',
+							'icon' => 'EmajIcon',
 							'tree' => false,
 						)
 					);
@@ -1039,7 +1040,7 @@
 			$trail['root'] = array(
 				'text'  => $appName,
 				'url'   => 'redirect.php?subject=root',
-				'icon'  => 'EmajwebIcon'
+				'icon'  => 'EmajIcon'
 			);
 
 			if ($subject == 'root') $done = true;

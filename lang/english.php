@@ -246,6 +246,7 @@
 	$lang['emajfrom'] = 'From';
 	$lang['emajto'] = 'To';
 	$lang['emajproperties'] = 'E-Maj properties';
+	$lang['emajschema'] = 'E-Maj schema';
 
 	// E-Maj html titles and tabs
 	$lang['emajgroupsmanagement'] = 'E-Maj groups management';

@@ -790,6 +790,30 @@ class EmajDb {
 	}
 
 	/**
+	 * Return all existing non system schemas in the databse
+	 */
+	function getAllSchemas() {
+		global $data;
+
+		$sql = "WITH emaj_schemas AS (";
+		if ($this->getNumEmajVersion() >= 22000){			// version >= 2.2.0
+			$sql .= "SELECT sch_name FROM emaj.emaj_schema) ";
+		} else {
+			$sql .= "SELECT DISTINCT rel_log_schema AS sch_name FROM emaj.emaj_relation WHERE rel_log_schema IS NOT NULL
+					 UNION SELECT 'emaj') ";
+		}
+		$sql .= "SELECT pn.nspname, pu.rolname AS nspowner,
+						pg_catalog.obj_description(pn.oid, 'pg_namespace') AS nspcomment,
+						CASE WHEN EXISTS (SELECT 0 FROM emaj_schemas WHERE sch_name = nspname) THEN 'E' ELSE '' END AS nsptype
+				 FROM pg_catalog.pg_namespace pn
+					 LEFT JOIN pg_catalog.pg_roles pu ON (pn.nspowner = pu.oid)
+				 WHERE nspname NOT LIKE 'pg@_%' ESCAPE '@' AND nspname != 'information_schema'
+				 ORDER BY nspname";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
 	 * Return all tables and sequences of a schema, 
 	 * plus all non existent tables but listed in emaj_group_def with this schema
 	 */
@@ -2373,7 +2397,10 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 
 	/**
 	 * Gets the 'E-Maj type' of a table or sequence
-	 * returns L when the table or sequence is a log object, or E if it is an internal E-Maj object, or ''
+	 * returns 
+     *   'L' when the table or sequence is a Log object, or 
+     *   'E' if it is an internal E-maj object, or 
+     *   '' in other cases
 	 */
 	function getEmajTypeTblSeq($schema, $tblseq) {
 		global $data;

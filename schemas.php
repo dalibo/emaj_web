@@ -57,7 +57,6 @@
 				'vars'  => array('schema' => 'nspname'),
 			),
 		);
-
 		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
 			$columns = array_merge($columns, array(
 				'type' => array(
@@ -68,7 +67,6 @@
 				),
 			));
 		}
-
 		$columns = array_merge($columns, array(
 			'owner' => array(
 				'title' => $lang['strowner'],
@@ -86,12 +84,26 @@
 
 		if (isset($_REQUEST['schema']) && $_REQUEST['schema'] != '') {
 
+			// is it an E-Maj schema ?
+			$isEmajSchema = false;
+			foreach ($schemas as $schema) {
+				if ($schema["nspname"] == $_REQUEST['schema'] && $schema["nsptype"] == 'E') {
+					$isEmajSchema = true;
+				}
+			}
+			// emaj attribute and actions to manage ?
+			$emajAttributesToManage = ($emajdb->isEnabled() && $emajdb->isAccessible() && ! $isEmajSchema);
+
 			// Display the tables list
 			echo "<a name=\"tables\">&nbsp;</a>\n";
 
 			$misc->printTitle(sprintf($lang['strtableslist'], $_REQUEST['schema']));
 
-			$tables = $data->getTables();
+			if ($emajAttributesToManage) {
+				$tables = $emajdb->getTables($_REQUEST['schema']);
+			} else {
+				$tables = $data->getTables();
+			}
 
 			$columns = array(
 				'table' => array(
@@ -103,6 +115,29 @@
 				'actions' => array(
 					'title' => $lang['stractions'],
 				),
+			);
+			if ($emajAttributesToManage) {
+				$columns = array_merge($columns, array(
+					'group' => array(
+						'title' => $lang['emajgroup'],
+						'field' => field('rel_group'),
+					),
+					'priority' => array(
+						'title' => $lang['emajpriority'],
+						'field' => field('rel_priority'),
+						'params'=> array('align' => 'center'),
+					),
+					'logdattsp' => array(
+						'title' => $lang['emajlogdattsp'],
+						'field' => field('rel_log_dat_tsp'),
+					),
+					'logidxtsp' => array(
+						'title' => $lang['emajlogidxtsp'],
+						'field' => field('rel_log_idx_tsp'),
+					),
+				));
+			}
+			$columns = array_merge($columns, array(
 				'owner' => array(
 					'title' => $lang['strowner'],
 					'field' => field('relowner'),
@@ -120,7 +155,7 @@
 					'title' => $lang['strcomment'],
 					'field' => field('relcomment'),
 				),
-			);
+			));
 
 			$actions = array(
 				'browse' => array(
@@ -149,7 +184,11 @@
 			$misc->printTitle(sprintf($lang['strsequenceslist'], $_REQUEST['schema']));
 
 			// Get all sequences
-			$sequences = $data->getSequences();
+			if ($emajAttributesToManage) {
+				$sequences = $emajdb->getSequences($_REQUEST['schema']);
+			} else {
+				$sequences = $data->getSequences();
+			}
 
 			$columns = array(
 				'sequence' => array(
@@ -158,6 +197,16 @@
 					'url'   => "seqproperties.php?action=properties&amp;{$misc->href}&amp;",
 					'vars'  => array('sequence' => 'seqname'),
 				),
+			);
+			if ($emajAttributesToManage) {
+				$columns = array_merge($columns, array(
+					'group' => array(
+						'title' => $lang['emajgroup'],
+						'field' => field('rel_group'),
+					),
+				));
+			}
+			$columns = array_merge($columns, array(
 				'owner' => array(
 					'title' => $lang['strowner'],
 					'field' => field('seqowner'),
@@ -166,7 +215,7 @@
 					'title' => $lang['strcomment'],
 					'field' => field('seqcomment'),
 				),
-			);
+			));
 
 			$misc->printTable($sequences, $columns, $actions, 'sequences-sequences', $lang['strnosequences'], null, array('sorter' => true, 'filter' => true));
 		}

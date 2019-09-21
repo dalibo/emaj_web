@@ -814,6 +814,64 @@ class EmajDb {
 	}
 
 	/**
+	 * Return all tables of a schema, with their current E-Maj characteristics
+	 */
+	function getTables($schema) {
+		global $data;
+
+		$data->clean($schema);
+
+		if ($data->hasWithOids()) {
+			$goodTypeConditions = "c.relpersistence = 'p' and not c.relhasoids";
+		} else {
+			$goodTypeConditions = "c.relpersistence = 'p'";
+		}
+
+		$sql = "SELECT nspname, c.relname,
+					c.relkind || case when (relkind = 'r' and ${goodTypeConditions}) then '+' else '-' end as relkind,
+					pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
+					pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment, spcname AS tablespace,
+					coalesce(rel_group, '') AS rel_group, coalesce(rel_priority::text, '') AS rel_priority,
+					coalesce(rel_log_dat_tsp, '') AS rel_log_dat_tsp, coalesce(rel_log_idx_tsp, '') AS rel_log_idx_tsp
+					FROM pg_catalog.pg_class c
+						LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+						LEFT JOIN emaj.emaj_relation ON rel_schema = nspname AND rel_tblseq = c.relname ";
+		if ($this->getNumEmajVersion() >= 20200){	// version >= 2.2.0
+			$sql .= "AND upper_inf(rel_time_range)";
+		}
+			$sql .= "LEFT JOIN pg_catalog.pg_tablespace pt ON pt.oid = c.reltablespace
+					WHERE c.relkind IN ('r','p') AND nspname='{$schema}'
+				ORDER BY relname";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Return all sequences of a schema, with their current E-Maj characteristics
+	 */
+	function getSequences($schema) {
+		global $data;
+
+		$data->clean($schema);
+
+		$sql = "SELECT nspname, c.relname AS seqname, c.relkind,
+					pg_catalog.pg_get_userbyid(c.relowner) AS seqowner,
+					pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment,
+					coalesce(rel_group, '') AS rel_group
+					FROM pg_catalog.pg_class c
+						LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+						LEFT JOIN emaj.emaj_relation ON rel_schema = nspname AND rel_tblseq = c.relname ";
+		if ($this->getNumEmajVersion() >= 20200){	// version >= 2.2.0
+			$sql .= "AND upper_inf(rel_time_range)";
+		}
+			$sql .= "LEFT JOIN pg_catalog.pg_tablespace pt ON pt.oid = c.reltablespace
+					WHERE c.relkind = 'S' AND nspname='{$schema}'
+				ORDER BY relname";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
 	 * Return all tables and sequences of a schema, 
 	 * plus all non existent tables but listed in emaj_group_def with this schema
 	 */
@@ -852,7 +910,8 @@ class EmajDb {
 						c.relkind || case when relkind = 'S' or (relkind = 'r' and ${goodTypeConditions}) then '+' else '-' end as relkind,
 						pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
 						pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment, spcname AS tablespace,
-						grpdef_group, grpdef_priority, grpdef_log_schema_suffix, grpdef_emaj_names_prefix, grpdef_log_dat_tsp, grpdef_log_idx_tsp 			   FROM pg_catalog.pg_class c
+						grpdef_group, grpdef_priority, grpdef_log_schema_suffix, grpdef_emaj_names_prefix, grpdef_log_dat_tsp, grpdef_log_idx_tsp
+						FROM pg_catalog.pg_class c
 							LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
 							LEFT JOIN emaj.emaj_group_def ON grpdef_schema = nspname AND grpdef_tblseq = c.relname
 							LEFT JOIN pg_catalog.pg_tablespace pt ON pt.oid = c.reltablespace

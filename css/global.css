@@ -118,7 +118,14 @@ button:disabled {
 }
 select {
 	background: #ffffff;
-	border: 1px solid #d5d5d5;
+	border: 1px solid #5090c1;
+	border-radius: 5px;
+	padding: 3px 5px 3px 5px;
+	min-width: 100px;
+}
+select:disabled {
+	background: #f0f0f0;
+	border: 1px solid #d0d0d0;
 }
 
 table.error {
@@ -145,8 +152,8 @@ th.data {
 }
 
 img.info {
-	margin-top: 3px;
-	margin-left: 5px;
+	margin-left: 10px;
+	vertical-align:middle;
 }
 
 tr th.data{

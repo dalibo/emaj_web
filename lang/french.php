@@ -124,18 +124,6 @@
 	$lang['strnoserversupplied'] = 'Aucun serveur fournis !';
 	$lang['strconnectionfail'] = 'Connexion au serveur échouée.';
 
-	// Tables
-	$lang['strtable'] = 'Table';
-	$lang['strtables'] = 'Tables';
-	$lang['strtableslist'] = 'Tables du schéma "%s"';
-	$lang['strnotables'] = 'Aucune table trouvée.';
-	$lang['strestimatedrowcount'] = 'Nombre estimé de lignes';
-	$lang['strtblproperties'] = 'Propriétés de la table "%s.%s"';
-	$lang['strtblcontent'] = 'Contenu de la table "%s.%s"';
-	$lang['emajemajlogtable'] = 'La table est une table de log E-Maj.';
-	$lang['emajinternaltable'] = 'La table est une table interne E-Maj.';
-	$lang['emajtblnogroupownership'] = 'La table ne fait actuellement partie d\'aucun groupe de tables.';
-
 	// Users
 	$lang['strusername'] = 'Utilisateur';
 	$lang['strpassword'] = 'Mot de passe';
@@ -155,6 +143,24 @@
 	$lang['strdatabaseslist'] = 'Databases du serveur';
 	$lang['strnodatabases'] = 'Aucune base de données trouvée.';
 	$lang['strsqlexecuted'] = 'Requête SQL exécutée.';
+
+	// Schemas
+	$lang['strschema'] = 'Schéma';
+	$lang['strschemas'] = 'Schémas';
+	$lang['strallschemas'] = 'Tous les schémas';
+	$lang['strnoschemas'] = 'Aucun schéma trouvé.';
+
+	// Tables
+	$lang['strtable'] = 'Table';
+	$lang['strtables'] = 'Tables';
+	$lang['strtableslist'] = 'Tables du schéma "%s"';
+	$lang['strnotables'] = 'Aucune table trouvée.';
+	$lang['strestimatedrowcount'] = 'Nombre estimé de lignes';
+	$lang['strtblproperties'] = 'Propriétés de la table "%s.%s"';
+	$lang['strtblcontent'] = 'Contenu de la table "%s.%s"';
+	$lang['emajemajlogtable'] = 'La table est une table de log E-Maj.';
+	$lang['emajinternaltable'] = 'La table est une table interne E-Maj.';
+	$lang['emajtblnogroupownership'] = 'La table ne fait actuellement partie d\'aucun groupe de tables.';
 
 	// Sequences
 	$lang['strsequence'] = 'Séquence';
@@ -180,12 +186,6 @@
 
 	// Types
 	$lang['strtype'] = 'Type';
-
-	// Schemas
-	$lang['strschema'] = 'Schéma';
-	$lang['strschemas'] = 'Schémas';
-	$lang['strallschemas'] = 'Tous les schémas';
-	$lang['strnoschemas'] = 'Aucun schéma trouvé.';
 
 	// Tablespaces
 	$lang['strtablespace'] = 'Tablespace';
@@ -224,6 +224,7 @@
 	$lang['emajnotavail'] = 'Désolé, E-Maj n\'est pas disponible ou accessible sur cette base de données. Plus de détails sur l\'onglet %s.';
 	$lang['emajstate'] = 'Etat';
 	$lang['emajnoselectedgroup'] = 'Aucun groupe de tables n\'a été sélectionné !';
+	$lang['emajtablesgroup'] = 'Groupe de tables';
 	$lang['emajgroup'] = 'Groupe';
 	$lang['emajgroups'] = 'Groupes';
 	$lang['emajmark'] = 'Marque';
@@ -247,7 +248,6 @@
 	$lang['emajto'] = 'A';
 	$lang['emajproperties'] = 'Propriétés E-Maj';
 	$lang['emajschema'] = 'Schéma E-Maj';
-
 
 	// E-Maj html titles and tabs
 	$lang['emajgroupsmanagement'] = 'Gestion des groupes E-Maj';
@@ -302,44 +302,68 @@
 	$lang['emajparavgfkcheck'] = 'Coût moyen de vérification d\'une clé étrangère';
 	$lang['emajparavgfkcheckinfo'] = 'Le paramètre \'avg_fkey_check_duration\' de la table emaj_param détermine le coût moyen de vérification d\'une clé étrangère. Le paramètre est de type INTERVAL. La valeur par défaut est de 20 µs.';
 
-	// Groups' content setup
+	// Dynamic groups content management
+	$lang['emajlogdattsp'] = 'Tablespace log';
+	$lang['emajlogidxtsp'] = 'Tablespace index log';
+	$lang['emajassign'] = 'Affecter';
+	$lang['emajmove'] = 'Déplacer';
+	$lang['emajremove'] = 'Retirer';
+	$lang['emajassigntable'] = 'E-Maj : Affecter des tables à un groupe de tables';
+	$lang['emajthetable'] = 'la table "%s.%s"';
+	$lang['emajconfirmassigntblseq'] = 'Affecter :';
+	$lang['emajenterpriority'] = 'Priorité de traitement';
+	$lang['emajpriorityhelp'] = 'Les tables sont traitées par ordre croissant de priorité, et par ordre alphabétique de nom si aucune priorité n\'est définie.';
+	$lang['emajenterlogdattsp'] = 'Tablespace pour la table de log';
+	$lang['emajenterlogidxtsp'] = 'Tablespace pour l\'index de la table de log';
+	$lang['emajmarkiflogginggroup'] = 'Marque (si groupe démarré)';
+	$lang['emajdynassigntablesok'] = '%s tables ont été assignées au groupe de tables %s.';
+	$lang['emajmodifygrouperr'] = 'Erreur lors du changement de composition des groupes de tables.';
+	$lang['emajmovetable'] = 'E-Maj : Déplacer des tables dans un autre groupe de tables';
+	$lang['emajthetableingroup'] = 'la table "%s.%s" (groupe %s)';
+	$lang['emajconfirmmovetblseq'] = 'Déplacer :';
+	$lang['emajdynmovetablesok'] = '%s tables ont été déplacées dans le groupe de tables %s.';
+	$lang['emajmodifytable'] = 'E-Maj : Modifier les propriétés E-Maj des tables';
+//	$lang['emajconfirmmodifytblseq'] = 'Etes-vous sûr de vouloir modifier les propriétés de :';
+	$lang['emajdynmodifytablesok'] = 'Les propriétés de %s tables ont été modifiées.';
+	$lang['emajremovetable'] = 'E-Maj : Retirer des tables de leur groupe de tables';
+	$lang['emajconfirmremovetblseq'] = 'Etes-vous sûr de vouloir retirer :';
+	$lang['emajdynremovetablesok'] = '%s tables ont été retirées de leur groupe de tables.';
+	$lang['emajassignsequence'] = 'E-Maj : Affecter des séquences à un groupe de tables';
+	$lang['emajthesequence'] = 'la séquence "%s.%s"';
+	$lang['emajdynassignsequencesok'] = '%s sequences ont été assignées au groupe de tables %s.';
+	$lang['emajmovesequence'] = 'E-Maj : Déplacer des séquences dans un autre groupe de tables';
+	$lang['emajthesequenceingroup'] = 'la séquence "%s.%s" (groupe %s)';
+	$lang['emajdynmovesequencesok'] = '%s sequences ont été déplacées dans le groupe de tables %s.';
+	$lang['emajremovesequence'] = 'E-Maj : Retirer des séquences de leur groupe de tables';
+	$lang['emajdynremovesequencesok'] = '%s séquences ont été retirées de leur groupe de tables.';
+
+	// Old Groups' content setup
 	$lang['emajappschemas'] = 'Les schémas applicatifs';
 	$lang['emajunknownobject'] = 'Cet objet est référencé dans la table emaj_group_def mais n\'est pas créé.';
 	$lang['emajunsupportedobject'] = 'Ce type d\'objet n\'est pas supporté par E-Maj (unlogged table, table avec OIDS, table partitionnée,...).';
 	$lang['emajtblseqofschema'] = 'Tables et séquences du schéma "%s"';
-	$lang['emajassign'] = 'Affecter';
-	$lang['emajremove'] = 'Retirer';
 	$lang['emajlogschemasuffix'] = 'Suffixe schéma log';
 	$lang['emajnamesprefix'] = 'Préfixe nom objets';
-	$lang['emajlogdattsp'] = 'Tablespace log';
-	$lang['emajlogidxtsp'] = 'Tablespace index log';
 	$lang['emajspecifytblseqtoassign'] = 'Spécifiez au moins une table ou séquence à affecter';
 	$lang['emajtblseqyetgroup'] = 'Erreur, "%s.%s" est déjà affecté à un groupe de tables.';
 	$lang['emajtblseqbadtype'] = 'Erreur, le type de "%s.%s" n\'est pas supporté par E-Maj.';
 	$lang['emajassigntblseq'] = 'E-Maj : Affecter des tables / séquences à un groupe de tables';
-	$lang['emajconfirmassigntblseq'] = 'Affecter :';
-	$lang['emajthetable'] = 'la table "%s.%s"';
-	$lang['emajthesequence'] = 'la séquence "%s.%s"';
 	$lang['emajfromgroup'] = 'du groupe "%s"';
-	$lang['emajenterpriority'] = 'Priorité de traitement';
-	$lang['emajpriorityhelp'] = 'Les tables sont traitées par ordre croissant de priorité, et par ordre alphabétique de nom si aucune priorité n\'est définie.';
 	$lang['emajenterlogschema'] = 'Suffixe du schéma de log';
 	$lang['emajlogschemahelp'] = 'Un schéma de log contient des tables, séquences et fonctions de log. Le schéma de log par défaut est \'emaj\'. Si un suffixe est défini pour la table, ses objets iront dans le schéma \'emaj\' + suffixe.';
 	$lang['emajenternameprefix'] = 'Préfixe des noms d\'objets E-Maj';
 	$lang['emajnameprefixhelp'] = 'Par défaut les noms des objets de log sont préfixés par &lt;schéma&gt;_&lt;table&gt;. Mais on peut définir un autre préfixe pour la table. Il doit être unique dans la base de données.';
-	$lang['emajenterlogdattsp'] = 'Tablespace pour la table de log';
-	$lang['emajenterlogidxtsp'] = 'Tablespace pour l\'index de la table de log';
 	$lang['emajspecifytblseqtoupdate'] = 'Spécifiez au moins une table ou séquence à modifier';
 	$lang['emajupdatetblseq'] = 'E-Maj : Modifier les propriétés d\'une table / séquence dans un groupe de tables';
 	$lang['emajspecifytblseqtoremove'] = 'Spécifiez au moins une table ou séquence à retirer';
 	$lang['emajtblseqnogroup'] = 'Erreur, "%s.%s" n\'est actuellement affecté à aucun groupe de tables.';
 	$lang['emajremovetblseq'] = 'E-Maj : Retirer des tables / séquences de groupes de tables';
 	$lang['emajconfirmremove1tblseq'] = 'Etes-vous sûr de vouloir retirer %s du groupe de tables "%s" ?';
-	$lang['emajconfirmremovetblseq'] = 'Etes-vous sûr de vouloir retirer :';
 	$lang['emajmodifygroupok'] = 'Le changement de configuration est enregistré. Il sera effectif après (re)création des groupes de tables concernés ou application des changements de configuration pour ces groupes.';
-	$lang['emajmodifygrouperr'] = 'Erreur lors du changement de composition des groupes de tables.';
+	$lang['emajspecifytblseqtoprocess'] = 'Spécifiez au moins une table ou séquence à traiter.';
 
 	// List Groups
+
 	$lang['emajidlegroups'] = 'Groupes de tables en état "arrêté" ';
 	$lang['emajlogginggroups'] = 'Groupes de tables en état "démarré" ';
 	$lang['emajconfiguredgroups'] = 'Groupes de tables "configurés" mais non encore "créés" ';
@@ -363,6 +387,7 @@
 	$lang['emajduplicaterelation'] = 'Table ou séquence déjà affectée à un groupe (x%s) / ';
 	$lang['emajnoconfiguredgroup'] = 'Pour créer un (autre) groupe de tables, allez d\'abord dans l\'onglet de configuration des groupes.<br>Vous pouvez aussi créer un groupe vide puis y ajouter des tables et séquences puis appliquer le changement de configuration.';
 	$lang['emajcreateemptygroup'] = 'Créer un groupe vide';
+	$lang['emajcreatetablesgroup'] = 'Créer un groupe de tables';
 
 	// Rollback activity
 	$lang['emajrlbkid'] = 'Id. Rlbk';

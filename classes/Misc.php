@@ -813,7 +813,7 @@
 				case 'database':
 					$emajNotAvail = (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
 						&& $emajdb->getNumEmajVersion() >= $oldest_supported_emaj_version_num));
-					$hideGroupConf = $emajNotAvail || !($emajdb->isEmaj_Adm());
+					$hideGroupConf = $emajNotAvail || !($emajdb->isEmaj_Adm()) || $emajdb->getNumEmajVersion() >= 30200;
 
 					$tabs = array (
 						'emajgroups' => array (
@@ -986,12 +986,12 @@
 				$trail = $this->getTrail($trail);
 			}
 			echo "<div class=\"trail\">\n";
-			echo "  <div class=\"crumb\">\n";
+			echo "  <div class=\"crumb\">\n\t";
 
 			$firstElement = 1;
 			foreach ($trail as $crumb) {
 				if (!$firstElement)
-					echo " &gt; ";
+					echo "\t &gt; ";
 
 				$firstElement = 0;
 
@@ -1013,7 +1013,7 @@
 				if (isset($crumb['icon']) && $icon = $this->icon($crumb['icon']))
 					$crumblink .= "<span class=\"icon\"><img src=\"{$icon}\" alt=\"{$iconalt}\" /></span>";
 
-				$crumblink .= "<span class=\"label\">" . htmlspecialchars($crumb['text']) . "</span></a>";
+				$crumblink .= "<span class=\"label\">" . htmlspecialchars($crumb['text']) . "</span></a>\n";
 
 				echo $crumblink;
 			}
@@ -1098,10 +1098,10 @@
 
 			if (isset($_REQUEST['group']) && !$done) {
 				$trail['emaj'] = array(
-					'title' => 'E-Maj',
+					'title' => $lang['emajtablesgroup'],
 					'text'  => $_REQUEST['group'],
 					'url'   => $this->getHREFSubject('emajgroup'),
-					'icon'  => 'Emaj'
+					'icon'  => 'EmajGroup'
 				);
 			}
 			if ($subject == 'group') $done = true;

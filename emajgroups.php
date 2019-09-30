@@ -230,7 +230,6 @@
 
 		$idleGroups = $emajdb->getIdleGroups();
 		$loggingGroups = $emajdb->getLoggingGroups();
-		$configuredGroups = $emajdb->getConfiguredGroups();
 
 		$columns = array(
 			'group' => array(
@@ -358,7 +357,7 @@
 							))))
 				))
 			);
-			if ($emajdb->getNumEmajVersion() >= 20100) {	// version >= 2.1.0
+			if ($emajdb->getNumEmajVersion() >= 20100 && $emajdb->getNumEmajVersion() < 30200) {	// 2.1 <= version < 3.2
 				$loggingActions = array_merge($loggingActions, array(
 					'alter_group' => array(
 						'content' => $lang['emajApplyConfChanges'],
@@ -372,9 +371,7 @@
 							))))
 					),
 				));
-				if ($emajdb->getNumEmajVersion() >= 20100) {	// version >= 2.1.0
-						$loggingActions['alter_group']['multiaction'] = 'alter_groups';
-				}
+				$loggingActions['alter_group']['multiaction'] = 'alter_groups';
 			};
 		};
 
@@ -419,20 +416,25 @@
 								'group' => field('group_name'),
 							))))
 				),
-				'alter_group' => array(
-					'content' => $lang['emajApplyConfChanges'],
-					'attr' => array (
-						'href' => array (
-							'url' => 'emajgroups.php',
-							'urlvars' => array_merge($urlvars, array (
-								'action' => 'alter_group',
-								'back' => 'list',
-								'group' => field('group_name'),
-						))))
-				),
 			));
-			if ($emajdb->getNumEmajVersion() >= 20100) {	// version >= 2.1.0
+
+			if ($emajdb->getNumEmajVersion() < 30200) {				// version < 3.2
+				$idleActions = array_merge($idleActions, array(
+					'alter_group' => array(
+						'content' => $lang['emajApplyConfChanges'],
+						'attr' => array (
+							'href' => array (
+								'url' => 'emajgroups.php',
+								'urlvars' => array_merge($urlvars, array (
+									'action' => 'alter_group',
+									'back' => 'list',
+									'group' => field('group_name'),
+							))))
+					),
+				));
+				if ($emajdb->getNumEmajVersion() >= 20100) {		// version >= 2.1.0
 					$idleActions['alter_group']['multiaction'] = 'alter_groups';
+				}
 			}
 			$idleActions = array_merge($idleActions, array(
 				'drop_group' => array(
@@ -511,19 +513,34 @@
 
 		echo "<hr>\n";
 
-		// configured but not yet created tables section
-		$misc->printTitle("{$lang['emajconfiguredgroups']}<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['emajconfiguredgrouphelp']}\"/>");
+		if ($emajdb->getNumEmajVersion() < 30200) {					// version < 3.2
+			// configured but not yet created tables groups section
+			$configuredGroups = $emajdb->getConfiguredGroups();
 
-		$misc->printTable($configuredGroups, $configuredColumns, $configuredActions, 'configuredGroups', $lang['emajnoconfiguredgroups'], null, array('sorter' => true, 'filter' => true));
+			$misc->printTitle("{$lang['emajconfiguredgroups']}<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['emajconfiguredgrouphelp']}\"/>");
+			
+			$misc->printTable($configuredGroups, $configuredColumns, $configuredActions, 'configuredGroups', $lang['emajnoconfiguredgroups'], null, array('sorter' => true, 'filter' => true));
 
-		// for emaj_adm role only, give information about how to create a group and propose the create empty group button
-		if ($emajdb->isEmaj_Adm()) {
-			if ($emajdb->getNumEmajVersion() >= 20100) {			// version >= 2.1.0
-				echo "<p>{$lang['emajnoconfiguredgroup']}</p>\n";
-				echo "<form id=\"createEmptyGroup_form\" action=\"emajgroups.php?action=create_group&amp;back=list&amp;empty=true&amp;{$misc->href}\"";
-				echo " method=\"post\" enctype=\"multipart/form-data\">\n";
-				echo "\t<input type=\"submit\" value=\"{$lang['emajcreateemptygroup']}\" />\n";
-				echo "</form>\n";
+			// for emaj_adm role only, give information about how to create a group
+			if ($emajdb->isEmaj_Adm()) {
+				if ($emajdb->getNumEmajVersion() >= 20100) {			// version >= 2.1.0
+					echo "<p>{$lang['emajnoconfiguredgroup']}</p>\n";
+					echo "<form id=\"createEmptyGroup_form\" action=\"emajgroups.php?action=create_group&amp;back=list&amp;empty=true&amp;{$misc->href}\"";
+					echo " method=\"post\" enctype=\"multipart/form-data\">\n";
+					echo "\t<input type=\"submit\" value=\"{$lang['emajcreateemptygroup']}\" />\n";
+					echo "</form>\n";
+				}
+			}
+		} else {
+
+			// for emaj_adm role only, display the "create tables group" button
+			if ($emajdb->isEmaj_Adm()) {
+				if ($emajdb->getNumEmajVersion() >= 20100) {			// version >= 2.1.0
+					echo "<form id=\"createEmptyGroup_form\" action=\"emajgroups.php?action=create_group&amp;back=list&amp;empty=true&amp;{$misc->href}\"";
+					echo " method=\"post\" enctype=\"multipart/form-data\">\n";
+					echo "\t<input type=\"submit\" value=\"{$lang['emajcreatetablesgroup']}\" />\n";
+					echo "</form>\n";
+				}
 			}
 		}
 	}
@@ -660,7 +677,7 @@
 			echo "</form>\n";
 
 			// alter_group
-			if ($hasWaitingChanges && ($groupState == 'IDLE' || $emajdb->getNumEmajVersion() >= 20100)) {
+			if ($hasWaitingChanges && ($groupState == 'IDLE' || $emajdb->getNumEmajVersion() >= 20100) && $emajdb->getNumEmajVersion() < 30200) {
 				echo "<form id=\"alter_group_form\" action=\"emajgroups.php?action=alter_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
 				echo "  <input type=\"submit\" name=\"altergroup\" value=\"{$lang['emajApplyConfChanges']}\" />";
 				echo "</form>\n";
@@ -1329,7 +1346,7 @@
 				'schema' => array(
 					'title' => $lang['strschema'],
 					'field' => field('rel_schema'),
-					'url'   => "redirect.php?subject=schema&amp;{$misc->href}&amp;",
+					'url'   => "schemas.php?action=list_schemas&amp;{$misc->href}&amp;",
 					'vars'  => array('schema' => 'rel_schema'),
 				),
 				'tblseq' => array(

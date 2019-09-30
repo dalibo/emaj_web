@@ -330,13 +330,13 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets tspemaj current size
+	 * Gets the E-Maj size on disk 
+	 * = size of all relations in emaj primary and secondary schemas + size of linked toast tables
 	 */
 	function getEmajSize() {
 		global $data;
 
 		if ($this->emaj_adm){
-// The E-Maj size = size of all relations in emaj primary and secondary schemas + size of linked toast tables
 			$sql = "SELECT coalesce(pg_size_pretty(t.emajtotalsize) || 
 							to_char(t.emajtotalsize * 100 / pg_database_size(current_database())::float,' = FM990D0%'), '0 B = 0%') as emajsize 
 					FROM 
@@ -421,6 +421,17 @@ class EmajDb {
 		$sql = "SELECT group_name, group_comment FROM emaj.emaj_group ORDER BY group_name";
 
 		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Gets number of created groups
+	 */
+	function getNbGroups() {
+		global $data;
+
+		$sql = "SELECT count(*) as nb_groups FROM emaj.emaj_group";
+
+		return $data->selectField($sql,'nb_groups');
 	}
 
 	/**
@@ -945,6 +956,18 @@ class EmajDb {
 	}
 
 	/**
+	 * Gets group names already known in the emaj_group table
+	 */
+	function getCreatedgroups() {
+		global $data;
+
+		$sql = "SELECT group_name
+				  FROM emaj.emaj_group
+				ORDER BY 1";
+		return $data->selectSet($sql);
+	}
+
+	/**
 	 * Gets log schema suffix already known in the emaj_group_def table
 	 */
 	function getKnownSuffix() {
@@ -1115,6 +1138,154 @@ class EmajDb {
 		}
 		// End transaction
 		return $data->endTransaction();
+	}
+
+	/**
+	 * Dynamically assign tables to a tables group
+	 */
+	function assignTables($schema,$tables,$group,$priority,$logDatTsp,$logIdxTsp,$mark) {
+		global $data;
+
+		$data->clean($schema);
+		$data->clean($tables);
+		$data->clean($group);
+		$data->clean($priority);
+		$data->clean($logDatTsp);
+		$data->clean($logIdxTsp);
+		$data->clean($mark);
+
+		// Build the tables array
+		$tablesArray = "ARRAY['" . str_replace(", ", "','", $tables) . "']";
+
+		// Build the JSON structure
+		if ($priority == '') $priority = 'null';
+		if ($logDatTsp == '') $logDatTsp = 'null'; else $logDatTsp = "\"{$logDatTsp}\"";
+		if ($logIdxTsp == '') $logIdxTsp = 'null'; else $logIdxTsp = "\"{$logIdxTsp}\"";
+		$properties = "{\"priority\": {$priority}, \"log_data_tablespace\": {$logDatTsp}, \"log_index_tablespace\": {$logIdxTsp}}";
+
+		$sql = "SELECT emaj.emaj_assign_tables('{$schema}',{$tablesArray},'{$group}','{$properties}'::jsonb,'{$mark}') AS nb_tables";
+
+		return $data->selectField($sql,'nb_tables');
+	}
+
+	/**
+	 * Dynamically move tables into another tables groups
+	 */
+	function moveTables($schema,$tables,$group,$mark) {
+		global $data;
+
+		$data->clean($schema);
+		$data->clean($tables);
+		$data->clean($group);
+		$data->clean($mark);
+
+		// Build the tables array
+		$tablesArray = "ARRAY['" . str_replace(", ", "','", $tables) . "']";
+
+		$sql = "SELECT emaj.emaj_move_tables('{$schema}',{$tablesArray},'{$group}','{$mark}') AS nb_tables";
+
+		return $data->selectField($sql,'nb_tables');
+	}
+
+	/**
+	 * Dynamically modify tables in their tables groups
+	 */
+	function modifyTables($schema,$tables,$priority,$logDatTsp,$logIdxTsp,$mark) {
+		global $data;
+
+		$data->clean($schema);
+		$data->clean($tables);
+		$data->clean($priority);
+		$data->clean($logDatTsp);
+		$data->clean($logIdxTsp);
+		$data->clean($mark);
+
+		// Build the tables array
+		$tablesArray = "ARRAY['" . str_replace(", ", "','", $tables) . "']";
+
+		// Build the JSON structure
+		if ($priority == '') $priority = 'null';
+		if ($logDatTsp == '') $logDatTsp = 'null'; else $logDatTsp = "\"{$logDatTsp}\"";
+		if ($logIdxTsp == '') $logIdxTsp = 'null'; else $logIdxTsp = "\"{$logIdxTsp}\"";
+		$properties = "{\"priority\": {$priority}, \"log_data_tablespace\": {$logDatTsp}, \"log_index_tablespace\": {$logIdxTsp}}";
+
+		$sql = "SELECT emaj.emaj_modify_tables('{$schema}',{$tablesArray},'{$properties}'::jsonb,'{$mark}') AS nb_tables";
+
+		return $data->selectField($sql,'nb_tables');
+	}
+
+	/**
+	 * Dynamically remove tables from their tables groups
+	 */
+	function removeTables($schema,$tables,$mark) {
+		global $data;
+
+		$data->clean($schema);
+		$data->clean($tables);
+		$data->clean($mark);
+
+		// Build the tables array
+		$tablesArray = "ARRAY['" . str_replace(", ", "','", $tables) . "']";
+
+		$sql = "SELECT emaj.emaj_remove_tables('{$schema}',{$tablesArray},'{$mark}') AS nb_tables";
+
+		return $data->selectField($sql,'nb_tables');
+	}
+
+	/**
+	 * Dynamically assign sequences to a tables group
+	 */
+	function assignSequences($schema,$sequences,$group,$mark) {
+		global $data;
+
+		$data->clean($schema);
+		$data->clean($sequences);
+		$data->clean($group);
+		$data->clean($mark);
+
+		// Build the sequences array
+		$sequencesArray = "ARRAY['" . str_replace(", ", "','", $sequences) . "']";
+
+		$sql = "SELECT emaj.emaj_assign_sequences('{$schema}',{$sequencesArray},'{$group}','{$mark}') AS nb_sequences";
+
+		return $data->selectField($sql,'nb_sequences');
+	}
+
+	/**
+	 * Dynamically move sequences into another tables groups
+	 */
+	function moveSequences($schema,$sequences,$group,$mark) {
+		global $data;
+
+		$data->clean($schema);
+		$data->clean($sequences);
+		$data->clean($group);
+		$data->clean($mark);
+
+		// Build the sequences array
+		$sequencesArray = "ARRAY['" . str_replace(", ", "','", $sequences) . "']";
+
+		$sql = "SELECT emaj.emaj_move_sequences('{$schema}',{$sequencesArray},'{$group}','{$mark}') AS nb_sequences";
+
+		return $data->selectField($sql,'nb_sequences');
+	}
+
+	/**
+	 * Dynamically remove sequences from their tables groups
+	 */
+	function removeSequences($schema,$sequences,$mark) {
+		global $data;
+
+		$data->clean($schema);
+		$data->clean($sequences);
+		$data->clean($mark);
+
+		// Build the sequences array
+		$sequencesArray = "ARRAY['" . str_replace(", ", "','", $sequences) . "']";
+
+		$sql = "SELECT emaj.emaj_remove_sequences('{$schema}',{$sequencesArray},'{$mark}') AS nb_sequences";
+
+		return $data->selectField($sql,'nb_sequences');
 	}
 
 	/**

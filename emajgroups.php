@@ -3060,7 +3060,7 @@
 		if (isset($_POST['cancel'])) { show_groups(); exit(); }
 
 		// Check the groups are always in LOGGING state and not protected
-		$groups=explode(', ',$_POST['groups']);
+		$groups = explode(', ',$_POST['groups']);
 		foreach($groups as $g) {
 			if ($emajdb->getGroup($g)->fields['group_state'] != 'LOGGING') {
 				show_groups('',sprintf($lang['emajcantrlbkidlegroups'],htmlspecialchars($groups), htmlspecialchars($g)));
@@ -3456,7 +3456,7 @@
 			rollback_group_confirm_alter();
 			break;
 		case 'rollback_group_ok':
-			rollback_groups_ok();
+			rollback_group_ok();
 			break;
 		case 'rollback_groups':
 			rollback_groups();

@@ -92,7 +92,8 @@
 					'title' => $lang['strtype'],
 					'field' => field('nsptype'),
 					'type'	=> 'callback',
-					'params'=> array('function' => 'renderSchemaType','align' => 'center')
+					'params'=> array('function' => 'renderSchemaType','align' => 'center'),
+					'filter' => false
 				),
 			));
 		}

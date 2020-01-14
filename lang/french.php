@@ -71,6 +71,8 @@
 	$lang['strcollapse'] = 'Réduire';
 	$lang['strrefresh'] = 'Rafraichir';
 	$lang['strdownload'] = 'Télécharger';
+	$lang['strexport'] = 'Exporter';
+	$lang['strimport'] = 'Importer';
 	$lang['strruntime'] = 'Temps d\'exécution total : %s ms';
 	$lang['strpaginate'] = 'Paginer les résultats';
 	$lang['strtrycred'] = 'Utilisez ces identifiants pour tous les serveurs';
@@ -123,6 +125,8 @@
 	$lang['strinvalidserverparam'] = 'Tentative de connexion avec un serveur invalide, il est possible que quelqu\'un essai de pirater votre système.'; 
 	$lang['strnoserversupplied'] = 'Aucun serveur fournis !';
 	$lang['strconnectionfail'] = 'Connexion au serveur échouée.';
+	$lang['strimporterror-uploadedfile'] = 'Erreur d\'importation : le fichier n\'a pas pû être récupéré sur le serveur.';
+	$lang['strimportfiletoobig'] = 'Erreur d\'importation : le fichier à charger est trop gros.';
 
 	// Users
 	$lang['strusername'] = 'Utilisateur';
@@ -248,6 +252,8 @@
 	$lang['emajto'] = 'A';
 	$lang['emajproperties'] = 'Propriétés E-Maj';
 	$lang['emajschema'] = 'Schéma E-Maj';
+	$lang['emajselectfile'] = 'Sélectionner un fichier';
+	$lang['emajnotjsonfile'] = 'Le fichier %s n\'a pas un format JSON valide.';
 
 	// E-Maj html titles and tabs
 	$lang['emajgroupsmanagement'] = 'Gestion des groupes E-Maj';
@@ -301,6 +307,14 @@
 	$lang['emajparavgrowdelinfo'] = 'Le paramètre \'avg_row_delete_log_duration\' de la table emaj_param détermine le coût moyen de suppression d\'une mise à jour élémentaire dans le log E-Maj. Le paramètre est de type INTERVAL. La valeur par défaut est de 10 µs.';
 	$lang['emajparavgfkcheck'] = 'Coût moyen de vérification d\'une clé étrangère';
 	$lang['emajparavgfkcheckinfo'] = 'Le paramètre \'avg_fkey_check_duration\' de la table emaj_param détermine le coût moyen de vérification d\'une clé étrangère. Le paramètre est de type INTERVAL. La valeur par défaut est de 20 µs.';
+	$lang['emajimportparamconf'] = 'Importer une configuration de paramètres';
+	$lang['emajdeletecurrentparam'] = 'Supprimer tous les paramètres existants';
+	$lang['emajdeletecurrentparaminfo'] = 'Si la case est cochée, tous les paramètres présents dans l\'extension emaj sont supprimés avant le chargement du fichier.';
+	$lang['emajparamconfimported'] = '%s : %s paramètres importés depuis le fichier %s.';
+	$lang['emajnewconf'] = 'Nouvelle configuration';
+	$lang['emajnewmodifiedconf'] = 'Configuration modifiée';
+	$lang['emajparamconfigimporterr'] = 'Erreur à l\'importation de paramètres à partir du fichier %s';
+	$lang['emajjsonnoparameters'] = 'Le fichier JSON %s n\'a pas de tableau "parameters".';
 
 	// Dynamic groups content management
 	$lang['emajlogdattsp'] = 'Tablespace log';

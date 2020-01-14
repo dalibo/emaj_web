@@ -71,6 +71,8 @@
 	$lang['strcollapse'] = 'Collapse';
 	$lang['strrefresh'] = 'Refresh';
 	$lang['strdownload'] = 'Download';
+	$lang['strexport'] = 'Export';
+	$lang['strimport'] = 'Import';
 	$lang['strruntime'] = 'Total runtime: %s ms';
 	$lang['strpaginate'] = 'Paginate results';
 	$lang['strtrycred'] = 'Use these credentials for all servers';
@@ -123,6 +125,8 @@
 	$lang['strinvalidserverparam'] = 'Attempt to connect with invalid server parameter, possibly someone is trying to hack your system.'; 
 	$lang['strnoserversupplied'] = 'No server supplied!';
 	$lang['strconnectionfail'] = 'Can not connect to server.';
+	$lang['strimporterror-uploadedfile'] = 'Import error: file could not be uploaded to the server';
+	$lang['strimportfiletoobig'] = 'Import error: the file to upload is too big.';
 
 	// Users
 	$lang['strusername'] = 'Username';
@@ -248,6 +252,8 @@
 	$lang['emajto'] = 'To';
 	$lang['emajproperties'] = 'E-Maj properties';
 	$lang['emajschema'] = 'E-Maj schema';
+	$lang['emajselectfile'] = 'Select a file';
+	$lang['emajnotjsonfile'] = 'The file %s has not a valid JSON format.';
 
 	// E-Maj html titles and tabs
 	$lang['emajgroupsmanagement'] = 'E-Maj groups management';
@@ -301,6 +307,15 @@
 	$lang['emajparavgrowdelinfo'] = 'The \'avg_row_delete_log_duration\' parameter of the emaj_param table determines an average cost of an elementary update deletion in an E-Maj log table. The parameter is of type INTERVAL. The default value is 10 µs.';
 	$lang['emajparavgfkcheck'] = 'Average foreign key check cost';
 	$lang['emajparavgfkcheckinfo'] = 'The \'avg_fkey_check_duration\' parameter of the emaj_param table determines an average cost to ckeck a foreign key. The parameter is of type INTERVAL. The default value is 20 µs.';
+	$lang['emajimportparamconf'] = 'Import a parameters configuration';
+	$lang['emajdeletecurrentparam'] = 'Delete all existing parameters';
+	$lang['emajdeletecurrentparaminfo'] = 'If the box is checked, all existing parameters of the emaj extension are deleted before loading the file.';
+	$lang['emajparamconfimported'] = '%s: %s parameters imported from the file %s.';
+	$lang['emajnewconf'] = 'New configuration';
+	$lang['emajnewmodifiedconf'] = 'Modified configuration';
+	$lang['emajparamconfigimporterr'] = 'Error while importing parameters from file %s';
+	$lang['emajjsonnoparameters'] = 'The JSON file %s has no "parameters" array.';
+
 
 	// Dynamic groups content management
 	$lang['emajlogdattsp'] = 'Log tablespace';

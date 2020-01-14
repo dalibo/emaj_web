@@ -103,19 +103,35 @@ input[type=checkbox], input[type=password], input[type=text], input[type=number]
 	border-radius: 5px;
 	padding: 3px 5px 3px 5px;
 }
-input[type=submit], input[type=button], input[type=reset], button {
+input[type=submit], input[type=button], input[type=reset], button, .custom-file-upload {
 	background: #ffffff;
 	border: 2px solid #8aafce;
 	border-radius: 7px;
+	cursor: pointer;
 }
+.custom-file-upload {
+	padding: 1px 6px;
+}
+
 input[type=submit]:hover, input[type=button]:hover, input[type=reset]:hover, button:hover {
 
 }
-button:disabled {
+input[type="file"] {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+/*	display: none;*/
+}
+
+button {
+	cursor: pointer;
+}
+button:disabled, button[disabled], input[type=submit]:disabled, input[type=button]:disabled, input[type=reset]:disabled {
 	background: #ffffff;
 	border: 2px solid #d0d0d0;
 	cursor: not-allowed;
 }
+
 select {
 	background: #ffffff;
 	border: 1px solid #5090c1;
@@ -423,18 +439,6 @@ pre.error {
 	font-weight: normal;
 }
 
-button {
-	cursor: pointer;
-}
-button:disabled,
-button[disabled]{
-	cursor: default;
-}
-
-input[type=submit], input[type=button] {
-	cursor: pointer;
-}
-
 table.multiactions {
 	margin-top: 5px;
 	border: 1px solid #e8e8e8;
@@ -503,6 +507,18 @@ div.form-param-value {
 	padding-left: 10px;
 	display: flex;
 	align-items: center;
+}
+div.form-param-def-value {
+	white-space: nowrap;
+	border: solid 1px #e6e6e6;
+	border-radius: 5px;
+	background-color: #f6f6f6;
+	padding-right: 10px;
+	padding-left: 10px;
+	display: flex;
+	align-items: center;
+	color: #909090;
+	font-style: italic;
 }
 div.form-param-button {
 	white-space: nowrap;

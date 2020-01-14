@@ -410,6 +410,29 @@ class EmajDb {
 		return $data->selectSet($sql);
 	}
 
+	/**
+	 * Export the parameters configuration
+	 */
+	function exportParamConfig() {
+		global $data;
+
+		$sql = "SELECT emaj.emaj_export_parameters_configuration() AS parameter_configuration";
+		return $data->selectField($sql,'parameter_configuration');
+	}
+
+	/**
+	 * Import the parameters configuration
+	 */
+	function importParamConfig($paramConfig, $replaceCurrent) {
+		global $data;
+
+		$data->clean($paramConfig);
+
+		if ($replaceCurrent) { $bool = 'true'; } else { $bool = 'false'; }
+		$sql = "SELECT emaj.emaj_import_parameters_configuration(E'" . $paramConfig . "'::json, " . $bool . ") AS nb_parameters";
+		return $data->selectField($sql,'nb_parameters');
+	}
+
 	// GROUPS
 
 	/**

@@ -81,7 +81,7 @@
 	$lang['strstop'] = 'Stop';
 	$lang['strgotoppage'] = 'back to top';
 	$lang['strselect'] = 'Select';
-	$lang['stractionsonselectedobjects'] = 'Actions on selected objects (0)';
+	$lang['stractionsonselectedobjects'] = 'Actions on selected objects (%s)';
 	$lang['strall'] = 'All';
 	$lang['strnone'] = 'None';
 	$lang['strinvert'] = 'Invert';
@@ -518,6 +518,10 @@
 	$lang['emajcantdropgroup'] = 'Dropping the tables group "%s" is not possible. The group is started.';
 	$lang['emajdropgroupok'] = 'The tables group "%s" has been dropped.';
 	$lang['emajdropgrouperr'] = 'Error during tables group "%s" drop!';
+
+	// Export groups configuration
+	$lang['emajexportgroupsconf'] = 'Export a tables groups configuration';
+	$lang['emajexportgroupsconfinfo'] = 'Select the tables groups whose configuration will be exported on a local file.';
 
 	// Group alter
 	$lang['emajaltergroups'] = 'E-Maj: Apply configuration changes';

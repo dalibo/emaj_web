@@ -1475,8 +1475,10 @@
 						foreach ($ma['keycols'] as $k => $v)
 							$a[$k] = $tabledata->fields[$v];
 						echo "<td class=\"center\">";
-						echo "<input type=\"checkbox\" name=\"ma[]\" value=\"". htmlentities(serialize($a), ENT_COMPAT, 'UTF-8') ."\" onclick=\"javascript:countChecked('{$place}');\"/>";
-						echo "</td>\n";
+						echo "<input type=\"checkbox\" name=\"ma[]\" value=\"". htmlentities(serialize($a), ENT_COMPAT, 'UTF-8') ."\" onclick=\"javascript:countChecked('{$place}');\"";
+						if (isset($ma['checked']) && $ma['checked'])
+							echo " checked";
+						echo "/></td>\n";
 					} else {
 						if ($filter)
 							echo "<td></td>\n";
@@ -1536,10 +1538,14 @@
 
 				// Multi action table footer with selectors and action buttons
 				if ($has_ma) {
+					if (isset($ma['checked']) && $ma['checked'])
+						$nbSelectedObject = $i;
+					else
+						$nbSelectedObject = 0;
 					echo "<table class=\"multiactions\">\n";
 					echo "<tr>\n";
 					echo "<th class=\"multiactions\">{$lang['strselect']}</th>\n";
-					echo "<th class=\"multiactions selectedcounter\">{$lang['stractionsonselectedobjects']}</th>\n";
+					echo "<th class=\"multiactions selectedcounter\">" . sprintf($lang['stractionsonselectedobjects'],$nbSelectedObject) ."</th>\n";
 					echo "</tr>\n";
 					echo "<tr class=\"row1\">\n";
 					echo "\t<td>\n";
@@ -1554,9 +1560,13 @@
 						echo "\t\t/&nbsp;<a onclick=\"javascript:checkSelect('notassigned','{$place}');countChecked('{$place}');\" class=\"action\">{$lang['emajnotassigned']}</a>&nbsp;\n";
 					}
 					echo "\t</td><td>\n";
+					if (isset($ma['checked']) && $ma['checked'])
+						$disabledButton = "";
+					else
+						$disabledButton = " disabled=\"true\" ";
 					foreach($actions as $k => $a)
 						if (isset($a['multiaction']))
-							echo "\t\t<button id=\"{$a['multiaction']}\" name=\"action\" value=\"{$a['multiaction']}\" disabled=\"true\" >{$a['content']}</button>\n";
+							echo "\t\t<button id=\"{$a['multiaction']}\" name=\"action\" value=\"{$a['multiaction']}\" {$disabledButton}>{$a['content']}</button>\n";
 					echo $this->form;
 					echo "</td>\n";
 					echo "</tr>\n";

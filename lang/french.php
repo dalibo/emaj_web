@@ -81,7 +81,7 @@
 	$lang['strstop'] = 'Arrêter';
 	$lang['strgotoppage'] = 'Haut de la page';
 	$lang['strselect'] = 'Sélectionner';
-	$lang['stractionsonselectedobjects'] = 'Actions sur les objets sélectionnés (0)';
+	$lang['stractionsonselectedobjects'] = 'Actions sur les objets sélectionnés (%s)';
 	$lang['strall'] = 'Tous';
 	$lang['strnone'] = 'Aucun';
 	$lang['strinvert'] = 'Inverser';
@@ -518,6 +518,10 @@
 	$lang['emajcantdropgroup'] = 'La suppression du groupe de tables "%s" est impossible. Le groupe est démarré.';
 	$lang['emajdropgroupok'] = 'Le groupe de tables "%s" a été supprimé.';
 	$lang['emajdropgrouperr'] = 'Erreur lors de la suppression du groupe de tables "%s" !';
+
+	// Export groups configuration
+	$lang['emajexportgroupsconf'] = 'Exporter une configuration de groupes de tables';
+	$lang['emajexportgroupsconfinfo'] = 'Sélectionnez les groupes de tables dont la configuration sera exportée sur un fichier local.';
 
 	// Group alter
 	$lang['emajalteraloggingroup'] = 'Le groupe "%s" est actif. Vous pouvez spécifier un nom de marque.';

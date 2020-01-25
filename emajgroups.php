@@ -231,6 +231,8 @@
 		$idleGroups = $emajdb->getIdleGroups();
 		$loggingGroups = $emajdb->getLoggingGroups();
 
+		$nbGroup = $idleGroups->recordCount() + $loggingGroups->recordCount();
+
 		$columns = array(
 			'group' => array(
 				'title' => $lang['emajgroup'],
@@ -541,6 +543,20 @@
 					echo "\t<input type=\"submit\" value=\"{$lang['emajcreatetablesgroup']}\" />\n";
 					echo "</form>\n";
 				}
+			}
+		}
+
+		// for emaj_adm role only, display the "export groups configuration" button
+		// the button is disabled when no group exists
+		if ($emajdb->isEmaj_Adm()) {
+			if ($emajdb->getNumEmajVersion() >= 30300) {			// version >= 3.3.0
+				echo "<div style=\"float:left; margin:20px\">\n";
+				echo "\t<form id=\"exportGroupsConf_form\" action=\"emajgroups.php?action=export_groups&amp;back=list&amp;{$misc->href}\"";
+				echo " method=\"post\" enctype=\"multipart/form-data\">\n";
+				$disabled = ''; if ($nbGroup = 0) $disabled = ' disabled';
+				echo "\t\t<input type=\"submit\" name=\"exportButton\" value=\"${lang['strexport']}\"{$disabled}>\n";
+				echo "\t</form>\n";
+				echo "</div>\n";
 			}
 		}
 	}
@@ -1904,6 +1920,125 @@
 					show_group('',sprintf($lang['emajcommentgrouperr'], htmlspecialchars($_POST['group'])));
 				}
 		}
+	}
+
+	/**
+	 * Prepare export group: select the groups to export and confirm
+	 */
+	function export_groups() {
+		global $misc, $lang, $emajdb;
+
+		$misc->printHeader('database', 'database','emajgroups');
+
+		$misc->printTitle("{$lang['emajexportgroupsconf']}<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['emajexportgroupsconfinfo']}\"/>");
+
+		$groups = $emajdb->getGroups();
+
+		$columns = array(
+			'group' => array(
+				'title' => $lang['emajgroup'],
+				'field' => field('group_name'),
+			),
+			'state' => array(
+				'title' => $lang['emajstate'],
+				'field' => field('group_state'),
+				'type'	=> 'callback',
+				'params'=> array('function' => 'renderGroupState','align' => 'center'),
+				'filter' => false,
+			),
+			'rollbackable' => array(
+				'title' => $lang['strtype'],
+				'field' => field('group_type'),
+				'type'	=> 'callback',
+				'params'=> array(
+						'function' => 'renderGroupType',
+						'align' => 'center'
+						),
+				'sorter_text_extraction' => 'img_alt',
+				'filter' => false,
+			),
+			'nbtbl' => array(
+				'title' => $lang['emajnbtbl'],
+				'field' => field('group_nb_table'),
+				'type'  => 'numeric'
+			),
+			'nbseq' => array(
+				'title' => $lang['emajnbseq'],
+				'field' => field('group_nb_sequence'),
+				'type'  => 'numeric'
+			),
+			'comment' => array(
+				'title' => $lang['strcomment'],
+				'field' => field('abbr_comment'),
+			),
+		);
+
+		$urlvars = $misc->getRequestVars();
+
+		$actions = array();
+		if ($emajdb->isEmaj_Adm()) {
+			$actions = array_merge($actions, array(
+				'multiactions' => array(
+					'keycols' => array('group' => 'group_name'),
+					'url' => "emajgroups.php?back=list",
+					'checked' => true,								// all groups selected by default
+				),
+				'export_group' => array(
+					'content' => $lang['strexport'],
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'export_group_ok',
+								'back' => 'list',
+								'group' => field('group_name'),
+							)))),
+					'multiaction' => 'export_groups_ok',
+				),
+			));
+		};
+
+		$misc->printTable($groups, $columns, $actions, 'groups', '', null, array('sorter' => true, 'filter' => true));
+
+		echo "<p></p>";
+
+		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+		echo $misc->form;
+		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strback']}\" /></p>\n";
+		echo "</form>\n";
+	}
+
+	/**
+	 * Export a tables groups configuration
+	 */
+	function export_groups_ok() {
+
+		global $misc, $emajdb;
+
+	// Build the groups list
+		$groupsList='';
+		foreach($_REQUEST['ma'] as $v) {
+			$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
+			$groupsList.=$a['group'].', ';
+		}
+		$groupsList=substr($groupsList,0,strlen($groupsList)-2);
+
+	// Build the JSON parameter configuration
+		$groupsConfig = $emajdb->exportGroupsConfig($groupsList);
+
+	// Generate a suggested local file name
+		$server_info = $misc->getServerInfo();
+		$fileName = "emaj_groups_" . $server_info['desc'] . "_" . $_REQUEST['database'] . "_" . date("Ymd_His") . ".json";
+
+	// Send it to the browser
+		header('Content-Description: File Transfer');
+		header('Content-Type: application/json');
+		header('Content-Disposition: attachment; filename="' . $fileName . '"');
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate');
+		header('Pragma: public');
+		header('Content-Length: ' . strlen($groupsConfig));
+		print $groupsConfig;
 	}
 
 	/**
@@ -3406,6 +3541,12 @@
 		header('Location: emajenvir.php?' . $_SERVER["QUERY_STRING"]);
 	}
 
+// The export_groups_ok action only builds and downloads the configuration file, but do not resend the main page
+	if ($action == 'export_groups_ok') {
+		export_groups_ok();
+		exit;
+	}
+
 	$misc->printHtmlHeader($lang['emajgroupsmanagement']);
 	$misc->printBody();
 
@@ -3466,6 +3607,9 @@
 			break;
 		case 'drop_group_ok':
 			drop_group_ok();
+			break;
+		case 'export_groups':
+			export_groups();
 			break;
 		case 'log_stat_group':
 			log_stat_group();

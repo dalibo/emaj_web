@@ -441,7 +441,17 @@ class EmajDb {
 	function getGroups() {
 		global $data;
 
-		$sql = "SELECT group_name, group_comment FROM emaj.emaj_group ORDER BY group_name";
+		$sql = "SELECT group_name, group_comment";
+		if ($this->getNumEmajVersion() >= 30300){	// version >= 3.3.0
+			$sql .= ", group_nb_table, group_nb_sequence, 
+					  CASE WHEN group_is_logging THEN 'LOGGING' ELSE 'IDLE' END 
+						as group_state, 
+					  CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END 
+						as group_type, 
+					  CASE WHEN length(group_comment) > 100 THEN substr(group_comment,1,97) || '...' ELSE group_comment END 
+						as abbr_comment";
+		}
+		$sql .=	" FROM emaj.emaj_group ORDER BY group_name";
 
 		return $data->selectSet($sql);
 	}
@@ -704,6 +714,19 @@ class EmajDb {
 				WHERE group_name = '{$group}'";
 
 		return $data->selectField($sql,'is_protected');
+	}
+
+	/**
+	 * Export a tables groups configuration
+	 */
+	function exportGroupsConfig($groups) {
+		global $data;
+
+		$data->clean($groups);
+		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
+
+		$sql = "SELECT emaj.emaj_export_groups_configuration({$groupsArray}) AS groups_configuration";
+		return $data->selectField($sql,'groups_configuration');
 	}
 
 	/**

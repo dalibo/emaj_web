@@ -546,15 +546,24 @@
 			}
 		}
 
-		// for emaj_adm role only, display the "export groups configuration" button
-		// the button is disabled when no group exists
+		// for emaj_adm role only, display the "export groups configuration" and "import groups configuration" buttons
 		if ($emajdb->isEmaj_Adm()) {
 			if ($emajdb->getNumEmajVersion() >= 30300) {			// version >= 3.3.0
+				// form to export groups configuration
+				// the export button is disabled when no group exists
 				echo "<div style=\"float:left; margin:20px\">\n";
 				echo "\t<form id=\"exportGroupsConf_form\" action=\"emajgroups.php?action=export_groups&amp;back=list&amp;{$misc->href}\"";
 				echo " method=\"post\" enctype=\"multipart/form-data\">\n";
 				$disabled = ''; if ($nbGroup = 0) $disabled = ' disabled';
 				echo "\t\t<input type=\"submit\" name=\"exportButton\" value=\"${lang['strexport']}\"{$disabled}>\n";
+				echo "\t</form>\n";
+				echo "</div>\n";
+
+				// form to import groups configuration
+				echo "<div style=\"margin:20px\">\n";
+				echo "\t<form name=\"importGroupsConf\" id=\"importGroupsConf\" method=\"POST\"";
+				echo " action=\"emajgroups.php?action=import_groups&amp;back=list&amp;{$misc->href}\">\n";
+				echo "\t\t<input type=\"submit\" name=\"importButton\" value=\"${lang['strimport']}\">\n";
 				echo "\t</form>\n";
 				echo "</div>\n";
 			}
@@ -2019,7 +2028,7 @@
 		$groupsList='';
 		foreach($_REQUEST['ma'] as $v) {
 			$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-			$groupsList.=$a['group'].', ';
+			$groupsList .= $a['group'].', ';
 		}
 		$groupsList=substr($groupsList,0,strlen($groupsList)-2);
 
@@ -2039,6 +2048,274 @@
 		header('Pragma: public');
 		header('Content-Length: ' . strlen($groupsConfig));
 		print $groupsConfig;
+	}
+
+	/**
+	 * Import a tables groups configuration
+	 */
+	function import_groups() {
+
+		global $misc, $lang, $emajdb;
+
+		$misc->printHeader('database', 'database','emajgroups');
+
+		$misc->printTitle($lang['emajimportgroupsconf']);
+
+		// form to import a tables groups configuration
+		echo "<div>\n";
+		echo "\t<form name=\"importgroups\" id=\"importgroups\" enctype=\"multipart/form-data\" method=\"POST\"";
+		echo " action=\"emajgroups.php?action=import_groups_select&amp;{$misc->href}\">\n";
+		echo "\t\t<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"10000000\">\n";
+		echo "\t\t<label for=\"file-upload\" class=\"custom-file-upload\">${lang['emajselectfile']}</label>";
+		echo "\t\t<p><input type=\"file\" id=\"file-upload\" name=\"file_name\"></p>\n";
+		echo "\t\t<p><input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />&nbsp;&nbsp;&nbsp;\n";
+		echo "\t\t<input type=\"submit\" name=\"openfile\" value=\"${lang['stropen']}\" disabled>";
+		echo "\t\t<span id=\"selected-file\"></span></p>\n";
+		echo "\t\t<script type=\"text/javascript\">
+			$(document).ready(
+				function(){
+					$('input:file').change(
+						function(){
+							if ($(this).val()) { $('input:submit').attr('disabled',false); } 
+						}
+						);
+					$('#file-upload').bind('change',
+						function(){
+							var fileName = '';
+							fileName = $(this).val();
+							$('#selected-file').html(fileName.replace(/^.*\\\\/, \"\"));
+						}
+						);
+				});
+		</script>\n";
+
+		echo "\t</form>\n";
+		echo "</div>\n";
+	}
+
+	/**
+	 * Upload and open the tables group configuration file and let the user select the groups he wants to import
+	 */
+	function import_groups_select() {
+
+		global $misc, $lang, $emajdb;
+
+		// process the click on the <cancel> button
+		if (isset($_POST['cancel'])) {
+			show_groups();
+		} else {
+
+		// Process the uploaded file
+
+			// If the file is properly loaded,
+			if (is_uploaded_file($_FILES['file_name']['tmp_name'])) {
+				$jsonContent = file_get_contents($_FILES['file_name']['tmp_name']);
+				$jsonStructure = json_decode($jsonContent, true);
+			// ... and contains a valid JSON structure,
+				if (json_last_error()===JSON_ERROR_NONE) {
+
+					$misc->printHeader('database', 'database','emajgroups');
+
+					$misc->printTitle($lang['emajimportgroupsconf']);
+
+					// check that the json content is valid
+
+					$errors = $emajdb->checkJsonGroupsConf($jsonContent);
+
+					if ($errors->recordCount() == 0) {
+						// No error has been detected in the json structure, so display the tables groups to select
+
+						echo "<p>" . sprintf($lang['emajimportgroupsinfile'], $_FILES['file_name']['name']) . "</p>";
+
+						// Extract the list of configured tables groups
+						$groupsList='';
+						foreach($jsonStructure["tables_groups"] as $jsonGroup){
+							if (isSet($jsonGroup["group"])) {
+								$groupsList .= "('" . htmlspecialchars_decode($jsonGroup["group"], ENT_QUOTES) . "'), ";
+							}
+						}
+						$groupsList=substr($groupsList,0,strlen($groupsList)-2);
+
+						// Get data about existing groups
+						$groups = $emajdb->getGroupsToImport($groupsList);
+
+						// Display the groups list
+						$columns = array(
+							'group' => array(
+								'title' => $lang['emajgroup'],
+								'field' => field('grp_name'),
+							),
+							'state' => array(
+								'title' => $lang['emajstate'],
+								'field' => field('group_state'),
+								'type'	=> 'callback',
+								'params'=> array(
+									'function' => 'renderGroupState',
+									'align' => 'center'
+									),
+								'filter' => false,
+							),
+							'rollbackable' => array(
+								'title' => $lang['strtype'],
+								'field' => field('group_type'),
+								'type'	=> 'callback',
+								'params'=> array(
+									'function' => 'renderGroupType',
+									'align' => 'center'
+									),
+								'sorter_text_extraction' => 'img_alt',
+								'filter' => false,
+							),
+							'nbtbl' => array(
+								'title' => $lang['emajnbtbl'],
+								'field' => field('group_nb_table'),
+								'type'  => 'numeric'
+							),
+							'nbseq' => array(
+								'title' => $lang['emajnbseq'],
+								'field' => field('group_nb_sequence'),
+								'type'  => 'numeric'
+							),
+							'comment' => array(
+								'title' => $lang['strcomment'],
+								'field' => field('abbr_comment'),
+							),
+						);
+				
+						$urlvars = $misc->getRequestVars();
+				
+						$actions = array();
+						if ($emajdb->isEmaj_Adm()) {
+							$actions = array_merge($actions, array(
+								'multiactions' => array(
+									'keycols' => array('group' => 'grp_name'),
+									'url' => "emajgroups.php",
+									'vars' => array (
+										'back' => 'list',
+										'file' => $_FILES['file_name']['name'],
+										'json' => json_encode($jsonStructure),
+									),
+									'checked' => true,								// all groups are selected by default
+								),
+								'import_group' => array(
+									'content' => $lang['strimport'],
+									'multiaction' => 'import_groups_ok',
+								),
+							));
+						};
+
+						$misc->printTable($groups, $columns, $actions, 'groups', '', null, array('sorter' => true, 'filter' => true));
+
+						echo "<p></p>";
+
+						echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+						echo $misc->form;
+						echo "<input type=\"hidden\" name=\"json\" value=\"" . htmlspecialchars(json_encode($jsonStructure)) . "\">\n";
+						echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+						echo "</form>\n";
+
+					} else {
+					// The json structure contains errors. Display them.
+
+						echo "<p>" . sprintf($lang['emajimportgroupsinfileerr'], $_FILES['file_name']['name']) . "</p>";
+
+						$columns = array(
+							'message' => array(
+								'title' => $lang['emajdiagnostics'],
+								'field' => field('chk_message'),
+							),
+						);
+	
+						$actions = array ();
+	
+						$misc->printTable($errors, $columns, $actions, 'checks', null, null, array('sorter' => true, 'filter' => false));
+
+						echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+						echo "<p><input type=\"hidden\" name=\"action\" value=\"import_groups_ok\" />\n";
+						echo $misc->form;
+						echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strok']}\" /></p>\n";
+						echo "</form>\n";
+
+					}
+				} else {
+					show_groups('', sprintf($lang['emajnotjsonfile'], $_FILES['file_name']['name']));
+				}
+			} else {
+				switch($_FILES['file_name']['error']){
+					case 1: //uploaded file exceeds the upload_max_filesize directive in php.ini
+					case 2: //uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the html form
+						$errMsg = $lang['strimportfiletoobig'];
+						break;
+					case 3: //uploaded file was only partially uploaded
+					case 4: //no file was uploaded
+					case 0: //no error; possible file attack!
+					default: //a default error, just in case!  :)
+						$errMsg = $lang['strimporterror-uploadedfile'];
+						break;
+				}
+				show_groups('', $errMsg);
+			}
+		}
+	}
+
+	/**
+	 * Effectively import a tables groups configuration
+	 */
+	function import_groups_ok() {
+
+		global $lang, $emajdb, $misc;
+
+		// process the click on the <cancel> button
+		if (isset($_POST['cancel'])) {
+			show_groups();
+		} else {
+
+			// build the groups list
+			$groupsList='';
+			foreach($_REQUEST['ma'] as $v) {
+				$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
+				$groupsList .= $a['group'] . ', ';
+			}
+			$groupsList = substr($groupsList,0,strlen($groupsList)-2);
+
+			// prepare the tables groups configuration import
+			$errors = $emajdb->importGroupsConfPrepare($_POST['json'], $groupsList);
+
+			if ($errors->recordCount() == 0) {
+				// no error detected, so execute the effective configuration import
+				$nbGroup = $emajdb->importGroupsConfig($_POST['json'], $groupsList);
+				if ($nbGroup >= 0) {
+					show_groups(sprintf($lang['emajgroupsconfimported'], $nbGroup, $_POST['file']));
+				} else {
+					show_groups('', sprintf($lang['emajgroupsconfimporterr'], $_POST['file']));
+				}
+			} else {
+				// there are errors to report to the user
+
+				$misc->printHeader('database', 'database','emajgroups');
+
+				$misc->printTitle($lang['emajimportgroupsconf']);
+
+				echo "<p>" . sprintf($lang['emajgroupsconfimportpreperr'], htmlspecialchars($groupsList), htmlspecialchars($_POST['file'])) . "</p>\n";
+
+				$columns = array(
+					'message' => array(
+						'title' => $lang['emajdiagnostics'],
+						'field' => field('chk_message'),
+					),
+				);
+	
+				$actions = array ();
+	
+				$misc->printTable($errors, $columns, $actions, 'errors', null, null, array('sorter' => true, 'filter' => false));
+
+				echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+				echo "<p><input type=\"hidden\" name=\"action\" value=\"import_group_ok\" />\n";
+				echo $misc->form;
+				echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strok']}\" /></p>\n";
+				echo "</form>\n";
+			}
+		}
 	}
 
 	/**
@@ -2156,7 +2433,7 @@
 		$groupsList='';
 		foreach($_REQUEST['ma'] as $v) {
 			$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-			$groupsList.=$a['group'].', ';
+			$groupsList .= $a['group'].', ';
 		}
 		$groupsList=substr($groupsList,0,strlen($groupsList)-2);
 		// send form
@@ -2201,7 +2478,7 @@
 		} else {
 
 			// Check the groups are always in IDLE state
-			$groups=explode(', ',$_POST['groups']);
+			$groups = explode(', ',$_POST['groups']);
 			foreach($groups as $g) {
 				if ($emajdb->getGroup($g)->fields['group_state'] != 'IDLE') {
 					show_groups('',sprintf($lang['emajcantstartgroups'], htmlspecialchars($_POST['groups']), htmlspecialchars($g)));
@@ -2320,7 +2597,7 @@
 		$groupsList='';
 		foreach($_REQUEST['ma'] as $v) {
 			$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-			$groupsList.=$a['group'].', ';
+			$groupsList .= $a['group'].', ';
 		}
 		$groupsList=substr($groupsList,0,strlen($groupsList)-2);
 		// send form
@@ -2352,7 +2629,7 @@
 		} else {
 
 			// Check the groups are always in LOGGING state
-			$groups=explode(', ',$_POST['groups']);
+			$groups = explode(', ',$_POST['groups']);
 			foreach($groups as $g) {
 				if ($emajdb->getGroup($g)->fields['group_state'] != 'LOGGING') {
 					show_groups('',sprintf($lang['emajcantstopgroups'], htmlspecialchars($_POST['groups']),$g));
@@ -2612,7 +2889,7 @@
 		$groupsList='';
 		foreach($_REQUEST['ma'] as $v) {
 			$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-			$groupsList.=$a['group'].', ';
+			$groupsList .= $a['group'].', ';
 		}
 		$groupsList=substr($groupsList,0,strlen($groupsList)-2);
 		echo "<p>", sprintf($lang['emajconfirmsetmarkgroup'], htmlspecialchars($groupsList)), "</p>\n";
@@ -2656,7 +2933,7 @@
 		} else {
 
 			// Check the groups are always in LOGGING state
-			$groups=explode(', ',$_POST['groups']);
+			$groups = explode(', ',$_POST['groups']);
 			foreach($groups as $g) {
 				if ($emajdb->getGroup($g)->fields['group_state'] != 'LOGGING') {
 					show_groups('',(sprintf($lang['emajcantsetmarkgroups'], htmlspecialchars($_POST['groups']),$g)));
@@ -3058,7 +3335,7 @@
 		$groupsList='';
 		foreach($_REQUEST['ma'] as $v) {
 			$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-			$groupsList.=$a['group'].', ';
+			$groupsList .= $a['group'].', ';
 		}
 		$groupsList=substr($groupsList,0,strlen($groupsList)-2);
 
@@ -3133,7 +3410,7 @@
 			} else {
 
 				// Check the groups are always in LOGGING state and not protected
-				$groups=explode(', ',$_POST['groups']);
+				$groups = explode(', ',$_POST['groups']);
 				foreach($groups as $g) {
 					if ($emajdb->getGroup($g)->fields['group_state'] != 'LOGGING') {
 						show_groups('',sprintf($lang['emajcantrlbkidlegroups'], htmlspecialchars($groups), htmlspecialchars($g)));
@@ -3610,6 +3887,15 @@
 			break;
 		case 'export_groups':
 			export_groups();
+			break;
+		case 'import_groups':
+			import_groups();
+			break;
+		case 'import_groups_select':
+			import_groups_select();
+			break;
+		case 'import_groups_ok':
+			import_groups_ok();
 			break;
 		case 'log_stat_group':
 			log_stat_group();

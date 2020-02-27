@@ -1393,7 +1393,7 @@
 					echo "<form id=\"{$place}\" action=\"{$ma['url']}\" method=\"post\" enctype=\"multipart/form-data\">\n";
 					if (isset($ma['vars']))
 						foreach ($ma['vars'] as $k => $v)
-							echo "<input type=\"hidden\" name=\"$k\" value=\"$v\" />";
+							echo "<input type=\"hidden\" name=\"$k\" value=\"" . htmlspecialchars($v) . "\" />\n";
 				} else {
 					echo "<div id=\"{$place}\">\n";
 				}

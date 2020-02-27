@@ -628,6 +628,29 @@ class EmajDb {
 	}
 
 	/**
+	 * Gets some details about existing groups among a set of configured groups to import
+	 */
+	function getGroupsToImport($configuredGroupsValues) {
+		global $data;
+
+		$sql = "SELECT grp_name, group_comment, group_nb_table, group_nb_sequence, 
+					   CASE WHEN group_is_logging THEN 'LOGGING'
+						    WHEN NOT group_is_logging THEN 'IDLE'
+						    ELSE NULL END as group_state,
+					   CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
+						    WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
+						    WHEN group_is_rollbackable AND group_is_rlbk_protected THEN 'ROLLBACKABLE-PROTECTED'
+						    ELSE NULL END as group_type,
+					   CASE WHEN length(group_comment) > 100 THEN substr(group_comment,1,97) || '...' ELSE group_comment END 
+					  	 as abbr_comment
+					FROM (VALUES $configuredGroupsValues) AS t(grp_name)
+						LEFT OUTER JOIN emaj.emaj_group ON (group_name = grp_name)
+					ORDER BY group_name";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
 	 * Gets properties of one emaj_group 
 	 */
 	function getGroup($group) {
@@ -637,10 +660,8 @@ class EmajDb {
 
 		if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
 			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, time_tx_timestamp as group_creation_datetime,
-					CASE WHEN group_is_logging THEN 'LOGGING' ELSE 'IDLE' END as group_state,
-					CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
-						 WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE' 
-						 ELSE 'ROLLBACKABLE-PROTECTED' END as group_type,
+					CASE WHEN group_is_logging THEN 'LOGGING' ELSE 'IDLE' END as group_state, 
+					CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END as group_type, 
 					group_comment, 
 					pg_size_pretty((SELECT sum(pg_total_relation_size('\"' || rel_log_schema || '\".\"' || rel_log_table || '\"'))
 						FROM emaj.emaj_relation 
@@ -727,6 +748,76 @@ class EmajDb {
 
 		$sql = "SELECT emaj.emaj_export_groups_configuration({$groupsArray}) AS groups_configuration";
 		return $data->selectField($sql,'groups_configuration');
+	}
+
+	/**
+	 * Prepare the a tables groups configuration import
+	 */
+	function importGroupsConfPrepare($groupsConfig, $groups) {
+		global $data, $lang;
+
+		$data->clean($groupsConfig);
+		$data->clean($groups);
+		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
+
+		// The tables groups configuration import prepare step is inserted into a transaction,
+		//   so that it can be properly canceled if errors are detected
+		// The transaction will be commited just later in the importGroupsConfig() function call
+		$status = $data->beginTransaction();
+
+		$sql = "SELECT chk_severity,
+				CASE chk_msg_type
+					WHEN  1 THEN format('" . $data->clean($lang['emajcheckconfgroups01']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN  2 THEN format('" . $data->clean($lang['emajcheckconfgroups02']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN  3 THEN format('" . $data->clean($lang['emajcheckconfgroups03']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN  4 THEN format('" . $data->clean($lang['emajcheckconfgroups04']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN  5 THEN format('" . $data->clean($lang['emajcheckconfgroups05']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 10 THEN format('" . $data->clean($lang['emajcheckconfgroups10']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN 11 THEN format('" . $data->clean($lang['emajcheckconfgroups11']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN 12 THEN format('" . $data->clean($lang['emajcheckconfgroups12']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN 13 THEN format('" . $data->clean($lang['emajcheckconfgroups13']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN 20 THEN format('" . $data->clean($lang['emajcheckconfgroups20']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 21 THEN format('" . $data->clean($lang['emajcheckconfgroups21']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 22 THEN format('" . $data->clean($lang['emajcheckconfgroups22']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 30 THEN format('" . $data->clean($lang['emajcheckconfgroups30']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 31 THEN format('" . $data->clean($lang['emajcheckconfgroups31']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 32 THEN format('" . $data->clean($lang['emajcheckconfgroups32']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 33 THEN format('" . $data->clean($lang['emajcheckconfgroups33']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 100 THEN format('" . $data->clean($lang['emajgroupsconfimport100']) . "', chk_group)
+					WHEN 101 THEN format('" . $data->clean($lang['emajgroupsconfimport101']) . "', chk_group)
+					WHEN 102 THEN format('" . $data->clean($lang['emajgroupsconfimport102']) . "', chk_group)
+					WHEN 110 THEN format('" . $data->clean($lang['emajgroupsconfimport110']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN 111 THEN format('" . $data->clean($lang['emajgroupsconfimport111']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+				END as chk_message
+			FROM emaj._import_groups_conf_prepare (E'{$groupsConfig}'::json, {$groupsArray}, true, NULL)";
+
+		$errors = $data->selectSet($sql);
+
+		if ($errors->recordCount() != 0) {
+			$data->rollbackTransaction();
+		}
+
+		return $errors;
+	}
+
+	/**
+	 * Import a tables groups configuration
+	 */
+	function importGroupsConfig($groupsConfig, $groups) {
+		global $data;
+
+		$data->clean($groupsConfig);
+		$data->clean($groups);
+
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
+
+		$sql = "SELECT emaj._import_groups_conf_exec(E'{$groupsConfig}'::json, {$groupsArray}) AS nb_groups";
+		$nbGroups = $data->selectField($sql,'nb_groups');
+
+		// Commit the transaction started in the importGroupsConfPrepare() function call
+		$data->endTransaction();
+
+		return $nbGroups;
 	}
 
 	/**
@@ -1417,6 +1508,37 @@ class EmajDb {
 	        WHERE 	chk_group = group_name
 				AND ((group_is_rollbackable AND chk_severity <= 2)
 				  OR (NOT group_is_rollbackable AND chk_severity <= 1))";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Check that a JSON structure representing tables groups configuration is valid, before importing it
+	 */
+	function checkJsonGroupsConf($json) {
+		global $data, $lang;
+
+		$data->clean($json);
+
+		$sql = "SELECT
+				CASE chk_msg_type
+					WHEN  1 THEN '" . $data->clean($lang['emajcheckjsongroupsconf01']) . "'
+					WHEN  2 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf02']) . "', chk_group)
+					WHEN 10 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf10']) . "', chk_extra_data)
+					WHEN 11 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf11']) . "', chk_group, chk_extra_data)
+					WHEN 12 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf12']) . "', chk_group)
+					WHEN 20 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf20']) . "', chk_group, chk_extra_data)
+					WHEN 21 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf21']) . "', chk_group, chk_extra_data)
+					WHEN 22 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf22']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN 23 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf23']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 24 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf24']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN 25 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf25']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN 30 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf30']) . "', chk_group, chk_extra_data)
+					WHEN 31 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf31']) . "', chk_group, chk_extra_data)
+					WHEN 32 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf32']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+				END as chk_message
+			FROM emaj._check_json_groups_conf(E'{$json}'::json)
+			ORDER BY chk_msg_type, chk_group, chk_schema, chk_tblseq";
 
 		return $data->selectSet($sql);
 	}

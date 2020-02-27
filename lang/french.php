@@ -73,6 +73,7 @@
 	$lang['strdownload'] = 'Télécharger';
 	$lang['strexport'] = 'Exporter';
 	$lang['strimport'] = 'Importer';
+	$lang['stropen'] = 'Ouvrir';
 	$lang['strruntime'] = 'Temps d\'exécution total : %s ms';
 	$lang['strpaginate'] = 'Paginer les résultats';
 	$lang['strtrycred'] = 'Utilisez ces identifiants pour tous les serveurs';
@@ -522,6 +523,33 @@
 	// Export groups configuration
 	$lang['emajexportgroupsconf'] = 'Exporter une configuration de groupes de tables';
 	$lang['emajexportgroupsconfinfo'] = 'Sélectionnez les groupes de tables dont la configuration sera exportée sur un fichier local.';
+
+	// Import groups configuration
+	$lang['emajimportgroupsconf'] = 'Importer une configuration de groupes de tables';
+	$lang['emajimportgroupsinfile'] = 'Sélectionnez les groupes de tables à importer depuis le fichier "%s" :';
+	$lang['emajimportgroupsinfileerr'] = 'Des erreurs ont été détectées dans le fichier "%s" :';
+	$lang['emajcheckjsongroupsconf01'] = 'La structure JSON ne contient pas de tableau "tables_groups".';
+	$lang['emajcheckjsongroupsconf02'] = 'La structure JSON référence plusieurs fois le groupe de tables "%s".';
+	$lang['emajcheckjsongroupsconf10'] = 'Le groupe de tables #%s ne contient pas d\'attribut "group".';
+	$lang['emajcheckjsongroupsconf11'] = 'Pour le groupe de tables "%s", le mot clé "%s" est inconnu.';
+	$lang['emajcheckjsongroupsconf12'] = 'Pour le groupe de tables "%s", l\'attribut "is_rollbackable" n\'est pas un booléen.';
+	$lang['emajcheckjsongroupsconf20'] = 'Dans le groupe de tables "%s", la table #%s n\'a pas d\'attribut "schema".';
+	$lang['emajcheckjsongroupsconf21'] = 'Dans le groupe de tables "%s", la table #%s n\'a pas d\'attribut "table".';
+	$lang['emajcheckjsongroupsconf22'] = 'Dans le groupe de tables "%s" et pour la table %s.%s, the mot clé "%s" est inconnu.';
+	$lang['emajcheckjsongroupsconf23'] = 'Dans le groupe de tables "%s" et pour la table %s.%s, l\'attribut "priority" n\'est pas un nombre.';
+	$lang['emajcheckjsongroupsconf24'] = 'Dans le groupe de tables "%s" et pour la table %s.%s, le trigger #%s n\'a pas d\'attribut "trigger".';
+	$lang['emajcheckjsongroupsconf25'] = 'Dans le groupe de tables "%s" et pour un trigger de la table %s.%s, le mot clé "%s" est inconnu.';
+	$lang['emajcheckjsongroupsconf30'] = 'Dans le groupe de tables "%s", la sequence #%s n\'a pas d\'attribut "schema".';
+	$lang['emajcheckjsongroupsconf31'] = 'Dans le groupe de tables "%s", la sequence #%s n\'a pas d\'attribut "sequence".';
+	$lang['emajcheckjsongroupsconf32'] = 'Dans le groupe de tables "%s" et pour la sequence %s.%s, le mot clé "%s" est inconnnu.';
+	$lang['emajgroupsconfimport100'] = 'Le groupe de tables "%s" à importer n\'est pas référencé dans la structure JSON.';
+	$lang['emajgroupsconfimport101'] = 'Le groupe de tables "%s" existe déjà.';
+	$lang['emajgroupsconfimport102'] = 'Changer le type du groupe de tables "%s" n\est pas permis.';
+	$lang['emajgroupsconfimport110'] = 'Dans le groupe de tables "%s" et pour la table %s.%s, le trigger %s n\'existe pas.';
+	$lang['emajgroupsconfimport111'] = 'Dans le groupe de tables "%s" et pour la table %s.%s, le trigger %s est un trigger E-Maj.';
+	$lang['emajgroupsconfimportpreperr'] = 'L\'importation de la configuration des groupes de tables "%s" depuis le fichier "%s" a échoué pour les raisons suivantes :';
+	$lang['emajgroupsconfimported'] = '%s groupes de tables ont été importés depuis le fichier "%s".';
+	$lang['emajgroupsconfimporterr'] = 'Erreur à l\'importation de groupes de tables à partir du fichier "%s"';
 
 	// Group alter
 	$lang['emajalteraloggingroup'] = 'Le groupe "%s" est actif. Vous pouvez spécifier un nom de marque.';

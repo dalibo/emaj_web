@@ -790,27 +790,28 @@ class EmajDb {
 
 		$sql = "SELECT chk_severity,
 				CASE chk_msg_type
-					WHEN  1 THEN format('" . $data->clean($lang['emajcheckconfgroups01']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN  2 THEN format('" . $data->clean($lang['emajcheckconfgroups02']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN  3 THEN format('" . $data->clean($lang['emajcheckconfgroups03']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN  4 THEN format('" . $data->clean($lang['emajcheckconfgroups04']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
-					WHEN  5 THEN format('" . $data->clean($lang['emajcheckconfgroups05']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 10 THEN format('" . $data->clean($lang['emajcheckconfgroups10']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
-					WHEN 11 THEN format('" . $data->clean($lang['emajcheckconfgroups11']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
-					WHEN 12 THEN format('" . $data->clean($lang['emajcheckconfgroups12']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
-					WHEN 13 THEN format('" . $data->clean($lang['emajcheckconfgroups13']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
-					WHEN 20 THEN format('" . $data->clean($lang['emajcheckconfgroups20']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 21 THEN format('" . $data->clean($lang['emajcheckconfgroups21']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 22 THEN format('" . $data->clean($lang['emajcheckconfgroups22']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 30 THEN format('" . $data->clean($lang['emajcheckconfgroups30']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 31 THEN format('" . $data->clean($lang['emajcheckconfgroups31']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 32 THEN format('" . $data->clean($lang['emajcheckconfgroups32']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 33 THEN format('" . $data->clean($lang['emajcheckconfgroups33']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 100 THEN format('" . $data->clean($lang['emajgroupsconfimport100']) . "', chk_group)
-					WHEN 101 THEN format('" . $data->clean($lang['emajgroupsconfimport101']) . "', chk_group)
-					WHEN 102 THEN format('" . $data->clean($lang['emajgroupsconfimport102']) . "', chk_group)
-					WHEN 110 THEN format('" . $data->clean($lang['emajgroupsconfimport110']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
-					WHEN 111 THEN format('" . $data->clean($lang['emajgroupsconfimport111']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN  1 THEN format('" . $data->clean($lang['emajcheckconfgroups01']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3)
+					WHEN  2 THEN format('" . $data->clean($lang['emajcheckconfgroups02']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3)
+					WHEN  3 THEN format('" . $data->clean($lang['emajcheckconfgroups03']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3)
+					WHEN  4 THEN format('" . $data->clean($lang['emajcheckconfgroups04']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3, chk_text_var_4)
+					WHEN  5 THEN format('" . $data->clean($lang['emajcheckconfgroups05']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3)
+					WHEN 10 THEN format('" . $data->clean($lang['emajcheckconfgroups10']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3, chk_text_var_4)
+					WHEN 11 THEN format('" . $data->clean($lang['emajcheckconfgroups11']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3, chk_text_var_4)
+					WHEN 12 THEN format('" . $data->clean($lang['emajcheckconfgroups12']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3, chk_text_var_4)
+					WHEN 13 THEN format('" . $data->clean($lang['emajcheckconfgroups13']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3, chk_text_var_4)
+					WHEN 20 THEN format('" . $data->clean($lang['emajcheckconfgroups20']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3)
+					WHEN 21 THEN format('" . $data->clean($lang['emajcheckconfgroups21']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3)
+					WHEN 22 THEN format('" . $data->clean($lang['emajcheckconfgroups22']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3)
+					WHEN 30 THEN format('" . $data->clean($lang['emajcheckconfgroups30']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3)
+					WHEN 31 THEN format('" . $data->clean($lang['emajcheckconfgroups31']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3)
+					WHEN 32 THEN format('" . $data->clean($lang['emajcheckconfgroups32']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3)
+					WHEN 33 THEN format('" . $data->clean($lang['emajcheckconfgroups33']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3)
+					WHEN 100 THEN format('" . $data->clean($lang['emajgroupsconfimport100']) . "', chk_text_var_1)
+					WHEN 101 THEN format('" . $data->clean($lang['emajgroupsconfimport101']) . "', chk_text_var_1)
+					WHEN 102 THEN format('" . $data->clean($lang['emajgroupsconfimport102']) . "', chk_text_var_1)
+					WHEN 110 THEN format('" . $data->clean($lang['emajgroupsconfimport110']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3, chk_text_var_4)
+					WHEN 111 THEN format('" . $data->clean($lang['emajgroupsconfimport111']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3, chk_text_var_4)
+                    ELSE 'Message not decoded (' || chk_msg_type || ')'
 				END as chk_message
 			FROM emaj._import_groups_conf_prepare (E'{$groupsConfig}'::json, {$groupsArray}, true, NULL)";
 
@@ -1468,6 +1469,7 @@ class EmajDb {
 
 	/**
 	 * Check in the emaj_group_def table the configuration of a new group to create
+	 * The function is not called anymore since E-Maj version 3.2+
 	 */
 	function checkConfNewGroup($group) {
 		global $data, $lang;
@@ -1501,6 +1503,7 @@ class EmajDb {
 
 	/**
 	 * Check in the emaj_group_def table the configuration of one or serveral existing groups to alter
+	 * The function is not called anymore since E-Maj version 3.2+
 	 */
 	function checkConfExistingGroups($groups) {
 		global $data, $lang;
@@ -1546,22 +1549,23 @@ class EmajDb {
 		$sql = "SELECT
 				CASE chk_msg_type
 					WHEN  1 THEN '" . $data->clean($lang['emajcheckjsongroupsconf01']) . "'
-					WHEN  2 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf02']) . "', chk_group)
-					WHEN 10 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf10']) . "', chk_extra_data)
-					WHEN 11 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf11']) . "', chk_group, chk_extra_data)
-					WHEN 12 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf12']) . "', chk_group)
-					WHEN 20 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf20']) . "', chk_group, chk_extra_data)
-					WHEN 21 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf21']) . "', chk_group, chk_extra_data)
-					WHEN 22 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf22']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
-					WHEN 23 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf23']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 24 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf24']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
-					WHEN 25 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf25']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
-					WHEN 30 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf30']) . "', chk_group, chk_extra_data)
-					WHEN 31 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf31']) . "', chk_group, chk_extra_data)
-					WHEN 32 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf32']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN  2 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf02']) . "', chk_text_var_1)
+					WHEN 10 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf10']) . "', chk_int_var_1)
+					WHEN 11 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf11']) . "', chk_text_var_1, chk_int_var_1)
+					WHEN 12 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf12']) . "', chk_text_var_1)
+					WHEN 20 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf20']) . "', chk_text_var_1, chk_int_var_1)
+					WHEN 21 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf21']) . "', chk_text_var_1, chk_int_var_1)
+					WHEN 22 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf22']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3, chk_text_var_4)
+					WHEN 23 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf23']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3)
+					WHEN 24 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf24']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3, chk_int_var_1)
+					WHEN 25 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf25']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3, chk_text_var_4)
+					WHEN 30 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf30']) . "', chk_text_var_1, chk_int_var_1)
+					WHEN 31 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf31']) . "', chk_text_var_1, chk_int_var_1)
+					WHEN 32 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf32']) . "', chk_text_var_1, chk_text_var_2, chk_text_var_3, chk_text_var_4)
+                    ELSE 'Message not decoded (' || chk_msg_type || ')'
 				END as chk_message
 			FROM emaj._check_json_groups_conf(E'{$json}'::json)
-			ORDER BY chk_msg_type, chk_group, chk_schema, chk_tblseq";
+			ORDER BY chk_msg_type, chk_text_var_1, chk_text_var_2, chk_text_var_3";
 
 		return $data->selectSet($sql);
 	}

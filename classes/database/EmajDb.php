@@ -421,6 +421,29 @@ class EmajDb {
 	}
 
 	/**
+	 * Check a parameters configuration to import
+	 */
+	function checkJsonParamConf($json) {
+		global $data, $lang;
+
+		$data->clean($json);
+
+		$sql = "SELECT
+				CASE chk_msg_type
+					WHEN 1 THEN '" . $data->clean($lang['emajcheckjsonparamconf01']) . "'
+					WHEN 2 THEN format('" . $data->clean($lang['emajcheckjsonparamconf02']) . "', chk_int_var_1)
+					WHEN 3 THEN format('" . $data->clean($lang['emajcheckjsonparamconf03']) . "', chk_text_var_1, chk_text_var_2)
+					WHEN 4 THEN format('" . $data->clean($lang['emajcheckjsonparamconf04']) . "', chk_text_var_1)
+					WHEN 5 THEN format('" . $data->clean($lang['emajcheckjsonparamconf05']) . "', chk_text_var_1)
+                    ELSE 'Message not decoded (' || chk_msg_type || ')'
+				END as chk_message
+			FROM emaj._check_json_param_conf(E'{$json}'::json)
+			ORDER BY chk_msg_type, chk_text_var_1, chk_text_var_2, chk_int_var_1";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
 	 * Import the parameters configuration
 	 */
 	function importParamConfig($paramConfig, $replaceCurrent) {

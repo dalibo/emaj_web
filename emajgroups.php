@@ -1939,7 +1939,9 @@
 
 		$misc->printHeader('database', 'database','emajgroups');
 
-		$misc->printTitle("{$lang['emajexportgroupsconf']}<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['emajexportgroupsconfinfo']}\"/>");
+		$misc->printTitle($lang['emajexportgroupsconf']);
+
+		echo "<p>{$lang['emajexportgroupsconfselect']}</p>";
 
 		$groups = $emajdb->getGroups();
 

@@ -120,9 +120,13 @@
 				$jsonStructure = json_decode($jsonContent, true);
 			// ... contains a valid JSON structure,
 				if (json_last_error()===JSON_ERROR_NONE) {
-			// ... with a "parameters" array
-					if (isSet($jsonStructure["parameters"])) {
-			// ... import the parameter configuration into emaj and report the result
+
+					// check that the json content is valid
+					$errors = $emajdb->checkJsonParamConf($jsonContent);
+
+					if ($errors->recordCount() == 0) {
+
+						// No error has been detected in the json structure, so effectively import the parameter configuration
 						$nbParam = $emajdb->importParamConfig($jsonContent, isSet($_POST['replaceCurrent']));
 						if ($nbParam >= 0) {
 							if (isSet($_POST['replaceCurrent'])) {
@@ -135,7 +139,31 @@
 							doDefault('', sprintf($lang['emajparamconfigimporterr'], $_FILES['file_name']['name']));
 						}
 					} else {
-						doDefault('', sprintf($lang['emajjsonnoparameters'], $_FILES['file_name']['name']));
+
+						// The JSON structure contains errors. Display them
+
+						$misc->printHeader('database', 'database', 'emajenvir');
+
+						$misc->printTitle($lang['emajimportparamconf']);
+						echo "<p>" . sprintf($lang['emajparamconfigimporterr'], $_FILES['file_name']['name']) . "</p>";
+
+						$columns = array(
+							'message' => array(
+								'title' => $lang['emajdiagnostics'],
+								'field' => field('chk_message'),
+							),
+						);
+
+						$actions = array ();
+	
+						$misc->printTable($errors, $columns, $actions, 'checks', null, null, array('sorter' => true, 'filter' => false));
+
+						echo "<form action=\"emajenvir.php\" method=\"post\">\n";
+						echo "<p><input type=\"hidden\" name=\"action\" value=\"import_parameters_ok\" />\n";
+						echo $misc->form;
+						echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strok']}\" /></p>\n";
+						echo "</form>\n";
+
 					}
 				} else {
 					doDefault('', sprintf($lang['emajnotjsonfile'], $_FILES['file_name']['name']));

@@ -308,15 +308,20 @@
 	$lang['emajparavgrowdelinfo'] = 'The \'avg_row_delete_log_duration\' parameter of the emaj_param table determines an average cost of an elementary update deletion in an E-Maj log table. The parameter is of type INTERVAL. The default value is 10 µs.';
 	$lang['emajparavgfkcheck'] = 'Average foreign key check cost';
 	$lang['emajparavgfkcheckinfo'] = 'The \'avg_fkey_check_duration\' parameter of the emaj_param table determines an average cost to ckeck a foreign key. The parameter is of type INTERVAL. The default value is 20 µs.';
+
+	// Import parameters
 	$lang['emajimportparamconf'] = 'Import a parameters configuration';
 	$lang['emajdeletecurrentparam'] = 'Delete all existing parameters';
 	$lang['emajdeletecurrentparaminfo'] = 'If the box is checked, all existing parameters of the emaj extension are deleted before loading the file.';
+	$lang['emajcheckjsonparamconf01'] = 'The JSON structure does not contain any "parameters" array.';
+	$lang['emajcheckjsonparamconf02'] = 'The #%s parameter has no "key" attribute or a "key" set to null.';
+	$lang['emajcheckjsonparamconf03'] = 'For the parameter "%s", the attribute "%s" is unknown.';
+	$lang['emajcheckjsonparamconf04'] = '"%s" is not a known E-Maj parameter.';
+	$lang['emajcheckjsonparamconf05'] = 'The JSON structure references several times the parameter "%s".';
 	$lang['emajparamconfimported'] = '%s: %s parameters imported from the file %s.';
 	$lang['emajnewconf'] = 'New configuration';
 	$lang['emajnewmodifiedconf'] = 'Modified configuration';
 	$lang['emajparamconfigimporterr'] = 'Error while importing parameters from file %s';
-	$lang['emajjsonnoparameters'] = 'The JSON file %s has no "parameters" array.';
-
 
 	// Dynamic groups content management
 	$lang['emajlogdattsp'] = 'Log tablespace';
@@ -522,7 +527,7 @@
 
 	// Export groups configuration
 	$lang['emajexportgroupsconf'] = 'Export a tables groups configuration';
-	$lang['emajexportgroupsconfinfo'] = 'Select the tables groups whose configuration will be exported on a local file.';
+	$lang['emajexportgroupsconfselect'] = 'Select the tables groups whose configuration will be exported on a local file.';
 
 	// Import groups configuration
 	$lang['emajimportgroupsconf'] = 'Import a tables groups configuration';

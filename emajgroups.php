@@ -2827,11 +2827,19 @@
 		$misc->printTitle($lang['emajsetamark']);
 		echo "<p>", sprintf($lang['emajconfirmsetmarkgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+
 		echo "<div class=\"form-container\">\n";
 		echo "\t<div class=\"form-label required\">{$lang['emajmark']}</div>\n";
 		echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"mark\" required pattern=\"\S+.*\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\" /></div>\n";
 		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
 		echo "</div>\n";
+
+		echo "<div class=\"form-container\">\n";
+		echo "\t<div class=\"form-label\">{$lang['strcomment']}</div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"comment\" size=\"80\" /></div>\n";
+		echo "\t<div class=\"form-comment\"></div>\n";
+		echo "</div>\n";
+
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"set_mark_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
@@ -2889,7 +2897,7 @@
 				return;
 			}
 			// OK
-			$status = $emajdb->setMarkGroup($_POST['group'],$finalMarkName);
+			$status = $emajdb->setMarkGroup($_POST['group'],$finalMarkName,$_POST['comment']);
 			if ($status == 0)
 				if ($_POST['back']=='list') {
 					show_groups(sprintf($lang['emajsetmarkgroupok'], htmlspecialchars($finalMarkName), htmlspecialchars($_POST['group'])));
@@ -2931,11 +2939,19 @@
 		echo "<p>", sprintf($lang['emajconfirmsetmarkgroup'], htmlspecialchars($groupsList)), "</p>\n";
 		// send form
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+
 		echo "<div class=\"form-container\">\n";
 		echo "\t<div class=\"form-label required\">{$lang['emajmark']}</div>\n";
 		echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"mark\" required pattern=\"\S+.*\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\" /></div>\n";
 		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></div>\n";
 		echo "</div>\n";
+
+		echo "<div class=\"form-container\">\n";
+		echo "\t<div class=\"form-label\">{$lang['strcomment']}</div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"comment\" size=\"80\" /></div>\n";
+		echo "\t<div class=\"form-comment\"></div>\n";
+		echo "</div>\n";
+
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"set_mark_groups_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
@@ -2983,7 +2999,7 @@
 				return;
 			}
 			// OK
-			$status = $emajdb->setMarkGroups($_POST['groups'],$finalMarkName);
+			$status = $emajdb->setMarkGroups($_POST['groups'],$finalMarkName,$_POST['comment']);
 			if ($status == 0)
 				show_groups(sprintf($lang['emajsetmarkgroupok'], htmlspecialchars($finalMarkName), htmlspecialchars($_POST['groups'])));
 			else
@@ -3071,7 +3087,7 @@
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<div class=\"form-container\">\n";
 		echo "\t<div class=\"form-label required\">{$lang['strcomment']}</div>\n";
-		echo "\t<div class=\"form-input\"><input name=\"comment\" size=\"100\" value=\"", htmlspecialchars($mark->fields['mark_comment']), "\" /></div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"comment\" size=\"80\" value=\"", htmlspecialchars($mark->fields['mark_comment']), "\" /></div>\n";
 		echo "\t<div class=\"form-comment\"></div>\n";
 		echo "</div>\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"comment_mark_group_ok\" />\n";

@@ -459,6 +459,8 @@ div.form-container {
 	display: grid;
 	grid-template-columns: minmax(70px, min-content) min-content min-content;
 	grid-gap: 7px;
+	margin-top:4px;
+	margin-bottom:4px;
 }
 div.form-label {
 	white-space: nowrap;

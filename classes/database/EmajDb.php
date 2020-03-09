@@ -1908,32 +1908,50 @@ class EmajDb {
 	}
 
 	/**
-	 * Sets a mark for a group
+	 * Sets a mark for a group and comments if requested
 	 */
-	function setMarkGroup($group,$mark) {
+	function setMarkGroup($group,$mark,$comment) {
 		global $data;
 
 		$data->clean($group);
 		$data->clean($mark);
+		$data->clean($comment);
 
 		$sql = "SELECT emaj.emaj_set_mark_group('{$group}','{$mark}') AS nbtblseq";
+		$rt = $data->execute($sql);
 
-		return $data->execute($sql);
+		if ($comment <> '') {
+			$sql = "SELECT emaj.emaj_comment_mark_group('{$group}','{$mark}','{$comment}')";
+			$data->execute($sql);
+		}
+
+		return $rt;
 	}
 
 	/**
-	 * Sets a mark for several groups
+	 * Sets a mark for several groups and comments if requested
 	 */
-	function setMarkGroups($groups,$mark) {
+	function setMarkGroups($groups,$mark,$comment) {
 		global $data;
 
 		$data->clean($groups);
 		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
 		$data->clean($mark);
+		$data->clean($comment);
 
 		$sql = "SELECT emaj.emaj_set_mark_groups({$groupsArray},'{$mark}') AS nbtblseq";
+		$rt = $data->execute($sql);
 
-		return $data->execute($sql);
+		if ($comment <> '') {
+		// Set a comment for each group of the groups list
+			$groupsA = explode(', ',$groups);
+			foreach($groupsA as $g) {
+				$sql = "SELECT emaj.emaj_comment_mark_group('{$g}','{$mark}','{$comment}')";
+				$data->execute($sql);
+			}
+		}
+
+		return $rt;
 	}
 
 	/**

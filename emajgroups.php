@@ -493,9 +493,8 @@
 						'href' => array (
 							'url' => 'emajgroups.php',
 							'urlvars' => array_merge($urlvars, array (
-								'action' => 'create_group',
+								'action' => 'create_configured_group',
 								'back' => 'list',
-								'empty' => 'false',
 								'group' => field('grpdef_group'),
 							))))
 				),
@@ -538,7 +537,7 @@
 			// for emaj_adm role only, display the "create tables group" button
 			if ($emajdb->isEmaj_Adm()) {
 				if ($emajdb->getNumEmajVersion() >= 20100) {			// version >= 2.1.0
-					echo "<form id=\"createEmptyGroup_form\" action=\"emajgroups.php?action=create_group&amp;back=list&amp;empty=true&amp;{$misc->href}\"";
+					echo "<form id=\"createEmptyGroup_form\" action=\"emajgroups.php?action=create_group&amp;back=list&amp;{$misc->href}\"";
 					echo " method=\"post\" enctype=\"multipart/form-data\">\n";
 					echo "\t<input type=\"submit\" value=\"{$lang['emajcreatetablesgroup']}\" />\n";
 					echo "</form>\n";
@@ -1423,8 +1422,7 @@
  *******************************************************************************************************/
 
 	/**
-	 *
- Prepare create group: ask for confirmation
+	 * Prepare create group: ask for confirmation
 	 */
 	function create_group() {
 		global $misc, $lang, $emajdb;
@@ -1433,79 +1431,31 @@
 
 		$misc->printTitle($lang['emajcreateagroup']);
 
-		$rollbackable = true; $auditonly = true;
-
-		if (htmlspecialchars($_REQUEST['empty'])=='true') {
-
-		// empty group
-			echo "<p>{$lang['emajcreateanemptygroup']}</p>\n";
-
-		} else {
-
-		// non empty group
-			if ($emajdb->getNumEmajVersion() >= 30000) {			// version >= 3.0.0
-			// check the group configuration
-				$checks = $emajdb->checkConfNewGroup($_REQUEST['group']);
-				if ($checks->recordCount() == 0) {
-					echo "<p>" . sprintf($lang['emajgroupconfok'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
-				} else {
-					echo "<p>" . sprintf($lang['emajgroupconfwithdiag'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
-	
-					$columns = array(
-						'message' => array(
-							'title' => $lang['emajdiagnostics'],
-							'field' => field('chk_message'),
-						),
-					);
-		
-					$actions = array ();
-		
-					$misc->printTable($checks, $columns, $actions, 'checks', null, null, array('sorter' => true, 'filter' => false));
-	
-					// determine whether the tables group can be audit_only
-					$rollbackable = false;
-					$checks->moveFirst();
-					while (!$checks->EOF) {
-						if ($checks->fields['chk_severity'] == 1) $auditonly = false;
-						$checks->moveNext();
-					}
-				}
-			} else {
-				echo "<p>" . sprintf($lang['emajconfirmcreategroup'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
-			}
-		}
-
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"create_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
-		echo "<input type=\"hidden\" name=\"empty\" value=\"", htmlspecialchars($_REQUEST['empty']), "\" />\n";
-		echo $misc->form;
 
-	// when creating an empty group, the group name is not known, so ask
+		echo "<div class=\"form-container\">\n";
+		echo "\t<div class=\"form-label required\">{$lang['emajgroup']}</div>\n";
+		echo "\t<div class=\"form-input\"><input type=\"text\" id=\"group\" name=\"group\" size=\"32\" required pattern=\"\S+.*\" value=\"\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\"></div>\n";
+		echo "\t<div class=\"form-comment\"></div>\n";
+		echo "</div>\n";
 
-		if (htmlspecialchars($_REQUEST['empty']) == 'false') {
-			echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
-		} else {
-			echo "<div class=\"form-container\">\n";
-			echo "\t<div class=\"form-label required\">{$lang['emajgroup']}</div>\n";
-			echo "\t<div class=\"form-input\"><input type=\"text\" id=\"group\" name=\"group\" size=\"32\" required pattern=\"\S+.*\" value=\"\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\"></div>\n";
-			echo "\t<div class=\"form-comment\"></div>\n";
-			echo "</div>\n";
-		}
+		echo "<p>{$lang['emajgrouptype']} : \n";
+		echo "\t<input type=\"radio\" name=\"grouptype\" value=\"rollbackable\" checked>{$lang['emajrollbackable']}\n";
+		echo "\t<input type=\"radio\" name=\"grouptype\" value=\"auditonly\">{$lang['emajauditonly']}\n";
+		echo "</p>\n";
 
-		if ($auditonly) {
-			echo "<p>{$lang['emajgrouptype']} : \n";
-			if ($rollbackable) {$attr = "checked";} else {$attr = "disabled";}
-			echo "\t<input type=\"radio\" name=\"grouptype\" value=\"rollbackable\" {$attr}>{$lang['emajrollbackable']}\n";
-			if ($rollbackable) {$attr = "";} else {$attr = "checked";}
-			echo "\t<input type=\"radio\" name=\"grouptype\" value=\"auditonly\" {$attr}>{$lang['emajauditonly']}\n";
-		}
-		echo "</p><p>";
-		if ($auditonly)
-			echo "<input type=\"submit\" name=\"creategroup\" value=\"{$lang['strcreate']}\" />\n";
+		echo "<div class=\"form-container\">\n";
+		echo "\t<div class=\"form-label\">{$lang['strcomment']}</div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"comment\" size=\"80\" /></div>\n";
+		echo "\t<div class=\"form-comment\"></div>\n";
+		echo "</div>\n";
+
+		echo "<p><input type=\"submit\" name=\"creategroup\" value=\"{$lang['strcreate']}\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";
+		echo $misc->form;
 		echo "</form>\n";
-
 	}
 
 	/**
@@ -1520,12 +1470,96 @@
 		} else {
 
 		// if the group is supposed to be empty, check the supplied group name doesn't exist
-			if ($_POST['empty'] == 'true' && !$emajdb->isNewEmptyGroupValid($_POST['group'])) {
+			if (!$emajdb->isNewEmptyGroupValid($_POST['group'])) {
 				show_groups('',sprintf($lang['emajinvalidemptygroup'], htmlspecialchars($_POST['group'])));
 				return;
 			}
 	
-			$status = $emajdb->createGroup($_POST['group'],$_POST['grouptype']=='rollbackable',$_POST['empty']=='true');
+			$status = $emajdb->createGroup($_POST['group'],$_POST['grouptype']=='rollbackable',true,$_POST['comment']);
+			if ($status == 0) {
+				$_reload_browser = true;
+				show_groups(sprintf($lang['emajcreategroupok'], htmlspecialchars($_POST['group'])));
+			} else
+				show_groups('',sprintf($lang['emajcreategrouperr'], htmlspecialchars($_POST['group'])));
+		}
+	}
+
+	/**
+	 * Prepare create group for groups configured in emaj_group_def: ask for confirmation
+	 */
+	function create_configured_group() {
+		global $misc, $lang, $emajdb;
+
+		$misc->printHeader('database', 'database','emajgroups');
+
+		$misc->printTitle($lang['emajcreateagroup']);
+
+		$rollbackable = true; $auditonly = true;
+
+		if ($emajdb->getNumEmajVersion() >= 30000) {			// version >= 3.0.0
+		// check the group configuration
+			$checks = $emajdb->checkConfNewGroup($_REQUEST['group']);
+			if ($checks->recordCount() == 0) {
+				echo "<p>" . sprintf($lang['emajgroupconfok'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
+			} else {
+				echo "<p>" . sprintf($lang['emajgroupconfwithdiag'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
+		
+				$columns = array(
+					'message' => array(
+						'title' => $lang['emajdiagnostics'],
+						'field' => field('chk_message'),
+					),
+				);
+		
+				$actions = array ();
+		
+				$misc->printTable($checks, $columns, $actions, 'checks', null, null, array('sorter' => true, 'filter' => false));
+		
+				// determine whether the tables group can be audit_only
+				$rollbackable = false;
+				$checks->moveFirst();
+				while (!$checks->EOF) {
+					if ($checks->fields['chk_severity'] == 1) $auditonly = false;
+					$checks->moveNext();
+				}
+			}
+		} else {
+			echo "<p>" . sprintf($lang['emajconfirmcreategroup'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
+		}
+
+		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"create_configured_group_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
+		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
+		if ($auditonly) {
+			echo "<p>{$lang['emajgrouptype']} : \n";
+			if ($rollbackable) {$attr = "checked";} else {$attr = "disabled";}
+			echo "\t<input type=\"radio\" name=\"grouptype\" value=\"rollbackable\" {$attr}>{$lang['emajrollbackable']}\n";
+			if ($rollbackable) {$attr = "";} else {$attr = "checked";}
+			echo "\t<input type=\"radio\" name=\"grouptype\" value=\"auditonly\" {$attr}>{$lang['emajauditonly']}\n";
+		}
+		echo "</p><p>";
+		if ($auditonly)
+			echo "<input type=\"submit\" name=\"creategroup\" value=\"{$lang['strcreate']}\" />\n";
+
+		echo $misc->form;
+
+		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";
+		echo "</form>\n";
+	}
+
+	/**
+	 * Perform create_group for a configured group
+	 */
+	function create_configured_group_ok() {
+		global $lang, $emajdb, $_reload_browser;
+
+	// process the click on the <cancel> button
+		if (isset($_POST['cancel'])) {
+			show_groups();
+		} else {
+
+			$status = $emajdb->createGroup($_POST['group'],$_POST['grouptype']=='rollbackable',false,'');
 			if ($status == 0) {
 				$_reload_browser = true;
 				show_groups(sprintf($lang['emajcreategroupok'], htmlspecialchars($_POST['group'])));
@@ -1888,7 +1922,7 @@
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<div class=\"form-container\">\n";
 		echo "\t<div class=\"form-label required\">{$lang['strcomment']}</div>\n";
-		echo "\t<div class=\"form-input\"><input name=\"comment\" size=\"100\" value=\"", htmlspecialchars($group->fields['group_comment']), "\" /></div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"comment\" size=\"80\" value=\"", htmlspecialchars($group->fields['group_comment']), "\" /></div>\n";
 		echo "\t<div class=\"form-comment\"></div>\n";
 		echo "</div>\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"comment_group_ok\" />\n";
@@ -3856,6 +3890,12 @@
 			break;
 		case 'comment_mark_group_ok':
 			comment_mark_group_ok();
+			break;
+		case 'create_configured_group':
+			create_configured_group();
+			break;
+		case 'create_configured_group_ok':
+			create_configured_group_ok();
 			break;
 		case 'create_group':
 			create_group();

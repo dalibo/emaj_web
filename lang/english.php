@@ -490,7 +490,6 @@
 
 	// Group creation
 	$lang['emajcreateagroup'] = 'E-Maj: Create a tables group';
-	$lang['emajcreateanemptygroup'] = 'Create an empty tables group';
 	$lang['emajconfirmcreategroup'] = 'Are you sure you want to create the tables group "%s"?';
 	$lang['emajinvalidemptygroup'] = 'Error, the tables group "%s" is already created or configured!';
 	$lang['emajcreategroupok'] = 'The tables group "%s" has been created.';

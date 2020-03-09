@@ -1571,12 +1571,13 @@ class EmajDb {
 	}
 
 	/**
-	 * Creates a group
+	 * Creates a group, and comment if requested
 	 */
-	function createGroup($group,$isRollbackable,$isEmpty) {
+	function createGroup($group,$isRollbackable,$isEmpty,$comment) {
 		global $data;
 
 		$data->clean($group);
+		$data->clean($comment);
 
 		if ($isEmpty) {
 			if ($isRollbackable){
@@ -1591,7 +1592,14 @@ class EmajDb {
 				$sql = "SELECT emaj.emaj_create_group('{$group}',false) AS nbtblseq";
 			}
 		}
-		return $data->execute($sql);
+		$rt = $data->execute($sql);
+
+		if ($comment <> '') {
+			$sql = "SELECT emaj.emaj_comment_group('{$group}','{$comment}')";
+			$data->execute($sql);
+		}
+
+		return $rt;
 	}
 
 	/**

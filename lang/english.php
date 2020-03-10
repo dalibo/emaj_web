@@ -88,6 +88,8 @@
 	$lang['strinvert'] = 'Invert';
 	$lang['emajnotassigned'] = 'Not assigned';
 	$lang['strlevel'] = 'Level';
+	$lang['strseverity'] = 'Severity';
+	$lang['strmessage'] = 'Message';
 
 	// User-supplied SQL editing
 	$lang['strsqledit'] = 'SQL statement editing';
@@ -132,7 +134,7 @@
 	// Users
 	$lang['strusername'] = 'Username';
 	$lang['strpassword'] = 'Password';
-	
+
 	// Groups
 	$lang['strgroup'] = 'Group';
 	$lang['strgroupgroups'] = 'Groups in group "%s"';
@@ -174,7 +176,7 @@
 	$lang['strnosequences'] = 'No sequences found.';
 	$lang['strseqproperties'] = 'Sequence "%s.%s" properties';
 	$lang['strlastvalue'] = 'Last value';
-	$lang['strincrementby'] = 'Increment by';	
+	$lang['strincrementby'] = 'Increment by';
 	$lang['strstartvalue'] = 'Start value';
 	$lang['strmaxvalue'] = 'Max value';
 	$lang['strminvalue'] = 'Min value';
@@ -185,7 +187,7 @@
 	$lang['emajemajlogsequence'] = 'The sequence is an E-Maj log sequence.';
 	$lang['emajinternalsequence'] = 'The sequence is an internal E-Maj sequence.';
 	$lang['emajseqnogroupownership'] = 'The sequence does not currently belong to any tables group.';
-	
+
 	// Constraints
 	$lang['strconstraints'] = 'Constraints';
 
@@ -449,7 +451,7 @@
 	$lang['emajcontent'] = 'Content';
 	$lang['emajgroupmarks'] = 'Tables group "%s" marks';
 	$lang['emajtimestamp'] = 'Date/Time';
-	$lang['emajnbchanges'] = '# row<br>changes';	
+	$lang['emajnbchanges'] = '# row<br>changes';
 	$lang['emajcumchanges'] = 'Cumulative<br>changes';
 	$lang['emajcumchangeshelp'] = 'The cummulative number of row changes represents the number of row changes to cancel in case of E-Maj rollback to the corresponding mark.';
 	$lang['emajsimrlbk'] = 'Simulate Rollback';
@@ -663,6 +665,7 @@
 	$lang['emajrlbkgrouperr'] = 'Error during tables group "%s" rollback to the mark "%s"!';
 	$lang['emajbadconfparam'] = 'Error: asynchronous rollback is not possible anymore. Check the dblink extension exists and both the pathname of the psql command (%s) and the temporary directory (%s) configuration parameters are correct.';
 	$lang['emajasyncrlbkstarted'] = 'Rollback started (id = %s).';
+	$lang['emajrlbkgroupreport'] = 'Rollback execution report for the tables group "%s" to the mark "%s"';
 
 	// Groups rollback
 	$lang['emajrlbkgroups'] = 'E-Maj: Rollback tables groups';
@@ -674,6 +677,7 @@
 	$lang['emajreachaltergroups'] = 'Rollbacking the tables groups "%s" to the mark "%s" would reach a point in time prior alter_group operations. Please confirm the rollback.';
 	$lang['emajrlbkgroupsok'] = 'The tables groups "%s" have been rollbacked to mark "%s".';
 	$lang['emajrlbkgroupserr'] = 'Error during tables groups "%s" rollback to mark "%s"!';
+	$lang['emajrlbkgroupreport'] = 'Rollback execution report for the tables groups "%s" to the mark "%s"';
 
 	// Elementary alter group actions previously executed, reported at rollback time 
 	$lang['emajalteredremovetbl'] = 'The table "%s.%s" has been removed from the tables group "%s"';

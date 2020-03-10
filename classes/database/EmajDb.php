@@ -1835,7 +1835,7 @@ class EmajDb {
 
 		$data->clean($group);
 		$data->clean($mark);
-		
+
 		if ($forceStop){
 			$sql = "SELECT emaj.emaj_force_stop_group('{$group}') AS nbtblseq";
 		}else{
@@ -1858,8 +1858,7 @@ class EmajDb {
 		$data->clean($groups);
 		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
 		$data->clean($mark);
-		
-		if ($mark == ""){
+			if ($mark == ""){
 			$sql = "SELECT emaj.emaj_stop_groups({$groupsArray}) AS nbtblseq";
 		}else{
 			$sql = "SELECT emaj.emaj_stop_groups({$groupsArray},'{$mark}') AS nbtblseq";
@@ -2201,7 +2200,27 @@ class EmajDb {
 	}
 
 	/**
+	 * Rollbacks a group to a mark (the old version, to be used with emaj prior 2.1)
+	 * It returns the number of tables and sequences processed.
+	 */
+	function oldRollbackGroup($group,$mark,$isLogged) {
+		global $data;
+
+		$data->clean($group);
+		$data->clean($mark);
+
+		if ($isLogged){
+			$sql = "SELECTemaj.emaj_logged_rollback_group('{$group}','{$mark}') AS nbtblseq";
+		} else {
+			$sql = "SELECT emaj.emaj_rollback_group('{$group}','{$mark}') AS nbtblseq";
+		}
+
+		return $data->execute($sql);
+	}
+
+	/**
 	 * Rollbacks a group to a mark
+	 * It returns a set of messages
 	 */
 	function rollbackGroup($group,$mark,$isLogged) {
 		global $data;
@@ -2209,25 +2228,13 @@ class EmajDb {
 		$data->clean($group);
 		$data->clean($mark);
 
-		if ($this->getNumEmajVersion() >= 20100){	// version >= 2.1.0
-			if ($isLogged){
-				$sql = "SELECT sum(substring(rlbk_message from '^\d+')::integer) AS nbtblseq
-						FROM emaj.emaj_logged_rollback_group('{$group}','{$mark}',true)
-						WHERE rlbk_severity = 'Notice'";
-			}else{
-				$sql = "SELECT sum(substring(rlbk_message from '^\d+')::integer) AS nbtblseq
-						FROM emaj.emaj_rollback_group('{$group}','{$mark}',true)
-						WHERE rlbk_severity = 'Notice'";
-			}
-		}else{
-			if ($isLogged){
-				$sql = "SELECTemaj.emaj_logged_rollback_group('{$group}','{$mark}') AS nbtblseq";
-			}else{
-				$sql = "SELECT emaj.emaj_rollback_group('{$group}','{$mark}') AS nbtblseq";
-			}
+		if ($isLogged){
+			$sql = "SELECT * FROM emaj.emaj_logged_rollback_group('{$group}','{$mark}',true)";
+		} else {
+			$sql = "SELECT * FROM emaj.emaj_rollback_group('{$group}','{$mark}',true)";
 		}
 
-		return $data->execute($sql);
+		return $data->selectSet($sql);
 	}
 
 	/**
@@ -2420,7 +2427,28 @@ class EmajDb {
 	}
 
 	/**
+	 * Rollbacks a groups array to a mark (the old version, to be used with emaj prior 2.1)
+	 * It returns the number of tables and sequences processed.
+	 */
+	function oldRollbackGroups($groups,$mark,$isLogged) {
+		global $data;
+
+		$data->clean($groups);
+		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
+		$data->clean($mark);
+
+		if ($isLogged){
+			$sql = "SELECT emaj.emaj_logged_rollback_groups({$groupsArray},'{$mark}') AS nbtblseq";
+		}else{
+			$sql = "SELECTemaj.emaj_rollback_groups({$groupsArray},'{$mark}') AS nbtblseq";
+		}
+
+		return $data->execute($sql);
+	}
+
+	/**
 	 * Rollbacks a groups array to a mark
+	 * It returns a set of messages
 	 */
 	function rollbackGroups($groups,$mark,$isLogged) {
 		global $data;
@@ -2429,25 +2457,13 @@ class EmajDb {
 		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
 		$data->clean($mark);
 
-		if ($this->getNumEmajVersion() >= 20100){	// version >= 2.1.0
-			if ($isLogged){
-				$sql = "SELECT sum(substring(rlbk_message from '^\d+')::integer) AS nbtblseq
-						FROM emaj.emaj_logged_rollback_groups({$groupsArray},'{$mark}',true)
-						WHERE rlbk_severity = 'Notice'";
-			}else{
-				$sql = "SELECT sum(substring(rlbk_message from '^\d+')::integer) AS nbtblseq
-						FROM emaj.emaj_rollback_groups({$groupsArray},'{$mark}',true)
-						WHERE rlbk_severity = 'Notice'";
-			}
+		if ($isLogged){
+			$sql = "SELECT * FROM emaj.emaj_logged_rollback_groups({$groupsArray},'{$mark}',true)";
 		}else{
-			if ($isLogged){
-				$sql = "SELECT emaj.emaj_logged_rollback_groups({$groupsArray},'{$mark}') AS nbtblseq";
-			}else{
-				$sql = "SELECTemaj.emaj_rollback_groups({$groupsArray},'{$mark}') AS nbtblseq";
-			}
+			$sql = "SELECT * FROM emaj.emaj_rollback_groups({$groupsArray},'{$mark}',true)";
 		}
 
-		return $data->execute($sql);
+		return $data->selectSet($sql);
 	}
 
 	/**

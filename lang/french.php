@@ -88,6 +88,8 @@
 	$lang['strinvert'] = 'Inverser';
 	$lang['emajnotassigned'] = 'Non affectés';
 	$lang['strlevel'] = 'Niveau';
+	$lang['strseverity'] = 'Sévérité';
+	$lang['strmessage'] = 'Message';
 
 	// User-supplied SQL editing
 	$lang['strsqledit'] = 'Edition de requête SQL';
@@ -384,7 +386,6 @@
 	$lang['emajspecifytblseqtoprocess'] = 'Spécifiez au moins une table ou séquence à traiter.';
 
 	// List Groups
-
 	$lang['emajidlegroups'] = 'Groupes de tables en état "arrêté" ';
 	$lang['emajlogginggroups'] = 'Groupes de tables en état "démarré" ';
 	$lang['emajconfiguredgroups'] = 'Groupes de tables "configurés" mais non encore "créés" ';
@@ -450,8 +451,8 @@
 	$lang['emajcontent'] = 'Contenu';
 	$lang['emajgroupmarks'] = 'Marques du groupe de tables "%s"';
 	$lang['emajtimestamp'] = 'Date-Heure';
-	$lang['emajnbchanges'] = 'Nb<br>mises à jour';	
-	$lang['emajcumchanges'] = 'Cumul<br>mises à jour';	
+	$lang['emajnbchanges'] = 'Nb<br>mises à jour';
+	$lang['emajcumchanges'] = 'Cumul<br>mises à jour';
 	$lang['emajcumchangeshelp'] = 'Le cumul du nombre de mises à jour représente le nombre de mises à jour à annuler en cas de rollback E-Maj à la marque correspondante.';
 	$lang['emajsimrlbk'] = 'Simuler Rollback';
 	$lang['emajrlbk'] = 'Rollback';
@@ -593,7 +594,7 @@
 	$lang['emajoldlogsdeletion'] = 'Suppression des anciens logs';
 	$lang['emajcantstartgroup'] = 'Le démarrage du groupe de tables "%s" est impossible. Le groupe est déjà démarré.';
 	$lang['emajstartgroupok'] = 'Le groupe de tables "%s" est démarré avec la marque "%s".';
-	$lang['emajstartgrouperr'] = 'Erreur lors du démarrage du groupe de tables "%s" !';	
+	$lang['emajstartgrouperr'] = 'Erreur lors du démarrage du groupe de tables "%s" !';
 
 	// Groups start
 	$lang['emajstartgroups'] = 'E-Maj : Démarrer des groupes de tables';
@@ -664,6 +665,7 @@
 	$lang['emajrlbkgrouperr'] = 'Erreur lors du rollback du groupe de tables "%s" à la marque "%s" !';
 	$lang['emajbadconfparam'] = 'Erreur : le rollback asynchrone n\'est plus possible. Vérifiez l\'existence de l\'extension dblink et la valeur des deux paramètres de configuration du chemin de la commande psql (%s) et du répertoire temporaire (%s).';
 	$lang['emajasyncrlbkstarted'] = 'Rollback démarré (id = %s).';
+	$lang['emajrlbkgroupreport'] = 'Rapport d\'exécution du rollback du groupe de tables "%s" à la marque "%s"';
 
 	// Groups rollback
 	$lang['emajrlbkgroups'] = 'E-Maj : Rollbacker des groupes de tables';
@@ -675,6 +677,7 @@
 	$lang['emajreachaltergroups'] = 'Le rollback des groupes de tables "%s" à la marque "%s" remonterait à un point dans le temps antérieur à des opérations de modification de groupes. Veuillez confirmer le rollback.';
 	$lang['emajrlbkgroupsok'] = 'Le rollback des groupes de tables "%s" à la marque "%s" est effectué.';
 	$lang['emajrlbkgroupserr'] = 'Erreur lors du rollback des groupes de tables "%s" à la marque "%s" !';
+	$lang['emajrlbkgroupsreport'] = 'Rapport d\'exécution du rollback des groupes de tables "%s" à la marque "%s"';
 
 	// Elementary alter group actions previously executed, reported at rollback time 
 	$lang['emajalteredremovetbl'] = 'La table "%s.%s" a été supprimée du groupe de tables %s';

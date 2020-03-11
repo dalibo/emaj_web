@@ -2269,7 +2269,7 @@
 						$columns = array(
 							'message' => array(
 								'title' => $lang['emajdiagnostics'],
-								'field' => field('chk_message'),
+								'field' => field('rpt_message'),
 							),
 						);
 
@@ -2348,7 +2348,7 @@
 				$columns = array(
 					'message' => array(
 						'title' => $lang['emajdiagnostics'],
-						'field' => field('chk_message'),
+						'field' => field('rpt_message'),
 					),
 				);
 

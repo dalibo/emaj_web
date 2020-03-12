@@ -88,7 +88,6 @@
 	$lang['strinvert'] = 'Inverser';
 	$lang['emajnotassigned'] = 'Non affectés';
 	$lang['strlevel'] = 'Niveau';
-	$lang['strseverity'] = 'Sévérité';
 	$lang['strmessage'] = 'Message';
 
 	// User-supplied SQL editing

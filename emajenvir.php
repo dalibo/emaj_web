@@ -10,17 +10,19 @@
 	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 	if (!isset($msg)) $msg = '';
 
-	// Callback function to dynamicaly add an icon to each diagnostic message
-	function renderDiagnostic($val) {
+	// Callback function to dynamicaly transform a message severity level into an icon
+	function renderMsgSeverity($val) {
 		global $misc;
-		if (preg_match("/^[Nn]o error /",$val)) {
-			$icon = 'CheckConstraint';
-		} elseif (preg_match("/^Warning/",$val)) {
+		if ($val == '1' || $val == '2') {
+			$icon = 'Delete';
+		} elseif ($val == '3') {
 			$icon = 'EmajWarning';
+		} elseif ($val == '4') {
+			$icon = 'CheckConstraint';
 		} else {
-			$icon = 'CorruptedDatabase';
+			return '?';
 		}
-		return "<img src=\"".$misc->icon($icon)."\" style=\"vertical-align:bottom;\" />&nbsp;" . $val;
+		return "<img src=\"".$misc->icon($icon)."\" style=\"vertical-align:bottom;\" />";
 	}
 
 	/**
@@ -148,6 +150,13 @@
 						echo "<p>" . sprintf($lang['emajparamconfigimporterr'], $_FILES['file_name']['name']) . "</p>";
 
 						$columns = array(
+							'severity' => array(
+								'title' => '',
+								'field' => field('rpt_severity'),
+								'type'	=> 'callback',
+								'params'=> array('function' => 'renderMsgSeverity','align' => 'center'),
+								'sorter' => false,
+							),
 							'message' => array(
 								'title' => $lang['emajdiagnostics'],
 								'field' => field('rpt_message'),
@@ -156,7 +165,7 @@
 
 						$actions = array ();
 	
-						$misc->printTable($errors, $columns, $actions, 'checks', null, null, array('sorter' => true, 'filter' => false));
+						$misc->printTable($errors, $columns, $actions, 'paramsconfchecks', null, null, array('sorter' => true, 'filter' => false));
 
 						echo "<form action=\"emajenvir.php\" method=\"post\">\n";
 						echo "<p><input type=\"hidden\" name=\"action\" value=\"import_parameters_ok\" />\n";
@@ -308,17 +317,22 @@
 			$messages = $emajdb->checkEmaj();
 
 			$columns = array(
+				'severity' => array(
+					'title' => '',
+					'field' => field('rpt_severity'),
+					'type'	=> 'callback',
+					'params'=> array('function' => 'renderMsgSeverity','align' => 'center'),
+					'sorter' => false,
+				),
 				'message' => array(
 					'title' => $lang['emajdiagnostics'],
-					'field' => field('emaj_verify_all'),
-					'type'	=> 'callback',
-					'params'=> array('function' => 'renderDiagnostic'),
+					'field' => field('rpt_message'),
 				),
 			);
 
 			$actions = array ();
 
-			$misc->printTable($messages, $columns, $actions, 'checks');
+			$misc->printTable($messages, $columns, $actions, 'checks', null, null, array('sorter' => true, 'filter' => false));
 
 		//
 		// E-Maj parameters managed with the emaj_param table

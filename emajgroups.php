@@ -225,6 +225,21 @@
 		return "<img src=\"".$misc->icon($icon)."\" style=\"vertical-align:bottom;\" />";
 	}
 
+	// Callback function to dynamicaly transform a message severity level into an icon
+	function renderMsgSeverity($val) {
+		global $misc;
+		if ($val == '1' || $val == '2') {
+			$icon = 'Delete';
+		} elseif ($val == '3') {
+			$icon = 'EmajWarning';
+		} elseif ($val == '4') {
+			$icon = 'CheckConstraint';
+		} else {
+			return '?';
+		}
+		return "<img src=\"".$misc->icon($icon)."\" style=\"vertical-align:bottom;\" />";
+	}
+
 /********************************************************************************************************
  * Main functions displaying pages
  *******************************************************************************************************/
@@ -2267,6 +2282,13 @@
 						echo "<p>" . sprintf($lang['emajimportgroupsinfileerr'], $_FILES['file_name']['name']) . "</p>";
 
 						$columns = array(
+							'severity' => array(
+								'title' => '',
+								'field' => field('rpt_severity'),
+								'type'	=> 'callback',
+								'params'=> array('function' => 'renderMsgSeverity','align' => 'center'),
+								'sorter' => false,
+							),
 							'message' => array(
 								'title' => $lang['emajdiagnostics'],
 								'field' => field('rpt_message'),
@@ -2346,6 +2368,13 @@
 				echo "<p>" . sprintf($lang['emajgroupsconfimportpreperr'], htmlspecialchars($groupsList), htmlspecialchars($_POST['file'])) . "</p>\n";
 
 				$columns = array(
+					'severity' => array(
+						'title' => '',
+						'field' => field('rpt_severity'),
+						'type'	=> 'callback',
+						'params'=> array('function' => 'renderMsgSeverity','align' => 'center'),
+						'sorter' => false,
+					),
 					'message' => array(
 						'title' => $lang['emajdiagnostics'],
 						'field' => field('rpt_message'),
@@ -3399,10 +3428,11 @@
 
 				$columns = array(
 					'severity' => array(
-						'title' => $lang['strseverity'],
+						'title' => '',
 						'field' => field('rlbk_severity'),
 						'type'	=> 'callback',
-						'params'=> array('function' => 'renderRlbkExecSeverity','align' => 'center')
+						'params'=> array('function' => 'renderRlbkExecSeverity','align' => 'center'),
+						'sorter' => false,
 					),
 					'msg' => array(
 						'title' => $lang['strmessage'],
@@ -3413,7 +3443,7 @@
 				$actions = array ();
 
 				echo "<div id=\"rlbkGroupReport\" style=\"margin-top:15px;margin-bottom:15px\" >\n";
-				$misc->printTable($rlbkReportMsgs, $columns, $actions, 'rlbkGroupReport');
+				$misc->printTable($rlbkReportMsgs, $columns, $actions, 'rlbkGroupReport', null, null, array('sorter' => true, 'filter' => false));
 				echo "</div>\n";
 
 				echo "<form action=\"emajgroups.php\" method=\"post\">\n";
@@ -3679,10 +3709,11 @@
 
 			$columns = array(
 				'severity' => array(
-					'title' => $lang['strseverity'],
+					'title' => '',
 					'field' => field('rlbk_severity'),
 					'type'	=> 'callback',
-					'params'=> array('function' => 'renderRlbkExecSeverity','align' => 'center')
+					'params'=> array('function' => 'renderRlbkExecSeverity','align' => 'center'),
+					'sorter' => false,
 				),
 				'msg' => array(
 					'title' => $lang['strmessage'],
@@ -3693,7 +3724,7 @@
 			$actions = array ();
 
 			echo "<div id=\"rlbkGroupsReport\" style=\"margin-top:15px;margin-bottom:15px\" >\n";
-			$misc->printTable($rlbkReportMsgs, $columns, $actions, 'rlbkGroupsReport');
+			$misc->printTable($rlbkReportMsgs, $columns, $actions, 'rlbkGroupsReport', null, null, array('sorter' => true, 'filter' => false));
 			echo "</div>\n";
 
 			echo "<form action=\"emajgroups.php\" method=\"post\">\n";

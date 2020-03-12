@@ -376,7 +376,14 @@ class EmajDb {
 	function checkEmaj() {
 		global $data;
 
-		$sql = "SELECT * FROM emaj.emaj_verify_all()";
+		$sql = "SELECT
+					CASE WHEN emaj_verify_all ILIKE 'No error%' THEN 4
+						 WHEN emaj_verify_all LIKE 'Warning%' THEN 3
+						 ELSE 1
+					END AS rpt_severity,
+					emaj_verify_all AS rpt_message
+				  FROM emaj.emaj_verify_all()
+				  ORDER BY rpt_severity DESC";
 		return $data->selectSet($sql);
 	}
 
@@ -429,6 +436,7 @@ class EmajDb {
 		$data->clean($json);
 
 		$sql = "SELECT
+				rpt_severity,
 				CASE rpt_msg_type
 					WHEN 101 THEN '" . $data->clean($lang['emajcheckjsonparamconf101']) . "'
 					WHEN 102 THEN format('" . $data->clean($lang['emajcheckjsonparamconf102']) . "', rpt_int_var_1)
@@ -1547,6 +1555,7 @@ class EmajDb {
 		$data->clean($json);
 
 		$sql = "SELECT
+				rpt_severity,
 				CASE rpt_msg_type
 					WHEN 201 THEN '" . $data->clean($lang['emajcheckjsongroupsconf201']) . "'
 					WHEN 202 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf202']) . "', rpt_text_var_1)
@@ -2254,9 +2263,9 @@ class EmajDb {
 		$isL = $isLogged ? 'true' : 'false';
 		$isM = $isMulti ? 'true' : 'false';
 		if ($this->getNumEmajVersion() >= 20100){	// version >= 2.1.0
-			$sql1 = "SELECT emaj._rlbk_init({$groupsArray}, '{$mark}', {$isL}, 1, $isM, true) as rlbk_id";
+			$sql1 = "SELECT emaj._rlbk_init({$groupsArray}, '{$mark}', {$isL}, 1, {$isM}, true) as rlbk_id";
 		} else {
-			$sql1 = "SELECT emaj._rlbk_init({$groupsArray}, '{$mark}', {$isL}, 1, $isM) as rlbk_id";
+			$sql1 = "SELECT emaj._rlbk_init({$groupsArray}, '{$mark}', {$isL}, 1, {$isM}) as rlbk_id";
 		}
 		$rlbkId = $data->selectField($sql1,'rlbk_id');
 

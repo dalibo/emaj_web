@@ -609,7 +609,7 @@
 		$group = $emajdb->getGroup($_REQUEST['group']);
 
 		// save some fields before calling printTable()
-		$comment=$group->fields['group_comment'];
+		$comment = $group->fields['group_comment'];
 		$nbMarks = $group->fields['nb_mark'];
 		$groupState = $group->fields['group_state'];
 		$groupType = $group->fields['group_type'];
@@ -3378,8 +3378,9 @@
 
 				// automatic form to go to the emajrollbacks.php page
 				echo "<form id=\"auto\" action=\"emajrollbacks.php\" method=\"get\">\n";
-				echo "<input type=\"hidden\" name=\"action\" value=\"show_rollbacks\" />\n";
-				echo "<input type=\"hidden\" name=\"rlbkId\" value=\"", htmlspecialchars($rlbkId), "\" />\n";
+				echo "<input type=\"hidden\" name=\"action\" value=\"show_rollback\" />\n";
+				echo "<input type=\"hidden\" name=\"asyncRlbk\" value=\"true\" />\n";
+				echo "<input type=\"hidden\" name=\"rlbkid\" value=\"", htmlspecialchars($rlbkId), "\" />\n";
 				echo $misc->form;
 				echo "</form>\n";
 				echo "<script type=\"text/javascript\">document.forms[\"auto\"].submit();</script>";
@@ -3672,8 +3673,9 @@
 
 			// automatic form to go to the emajrollbacks.php page
 			echo "<form id=\"auto\" action=\"emajrollbacks.php\" method=\"get\">\n";
-			echo "<input type=\"hidden\" name=\"action\" value=\"show_rollbacks\" />\n";
-			echo "<input type=\"hidden\" name=\"rlbkId\" value=\"", htmlspecialchars($rlbkId), "\" />\n";
+			echo "<input type=\"hidden\" name=\"action\" value=\"show_rollback\" />\n";
+			echo "<input type=\"hidden\" name=\"asyncRlbk\" value=\"true\" />\n";
+			echo "<input type=\"hidden\" name=\"rlbkid\" value=\"", htmlspecialchars($rlbkId), "\" />\n";
 			echo $misc->form;
 			echo "</form>\n";
 			echo "<script type=\"text/javascript\">document.forms[\"auto\"].submit();</script>";

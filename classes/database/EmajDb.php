@@ -2529,7 +2529,7 @@ class EmajDb {
 						  FROM emaj.emaj_rlbk, emaj.emaj_time_stamp tr, emaj.emaj_time_stamp tm 
 						  WHERE tr.time_id = rlbk_time_id AND tm.time_id = rlbk_mark_time_id 
 							AND rlbk_status IN ('COMPLETED','COMMITTED','ABORTED')";
-		}else{
+		} else {
 			$sql .= "FROM (SELECT * FROM emaj.emaj_rlbk 
 					WHERE rlbk_status IN ('COMPLETED','COMMITTED','ABORTED')";
 		}
@@ -2604,6 +2604,145 @@ class EmajDb {
 		return $data->execute($sql);
 	}
 
+	/**
+	 * Gets the properties of a single rollback operation. It returns 1 row.
+	 */
+	function getOneRlbk($rlbkId) {
+		global $data;
+
+		$data->clean($rlbkId);
+
+// first cleanup recently completed rollback operation status
+		$sql = "SELECT emaj.emaj_cleanup_rollback_state()";
+		$data->execute($sql);
+
+// get the emaj_rlbk data
+		$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,',') as rlbk_groups_list, rlbk_status,
+					rlbk_start_datetime, rlbk_end_datetime,
+					to_char(rlbk_end_datetime - rlbk_start_datetime,'HH24:MI:SS.MSFM') as rlbk_duration, 
+					rlbk_mark, rlbk_mark_datetime, rlbk_is_logged, rlbk_nb_session, rlbk_eff_nb_table,
+					rlbk_nb_sequence ";
+		if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
+			$sql .= "FROM (SELECT *, tr.time_tx_timestamp as rlbk_start_datetime, tm.time_tx_timestamp as rlbk_mark_datetime
+							FROM emaj.emaj_rlbk, emaj.emaj_time_stamp tr, emaj.emaj_time_stamp tm 
+							WHERE tr.time_id = rlbk_time_id AND tm.time_id = rlbk_mark_time_id 
+							  AND rlbk_id = {$rlbkId}
+						  ) AS t";
+		} else {
+			$sql .= "FROM (SELECT *
+							FROM emaj.emaj_rlbk 
+							WHERE rlbk_id = {$rlbkId}
+						  ) AS t";
+		}
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Gets a single in progress rollback operation. It returns 0 or 1 row.
+	 */
+	function getOneInProgressRlbk($rlbkId) {
+		global $data;
+
+		$data->clean($rlbkId);
+
+		$sql = "SELECT rlbk_status, rlbk_start_datetime,
+					   to_char(rlbk_elapse,'HH24:MI:SS.MSFM') AS rlbk_current_elapse, rlbk_remaining,
+					   rlbk_completion_pct
+				FROM emaj.emaj_rollback_activity()
+				WHERE rlbk_id = {$rlbkId}";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Gets the report messages for a single completed rollback operation.
+	 */
+	function getRlbkReportMsg($rlbkId) {
+		global $data;
+
+		$data->clean($rlbkId);
+
+		$sql = "SELECT substring(msg from '(.*?):') AS rlbk_severity,
+					   substring(msg from ': (.*)') AS rlbk_message
+				FROM (SELECT unnest(rlbk_messages) AS msg
+						FROM emaj.emaj_rlbk
+						WHERE rlbk_id = {$rlbkId}
+					 ) AS t";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Gets sessions data for a rollback operation.
+	 */
+	function getRlbkSessions($rlbkId) {
+		global $data;
+
+		$data->clean($rlbkId);
+
+		$sql = "SELECT rlbs_session, rlbs_txid,
+				rlbs_start_datetime::TIME,
+				rlbs_end_datetime::TIME,
+				to_char(rlbs_end_datetime - rlbs_start_datetime,'HH24:MI:SS.MSFM') AS rlbs_duration
+				FROM emaj.emaj_rlbk_session
+				WHERE rlbs_rlbk_id = {$rlbkId}
+				ORDER BY rlbs_session";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Gets planning data for a rollback operation.
+	 */
+	function getRlbkSteps($rlbkId) {
+		global $data, $lang;
+
+		$data->clean($rlbkId);
+
+		$sql = "SELECT row_number() over () AS rlbp_rank,
+					   rlbp_schema || '.' || rlbp_table AS rlbk_schema_table,
+					   CASE 
+						 WHEN rlbp_step = 'DIS_APP_TRG' THEN
+							format('{$lang['emajrlbkdisapptrg']}', quote_ident(rlbp_object))
+						 WHEN rlbp_step = 'DIS_LOG_TRG' THEN
+							'{$lang['emajrlbkdislogtrg']}'
+						 WHEN rlbp_step = 'DROP_FK' THEN
+							format('{$lang['emajrlbkdropfk']}',	quote_ident(rlbp_object))
+						 WHEN rlbp_step = 'SET_FK_DEF' THEN
+							format('{$lang['emajrlbksetfkdef']}', quote_ident(rlbp_object))
+						 WHEN rlbp_step = 'RLBK_TABLE' THEN
+							'{$lang['emajrlbkrlbktable']}'
+						 WHEN rlbp_step = 'DELETE_LOG' THEN
+							'{$lang['emajrlbkdeletelog']}'
+						 WHEN rlbp_step = 'SET_FK_IMM' THEN
+							format('{$lang['emajrlbksetfkimm']}', quote_ident(rlbp_object))
+						 WHEN rlbp_step = 'ADD_FK' THEN
+							format('{$lang['emajrlbkaddfk']}', quote_ident(rlbp_object))
+						 WHEN rlbp_step = 'ENA_APP_TRG' THEN
+							format('{$lang['emajrlbkenaapptrg']}', quote_ident(rlbp_object))
+						 WHEN rlbp_step = 'ENA_LOG_TRG' THEN
+							'{$lang['emajrlbkenalogtrg']}'
+						 ELSE '?'
+					   END AS rlbp_action,
+					   rlbp_batch_number, rlbp_session,
+					   rlbp_estimated_quantity, rlbp_estimated_duration,
+					   CASE WHEN rlbp_estimate_method = 1 THEN 'STAT+'
+							WHEN rlbp_estimate_method = 2 THEN 'STAT'
+							WHEN rlbp_estimate_method = 3 THEN 'PARAM'
+					   END AS rlbp_estimate_method,
+					   rlbp_start_datetime::TIME, rlbp_quantity, rlbp_duration
+				FROM emaj.emaj_rlbk_plan,
+					(VALUES ('DIS_APP_TRG',1),('DIS_LOG_TRG',2),('DROP_FK',3),('SET_FK_DEF',4),
+							('RLBK_TABLE',5),('DELETE_LOG',6),('SET_FK_IMM',7),('ADD_FK',8),
+							('ENA_APP_TRG',9),('ENA_LOG_TRG',10)) AS step(step_name, step_order)
+				WHERE rlbp_step::TEXT = step.step_name
+				  AND rlbp_rlbk_id = {$rlbkId}
+				  AND rlbp_step NOT IN ('LOCK_TABLE','CTRL-DBLINK','CTRL+DBLINK')
+				ORDER BY rlbp_start_datetime, rlbp_batch_number, step_order, rlbp_table, rlbp_object";
+
+		return $data->selectSet($sql);
+	}
 	/**
 	 * Gets the global log statistics for a group between 2 marks
 	 * It also delivers the sql queries to look at the corresponding log rows

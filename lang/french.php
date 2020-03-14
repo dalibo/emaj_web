@@ -89,6 +89,9 @@
 	$lang['emajnotassigned'] = 'Non affectés';
 	$lang['strlevel'] = 'Niveau';
 	$lang['strmessage'] = 'Message';
+	$lang['strbegin'] = 'Début';
+	$lang['strend'] = 'Fin';
+	$lang['strquantity'] = 'Quantité';
 
 	// User-supplied SQL editing
 	$lang['strsqledit'] = 'Edition de requête SQL';
@@ -256,6 +259,7 @@
 	$lang['emajschema'] = 'Schéma E-Maj';
 	$lang['emajselectfile'] = 'Sélectionner un fichier';
 	$lang['emajnotjsonfile'] = 'Le fichier %s n\'a pas un format JSON valide.';
+	$lang['emajtxid'] = 'Id. transaction';
 
 	// E-Maj html titles and tabs
 	$lang['emajgroupsmanagement'] = 'Gestion des groupes E-Maj';
@@ -444,6 +448,30 @@
 	$lang['emajconfirmconsolidaterlbk'] = 'Etes-vous sûr de vouloir consolider le rollback terminé par la marque "%s" du groupe de tables "%s" ?';
 	$lang['emajconsolidaterlbkok'] = 'Le rollback terminé par la marque "%s" du groupe de tables "%s" a été consolidé.';
 	$lang['emajconsolidaterlbkerr'] = 'Erreur lors de la consolidation du rollback terminé par la marque "%s" du groupe de tables "%s" !';
+	$lang['emajrlbkdetail'] = 'Détail du rollback E-Maj #%s';
+	$lang['emajrlbkident'] = 'Identification du rollback';
+	$lang['emajrlbkprogress'] = 'Progression du rollback';
+	$lang['emajrlbkcharacteristics'] = 'Caractéristiques du rollback';
+	$lang['emajrlbksessions'] = 'Sessions';
+	$lang['emajrlbksession'] = 'Session';
+	$lang['emajrlbkexecreport'] = 'Rapport d\'exécution';
+	$lang['emajrlbkplanning'] = 'Planification';
+	$lang['emajrlbkplanninghelp'] = 'Les étapes élémentaires d\'exécution du Rollback E-Maj. Ne sont pas inclus : la planification et la pose des verrous sur les tables en début d\'opération et le traitement des séquences en fin d\'opération.';
+	$lang['emajrlbkestimmethodhelp'] = 'En phase de planification, la durée de chaque étape est estimée, en utilisant en priorité des statistiques d\'exécutions similaires passées, avec le même ordre de grandeur de quantités à traiter (STAT+), ou des ordres de grandeur différentes (STAT), ou, à défaut, les paramètres de l\'extension (PARAM).';
+	$lang['emajrlbkstep'] = 'Étape';
+	$lang['emajestimatedduration'] = 'Durée estimée';
+	$lang['emajestimatedquantity'] = 'Quantité estimée';
+	$lang['emajestimationmethod'] = 'Méthode estimation';
+	$lang['emajrlbkdisapptrg'] = 'Désactiver le trigger %s';
+	$lang['emajrlbkdislogtrg'] = 'Désactiver le trigger de log';
+	$lang['emajrlbkdropfk'] = 'Supprimer la clé étrangère %s';
+	$lang['emajrlbksetfkdef'] = 'Positionner la clé étrangère %s DEFFERED';
+	$lang['emajrlbkrlbktable'] = 'Exécuter le Rollback';
+	$lang['emajrlbkdeletelog'] = 'Supprimer des log';
+	$lang['emajrlbksetfkimm'] = 'Positionner la clé étrangère %s IMMEDIATE';
+	$lang['emajrlbkaddfk'] = 'Recréer la clé étrangère %s';
+	$lang['emajrlbkenaapptrg'] = 'Réactiver le trigger %s';
+	$lang['emajrlbkenalogtrg'] = 'Réactiver le trigger de log';
 
 	// Group's properties and marks
 	$lang['emajgroupproperties'] = 'Propriétés du groupe de tables "%s"';
@@ -663,7 +691,7 @@
 	$lang['emajrlbkgroupok'] = 'Le rollback du groupe de tables "%s" à la marque "%s" est effectué.';
 	$lang['emajrlbkgrouperr'] = 'Erreur lors du rollback du groupe de tables "%s" à la marque "%s" !';
 	$lang['emajbadconfparam'] = 'Erreur : le rollback asynchrone n\'est plus possible. Vérifiez l\'existence de l\'extension dblink et la valeur des deux paramètres de configuration du chemin de la commande psql (%s) et du répertoire temporaire (%s).';
-	$lang['emajasyncrlbkstarted'] = 'Rollback démarré (id = %s).';
+	$lang['emajasyncrlbkstarted'] = 'Rollback #%s démarré.';
 	$lang['emajrlbkgroupreport'] = 'Rapport d\'exécution du rollback du groupe de tables "%s" à la marque "%s"';
 
 	// Groups rollback

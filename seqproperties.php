@@ -94,11 +94,11 @@
 							'params'=> array('function' => 'renderlinktogroup')
 						),
 						'starttime' => array(
-							'title' => $lang['emajfrom'],
+							'title' => $lang['strbegin'],
 							'field' => field('start_datetime')
 						),
 						'stoptime' => array(
-							'title' => $lang['emajto'],
+							'title' => $lang['strend'],
 							'field' => field('stop_datetime')
 						),
 					);

@@ -458,6 +458,8 @@
 	$lang['emajrlbkplanning'] = 'Planification';
 	$lang['emajrlbkplanninghelp'] = 'Les étapes élémentaires d\'exécution du Rollback E-Maj. Ne sont pas inclus : la planification et la pose des verrous sur les tables en début d\'opération et le traitement des séquences en fin d\'opération.';
 	$lang['emajrlbkestimmethodhelp'] = 'En phase de planification, la durée de chaque étape est estimée, en utilisant en priorité des statistiques d\'exécutions similaires passées, avec le même ordre de grandeur de quantités à traiter (STAT+), ou des ordres de grandeur différentes (STAT), ou, à défaut, les paramètres de l\'extension (PARAM).';
+	$lang['emajhideestimates'] = 'Cacher estimations';
+	$lang['emajshowestimates'] = 'Voir estimations';
 	$lang['emajrlbkstep'] = 'Étape';
 	$lang['emajestimatedduration'] = 'Durée estimée';
 	$lang['emajestimatedquantity'] = 'Quantité estimée';

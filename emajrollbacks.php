@@ -281,6 +281,10 @@
 	function show_rollback() {
 		global $lang, $misc, $emajdb;
 
+		if (!isset($_SESSION['emaj']['RlbkShowEstimates'])) {
+			$_SESSION['emaj']['RlbkShowEstimates'] = true;
+		}
+
 		$misc->printHeader('database', 'database', 'emajrollbacks');
 
 		if (isset($_REQUEST['asyncRlbk']))
@@ -465,22 +469,27 @@
 				'field' => field('rlbp_quantity'),
 				'params'=> array('align' => 'right'),
 			),
-			'estimatedDuration' => array(
-				'title' => $lang['emajestimatedduration'],
-				'field' => field('rlbp_estimated_duration'),
-				'params'=> array('class' => 'rlbkEstimates'),
-			),
-			'estimatedQuantity' => array(
-				'title' => $lang['emajestimatedquantity'],
-				'field' => field('rlbp_estimated_quantity'),
-				'params'=> array('class' => 'rlbkEstimates', 'align' => 'right'),
-			),
-			'estimateMethod' => array(
-				'title' => $lang['emajestimationmethod'],
-				'field' => field('rlbp_estimate_method'),
-				'params'=> array('class' => 'rlbkEstimates', 'align' => 'center'),
-			),
 		);
+
+		if ($_SESSION['emaj']['RlbkShowEstimates']) {
+			$columnsSteps = array_merge($columnsSteps, array(
+				'estimatedDuration' => array(
+					'title' => $lang['emajestimatedduration'],
+					'field' => field('rlbp_estimated_duration'),
+					'params'=> array('class' => 'rlbkEstimates'),
+				),
+				'estimatedQuantity' => array(
+					'title' => $lang['emajestimatedquantity'],
+					'field' => field('rlbp_estimated_quantity'),
+					'params'=> array('class' => 'rlbkEstimates', 'align' => 'right'),
+				),
+				'estimateMethod' => array(
+					'title' => $lang['emajestimationmethod'],
+					'field' => field('rlbp_estimate_method'),
+					'params'=> array('class' => 'rlbkEstimates', 'align' => 'center'),
+				),
+			));
+		}
 
 		$urlvars = $misc->getRequestVars();
 
@@ -527,10 +536,24 @@
 
 		// print planning data
 		if ($rlbkSteps->recordCount() > 0) {
-			echo "<h4>{$lang['emajrlbkplanning']}";
-			echo "&nbsp;&nbsp;<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajrlbkplanninghelp']}\"/>";
-			echo "&nbsp;&nbsp;<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajrlbkestimmethodhelp']}\"/>";
-			echo "</h4>";
+			echo "<h4 style=\"float:left; margin-right:430px\">{$lang['emajrlbkplanning']}\n";
+			echo "&nbsp;&nbsp;<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajrlbkplanninghelp']}\"/>\n";
+			echo "&nbsp;&nbsp;<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajrlbkestimmethodhelp']}\"/>\n";
+			echo "</h4>\n";
+
+			// Button to hide or show estimates columns
+			echo "<div style=\"margin:13px\">\n";
+			echo "\t<form id=\"showHideEstimates\" action=\"emajrollbacks.php?action=toggle_estimates&amp;{$misc->href}\"";
+			echo " method=\"post\" enctype=\"multipart/form-data\">\n";
+			if ($_SESSION['emaj']['RlbkShowEstimates'])
+				$buttonText = $lang['emajhideestimates'];
+			else
+				$buttonText = $lang['emajshowestimates'];
+			echo "<input type=\"hidden\" name=\"rlbkid\" value=\"{$_REQUEST['rlbkid']}\" />\n";
+			echo "\t\t<input type=\"submit\" name=\"showHideEstimates\" value=\"{$buttonText}\">\n";
+			echo "\t</form>\n";
+			echo "</div>\n";
+
 			$misc->printTable($rlbkSteps, $columnsSteps, $actions, 'detailRlbkSteps', null, null, array('sorter' => true, 'filter' => true));
 		}
 	}
@@ -598,6 +621,15 @@
 			show_rollbacks('',sprintf($lang['emajconsolidaterlbkerr'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group'])));
 	}
 
+	/**
+	 * Toggle the show_estimates and hide_estimates switch
+	 */
+	function toggle_estimates() {
+
+		$_SESSION['emaj']['RlbkShowEstimates'] = (! $_SESSION['emaj']['RlbkShowEstimates']);
+		show_rollback();
+	}
+
 	// redirect to the emajenvir.php page if the emaj extension is not installed or accessible or is too old
 	if (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
 		&& $emajdb->getNumEmajVersion() >= $oldest_supported_emaj_version_num)) {
@@ -622,6 +654,9 @@
 			break;
 		case 'show_rollback':
 			show_rollback();
+			break;
+		case 'toggle_estimates':
+			toggle_estimates();
 			break;
 		default:
 			show_rollbacks();

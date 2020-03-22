@@ -238,6 +238,7 @@
 	$lang['emajgroups'] = 'Groups';
 	$lang['emajmark'] = 'Mark';
 	$lang['emajgrouptype'] = 'Group type';
+	$lang['emajrollback'] = 'E-Maj rollback';
 	$lang['emajrollbacktype'] = 'Rollback type';
 	$lang['emajauditonly'] = 'AUDIT-ONLY';
 	$lang['emajrollbackable'] = 'ROLLBACK-ABLE';

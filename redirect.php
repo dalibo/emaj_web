@@ -1,13 +1,13 @@
 <?php
 	$subject = isset($_REQUEST['subject']) ? $_REQUEST['subject'] : 'root'; 
-	
+
 	if ($subject == 'root')
 		$_no_db_connection = true;
-	
+
 	include_once('./libraries/lib.inc.php');
-	
+
 	$url = $misc->getLastTabURL($subject);
-	
+
 	// Load query vars into superglobal arrays
 	if (isset($url['urlvars'])) {
 		$urlvars = array();

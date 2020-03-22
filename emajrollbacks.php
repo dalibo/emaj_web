@@ -27,6 +27,32 @@
 		return "<img src=\"".$misc->icon($icon)."\" style=\"vertical-align:bottom;\" />";
 	}
 
+	// Callback function to dynamicaly replace the rollback status by a colored dot
+	function renderRlbkStatusInList($val) {
+		global $misc;
+		if ($val == 'COMMITTED') {
+			$ret = "<div title=\"COMMITED\"><span class=\"dot greenbg\"></span></div>";
+		} elseif ($val == 'ABORTED') {
+			$ret = "<div title=\"ABORTED\"><span class=\"dot redbg\"></span></div>";
+		} else {
+			$ret = '<div title=\"COMPLETED\">?</div>';
+		}
+		return $ret;
+	}
+
+	// Callback function to dynamicaly add a colored dot before rollback status
+	function renderRlbkStatusInDetail($val) {
+		global $misc;
+		if ($val == 'COMMITTED') {
+			$img = "<span class=\"dot greenbg\"></span>&nbsp;";
+		} elseif ($val == 'ABORTED') {
+			$img = "<span class=\"dot redbg\"></span>&nbsp;";
+		} else {
+			$img='';
+		}
+		return $img . $val;
+	}
+
 	/**
 	 * Display the status of past and in progress rollback operations
 	 */
@@ -121,6 +147,11 @@
 			'rlbkStatus' => array(
 				'title' => $lang['emajstate'],
 				'field' => field('rlbk_status'),
+				'type'	=> 'callback',
+				'params'=> array(
+					'function' => 'renderRlbkStatusInList',
+					'align' => 'center',
+				),
 			),
 			'rlbkStartDateTime' => array(
 				'title' => $lang['emajrlbkstart'],
@@ -285,7 +316,7 @@
 			$_SESSION['emaj']['RlbkShowEstimates'] = true;
 		}
 
-		$misc->printHeader('database', 'database', 'emajrollbacks');
+		$misc->printHeader('emajrollback', 'database', 'emajrollbacks');
 
 		if (isset($_REQUEST['asyncRlbk']))
 			// An asynchronous rollback has just been spawned, report the rollback id
@@ -329,6 +360,11 @@
 			'rlbkStatus' => array(
 				'title' => $lang['emajstate'],
 				'field' => field('rlbk_status'),
+				'type'	=> 'callback',
+				'params'=> array(
+					'function' => 'renderRlbkStatusInDetail',
+					'align' => 'center',
+				),
 			),
 			'rlbkStartDateTime' => array(
 				'title' => $lang['emajrlbkstart'],
@@ -538,7 +574,6 @@
 		if ($rlbkSteps->recordCount() > 0) {
 			echo "<h4 style=\"float:left; margin-right:430px\">{$lang['emajrlbkplanning']}\n";
 			echo "&nbsp;&nbsp;<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajrlbkplanninghelp']}\"/>\n";
-			echo "&nbsp;&nbsp;<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajrlbkestimmethodhelp']}\"/>\n";
 			echo "</h4>\n";
 
 			// Button to hide or show estimates columns
@@ -551,6 +586,7 @@
 				$buttonText = $lang['emajshowestimates'];
 			echo "<input type=\"hidden\" name=\"rlbkid\" value=\"{$_REQUEST['rlbkid']}\" />\n";
 			echo "\t\t<input type=\"submit\" name=\"showHideEstimates\" value=\"{$buttonText}\">\n";
+			echo "&nbsp;&nbsp;<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajrlbkestimmethodhelp']}\"/>\n";
 			echo "\t</form>\n";
 			echo "</div>\n";
 

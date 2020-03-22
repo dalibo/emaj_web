@@ -43,7 +43,7 @@ h3 {
 	border-radius: 7px;
 }
 h4 {
-	font-size: 1em;
+	font-size: 1.1em;
 	font-weight: bold;
 	margin-top: 1em;
 	margin-bottom: 0.75em;
@@ -416,7 +416,9 @@ tr td.data1:last-child, tr td.data2:last-child, tr td.data3:last-child {
 	background-color: #f9f9f9;
 	text-align: left;
 }
-.row3, .data3 {background-color: #d4c8a1}
+.row3, .data3 {
+	background-color: #d4c8a1
+}
 td.opbutton1, td.opbutton2 {
 	color: #000000;
 	padding: 2px 6px;
@@ -430,6 +432,18 @@ td.opbutton1 a:hover, td.opbutton2 a:hover {
 }
 td.opbutton1:hover, td.opbutton2:hover {
 	text-decoration: none;
+}
+.dot {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.redbg {
+	background-color: #ff0000;
+}
+.greenbg {
+	background-color: #00dd00;
 }
 a.help {
 	color: #A46600;

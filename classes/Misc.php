@@ -98,12 +98,24 @@
 					break;
 				case 'emajgroup':
 					$vars = array (
+						'url' => 'emajgroups.php',
 						'params' => array (
 							'server' => $_REQUEST['server'],
 							'subject' => 'emajgroup',
 							'action' => $_REQUEST['action'],
 							'database' => $_REQUEST['database'],
 							'group' => $_REQUEST['group'],
+					));
+					break;
+				case 'emajrollback':
+					$vars = array (
+						'url' => 'emajrollbacks.php',
+						'params' => array (
+							'server' => $_REQUEST['server'],
+							'subject' => 'emajrollback',
+							'action' => $_REQUEST['action'],
+							'database' => $_REQUEST['database'],
+							'rlbkid' => $_REQUEST['rlbkid'],
 					));
 					break;
 				default:
@@ -872,7 +884,6 @@
 							'urlvars' => array(
 								'subject' => 'database'
 							),
-#							'icon' => 'Emaj',
 							'icon' => 'EmajIcon',
 							'tree' => false,
 						)
@@ -977,7 +988,7 @@
 
 		/**
 		 * Display a bread crumb trail.
-		 * ... and the buttons to refresh the page and to go to the page bottom
+		 * ... and the button to go to the page bottom
 		 */
 		function printTrail($trail = array()) {
 			global $lang;
@@ -1105,6 +1116,16 @@
 				);
 			}
 			if ($subject == 'group') $done = true;
+
+			if (isset($_REQUEST['rlbkid']) && !$done) {
+				$trail['emajrollback'] = array(
+					'title' => $lang['emajrollback'],
+					'text'  => $_REQUEST['rlbkid'],
+					'url'   => $this->getHREFSubject('emajrollback'),
+					'icon'  => 'EmajRollback'
+				);
+			}
+			if ($subject == 'rollback') $done = true;
 
 			if (!$done && !is_null($subject)) {
 				if (isset($_REQUEST[$subject])) {

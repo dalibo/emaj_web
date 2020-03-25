@@ -837,6 +837,7 @@
 							),
 							'hide' => $emajNotAvail,
 							'icon' => 'EmajGroup',
+							'branch' => true,
 						),
 						'emajconfiguregroups' => array (
 							'title' => $lang['emajgroupsconf'],
@@ -857,6 +858,7 @@
 								'action' => 'list_schemas'
 							),
 							'icon'  => 'Schemas',
+							'branch' => true,
 						),
 						'triggers' => array (
 							'title' => $lang['strtriggers'],
@@ -865,7 +867,6 @@
 								'subject' => 'database'
 							),
 							'icon'  => 'Triggers',
-							'tree' => false,
 						),
 						'emajrollbacks' => array (
 							'title' => $lang['emajrlbkop'],
@@ -876,7 +877,6 @@
 							),
 							'hide' => $emajNotAvail,
 							'icon' => 'EmajRollback',
-							'tree' => false,
 						),
 						'emajenvir' => array (
 							'title' => $lang['emajenvir'],
@@ -885,7 +885,6 @@
 								'subject' => 'database'
 							),
 							'icon' => 'EmajIcon',
-							'tree' => false,
 						)
 					);
 					break;

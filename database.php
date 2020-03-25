@@ -31,13 +31,14 @@
 							$reqvars,
 							field('urlvars', array())
 						),
-			'branch' => url(field('url'),
-							$reqvars,
-							field('urlvars'),
-							array('action' => 'tree')
-						),
+			'branch' => ifempty(field('branch'), '',
+							url(field('url'),
+								$reqvars,
+								field('urlvars'),
+								array('action' => 'tree')
+							)),
 		);
-		
+
 		$misc->printTree($items, $attrs, 'database');
 
 		exit;

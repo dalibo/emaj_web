@@ -116,9 +116,11 @@
 
 			// is it an E-Maj schema ?
 			$isEmajSchema = false;
-			foreach ($schemas as $schema) {
-				if ($schema["nspname"] == $_REQUEST['schema'] && $schema["nsptype"] == 'E') {
-					$isEmajSchema = true;
+			if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
+				foreach ($schemas as $schema) {
+					if ($schema["nspname"] == $_REQUEST['schema'] && $schema["nsptype"] == 'E') {
+						$isEmajSchema = true;
+					}
 				}
 			}
 			// emaj attribute and actions to manage ?

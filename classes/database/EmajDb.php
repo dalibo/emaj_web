@@ -941,6 +941,17 @@ class EmajDb {
 	}
 
 	/**
+	 * Return the list of all existing emaj schemas recorded in the emaj_schema table
+	 */
+	function getEmajSchemasList() {
+		global $data;
+
+		$sql = "SELECT string_agg(sch_name, ',' ORDER BY sch_name) AS schemas_list FROM emaj.emaj_schema";
+
+		return $data->selectField($sql,'schemas_list');
+	}
+
+	/**
 	 * Return all non system schemas but emaj from the current database
 	 * plus all nonexistent schemas but listed in emaj_group_def
 	 */

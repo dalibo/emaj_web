@@ -488,7 +488,7 @@
 	 * Perform tables assignment into a tables group
 	 */
 	function assign_tables_ok() {
-		global $lang, $data, $emajdb;
+		global $lang, $data, $emajdb, $_reload_browser;
 
 	// process the click on the <cancel> button
 		if (isset($_POST['cancel'])) {
@@ -496,14 +496,22 @@
 		} else {
 
 	// process the tables assignment
+			// get the list of emaj_schema before the assignment
+			$emajSchemasBefore = $emajdb->getEmajSchemasList();
+
 			if ($_POST['logdattsp'] == "<{$lang['strnone']}>") $_POST['logdattsp'] = '';
 			if ($_POST['logidxtsp'] == "<{$lang['strnone']}>") $_POST['logidxtsp'] = '';
 			$nbTables = $emajdb->assignTables($_POST['schema'],$_POST['tables'],$_POST['group'],
 								$_POST['priority'], $_POST['logdattsp'], $_POST['logidxtsp'], $_POST['mark']);
-			if ($nbTables >= 0)
+			if ($nbTables >= 0) {
+				// reload the browser only if new emaj schemas have been created
+				$emajSchemasAfter = $emajdb->getEmajSchemasList();
+				if ($emajdb->getEmajSchemasList() <> $emajSchemasBefore)
+					$_reload_browser = true;
 				list_schemas(sprintf($lang['emajdynassigntablesok'], $nbTables, htmlspecialchars($_POST['group'])));
-			else
+			} else {
 				list_schemas($lang['emajmodifygrouperr']);
+			}
 		}
 	}
 
@@ -763,7 +771,7 @@
 	 * Perform tables remove from their tables group
 	 */
 	function remove_tables_ok() {
-		global $lang, $data, $emajdb;
+		global $lang, $data, $emajdb, $_reload_browser;
 
 	// process the click on the <cancel> button
 		if (isset($_POST['cancel'])) {
@@ -771,11 +779,18 @@
 		} else {
 
 	// process the tables removal
+			// get the list of emaj_schema before the removal
+			$emajSchemasBefore = $emajdb->getEmajSchemasList();
+
 			$nbTables = $emajdb->removeTables($_POST['schema'],$_POST['tables'],$_POST['mark']);
-			if ($nbTables >= 0)
+			if ($nbTables >= 0) {
+				// reload the browser only if emaj schemas have been dropped
+				if ($emajdb->getEmajSchemasList() <> $emajSchemasBefore)
+					$_reload_browser = true;
 				list_schemas(sprintf($lang['emajdynremovetablesok'], $nbTables));
-			else
+			} else {
 				list_schemas($lang['emajmodifygrouperr']);
+			}
 		}
 	}
 

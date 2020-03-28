@@ -2399,7 +2399,7 @@
 	 */
 	function import_groups_ok() {
 
-		global $lang, $emajdb, $misc;
+		global $lang, $emajdb, $misc, $_reload_browser;
 
 		// process the click on the <cancel> button
 		if (isset($_POST['cancel'])) {
@@ -2421,6 +2421,7 @@
 				// no error detected, so execute the effective configuration import
 				$nbGroup = $emajdb->importGroupsConfig($_POST['json'], $groupsList);
 				if ($nbGroup >= 0) {
+					$_reload_browser = true;
 					show_groups(sprintf($lang['emajgroupsconfimported'], $nbGroup, $_POST['file']));
 				} else {
 					show_groups('', sprintf($lang['emajgroupsconfimporterr'], $_POST['file']));

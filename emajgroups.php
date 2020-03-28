@@ -431,7 +431,8 @@
 								'action' => 'reset_group',
 								'back' => 'list',
 								'group' => field('group_name'),
-							))))
+							)))),
+					'multiaction' => 'reset_groups',
 				),
 				'comment_group' => array(
 					'content' => $lang['emajsetcomment'],
@@ -474,7 +475,8 @@
 								'action' => 'drop_group',
 								'back' => 'list',
 								'group' => field('group_name'),
-							))))
+							)))),
+					'multiaction' => 'drop_groups',
 				),
 			));
 		};
@@ -1655,6 +1657,71 @@
 	}
 
 	/**
+	 * Prepare drop groups: ask for confirmation
+	 */
+	function drop_groups() {
+		global $misc, $lang;
+
+		if (!isset($_REQUEST['ma'])) {
+			show_groups('',$lang['emajnoselectedgroup']);
+			return;
+		}
+
+		$misc->printHeader('database', 'database','emajgroups');
+
+		$misc->printTitle($lang['emajdropgroups']);
+
+		// build the groups list
+		$groupsList = '';
+		foreach($_REQUEST['ma'] as $v) {
+			$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
+			$groupsList .= $a['group'].', ';
+		}
+		$groupsList = substr($groupsList,0,strlen($groupsList)-2);
+
+		echo "<p>", sprintf($lang['emajconfirmdropgroups'], htmlspecialchars($groupsList)), "</p>\n";
+		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+		echo "<p><input type=\"hidden\" name=\"action\" value=\"drop_groups_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
+		echo $misc->form;
+		echo "<input type=\"submit\" name=\"dropgroups\" value=\"{$lang['strdrop']}\" />\n";
+		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+		echo "</form>\n";
+	}
+
+	/**
+	 * Perform drop groups
+	 */
+	function drop_groups_ok() {
+		global $lang, $emajdb, $_reload_browser;
+
+	// process the click on the <cancel> button
+		if (isset($_POST['cancel'])) {
+			show_groups();
+		} else {
+
+		// Check that all groups are always in IDLE state
+			$groups = explode(', ',$_POST['groups']);
+			foreach($groups as $g) {
+				$group = $emajdb->getGroup($g);
+				// exit the loop in case of error
+				if ($group->fields['group_state'] != 'IDLE') {
+					show_groups('',sprintf($lang['emajcantdropgroups'], htmlspecialchars($_POST['groups'])));
+					exit();
+				}
+			}
+
+		// OK
+			$status = $emajdb->dropGroups($_POST['groups']);
+			if ($status == 0) {
+				$_reload_browser = true;
+				show_groups(sprintf($lang['emajdropgroupsok'], htmlspecialchars($_POST['groups'])));
+			} else
+				show_groups('',sprintf($lang['emajdropgroupserr'], htmlspecialchars($_POST['groups'])));
+		}
+	}
+
+	/**
 	 * Prepare alter group: ask for confirmation
 	 */
 	function alter_group() {
@@ -2784,6 +2851,70 @@
 				} else {
 					show_group('',sprintf($lang['emajresetgrouperr'], htmlspecialchars($_POST['group'])));
 				}
+		}
+	}
+
+	/**
+	 * Prepare reset groups: ask for confirmation
+	 */
+	function reset_groups() {
+		global $misc, $lang;
+
+		if (!isset($_REQUEST['ma'])) {
+			show_groups('',$lang['emajnoselectedgroup']);
+			return;
+		}
+
+		$misc->printHeader('database', 'database','emajgroups');
+
+		$misc->printTitle($lang['emajresetgroups']);
+
+		// build the groups list
+		$groupsList = '';
+		foreach($_REQUEST['ma'] as $v) {
+			$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
+			$groupsList .= $a['group'].', ';
+		}
+		$groupsList = substr($groupsList,0,strlen($groupsList)-2);
+
+		echo "<p>", sprintf($lang['emajconfirmresetgroups'], htmlspecialchars($groupsList)), "</p>\n";
+		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+		echo "<p><input type=\"hidden\" name=\"action\" value=\"reset_groups_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
+		echo $misc->form;
+		echo "<input type=\"submit\" name=\"resetgroups\" value=\"{$lang['strreset']}\" />\n";
+		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+		echo "</form>\n";
+	}
+
+	/**
+	 * Perform reset groups
+	 */
+	function reset_groups_ok() {
+		global $lang, $emajdb;
+
+	// process the click on the <cancel> button
+		if (isset($_POST['cancel'])) {
+			show_groups();
+		} else {
+
+		// Check that all groups are always in IDLE state
+			$groups = explode(', ',$_POST['groups']);
+			foreach($groups as $g) {
+				$group = $emajdb->getGroup($g);
+				// exit the loop in case of error
+				if ($group->fields['group_state'] != 'IDLE') {
+					show_groups('',sprintf($lang['emajcantresetgroups'], htmlspecialchars($_POST['groups'])));
+					exit();
+				}
+			}
+
+		// OK
+			$status = $emajdb->resetGroups($_POST['groups']);
+			if ($status == 0) {
+				show_groups(sprintf($lang['emajresetgroupsok'], htmlspecialchars($_POST['groups'])));
+			} else
+				show_groups('',sprintf($lang['emajresetgroupserr'], htmlspecialchars($_POST['groups'])));
 		}
 	}
 
@@ -4069,8 +4200,14 @@
 		case 'drop_group':
 			drop_group();
 			break;
+		case 'drop_groups':
+			drop_groups();
+			break;
 		case 'drop_group_ok':
 			drop_group_ok();
+			break;
+		case 'drop_groups_ok':
+			drop_groups_ok();
 			break;
 		case 'export_groups':
 			export_groups();
@@ -4102,8 +4239,14 @@
 		case 'reset_group':
 			reset_group();
 			break;
+		case 'reset_groups':
+			reset_groups();
+			break;
 		case 'reset_group_ok':
 			reset_group_ok();
+			break;
+		case 'reset_groups_ok':
+			reset_groups_ok();
 			break;
 		case 'rollback_group':
 			rollback_group();

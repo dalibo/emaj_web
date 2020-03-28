@@ -556,6 +556,13 @@
 	$lang['emajdropgroupok'] = 'Le groupe de tables "%s" a été supprimé.';
 	$lang['emajdropgrouperr'] = 'Erreur lors de la suppression du groupe de tables "%s" !';
 
+	// Groups drop
+	$lang['emajdropgroups'] = 'E-Maj : Supprimer les groupes de tables';
+	$lang['emajconfirmdropgroups'] = 'Etes-vous sûr de vouloir supprimer les groupes de tables "%s" ?';
+	$lang['emajcantdropgroups'] = 'La suppression des groupes de tables "%s" est impossible. Au moins un des groupes est démarré.';
+	$lang['emajdropgroupsok'] = 'Les groupes de tables "%s" ont été supprimés.';
+	$lang['emajdropgroupserr'] = 'Erreur lors de la suppression des groupes de tables "%s" !';
+
 	// Export groups configuration
 	$lang['emajexportgroupsconf'] = 'Exporter une configuration de groupes de tables';
 	$lang['emajexportgroupsconfselect'] = 'Sélectionnez les groupes de tables dont la configuration sera exportée sur un fichier local.';
@@ -655,6 +662,13 @@
 	$lang['emajcantresetgroup'] = 'La réinitialisation du groupe de tables "%s" est impossible. Le groupe est démarré.';
 	$lang['emajresetgroupok'] = 'Le groupe de tables "%s" est réinitialisé.';
 	$lang['emajresetgrouperr'] = 'Erreur lors de la réinitialisation du groupe de tables "%s" !';
+
+	// Groups reset
+	$lang['emajresetgroups'] = 'E-Maj : Réinitialiser des groupes de tables';
+	$lang['emajconfirmresetgroups'] = 'Etes-vous sûr de vouloir réinitialiser les groupe de tables "%s" ?';
+	$lang['emajcantresetgroups'] = 'La réinitialisation des groupes de tables "%s" est impossible. Au moins un groupe est démarré.';
+	$lang['emajresetgroupsok'] = 'Les groupes de tables "%s" ont été réinitialisés.';
+	$lang['emajresetgroupserr'] = 'Erreur lors de la réinitialisation des groupes de tables "%s" !';
 
 	// Set Mark for one or several groups
 	$lang['emajsetamark'] = 'E-Maj : Poser une marque';

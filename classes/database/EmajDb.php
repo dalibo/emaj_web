@@ -1625,6 +1625,32 @@ class EmajDb {
 	}
 
 	/**
+	 * Drops several groups at once
+	 */
+	function dropGroups($groups) {
+		global $data;
+
+		$data->clean($groups);
+
+		// as all groups are dropped the one after the others, build a transaction
+		$status = $data->beginTransaction();
+
+		$groupsA = explode(', ',$groups);
+		foreach($groupsA as $g) {
+			$sql = "SELECT emaj.emaj_drop_group('{$g}') AS nbtblseq";
+			$status = $data->execute($sql);
+			if ($status != 0) {
+				$data->rollbackTransaction();
+				return $status;
+			}
+		}
+
+		$data->endTransaction();
+
+		return $status;
+	}
+
+	/**
 	 * Check that the group can be altered
 	 * If the group is not IDLE, it performs checks on operations that will be performed
 	 * Returns 1 if OK, else 0
@@ -1887,6 +1913,32 @@ class EmajDb {
 		$sql = "SELECT emaj.emaj_reset_group('{$group}') AS nbtblseq";
 
 		return $data->execute($sql);
+	}
+
+	/**
+	 * Resets several groups at once
+	 */
+	function resetGroups($groups) {
+		global $data;
+
+		$data->clean($groups);
+
+		// as all groups are reset the one after the others, build a transaction
+		$status = $data->beginTransaction();
+
+		$groupsA = explode(', ',$groups);
+		foreach($groupsA as $g) {
+			$sql = "SELECT emaj.emaj_reset_group('{$g}')";
+			$status = $data->execute($sql);
+			if ($status != 0) {
+				$data->rollbackTransaction();
+				return $status;
+			}
+		}
+
+		$data->endTransaction();
+
+		return $status;
 	}
 
 	/**

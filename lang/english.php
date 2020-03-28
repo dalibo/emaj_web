@@ -556,6 +556,13 @@
 	$lang['emajdropgroupok'] = 'The tables group "%s" has been dropped.';
 	$lang['emajdropgrouperr'] = 'Error during tables group "%s" drop!';
 
+	// Groups drop
+	$lang['emajdropgroups'] = 'E-Maj: Drop tables groups';
+	$lang['emajconfirmdropgroups'] = 'Are you sure you want to drop the tables groups "%s"?';
+	$lang['emajcantdropgroups'] = 'Dropping the tables groups "%s" is not possible. At least one group is started.';
+	$lang['emajdropgroupsok'] = 'The tables groups "%s" have been dropped.';
+	$lang['emajdropgroupserr'] = 'Error during tables groups "%s" drop!';
+
 	// Export groups configuration
 	$lang['emajexportgroupsconf'] = 'Export a tables groups configuration';
 	$lang['emajexportgroupsconfselect'] = 'Select the tables groups whose configuration will be exported on a local file.';
@@ -655,6 +662,13 @@
 	$lang['emajcantresetgroup'] = 'Reseting the tables group "%s" is not possible. The group is started.';
 	$lang['emajresetgroupok'] = 'The tables group "%s" has been reset.';
 	$lang['emajresetgrouperr'] = 'Error during tables group "%s" reset!';
+
+	// Groups reset
+	$lang['emajresetgroups'] = 'E-Maj: Reset tables groups';
+	$lang['emajconfirmresetgroups'] = 'Are you sure you want to reset the tables groups "%s"?';
+	$lang['emajcantresetgroups'] = 'Reseting the tables groups "%s" is not possible. At least one group is started.';
+	$lang['emajresetgroupsok'] = 'The tables group "%s" have been reset.';
+	$lang['emajresetgroupserr'] = 'Error during tables groups "%s" reset!';
 
 	// Set Mark for one or several groups
 	$lang['emajsetamark'] = 'E-Maj: Set a mark';

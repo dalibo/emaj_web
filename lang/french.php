@@ -290,6 +290,13 @@
 	$lang['emajtooold'] = 'Désolé, cette version d\'E-Maj (%s) est trop ancienne. La version minimum supportée par Emaj_web est %s.';
 	$lang['emajversionmorerecent'] = 'Une version plus récente d\'E-Maj existe. Contactez votre administrateur des bases de données.';
 	$lang['emajwebversionmorerecent'] = 'Une version plus récente d\'Emaj_web existe probablement. Contactez votre administrateur des bases de données.';
+	$lang['emajextensionmngt'] = 'Gestion de l\'extension "emaj"';
+	$lang['emajdropextension'] = 'Supprimer l\'extension';
+	$lang['emajdropextensiongroupsexist'] = 'Pour supprimer l\'extension "emaj", supprimez les groupes de tables au préalable.';
+	$lang['emajdropemajextension'] = 'Supprimer l\'extension "emaj"';
+	$lang['emajconfirmdropextension'] = 'Confirmer la suppression de l\'extension "emaj"';
+	$lang['emajdropextensionok'] = 'L\'extension "emaj" a été supprimée.';
+	$lang['emajdropextensionerr'] = 'Erreur lors de la suppression de l\'extension "emaj".';
 	$lang['emajdiskspace'] = 'Place disque occupée par l\'environnement E-Maj : %s de la base de données courante.';
 	$lang['emajchecking'] = 'Intégrité de l\'environnement E-Maj';
 	$lang['emajdiagnostics'] = 'Diagnostics';

@@ -290,6 +290,13 @@
 	$lang['emajtooold'] = 'Sorry, this E-Maj version (%s) is too old. The minimum version supported by Emaj_web is %s.';
 	$lang['emajversionmorerecent'] = 'A more recent E-Maj version exists. Contact your database administrator.';
 	$lang['emajwebversionmorerecent'] = 'A more recent Emaj_web version probably exists. Contact your database administrator.';
+	$lang['emajextensionmngt'] = '"emaj" extension management';
+	$lang['emajdropextension'] = 'Drop extension';
+	$lang['emajdropextensiongroupsexist'] = 'To drop the "emaj" extension, first drop the tables groups.';
+	$lang['emajdropemajextension'] = 'Drop the "emaj" extension';
+	$lang['emajconfirmdropextension'] = 'Confirm the "emaj" extension drop';
+	$lang['emajdropextensionok'] = 'The "emaj" extension has been dropped.';
+	$lang['emajdropextensionerr'] = 'Error while dropping the "emaj" extension.';
 	$lang['emajdiskspace'] = 'Disk space used by the E-Maj environment: %s of the current database.';
 	$lang['emajchecking'] = 'E-Maj environment consistency';
 	$lang['emajdiagnostics'] = 'Diagnostics';

@@ -25,6 +25,90 @@
 		return "<img src=\"".$misc->icon($icon)."\" style=\"vertical-align:bottom;\" />";
 	}
 
+	function displayOneParameter($param, $label, $info) {
+	// This function displays the value of a sinigle parameter in the parameter section of the main page.
+		global $lang, $misc, $emajdb, $paramValue, $defValParam;
+
+		echo "\t<div class=\"form-param-label\">{$label}</div>\n";
+		echo "\t<div class=\"form-param-info\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$info}\"/></div>";
+
+		if (isset($paramValue[$param])) {
+			$value = $paramValue[$param];
+			// Specific adjustments for some parameters
+			if ($param == 'dblink_user_password' && $value == "<masked data>") {
+//TODO: better handle the case: for emaj_viewer, hide the entire row ?
+//								for emaj_adm, add an eye to show the string value ?
+				// Hide the dblink connection string for emaj_viewer only roles
+				$value = htmlspecialchars($value);
+			}
+			if ($param == 'alter_log_table') {
+				// Add a line feed between ADD COLUMN directives
+				$value = preg_replace('/,(\s*ADD\s+COLUMN)/i', ',<br>$1', $value);
+			}
+			if (preg_match("/fixed_|avg_/",$param)) {
+				// Drop unsignificant zeros on the left and add a unit to cost parameters
+				$value = preg_replace('/^0+/','', $value) . " µs";
+			}
+			echo "<div class=\"form-param-value\">{$value}</div>\n";
+		} else {
+			// The parameter has its default value
+			echo "<div class=\"form-param-def-value\">${defValParam[$param]}&nbsp<sup>(def)</sup></div>\n";
+		}
+
+//		if ($emajdb->isEmaj_Adm()) {
+////TODO: Modify button to insert
+//			echo "<div class=\"form-button-param\">"
+//				. $lang['strupdate']
+//				. "</div>\n";
+//		} else {
+			echo "<div class=\"form-button-param\"></div>\n";
+//		}
+	}
+
+	/**
+	 * Prepare the extension drop: ask for confirmation
+	 */
+	function drop_extension() {
+		global $misc, $lang;
+
+		$misc->printHeader('database', 'database', 'emajenvir');
+
+		$misc->printTitle($lang['emajdropemajextension']);
+
+		echo "<p>{$lang['emajconfirmdropextension']}</p>\n";
+		echo "<form action=\"emajenvir.php\" method=\"post\">\n";
+		echo "<p><input type=\"hidden\" name=\"action\" value=\"drop_extension_ok\" />\n";
+		echo $misc->form;
+		echo "<input type=\"submit\" name=\"dropextension\" value=\"{$lang['strok']}\" />\n";
+		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+		echo "</form>\n";
+	}
+
+	/**
+	 * Perform the extension drop
+	 */
+	function drop_extension_ok() {
+		global $lang, $emajdb, $_reload_browser;
+
+		// process the click on the <cancel> button
+		if (isset($_POST['cancel'])) {
+			doDefault();
+		} else {
+			// recheck that emaj is always here and that no tables group exist before dropping the extension
+			if ($emajdb->isEnabled() && $emajdb->getNbGroups() == 0) {
+				$status = $emajdb->dropEmajExtension();
+				if ($status == 0) {
+					$_reload_browser = true;
+					doDefault($lang['emajdropextensionok']);
+				} else {
+					doDefault('', $lang['emajdropextensionerr']);
+				}
+			} else {
+				doDefault('', $lang['emajdropextensionerr']);
+			}
+		}
+	}
+
 	/**
 	 * Export a parameters configuration
 	 */
@@ -199,7 +283,7 @@
 	 * Show the E-Maj environment characteristics of the database
 	 */
 	function doDefault($msg = '', $errMsg = '') {
-		global $misc, $lang, $emajdb;
+		global $misc, $lang, $data, $emajdb;
 		global $oldest_supported_emaj_version_num, $oldest_supported_emaj_version, $last_known_emaj_version_num;
 		global $paramValue, $defValParam;
 
@@ -226,46 +310,6 @@
 			}
 		}
 
-	function displayOneParameter($param, $label, $info) {
-	// This function displays the value of 1 parameter.
-		global $lang, $misc, $emajdb, $paramValue, $defValParam;
-
-		echo "\t<div class=\"form-param-label\">{$label}</div>\n";
-
-		echo "\t<div class=\"form-param-info\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$info}\"/></div>";
-
-		if (isset($paramValue[$param])) {
-			$value = $paramValue[$param];
-			// Specific adjustments for some parameters
-			if ($param == 'dblink_user_password' && $value == "<masked data>") {
-//TODO: better handle the case: for emaj_viewer, hide the entire row ?
-//								for emaj_adm, add an eye to show the string value ?
-				// Hide the dblink connection string for emaj_viewer only roles
-				$value = htmlspecialchars($value);
-			}
-			if ($param == 'alter_log_table') {
-				// Add a line feed between ADD COLUMN directives
-				$value = preg_replace('/,(\s*ADD\s+COLUMN)/i', ',<br>$1', $value);
-			}
-			if (preg_match("/fixed_|avg_/",$param)) {
-				// Drop unsignificant zeros on the left and add a unit to cost parameters
-				$value = preg_replace('/^0+/','', $value) . " µs";
-			}
-			echo "<div class=\"form-param-value\">{$value}</div>\n";
-		} else {
-			// The parameter has its default value
-			echo "<div class=\"form-param-def-value\">${defValParam[$param]}&nbsp<sup>(def)</sup></div>\n";
-		}
-
-		if ($emajdb->isEmaj_Adm()) {
-//TODO: Modify button to insert
-			echo "<div class=\"form-button-param\">"
-//				. $lang['strupdate']
-				. "</div>\n";
-		} else {
-			echo "<div class=\"form-button-param\"></div>\n";
-		}
-	}
 		//
 		// Version section
 		//
@@ -277,7 +321,9 @@
 		echo "<p>{$lang['emajpgversion']}{$pgVersion[1]}</p>\n";
 
 		if ($emajOK) {
-			if ($emajdb->isExtension()) {
+			// display the E-Maj version
+			$isExtension = $emajdb->isExtension();
+			if ($isExtension) {
 				$installationMode = $lang['emajasextension'];
 			} else {
 				$installationMode = $lang['emajasscript'];
@@ -294,6 +340,31 @@
 					if ($emajdb->getNumEmajVersion() > $last_known_emaj_version_num) {
 						echo "<p>{$lang['emajwebversionmorerecent']}</p>\n";
 					}
+				}
+			}
+		}
+
+		if ($emajOK) {
+		//
+		// Extension management section
+		//
+			if (($data->isSuperUser($server_info['username'])) && $isExtension) {
+
+				echo "<hr/>\n";
+				$misc->printTitle($lang['emajextensionmngt']);
+
+				// extension management: drop
+				if ($emajdb->getNbGroups() > 0) {
+					echo "<p>" . $lang['emajdropextensiongroupsexist'] . "</p>\n";
+				} else {
+					// form to drop the extension
+//					echo "<div style=\"float:left; margin:20px\">\n";
+					echo "<div style=\"margin:20px\">\n";
+					echo "\t<form name=\"dropextension\" id=\"dropextension\" enctype=\"multipart/form-data\" method=\"POST\"";
+					echo " action=\"emajenvir.php?action=drop_extension&amp;{$misc->href}\">\n";
+					echo "\t\t<input type=\"submit\" name=\"dropextensionbutton\" value=\"{$lang['emajdropextension']}\">\n";
+					echo "\t</form>\n";
+					echo "</div>\n";
 				}
 			}
 		}
@@ -423,6 +494,12 @@
 	$misc->printBody();
 
 	switch ($action) {
+		case 'drop_extension':
+			drop_extension();
+			break;
+		case 'drop_extension_ok':
+			drop_extension_ok();
+			break;
 		case 'import_parameters':
 			import_parameters();
 			break;

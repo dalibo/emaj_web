@@ -78,9 +78,9 @@ class EmajDb {
 		$this->emaj_adm = false;
 		$server_info = $misc->getServerInfo();
 		// if the current role is superuser, he is considered as E-maj administration
-		if ($data->isSuperUser($server_info['username'])){
+		if ($data->isSuperUser($server_info['username'])) {
 			$this->emaj_adm = true;
-		}else{
+		} else {
 		// otherwise, is the current role member of emaj_adm role ?
 			$sql = "SELECT CASE WHEN pg_catalog.pg_has_role('emaj_adm','USAGE') THEN 1 ELSE 0 END AS is_emaj_adm";
 			$this->emaj_adm = $data->selectField($sql,'is_emaj_adm');
@@ -100,10 +100,10 @@ class EmajDb {
 		global $data, $misc;
 
 		$this->emaj_viewer = false;
-		if ($this->emaj_adm){
+		if ($this->emaj_adm) {
 		// emaj_adm role is also considered as E-maj viewer
 			$this->emaj_viewer = true;
-		}else{
+		} else {
 		// otherwise, is the current role member of emaj_viewer role ?
 			$sql = "SELECT CASE WHEN pg_catalog.pg_has_role('emaj_viewer','USAGE') THEN 1 ELSE 0 END AS is_emaj_viewer";
 			$this->emaj_viewer = $data->selectField($sql,'is_emaj_viewer');
@@ -167,6 +167,37 @@ class EmajDb {
 ////			return 0;
 ////		}
 ////	}
+
+	/**
+	 * Drop the emaj extension
+	 * The emaj_adm and emaj_viewer roles are not dropped as they can bu used in other databases
+	 */
+	function dropEmajExtension() {
+		global $data;
+
+		$sql = "DO LANGUAGE plpgsql $$
+				BEGIN
+					PERFORM emaj.emaj_disable_protection_by_event_triggers();
+					DROP EXTENSION IF EXISTS emaj CASCADE;
+					DROP SCHEMA IF EXISTS emaj CASCADE;
+					DROP FUNCTION IF EXISTS public._emaj_protection_event_trigger_fnct() CASCADE;
+					RETURN;
+				END;$$;";
+		$status = $data->execute($sql);
+		if ($status == 0) {
+			// the extension has been dropped, so reset all emajdb cached variables
+			$this->emaj_version = '?';
+			$this->emaj_version_num = 0;
+			$this->enabled = null;
+			$this->accessible = null;
+			$this->emaj_adm = null;
+			$this->emaj_viewer = null;
+			$this->dblink_usable = null;
+			$this->dblink_schema = null;
+			$this->asyncRlbkUsable = null;
+		}
+		return $status;
+	}
 
 	/**
 	 * Determines whether or not a dblink connection can be used for rollbacks (not necessarily for this user).

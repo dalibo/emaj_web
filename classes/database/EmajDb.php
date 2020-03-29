@@ -806,7 +806,7 @@ class EmajDb {
 		global $data;
 
 		$data->clean($groups);
-		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 
 		$sql = "SELECT emaj.emaj_export_groups_configuration({$groupsArray}) AS groups_configuration";
 		return $data->selectField($sql,'groups_configuration');
@@ -820,7 +820,7 @@ class EmajDb {
 
 		$data->clean($groupsConfig);
 		$data->clean($groups);
-		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 
 		// The tables groups configuration import prepare step is inserted into a transaction,
 		//   so that it can be properly canceled if errors are detected
@@ -1525,7 +1525,7 @@ class EmajDb {
 		global $data, $lang;
 
 		$data->clean($group);
-		$groupsArray="ARRAY['".str_replace(', ',"','",$group)."']";
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$group)."']";
 
 		$sql = "SELECT chk_severity,
 				CASE chk_msg_type
@@ -1559,7 +1559,7 @@ class EmajDb {
 		global $data, $lang;
 
 		$data->clean($groups);
-		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 
 		$sql = "SELECT chk_severity,
 				CASE chk_msg_type
@@ -1673,23 +1673,12 @@ class EmajDb {
 		global $data;
 
 		$data->clean($groups);
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 
-		// as all groups are dropped the one after the others, build a transaction
-		$status = $data->beginTransaction();
+		$sql = "SELECT emaj.emaj_drop_group(group_name) FROM emaj.emaj_group
+				  WHERE group_name = ANY ({$groupsArray})";
 
-		$groupsA = explode(', ',$groups);
-		foreach($groupsA as $g) {
-			$sql = "SELECT emaj.emaj_drop_group('{$g}') AS nbtblseq";
-			$status = $data->execute($sql);
-			if ($status != 0) {
-				$data->rollbackTransaction();
-				return $status;
-			}
-		}
-
-		$data->endTransaction();
-
-		return $status;
+		return $data->execute($sql);
 	}
 
 	/**
@@ -1769,7 +1758,7 @@ class EmajDb {
 
 		$data->clean($groups);
 		$data->clean($mark);
-		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 
 		if ($mark == '') {
 			$sql = "SELECT emaj.emaj_alter_groups({$groupsArray}) AS nbtblseq";
@@ -1803,7 +1792,7 @@ class EmajDb {
 		global $data;
 
 		$data->clean($groups);
-		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 		$data->clean($mark);
 
 		if ($mark == '' or $mark == 'EMAJ_LAST_MARK') {
@@ -1892,7 +1881,7 @@ class EmajDb {
 		global $data;
 
 		$data->clean($groups);
-		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 		$data->clean($mark);
 
 		if ($resetLog){
@@ -1933,7 +1922,7 @@ class EmajDb {
 		global $data;
 
 		$data->clean($groups);
-		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 		$data->clean($mark);
 			if ($mark == ""){
 			$sql = "SELECT emaj.emaj_stop_groups({$groupsArray}) AS nbtblseq";
@@ -1964,23 +1953,12 @@ class EmajDb {
 		global $data;
 
 		$data->clean($groups);
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 
-		// as all groups are reset the one after the others, build a transaction
-		$status = $data->beginTransaction();
+		$sql = "SELECT emaj.emaj_reset_group(group_name) FROM emaj.emaj_group
+				  WHERE group_name = ANY ({$groupsArray})";
 
-		$groupsA = explode(', ',$groups);
-		foreach($groupsA as $g) {
-			$sql = "SELECT emaj.emaj_reset_group('{$g}')";
-			$status = $data->execute($sql);
-			if ($status != 0) {
-				$data->rollbackTransaction();
-				return $status;
-			}
-		}
-
-		$data->endTransaction();
-
-		return $status;
+		return $data->execute($sql);
 	}
 
 	/**
@@ -2037,7 +2015,7 @@ class EmajDb {
 		global $data;
 
 		$data->clean($groups);
-		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 		$data->clean($mark);
 		$data->clean($comment);
 
@@ -2257,7 +2235,7 @@ class EmajDb {
 		$data->clean($groups);
 		$data->clean($mark);
 
-		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 		$firstGroup = substr($groups, 0, strpos($groups.',', ','));
 
 		// look at the alter group operations executed after the mark
@@ -2351,7 +2329,7 @@ class EmajDb {
 		$data->clean($psqlExe);
 		$data->clean($tempDir);
 
-		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 
 		// Initialize the rollback operation and get its rollback id
 		$isL = $isLogged ? 'true' : 'false';
@@ -2408,7 +2386,7 @@ class EmajDb {
 		global $data;
 
 		$data->clean($groups);
-		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 
 // Attention, this statement needs postgres 8.4+, because of array_agg() function use
 		if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
@@ -2489,7 +2467,7 @@ class EmajDb {
 		global $data;
 
 		$data->clean($groups);
-		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 		$data->clean($mark);
 
 		$nbGroups = substr_count($groupsArray,',') + 1;
@@ -2537,7 +2515,7 @@ class EmajDb {
 		global $data;
 
 		$data->clean($groups);
-		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 		$data->clean($mark);
 
 		if ($isLogged){
@@ -2557,7 +2535,7 @@ class EmajDb {
 		global $data;
 
 		$data->clean($groups);
-		$groupsArray="ARRAY['".str_replace(', ',"','",$groups)."']";
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 		$data->clean($mark);
 
 		if ($isLogged){

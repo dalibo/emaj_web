@@ -278,8 +278,9 @@
 	$lang['emajfiltershelp'] = 'Afficher/cacher les filtres. Les filtres sur le contenu des colonnes peuvent contenir des chaînes de caractères (abc), des nombres (123), des conditions d\'inégalité (>= 1000), des expressions rationnelles (/^ABC\d\d/), des conditions multiples avec les opérateurs \'and\', \'or\' ou \'!\'.';
 
 	// E-Maj environment
-	$lang['emajextnotavailable'] = 'Le logiciel E-Maj n\'est pas installé sur cette instance PostgreSQL. Contactez votre administrateur des bases de données.';
-	$lang['emajextnotcreated'] = 'L\'extension emaj n\'est pas créée dans cette base de données. Contactez votre administrateur des bases de données.';
+	$lang['emajextnotavailable'] = 'Le logiciel E-Maj n\'est pas installé sur cette instance PostgreSQL.';
+	$lang['emajextnotcreated'] = 'L\'extension emaj n\'est pas créée dans cette base de données.';
+	$lang['emajcontactdba'] = 'Contactez votre administrateur des bases de données.';
 	$lang['emajnogrant'] = 'Votre rôle de connexion n\'a pas les droits d\'utilisation d\'E-Maj. Utilisez un autre rôle ou contactez votre administrateur des bases de données.';
 	$lang['emajcharacteristics'] = 'Caractéristiques de l\'environnement E-Maj';
 	$lang['emajversions'] = 'Versions';
@@ -291,6 +292,10 @@
 	$lang['emajversionmorerecent'] = 'Une version plus récente d\'E-Maj existe. Contactez votre administrateur des bases de données.';
 	$lang['emajwebversionmorerecent'] = 'Une version plus récente d\'Emaj_web existe probablement. Contactez votre administrateur des bases de données.';
 	$lang['emajextensionmngt'] = 'Gestion de l\'extension "emaj"';
+	$lang['emajcreateextension'] = 'Créer l\'extension';
+	$lang['emajcreateemajextension'] = 'Créer l\'extension "emaj"';
+	$lang['emajcreateextensionok'] = 'L\'extension "emaj" a été créée.';
+	$lang['emajcreateextensionerr'] = 'Erreur lors de la création de l\'extension "emaj".';
 	$lang['emajdropextension'] = 'Supprimer l\'extension';
 	$lang['emajdropextensiongroupsexist'] = 'Pour supprimer l\'extension "emaj", supprimez les groupes de tables au préalable.';
 	$lang['emajdropemajextension'] = 'Supprimer l\'extension "emaj"';

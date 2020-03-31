@@ -278,8 +278,9 @@
 	$lang['emajfiltershelp'] = 'Display/hide filters. Filters on the columns content may contain character strings (abc), numbers (123), inequality conditions (>= 1000), regular expressions (/^ABC\d\d/), multiple conditions with \'and\', \'or\', \'!\' operators.';
 
 	// E-Maj environment
-	$lang['emajextnotavailable'] = 'The E-Maj software is not installed on this PostgreSQL instance. Contact your database administrator.';
-	$lang['emajextnotcreated'] = 'The emaj extension is not created in this database. Contact your database administrator.';
+	$lang['emajextnotavailable'] = 'The E-Maj software is not installed on this PostgreSQL instance.';
+	$lang['emajextnotcreated'] = 'The emaj extension is not created in this database.';
+	$lang['emajcontactdba'] = 'Contact your database administrator.';
 	$lang['emajnogrant'] = 'Your connection role has no E-Maj rights. Use another role or contact your database administrator.';
 	$lang['emajcharacteristics'] = 'E-Maj environment characteristics';
 	$lang['emajversions'] = 'Versions';
@@ -291,6 +292,10 @@
 	$lang['emajversionmorerecent'] = 'A more recent E-Maj version exists. Contact your database administrator.';
 	$lang['emajwebversionmorerecent'] = 'A more recent Emaj_web version probably exists. Contact your database administrator.';
 	$lang['emajextensionmngt'] = '"emaj" extension management';
+	$lang['emajcreateextension'] = 'Create extension';
+	$lang['emajcreateemajextension'] = 'Create the "emaj" extension';
+	$lang['emajcreateextensionok'] = 'The "emaj" extension has been created.';
+	$lang['emajcreateextensionerr'] = 'Error while creating the "emaj" extension.';
 	$lang['emajdropextension'] = 'Drop extension';
 	$lang['emajdropextensiongroupsexist'] = 'To drop the "emaj" extension, first drop the tables groups.';
 	$lang['emajdropemajextension'] = 'Drop the "emaj" extension';

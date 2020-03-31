@@ -66,6 +66,64 @@
 	}
 
 	/**
+	 * Prepare the extension creation: ask for the version and the confirmation
+	 */
+	function create_extension() {
+		global $misc, $lang, $emajdb;
+
+		$misc->printHeader('database', 'database', 'emajenvir');
+
+		$misc->printTitle($lang['emajcreateemajextension']);
+
+		$availableVersions = $emajdb->getAvailableExtensionVersions();
+
+		echo "<form action=\"emajenvir.php\" method=\"post\">\n";
+		echo "<p><input type=\"hidden\" name=\"action\" value=\"create_extension_ok\" />\n";
+		echo $misc->form;
+
+		if ($availableVersions->recordCount() == 1) {
+			// a single version is available, so just display the information
+			$rec = $availableVersions->MoveFirst();
+			echo "<p>{$lang['emajversion']}{$rec['version']}</p>\n";
+			echo "<p><input type=\"hidden\" name=\"version\" value=\"". htmlspecialchars($rec['version']) . "\" />\n";
+		} else {
+			// several versions are available, so display a select box so that the user can choose the version to install
+			echo "<p>{$lang['emajversion']}<select name=\"version\" id=\"version\">\n";
+			foreach($availableVersions as $v)
+				echo "\t<option value=\"", htmlspecialchars($v['version']), "\" >", htmlspecialchars($v['version']), "</option>\n";
+			echo "</select></p>\n";
+		}
+		echo "<input type=\"submit\" name=\"createextension\" value=\"{$lang['strok']}\" />\n";
+		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+		echo "</form>\n";
+	}
+
+	/**
+	 * Perform the extension creation
+	 */
+	function create_extension_ok() {
+		global $lang, $emajdb, $_reload_browser;
+
+		// process the click on the <cancel> button
+		if (isset($_POST['cancel'])) {
+			doDefault();
+		} else {
+			// recheck that emaj does not exist
+			if (! $emajdb->isEnabled()) {
+				$status = $emajdb->createEmajExtension($_POST['version']);
+				if ($status == 0) {
+					$_reload_browser = true;
+					doDefault($lang['emajcreateextensionok']);
+				} else {
+					doDefault('', $lang['emajcreateextensionerr']);
+				}
+			} else {
+				doDefault('', $lang['emajcreateextensionerr']);
+			}
+		}
+	}
+
+	/**
 	 * Prepare the extension drop: ask for confirmation
 	 */
 	function drop_extension() {
@@ -291,25 +349,6 @@
 
 		$misc->printMsg($msg,$errMsg);
 
-		$emajOK = 1;
-
-		// check if E-Maj is installed in the current database
-		if (! $emajdb->isEnabled()) {
-			// emaj is not installed, check if the extension is available
-			if (! $emajdb->isExtensionAvailable()) {
-				echo "<p>{$lang['emajextnotavailable']}</p>\n";
-			} else {
-				echo "<p>{$lang['emajextnotcreated']}</p>\n";
-			}
-			$emajOK= 0;
-		} else {
-			// emaj is installed, check that the user has enought rights to continue
-			if (! $emajdb->isAccessible()) {
-				echo "<p>{$lang['emajnogrant']}</p>\n";
-				$emajOK= 0;
-			}
-		}
-
 		//
 		// Version section
 		//
@@ -320,8 +359,29 @@
 		preg_match('/PostgreSQL (.*)/',$server_info['platform'], $pgVersion);
 		echo "<p>{$lang['emajpgversion']}{$pgVersion[1]}</p>\n";
 
-		if ($emajOK) {
-			// display the E-Maj version
+		// check if E-Maj is installed in the current database
+		$isEnabled = $emajdb->isEnabled();
+		if (! $isEnabled) {
+			// emaj is not installed, check if the extension is available
+			if ($emajdb->isExtensionAvailable()) {
+				// the extension just needs a CREATE EXTENSION, by a superuser
+				if ($data->isSuperUser($server_info['username'])) {
+					echo "<p>{$lang['emajversion']}{$lang['emajextnotcreated']}</p>\n";
+				} else {
+					echo "<p>{$lang['emajversion']}{$lang['emajextnotcreated']} {$lang['emajcontactdba']}</p>\n";
+					return;
+				}
+			} else {
+				echo "<p>{$lang['emajversion']}{$lang['emajextnotavailable']} {$lang['emajcontactdba']}</p>\n";
+				return;
+			}
+		} else {
+			// emaj is installed, check that the user has enought rights to continue
+			if (! $emajdb->isAccessible()) {
+				echo "<p>{$lang['emajnogrant']}</p>\n";
+				return;
+			}
+			// OK, nom display the E-Maj version
 			$isExtension = $emajdb->isExtension();
 			if ($isExtension) {
 				$installationMode = $lang['emajasextension'];
@@ -331,7 +391,7 @@
 			echo "<p>{$lang['emajversion']}{$emajdb->getEmajVersion()} ({$installationMode})</p>\n";
 			if ($emajdb->getNumEmajVersion() < $oldest_supported_emaj_version_num) {
 				echo "<p>" . sprintf($lang['emajtooold'],$emajdb->getEmajVersion(),$oldest_supported_emaj_version) . "</p>\n";
-				$emajOK= 0;
+				return;
 			} else {
 				if ($emajdb->getNumEmajVersion() <> 999999) {
 					if ($emajdb->getNumEmajVersion() < $last_known_emaj_version_num) {
@@ -344,38 +404,52 @@
 			}
 		}
 
-		if ($emajOK) {
+		if (($data->isSuperUser($server_info['username']))) {
 		//
 		// Extension management section
 		//
-			if (($data->isSuperUser($server_info['username'])) && $isExtension) {
-
+			if (! $isEnabled || $isExtension) {
 				echo "<hr/>\n";
 				$misc->printTitle($lang['emajextensionmngt']);
+			}
 
-				// extension management: drop
-				if ($emajdb->getNbGroups() > 0) {
-					echo "<p>" . $lang['emajdropextensiongroupsexist'] . "</p>\n";
-				} else {
-					// form to drop the extension
-//					echo "<div style=\"float:left; margin:20px\">\n";
-					echo "<div style=\"margin:20px\">\n";
-					echo "\t<form name=\"dropextension\" id=\"dropextension\" enctype=\"multipart/form-data\" method=\"POST\"";
-					echo " action=\"emajenvir.php?action=drop_extension&amp;{$misc->href}\">\n";
-					echo "\t\t<input type=\"submit\" name=\"dropextensionbutton\" value=\"{$lang['emajdropextension']}\">\n";
-					echo "\t</form>\n";
-					echo "</div>\n";
+			if (! $isEnabled) {
+				// the extension is not yet created
+				// form to create the extension
+				echo "<div style=\"margin:20px\">\n";
+				echo "\t<form name=\"createextension\" id=\"createextension\" enctype=\"multipart/form-data\" method=\"POST\"";
+				echo " action=\"emajenvir.php?action=create_extension&amp;{$misc->href}\">\n";
+				echo "\t\t<input type=\"submit\" name=\"creatextensionbutton\" value=\"{$lang['emajcreateextension']}\">\n";
+				echo "\t</form>\n";
+				echo "</div>\n";
+
+			} else {
+
+				if ($isExtension) {
+				// emaj exists as an extension
+					if ($emajdb->getNbGroups() > 0) {
+						echo "<p>" . $lang['emajdropextensiongroupsexist'] . "</p>\n";
+					} else {
+						// form to drop the extension
+//						echo "<div style=\"float:left; margin:20px\">\n";
+						echo "<div style=\"margin:20px\">\n";
+						echo "\t<form name=\"dropextension\" id=\"dropextension\" enctype=\"multipart/form-data\" method=\"POST\"";
+						echo " action=\"emajenvir.php?action=drop_extension&amp;{$misc->href}\">\n";
+						echo "\t\t<input type=\"submit\" name=\"dropextensionbutton\" value=\"{$lang['emajdropextension']}\">\n";
+						echo "\t</form>\n";
+						echo "</div>\n";
+					}
 				}
 			}
 		}
 
-		if ($emajOK) {
+		if ($isEnabled) {
 		//
 		// General characteristics of the E-Maj environment
 		//
-			echo "<hr/>\n";
-			$misc->printTitle($lang['emajcharacteristics']);
 			if ($emajdb->isEmaj_Adm()) {
+				echo "<hr/>\n";
+				$misc->printTitle($lang['emajcharacteristics']);
 				echo "<p>".sprintf($lang['emajdiskspace'],$emajdb->getEmajSize())."</p>\n";
 			}
 
@@ -478,7 +552,6 @@
 				echo "\t\t<input type=\"submit\" name=\"importButton\" value=\"${lang['strimport']}\">\n";
 				echo "\t</form>\n";
 				echo "</div>\n";
-
 			}
 		}
 	}
@@ -494,6 +567,12 @@
 	$misc->printBody();
 
 	switch ($action) {
+		case 'create_extension':
+			create_extension();
+			break;
+		case 'create_extension_ok':
+			create_extension_ok();
+			break;
 		case 'drop_extension':
 			drop_extension();
 			break;

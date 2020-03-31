@@ -139,11 +139,24 @@ class EmajDb {
 		return 0;
 	}
 
+	/**
+	 * Return the E-Maj extension versions available for the instance.
+	 */
+	function getAvailableExtensionVersions() {
+		global $data;
+
+		$sql = "SELECT version FROM pg_catalog.pg_available_extension_versions
+				  WHERE name = 'emaj' AND NOT installed
+				  ORDER BY version DESC";
+
+		return $data->selectSet($sql);
+	}
+
 ////	/**
 ////	 * Return the installed E-Maj extension version.
 ////	 */
 ////	function getExtensionVersion() {
-////		global $data,;
+////		global $data;
 ////
 ////		$this->extension_installed = 0;
 ////		$this->extension_version ='';
@@ -167,6 +180,44 @@ class EmajDb {
 ////			return 0;
 ////		}
 ////	}
+
+	/**
+	 * Create the emaj extension
+	 */
+	function createEmajExtension($version) {
+		global $data, $misc;
+
+		$data->clean($version);
+
+		if ($version !== null && $version <> '')
+			$version = "VERSION '{$version}'";
+		else
+			$version = '';
+
+		$server_info = $misc->getServerInfo();
+		if ($server_info["pgVersion"] < 9.6) {
+			$sql = "CREATE EXTENSION IF NOT EXISTS dblink;
+					CREATE EXTENSION IF NOT EXISTS btree_gist;
+					CREATE EXTENSION emaj {$version};";
+		} else {
+			$sql = "CREATE EXTENSION emaj {$version};";
+		}
+
+		$status = $data->execute($sql);
+		if ($status == 0) {
+			// the extension has been created, so reset all emajdb cached variables
+			$this->emaj_version = '?';
+			$this->emaj_version_num = 0;
+			$this->enabled = null;
+			$this->accessible = null;
+			$this->emaj_adm = null;
+			$this->emaj_viewer = null;
+			$this->dblink_usable = null;
+			$this->dblink_schema = null;
+			$this->asyncRlbkUsable = null;
+		}
+		return $status;
+	}
 
 	/**
 	 * Drop the emaj extension

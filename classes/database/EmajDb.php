@@ -140,7 +140,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Return the E-Maj extension versions available for the instance.
+	 * Returns the E-Maj extension versions available in the instance for a CREATE EXTENSION.
 	 */
 	function getAvailableExtensionVersions() {
 		global $data;
@@ -152,37 +152,35 @@ class EmajDb {
 		return $data->selectSet($sql);
 	}
 
-////	/**
-////	 * Return the installed E-Maj extension version.
-////	 */
-////	function getExtensionVersion() {
-////		global $data;
-////
-////		$this->extension_installed = 0;
-////		$this->extension_version ='';
-////		$sql = "SELECT extversion AS version FROM pg_catalog.pg_extension WHERE extname = 'emaj';";
-////		$rs = $data->selectSet($sql);
-////		if ($rs->recordCount() == 1) {
-////			$this->extension_installed = 1;
-////			$this->extension_version = $rs->fields['version'];
-////		}
-////		return $this->extension_installed;
-////	}
+	/**
+	 * Returns a boolean indicating whether one or several versions of the E-Maj extension are available for an ALTER EXTENSION UPDATE.
+	 */
+	function areThereVersionsToUpdate() {
+		global $data;
 
-////	/**
-////	 * Determines whether or not the installed emaj version is greater or equal a given version (in numeric format).
-////	 */
-////	function isVersionMin($min_version_num) {
-////
-////		if ($this->getNumEmajVersion() >= $min_version_num) {
-////			return 1;
-////		} else {
-////			return 0;
-////		}
-////	}
+		$sql = "SELECT CASE WHEN EXISTS (
+				  SELECT target FROM pg_catalog.pg_extension_update_paths('emaj')
+					WHERE source = '{$this->emaj_version}' AND path IS NOT NULL
+				) THEN 1 ELSE 0 END AS versions_exist";
+
+		return $data->selectField($sql,'versions_exist');
+	}
 
 	/**
-	 * Create the emaj extension
+	 * Returns the E-Maj extension versions available as target for an ALTER EXTENSION UPDATE.
+	 */
+	function getAvailableExtensionVersionsForUpdate() {
+		global $data;
+
+		$sql = "SELECT target FROM pg_catalog.pg_extension_update_paths('emaj')
+				  WHERE source = '{$this->emaj_version}' AND path IS NOT NULL
+				  ORDER BY 1 DESC";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Creates the emaj extension
 	 */
 	function createEmajExtension($version) {
 		global $data, $misc;
@@ -220,7 +218,38 @@ class EmajDb {
 	}
 
 	/**
-	 * Drop the emaj extension
+	 * Updates the emaj extension
+	 */
+	function updateEmajExtension($version) {
+		global $data, $misc;
+
+		$data->clean($version);
+
+		if ($version !== null && $version <> '')
+			$version = "TO '{$version}'";
+		else
+			$version = '';
+
+		$sql = "ALTER EXTENSION emaj UPDATE {$version};";
+
+		$status = $data->execute($sql);
+		if ($status == 0) {
+			// the extension version has changed, so reset all emajdb cached variables
+			$this->emaj_version = '?';
+			$this->emaj_version_num = 0;
+			$this->enabled = null;
+			$this->accessible = null;
+			$this->emaj_adm = null;
+			$this->emaj_viewer = null;
+			$this->dblink_usable = null;
+			$this->dblink_schema = null;
+			$this->asyncRlbkUsable = null;
+		}
+		return $status;
+	}
+
+	/**
+	 * Drops the emaj extension
 	 * The emaj_adm and emaj_viewer roles are not dropped as they can bu used in other databases
 	 */
 	function dropEmajExtension() {

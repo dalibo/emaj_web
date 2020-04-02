@@ -83,11 +83,13 @@
 
 		if ($availableVersions->recordCount() == 1) {
 			// a single version is available, so just display the information
-			$rec = $availableVersions->MoveFirst();
-			echo "<p>{$lang['emajversion']}{$rec['version']}</p>\n";
-			echo "<p><input type=\"hidden\" name=\"version\" value=\"". htmlspecialchars($rec['version']) . "\" />\n";
+			foreach($availableVersions as $v) {
+				echo "<p>{$lang['emajversion']}{$v['version']}</p>\n";
+				echo "<p><input type=\"hidden\" name=\"version\" value=\"". htmlspecialchars($v['version']) . "\" />\n";
+			}
 		} else {
-			// several versions are available, so display a select box so that the user can choose the version to install
+			// several versions are available,
+			// display a select box so that the user can choose the version to install
 			echo "<p>{$lang['emajversion']}<select name=\"version\" id=\"version\">\n";
 			foreach($availableVersions as $v)
 				echo "\t<option value=\"", htmlspecialchars($v['version']), "\" >", htmlspecialchars($v['version']), "</option>\n";
@@ -119,6 +121,61 @@
 				}
 			} else {
 				doDefault('', $lang['emajcreateextensionerr']);
+			}
+		}
+	}
+
+	/**
+	 * Prepare the extension update: ask for the version and the confirmation
+	 */
+	function update_extension() {
+		global $misc, $lang, $emajdb;
+
+		$misc->printHeader('database', 'database', 'emajenvir');
+
+		$misc->printTitle($lang['emajupdateemajextension']);
+
+		$availableVersions = $emajdb->getAvailableExtensionVersionsForUpdate();
+
+		echo "<form action=\"emajenvir.php\" method=\"post\">\n";
+		echo "<p><input type=\"hidden\" name=\"action\" value=\"update_extension_ok\" />\n";
+		echo $misc->form;
+
+		if ($availableVersions->recordCount() == 1) {
+			// a single version is available, so just display the information
+			foreach($availableVersions as $v) {
+				echo "<p>{$lang['emajversion']}{$v['target']}</p>\n";
+				echo "<p><input type=\"hidden\" name=\"version\" value=\"". htmlspecialchars($v['target']) . "\" />\n";
+			}
+		} else {
+			// several versions are available
+			// display a select box so that the user can choose the version to install
+			echo "<p>{$lang['emajversion']}<select name=\"version\" id=\"version\">\n";
+			foreach($availableVersions as $v)
+				echo "\t<option value=\"", htmlspecialchars($v['target']), "\" >", htmlspecialchars($v['target']), "</option>\n";
+			echo "</select></p>\n";
+		}
+		echo "<input type=\"submit\" name=\"updateextension\" value=\"{$lang['strok']}\" />\n";
+		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+		echo "</form>\n";
+	}
+
+	/**
+	 * Perform the extension update
+	 */
+	function update_extension_ok() {
+		global $lang, $emajdb, $_reload_browser;
+
+		// process the click on the <cancel> button
+		if (isset($_POST['cancel'])) {
+			doDefault();
+		} else {
+			$status = $emajdb->updateEmajExtension($_POST['version']);
+			if ($status == 0) {
+				$_reload_browser = true;
+				doDefault($lang['emajupdateextensionok']);
+			} else {
+				doDefault('', $lang['emajupdateextensionerr']);
 			}
 		}
 	}
@@ -362,26 +419,30 @@
 		// check if E-Maj is installed in the current database
 		$isEnabled = $emajdb->isEnabled();
 		if (! $isEnabled) {
-			// emaj is not installed, check if the extension is available
-			if ($emajdb->isExtensionAvailable()) {
-				// the extension just needs a CREATE EXTENSION, by a superuser
-				if ($data->isSuperUser($server_info['username'])) {
-					echo "<p>{$lang['emajversion']}{$lang['emajextnotcreated']}</p>\n";
-				} else {
-					echo "<p>{$lang['emajversion']}{$lang['emajextnotcreated']} {$lang['emajcontactdba']}</p>\n";
-					return;
-				}
+			// emaj is not installed,
+			// check if the extension is available
+			if ($emajdb->isExtensionAvailable())
+				$msg = $lang['emajextnotcreated'];
+			else
+				$msg = $lang['emajextnotavailable'];
+
+			if ($data->isSuperUser($server_info['username'])) {
+				// display a message to the superuser and go on
+				echo "<p>{$lang['emajversion']}{$msg}</p>\n";
 			} else {
-				echo "<p>{$lang['emajversion']}{$lang['emajextnotavailable']} {$lang['emajcontactdba']}</p>\n";
+				// display a message to the user and stop
+				echo "<p>{$lang['emajversion']}{$msg} {$lang['emajcontactdba']}</p>\n";
 				return;
 			}
 		} else {
-			// emaj is installed, check that the user has enought rights to continue
+			// emaj is installed,
+			// check that the user has enought rights to continue
 			if (! $emajdb->isAccessible()) {
 				echo "<p>{$lang['emajnogrant']}</p>\n";
 				return;
 			}
-			// OK, nom display the E-Maj version
+
+			// OK, now display the E-Maj version
 			$isExtension = $emajdb->isExtension();
 			if ($isExtension) {
 				$installationMode = $lang['emajasextension'];
@@ -389,16 +450,23 @@
 				$installationMode = $lang['emajasscript'];
 			}
 			echo "<p>{$lang['emajversion']}{$emajdb->getEmajVersion()} ({$installationMode})</p>\n";
+
+			// check if the emaj version is not too old for this emaj_web
 			if ($emajdb->getNumEmajVersion() < $oldest_supported_emaj_version_num) {
 				echo "<p>" . sprintf($lang['emajtooold'],$emajdb->getEmajVersion(),$oldest_supported_emaj_version) . "</p>\n";
 				return;
 			} else {
+
+				// if there are more recent emaj or emaj_web versions, tell it
 				if ($emajdb->getNumEmajVersion() <> 999999) {
 					if ($emajdb->getNumEmajVersion() < $last_known_emaj_version_num) {
-						echo "<p>{$lang['emajversionmorerecent']}</p>\n";
+						if ($data->isSuperUser($server_info['username']))
+							echo "<p>{$lang['emajversionmorerecent']}</p>\n";
+						else
+							echo "<p>{$lang['emajversionmorerecent']} {$lang['emajcontactdba']}</p>\n";
 					}
 					if ($emajdb->getNumEmajVersion() > $last_known_emaj_version_num) {
-						echo "<p>{$lang['emajwebversionmorerecent']}</p>\n";
+						echo "<p>{$lang['emajwebversionmorerecent']} {$lang['emajcontactdba']}</p>\n";
 					}
 				}
 			}
@@ -427,11 +495,22 @@
 
 				if ($isExtension) {
 				// emaj exists as an extension
+					// can we update it with a more recent version ?
+					if ($emajdb->areThereVersionsToUpdate()) {
+						// form to update the extension
+						echo "<div style=\"margin:20px\">\n";
+						echo "\t<form name=\"updateextension\" id=\"updateextension\" enctype=\"multipart/form-data\" method=\"POST\"";
+						echo " action=\"emajenvir.php?action=update_extension&amp;{$misc->href}\">\n";
+						echo "\t\t<input type=\"submit\" name=\"updateextensionbutton\" value=\"{$lang['emajupdateextension']}\">\n";
+						echo "\t</form>\n";
+						echo "</div>\n";
+					}
+
+					// can we drop it ?
 					if ($emajdb->getNbGroups() > 0) {
 						echo "<p>" . $lang['emajdropextensiongroupsexist'] . "</p>\n";
 					} else {
 						// form to drop the extension
-//						echo "<div style=\"float:left; margin:20px\">\n";
 						echo "<div style=\"margin:20px\">\n";
 						echo "\t<form name=\"dropextension\" id=\"dropextension\" enctype=\"multipart/form-data\" method=\"POST\"";
 						echo " action=\"emajenvir.php?action=drop_extension&amp;{$misc->href}\">\n";
@@ -584,6 +663,12 @@
 			break;
 		case 'import_parameters_ok':
 			import_parameters_ok();
+			break;
+		case 'update_extension':
+			update_extension();
+			break;
+		case 'update_extension_ok':
+			update_extension_ok();
 			break;
 		default:
 			doDefault();

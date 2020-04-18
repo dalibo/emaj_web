@@ -3249,6 +3249,7 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 
 	/**
 	 * Gets the tables groups that owned or currently owns a given table or sequence.
+	 * The function is only called when emaj version >= 2.2.0
 	 */
 	function getTableGroupsTblSeq($schema, $tblseq) {
 		global $data;
@@ -3273,8 +3274,8 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 							LEFT OUTER JOIN emaj.emaj_time_stamp start ON (lower(relh_time_range) = start.time_id)
 							LEFT OUTER JOIN emaj.emaj_time_stamp stop ON (upper(relh_time_range) = stop.time_id)
 						WHERE relh_schema = '{$schema}' AND relh_tblseq = '{$tblseq}'
-					ORDER BY start_datetime";
-		} elseif ($this->getNumEmajVersion() >= 20200) {
+					ORDER BY start_datetime DESC";
+		} else {
 			// The rel_group is suffixed with a ###LINK### when a link to the group definition has to be added at page display
 			$sql = "SELECT rel_group || CASE WHEN upper_inf(rel_time_range) THEN '###LINK###' ELSE '' END AS rel_group,
 							date_trunc('SECOND', start.time_tx_timestamp)::TEXT AS start_datetime,
@@ -3283,11 +3284,7 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 						LEFT OUTER JOIN emaj.emaj_time_stamp start ON (lower(rel_time_range) = start.time_id)
 						LEFT OUTER JOIN emaj.emaj_time_stamp stop ON (upper(rel_time_range) = stop.time_id)
 					WHERE rel_schema = '{$schema}' AND rel_tblseq = '{$tblseq}'
-					ORDER BY rel_time_range";
-		} else {
-			$sql = "SELECT rel_group || '###LINK###' AS rel_group,
-					FROM emaj.emaj_relation
-					WHERE rel_schema = '{$schema}' AND rel_tblseq = '{$tblseq}'";
+					ORDER BY rel_time_range DESC";
 		}
 
 		return $data->selectSet($sql);

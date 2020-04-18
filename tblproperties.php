@@ -145,7 +145,7 @@
 		$misc->printTable($attrs, $columns, $actions, 'tblproperties-columns', null, 'attPre');
 
 		// Display the E-Maj properties, if any
-		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
+		if ($emajdb->isEnabled() && $emajdb->isAccessible() && $emajdb->getNumEmajVersion() >= 20200) {
 
 			$misc->printTitle($lang['emajproperties']);
 

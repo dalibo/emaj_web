@@ -688,12 +688,14 @@
 
 	// Set Mark for one or several groups
 	$lang['emajsetamark'] = 'E-Maj : Poser une marque';
-	$lang['emajconfirmsetmarkgroup'] = 'Pose d\'une marque pour le(s) groupe(s) de tables "%s" :';
+	$lang['emajconfirmsetmarkgroup'] = 'Pose d\'une marque pour le groupe de tables "%s" :';
 	$lang['emajcantsetmarkgroup'] = 'La pose d\'une marque pour le groupe de tables "%s" est impossible. Le groupe est arrêté.';
 	$lang['emajinvalidmark'] = 'La marque saisie (%s) est invalide.';
-	$lang['emajsetmarkgroupok'] = 'La marque "%s" est posée pour le(s) groupe(s) de tables "%s".';
-	$lang['emajsetmarkgrouperr'] = 'Erreur lors de la pose de la marque "%s" pour le(s) groupe(s) de tables "%s" !';
-	$lang['emajcantsetmarkgroups'] = 'La pose d\'une marque pour les groupes de tables "%s" est impossible. Le groupe "%s" est arrêté.';
+	$lang['emajsetmarkgroupok'] = 'La marque "%s" est posée pour le groupe de tables "%s".';
+	$lang['emajsetmarkgrouperr'] = 'Erreur lors de la pose de la marque "%s" pour le groupe de tables "%s" !';
+	$lang['emajconfirmsetmarkgroups'] = 'Pose d\'une marque pour les groupes de tables "%s" :';
+	$lang['emajsetmarkgroupsok'] = 'La marque "%s" est posée pour les groupes de tables "%s".';
+	$lang['emajsetmarkgroupserr'] = 'Erreur lors de la pose de la marque "%s" pour les groupes de tables "%s" !';
 
 	// Protect mark
 	$lang['emajcantprotectmarkgroup'] = 'La protection d\'une marque pour le groupe de tables "%s" est impossible. Le groupe est arrêté.';

@@ -2564,10 +2564,20 @@
 	function start_groups() {
 		global $misc, $lang;
 
+		// if no group has been selected, stop
 		if (!isset($_REQUEST['ma'])) {
 			show_groups('',$lang['emajnoselectedgroup']);
 			return;
 		}
+
+		// if only one group is selected, switch to the mono-group function
+		if (count($_REQUEST['ma']) == 1) {
+			$a = unserialize(htmlspecialchars_decode($_REQUEST['ma'][0], ENT_QUOTES));
+			$_REQUEST['group'] = $a['group'];
+			start_group();
+			return;
+		}
+
 		if (!isset($_POST['mark'])) $_POST['mark'] = '';
 
 		$misc->printHeader('database', 'database','emajgroups');
@@ -2728,8 +2738,17 @@
 	function stop_groups() {
 		global $misc, $lang;
 
+		// if no group has been selected, stop
 		if (!isset($_REQUEST['ma'])) {
 			show_groups('',$lang['emajnoselectedgroup']);
+			return;
+		}
+
+		// if only one group is selected, switch to the mono-group function
+		if (count($_REQUEST['ma']) == 1) {
+			$a = unserialize(htmlspecialchars_decode($_REQUEST['ma'][0], ENT_QUOTES));
+			$_REQUEST['group'] = $a['group'];
+			stop_group();
 			return;
 		}
 
@@ -2861,8 +2880,17 @@
 	function reset_groups() {
 		global $misc, $lang;
 
+		// if no group has been selected, stop
 		if (!isset($_REQUEST['ma'])) {
 			show_groups('',$lang['emajnoselectedgroup']);
+			return;
+		}
+
+		// if only one group is selected, switch to the mono-group function
+		if (count($_REQUEST['ma']) == 1) {
+			$a = unserialize(htmlspecialchars_decode($_REQUEST['ma'][0], ENT_QUOTES));
+			$_REQUEST['group'] = $a['group'];
+			reset_group();
 			return;
 		}
 
@@ -3091,10 +3119,20 @@
 	function set_mark_groups() {
 		global $misc, $lang;
 
+		// if no group has been selected, stop
 		if (!isset($_REQUEST['ma'])) {
 			show_groups('',$lang['emajnoselectedgroup']);
 			return;
 		}
+
+		// if only one group is selected, switch to the mono-group function
+		if (count($_REQUEST['ma']) == 1) {
+			$a = unserialize(htmlspecialchars_decode($_REQUEST['ma'][0], ENT_QUOTES));
+			$_REQUEST['group'] = $a['group'];
+			set_mark_group();
+			return;
+		}
+
 		if (!isset($_POST['mark'])) $_POST['mark'] = '';
 
 		$misc->printHeader('database', 'database','emajgroups');
@@ -3108,7 +3146,7 @@
 			$groupsList .= $a['group'].', ';
 		}
 		$groupsList=substr($groupsList,0,strlen($groupsList)-2);
-		echo "<p>", sprintf($lang['emajconfirmsetmarkgroup'], htmlspecialchars($groupsList)), "</p>\n";
+		echo "<p>", sprintf($lang['emajconfirmsetmarkgroups'], htmlspecialchars($groupsList)), "</p>\n";
 		// send form
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 
@@ -3173,9 +3211,9 @@
 			// OK
 			$status = $emajdb->setMarkGroups($_POST['groups'],$finalMarkName,$_POST['comment']);
 			if ($status == 0)
-				show_groups(sprintf($lang['emajsetmarkgroupok'], htmlspecialchars($finalMarkName), htmlspecialchars($_POST['groups'])));
+				show_groups(sprintf($lang['emajsetmarkgroupsok'], htmlspecialchars($finalMarkName), htmlspecialchars($_POST['groups'])));
 			else
-				show_groups('',sprintf($lang['emajsetmarkgrouperr'], htmlspecialchars($finalMarkName), htmlspecialchars($_POST['groups'])));
+				show_groups('',sprintf($lang['emajsetmarkgroupserr'], htmlspecialchars($finalMarkName), htmlspecialchars($_POST['groups'])));
 		}
 	}
 
@@ -3600,11 +3638,20 @@
 	function rollback_groups() {
 		global $misc, $lang, $emajdb;
 
+		// if no group has been selected, stop
 		if (!isset($_REQUEST['ma'])) {
-		// function called but no selected group
 			show_groups('',$lang['emajnoselectedgroup']);
 			return;
 		}
+
+		// if only one group is selected, switch to the mono-group function
+		if (count($_REQUEST['ma']) == 1) {
+			$a = unserialize(htmlspecialchars_decode($_REQUEST['ma'][0], ENT_QUOTES));
+			$_REQUEST['group'] = $a['group'];
+			rollback_group();
+			return;
+		}
+
 		// build the groups list
 		$groupsList='';
 		foreach($_REQUEST['ma'] as $v) {

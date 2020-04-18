@@ -688,12 +688,15 @@
 
 	// Set Mark for one or several groups
 	$lang['emajsetamark'] = 'E-Maj: Set a mark';
-	$lang['emajconfirmsetmarkgroup'] = 'Setting a mark for the tables group(s) "%s":';
+	$lang['emajconfirmsetmarkgroup'] = 'Setting a mark for the tables group "%s":';
 	$lang['emajcantsetmarkgroup'] = 'Setting a mark on the tables group "%s" is not possible. The group is stopped.';
 	$lang['emajinvalidmark'] = 'The supplied mark (%s) is invalid!';
-	$lang['emajsetmarkgroupok'] = 'The mark "%s" has been set for the tables group(s) "%s".';
-	$lang['emajsetmarkgrouperr'] = 'Error during mark set "%s" for the tables group(s) "%s"!';
+	$lang['emajsetmarkgroupok'] = 'The mark "%s" has been set for the tables group "%s".';
+	$lang['emajsetmarkgrouperr'] = 'Error during mark set "%s" for the tables group "%s"!';
+	$lang['emajconfirmsetmarkgroups'] = 'Setting a mark for the tables groups "%s":';
 	$lang['emajcantsetmarkgroups'] = 'Setting a mark for the tables groups "%s" is not possible. The group "%s" is stopped.';
+	$lang['emajsetmarkgroupsok'] = 'The mark "%s" has been set for the tables groups "%s".';
+	$lang['emajsetmarkgroupserr'] = 'Error during mark set "%s" for the tables groups "%s"!';
 
 	// Protect mark
 	$lang['emajcantprotectmarkgroup'] = 'Protecting a mark on the tables group "%s" is not possible. The group is stopped.';

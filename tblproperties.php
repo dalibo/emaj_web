@@ -52,12 +52,6 @@
 		}
 	}
 
-	// Callback function to dynamicaly translate a boolean column into the user's language
-	function renderBoolean($val) {
-		global $lang;
-		return $val == 't' ? $lang['stryes'] : $lang['strno'];
-	}
-
 	// Function to dynamicaly modify actions list for each table column description
 	function attPre(&$rowdata, $actions) {
 		global $data;
@@ -215,8 +209,7 @@
 			'tgisemaj' => array(
 				'title' => $lang['emajisemaj'],
 				'field' => field('tgisemaj'),
-				'type'	=> 'callback',
-				'params'=> array('function' => 'renderBoolean', 'align' => 'center')
+				'type'	=> 'yesno',
 			),
 		);
 		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
@@ -226,8 +219,7 @@
 						'title' => $lang['emajisautodisable'],
 						'field' => field('tgisautodisable'),
 						'info'  => $lang['emajisautodisablehelp'],
-						'type'	=> 'callback',
-						'params'=> array('function' => 'renderBoolean', 'align' => 'center')
+						'type'	=> 'yesno',
 					),
 					'actions' => array(
 						'title' => $lang['stractions'],

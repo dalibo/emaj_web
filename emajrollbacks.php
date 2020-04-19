@@ -10,12 +10,6 @@
 	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 	if (!isset($msg)) $msg = '';
 
-	// Callback function to dynamicaly translate a boolean column into the user's language
-	function renderBoolean($val) {
-		global $lang;
-		return $val == 't' ? $lang['stryes'] : $lang['strno'];
-	}
-
 	// Callback function to dynamicaly add an icon to each rollback execution report
 	function renderRlbkExecSeverity($val) {
 		global $misc;
@@ -122,8 +116,7 @@
 			'isLogged' => array(
 				'title' => $lang['emajislogged'],
 				'field' => field('rlbk_is_logged'),
-				'type'	=> 'callback',
-				'params'=> array('function' => 'renderBoolean', 'align' => 'center')
+				'type'	=> 'yesno',
 			),
 			'rlbkNbSession' => array(
 				'title' => $lang['emajnbsession'],
@@ -175,8 +168,7 @@
 			'isLogged' => array(
 				'title' => $lang['emajislogged'],
 				'field' => field('rlbk_is_logged'),
-				'type'	=> 'callback',
-				'params'=> array('function' => 'renderBoolean', 'align' => 'center')
+				'type'	=> 'yesno',
 			),
 			'rlbkNbSession' => array(
 				'title' => $lang['emajnbsession'],
@@ -414,8 +406,7 @@
 			'isLogged' => array(
 				'title' => $lang['emajislogged'],
 				'field' => field('rlbk_is_logged'),
-				'type'	=> 'callback',
-				'params'=> array('function' => 'renderBoolean', 'align' => 'center')
+				'type'	=> 'yesno',
 			),
 			'rlbkNbSession' => array(
 				'title' => $lang['emajnbsession'],

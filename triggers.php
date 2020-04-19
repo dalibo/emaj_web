@@ -10,12 +10,6 @@
 	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 	if (!isset($msg)) $msg = '';
 
-	// Callback function to dynamicaly translate a boolean column into the user's language
-	function renderBoolean($val) {
-		global $lang;
-		return $val == 't' ? $lang['stryes'] : $lang['strno'];
-	}
-
 	/**
 	 * Show the list of triggers in the database
 	 */
@@ -72,8 +66,7 @@
 						'title' => $lang['emajisautodisable'],
 						'field' => field('tgisautodisable'),
 						'info'  => $lang['emajisautodisablehelp'],
-						'type'	=> 'callback',
-						'params'=> array('function' => 'renderBoolean', 'align' => 'center')
+						'type'	=> 'yesno',
 					),
 					'actions' => array(
 						'title' => $lang['stractions'],

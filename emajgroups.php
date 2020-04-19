@@ -182,12 +182,6 @@
 		return "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 	}
 
-	// Callback function to dynamicaly translate a boolean column into the user's language
-	function renderBoolean($val) {
-		global $lang;
-		return $val == 't' ? $lang['stryes'] : $lang['strno'];
-	}
-
 	// Callback function to dynamicaly translate a boolean column into an icon
 	function renderBooleanIcon($val) {
 		global $misc;

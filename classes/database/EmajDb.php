@@ -579,6 +579,7 @@ class EmajDb {
 
 	/**
 	 * Gets all groups referenced in emaj_group table for this database
+	 * The function is called to feed the browser tree or to list the groups to export (emaj 3.3+)
 	 */
 	function getGroups() {
 		global $data;
@@ -589,9 +590,7 @@ class EmajDb {
 					  CASE WHEN group_is_logging THEN 'LOGGING' ELSE 'IDLE' END 
 						as group_state, 
 					  CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END 
-						as group_type, 
-					  CASE WHEN length(group_comment) > 100 THEN substr(group_comment,1,97) || '...' ELSE group_comment END 
-						as abbr_comment";
+						as group_type";
 		}
 		$sql .=	" FROM emaj.emaj_group ORDER BY group_name";
 
@@ -616,11 +615,9 @@ class EmajDb {
 		global $data;
 
 		if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-			$sql = "SELECT group_name, group_nb_table, group_nb_sequence,
+			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, group_comment,
 					  CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END 
 						as group_type, 
-					  CASE WHEN length(group_comment) > 100 THEN substr(group_comment,1,97) || '...' ELSE group_comment END 
-						as abbr_comment, 
 					  to_char(time_tx_timestamp,'DD/MM/YYYY HH24:MI:SS') as creation_datetime,";
 			if ($this->getNumEmajVersion() >= 30000){	// version >= 3.0.0
 				$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes,";
@@ -633,11 +630,9 @@ class EmajDb {
 					  AND time_id = group_creation_time_id
 					ORDER BY group_name";
 		}else{
-			$sql = "SELECT group_name, group_nb_table, group_nb_sequence,
+			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, group_comment,
 					  CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END 
 						as group_type, 
-					  CASE WHEN length(group_comment) > 100 THEN substr(group_comment,1,97) || '...' ELSE group_comment END 
-						as abbr_comment, 
 					  to_char(group_creation_datetime,'DD/MM/YYYY HH24:MI:SS') as creation_datetime,
 					  1 as has_waiting_changes,
 					  (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
@@ -656,12 +651,10 @@ class EmajDb {
 		global $data;
 
 		if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-			$sql = "SELECT group_name, group_nb_table, group_nb_sequence,
+			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, group_comment,
 					  CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
 						   WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
 						   ELSE 'ROLLBACKABLE-PROTECTED' END as group_type,
-					  CASE WHEN length(group_comment) > 100 THEN substr(group_comment,1,97) || '...' ELSE group_comment END
-						as abbr_comment,
 					  to_char(time_tx_timestamp,'DD/MM/YYYY HH24:MI:SS') as creation_datetime,";
 			if ($this->getNumEmajVersion() >= 30000){	// version >= 3.0.0
 				$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes,";
@@ -674,11 +667,10 @@ class EmajDb {
 					  AND time_id = group_creation_time_id
 					ORDER BY group_name";
 		}else{
-			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, 
+			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, group_comment,
 						CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
 							 WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
 							 ELSE 'ROLLBACKABLE-PROTECTED' END as group_type, 
-						CASE WHEN length(group_comment) > 100 THEN substr(group_comment,1,97) || '...' ELSE group_comment END as abbr_comment, 
 						to_char(group_creation_datetime,'DD/MM/YYYY HH24:MI:SS') as creation_datetime,
 						(SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
 					FROM emaj.emaj_group

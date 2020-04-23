@@ -192,6 +192,53 @@ th.required {
 	text-decoration: underline
 }
 
+.comment-in-tooltip
+{
+	position: relative;
+	display: inline-block;
+	text-decoration: none;
+	outline: none;
+	cursor: help;
+}
+
+.comment-in-tooltip span
+{
+	visibility: hidden;
+	position: absolute;
+	top: 27px;
+/*	right: 50%;*/
+	right: -12px;
+	max-width: 230px;
+	margin-left: -210px;
+	padding: 7px;
+	z-index: 999;
+	border: 2px solid #5090c1;
+	border-radius: 7px;
+	opacity: .9;
+	background-color: #f2f2f4;
+	box-shadow: -2px 3px 5px rgba(0,0,0,.35);
+}
+
+.comment-in-tooltip:hover span
+{
+	visibility: visible;
+}
+
+.comment-in-tooltip span:before,
+.comment-in-tooltip span:after
+{
+	content: "";
+	position: absolute;
+	z-index: 1000;
+	top: -8px;
+/*  right: 80%;*/
+	right: 25px;
+	margin-left: -8px;
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
+	border-bottom: 8px solid #5090c1;
+}
+
 /**
  ** Page header
  **/

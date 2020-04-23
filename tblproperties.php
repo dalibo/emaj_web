@@ -136,6 +136,8 @@
 			),
 		);
 
+		$actions = array();
+
 		$misc->printTable($attrs, $columns, $actions, 'tblproperties-columns', null, 'attPre');
 
 		// Display the E-Maj properties, if any

@@ -108,6 +108,8 @@
 			),
 		));
 
+		$actions = array();
+
 		$misc->printTable($schemas, $columns, $actions, 'schemas-schemas', $lang['strnoschemas'], null, array('sorter' => true, 'filter' => true));
 
 		// Tables and séquences for the selected schema, if any

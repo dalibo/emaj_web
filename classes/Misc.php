@@ -536,6 +536,7 @@
 			};
 
 			echo "</header>\n";
+			echo "<section>\n";
 		}
 
 		/**
@@ -671,6 +672,7 @@
 			global $lang, $_no_bottom_link;
 
 			if ($doBody) {
+				echo "</section>\n";
 				echo "<footer>\n";
 
 				// reload the browser if requested

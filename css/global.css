@@ -17,6 +17,7 @@ body > * {
 	margin-left: 12px;
 	margin-right: 12px;
 }
+
 img {
 	border: none;
 }
@@ -71,10 +72,6 @@ p.error-message {
 }
 .pre {
 	white-space: pre;
-}
-.rlbkEstimates {
-	font-size: 0.9em;
-	font-style: italic;
 }
 
 hr {
@@ -152,7 +149,7 @@ button:disabled, button[disabled], input[type=submit]:disabled, input[type=butto
 
 select {
 	background: #ffffff;
-	border: 1px solid #5090c1;
+	border: 1px solid #cfcfcf;
 	border-radius: 5px;
 	padding: 3px 5px 3px 5px;
 	min-width: 100px;
@@ -243,9 +240,11 @@ th.required {
  **/
 
 header {
-	background-color: #383840;
+	position: fixed;
+	top : 0px;
+	background-color: #1B3342;
 	color: #cfcfcf;
-	margin: 0px 0px 20px 0px;
+	margin: 0px 0px 0px 0px;
 	width: 100%;
 	box-shadow: -1px 2px 5px rgba(0,0,0,.25);
 }
@@ -348,8 +347,16 @@ nav .active {
 	background-color: #ffffff;
 }
 
-/** footer **/
+/**
+ ** Main section
+ **/
+section {
+	margin-top: 140px;
+}
 
+/**
+ ** Page footer
+ **/
 footer {
 }
 .bottom_link {
@@ -610,6 +617,11 @@ div.form-param-button {
 	white-space: nowrap;
 	display: flex;
 	align-items: center;
+}
+
+.rlbkEstimates {
+	font-size: 0.9em;
+	font-style: italic;
 }
 
 /** Specific div for the intro.php page **/

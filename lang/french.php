@@ -15,6 +15,7 @@
 	$lang['strpgsqlhome'] = 'Page d\'accueil de PostgreSQL';
 	$lang['strpgsqlhome_url'] = 'http://www.postgresql.org/';
 	$lang['stremajdoc'] = 'Documentation E-Maj';
+	$lang['stremajdoc_url'] = 'http://emaj.readthedocs.io/fr/latest/';
 	$lang['stremajproject'] = 'E-Maj sur github';
 	$lang['stremajwebproject'] = 'Emaj_web sur github';
 

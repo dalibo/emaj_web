@@ -12,25 +12,26 @@
 	$misc->printBody();
 
 	$misc->printHeader('root', 'root', 'intro');
-?>
 
-<div id="welcome">
-  <h1><?php echo sprintf($lang['strintro'],$appName,$appVersion)?></h1>
-  <img src="<?php echo $misc->icon('E-Maj_H')?>" alt="E-Maj_logo">
-</div>
+	echo "<div class=\"intro-welcome\">";
+	echo "  <h1>" . sprintf($lang['strintro'],$appName,$appVersion) . "</h1>";
+	echo "  <img src=\"{$misc->icon('E-Maj_H')}\" alt=\"E-Maj_logo\">";
+	echo "</div>";
 
-<?php $misc->printTitle($lang['strlink']); ?>
+	$misc->printTitle($lang['strlink']);
 
-<ul class="intro">
-	<li><a href="http://emaj.readthedocs.io/en/stable/" target=blank ><?php echo $lang['stremajdoc'] ?></a></li>
-	<li><a href="https://github.com/dalibo/emaj" target=blank ><?php echo $lang['stremajproject'] ?></a></li>
-	<li><a href="https://github.com/dalibo/emaj_web" target=blank ><?php echo $lang['stremajwebproject'] ?></a></li>
-</ul>
-<ul class="intro">
-	<li><a href="<?php echo $lang['strpgsqlhome_url'] ?>" target=blank ><?php echo $lang['strpgsqlhome'] ?></a></li>
-</ul>
+	echo "<ul class=\"intro-link\">";
+	echo "	<li><a href=\"{$lang['stremajdoc_url']}\" target=blank >{$lang['stremajdoc']}</a></li>";
+	echo "  <li><a href=\"https://github.com/dalibo/emaj\" target=blank >{$lang['stremajproject']}</a></li>";
+	echo "	<li><a href=\"https://github.com/dalibo/emaj_web\" target=blank >{$lang['stremajwebproject']}</a></li>";
+	echo "</ul>";
+	echo "<ul class=\"intro-link\">";
+	echo "	<li><a href=\"{$lang['strpgsqlhome_url']}\" target=blank >{$lang['strpgsqlhome']}</a></li>";
+	echo "</ul>";
 
-<?php
-    echo "<p style=\"font-style: italic; color: grey; font-size: 12px;\">Powered by PHP " . phpversion() . "</p>\n";
+	echo "<div class=\"intro-footer\">";
+    echo "Powered by PHP " . phpversion() . "\n";
+	echo "</div>";
+
 	$misc->printFooter();
 ?>

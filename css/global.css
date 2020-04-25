@@ -504,9 +504,6 @@ pre.data {
 pre.error {
 	font-size: 120%;
 }
-.intro li {
-	font-weight: normal;
-}
 
 table.multiactions {
 	margin-top: 5px;
@@ -604,12 +601,22 @@ div.form-param-button {
 }
 
 /** Specific div for the intro.php page **/
-#welcome {
+.intro-welcome {
 	margin: 20px 20px 40px 20px;
 	text-align:center;
 }
-#welcome img {
+.intro-welcome img {
 	width: 400px;
+}
+.intro-link li {
+	font-weight: normal;
+}
+.intro-footer {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	color: grey;
+	font-style: italic;
+	font-size: 12px;
 }
 
 /** FK browsing **/

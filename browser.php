@@ -23,11 +23,17 @@
 	$misc->printHtmlHeader('', $scripts, 'browser');
 	
 	$misc->printBody('browser');
-	echo "<div dir=\"ltr\">\n";
+
+	echo "<div class=\"logo\"><a href=\"intro.php\" target=\"detail\">";
+	echo "<img src=\"{$misc->icon('title')}\" alt=\"" . htmlspecialchars($appName) . "\" title=\"" . htmlspecialchars($appName) . "\" />";
+	echo "</a></div>";
+	echo "<div class=\"refresh\"><a href=\"browser.php\" target=\"browser\" >";
+	echo "<img src=\"{$misc->icon('Refresh')}\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\" />";
+	echo "</a></div>";
+
+	echo "<div class=\"tree\" dir=\"ltr\">\n";
 ?>
 
-	<div class="logo"><a href="intro.php" target="detail"><img src="<?php echo $misc->icon('title') ?>" width="200" height="50" alt="<?php echo htmlspecialchars($appName) ?>" title="<?php echo htmlspecialchars($appName) ?>" /></a></div>
-	<div class="refreshTree"><a href="browser.php" target="browser" ><img src="<?php echo $misc->icon('Refresh'); ?>" alt="<?php echo $lang['strrefresh']; ?>" title="<?php echo $lang['strrefresh']; ?>" /></a></div>
 <script type="text/javascript">
 
 webFXTreeConfig.rootIcon		= "<?php echo $misc->icon('Servers') ?>";
@@ -77,5 +83,4 @@ tree.setExpanded(true);
    // Output footer
    echo "</div>\n";
    $misc->printFooter();
-
 ?>

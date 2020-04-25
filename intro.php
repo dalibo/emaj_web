@@ -16,7 +16,7 @@
 
 <div id="welcome">
   <h1><?php echo sprintf($lang['strintro'],$appName,$appVersion)?></h1>
-  <img src="<?php echo $misc->icon('E-Maj_H')?>" alt="E-Maj_logo" style="width:35%;	height:35%;"/>
+  <img src="<?php echo $misc->icon('E-Maj_H')?>" alt="E-Maj_logo">
 </div>
 
 <?php $misc->printTitle($lang['strlink']); ?>

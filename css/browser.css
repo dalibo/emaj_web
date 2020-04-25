@@ -10,7 +10,7 @@ body.browser {
 	color: #555555;
 }
 body.browser > * {
-	margin: 0;
+	margin: 3px;
 }
 body.browser div.webfx-tree-row:hover {
 	background: #eeeeee;
@@ -21,12 +21,34 @@ body.browser a {
 body.browser a:hover {
 	color: #cc0000;
 }
+
 div.logo {
-	margin:	0px;
-	padding: 0px;
-	font-size: smaller; 
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	margin: 0px;
+	background-color: #f8f8f8;
+	z-index: 5;
 	border: none;
-	margin-bottom: 12px;
+	box-shadow: 0 2px 5px rgba(0,0,0,.25);
+}
+div.logo img {
+	width: 200px;
+	height: 50px;
+	margin: 5px
+}
+
+div.refresh {
+	position: fixed;
+	top: 65px;
+	left: 0px;
+	width: 100%;
+	text-align: right;
+	z-index: 6;
+}
+div.refresh img {
+	margin-right: 5px
 }
 
 /** Browser Tree using XLoadTree 2 **/
@@ -37,11 +59,12 @@ body.browser {
 	padding: 0px;
 	text-align: left;
 }
-.refreshTree {
-	float:right;
-	text-align:right;
-	padding: 0 3px;
+
+div.tree {
+	position: relative;
+	top: 75px;
 }
+
 .webfx-tree-row {white-space: nowrap}
 .webfx-tree-children {
 	background-repeat: repeat-y;

@@ -102,10 +102,10 @@
 	$lang['strhistory'] = 'Historique';
 	$lang['strsqlhistory'] = 'Historique des requêtes SQL';
 	$lang['strnohistory'] = 'Pas d\'historique.';
-	$lang['strclearhistory'] = 'Éffacer l\'historique';
+	$lang['strclearhistory'] = 'Effacer l\'historique';
 	$lang['strdelhistory'] = 'Supprimer de l\'historique';
 	$lang['strconfdelhistory'] = 'Voulez-vous vraiment supprimer cette requête de l\'historique ?';
-	$lang['strconfclearhistory'] = 'Voulez-vous vraiment éffacer l\'historique ?';
+	$lang['strconfclearhistory'] = 'Voulez-vous vraiment effacer l\'historique ?';
 	$lang['strnodatabaseselected'] = 'Veuillez sélectionner une base de données.';
 
 	// Database Sizes

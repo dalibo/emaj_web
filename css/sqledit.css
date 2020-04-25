@@ -28,6 +28,7 @@ html, body {
 
 input[type=text] {
 	width: 100%;
+	padding-right: 0px;
 }
 
 textarea {

@@ -86,53 +86,24 @@
 		}
 		else echo "<p>{$lang['strnohistory']}</p>\n";
 
-		$navlinks = array (
-			'refresh' => array (
-				'attr'=> array (
-					'href' => array (
-						'url' => 'history.php',
-						'urlvars' => array (
-							'action' => 'history',
-							'server' => $_REQUEST['server'],
-							'database' => $_REQUEST['database'],
-						)
-					)
-				),
-				'content' => $lang['strrefresh']
-			)
-		);
+		$dbInUrl = "server=" . urlencode($_REQUEST['server']) . "&amp;database=" . urlencode($_REQUEST['database']);
+		echo "<div class=\"actionslist\">\n";
+		echo "  <form id=\"refresh_form\" action=\"history.php?action=history&amp;{$dbInUrl}\" method=\"post\">\n";
+		echo "    <input type=\"submit\" name=\"refresh\" value=\"{$lang['strrefresh']}\" />";
+		echo "  </form>\n";
 
 		if (isset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']]) 
 				&& count($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])) {
-			$navlinks['download'] = array (
-				'attr'=> array (
-					'href' => array (
-						'url' => 'history.php',
-						'urlvars' => array (
-							'action' => 'download',
-							'server' => $_REQUEST['server'],
-							'database' => $_REQUEST['database']
-						)
-					)
-				),
-				'content' => $lang['strdownload']
-			);
-			$navlinks['clear'] = array (
-				'attr'=> array (
-					'href' => array (
-						'url' => 'history.php',
-						'urlvars' => array(
-							'action' => 'confclearhistory',
-							'server' => $_REQUEST['server'],
-							'database' => $_REQUEST['database']
-						)
-					)
-				),
-				'content' => $lang['strclearhistory']
-			);
+			echo "  <form id=\"download_form\" action=\"history.php?action=download&amp;{$dbInUrl}\" method=\"post\">\n";
+			echo "    <input type=\"submit\" name=\"download\" value=\"{$lang['strdownload']}\" />";
+			echo "  </form>\n";
+
+			echo "  <form id=\"clear_form\" action=\"history.php?action=confclearhistory&amp;{$dbInUrl}\" method=\"post\">\n";
+			echo "    <input type=\"submit\" name=\"clear\" value=\"{$lang['strclearhistory']}\" />";
+			echo "  </form>\n";
 		}
 
-		$misc->printNavLinks($navlinks);
+		echo "</div>\n";
 	}
 
 	function doDelHistory($qid, $confirm) {

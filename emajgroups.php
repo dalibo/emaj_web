@@ -586,7 +586,7 @@
 			if ($emajdb->getNumEmajVersion() >= 30300) {			// version >= 3.3.0
 				// form to export groups configuration
 				// the export button is disabled when no group exists
-				echo "<div style=\"float:left; margin:20px\">\n";
+				echo "<div style=\"float:left; margin-top:20px\">\n";
 				echo "\t<form id=\"exportGroupsConf_form\" action=\"emajgroups.php?action=export_groups&amp;back=list&amp;{$misc->href}\"";
 				echo " method=\"post\" enctype=\"multipart/form-data\">\n";
 				$disabled = ''; if ($nbGroup = 0) $disabled = ' disabled';
@@ -595,7 +595,7 @@
 				echo "</div>\n";
 
 				// form to import groups configuration
-				echo "<div style=\"margin:20px\">\n";
+				echo "<div style=\"margin-top:20px\">\n";
 				echo "\t<form name=\"importGroupsConf\" id=\"importGroupsConf\" method=\"POST\"";
 				echo " action=\"emajgroups.php?action=import_groups&amp;back=list&amp;{$misc->href}\">\n";
 				echo "\t\t<input type=\"submit\" name=\"importButton\" value=\"${lang['strimport']}\">\n";

@@ -99,6 +99,9 @@ a:hover {
 	color: #cc0000;
 }
 
+button {
+	cursor: pointer;
+}
 input[type=checkbox], input[type=password], input[type=text], input[type=number], input[type=radio] {
 	background: #ffffff;
 	border: 1px solid #5090c1;
@@ -106,11 +109,30 @@ input[type=checkbox], input[type=password], input[type=text], input[type=number]
 	padding: 3px 5px 3px 5px;
 }
 input[type=submit], input[type=button], input[type=reset], button, .custom-file-upload {
-	background: #ffffff;
-	border: 2px solid #8aafce;
-	border-radius: 7px;
+	background: #fa842f;
+	color: #ffffff;
+	font-weight: bold;
+	margin: 2px 10px 2px 10px;
+	padding: 2px 15px 2px 15px;
+	border: 1px solid #fa842f;
+	border-radius: 60px;
+	box-shadow: -1px 2px 5px rgba(0,0,0,.3);
 	cursor: pointer;
-	box-shadow: -1px 2px 5px rgba(0,0,0,.25);
+}
+input[type=submit]:hover:enabled, input[type=button]:hover:enabled, input[type=reset]:hover:enabled, button:hover:enabled {
+	background: #ffffff;
+	color: #fa842f;
+	border: 1px solid #fa842f;
+}
+input[type=submit]:disabled, input[type=button]:disabled, input[type=reset]:disabled, button:disabled, button[disabled] {
+	background: #d0d0d0;
+	border: 1px solid #d0d0d0;
+	cursor: not-allowed;
+}
+input[type="file"] {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
 }
 
 .actionslist {
@@ -126,25 +148,6 @@ input[type=submit], input[type=button], input[type=reset], button, .custom-file-
 
 .custom-file-upload {
 	padding: 1px 6px;
-}
-
-input[type=submit]:hover, input[type=button]:hover, input[type=reset]:hover, button:hover {
-
-}
-input[type="file"] {
-	position: absolute;
-	opacity: 0;
-	pointer-events: none;
-/*	display: none;*/
-}
-
-button {
-	cursor: pointer;
-}
-button:disabled, button[disabled], input[type=submit]:disabled, input[type=button]:disabled, input[type=reset]:disabled {
-	background: #ffffff;
-	border: 2px solid #d0d0d0;
-	cursor: not-allowed;
 }
 
 select {
@@ -200,6 +203,7 @@ th.required {
 .comment-in-tooltip span
 {
 	visibility: hidden;
+    transition: 0s visibility;
 	position: absolute;
 	top: 27px;
 /*	right: 50%;*/
@@ -208,16 +212,18 @@ th.required {
 	margin-left: -210px;
 	padding: 7px;
 	z-index: 999;
-	border: 2px solid #5090c1;
+	background-color: #505050;
+	color: #ffffff;
+	border: none;
 	border-radius: 7px;
 	opacity: .9;
-	background-color: #f2f2f4;
-	box-shadow: -1px 2px 5px rgba(0,0,0,.25);
+	box-shadow: -1px 2px 5px rgba(0,0,0,.45);
 }
 
 .comment-in-tooltip:hover span
 {
 	visibility: visible;
+	transition-delay: 0.2s;
 }
 
 .comment-in-tooltip span:before,
@@ -232,7 +238,7 @@ th.required {
 	margin-left: -8px;
 	border-left: 8px solid transparent;
 	border-right: 8px solid transparent;
-	border-bottom: 8px solid #5090c1;
+	border-bottom: 8px solid #505050;
 }
 
 /**
@@ -242,7 +248,7 @@ th.required {
 header {
 	position: fixed;
 	top : 0px;
-	background-color: #1B3342;
+	background-color: #203C4F;
 	color: #cfcfcf;
 	margin: 0px 0px 0px 0px;
 	width: 100%;
@@ -525,7 +531,7 @@ pre.error {
 }
 
 table.multiactions {
-	margin-top: 5px;
+	margin-top: 6px;
 	border: 1px solid #e8e8e8;
 	box-shadow: -1px 2px 5px rgba(0,0,0,.25);
 }
@@ -673,6 +679,7 @@ a.fk_delete {
 	background-color: #fff;
 	padding: 2px 5px 0px 5px;
 }
+
 /*
 ** tablesorter JQuery plugin css description
  */

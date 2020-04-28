@@ -921,7 +921,7 @@
 								'action' => 'show_content_group',
 								'group' => $_REQUEST['group']
 							),
-							'icon' => 'Tablespace'
+							'icon' => 'Content'
 						),
 					);
 					break;

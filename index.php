@@ -1,36 +1,26 @@
 <?php
 
 	/*
-	 * Main access point to the app.
+	 * Main access point to Emaj_web
 	 */
 
 	// Include application functions
 	$_no_db_connection = true;
 	include_once('./libraries/lib.inc.php');
-	$misc->printHtmlHeader('', null, null, true);
 
-	$rtl = (strcasecmp($lang['applangdir'], 'rtl') == 0);
+	// Page header
+	$misc->printHtmlHeader('', null, 'index', true);
+	echo "<body>\n";
 
-	$cols = $rtl ? '*,'.$conf['left_width'] : $conf['left_width'].',*';
-	$mainframe = '<frame src="intro.php" name="detail" id="detail" frameborder="0" />'
-?>
-<frameset cols="<?php echo $cols ?>">
+	// Both iframes
+	echo "<div id=\"allFrames\">\n";
+	echo "  <div id=\"browserDiv\">\n";
+	echo "    <iframe src=\"browser.php\" name=\"browser\" id=\"browserFrame\"></iframe>\n";
+	echo "  </div>\n";
+	echo "  <div id=\"mainDiv\">\n";
+	echo "    <iframe src=\"intro.php\" name=\"detail\" id=\"mainFrame\"></iframe>\n";
+	echo "  </div>\n";
+	echo "</div>\n";
 
-<?php if ($rtl) echo $mainframe; ?>
-
-	<frame src="browser.php" name="browser" id="browser" frameborder="0" />
-
-<?php if (!$rtl) echo $mainframe; ?>
-
-	<noframes>
-	<body>
-		<?php echo $lang['strnoframes'] ?><br />
-		<a href="intro.php"><?php echo $lang['strnoframeslink'] ?></a>
-	</body>
-	</noframes>
-
-</frameset>
-
-<?php
-	$misc->printFooter(false);
+	echo "</body></html>\n";
 ?>

@@ -453,13 +453,15 @@
 		 * Prints the html page header.
 		 * @param $title The title of the page
 		 * @param $script script tag
+		 * @param $css a css file to include
+		 * @param $frameset boolean set to true for the main php file
 		 */
 		function printHtmlHeader($title = '', $script = null, $css = null, $frameset = false) {
 			global $appName, $lang, $conf;
 
 			header("Content-Type: text/html; charset=utf-8");
+
 			// Send XHTML headers, or regular XHTML strict headers
-			echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 			if ($frameset == true) {
 				echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Frameset//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd\">\n";
 			} else if (isset($conf['use_xhtml_strict']) && $conf['use_xhtml_strict']) {
@@ -477,9 +479,10 @@
 			// Theme
 			if (!$frameset) {
 				echo "<link rel=\"stylesheet\" href=\"css/global.css\" type=\"text/css\" />\n";
-				if ($css)
-					echo "<link rel=\"stylesheet\" href=\"css/{$css}.css\" type=\"text/css\" />\n";
-			} else {
+			}
+			if ($css)
+				echo "<link rel=\"stylesheet\" href=\"css/{$css}.css\" type=\"text/css\" />\n";
+			if ($frameset) {
 				echo "<link rel=\"shortcut icon\" type=\"image/vnd.microsoft.icon\" href=\"images/Favicon.ico\" />\n";
 				echo "<link rel=\"icon\" type=\"image/png\" href=\"images/EmajIcon.png\" />\n";
 			}

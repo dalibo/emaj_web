@@ -1,0 +1,43 @@
+/* global.css
+ *
+ * css file for the main index.php file
+ */
+html {
+	height: 100%;
+}
+body {
+	height: 100%;
+	margin:	0;
+	padding: 0;
+}
+
+#allFrames {
+	display:flex;
+	height:100%;
+}
+
+#browserDiv {
+    display: inline-block;
+	height: 100%;
+    width: 225px;
+	flex-shrink: 0;
+	resize: horizontal;
+	overflow: scroll;
+}
+
+#mainDiv {
+    display: inline-block;
+	height: 100%;
+    width: 100%;
+}
+
+#browserFrame {
+    height: 100%;
+    width: 100%;
+	border: none;
+}
+#mainFrame {
+    height: 100%;
+    width: 100%;
+	border: none;
+}

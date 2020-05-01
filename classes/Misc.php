@@ -522,7 +522,8 @@
 		/**
 		 * Prints the page header
 		 * @param $trail = trail name, $urlvar = variables to add to the url for the refresh button
-		 *        $tabs = name of the tabs bar to display, $activetab = name of ... the active tab
+		 *        $tabs = name of the tabs bar to display (may be an empty string)
+		 *        $activetab = name of ... the active tab in the tabs bar (may be an empty string)
 		 */
 		function printHeader($trail, $tabs, $activetab) {
 			global $lang;
@@ -535,9 +536,7 @@
 				$this->printTrail($trail);
 			}
 
-			if ($tabs != '') {
-				$this->printTabs($tabs, $activetab);
-			};
+			$this->printTabs($tabs, $activetab);
 
 			echo "</header>\n";
 			echo "<section>\n";
@@ -765,30 +764,32 @@
 			foreach ($tabs as $tab_id => $tab) {
 				if (!isset($tab['hide']) || $tab['hide'] !== true) $nbTabs++;
 			}
-			if ($nbTabs != 0)
-				$width = (int)(100 / $nbTabs) . '%';
-			else
-				$width = '100%';
 
 			echo "<nav>\n";
-			foreach ($tabs as $tab_id => $tab) {
-				$active = ($tab_id == $activetab) ? ' active' : '';
+			if ($nbTabs == 0) {
+				// Special case when no tab has to be displayed.
+				echo "\t<div style=\"width:100%; height:45px;\" class=\"tab\"></div>\n";
+			} else {
+				// Display tabs
+				$width = (int)(100 / $nbTabs) . '%';
+				foreach ($tabs as $tab_id => $tab) {
+					$active = ($tab_id == $activetab) ? ' active' : '';
 
-				if (!isset($tab['hide']) || $tab['hide'] !== true) {
+					if (!isset($tab['hide']) || $tab['hide'] !== true) {
 
-					$tablink = "\t\t<a href=\"" . htmlentities($this->getActionUrl($tab, $_REQUEST)) . "\">";
+						$tablink = "\t\t<a href=\"" . htmlentities($this->getActionUrl($tab, $_REQUEST)) . "\">";
 
-					if (isset($tab['icon']) && $icon = $this->icon($tab['icon']))
-						$tablink .= "<span class=\"icon\"><img src=\"{$icon}\" alt=\"{$tab['title']}\" /></span>";
+						if (isset($tab['icon']) && $icon = $this->icon($tab['icon']))
+							$tablink .= "<span class=\"icon\"><img src=\"{$icon}\" alt=\"{$tab['title']}\" /></span>";
 
-					$tablink .= "{$tab['title']}</a>\n";
+						$tablink .= "{$tab['title']}</a>\n";
 
-					echo "\t<div style=\"width: {$width}\" class=\"tab{$active}\">\n";
-					echo $tablink;
-					echo "\t</div>\n";
+						echo "\t<div style=\"width: {$width}\" class=\"tab{$active}\">\n";
+						echo $tablink;
+						echo "\t</div>\n";
+					}
 				}
 			}
-
 			echo "</nav>\n";
 		}
 

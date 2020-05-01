@@ -20,10 +20,10 @@
 	if (isset($msg)) $misc->printMsg($msg);
 
 	$md5_server = md5($_REQUEST['server']);
-?>
+	$username = isset($_POST['loginUsername']) ? htmlspecialchars($_POST['loginUsername']) : '';
 
-<form id="login_form" action="redirect.php" method="post" name="login_form">
-<?php
+	echo "<form id=\"login_form\" action=\"redirect.php\" method=\"post\" name=\"login_form\">";
+
 	if (!empty($_POST)) $vars =& $_POST;
 	else $vars =& $_GET;
 	// Pass request vars through form (is this a security risk???)
@@ -31,35 +31,36 @@
 		if (substr($key,0,5) == 'login') continue;
 		echo "<input type=\"hidden\" name=\"", htmlspecialchars($key), "\" value=\"", htmlspecialchars($val), "\" />\n";
 	}
-?>
-	<input type="hidden" name="loginServer" value="<?php echo htmlspecialchars($_REQUEST['server']); ?>" />
-	<table class="navbar" border="0" cellpadding="5" cellspacing="3">
-		<tr>
-			<td><?php echo $lang['strusername']; ?></td>
-			<td><input type="text" name="loginUsername" value="<?php if (isset($_POST['loginUsername'])) echo htmlspecialchars($_POST['loginUsername']); ?>" size="24" /></td>
-		</tr>
-		<tr>
-			<td><?php echo $lang['strpassword']; ?></td>
-			<td><input id="loginPassword" type="password" name="loginPassword_<?php echo $md5_server; ?>" size="24" /></td>
-		</tr>
-	</table>
-<?php if (sizeof($conf['servers']) > 1) : ?>
-	<p><input type="checkbox" id="loginShared" name="loginShared" <?php echo isset($_POST['loginShared']) ? 'checked="checked"' : '' ?> /><label for="loginShared"><?php echo $lang['strtrycred'] ?></label></p>
-<?php endif; ?>
-	<p><input type="submit" name="loginSubmit" value="<?php echo $lang['strlogin']; ?>" /></p>
-</form>
+	echo "<input type=\"hidden\" name=\"loginServer\" value=\"" . htmlspecialchars($_REQUEST['server']) . "\" />";
+	echo "<table class=\"navbar\" border=\"0\" cellpadding=\"5\" cellspacing=\"3\">";
+	echo "\t<tr>";
+	echo "\t\t<td>{$lang['strusername']}</td>";
+	echo "\t\t<td><input type=\"text\" name=\"loginUsername\" value=\"{$username}\" size=\"24\" /></td>";
+	echo "\t</tr>";
+	echo "\t<tr>";
+	echo "\t\t<td>{$lang['strpassword']}</td>";
+	echo "\t\t<td><input id=\"loginPassword\" type=\"password\" name=\"loginPassword_{$md5_server}\" size=\"24\" /></td>";
+	echo "\t</tr>";
+	echo "</table>";
 
-<script>
-	var uname = document.login_form.loginUsername;
-	var pword = document.login_form.loginPassword_<?php echo $md5_server; ?>;
-	if (uname.value == "") {
-		uname.focus();
-	} else {
-		pword.focus();
+	if (sizeof($conf['servers']) > 1) {
+		echo "<p><input type=\"checkbox\" id=\"loginShared\" name=\"loginShared\" ";
+		echo isset($_POST['loginShared']) ? 'checked="checked"' : '';
+		echo "<label for=\"loginShared\">{$lang['strtrycred']}</label></p>";
 	}
-</script>
+	echo "<p><input type=\"submit\" name=\"loginSubmit\" value=\"{$lang['strlogin']}\" /></p>";
+	echo "</form>";
 
-<?php
+	echo "<script>";
+	echo "	var uname = document.login_form.loginUsername;";
+	echo "	var pword = document.login_form.loginPassword_{$md5_server};";
+	echo "	if (uname.value == \"\") {";
+	echo "		uname.focus();";
+	echo "	} else {";
+	echo "		pword.focus();";
+	echo "	}";
+	echo "</script>";
+
 	// Output footer
 	$misc->printFooter();
 ?>

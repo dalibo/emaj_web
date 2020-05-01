@@ -22,13 +22,14 @@ body {
     width: 225px;
 	flex-shrink: 0;
 	resize: horizontal;
-	overflow: scroll;
+	overflow: hidden;
 }
 
 #mainDiv {
     display: inline-block;
 	height: 100%;
     width: 100%;
+	overflow: hidden;
 }
 
 #browserFrame {

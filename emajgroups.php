@@ -930,7 +930,7 @@
 		$misc->printTable($marks, $columns, $actions, 'marks', $lang['emajnomark'], 'markPre', array('sorter' => false, 'filter' => true));
 
 		// JQuery to remove the last deleteBeforeMark button as it is meaningless on the first set mark
-		echo "<script type=\"text/javascript\">\n";
+		echo "<script>\n";
 		echo "  $(\"table.data tr:last td:contains('{$lang['emajfirstmark']}')\").removeClass()\n";
 		echo "  $(\"table.data tr:last a:contains('{$lang['emajfirstmark']}')\").remove()\n";
 		echo "</script>\n";
@@ -975,7 +975,6 @@
 		} else {
 
 			// form for statistics selection
-			echo "<style type=\"text/css\">[disabled]{color:#933;}</style>";
 			echo "<form id=\"statistics_form\" action=\"emajgroups.php?action=log_stat_group&amp;back=detail&amp;{$misc->href}\"";
 			echo "  method=\"post\" enctype=\"multipart/form-data\">\n";
 
@@ -1008,7 +1007,7 @@
 			echo "</p></form>\n";
 
 			// JQuery scripts
-			echo "<script type=\"text/javascript\">\n";
+			echo "<script>\n";
 
 			// JQuery to remove the last mark as it cannot be selected as end mark
 			echo "  $(\"#rangeend option:last-child\").remove();\n";
@@ -1218,7 +1217,7 @@
 
 			// dynamicaly change the behaviour of the SQL link using JQuery code: open a new window
 			$sql_window_id = htmlentities('emaj_sqledit:'.$_REQUEST['server']);
-				echo "<script type=\"text/javascript\">
+				echo "<script>
 				$(\"#logStats a:contains('SQL')\").click(function() {
 					window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=400,resizable=yes,scrollbars=yes').focus();
 					return false;
@@ -1371,7 +1370,7 @@
 
 			// dynamicly change the behaviour of the SQL link using JQuery code: open a new window
 			$sql_window_id = htmlentities('emaj_sqledit:'.$_REQUEST['server']);
-			echo "<script type=\"text/javascript\">
+			echo "<script>
 				$(\"#detailedLogStats a:contains('SQL')\").click(function() {
 					window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=400,resizable=yes,scrollbars=yes').focus();
 					return false;
@@ -2218,7 +2217,7 @@
 		echo "\t\t<p><input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />&nbsp;&nbsp;&nbsp;\n";
 		echo "\t\t<input type=\"submit\" name=\"openfile\" value=\"${lang['stropen']}\" disabled>";
 		echo "\t\t<span id=\"selected-file\"></span></p>\n";
-		echo "\t\t<script type=\"text/javascript\">
+		echo "\t\t<script>
 			$(document).ready(
 				function(){
 					$('input:file').change(
@@ -2511,7 +2510,7 @@
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate /></p>\n";
 		echo "</form>\n";
 
-		echo "<script type=\"text/javascript\">\n";
+		echo "<script>\n";
 		echo "  $(document).ready(function () {\n";
 		echo "    $(\"#mark\").keyup(function (data) {\n";
 		echo "      if ($(this).val() != \"\") {\n";
@@ -2625,7 +2624,7 @@
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate /></p>\n";
 		echo "</form>\n";
 
-		echo "<script type=\"text/javascript\">\n";
+		echo "<script>\n";
 		echo "  $(document).ready(function () {\n";
 		echo "    $(\"#mark\").keyup(function (data) {\n";
 		echo "      if ($(this).val() != \"\") {\n";
@@ -3066,7 +3065,7 @@
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate /></p>\n";
 		echo "</form>\n";
 
-		echo "<script type=\"text/javascript\">\n";
+		echo "<script>\n";
 		echo "  $(document).ready(function () {\n";
 		echo "    $(\"#mark\").keyup(function (data) {\n";
 		echo "      if ($(this).val() != \"\") {\n";
@@ -3188,7 +3187,7 @@
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate /></p>\n";
 		echo "</form>\n";
 
-		echo "<script type=\"text/javascript\">\n";
+		echo "<script>\n";
 		echo "  $(document).ready(function () {\n";
 		echo "    $(\"#mark\").keyup(function (data) {\n";
 		echo "      if ($(this).val() != \"\") {\n";
@@ -3360,7 +3359,6 @@
 
 		$misc->printTitle($lang['emajrlbkagroup']);
 
-		echo "<style type=\"text/css\">[disabled]{color:#933;}</style>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"rollback_group_confirm_alter\" />\n";
 
@@ -3571,7 +3569,7 @@
 				echo "<input type=\"hidden\" name=\"rlbkid\" value=\"", htmlspecialchars($rlbkId), "\" />\n";
 				echo $misc->form;
 				echo "</form>\n";
-				echo "<script type=\"text/javascript\">document.forms[\"auto\"].submit();</script>";
+				echo "<script>document.forms[\"auto\"].submit();</script>";
 
 				exit;
 			}
@@ -3700,7 +3698,6 @@
 
 		$misc->printTitle($lang['emajrlbkgroups']);
 
-		echo "<style type=\"text/css\">[disabled]{color:#933;}</style>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"rollback_groups_confirm_alter\" />\n";
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
@@ -3875,7 +3872,7 @@
 			echo "<input type=\"hidden\" name=\"rlbkid\" value=\"", htmlspecialchars($rlbkId), "\" />\n";
 			echo $misc->form;
 			echo "</form>\n";
-			echo "<script type=\"text/javascript\">document.forms[\"auto\"].submit();</script>";
+			echo "<script>document.forms[\"auto\"].submit();</script>";
 			exit;
 		}
 
@@ -3963,7 +3960,7 @@
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate /></p>\n";
 		echo "</form>\n";
 
-		echo "<script type=\"text/javascript\">\n";
+		echo "<script>\n";
 		echo "  $(document).ready(function () {\n";
 		echo "    $(\"#newmark\").keyup(function (data) {\n";
 		echo "      if ($(this).val() != \"\") {\n";

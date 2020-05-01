@@ -49,7 +49,7 @@
 	<p><input type="submit" name="loginSubmit" value="<?php echo $lang['strlogin']; ?>" /></p>
 </form>
 
-<script type="text/javascript">
+<script>
 	var uname = document.login_form.loginUsername;
 	var pword = document.login_form.loginPassword_<?php echo $md5_server; ?>;
 	if (uname.value == "") {

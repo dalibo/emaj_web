@@ -217,7 +217,7 @@
 		$misc->printTable($completedRlbks, $columnsCompletedRlbk, $actions, 'completedRlbk', $lang['emajnorlbk']);
 
 		// JQuery script to disable input field if the associated checkbox is not checked
-		echo "<script type=\"text/javascript\">\n";
+		echo "<script>\n";
 		echo "  $(\"#nbrlbkchecked\").bind('click', function () {\n";
 		echo "    if ($(this).prop('checked')) {\n";
 		echo "      $(\"#rlbkNb\").removeAttr('disabled');\n";

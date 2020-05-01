@@ -15,9 +15,9 @@
 	
 	// Output header
 	$scripts = '
-		<script src="xloadtree/xtree2.js" type="text/javascript"></script>
-		<script src="xloadtree/xloadtree2.js" type="text/javascript"></script>
-		<style type="text/css">
+		<script src="xloadtree/xtree2.js"></script>
+		<script src="xloadtree/xloadtree2.js"></script>
+		<style>
 			.webfx-tree-children { background-image: url("' . $misc->icon('I') . '"); }
 		</style>';
 	$misc->printHtmlHeader('', $scripts, 'browser');

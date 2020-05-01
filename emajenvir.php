@@ -52,7 +52,7 @@
 			echo "<div class=\"form-param-value\">{$value}</div>\n";
 		} else {
 			// The parameter has its default value
-			echo "<div class=\"form-param-def-value\">${defValParam[$param]}&nbsp<sup>(def)</sup></div>\n";
+			echo "<div class=\"form-param-def-value\">${defValParam[$param]}&nbsp;<sup>(def)</sup></div>\n";
 		}
 
 //		if ($emajdb->isEmaj_Adm()) {
@@ -275,7 +275,7 @@
 			echo "\t\t<p><input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /> \n";
 			echo "\t\t<input type=\"submit\" name=\"sendfile\" value=\"${lang['strimport']}\" disabled>";
 			echo "\t\t<span id=\"selected-file\"></span></p>\n";
-			echo "\t\t<script type=\"text/javascript\">
+			echo "\t\t<script>
 				$(document).ready(
 					function(){
 						$('input:file').change(
@@ -587,7 +587,6 @@
 			}
 
 			// Display the parameter values
-			echo "<div>\n";
 			echo "<h4>{$lang['emajpargeneral']}</h4>\n";
 
 			echo "<div class=\"form-container-param\">\n";

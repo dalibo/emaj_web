@@ -464,6 +464,7 @@
 			// Send XHTML headers, or regular XHTML strict headers
 			if ($frameset == true) {
 				echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Frameset//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd\">\n";
+//				echo "<!DOCTYPE html>\n";
 			} else if (isset($conf['use_xhtml_strict']) && $conf['use_xhtml_strict']) {
 				echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-Strict.dtd\">\n";
 			} else {
@@ -489,10 +490,10 @@
 
 			// Javascript
 			if (!$frameset) {
-				echo "<script type=\"text/javascript\" src=\"js/global.js\"></script>\n";
-				echo "<script type=\"text/javascript\" src=\"libraries/js/jquery-3.3.1.min.js\"></script>\n";
-				echo "<script type=\"text/javascript\" src=\"libraries/js/jquery.tablesorter.min.js\"></script>\n";
-				echo "<script type=\"text/javascript\" src=\"libraries/js/jquery.tablesorter.widgets.min.js\"></script>\n";
+				echo "<script src=\"js/global.js\"></script>\n";
+				echo "<script src=\"libraries/js/jquery-3.3.1.min.js\"></script>\n";
+				echo "<script src=\"libraries/js/jquery.tablesorter.min.js\"></script>\n";
+				echo "<script src=\"libraries/js/jquery.tablesorter.widgets.min.js\"></script>\n";
 			}
 			if ($script) echo "{$script}\n";
 
@@ -610,7 +611,7 @@
 				$sql_window_id = htmlentities('sqledit:'.$_REQUEST['server']);
 				$history_window_id = htmlentities('history:'.$_REQUEST['server']);
 
-				echo "\t<script type=\"text/javascript\">
+				echo "\t<script>
 						$('#toplink_sql').click(function() {
 							window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();
 							return false;
@@ -680,14 +681,14 @@
 
 				// reload the browser if requested
 				if (isset($_reload_browser)) {
-					echo "<script type=\"text/javascript\">\n";
+					echo "<script>\n";
 					echo "\tparent.frames.browser.location.reload();\n";
 					echo "</script>\n";
 				}
 
 				// the button to reach the page top if requested
 				if ($doBottomLink) {
-					echo "\t<a name=\"bottom\">&nbsp;</a>\n";
+					echo "\t<a id=\"bottom\">&nbsp;</a>\n";
 					if (!isset($_no_bottom_link))
 						echo "\t<a href=\"#\" class=\"bottom_link\"><img src=\"{$this->icon('Top')}\" alt=\"{$lang['strgotoppage']}\" title=\"{$lang['strgotoppage']}\"/></a>\n";
 				}
@@ -1219,7 +1220,7 @@
 		 * @param $object eg. forms[0].username
 		 */
 		function setFocus($object) {
-			echo "<script type=\"text/javascript\">\n";
+			echo "<script>\n";
 			echo "   document.{$object}.focus();\n";
 			echo "</script>\n";
 		}
@@ -1231,7 +1232,7 @@
 		 *        attached to the name.
 		 */
 		function setWindowName($name, $addServer = true) {
-			echo "<script type=\"text/javascript\">\n";
+			echo "<script>\n";
 			echo "//<![CDATA[\n";
 			echo "   window.name = '{$name}", ($addServer ? ':'.htmlspecialchars($_REQUEST['server']) : ''), "';\n";
 			echo "//]]>\n";
@@ -1588,7 +1589,7 @@
 					if (isset($ma['checked']) && $ma['checked'])
 						$disabledButton = "";
 					else
-						$disabledButton = " disabled=\"true\" ";
+						$disabledButton = " disabled";
 					foreach($actions as $k => $a)
 						if (isset($a['multiaction']))
 							echo "\t\t<button id=\"{$a['multiaction']}\" name=\"action\" value=\"{$a['multiaction']}\" {$disabledButton}>{$a['content']}</button>\n";
@@ -1603,7 +1604,7 @@
 
 				// generate the javascript for the tablesorter JQuery plugin
 				if ($sorter || $filter) {
-					echo "<script type=\"text/javascript\">\n";
+					echo "<script>\n";
 					echo "\t$(document).ready(function() {\n";
 					echo "\t\t$(\"#{$place} table\").tablesorter( {\n";
 					echo "\t\t\twidthFixed : true,\n";

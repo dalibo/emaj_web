@@ -137,7 +137,7 @@
 			$urlvars = $misc->getRequestVars();
 
 			// Display the tables list
-			echo "<a name=\"tables\">&nbsp;</a>\n";
+			echo "<a id=\"tables\">&nbsp;</a>\n";
 
 			$misc->printTitle(sprintf($lang['strtableslist'], $_REQUEST['schema']));
 
@@ -287,7 +287,7 @@
 
 			// Display the sequences list
 
-			echo "<a name=\"sequences\">&nbsp;</a>\n";
+			echo "<a id=\"sequences\">&nbsp;</a>\n";
 
 			$misc->printTitle(sprintf($lang['strsequenceslist'], $_REQUEST['schema']));
 

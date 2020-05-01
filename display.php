@@ -413,9 +413,9 @@
 		doBrowseFK();
 	}
 
-	$scripts = "<script src=\"libraries/js/jquery-ui.min.js\" type=\"text/javascript\"></script>";
-	$scripts .= "<script src=\"js/display.js\" type=\"text/javascript\"></script>";
-	$scripts .= "<script type=\"text/javascript\">\n";
+	$scripts = "<script src=\"libraries/js/jquery-ui.min.js\"></script>";
+	$scripts .= "<script src=\"js/display.js\"></script>";
+	$scripts .= "<script>\n";
 	$scripts .= "var Display = {\n";
 	$scripts .= "errmsg: '". str_replace("'", "\'", $lang['strconnectionfail']) ."'\n";
 	$scripts .= "};\n";

@@ -17,6 +17,7 @@ body {
 }
 
 #browserDiv {
+	position: relative;
     display: inline-block;
 	height: 100%;
     width: 225px;
@@ -41,4 +42,25 @@ body {
     height: 100%;
     width: 100%;
 	border: none;
+}
+
+.bottom_link {
+	position: absolute;
+	bottom: 0px;
+	margin: 0;
+	padding: 4px;
+	background: #383840;
+	border-top: 1px dotted #999;
+	border-left: 1px dotted #999;
+	height: 16px;
+}
+#minimize_button {
+	visibility: visible;
+	right: 15px;
+	transform: rotate(270deg);
+}
+#maximize_button {
+	visibility: hidden;
+	left: 0px;
+	transform: rotate(90deg);
 }

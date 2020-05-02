@@ -248,7 +248,7 @@ th.required {
 header {
 	position: fixed;
 	top : 0px;
-	background-color: #203C4F;
+	background-color: #203c4f;
 	color: #cfcfcf;
 	margin: 0px 0px 0px 0px;
 	width: 100%;
@@ -371,7 +371,7 @@ footer {
 	right: 0;
 	margin: 0;
 	padding: 4px;
-	background: #383840;
+	background: #203c4f;
 	border-top: 1px dotted #999;
 	border-left: 1px dotted #999;
 	font-size: smaller;

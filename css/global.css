@@ -10,7 +10,7 @@ body {
 	margin:	4px;
 	padding: 0;
 	font-family: "Open Sans", arial, tahoma, verdana, helvetica, sans-serif, serif;
-	font-size: 0.9em;
+	font-size: 1em;
 	color: #5a5a5a;
 }
 body > * {
@@ -22,7 +22,8 @@ img {
 	border: none;
 }
 h1 {
-	font-size: 1.5em;
+	padding: 20px;
+	font-size: 1.7em;
 	font-weight: bold;
 	color: #308ac5;
 }
@@ -111,6 +112,7 @@ input[type=checkbox], input[type=password], input[type=text], input[type=number]
 input[type=submit], input[type=button], input[type=reset], button, .custom-file-upload {
 	background: #fa842f;
 	color: #ffffff;
+	font-size: 1em;
 	font-weight: bold;
 	margin: 2px 10px 2px 10px;
 	padding: 2px 15px 2px 15px;
@@ -211,7 +213,7 @@ th.required {
 	max-width: 230px;
 	margin-left: -210px;
 	padding: 7px;
-	z-index: 999;
+	z-index: 99;
 	background-color: #505050;
 	color: #ffffff;
 	border: none;
@@ -231,7 +233,7 @@ th.required {
 {
 	content: "";
 	position: absolute;
-	z-index: 1000;
+	z-index: 100;
 	top: -8px;
 /*  right: 80%;*/
 	right: 25px;
@@ -248,6 +250,7 @@ th.required {
 header {
 	position: fixed;
 	top : 0px;
+	z-index: 100;
 	background-color: #203c4f;
 	color: #cfcfcf;
 	margin: 0px 0px 0px 0px;
@@ -357,7 +360,7 @@ nav .active {
  ** Main section
  **/
 section {
-	margin-top: 140px;
+	margin-top: 150px;
 }
 
 /**
@@ -476,8 +479,8 @@ td.iconbutton:hover {
 	transition: background-color 0.4s;
 }
 td.iconbutton a img {
-	width: 20px;
-	height: 20px;
+	width: 22px;
+	height: 22px;
 }
 td.iconbutton a {
 	padding: 1px 2px;
@@ -501,7 +504,7 @@ table.multiactions {
 th.multiactions {
 	text-align: left;
 	background-color: #e6e6e6;
-	font-size: smaller; /* 0.9em */
+	font-size: 0.8em;
 	padding: 0px 5px;
 }
 td.multiactionbuttons {
@@ -535,13 +538,15 @@ tr.row1 {
 	border: 1px solid #d8d8d8;
 }
 
-/** Other content formating **/
+/* Query result data table */
+table#data tr {
+	font-size: 0.9em;
+}
+table#data tr.data1, table#data tr.data2, table#data tr.data3 {
+	font-size: 0.8em;
+}
 
-/*.active a {
-	font-weight: bold;
-	font-size: 1.2em;
-	color: #ffffff;
-}*/
+/** Other content formating **/
 
 ul.toplink, ul.navlink {
 	list-style: none;
@@ -564,22 +569,16 @@ ul.toplink li:first-child, ul.navlink li:first-child {
 }
 
 .dot {
-  height: 10px;
-  width: 10px;
-  border-radius: 50%;
-  display: inline-block;
+	height: 10px;
+	width: 10px;
+	border-radius: 50%;
+	display: inline-block;
 }
 .redbg {
 	background-color: #ff0000;
 }
 .greenbg {
 	background-color: #00dd00;
-}
-a.help {
-	color: #A46600;
-	vertical-align: super;
-	text-decoration: none;
-	font-size: 0.8em;
 }
 pre {
 	font-size: 110%;
@@ -688,7 +687,7 @@ div.form-param-button {
 	margin-bottom: 20px;
 	color: grey;
 	font-style: italic;
-	font-size: 12px;
+	font-size: 0.9em;
 }
 
 /** FK browsing **/
@@ -775,9 +774,6 @@ a.fk_delete {
 	line-height: normal;
 	text-align: center; /* center the input */
 	padding: 1px 3px 1px 3px;
-	-webkit-transition: line-height 0.1s ease;
-	-moz-transition: line-height 0.1s ease;
-	-o-transition: line-height 0.1s ease;
 	transition: line-height 0.1s ease;
 }
 
@@ -794,11 +790,18 @@ a.fk_delete {
 }
 
 button.filterreset {
-	border: none;
-	margin-top: 2px;
-	padding: 0px;
+	margin: 2px 0px 2px 0px;
+	padding: 0px 3px 0px 3px;
+	font-size: 0.87em;
+	font-weight: normal;
+	color: #ffffff;
+	background-color: #308ac5;
+	border: 1px solid #308ac5;
+}
+button.filterreset:hover {
 	color: #308ac5;
-	background-color: inherit;
+	background-color: #ffffff;
+	border: 1px solid #308ac5;
 }
 th.filtericon {
 	vertical-align: bottom;

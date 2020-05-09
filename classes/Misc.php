@@ -596,35 +596,34 @@
 					)
 				);
 
-				echo "\t<div class=\"connlinks\">";
+				echo "\t<div class=\"connlinks\">\n";
 				$this->printLinksList($toplinks, 'toplink');
 
 				$sql_window_id = htmlentities('sqledit:'.$_REQUEST['server']);
 				$history_window_id = htmlentities('history:'.$_REQUEST['server']);
 
-				echo "\t<script>
-						$('#toplink_sql').click(function() {
-							window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();
-							return false;
-						});
-						$('#toplink_history').click(function() {
-							window.open($(this).attr('href'),'{$history_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();
-							return false;
-						});";
+				echo "\t\t<script>\n";
+				echo "\t\t\t$('#toplink_sql').click(function() {\n";
+				echo "\t\t\t	window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();\n";
+				echo "\t\t\t	return false;\n";
+				echo "\t\t\t});\n";
+				echo "\t\t\t$('#toplink_history').click(function() {\n";
+				echo "\t\t\t	window.open($(this).attr('href'),'{$history_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();\n";
+				echo "\t\t\t	return false;\n";
+				echo "\t\t\t});\n";
 
 				if (isset($_SESSION['sharedUsername'])) {
-					printf("
-						$('#toplink_logout').click(function() {
-							return confirm('%s');
-						});", str_replace("'", "\'", $lang['strconfdropcred']));
+					echo "\t\t\t$('#toplink_logout').click(function() {\n";
+					echo "\t\t\t	return confirm('{$lang['strconfdropcred']}');\n";
+					echo "\t\t\t});";
 				}
 
-				echo "\n\t</script>\n";
+				echo "\n\t\t</script>\n";
 			}
 			else {
-				echo "<span class=\"appname\">{$appName}</span> <span class=\"version\">{$appVersion}</span>";
+				echo "\t\t<span class=\"appname\">{$appName}</span> <span class=\"version\">{$appVersion}</span>\n";
 			}
-			echo "</div>\n";
+			echo "\t</div>\n";
 
 			// language change management
 			// if the language has just been changed, set the flag that will force the browser reload at the end of the page processing on client side 
@@ -632,27 +631,27 @@
 				$_reload_browser = true;
 
 			// language selection
-			echo "\t<div class=\"language\">";
+			echo "\t<div class=\"language\">\n";
 			if ($_SERVER["REQUEST_METHOD"] == 'GET')
-				echo "<form method=\"get\">";
+				echo "\t\t<form method=\"get\">\n";
 			else
-				echo "<form method=\"get\" action=\"intro.php\">";
-			echo "<select name=\"language\" onchange=\"this.form.submit()\">\n";
+				echo "\t\t<form method=\"get\" action=\"intro.php\">\n";
+			echo "\t\t\t<select name=\"language\" onchange=\"this.form.submit()\">\n";
 			$language = isset($_SESSION['webdbLanguage']) ? $_SESSION['webdbLanguage'] : 'english';
 			foreach ($appLangFiles as $k => $v) {
-				echo "<option value=\"{$k}\"",
+				echo "\t\t\t\t<option value=\"{$k}\"",
 					($k == $language) ? ' selected="selected"' : '',
 					">{$v}</option>\n";
 			}
-			echo "</select>\n";
-			echo "<noscript><input type=\"submit\" value=\"Set Language\"></noscript>\n";
+			echo "\t\t\t</select>\n";
+			echo "\t\t\t<noscript><input type=\"submit\" value=\"Set Language\"></noscript>\n";
 			if ($_SERVER["REQUEST_METHOD"] == 'GET') {
 				foreach ($_GET as $key => $val) {
 					if ($key == 'language') continue;
-					echo "<input type=\"hidden\" name=\"{$key}\" value=\"", htmlspecialchars($val), "\" />\n";
+					echo "\t\t\t<input type=\"hidden\" name=\"{$key}\" value=\"", htmlspecialchars($val), "\" />\n";
 				}
 			}
-			echo "</form>\n";
+			echo "\t\t</form>\n";
 			echo "\t</div>\n";
 
 			echo "</div>\n";
@@ -737,13 +736,13 @@
 		 *   WARNING: This field is NOT escaped! No user should be able to inject something here, use with care.
 		 */
 		function printLinksList($links, $class='') {
-			echo "<ul class=\"{$class}\">\n";
+			echo "\t\t<ul class=\"{$class}\">\n";
 			foreach ($links as $link) {
-				echo "\t\t<li>";
+				echo "\t\t\t<li>";
 				$this->printLink($link);
 				echo "</li>\n";
 			}
-			echo "\t</ul>\n";
+			echo "\t\t</ul>\n";
 		}
 
 		/**
@@ -1002,12 +1001,12 @@
 				$trail = $this->getTrail($trail);
 			}
 			echo "<div class=\"trail\">\n";
-			echo "  <div class=\"crumb\">\n\t";
+			echo "\t<div class=\"crumb\">\n\t\t";
 
 			$firstElement = 1;
 			foreach ($trail as $crumb) {
 				if (!$firstElement)
-					echo "\t &gt; ";
+					echo "\t\t &gt; ";
 
 				$firstElement = 0;
 
@@ -1033,7 +1032,7 @@
 
 				echo $crumblink;
 			}
-			echo "  </div>\n";
+			echo "\t</div>\n";
 
 			// right cell containing the bottom button
 			echo "\t<div class=\"trailicons\">\n";

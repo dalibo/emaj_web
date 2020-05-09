@@ -210,7 +210,7 @@
 			$subject = '';
 		}
 
-		if ($subject == '')
+		if ($subject == '' || $subject == 'history')
 			$misc->printHeader('database', '', '');
 		else
 			$misc->printHeader('table', 'table', 'content');

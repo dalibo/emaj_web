@@ -320,7 +320,7 @@ header {
 nav {
 	display:flex;
 }
-.tab {
+.tab, .tab-inactive{
 	background-color: #f4f4f4;
 	text-align: center;
 	vertical-align: top;
@@ -384,7 +384,9 @@ footer {
 	color: #ffffff;
 }
 
-/** Other content formating **/
+/**
+ ** Data tables
+ **/
 
 table.data {
 	border: 1px solid #e8e8e8;
@@ -402,32 +404,6 @@ th.data a {
 }
 th.data a:hover {
 	color: #cc0000;
-}
-
-/*.active a {
-	font-weight: bold;
-	font-size: 1.2em;
-	color: #ffffff;
-}*/
-
-ul.toplink, ul.navlink {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-}
-
-ul.navlink{
-	margin:20px 0 20px 20px;
-}
-
-ul.toplink li, ul.navlink li {
-	display:inline;
-	border-left:1px solid #b3b3b3;
-	margin:0;padding: 0 2px 0 5px;
-}
-ul.toplink li:first-child, ul.navlink li:first-child {
-	border: none;
-	padding-left:0;
 }
 tr th.data:first-child{
 	border-left: 0;
@@ -489,19 +465,104 @@ tr td.data1:last-child, tr td.data2:last-child, tr td.data3:last-child {
 	background-color: #d4c8a1
 }
 td.opbutton1, td.opbutton2 {
-	color: #000000;
-	padding: 2px 6px;
+	padding: 0px;
 	text-align: center;
-}
-td.opbutton1 a, td.opbutton2 a {
-	color: #308ac5;
-}
-td.opbutton1 a:hover, td.opbutton2 a:hover {
-	color: #cc0000;
 }
 td.opbutton1:hover, td.opbutton2:hover {
 	text-decoration: none;
 }
+td.iconbutton:hover {
+	background-color: #ffffff;
+	transition: background-color 0.4s;
+}
+td.iconbutton a img {
+	width: 20px;
+	height: 20px;
+}
+td.iconbutton a {
+	padding: 1px 2px;
+}
+td.textbutton a {
+	padding: 2px 6px;
+	color: #308ac5;
+}
+td.textbutton a:hover {
+	color: #cc0000;
+}
+td.emptybutton {
+	width: 24px;
+}
+
+table.multiactions {
+	margin-top: 6px;
+	border: 1px solid #e8e8e8;
+	box-shadow: -1px 2px 5px rgba(0,0,0,.25);
+}
+th.multiactions {
+	text-align: left;
+	background-color: #e6e6e6;
+	font-size: smaller; /* 0.9em */
+	padding: 0px 5px;
+}
+td.multiactionbuttons {
+	background-color: #f9f9f9;
+}
+
+table.multiactions button.text {
+	box-shadow: 0px 0px 0px;
+}
+table.multiactions button.icon {
+	width: 20px;
+	height: 20px;
+	margin: 0px 8px;
+	padding: 0;
+	border: none;
+	border-radius: 0;
+	background-color: transparent;
+	box-shadow: 0px 0px 0px;
+}
+table.multiactions button.icon:hover {
+	background-color: #ffffff;
+	transition: background-color 0.4s;
+}
+table.multiactions button.icon:disabled, table.multiactions button.icon:disabled:hover {
+	opacity: 0.6;
+	filter: grayscale(100%);
+	cursor: not-allowed;
+}
+
+tr.row1 {
+	border: 1px solid #d8d8d8;
+}
+
+/** Other content formating **/
+
+/*.active a {
+	font-weight: bold;
+	font-size: 1.2em;
+	color: #ffffff;
+}*/
+
+ul.toplink, ul.navlink {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+ul.navlink{
+	margin:20px 0 20px 20px;
+}
+
+ul.toplink li, ul.navlink li {
+	display:inline;
+	border-left:1px solid #b3b3b3;
+	margin:0;padding: 0 2px 0 5px;
+}
+ul.toplink li:first-child, ul.navlink li:first-child {
+	border: none;
+	padding-left:0;
+}
+
 .dot {
   height: 10px;
   width: 10px;
@@ -528,25 +589,6 @@ pre.data {
 }
 pre.error {
 	font-size: 120%;
-}
-
-table.multiactions {
-	margin-top: 6px;
-	border: 1px solid #e8e8e8;
-	box-shadow: -1px 2px 5px rgba(0,0,0,.25);
-}
-th.multiactions {
-	text-align: left;
-	background-color: #e6e6e6;
-	font-size: smaller; /* 0.9em */
-	padding: 0px 5px;
-}
-table.multiactions button {
-	box-shadow: 0px 0px 0px;
-}
-
-tr.row1 {
-	border: 1px solid #d8d8d8;
 }
 
 /** Grid div for forms */

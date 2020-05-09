@@ -83,7 +83,7 @@
 	$lang['strstop'] = 'Stop';
 	$lang['strgotoppage'] = 'back to top';
 	$lang['strselect'] = 'Select';
-	$lang['stractionsonselectedobjects'] = 'Actions on selected objects (%s)';
+	$lang['stractionsonselectedobjects'] = 'Actions on objects (%s)';
 	$lang['strall'] = 'All';
 	$lang['strnone'] = 'None';
 	$lang['strinvert'] = 'Invert';
@@ -528,6 +528,7 @@
 	$lang['emajnbtruncate'] = '# TRUNCATE';
 	$lang['emajnbrole'] = '# roles';
 	$lang['emajstatrows'] = '# row changes';
+	$lang['emajbrowsechanges'] = 'Browse changes';
 
 	// Group's content
 	$lang['emajgroupcontent'] = 'Current content of the tables group "%s"';

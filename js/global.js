@@ -37,10 +37,10 @@ function countChecked(form_id) {
 		$(elem).html( $(elem).html().replace(/\(\d+\)/,"("+cnt+")") );
 	});
 
-	// for each multiaction button, disable the button if:
+	// for each multiaction button or icon, disable the button if:
 	// - either the number of checked rows is 0
 	// - or at least one checked row has its related button disabled (empty cell in the table for the associated action column
-	var buttons = $("#" + form_id + " button:not(.reset_" + form_id + ")").each(function(i,elem) {
+	var buttons = $("#" + form_id).find("input[type=image], button:not(.reset_" + form_id + ")").each(function(i,elem) {
 		nbHiddenButtons = 0;
 		if (cnt > 0) {
 			nbHiddenButtons = $("#" + form_id + " input:checkbox:checked").parents("tr").find(".multi_" + $(elem).attr("value") + ":empty").length;

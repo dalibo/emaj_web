@@ -202,6 +202,7 @@
 			$actions = array(
 				'browse' => array(
 					'content' => $lang['strbrowse'],
+					'icon' => 'Eye',
 					'attr'=> array (
 						'href' => array (
 							'url' => 'display.php',
@@ -222,6 +223,7 @@
 					),
 					'assign' => array(
 						'content' => $lang['emajassign'],
+						'icon' => 'Assign',
 						'attr' => array (
 							'href' => array (
 								'url' => 'schemas.php',
@@ -236,6 +238,7 @@
 					),
 					'move' => array(
 						'content' => $lang['emajmove'],
+						'icon' => 'Move',
 						'attr' => array (
 							'href' => array (
 								'url' => 'schemas.php',
@@ -250,6 +253,7 @@
 					),
 					'modify' => array(
 						'content' => $lang['strupdate'],
+						'icon' => 'Pencil',
 						'attr' => array (
 							'href' => array (
 								'url' => 'schemas.php',
@@ -268,6 +272,7 @@
 					),
 					'remove' => array(
 						'content' => $lang['emajremove'],
+						'icon' => 'Remove',
 						'attr' => array (
 							'href' => array (
 								'url' => 'schemas.php',
@@ -337,6 +342,7 @@
 					),
 					'assign' => array(
 						'content' => $lang['emajassign'],
+						'icon' => 'Assign',
 						'attr' => array (
 							'href' => array (
 								'url' => 'schemas.php',
@@ -351,6 +357,7 @@
 					),
 					'move' => array(
 						'content' => $lang['emajmove'],
+						'icon' => 'Move',
 						'attr' => array (
 							'href' => array (
 								'url' => 'schemas.php',
@@ -365,6 +372,7 @@
 					),
 					'remove' => array(
 						'content' => $lang['emajremove'],
+						'icon' => 'Remove',
 						'attr' => array (
 							'href' => array (
 								'url' => 'schemas.php',

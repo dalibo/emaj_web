@@ -83,7 +83,7 @@
 	$lang['strstop'] = 'Arrêter';
 	$lang['strgotoppage'] = 'Haut de la page';
 	$lang['strselect'] = 'Sélectionner';
-	$lang['stractionsonselectedobjects'] = 'Actions sur les objets sélectionnés (%s)';
+	$lang['stractionsonselectedobjects'] = 'Actions sur les objets (%s)';
 	$lang['strall'] = 'Tous';
 	$lang['strnone'] = 'Aucun';
 	$lang['strinvert'] = 'Inverser';
@@ -528,6 +528,7 @@
 	$lang['emajnbtruncate'] = 'Nb TRUNCATE';
 	$lang['emajnbrole'] = 'Nb rôles';
 	$lang['emajstatrows'] = 'Nb mises à jour';
+	$lang['emajbrowsechanges'] = 'Voir les mises à jour';
 
 	// Group's content
 	$lang['emajgroupcontent'] = 'Contenu actuel du groupe de tables "%s"';

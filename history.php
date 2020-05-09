@@ -55,6 +55,7 @@
 			$actions = array(
 				'run' => array(
 					'content' => $lang['strexecute'],
+					'icon' => 'Start',
 					'attr'=> array (
 						'href' => array (
 							'url' => 'sql.php',
@@ -70,6 +71,7 @@
 				),
 				'remove' => array(
 					'content' => $lang['strdelete'],
+					'icon' => 'Bin',
 					'attr'=> array (
 						'href' => array (
 							'url' => 'history.php',

@@ -276,6 +276,7 @@
 				$actions = array(
 					'consolidate' => array(
 						'content' => $lang['emajconsolidate'],
+						'icon' => 'Consolidate',
 						'attr' => array (
 							'href' => array (
 								'url' => 'emajrollbacks.php',

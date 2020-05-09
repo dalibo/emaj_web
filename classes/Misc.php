@@ -699,6 +699,7 @@
 		 *          ...
 		 *       ),
 		 *       'content' => The link text
+		 *       'icon' => (optional) if supplied, the icon replaces the 'content' text
 		 *       'fields' => (optionnal) the data from which content and attr's values are obtained
 		 *     );
 		 *   the special attribute 'href' might be a string or an array. If href is an array it
@@ -713,12 +714,18 @@
 			foreach ($link['attr'] as $attr => $value) {
 				if ($attr == 'href' and is_array($value)) {
 					$tag.= 'href="'. htmlentities($this->getActionUrl($value, $link['fields'])).'" ';
-				}
-				else {
+				} else {
 					$tag.= htmlentities($attr).'="'. value($value, $link['fields'], 'html') .'" ';
 				}
 			}
-			$tag.= ">". value($link['content'], $link['fields'], 'html') ."</a>";
+			$content = value($link['content'], $link['fields'], 'html');
+
+			if (! isset($link['icon'])) {
+				$tag.= ">". $content ."</a>";
+			} else {
+				$iconFile = $this->icon($link['icon']);
+				$tag.= "><img src=\"{$iconFile}\" alt=\"{$content}\" title=\"{$content}\" /></a>";
+			}
 			echo $tag;
 		}
 
@@ -760,7 +767,7 @@
 			echo "<nav>\n";
 			if ($nbTabs == 0) {
 				// Special case when no tab has to be displayed.
-				echo "\t<div style=\"width:100%; height:45px;\" class=\"tab\"></div>\n";
+				echo "\t<div style=\"width:100%; height:45px;\" class=\"tab-inactive\"></div>\n";
 			} else {
 				// Display tabs
 				$width = (int)(100 / $nbTabs) . '%';
@@ -1511,17 +1518,12 @@
 						switch ($column_id) {
 							case 'actions':
 								foreach ($alt_actions as $action) {
+									$classMulti = (isset($action['multiaction'])) ? ' multi_' . $action['multiaction'] : '';
 									if (isset($action['disable']) && $action['disable'] === true) {
-										if (isset($action['multiaction']))
-											echo "<td class=\"multi_{$action['multiaction']}\"></td>\n";
-										else
-											echo "<td></td>\n";
+										echo "<td class=\"emptybutton{$classMulti}\"></td>\n";
 									} else {
-										if (isset($action['multiaction']))
-											echo "<td class=\"opbutton{$id} multi_{$action['multiaction']}\">";
-										else
-											echo "<td class=\"opbutton{$id}\">";
-
+										$classObjType = (isset($action['icon'])) ? 'iconbutton' : 'textbutton';
+										echo "<td class=\"opbutton{$id} {$classObjType}{$classMulti}\">";
 										$action['fields'] = $tabledata->fields;
 										$this->printLink($action);
 										echo "</td>\n";
@@ -1578,19 +1580,26 @@
 						// This selector is specific to the groups configuration page
 						echo "\t\t/&nbsp;<a onclick=\"javascript:checkSelect('notassigned','{$place}');countChecked('{$place}');\" class=\"action\">{$lang['emajnotassigned']}</a>&nbsp;\n";
 					}
-					echo "\t</td><td>\n";
+					echo "\t</td><td class=\"multiactionbuttons\">\n";
 					if (isset($ma['checked']) && $ma['checked'])
 						$disabledButton = "";
 					else
 						$disabledButton = " disabled";
 					foreach($actions as $k => $a)
-						if (isset($a['multiaction']))
-							echo "\t\t<button id=\"{$a['multiaction']}\" name=\"action\" value=\"{$a['multiaction']}\" {$disabledButton}>{$a['content']}</button>\n";
+						if (isset($a['multiaction'])) {
+							echo "\t\t<button id=\"{$a['multiaction']}\" name=\"action\" value=\"{$a['multiaction']}\" ";
+							if (! isset($a['icon'])) {
+								echo "class=\"text\"{$disabledButton}>{$a['content']}";
+							} else {
+								echo "class=\"icon\" style=\"background-image: url('{$this->icon($a['icon'])}');\" {$disabledButton} title=\"{$a['content']}\">";
+							}
+							echo "</button>\n";
+						}
 					echo $this->form;
 					echo "</td>\n";
 					echo "</tr>\n";
 					echo "</table>\n";
-					echo '</form>';
+					echo "</form>\n";
 				} else {
 					echo "</div>\n";
 				};

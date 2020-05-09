@@ -325,6 +325,7 @@
 				),
 				'set_mark_group' => array(
 					'content' => $lang['emajsetmark'],
+					'icon' => 'Pin',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',
@@ -337,6 +338,7 @@
 				),
 				'protect_group' => array(
 					'content' => $lang['emajprotect'],
+					'icon' => 'PadLockOn',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',
@@ -348,6 +350,7 @@
 					),
 				'unprotect_group' => array(
 					'content' => $lang['emajunprotect'],
+					'icon' => 'PadLockOff',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',
@@ -359,6 +362,7 @@
 					),
 				'rollback_group' => array(
 					'content' => $lang['emajrlbk'],
+					'icon' => 'Rewind',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',
@@ -371,6 +375,7 @@
 				),
 				'stop_group' => array(
 					'content' => $lang['strstop'],
+					'icon' => 'Stop',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',
@@ -383,6 +388,7 @@
 				),
 				'comment_group' => array(
 					'content' => $lang['emajsetcomment'],
+					'icon' => 'Pencil',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',
@@ -420,6 +426,7 @@
 				),
 				'start_group' => array(
 					'content' => $lang['strstart'],
+					'icon' => 'Start',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',
@@ -432,6 +439,7 @@
 				),
 				'reset_group' => array(
 					'content' => $lang['strreset'],
+					'icon' => 'Reset',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',
@@ -441,17 +449,6 @@
 								'group' => field('group_name'),
 							)))),
 					'multiaction' => 'reset_groups',
-				),
-				'comment_group' => array(
-					'content' => $lang['emajsetcomment'],
-					'attr' => array (
-						'href' => array (
-							'url' => 'emajgroups.php',
-							'urlvars' => array_merge($urlvars, array (
-								'action' => 'comment_group',
-								'back' => 'list',
-								'group' => field('group_name'),
-							))))
 				),
 			));
 
@@ -476,6 +473,7 @@
 			$idleActions = array_merge($idleActions, array(
 				'drop_group' => array(
 					'content' => $lang['strdrop'],
+					'icon' => 'Bin',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',
@@ -485,6 +483,18 @@
 								'group' => field('group_name'),
 							)))),
 					'multiaction' => 'drop_groups',
+				),
+				'comment_group' => array(
+					'content' => $lang['emajsetcomment'],
+					'icon' => 'Pencil',
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'comment_group',
+								'back' => 'list',
+								'group' => field('group_name'),
+							))))
 				),
 			));
 		};
@@ -817,6 +827,7 @@
 			$actions = array_merge($actions, array(
 				'rollbackgroup' => array(
 					'content' => $lang['emajrlbk'],
+					'icon' => 'Rewind',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',
@@ -849,6 +860,7 @@
 			$actions = array_merge($actions, array(
 				'deletemark' => array(
 					'content' => $lang['strdelete'],
+					'icon' => 'Bin',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',
@@ -866,6 +878,7 @@
 			$actions = array_merge($actions, array(
 				'deletebeforemark' => array(
 					'content' => $lang['emajfirstmark'],
+					'icon' => 'First',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',
@@ -882,6 +895,7 @@
 			$actions = array_merge($actions, array(
 				'protectmark' => array(
 					'content' => $lang['emajprotect'],
+					'icon' => 'PadLockOn',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',
@@ -894,6 +908,7 @@
 				),
 				'unprotectmark' => array(
 					'content' => $lang['emajunprotect'],
+					'icon' => 'PadLockOff',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',
@@ -910,6 +925,7 @@
 			$actions = array_merge($actions, array(
 				'commentmark' => array(
 					'content' => $lang['emajsetcomment'],
+					'icon' => 'Pencil',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',
@@ -931,8 +947,10 @@
 
 		// JQuery to remove the last deleteBeforeMark button as it is meaningless on the first set mark
 		echo "<script>\n";
-		echo "  $(\"table.data tr:last td:contains('{$lang['emajfirstmark']}')\").removeClass()\n";
-		echo "  $(\"table.data tr:last a:contains('{$lang['emajfirstmark']}')\").remove()\n";
+		echo "  $(\"table.data tr:last td.textbutton a:contains('{$lang['emajfirstmark']}')\").remove()\n";
+		echo "  $(\"table.data tr:last td.iconbutton a img[alt='{$lang['emajfirstmark']}']\").parent('a').remove()\n";
+		echo "  $(\"table.data tr:last td:empty\").removeClass()\n";
+		echo "  $(\"table.data tr:last td:empty\").addClass('emptybutton')\n";
 		echo "</script>\n";
 	}
 
@@ -1200,7 +1218,8 @@
 
 			$actions = array(
 				'sql' => array(
-					'content' => $lang['strsql'],
+					'content' => $lang['emajbrowsechanges'],
+					'icon' => 'Eye',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',
@@ -1216,13 +1235,14 @@
 			$misc->printTable($stats, $columns, $actions, 'logStats', null, null, array('sorter' => true, 'filter' => true));
 
 			// dynamicaly change the behaviour of the SQL link using JQuery code: open a new window
+			// the link may be either a text button with a SQL content (td of type textbutton) or an icon (td of type iconbutton)
 			$sql_window_id = htmlentities('emaj_sqledit:'.$_REQUEST['server']);
-				echo "<script>
-				$(\"#logStats a:contains('SQL')\").click(function() {
-					window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=400,resizable=yes,scrollbars=yes').focus();
-					return false;
-				});
-				</script>";
+			echo "<script>
+			$(\"#logStats\").find(\"td.textbutton a:contains('SQL'), td.iconbutton a\").click(function() {
+				window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=400,resizable=yes,scrollbars=yes').focus();
+				return false;
+			});
+			</script>\n";
 		}
 	}
 
@@ -1353,7 +1373,8 @@
 
 			$actions = array(
 				'sql' => array(
-					'content' => $lang['strsql'],
+					'content' => $lang['emajbrowsechanges'],
+					'icon' => 'Eye',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',
@@ -1368,14 +1389,15 @@
 
 			$misc->printTable($stats, $columns, $actions, 'detailedLogStats', null, null, array('sorter' => true, 'filter' => true));
 
-			// dynamicly change the behaviour of the SQL link using JQuery code: open a new window
+			// dynamicaly change the behaviour of the SQL link using JQuery code: open a new window
+			// the link may be either a text button with a SQL content (td of type textbutton) or an icon (td of type iconbutton)
 			$sql_window_id = htmlentities('emaj_sqledit:'.$_REQUEST['server']);
 			echo "<script>
-				$(\"#detailedLogStats a:contains('SQL')\").click(function() {
-					window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=400,resizable=yes,scrollbars=yes').focus();
-					return false;
-				});
-				</script>";
+			$(\"#detailedLogStats\").find(\"td.textbutton a:contains('SQL'), td.iconbutton a\").click(function() {
+				window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=400,resizable=yes,scrollbars=yes').focus();
+				return false;
+			});
+			</script>\n";
 		}
 	}
 

@@ -84,10 +84,11 @@
 				'title' => $lang['stractions'],
 			),
 		);
-		
+
 		$actions = array(
 			'logout' => array(
 				'content' => $lang['strlogout'],
+				'icon' => 'Logout',
 				'attr'=> array (
 					'href' => array (
 						'url' => 'servers.php',

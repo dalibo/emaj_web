@@ -481,9 +481,10 @@ td.iconbutton:hover {
 td.iconbutton a img {
 	width: 22px;
 	height: 22px;
+	margin-top: 1px;
 }
 td.iconbutton a {
-	padding: 1px 2px;
+	padding: 5px 2px 1px 2px;
 }
 td.textbutton a {
 	padding: 2px 6px;
@@ -515,8 +516,8 @@ table.multiactions button.text {
 	box-shadow: 0px 0px 0px;
 }
 table.multiactions button.icon {
-	width: 20px;
-	height: 20px;
+	width: 22px;
+	height: 22px;
 	margin: 0px 8px;
 	padding: 0;
 	border: none;

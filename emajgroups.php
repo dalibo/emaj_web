@@ -388,7 +388,7 @@
 				),
 				'comment_group' => array(
 					'content' => $lang['emajsetcomment'],
-					'icon' => 'Pencil',
+					'icon' => 'Bubble',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',
@@ -439,7 +439,7 @@
 				),
 				'reset_group' => array(
 					'content' => $lang['strreset'],
-					'icon' => 'Reset',
+					'icon' => 'Eraser',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',
@@ -486,7 +486,7 @@
 				),
 				'comment_group' => array(
 					'content' => $lang['emajsetcomment'],
-					'icon' => 'Pencil',
+					'icon' => 'Bubble',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',
@@ -844,6 +844,7 @@
 			$actions = array_merge($actions, array(
 				'renamemark' => array(
 					'content' => $lang['emajrename'],
+					'icon' => 'Pencil',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',
@@ -860,7 +861,7 @@
 			$actions = array_merge($actions, array(
 				'deletemark' => array(
 					'content' => $lang['strdelete'],
-					'icon' => 'Bin',
+					'icon' => 'Eraser',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',
@@ -925,7 +926,7 @@
 			$actions = array_merge($actions, array(
 				'commentmark' => array(
 					'content' => $lang['emajsetcomment'],
-					'icon' => 'Pencil',
+					'icon' => 'Bubble',
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroups.php',

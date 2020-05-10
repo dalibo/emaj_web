@@ -72,6 +72,8 @@
 			echo "</tr>";
 			echo "</table>";
 
+			echo "<hr/>\n";
+
 			// Display the E-Maj properties, if any
 			if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
 

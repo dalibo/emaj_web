@@ -139,6 +139,7 @@
 		$actions = array();
 
 		$misc->printTable($attrs, $columns, $actions, 'tblproperties-columns', null, 'attPre');
+		echo "<hr/>\n";
 
 		// Display the E-Maj properties, if any
 		if ($emajdb->isEnabled() && $emajdb->isAccessible() && $emajdb->getNumEmajVersion() >= 20200) {
@@ -173,6 +174,8 @@
 		
 				$misc->printTable($groups, $columns, $actions, 'tblproperties-groups', $lang['emajtblnogroupownership']);
 			}
+
+			echo "<hr/>\n";
 		}
 
 		// Display the table triggers

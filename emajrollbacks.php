@@ -189,6 +189,7 @@
 		} else {
 			echo "<p>{$lang['emajrlbkmonitornotavailable']}</p>\n";
 		}
+		echo "<hr/>\n";
 
 		$misc->printTitle($lang['emajcompletedrlbk']);
 
@@ -233,6 +234,8 @@
 		echo "    }\n";
 		echo "  });\n";
 		echo "</script>\n";
+
+		echo "<hr/>\n";
 
 		// Display the E-Maj logged rollback operations that may be consolidated (i.e. transformed into unlogged rollback)
 		if ($emajdb->getNumEmajVersion() >= 20000) {			// version >= 2.0.0

@@ -177,11 +177,11 @@
 	$lang['strnosequences'] = 'Aucune séquence trouvée.';
 	$lang['strseqproperties'] = 'Propriétés de la séquence "%s.%s"';
 	$lang['strlastvalue'] = 'Dernière valeur';
-	$lang['strincrementby'] = 'Incrémenter par ';
+	$lang['strincrement'] = 'Incrément';
 	$lang['strstartvalue'] = 'Valeur de départ';
 	$lang['strmaxvalue'] = 'Valeur maximale';
 	$lang['strminvalue'] = 'Valeur minimale';
-	$lang['strcachevalue'] = 'Valeur de cache';
+	$lang['strcachesize'] = 'Taille de cache';
 	$lang['strlogcount'] = 'Comptage';
 	$lang['strcancycle'] = 'Peut boucler?';
 	$lang['striscalled'] = 'Incrémentera la dernière valeur avant de retourner la prochaine valeur (is_called) ?';

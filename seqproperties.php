@@ -33,83 +33,104 @@
 		$misc->printMsg($msg);
 
 		// Fetch the sequence information
-		$sequence = $data->getSequence($_REQUEST['sequence']);
+		$sequence = $emajdb->getSequenceProperties($_REQUEST['schema'], $_REQUEST['sequence']);
 
-		if (is_object($sequence) && $sequence->recordCount() > 0) {
-			$sequence->fields['is_cycled'] = $data->phpBool($sequence->fields['is_cycled']);
-			$sequence->fields['is_called'] = $data->phpBool($sequence->fields['is_called']);
+		$columns = array(
+			'lastvalue' => array(
+				'title' => $lang['strlastvalue'],
+				'field' => field('last_value'),
+				'type'  => 'numeric',
+				'params'=> array('class' => 'bold'),
+			),
+			'iscalled' => array(
+				'title' => $lang['striscalled'],
+				'field' => field('is_called'),
+				'type'  => 'bool',
+				'params'=> array('true' => $lang['stryes'], 'false' => $lang['strno'], 'class' => 'bold'),
+			),
+			'startvalue' => array(
+				'title' => $lang['strstartvalue'],
+				'field' => field('start_value'),
+				'type'  => 'numeric',
+			),
+			'minvalue' => array(
+				'title' => $lang['strminvalue'],
+				'field' => field('min_value'),
+				'type'  => 'numeric',
+			),
+			'maxvalue' => array(
+				'title' => $lang['strmaxvalue'],
+				'field' => field('max_value'),
+				'type'  => 'numeric',
+			),
+			'increment' => array(
+				'title' => $lang['strincrement'],
+				'field' => field('increment_by'),
+				'type'  => 'numeric',
+			),
+			'cancycle' => array(
+				'title' => $lang['strcancycle'],
+				'field' => field('cycle'),
+				'type'  => 'bool',
+				'params'=> array('true' => $lang['stryes'], 'false' => $lang['strno']),
+			),
+			'cachesize' => array(
+				'title' => $lang['strcachesize'],
+				'field' => field('cache_size'),
+				'type'  => 'numeric',
+			),
+			'logcount' => array(
+				'title' => $lang['strlogcount'],
+				'field' => field('log_cnt'),
+				'type'  => 'numeric',
+			),
+		);
 
-			// Show comment if any
-			if ($sequence->fields['seqcomment'] !== null)
-				echo "<p>{$lang['strcommentlabel']}<span class=\"comment\">{$misc->printVal($sequence->fields['seqcomment'])}</span></p>\n";
+		$actions = array();
 
-			echo "<table border=\"0\">";
-			echo "<tr><th class=\"data\">{$lang['strname']}</th>";
-			if ($data->hasAlterSequenceStart()) {
-				echo "<th class=\"data\">{$lang['strstartvalue']}</th>";
-			}
-			echo "<th class=\"data\">{$lang['strlastvalue']}</th>";
-			echo "<th class=\"data\">{$lang['strincrementby']}</th>";
-			echo "<th class=\"data\">{$lang['strmaxvalue']}</th>";
-			echo "<th class=\"data\">{$lang['strminvalue']}</th>";
-			echo "<th class=\"data\">{$lang['strcachevalue']}</th>";
-			echo "<th class=\"data\">{$lang['strlogcount']}</th>";
-			echo "<th class=\"data\">{$lang['strcancycle']}</th>";
-			echo "<th class=\"data\">{$lang['striscalled']}</th></tr>";
-			echo "<tr>";
-			echo "<td class=\"data1\">", $misc->printVal($sequence->fields['seqname']), "</td>";
-			if ($data->hasAlterSequenceStart()) {
-				echo "<td class=\"data1\">", $misc->printVal($sequence->fields['start_value']), "</td>";
-			}
-			echo "<td class=\"data1\">", $misc->printVal($sequence->fields['last_value']), "</td>";
-			echo "<td class=\"data1\">", $misc->printVal($sequence->fields['increment_by']), "</td>";
-			echo "<td class=\"data1\">", $misc->printVal($sequence->fields['max_value']), "</td>";
-			echo "<td class=\"data1\">", $misc->printVal($sequence->fields['min_value']), "</td>";
-			echo "<td class=\"data1\">", $misc->printVal($sequence->fields['cache_value']), "</td>";
-			echo "<td class=\"data1\">", $misc->printVal($sequence->fields['log_cnt']), "</td>";
-			echo "<td class=\"data1\">", ($sequence->fields['is_cycled'] ? $lang['stryes'] : $lang['strno']), "</td>";
-			echo "<td class=\"data1\">", ($sequence->fields['is_called'] ? $lang['stryes'] : $lang['strno']), "</td>";
-			echo "</tr>";
-			echo "</table>";
+		$misc->printTable($sequence, $columns, $actions, 'seqproperties-columns', $lang['strnodata']);
 
-			echo "<hr/>\n";
+		// Show comment if any
+		$sequence->moveFirst();
+		if ($sequence->fields['seqcomment'] !== null)
+			echo "<p>{$lang['strcommentlabel']}<span class=\"comment\">{$misc->printVal($sequence->fields['seqcomment'])}</span></p>\n";
 
-			// Display the E-Maj properties, if any
-			if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
+		echo "<hr/>\n";
 
-				$misc->printTitle($lang['emajproperties']);
+		// Display the E-Maj properties, if any
+		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
 
-				$type = $emajdb->getEmajTypeTblSeq($_REQUEST['schema'], $_REQUEST['sequence']);
-	
-				if ($type == 'L') {
-					echo "<p>{$lang['emajemajlogsequence']}</p>\n";
-				} elseif ($type == 'E') {
-					echo "<p>{$lang['emajinternalsequence']}</p>\n";
-				} else {
-					$groups = $emajdb->getTableGroupsTblSeq($_REQUEST['schema'], $_REQUEST['sequence']);
-	
-					$columns = array(
-						'group' => array(
-							'title' => $lang['emajgroup'],
-							'field' => field('rel_group'),
-							'type'	=> 'callback',
-							'params'=> array('function' => 'renderlinktogroup')
-						),
-						'starttime' => array(
-							'title' => $lang['strbegin'],
-							'field' => field('start_datetime')
-						),
-						'stoptime' => array(
-							'title' => $lang['strend'],
-							'field' => field('stop_datetime')
-						),
-					);
-			
-					$misc->printTable($groups, $columns, $actions, 'sequences-groups', $lang['emajseqnogroupownership']);
-				}
+			$misc->printTitle($lang['emajproperties']);
+
+			$type = $emajdb->getEmajTypeTblSeq($_REQUEST['schema'], $_REQUEST['sequence']);
+
+			if ($type == 'L') {
+				echo "<p>{$lang['emajemajlogsequence']}</p>\n";
+			} elseif ($type == 'E') {
+				echo "<p>{$lang['emajinternalsequence']}</p>\n";
+			} else {
+				$groups = $emajdb->getTableGroupsTblSeq($_REQUEST['schema'], $_REQUEST['sequence']);
+
+				$columns = array(
+					'group' => array(
+						'title' => $lang['emajgroup'],
+						'field' => field('rel_group'),
+						'type'	=> 'callback',
+						'params'=> array('function' => 'renderlinktogroup')
+					),
+					'starttime' => array(
+						'title' => $lang['strbegin'],
+						'field' => field('start_datetime')
+					),
+					'stoptime' => array(
+						'title' => $lang['strend'],
+						'field' => field('stop_datetime')
+					),
+				);
+
+				$misc->printTable($groups, $columns, $actions, 'sequences-groups', $lang['emajseqnogroupownership']);
 			}
 		}
-		else echo "<p>{$lang['strnodata']}</p>\n";
 	}
 
 	// Print header

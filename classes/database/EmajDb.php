@@ -1166,6 +1166,36 @@ class EmajDb {
 	}
 
 	/**
+	 * Returns properties of a single sequence
+	 */
+	function getSequenceProperties($schema, $sequence) {
+		global $data, $misc;
+
+		$data->clean($schema);
+		$data->clean($sequence);
+
+		$server_info = $misc->getServerInfo();
+
+		if ($server_info["pgVersion"] < 10) {				// Postgres version < 10
+			$sql = "SELECT last_value, is_called, start_value, min_value, max_value, increment_by, is_cycled AS cycle,
+							cache_value AS cache_size, log_cnt,
+							pg_catalog.obj_description(s.tableoid, 'pg_class') AS seqcomment
+					FROM \"{$sequence}\" AS s, pg_catalog.pg_class c, pg_catalog.pg_namespace n
+					WHERE c.relnamespace = n.oid
+						AND c.relname = '{$sequence}' AND n.nspname='{$schema}' AND c.relkind = 'S'";
+		} else {
+			$sql = "SELECT s.last_value, is_called, start_value, min_value, max_value, increment_by, cycle, cache_size, log_cnt,
+							pg_catalog.obj_description(s.tableoid, 'pg_class') AS seqcomment
+					FROM \"{$sequence}\" AS s, pg_catalog.pg_sequences, pg_catalog.pg_class c, pg_catalog.pg_namespace n
+					WHERE c.relnamespace = n.oid
+						AND schemaname = '{$schema}' AND sequencename = '{$sequence}'
+						AND c.relname = '{$sequence}' AND n.nspname='{$schema}' AND c.relkind = 'S'";
+		}
+
+		return $data->selectSet( $sql );
+	}
+
+	/**
 	 * Return all tables and sequences of a schema, 
 	 * plus all non existent tables but listed in emaj_group_def with this schema
 	 */

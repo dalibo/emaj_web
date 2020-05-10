@@ -74,6 +74,9 @@ p.error-message {
 .pre {
 	white-space: pre;
 }
+.bold {
+	font-weight: bold;
+}
 
 hr {
 	height: 0px;

@@ -51,7 +51,7 @@ div.refresh img {
 	width: 22px;
 	height: 22px;
 	padding: 1px 4px 1px 1px;
-	background-color: inherit;
+	background-color: #f8f8f8;
 }
 div.refresh img:hover {
 	background-color: #ffffff;

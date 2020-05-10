@@ -428,7 +428,7 @@
 	$lang['emajduplicaterelation'] = 'Table ou séquence déjà affectée à un groupe (x%s) / ';
 	$lang['emajnoconfiguredgroup'] = 'Pour créer un (autre) groupe de tables, allez d\'abord dans l\'onglet de configuration des groupes.<br>Vous pouvez aussi créer un groupe vide puis y ajouter des tables et séquences puis appliquer le changement de configuration.';
 	$lang['emajcreateemptygroup'] = 'Créer un groupe vide';
-	$lang['emajcreatetablesgroup'] = 'Créer un groupe de tables';
+	$lang['emajnewgroup'] = 'Nouveau groupe';
 
 	// Rollback activity
 	$lang['emajrlbkid'] = 'Id. Rlbk';

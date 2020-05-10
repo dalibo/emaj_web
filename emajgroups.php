@@ -558,7 +558,7 @@
 
 		$misc->printTable($idleGroups, $columns, $idleActions, 'idleGroups', $lang['emajnoidlegroup'], 'idleGroupPre', array('sorter' => true, 'filter' => true));
 
-		echo "<hr>\n";
+		echo "<hr/>\n";
 
 		if ($emajdb->getNumEmajVersion() < 30200) {					// version < 3.2
 			// configured but not yet created tables groups section
@@ -579,37 +579,32 @@
 				}
 			}
 		} else {
-
-			// for emaj_adm role only, display the "create tables group" button
+			// Emaj Version 3.2+
+			// for emaj_adm role only, display additional buttons
 			if ($emajdb->isEmaj_Adm()) {
-				if ($emajdb->getNumEmajVersion() >= 20100) {			// version >= 2.1.0
-					echo "<form id=\"createEmptyGroup_form\" action=\"emajgroups.php?action=create_group&amp;back=list&amp;{$misc->href}\"";
-					echo " method=\"post\" enctype=\"multipart/form-data\">\n";
-					echo "\t<input type=\"submit\" value=\"{$lang['emajcreatetablesgroup']}\" />\n";
-					echo "</form>\n";
-				}
-			}
-		}
-
-		// for emaj_adm role only, display the "export groups configuration" and "import groups configuration" buttons
-		if ($emajdb->isEmaj_Adm()) {
-			if ($emajdb->getNumEmajVersion() >= 30300) {			// version >= 3.3.0
-				// form to export groups configuration
-				// the export button is disabled when no group exists
-				echo "<div style=\"float:left; margin-top:20px\">\n";
-				echo "\t<form id=\"exportGroupsConf_form\" action=\"emajgroups.php?action=export_groups&amp;back=list&amp;{$misc->href}\"";
+				echo "<div class=\"actionslist\">\n";
+				// display the "new group" button
+				echo "\t<form id=\"createEmptyGroup_form\" action=\"emajgroups.php?action=create_group&amp;back=list&amp;{$misc->href}\"";
 				echo " method=\"post\" enctype=\"multipart/form-data\">\n";
-				$disabled = ''; if ($nbGroup = 0) $disabled = ' disabled';
-				echo "\t\t<input type=\"submit\" name=\"exportButton\" value=\"${lang['strexport']}\"{$disabled}>\n";
+				echo "\t\t<input type=\"submit\" value=\"{$lang['emajnewgroup']}\" />\n";
 				echo "\t</form>\n";
-				echo "</div>\n";
 
-				// form to import groups configuration
-				echo "<div style=\"margin-top:20px\">\n";
-				echo "\t<form name=\"importGroupsConf\" id=\"importGroupsConf\" method=\"POST\"";
-				echo " action=\"emajgroups.php?action=import_groups&amp;back=list&amp;{$misc->href}\">\n";
-				echo "\t\t<input type=\"submit\" name=\"importButton\" value=\"${lang['strimport']}\">\n";
-				echo "\t</form>\n";
+				// display the "export groups configuration" and "import groups configuration" buttons
+				if ($emajdb->getNumEmajVersion() >= 30300) {			// version >= 3.3.0
+					// form to export groups configuration
+					// the export button is disabled when no group exists
+					echo "\t<form id=\"exportGroupsConf_form\" action=\"emajgroups.php?action=export_groups&amp;back=list&amp;{$misc->href}\"";
+					echo " method=\"post\" enctype=\"multipart/form-data\">\n";
+					$disabled = ''; if ($nbGroup = 0) $disabled = ' disabled';
+					echo "\t\t<input type=\"submit\" name=\"exportButton\" value=\"${lang['strexport']}\"{$disabled}>\n";
+					echo "\t</form>\n";
+
+					// form to import groups configuration
+					echo "\t<form name=\"importGroupsConf\" id=\"importGroupsConf\" method=\"POST\"";
+					echo " action=\"emajgroups.php?action=import_groups&amp;back=list&amp;{$misc->href}\">\n";
+					echo "\t\t<input type=\"submit\" name=\"importButton\" value=\"${lang['strimport']}\">\n";
+					echo "\t</form>\n";
+				}
 				echo "</div>\n";
 			}
 		}

@@ -76,10 +76,8 @@ p.error-message {
 }
 
 hr {
-	color: #ffffff;
-	background-color: #ffffff;
 	height: 0px;
-	margin-top: 20px;
+	padding: 5px;
 	border: 0;
 }
 

@@ -115,8 +115,8 @@
 		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
 			if ($emajdb->getNumEmajVersion() >= 30100) {			// version >= 3.1.0
 				$orphanTriggers = $emajdb->getOrphanAppTriggers();
-	
-				if ($orphanTriggers) {
+
+				if (!$orphanTriggers->EOF) {
 					print "<p>{$lang['emajorphantriggersexist']}</p>";
 					$columns = array(
 						'schema' => array(
@@ -147,6 +147,7 @@
 						),
 						'removetrigger' => array(
 							'content' => $lang['emajremove'],
+							'icon' => 'Remove',
 							'attr' => array (
 								'href' => array (
 									'url' => 'triggers.php',
@@ -232,7 +233,7 @@
 	function doRemoveTrigger() {
 		global $lang, $emajdb;
 
-		$nbTriggers = $emajdb->keepDisabledTrigger('REMOVE', $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['trigger']);
+		$nbTriggers = $emajdb->ignoreAppTrigger('REMOVE', $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['trigger']);
 
 		if ($nbTriggers > 0) {
 			showTriggers(sprintf($lang['emajtriggersremovedok'], $nbTriggers));
@@ -257,7 +258,7 @@
 		if ($status == 0) {
 			foreach($_REQUEST['ma'] as $v) {
 				$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-				$status = $emajdb->keepDisabledTrigger('REMOVE', $a['schema'], $a['table'], $a['trigger']);
+				$status = $emajdb->ignoreAppTrigger('REMOVE', $a['schema'], $a['table'], $a['trigger']);
 				if ($status == 0) {
 					$data->rollbackTransaction();
 					showTriggers(sprintf($lang['emajtriggerprocerr'], htmlspecialchars($a['trigger']), htmlspecialchars($a['schema']), htmlspecialchars($a['table'])));

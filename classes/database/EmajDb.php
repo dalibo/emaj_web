@@ -3366,7 +3366,7 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 	}
 
 	/**
-	 * Hangle the list of triggers that must not be automatically disabled at rollback time: add or remove one
+	 * Handle the list of triggers that must not be automatically disabled at rollback time: add or remove one
 	 * It usually returns 1 (unless the list has been just modified by someone else)
 	 */
 	function ignoreAppTrigger($action, $schema, $table, $trigger) {

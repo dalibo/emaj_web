@@ -3694,24 +3694,22 @@
 		}
 		$groupsList=substr($groupsList,0,strlen($groupsList)-2);
 
-		$server_info = $misc->getServerInfo();
-		if ($server_info["pgVersion"]>=8.4) {
 		// if at least one selected group is protected, stop
-			$protectedGroups=$emajdb->getProtectedGroups($groupsList);
-			if ($protectedGroups != '') {
-				show_groups('',sprintf($lang['emajcantrlbkprotgroups'], htmlspecialchars($groupsList), htmlspecialchars($protectedGroups)));
-				return;
-			}
-		// look for marks common to all selected groups
-			$marks=$emajdb->getRollbackMarkGroups($groupsList);
-		// if no mark is usable for all selected groups, stop
-			if ($marks->recordCount()==0) {
-				show_groups('',sprintf($lang['emajnomarkgroups'], htmlspecialchars($groupsList)));
-				return;
-			}
-		// get the youngest timestamp protected mark for all groups
-			$youngestProtectedMarkTimestamp=$emajdb->getYoungestProtectedMarkTimestamp($groupsList);
+		$protectedGroups=$emajdb->getProtectedGroups($groupsList);
+		if ($protectedGroups != '') {
+			show_groups('',sprintf($lang['emajcantrlbkprotgroups'], htmlspecialchars($groupsList), htmlspecialchars($protectedGroups)));
+			return;
 		}
+		// look for marks common to all selected groups
+		$marks=$emajdb->getRollbackMarkGroups($groupsList);
+		// if no mark is usable for all selected groups, stop
+		if ($marks->recordCount()==0) {
+			show_groups('',sprintf($lang['emajnomarkgroups'], htmlspecialchars($groupsList)));
+			return;
+		}
+		// get the youngest timestamp protected mark for all groups
+		$youngestProtectedMarkTimestamp=$emajdb->getYoungestProtectedMarkTimestamp($groupsList);
+
 		$misc->printHeader('database', 'database','emajgroups');
 
 		$misc->printTitle($lang['emajrlbkgroups']);
@@ -3859,14 +3857,11 @@
 				}
 			}
 		}
-		$server_info = $misc->getServerInfo();
-		if ($server_info["pgVersion"]>=8.4) {
 		// if at least one selected group is protected, stop
-			$protectedGroups=$emajdb->getProtectedGroups($_POST['groups']);
-			if ($protectedGroups != '') {
-				show_groups('',sprintf($lang['emajcantrlbkprotgroups'], htmlspecialchars($groups), htmlspecialchars($protectedGroups)));
-				return;
-			}
+		$protectedGroups=$emajdb->getProtectedGroups($_POST['groups']);
+		if ($protectedGroups != '') {
+			show_groups('',sprintf($lang['emajcantrlbkprotgroups'], htmlspecialchars($groups), htmlspecialchars($protectedGroups)));
+			return;
 		}
 
 		// Check the mark is always valid

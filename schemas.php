@@ -105,6 +105,11 @@
 			'comment' => array(
 				'title' => $lang['strcomment'],
 				'field' => field('nspcomment'),
+				'type' => 'comment',
+				'params'=> array(
+						'cliplen' => 32,
+						'class' => 'comment-in-tooltip',
+						),
 			),
 		));
 
@@ -196,6 +201,11 @@
 				'comment' => array(
 					'title' => $lang['strcomment'],
 					'field' => field('relcomment'),
+				'type' => 'comment',
+				'params'=> array(
+						'cliplen' => 32,
+						'class' => 'comment-in-tooltip',
+						),
 				),
 			));
 
@@ -330,6 +340,11 @@
 				'comment' => array(
 					'title' => $lang['strcomment'],
 					'field' => field('seqcomment'),
+					'type' => 'comment',
+					'params'=> array(
+							'cliplen' => 32,
+							'class' => 'comment-in-tooltip',
+							),
 				),
 			));
 

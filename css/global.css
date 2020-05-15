@@ -61,10 +61,6 @@ p.error-message {
 	font-weight: bold;
 	color: red;
 }
-.comment {
-	font-style: italic;
-	color: #555555;
-}
 .left {
 	text-align: left;
 }
@@ -194,13 +190,26 @@ th.required {
 	text-decoration: underline
 }
 
+/*
+ * Comments
+ */
+span.comment {
+	font-style: italic;
+	color: #555555;
+}
+
+th.comment, td.comment {
+	white-space: nowrap;
+}
+
 .comment-in-tooltip
 {
 	position: relative;
 	display: inline-block;
 	text-decoration: none;
 	outline: none;
-	cursor: help;
+	white-space: nowrap;
+/*	cursor: help;*/
 }
 
 .comment-in-tooltip span
@@ -209,11 +218,11 @@ th.required {
     transition: 0s visibility;
 	position: absolute;
 	top: 27px;
-/*	right: 50%;*/
 	right: -12px;
 	max-width: 230px;
 	margin-left: -210px;
 	padding: 7px;
+	white-space: normal;
 	z-index: 99;
 	background-color: #505050;
 	color: #ffffff;

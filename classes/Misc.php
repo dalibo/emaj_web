@@ -161,6 +161,7 @@
 		 *			nbsp     - replace all spaces with &nbsp;'s
 		 *			verbatim - render exactly as supplied, no escaping what-so-ever.
 		 *			callback - render using a callback function supplied in the 'function' param.
+		 *			comment  - comment like data, clipped if larger than a cliplen parameter, the entire value being put into a tooltip
 		 *
 		 * @param $params Type parameters (optional), known parameters:
 		 *			null     - string to display if $str is null, or set to TRUE to use a default 'NULL' string,
@@ -300,6 +301,16 @@
 								}
 							}
 						}
+					}
+					break;
+				case 'comment':
+					$maxlen = isset($params['cliplen']) && is_integer($params['cliplen']) ? $params['cliplen'] : $conf['max_chars'];
+					$ellipsis = isset($params['ellipsis']) ? $params['ellipsis'] : $lang['strellipsis'];
+					if (strlen($str) > $maxlen) {
+						// the full supplied string is added in a span tag after the clipped string
+						$out = htmlspecialchars(substr($str, 0, $maxlen-1)) . $ellipsis . "<span>" . htmlspecialchars($str) . "</span>";
+					} else {
+						$out = htmlspecialchars($str);
 					}
 					break;
 				default:
@@ -1403,17 +1414,6 @@
 
 			if ($tabledata->recordCount() > 0) {
 
-				// Remove the 'comment' column if they have been disabled
-				if (!$conf['show_comments']) {
-					unset($columns['comment']);
-				}
-
-				if (isset($columns['comment'])) {
-					// Uncomment this for clipped comments.
-					// TODO: This should be a user option.
-					//$columns['comment']['params']['clip'] = true;
-				}
-
 				if ($has_ma) {
 					echo "<form id=\"{$place}\" action=\"{$ma['url']}\" method=\"post\" enctype=\"multipart/form-data\">\n";
 					if (isset($ma['vars']))
@@ -1452,16 +1452,17 @@
 							}
 							break;
 						default:
-							// add a sorter_false class to the data column header if a 'sorter' attribute is set to false
-							$class_sorter = '';
-							if ((isset($column['sorter']) && !$column['sorter']) || ($filter && ! $sorter))
-								$class_sorter = ' sorter-false';
-							// add a filter_false class to the data column header if a 'filter' attribute is set to false
-							$class_filter = '';
-							if ($filter && (isset($column['filter']) && !$column['filter']))
-								$class_filter = ' filter-false';
-							echo "<th class=\"data{$class_sorter}{$class_filter}\">";
+							// build classes
+							//   add a 'sorter_false' class to the data column header if a 'sorter' attribute is set to false
+							$class_sorter = ((isset($column['sorter']) && !$column['sorter']) || ($filter && ! $sorter)) ?
+												' sorter-false' : '';
+							//   add a 'filter_false' class to the data column header if a 'filter' attribute is set to false
+							$class_filter = ($filter && (isset($column['filter']) && !$column['filter'])) ? ' filter-false' : '';
+							//   add a 'comment' class to the data column header if the column's type is 'comment'
+							$class_comment = (isset($column['type']) && $column['type'] == 'comment') ? ' comment' : '';
+
 							// column title
+							echo "<th class=\"data{$class_sorter}{$class_filter}{$class_comment}\">";
 							echo $column['title'];
 							// additional info if requested
 							if (isset($column['info']))
@@ -1530,7 +1531,9 @@
 								}
 								break;
 							default:
-								echo "<td>";
+								//   add a 'comment' class to the cell if the column's type is 'comment'
+								$class = (isset($column['type']) && $column['type'] == 'comment') ? ' class="comment"' : '';
+								echo "<td{$class}>";
 								$val = value($column['field'], $tabledata->fields);
 								if (!is_null($val)) {
 									if (isset($column['url'])) {

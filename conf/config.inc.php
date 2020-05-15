@@ -119,10 +119,6 @@
 	// other means. (e.g. Run 'SELECT * FROM pg_database' in the SQL area.)
 	$conf['owned_only'] = false;
 
-	// Display comments on objects?  Comments are a good way of documenting
-	// a database, but they do take up space in the interface.
-	$conf['show_comments'] = true;
-
 	// Display "system" objects?
 	$conf['show_system'] = false;
 

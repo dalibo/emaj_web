@@ -193,15 +193,6 @@
 		return "<img src=\"".$misc->icon($icon)."\" style=\"vertical-align:bottom;\" />";
 	}
 
-	// Callback function to dynamicaly translate a comment cell in a simple '...' text and the real comment in tooltop, using css
-	function renderCommentInTooltip($val, $params) {
-		global $lang;
-		if (isset($params['cliplen']) && strlen($val) >= $params['cliplen'])
-			return "<div class=\"comment-in-tooltip\">" . substr($val,0,$params['cliplen']) . "{$lang['strellipsis']}<span>{$val}</span></div>";
-		else
-			return $val;
-	}
-
 	// Callback function to dynamicaly modify the mark state column content
 	// It replaces the database value by an icon
 	function renderMarkState($val) {
@@ -306,10 +297,10 @@
 			'comment' => array(
 				'title' => $lang['strcomment'],
 				'field' => field('group_comment'),
-				'type'	=> 'callback',
+				'type' => 'comment',
 				'params'=> array(
-						'function' => 'renderCommentInTooltip',
-						'cliplen' => 8,
+						'cliplen' => 12,
+						'class' => 'comment-in-tooltip',
 						),
 			),
 		);
@@ -799,10 +790,10 @@
 			'comment' => array(
 				'title' => $lang['strcomment'],
 				'field' => field('mark_comment'),
-				'type'	=> 'callback',
+				'type' => 'comment',
 				'params'=> array(
-						'function' => 'renderCommentInTooltip',
-						'cliplen' => 8,
+						'cliplen' => 12,
+						'class' => 'comment-in-tooltip',
 						),
 			),
 		);
@@ -2138,10 +2129,10 @@
 			'comment' => array(
 				'title' => $lang['strcomment'],
 				'field' => field('group_comment'),
-				'type'	=> 'callback',
+				'type' => 'comment',
 				'params'=> array(
-						'function' => 'renderCommentInTooltip',
 						'cliplen' => 20,
+						'class' => 'comment-in-tooltip',
 						),
 			),
 		);

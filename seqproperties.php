@@ -35,6 +35,11 @@
 		// Fetch the sequence information
 		$sequence = $emajdb->getSequenceProperties($_REQUEST['schema'], $_REQUEST['sequence']);
 
+		// Show comment if any
+		if ($sequence->fields['seqcomment'] !== null)
+			echo "<p>{$lang['strcommentlabel']}<span class=\"comment\">{$misc->printVal($sequence->fields['seqcomment'])}</span></p>\n";
+		$sequence->moveFirst();
+
 		$columns = array(
 			'lastvalue' => array(
 				'title' => $lang['strlastvalue'],
@@ -89,11 +94,6 @@
 		$actions = array();
 
 		$misc->printTable($sequence, $columns, $actions, 'seqproperties-columns', $lang['strnodata']);
-
-		// Show comment if any
-		$sequence->moveFirst();
-		if ($sequence->fields['seqcomment'] !== null)
-			echo "<p>{$lang['strcommentlabel']}<span class=\"comment\">{$misc->printVal($sequence->fields['seqcomment'])}</span></p>\n";
 
 		echo "<hr/>\n";
 

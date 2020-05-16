@@ -19,7 +19,7 @@
 		$misc->printHeader('database', 'database', 'triggers');
 
 		$misc->printMsg($msg);
-		$misc->printTitle("{$lang['emajapptriggers']}<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['emajapptriggershelp']}\"/>");
+		$misc->printTitle($lang['emajapptriggers'], $lang['emajapptriggershelp']);
 
 		$urlvars = $misc->getRequestVars();
 

@@ -540,12 +540,12 @@
 			$configuredActions = array();
 		}
 
-		$misc->printTitle("{$lang['emajlogginggroups']}<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['emajlogginggrouphelp']}\"/>");
+		$misc->printTitle($lang['emajlogginggroups'], $lang['emajlogginggrouphelp']);
 
 		$misc->printTable($loggingGroups, $columns, $loggingActions, 'loggingGroups', $lang['emajnologginggroup'], 'loggingGroupPre', array('sorter' => true, 'filter' => true));
 
 		echo "<hr>";
-		$misc->printTitle("{$lang['emajidlegroups']}<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['emajidlegrouphelp']}\"/>");
+		$misc->printTitle($lang['emajidlegroups'], $lang['emajidlegrouphelp']);
 
 		$misc->printTable($idleGroups, $columns, $idleActions, 'idleGroups', $lang['emajnoidlegroup'], 'idleGroupPre', array('sorter' => true, 'filter' => true));
 
@@ -555,7 +555,7 @@
 			// configured but not yet created tables groups section
 			$configuredGroups = $emajdb->getConfiguredGroups();
 
-			$misc->printTitle("{$lang['emajconfiguredgroups']}<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['emajconfiguredgrouphelp']}\"/>");
+			$misc->printTitle($lang['emajconfiguredgroups'], $lang['emajconfiguredgrouphelp']);
 
 			$misc->printTable($configuredGroups, $configuredColumns, $configuredActions, 'configuredGroups', $lang['emajnoconfiguredgroups'], null, array('sorter' => true, 'filter' => true));
 

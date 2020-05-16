@@ -380,14 +380,16 @@
 		}
 
 		/**
-		 * Print out the page heading and help link
+		 * Print out the page or section heading and the help
 		 * @param $title Title, already escaped
-		 * @param $help (optional) The identifier for the help link
+		 * @param $help (optional) The text for the help
 		 */
 		function printTitle($title, $help = null) {
-			global $data, $lang;
 
-			echo "<h2>{$title}</h2>\n";
+			if (! $help)
+				echo "<h2>{$title}</h2>\n";
+			else
+				echo "<h2>{$title}<img src=\"{$this->icon('Info-inv')}\" alt=\"info\" title=\"{$help}\"/></h2>\n";
 		}
 
 		/**

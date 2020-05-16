@@ -201,8 +201,10 @@
 	// Triggers
 	$lang['strtrigger'] = 'Trigger';
 	$lang['strtriggers'] = 'Triggers';
-	$lang['strnotrigger'] = 'No trigger found.';
+	$lang['strnotriggerontable'] = 'The table has no trigger.';
 	$lang['emajapptriggers'] = 'Application triggers';
+	$lang['emajapptriggershelp'] = 'List of triggers in the database, excluding system and E-Maj triggers.';
+	$lang['strnoapptrigger'] = 'No application trigger in the database.';
 	$lang['emajexecorder'] = 'Exec. order';
 	$lang['emajtriggeringevent'] = 'Triggering event';
 	$lang['emajcalledfunction'] = 'Called function';

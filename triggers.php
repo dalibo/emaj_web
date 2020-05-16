@@ -19,7 +19,7 @@
 		$misc->printHeader('database', 'database', 'triggers');
 
 		$misc->printMsg($msg);
-		$misc->printTitle($lang['emajapptriggers']);
+		$misc->printTitle("{$lang['emajapptriggers']}<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['emajapptriggershelp']}\"/>");
 
 		$urlvars = $misc->getRequestVars();
 
@@ -109,7 +109,7 @@
 			}
 		}
 
-		$misc->printTable($triggers, $columns, $actions, 'triggers-triggers', $lang['strnotrigger'], null, array('sorter' => true, 'filter' => true));
+		$misc->printTable($triggers, $columns, $actions, 'triggers-triggers', $lang['strnoapptrigger'], null, array('sorter' => true, 'filter' => true));
 
 		// Check if orphan triggers exist in the emaj_ignored_app_trigger table
 		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {

@@ -261,7 +261,7 @@
 			}
 		}
 
-		$misc->printTable($triggers, $columns, $actions, 'tblproperties-triggers', $lang['strnotrigger'], 'triggerPre', array('sorter' => true, 'filter' => false));
+		$misc->printTable($triggers, $columns, $actions, 'tblproperties-triggers', $lang['strnotriggerontable'], 'triggerPre', array('sorter' => true, 'filter' => false));
 	}
 
 	/**

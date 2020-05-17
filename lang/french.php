@@ -255,6 +255,9 @@
 	$lang['emajlogsize'] = 'Taille du log';
 	$lang['emajrequiredfield'] = 'Champ requis';
 	$lang['emajestimates'] = 'Estimations';
+	$lang['emajestimate'] = 'Estimer';
+	$lang['emajreestimate'] = 'Ré-estimer';
+	$lang['emajestimatedduration'] = 'Durée estimée';
 	$lang['emajfrom'] = 'De';
 	$lang['emajto'] = 'A';
 	$lang['emajproperties'] = 'Propriétés E-Maj';
@@ -479,7 +482,6 @@
 	$lang['emajhideestimates'] = 'Cacher estimations';
 	$lang['emajshowestimates'] = 'Voir estimations';
 	$lang['emajrlbkstep'] = 'Étape';
-	$lang['emajestimatedduration'] = 'Durée estimée';
 	$lang['emajestimatedquantity'] = 'Quantité estimée';
 	$lang['emajestimationmethod'] = 'Méthode estimation';
 	$lang['emajrlbkdisapptrg'] = 'Désactiver le trigger %s';
@@ -501,7 +503,6 @@
 	$lang['emajnbchanges'] = 'Nb<br>mises à jour';
 	$lang['emajcumchanges'] = 'Cumul<br>mises à jour';
 	$lang['emajcumchangeshelp'] = 'Le cumul du nombre de mises à jour représente le nombre de mises à jour à annuler en cas de rollback E-Maj à la marque correspondante.';
-	$lang['emajsimrlbk'] = 'Simuler Rollback';
 	$lang['emajrlbk'] = 'Rollback';
 	$lang['emajfirstmark'] = 'Première marque';
 	$lang['emajrename'] = 'Renommer';
@@ -517,8 +518,6 @@
 	$lang['emajlogstatcurrentsituation'] = 'la situation courante';
 	$lang['emajlogstatmark'] = 'la marque "%s"';
 	$lang['emajlogstattittle'] = 'Mises à jour de table entre la marque "%s" et %s pour le groupe de tables "%s"';
-	$lang['emajnosimrlbkduration'] = 'La première marque ne peut pas être utilisée pour un rollback. Aucune durée de rollback ne peut être estimée.';
-	$lang['emajsimrlbkduration'] = 'Le rollback du groupe de tables "%s" à la marque "%s" durerait environ %s.';
 	$lang['emajstatfirstmark'] = 'Première marque';
 	$lang['emajstatfirstmarkdatetime'] = 'Date-Heure première marque';
 	$lang['emajstatlastmark'] = 'Dernière marque';
@@ -719,6 +718,10 @@
 	$lang['emajrlbkagroup'] = 'E-Maj : Rollbacker un groupe de tables';
 	$lang['emajconfirmrlbkgroup'] = 'Rollback du groupe de tables "%s" à la marque "%s"';
 	$lang['emajselectmarkgroup'] = 'Rollback du groupe de tables "%s" à la marque : ';
+	$lang['emajunknownestimate'] = 'non connue';
+	$lang['emajdurationminutesseconds'] = '%s mn %s s';
+	$lang['emajdurationhoursminutes'] = '%s h %s mn';
+	$lang['emajdurationovertendays'] = '> 10 jours';
 	$lang['emajrlbkthenmonitor'] = 'Rollback et suivi';
 	$lang['emajcantrlbkidlegroup'] = 'Le rollback du groupe de tables "%s" est impossible. Le groupe est arrêté.';
 	$lang['emajcantrlbkprotgroup'] = 'Le rollback du groupe de tables "%s" est impossible. Le groupe est protégé.';

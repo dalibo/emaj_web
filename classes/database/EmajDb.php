@@ -2666,15 +2666,18 @@ class EmajDb {
 	}
 
 	/**
-	 * Estimates the rollback duration for a group and a mark
+	 * Estimates the rollback duration for one or several groups and a mark
 	 */
-	function estimateRollbackGroup($group,$mark) {
+	function estimateRollbackGroups($groups, $mark, $rollbackType) {
 		global $data;
 
-		$data->clean($group);
+		$data->clean($groups);
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 		$data->clean($mark);
+		$bool = ($rollbackType == 'logged') ? 'TRUE' : 'FALSE';
 
-		$sql = "SELECT to_char(emaj.emaj_estimate_rollback_group('{$group}','{$mark}',false) + '1 second'::interval,'HH24:MI:SS') as duration";
+		$sql = "SELECT to_char(emaj.emaj_estimate_rollback_groups({$groupsArray}, '{$mark}', {$bool})
+								+ '1 second'::interval,'YYYY/MM/DD HH24:MI:SS') as duration";
 
 		return $data->selectField($sql,'duration');
 	}

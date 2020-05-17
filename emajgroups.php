@@ -1000,12 +1000,6 @@
 
 			// Other elements of the form
 			echo "  <p><input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
-
-			// Rollback simulation checkbox is only available for rollbackable groups in logging state
-			if ($group->fields['group_type'] == 'ROLLBACKABLE' && $group->fields['group_state'] == 'LOGGING') {
-				echo "  {$lang['emajsimrlbk']} <input type=\"checkbox\" name=\"simrlbk\" id=\"simrlbk\"/>\n";
-			}
-
 			echo "  <input type=\"submit\" name=\"globalstatgroup\" value=\"{$lang['emajestimates']}\" />\n";
 			echo "  <input type=\"submit\" name=\"detailedstatgroup\" value=\"{$lang['emajdetailedstat']}\" />\n";
 			echo "  <img src=\"{$misc->icon('EmajWarning')}\" alt=\"warning\" title=\"{$lang['emajdetailedlogstatwarning']}\" style=\"vertical-align:middle\"/>";
@@ -1049,13 +1043,6 @@
 			echo "      if ($(this).val() == mark) { todisable = false; }\n";
 			echo "      $(this).prop('disabled', todisable);\n";
 			echo "    });\n";
-					// and disable the simrlbk checkbox if the rangeend is not "currentsituation"
-			echo "    if ($(\"#rangeend option:selected\").val() == \"currentsituation\") { \n";
-			echo "      $(\"#simrlbk\").removeAttr('checked');\n";
-			echo "      $(\"#simrlbk\").removeAttr('disabled');\n";
-			echo "    } else {\n";
-			echo "      $(\"#simrlbk\").prop('disabled',true);\n";
-			echo "    }\n";
 			echo "  });\n";
 
 				// At each list box change
@@ -1075,45 +1062,27 @@
 			echo "      if ($(this).val() == mark) { todisable = false; }\n";
 			echo "      $(this).prop('disabled', todisable);\n";
 			echo "    });\n";
-					// and disable the simrlbk checkbox if the rangeend is not "currentsituation"
-			echo "    if ($(\"#rangeend option:selected\").val() == \"currentsituation\") { \n";
-			echo "      $(\"#simrlbk\").removeAttr('checked');\n";
-			echo "      $(\"#simrlbk\").removeAttr('disabled');\n";
-			echo "    } else {\n";
-			echo "      $(\"#simrlbk\").prop('disabled',true);\n";
-			echo "    }\n";
 			echo "  });\n";
 
 			echo "</script>\n";
 
-			// If rollback simulation is requested, compute the duration estimate
-			$rlbkDuration = '';
-			if ($simRlbk) {
-				// check the start mark is not deleted
-				if ($emajdb->isMarkActiveGroup($_REQUEST['group'],$_REQUEST['rangestart']) == 1) {
-					$rlbkDuration = $emajdb->estimateRollbackGroup($_REQUEST['group'],$_REQUEST['rangestart']);
-				} else {
-					$rlbkDuration = "-";
-				}
-			}
-
 			// If global stat display is requested
 			if ($globalStat) {
-				disp_global_log_stat_section($rlbkDuration);
+				disp_global_log_stat_section();
 			}
 
 			// If detailed stat display is requested
 			if ($detailedStat) {
-				disp_detailed_log_stat_section($rlbkDuration);
+				disp_detailed_log_stat_section();
 			}
 		}
 	}
 
 	/**
 	 * This function is called by the log_stat_group() function.
-	 * It generates the page section corresponding to the rollback simulation output
+	 * It generates the page section corresponding to the statistics output
 	 */
-	function disp_global_log_stat_section($rlbkDuration) {
+	function disp_global_log_stat_section() {
 		global $misc, $lang, $emajdb;
 
 		// Get statistics from E-Maj
@@ -1142,17 +1111,6 @@
 		echo "<td><div style=\"text-align: center\">{$summary->fields['sum_rows']}</div></td>";
 		echo "</tr></table>\n";
 		echo "</div>\n";
-
-		// Display rollback duration estimate if requested
-		if ($rlbkDuration != '') {
-			if ($rlbkDuration == '-') {
-				// the start mark cannot be used for a rollback
-				echo "<p>{$lang['emajnosimrlbkduration']}</p>";
-			} else {
-				// dispay the duration estimate
-				echo "<p>",sprintf($lang['emajsimrlbkduration'], htmlspecialchars($_REQUEST['group']), htmlspecialchars($_REQUEST['rangestart']),$rlbkDuration),"</p>\n";
-			}
-		}
 
 		if ($summary->fields['nb_tables'] > 0) {
 
@@ -1235,9 +1193,9 @@
 
 	/**
 	 * This function is called by the log_stat_group() function.
-	 * It generates the page section corresponding to the rollback simulation output
+	 * It generates the page section corresponding to the statistics output
 	 */
-	function disp_detailed_log_stat_section($rlbkDuration) {
+	function disp_detailed_log_stat_section() {
 		global $misc, $lang, $emajdb;
 
 		if (!ini_get('safe_mode')) set_time_limit(0);		// Prevent timeouts on large stats (non-safe mode only)
@@ -1289,17 +1247,6 @@
 		echo "<td><div style=\"text-align: center\">{$roleList}</div></td>";
 		echo "</tr></table>\n";
 		echo "</div>\n";
-
-		// Display rollback duration estimate if requested
-		if ($rlbkDuration != '') {
-			if ($rlbkDuration == '-') {
-				// the start mark cannot be used for a rollback
-				echo "<p>{$lang['emajnosimrlbkduration']}</p>";
-			} else {
-				// dispay the duration estimate
-				echo "<p>",sprintf($lang['emajsimrlbkduration'], htmlspecialchars($_REQUEST['group']), htmlspecialchars($_REQUEST['rangestart']),$rlbkDuration),"</p>\n";
-			}
-		}
 
 		if ($summary->fields['nb_tables'] > 0) {
 
@@ -3358,7 +3305,7 @@
 	/**
 	 * Prepare rollback group: ask for confirmation
 	 */
-	function rollback_group() {
+	function rollback_group($estimatedDuration = null) {
 		global $misc, $lang, $emajdb, $conf;
 
 		if ($_REQUEST['back']=='list')
@@ -3373,34 +3320,64 @@
 
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
-		if (isset($_REQUEST['mark'])) {
-		// the mark name is already defined (we are coming from the 'detail group' page)
-			echo "<p>", sprintf($lang['emajconfirmrlbkgroup'], htmlspecialchars($_REQUEST['group']), htmlspecialchars($_REQUEST['mark'])), "</p>\n";
-			echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
-		} else {
+		if ($_REQUEST['back'] = 'list') {
 		// the mark name is not yet defined (we are coming from the 'list groups' page)
 			$marks=$emajdb->getRollbackMarkGroup($_REQUEST['group']);
 			echo sprintf($lang['emajselectmarkgroup'], htmlspecialchars($_REQUEST['group']));
 			echo "<select name=\"mark\">\n";
 			$optionDisabled = '';
 			foreach($marks as $m) {
-				echo "<option value=\"", htmlspecialchars($m['mark_name']), "\" $optionDisabled>", htmlspecialchars($m['mark_name']), " ({$m['mark_datetime']})</option>\n";
+				$optionSelected = (isset($_POST['mark']) && $_POST['mark'] == $m['mark_name']) ? ' selected' : '';
+				echo "<option value=\"", htmlspecialchars($m['mark_name']), "\"{$optionDisabled}{$optionSelected}>", htmlspecialchars($m['mark_name']), " ({$m['mark_datetime']})</option>\n";
 				// if the mark is protected against rollback, disabled the next ones
-				if ($m['mark_is_rlbk_protected'] == 't') $optionDisabled = 'disabled';
+				if ($m['mark_is_rlbk_protected'] == 't') $optionDisabled = ' disabled';
 			}
-			echo "</select></p><p>\n";
+			echo "</select></p>\n";
+		} else {
+		// the mark name is already defined (we are coming from the 'detail group' page)
+			echo "<p>", sprintf($lang['emajconfirmrlbkgroup'], htmlspecialchars($_REQUEST['group']), htmlspecialchars($_REQUEST['mark'])), "</p>\n";
+			echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
 		}
 		echo $misc->form;
-		echo "{$lang['emajrollbacktype']} : ";
-		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"unlogged\" checked>{$lang['emajunlogged']}";
-		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"logged\">{$lang['emajlogged']}\n";
-		echo "</p><p>";
-		echo "<input type=\"submit\" name=\"rollbackgroup\" value=\"{$lang['emajrlbk']}\" />\n";
+
+		// rollback type line
+		echo "<p>{$lang['emajrollbacktype']} : \n";
+		$unloggedChecked = 'checked'; $loggedChecked = '';
+		if (isset($_POST['rollbacktype']) && $_POST['rollbacktype'] == 'logged') {
+			$unloggedChecked = ''; $loggedChecked = 'checked';
+		}
+		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"unlogged\" {$unloggedChecked}>{$lang['emajunlogged']}\n";
+		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"logged\" {$loggedChecked}>{$lang['emajlogged']}\n";
+		echo "</p>\n";
+
+		// estimated duration line
+		echo "<p>{$lang['emajestimatedduration']}&nbsp;:&nbsp;\n";
+		if (isset($estimatedDuration)) {
+			// the duration estimate is already known, so display it in a pleasant manner
+			if (preg_match('/(\d\d\d\d)\/(\d\d)\/(\d\d) (\d\d):(\d\d):(\d\d)/', $estimatedDuration, $m)) {
+				if ($m[1] + $m[2] > 0 || $m[3] > 10) {			// more than 10 days (should it happen one day ?)
+					$duration = $lang['emajdurationovertendays'];
+				} elseif ($m[3] * 24 + $m[4]> 0) {				// more than 1 hour => display hours and minutes
+					$duration = sprintf($lang['emajdurationhoursminutes'], ($m[3] * 24 + $m[4]), $m[5]);
+				} else {										// less than 1 hour => display minutes and seconds
+					$duration = sprintf($lang['emajdurationminutesseconds'], ($m[5] + 0), $m[6]);
+				}
+			} else {
+				$duration = $estimatedDuration;
+			}
+			echo $duration . "&nbsp;<input type=\"submit\" name=\"estimaterollbackduration\" value=\"{$lang['emajreestimate']}\" /></p>\n";
+		} else {
+			// the duration estimate is unknown, so propose a button to get it
+			echo "{$lang['emajunknownestimate']}&nbsp;<input type=\"submit\" name=\"estimaterollbackduration\" value=\"{$lang['emajestimate']}\" /></p>\n";
+		}
+
+		// main buttons line
+		echo "<p><input type=\"submit\" name=\"rollbackgroup\" value=\"{$lang['emajrlbk']}\" />\n";
 		if ($emajdb->isAsyncRlbkUsable($conf) ) {
 			echo "<input type=\"submit\" name=\"async\" value=\"{$lang['emajrlbkthenmonitor']}\" />\n";
 		}
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-		echo "</form>\n";
+		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+		echo "</p></form>\n";
 	}
 
 	/**
@@ -3409,21 +3386,32 @@
 	function rollback_group_confirm_alter() {
 		global $lang, $misc, $emajdb;
 
-		if ($emajdb->getNumEmajVersion() < 20100) {	// version < 2.1.0) {
-			// for emaj version prior 2.1, directly call the function that executes the rollback
-			rollback_group_ok();
-		} else {
-			// check that the rollback would not reach a mark set before any alter group operation
-
-			// process the click on the <cancel> button
-			if (isset($_POST['cancel'])) {
-				if ($_POST['back'] == 'list') {
-					show_groups();
-				} else {
-					show_group();
-				}
+		// process the click on the <cancel> button
+		if (isset($_POST['cancel'])) {
+			if ($_POST['back'] == 'list') {
+				show_groups();
 			} else {
+				show_group();
+			}
 
+		} elseif (isset($_POST['estimaterollbackduration'])) {
+			// process the click on the <estimate> button (compute the estimaged duration and go back to the previous page
+			// check the rollback target mark is always valid
+			// if ok, estimate the rollback duration and go back to the rollback_group() function
+			if ($emajdb->isMarkActiveGroup($_POST['group'], $_POST['mark']) == 1) {
+				$estimatedDuration = $emajdb->estimateRollbackGroups($_POST['group'], $_POST['mark'], $_POST['rollbacktype']);
+			} else {
+				$estimatedDuration = "-";
+			}
+			rollback_group($estimatedDuration);
+			exit;
+
+		} else {
+			// process a rollback
+			if ($emajdb->getNumEmajVersion() < 20100) {	// version < 2.1.0) {
+				// for emaj version prior 2.1, directly call the function that executes the rollback
+				rollback_group_ok();
+			} else {
 				// Check the group is always in LOGGING state and ROLLBACKABLE (i.e. not protected)
 				$group = $emajdb->getGroup($_POST['group']);
 				if ($group->fields['group_state'] != 'LOGGING') {
@@ -3660,30 +3648,36 @@
 	/**
 	 * Prepare rollback groups: ask for confirmation
 	 */
-	function rollback_groups() {
+	function rollback_groups($estimatedDuration = null) {
 		global $misc, $lang, $emajdb;
 
-		// if no group has been selected, stop
-		if (!isset($_REQUEST['ma'])) {
-			show_groups('',$lang['emajnoselectedgroup']);
-			return;
-		}
+		if ($estimatedDuration === null) {
+			// usual function entry
+			// if no group has been selected, stop
+			if (!isset($_REQUEST['ma'])) {
+				show_groups('',$lang['emajnoselectedgroup']);
+				return;
+			}
 
-		// if only one group is selected, switch to the mono-group function
-		if (count($_REQUEST['ma']) == 1) {
-			$a = unserialize(htmlspecialchars_decode($_REQUEST['ma'][0], ENT_QUOTES));
-			$_REQUEST['group'] = $a['group'];
-			rollback_group();
-			return;
-		}
+			// if only one group is selected, switch to the mono-group function
+			if (count($_REQUEST['ma']) == 1) {
+				$a = unserialize(htmlspecialchars_decode($_REQUEST['ma'][0], ENT_QUOTES));
+				$_REQUEST['group'] = $a['group'];
+				rollback_group();
+				return;
+			}
 
-		// build the groups list
-		$groupsList='';
-		foreach($_REQUEST['ma'] as $v) {
-			$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-			$groupsList .= $a['group'].', ';
+			// build the groups list
+			$groupsList='';
+			foreach($_REQUEST['ma'] as $v) {
+				$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
+				$groupsList .= $a['group'].', ';
+			}
+			$groupsList=substr($groupsList,0,strlen($groupsList)-2);
+		} else {
+			// the function is called back with the estimated duration, so the groups list is already built
+			$groupsList = $_POST['groups'];
 		}
-		$groupsList=substr($groupsList,0,strlen($groupsList)-2);
 
 		// if at least one selected group is protected, stop
 		$protectedGroups=$emajdb->getProtectedGroups($groupsList);
@@ -3714,21 +3708,52 @@
 		$optionDisabled = '';
 		foreach($marks as $m) {
 			// if the mark is older than the youngest protected against rollback, disabled it and the next ones
-			if ($m['mark_datetime'] < $youngestProtectedMarkTimestamp) $optionDisabled = 'disabled';
-			echo "<option value=\"",htmlspecialchars($m['mark_name']),"\" $optionDisabled>",htmlspecialchars($m['mark_name'])," (",htmlspecialchars($m['mark_datetime']),")</option>\n";
+			if ($m['mark_datetime'] < $youngestProtectedMarkTimestamp) $optionDisabled = ' disabled';
+			$optionSelected = (isset($_POST['mark']) && $_POST['mark'] == $m['mark_name']) ? ' selected' : '';
+			echo "<option value=\"",htmlspecialchars($m['mark_name']),"\"{$optionDisabled}{$optionSelected}>",htmlspecialchars($m['mark_name'])," (",htmlspecialchars($m['mark_datetime']),")</option>\n";
 		}
 		echo "</select></p><p>\n";
 		echo $misc->form;
-		echo "{$lang['emajrollbacktype']} : ";
-		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"unlogged\" checked>{$lang['emajunlogged']}";
-		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"logged\">{$lang['emajlogged']}\n";
-		echo "</p><p>";
+
+		// rollback type line
+		echo "<p>{$lang['emajrollbacktype']} : \n";
+		$unloggedChecked = 'checked'; $loggedChecked = '';
+		if (isset($_POST['rollbacktype']) && $_POST['rollbacktype'] == 'logged') {
+			$unloggedChecked = ''; $loggedChecked = 'checked';
+		}
+		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"unlogged\" {$unloggedChecked}>{$lang['emajunlogged']}\n";
+		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"logged\" {$loggedChecked}>{$lang['emajlogged']}\n";
+		echo "</p>\n";
+
+		// estimated duration line
+		echo "<p>{$lang['emajestimatedduration']}&nbsp;:&nbsp;\n";
+		if (isset($estimatedDuration)) {
+			// the duration estimate is already known, so display it in a pleasant manner
+			if (preg_match('/(\d\d\d\d)\/(\d\d)\/(\d\d) (\d\d):(\d\d):(\d\d)/', $estimatedDuration, $m)) {
+				if ($m[1] + $m[2] > 0 || $m[3] > 10) {			// more than 10 days (should it happen one day ?)
+					$duration = $lang['emajdurationovertendays'];
+				} elseif ($m[3] * 24 + $m[4]> 0) {				// more than 1 hour => display hours and minutes
+					$duration = sprintf($lang['emajdurationhoursminutes'], ($m[3] * 24 + $m[4]), $m[5]);
+				} else {										// less than 1 hour => display minutes and seconds
+					$duration = sprintf($lang['emajdurationminutesseconds'], ($m[5] + 0), $m[6]);
+				}
+			} else {
+				$duration = $estimatedDuration;
+			}
+			echo $duration . "&nbsp;<input type=\"submit\" name=\"estimaterollbackduration\" value=\"{$lang['emajreestimate']}\" /></p>\n";
+		} else {
+			// the duration estimate is unknown, so propose a button to get it
+			echo "{$lang['emajunknownestimate']}&nbsp;<input type=\"submit\" name=\"estimaterollbackduration\" value=\"{$lang['emajestimate']}\" /></p>\n";
+		}
+
+		// main buttons line
+		echo "<p>\n";
 		echo "<input type=\"submit\" name=\"rollbackgroups\" value=\"{$lang['emajrlbk']}\" />\n";
 		if ($emajdb->isAsyncRlbkUsable() ) {
 			echo "<input type=\"submit\" name=\"async\" value=\"{$lang['emajrlbkthenmonitor']}\" />\n";
 		}
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-		echo "</form>\n";
+		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+		echo "</p></form>\n";
 	}
 
 	/**
@@ -3737,21 +3762,33 @@
 	function rollback_groups_confirm_alter() {
 		global $lang, $misc, $emajdb;
 
-		if ($emajdb->getNumEmajVersion() < 20100) {	// version < 2.1.0) {
-			// for emaj version prior 2.1, directly go call the function that executes the rollback
-			rollback_groups_ok();
-		} else {
-			// check that the rollback would not reach a mark set before any alter group operation
-
-			// process the click on the <cancel> button
-			if (isset($_POST['cancel'])) {
-				if ($_POST['back'] == 'list') {
-					show_groups();
-				} else {
-					show_group();
-				}
+		// process the click on the <cancel> button
+		if (isset($_POST['cancel'])) {
+			if ($_POST['back'] == 'list') {
+				show_groups();
 			} else {
+				show_group();
+			}
 
+		} elseif (isset($_POST['estimaterollbackduration'])) {
+			// process the click on the <estimate> button (compute the estimaged duration and go back to the previous page
+			// check the rollback target mark is always valid
+			// if ok, estimate the rollback duration and go back to the rollback_group() function
+			if ($emajdb->isRollbackMarkValidGroups($_POST['groups'], $_POST['mark'])) {
+				$estimatedDuration = $emajdb->estimateRollbackGroups($_POST['groups'], $_POST['mark'], $_POST['rollbacktype']);
+			} else {
+				$estimatedDuration = "-";
+			}
+			rollback_groups($estimatedDuration);
+			exit;
+
+		} else {
+			// process a rollback
+			if ($emajdb->getNumEmajVersion() < 20100) {	// version < 2.1.0) {
+				// for emaj version prior 2.1, directly go call the function that executes the rollback
+				rollback_groups_ok();
+			} else {
+				// check that the rollback would not reach a mark set before any alter group operation
 				// Check the groups are always in LOGGING state and not protected
 				$groups = explode(', ',$_POST['groups']);
 				foreach($groups as $g) {

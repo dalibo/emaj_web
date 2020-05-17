@@ -255,6 +255,9 @@
 	$lang['emajlogsize'] = 'Log size';
 	$lang['emajrequiredfield'] = 'Required field';
 	$lang['emajestimates'] = 'Estimates';
+	$lang['emajestimate'] = 'Estimate';
+	$lang['emajreestimate'] = 'Reestimate';
+	$lang['emajestimatedduration'] = 'Estimated duration';
 	$lang['emajfrom'] = 'From';
 	$lang['emajto'] = 'To';
 	$lang['emajproperties'] = 'E-Maj properties';
@@ -479,7 +482,6 @@
 	$lang['emajhideestimates'] = 'Hide estimates';
 	$lang['emajshowestimates'] = 'Show estimates';
 	$lang['emajrlbkstep'] = 'Step';
-	$lang['emajestimatedduration'] = 'Estimated duration';
 	$lang['emajestimatedquantity'] = 'Estimated quantity';
 	$lang['emajestimationmethod'] = 'Estimation method';
 	$lang['emajrlbkdisapptrg'] = 'Disable the trigger %s';
@@ -501,7 +503,6 @@
 	$lang['emajnbchanges'] = '# row<br>changes';
 	$lang['emajcumchanges'] = 'Cumulative<br>changes';
 	$lang['emajcumchangeshelp'] = 'The cummulative number of row changes represents the number of row changes to cancel in case of E-Maj rollback to the corresponding mark.';
-	$lang['emajsimrlbk'] = 'Simulate Rollback';
 	$lang['emajrlbk'] = 'Rollback';
 	$lang['emajfirstmark'] = 'First mark';
 	$lang['emajrename'] = 'Rename';
@@ -517,8 +518,6 @@
 	$lang['emajlogstatcurrentsituation'] = 'the current state';
 	$lang['emajlogstatmark'] = 'the mark "%s"';
 	$lang['emajlogstattittle'] = 'Table changes between the mark "%s" and %s for the tables group "%s"';
-	$lang['emajnosimrlbkduration'] = 'The start mark cannot be used for a rollback. No rollback duration can be estimated.';
-	$lang['emajsimrlbkduration'] = 'Rolling the tables group "%s" back to the mark "%s" would take about %s.';
 	$lang['emajstatfirstmark'] = 'First mark';
 	$lang['emajstatfirstmarkdatetime'] = 'First mark date/time';
 	$lang['emajstatlastmark'] = 'Last mark';
@@ -719,6 +718,10 @@
 	// Group rollback
 	$lang['emajrlbkagroup'] = 'E-Maj: Rollback a tables group';
 	$lang['emajconfirmrlbkgroup'] = 'Rollbacking the tables group "%s" to the mark "%s"';
+	$lang['emajunknownestimate'] = 'unknown';
+	$lang['emajdurationminutesseconds'] = '%s mn %s s';
+	$lang['emajdurationhoursminutes'] = '%s h %s mn';
+	$lang['emajdurationovertendays'] = '> 10 days';
 	$lang['emajselectmarkgroup'] = 'Rollbacking the tables group "%s" to the mark: ';
 	$lang['emajrlbkthenmonitor'] = 'Rollback and monitor';
 	$lang['emajcantrlbkidlegroup'] = 'Rollbacking the tables group "%s" is not possible. The group is stopped.';

@@ -163,6 +163,7 @@ select:disabled {
 
 table.error {
 	margin: auto;
+	margin-top: 150px;
 	color: #d72b3f;
 	background-color: #f9f9f9;
 }

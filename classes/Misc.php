@@ -533,6 +533,11 @@
 		function printHeader($trail, $tabs, $activetab) {
 			global $lang;
 
+			// if no tabs bar is supplied, try to use the last displayed one
+			if ($tabs == '' && isset($_SESSION['lastTabsBar'])) {
+				$tabs = $_SESSION['lastTabsBar'];
+			}
+
 			echo "<header>\n";
 
 			$this->printTopbar();
@@ -545,6 +550,9 @@
 
 			echo "</header>\n";
 			echo "<section>\n";
+
+			// keep in memory the last displayed tabs bar id
+			$_SESSION['lastTabsBar'] = $tabs;
 		}
 
 		/**

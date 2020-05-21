@@ -695,6 +695,7 @@
 	$lang['emajsetmarkgroupok'] = 'La marque "%s" est posée pour le groupe de tables "%s".';
 	$lang['emajsetmarkgrouperr'] = 'Erreur lors de la pose de la marque "%s" pour le groupe de tables "%s" !';
 	$lang['emajconfirmsetmarkgroups'] = 'Pose d\'une marque pour les groupes de tables "%s" :';
+	$lang['emajcantsetmarkgroups'] = 'La pose d\'une marque pour le groupe de tables "%s" est impossible. Le groupe "%s" est arrêté.';
 	$lang['emajsetmarkgroupsok'] = 'La marque "%s" est posée pour les groupes de tables "%s".';
 	$lang['emajsetmarkgroupserr'] = 'Erreur lors de la pose de la marque "%s" pour les groupes de tables "%s" !';
 

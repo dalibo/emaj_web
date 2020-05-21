@@ -46,6 +46,10 @@ function countChecked(form_id) {
 			nbHiddenButtons = $("#" + form_id + " input:checkbox:checked").parents("tr").find(".multi_" + $(elem).attr("value") + ":empty").length;
 		}
 		$(elem).attr("disabled", (cnt == 0 || nbHiddenButtons > 0));
+		// specific case of the delete_marks action: at least 1 checkbox must be unchecked to activate the muti action delete button
+		if (($(elem).attr("value") == 'delete_marks') && ($("#" + form_id + " input:checkbox:not(:checked)").length == 0)) {
+			$(elem).attr("disabled", true);
+		}
 	});
 }
 

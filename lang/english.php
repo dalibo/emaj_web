@@ -779,7 +779,6 @@
 	$lang['emajconfirmdelmarks'] = 'Are you sure you want to delete the marks "%s" for the tables group "%s"?';
 	$lang['emajdelmarksok'] = 'The marks "%s" have been deleted for the tables group "%s".';
 	$lang['emajdelmarkserr'] = 'Error during marks "%s" deletion for the tables group "%s"!';
-	$lang['emajdelmarkserr2'] = 'It is not allowed to delete all marks of a tables group. A tables group in LOGGING state must have at least one mark.';
 
 	// Marks before mark deletion
 	$lang['emajdelmarksprior'] = 'E-Maj: Delete marks';

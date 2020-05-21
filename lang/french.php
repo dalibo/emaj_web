@@ -778,7 +778,6 @@
 	$lang['emajconfirmdelmarks'] = 'Etes-vous sûr de vouloir effacer les marques "%s" pour le groupe de tables "%s" ?';
 	$lang['emajdelmarksok'] = 'Les marques "%s" ont été effacées pour le groupe de tables "%s".';
 	$lang['emajdelmarkserr'] = 'Erreur lors de l\'effacement des marques "%s" pour le groupe de tables "%s" !';
-	$lang['emajdelmarkserr2'] = 'On ne peut pas effacer toutes les marques d\'une groupe de tables. Un groupe de tables actif doit avoir au moins une marque.';
 
 	// Marks before mark deletion
 	$lang['emajdelmarksprior'] = 'E-Maj : Supprimer des marques';

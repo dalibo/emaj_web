@@ -4100,12 +4100,6 @@
 		}
 		$marksList=substr($marksList,0,strlen($marksList)-2);
 
-		// Chech that at least 1 mark will remain
-		if ($nbMarks >= $emajdb->getNbMarks($_REQUEST['group'])) {
-			show_group('',sprintf($lang['emajdelmarkserr2'], htmlspecialchars($_POST['marks']), htmlspecialchars($_POST['group'])));
-			return;
-		}
-
 		echo "<p>", sprintf($lang['emajconfirmdelmarks'], htmlspecialchars($marksList), htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"delete_marks_ok\" />\n";

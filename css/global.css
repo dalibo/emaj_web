@@ -581,6 +581,32 @@ ul.toplink li:first-child, ul.navlink li:first-child {
 	padding-left: 0;
 }
 
+ul.buttonslist{
+	margin: 10px;
+	padding: 0px;
+}
+
+ul.buttonslist li {
+	display: inline;
+	background: #fa842f;
+	color: #ffffff;
+	font-size: 1em;
+	font-weight: bold;
+	margin: 2px 10px 2px 10px;
+	padding: 2px 15px 2px 15px;
+	border: 1px solid #fa842f;
+	border-radius: 60px;
+	box-shadow: -1px 2px 5px rgba(0,0,0,.3);
+	cursor: pointer;
+}
+ul.buttonslist li:hover {
+	background: #ffffff;
+	color: #fa842f;
+	border: 1px solid #fa842f;
+}
+ul.buttonslist li a {
+	color: inherit;
+}
 .dot {
 	height: 10px;
 	width: 10px;

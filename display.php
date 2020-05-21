@@ -306,10 +306,11 @@
 
 		if (isset($_REQUEST['schema']))
 			$fields['schema'] = $_REQUEST['schema'];
+
 		// Expand/Collapse
 		if ($_REQUEST['strings'] == 'expanded')
 			$navlinks['collapse'] = array (
-				'attr'=> array (
+				'attr' => array (
 					'href' => array (
 						'url' => 'display.php',
 						'urlvars' => array_merge(
@@ -324,7 +325,7 @@
 			);
 		else
 			$navlinks['collapse'] = array (
-				'attr'=> array (
+				'attr' => array (
 					'href' => array (
 						'url' => 'display.php',
 						'urlvars' => array_merge(
@@ -352,8 +353,7 @@
 			),
 			'content' => $lang['strrefresh']
 		);
-		$misc->printNavLinks($navlinks);
-
+		$misc->printLinksList($navlinks, 'buttonslist');
 
 		if (is_object($rs) && $rs->recordCount() > 0) {
 			// Show page navigation
@@ -404,8 +404,7 @@
 		else echo "<p>{$lang['strnodata']}</p>\n";
 
 		// regenerate the navigation links at the page bottom
-
-		$misc->printNavLinks($navlinks);
+		$misc->printLinksList($navlinks, 'buttonslist');
 	}
 
 	/* shortcuts: this function exit the script for ajax purpose */

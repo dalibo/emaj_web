@@ -1168,7 +1168,7 @@
 		/**
 		* Display the navlinks
 		*
-		* @param $navlinks - An array with the the attributes and values that will be shown. See printLinksList for array format.
+		* @param $navlinks - An array with the attributes and values that will be shown. See printLinksList for array format.
 		*/
 		function printNavLinks($navlinks) {
 

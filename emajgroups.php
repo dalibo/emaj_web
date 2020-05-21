@@ -87,21 +87,6 @@
 		return $actions;
 	}
 
-	/**
-	 * Render callback functions
-	 */
-
-	// Callback function to dynamicaly add an icon to each diagnostic message
-	function renderDiagnostic($val) {
-		global $misc;
-		if (preg_match("/[Nn]o error /",$val)) {
-			$icon = 'CheckConstraint';
-		} else {
-			$icon = 'CorruptedDatabase';
-		}
-		return "<img src=\"".$misc->icon($icon)."\" style=\"vertical-align:bottom;\" />" . $val;
-	}
-
 	// Callback function to dynamicaly modify the Table/Sequence columns content
 	// It replaces the database value by an icon representing either a table or a sequence
 	function renderTblSeq($val) {
@@ -119,7 +104,7 @@
 			$icon = $misc->icon('ObjectNotFound');
 			$alt = $lang['emajunsupportedobject'];
 		}
-		return "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
+		return "<img src=\"{$icon}\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 	}
 
 	// Callback function to dynamicaly replace the group type from the database by one or two icons
@@ -128,18 +113,18 @@
 		if ($val == 'ROLLBACKABLE') {
 			$icon = $misc->icon('EmajRollbackable');
 			$alt = $lang['emajrollbackable'];
-			$img = "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
+			$img = "<img src=\"{$icon}\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 		} elseif ($val == 'AUDIT_ONLY') {
 			$icon = $misc->icon('EmajAuditOnly');
 			$alt = $lang['emajauditonly'];
-			$img = "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
+			$img = "<img src=\"{$icon}\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 		} elseif ($val == 'ROLLBACKABLE-PROTECTED') {
 			$icon = $misc->icon('EmajRollbackable');
 			$alt = $lang['emajrollbackable'];
-			$img = "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
+			$img = "<img src=\"{$icon}\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 			$icon = $misc->icon('EmajPadlock');
 			$alt = $lang['emajprotected'];
-			$img .= "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
+			$img .= "<img src=\"{$icon}\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 		}
 		return $img;
 	}
@@ -179,7 +164,7 @@
 			$icon = $misc->icon('EmajLogging');
 			$alt = $lang['emajlogging'];
 		}
-		return "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
+		return "<img src=\"{$icon}\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 	}
 
 	// Callback function to dynamicaly translate a boolean column into an icon
@@ -190,7 +175,7 @@
 		} else {
 			$icon = 'Delete';
 		}
-		return "<img src=\"".$misc->icon($icon)."\" style=\"vertical-align:bottom;\" />";
+		return "<img src=\"".$misc->icon($icon)."\" />";
 	}
 
 	// Callback function to dynamicaly modify the mark state column content
@@ -198,12 +183,12 @@
 	function renderMarkState($val) {
 		global $misc, $lang;
 		if ($val == 'ACTIVE') {
-			$img = "<img src=\"{$misc->icon('ActiveMark')}\" style=\"vertical-align:bottom;\" alt=\"active_mark\" title=\"{$lang['emajactivemark']}\"/>";
+			$img = "<img src=\"{$misc->icon('ActiveMark')}\" alt=\"active_mark\" title=\"{$lang['emajactivemark']}\"/>";
 		} elseif ($val == 'DELETED') {
-			$img = "<img src=\"{$misc->icon('DeletedMark')}\" style=\"vertical-align:bottom;\" alt=\"deleted_mark\" title=\"{$lang['emajdeletedmark']}\"/>";
+			$img = "<img src=\"{$misc->icon('DeletedMark')}\" alt=\"deleted_mark\" title=\"{$lang['emajdeletedmark']}\"/>";
 		} elseif ($val == 'ACTIVE-PROTECTED') {
-			$img = "<img src=\"{$misc->icon('ActiveMark')}\" style=\"vertical-align:bottom;\" alt=\"active_mark\" title=\"{$lang['emajactivemark']}\"/>";
-			$img .= "<img src=\"{$misc->icon('EmajPadlock')}\" style=\"vertical-align:bottom;\" alt=\"protected\" title=\"{$lang['emajprotectedmark']}\"/>";
+			$img = "<img src=\"{$misc->icon('ActiveMark')}\" alt=\"active_mark\" title=\"{$lang['emajactivemark']}\"/>";
+			$img .= "<img src=\"{$misc->icon('EmajPadlock')}\" alt=\"protected\" title=\"{$lang['emajprotectedmark']}\"/>";
 		}
 		return $img;
 	}
@@ -216,7 +201,7 @@
 		} else {
 			$icon = 'EmajWarning';
 		}
-		return "<img src=\"".$misc->icon($icon)."\" style=\"vertical-align:bottom;\" />";
+		return "<img src=\"".$misc->icon($icon)."\" />";
 	}
 
 	// Callback function to dynamicaly transform a message severity level into an icon
@@ -231,7 +216,7 @@
 		} else {
 			return '?';
 		}
-		return "<img src=\"".$misc->icon($icon)."\" style=\"vertical-align:bottom;\" />";
+		return "<img src=\"".$misc->icon($icon)."\" />";
 	}
 
 /********************************************************************************************************

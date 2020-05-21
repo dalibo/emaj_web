@@ -47,7 +47,7 @@
 		if ($val == 'E') {
 			$icon = $misc->icon('EmajIcon');
 			$alt = $lang['emajschema'];
-			return "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
+			return "<img src=\"{$icon}\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 		}
 		return;
 	}

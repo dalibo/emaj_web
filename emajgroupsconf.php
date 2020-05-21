@@ -44,7 +44,7 @@
 			$icon = $misc->icon('ObjectNotFound');
 			$alt = $lang['emajunsupportedobject'];
 		}
-		return "<img src=\"{$icon}\" style=\"vertical-align:bottom;\" alt=\"{$alt}\" title=\"{$alt}\"/>";
+		return "<img src=\"{$icon}\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 	}
 
 	// Callback function to dynamicaly modify the schema owner columns content

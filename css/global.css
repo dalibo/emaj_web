@@ -478,6 +478,9 @@ tr td.data1:last-child, tr td.data2:last-child, tr td.data3:last-child {
 .row3, .data3 {
 	background-color: #d4c8a1
 }
+tr.data1 img, tr.data2 img, tr.data3 img {
+	vertical-align:bottom;
+}
 td.opbutton1, td.opbutton2 {
 	padding: 0px;
 	text-align: center;

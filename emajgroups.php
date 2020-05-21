@@ -953,10 +953,7 @@
 
 		// display the stat form
 
-		$globalStat = false; $detailedStat = false; $simRlbk = false;
-		if (isset($_REQUEST['simrlbk'])) {
-			$simRlbk = true;
-		}
+		$globalStat = false; $detailedStat = false;
 		if (isset($_REQUEST['globalstatgroup'])) {
 			$globalStat = true;
 			$urlExt = 'globalstatgroup='.urlencode($_REQUEST['globalstatgroup']);
@@ -983,26 +980,34 @@
 			echo "<form id=\"statistics_form\" action=\"emajgroups.php?action=log_stat_group&amp;back=detail&amp;{$misc->href}\"";
 			echo "  method=\"post\" enctype=\"multipart/form-data\">\n";
 
+			echo "<div class=\"form-container\">\n";
 			// First mark defining the marks range to analyze
-			echo "<p>{$lang['emajfrom']}\n";
-			echo "  <select name=\"rangestart\" id=\"rangestart\">\n";
+			echo "\t<div class=\"form-label\">{$lang['emajstartmark']}</div>\n";
+			echo "\t<div class=\"form-input\">\n";
+			echo "\t\t<select name=\"rangestart\" id=\"rangestart\">\n";
 			foreach($marks as $r)
-				echo "    <option value=\"", htmlspecialchars($r['mark_name']), "\" >", htmlspecialchars($r['mark_name']), " ({$r['mark_datetime']})</option>\n";
-			echo "  </select>\n";
+				echo "\t\t\t<option value=\"", htmlspecialchars($r['mark_name']), "\" >", htmlspecialchars($r['mark_name']), " ({$r['mark_datetime']})</option>\n";
+			echo "\t\t</select>\n";
+			echo "\t</div>\n";
+			echo "\t<div class=\"form-comment\"></div>\n";
 
 			// Last mark defining the marks range to analyze
-			echo "{$lang['emajto']}\n";
-			echo "  <select name=\"rangeend\" id=\"rangeend\" >\n";
-			echo "    <option value=\"currentsituation\">{$lang['emajcurrentsituation']}</option>\n";
+			echo "\t<div class=\"form-label\">{$lang['emajendmark']}</div>\n";
+			echo "\t<div class=\"form-input\">\n";
+			echo "\t\t<select name=\"rangeend\" id=\"rangeend\" >\n";
+			echo "\t\t\t<option value=\"currentsituation\">{$lang['emajcurrentsituation']}</option>\n";
 			foreach($marks as $r)
-				echo "    <option value=\"", htmlspecialchars($r['mark_name']), "\" >", htmlspecialchars($r['mark_name']), " ({$r['mark_datetime']})</option>\n";
-			echo "  </select></p>\n";
+				echo "\t\t\t<option value=\"", htmlspecialchars($r['mark_name']), "\" >", htmlspecialchars($r['mark_name']), " ({$r['mark_datetime']})</option>\n";
+			echo "\t\t</select>\n";
+			echo "\t</div>\n";
+			echo "\t<div class=\"form-comment\"></div>\n";
+			echo "</div>\n";
 
-			// Other elements of the form
-			echo "  <p><input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
-			echo "  <input type=\"submit\" name=\"globalstatgroup\" value=\"{$lang['emajestimates']}\" />\n";
-			echo "  <input type=\"submit\" name=\"detailedstatgroup\" value=\"{$lang['emajdetailedstat']}\" />\n";
-			echo "  <img src=\"{$misc->icon('EmajWarning')}\" alt=\"warning\" title=\"{$lang['emajdetailedlogstatwarning']}\" style=\"vertical-align:middle\"/>";
+			// Buttons
+			echo "\t<p><input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
+			echo "\t\t<input type=\"submit\" name=\"globalstatgroup\" value=\"{$lang['emajestimates']}\" />&nbsp;&nbsp;&nbsp;\n";
+			echo "\t\t<input type=\"submit\" name=\"detailedstatgroup\" value=\"{$lang['emajdetailedstat']}\" />\n";
+			echo "\t\t<img src=\"{$misc->icon('EmajWarning')}\" alt=\"warning\" title=\"{$lang['emajdetailedlogstatwarning']}\" style=\"vertical-align:middle\"/>";
 			echo "</p></form>\n";
 
 			// JQuery scripts
@@ -1132,20 +1137,20 @@
 				));
 			if ($emajdb->getNumEmajVersion() >= 20300) {			// version >= 2.3.0
 				$columns = array_merge($columns, array(
-					'stat_first_mark' => array(
-						'title' => $lang['emajstatfirstmark'],
+					'start_mark' => array(
+						'title' => $lang['emajstartmark'],
 						'field' => field('stat_first_mark'),
 					),
-					'stat_first_mark_datetime' => array(
-						'title' => $lang['emajstatfirstmarkdatetime'],
+					'start_datetime' => array(
+						'title' => $lang['emajstartdatetime'],
 						'field' => field('stat_first_mark_datetime'),
 					),
-					'stat_last_mark' => array(
-						'title' => $lang['emajstatlastmark'],
+					'end_mark' => array(
+						'title' => $lang['emajendmark'],
 						'field' => field('stat_last_mark'),
 					),
-					'stat_last_mark_datetime' => array(
-						'title' => $lang['emajstatlastmarkdatetime'],
+					'end_datetime' => array(
+						'title' => $lang['emajenddatetime'],
 						'field' => field('stat_last_mark_datetime'),
 					),
 				));
@@ -1268,20 +1273,20 @@
 				));
 			if ($emajdb->getNumEmajVersion() >= 20300) {			// version >= 2.3.0
 				$columns = array_merge($columns, array(
-					'stat_first_mark' => array(
-						'title' => $lang['emajstatfirstmark'],
+					'start_mark' => array(
+						'title' => $lang['emajstartmark'],
 						'field' => field('stat_first_mark'),
 					),
-					'stat_first_mark_datetime' => array(
-						'title' => $lang['emajstatfirstmarkdatetime'],
+					'start_datetime' => array(
+						'title' => $lang['emajstartdatetime'],
 						'field' => field('stat_first_mark_datetime'),
 					),
-					'stat_last_mark' => array(
-						'title' => $lang['emajstatlastmark'],
+					'end_mark' => array(
+						'title' => $lang['emajendmark'],
 						'field' => field('stat_last_mark'),
 					),
-					'stat_last_mark_datetime' => array(
-						'title' => $lang['emajstatlastmarkdatetime'],
+					'end_datetime' => array(
+						'title' => $lang['emajenddatetime'],
 						'field' => field('stat_last_mark_datetime'),
 					),
 				));

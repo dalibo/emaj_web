@@ -258,13 +258,15 @@
 	$lang['emajestimate'] = 'Estimer';
 	$lang['emajreestimate'] = 'Ré-estimer';
 	$lang['emajestimatedduration'] = 'Durée estimée';
-	$lang['emajfrom'] = 'De';
-	$lang['emajto'] = 'A';
 	$lang['emajproperties'] = 'Propriétés E-Maj';
 	$lang['emajschema'] = 'Schéma E-Maj';
 	$lang['emajselectfile'] = 'Sélectionner un fichier';
 	$lang['emajnotjsonfile'] = 'Le fichier %s n\'a pas un format JSON valide.';
 	$lang['emajtxid'] = 'Id. transaction';
+	$lang['emajstartmark'] = 'Marque début';
+	$lang['emajstartdatetime'] = 'Date-Heure début';
+	$lang['emajendmark'] = 'Marque fin';
+	$lang['emajenddatetime'] = 'Date-Heure fin';
 
 	// E-Maj html titles and tabs
 	$lang['emajgroupsmanagement'] = 'Gestion des groupes E-Maj';
@@ -511,17 +513,13 @@
 	$lang['emajunprotect'] = 'Déprotéger';
 
 	// Statistics
-	$lang['emajshowstat'] = 'Statistiques issues du log E-Maj pour le groupe "%s"';
+	$lang['emajshowstat'] = 'Statistiques issues du log E-Maj pour le groupe de tables "%s"';
 	$lang['emajcurrentsituation'] = 'Situation courante';
 	$lang['emajdetailedstat'] = 'Stats détaillées';
-	$lang['emajdetailedlogstatwarning'] = 'Attention, le parcours des tables de log nécessaires à l\'obtention des statistiques détaillées peut être long';
+	$lang['emajdetailedlogstatwarning'] = 'Attention, le parcours des tables de log nécessaire à l\'obtention des statistiques détaillées peut être long';
 	$lang['emajlogstatcurrentsituation'] = 'la situation courante';
 	$lang['emajlogstatmark'] = 'la marque "%s"';
 	$lang['emajlogstattittle'] = 'Mises à jour de table entre la marque "%s" et %s pour le groupe de tables "%s"';
-	$lang['emajstatfirstmark'] = 'Première marque';
-	$lang['emajstatfirstmarkdatetime'] = 'Date-Heure première marque';
-	$lang['emajstatlastmark'] = 'Dernière marque';
-	$lang['emajstatlastmarkdatetime'] = 'Date-Heure dernière marque';
 	$lang['emajstatverb'] = 'Verbe SQL';
 	$lang['emajnbinsert'] = 'Nb INSERT';
 	$lang['emajnbupdate'] = 'Nb UPDATE';

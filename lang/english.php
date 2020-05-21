@@ -258,13 +258,15 @@
 	$lang['emajestimate'] = 'Estimate';
 	$lang['emajreestimate'] = 'Reestimate';
 	$lang['emajestimatedduration'] = 'Estimated duration';
-	$lang['emajfrom'] = 'From';
-	$lang['emajto'] = 'To';
 	$lang['emajproperties'] = 'E-Maj properties';
 	$lang['emajschema'] = 'E-Maj schema';
 	$lang['emajselectfile'] = 'Select a file';
 	$lang['emajnotjsonfile'] = 'The file %s has not a valid JSON format.';
 	$lang['emajtxid'] = 'Transaction id.';
+	$lang['emajstartmark'] = 'Start mark';
+	$lang['emajstartdatetime'] = 'Start date-time';
+	$lang['emajendmark'] = 'End mark';
+	$lang['emajenddatetime'] = 'End date-time';
 
 	// E-Maj html titles and tabs
 	$lang['emajgroupsmanagement'] = 'E-Maj groups management';
@@ -511,17 +513,13 @@
 	$lang['emajunprotect'] = 'Unprotect';
 
 	// Statistics
-	$lang['emajshowstat'] = 'Statistics from E-Maj logs for the group "%s"';
+	$lang['emajshowstat'] = 'Statistics from E-Maj logs for the tables group "%s"';
 	$lang['emajcurrentsituation'] = 'Current state';
 	$lang['emajdetailedstat'] = 'Detailed stats';
 	$lang['emajdetailedlogstatwarning'] = 'Attention, scanning the log tables needed to get detailed statistics may take a long time';
 	$lang['emajlogstatcurrentsituation'] = 'the current state';
 	$lang['emajlogstatmark'] = 'the mark "%s"';
 	$lang['emajlogstattittle'] = 'Table changes between the mark "%s" and %s for the tables group "%s"';
-	$lang['emajstatfirstmark'] = 'First mark';
-	$lang['emajstatfirstmarkdatetime'] = 'First mark date/time';
-	$lang['emajstatlastmark'] = 'Last mark';
-	$lang['emajstatlastmarkdatetime'] = 'Last mark date/time';
 	$lang['emajstatverb'] = 'SQL verb';
 	$lang['emajnbinsert'] = '# INSERT';
 	$lang['emajnbupdate'] = '# UPDATE';

@@ -5,8 +5,6 @@
 	 * unless we implement a full SQL parser, there's no way of knowing
 	 * how many SQL statements have been strung together with semi-colons
 	 * @param $_SESSION['sqlquery'] The SQL query string to execute
-	 *
-	 * $Id: sql.php,v 1.43 2008/01/10 20:19:27 xzilla Exp $
 	 */
 
 	 global $lang;
@@ -77,15 +75,13 @@
 	if (isset($_REQUEST['subject']) && $_REQUEST['subject'] == 'history') {
 		// Or maybe we came from the history popup
 		$_SESSION['sqlquery'] = $_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$_GET['queryid']]['query'];
-	}
-	elseif (isset($_POST['query'])) {
+	} elseif (isset($_POST['query'])) {
 		// Or maybe we came from an sql form
 		$_SESSION['sqlquery'] = $_POST['query'];
-	}
-	else {
+	} else {
 		echo "could not find the query!!";
 	}
-	
+
 	// Pagination maybe set by a get link that has it as FALSE,
 	// if that's the case, unset the variable.
 
@@ -94,15 +90,14 @@
 		unset($_POST['paginate']);
 		unset($_GET['paginate']);
 	}
-	// Check to see if pagination has been specified. In that case, send to display
-	// script for pagination
+	// Check to see if pagination has been specified. In that case, send to display script for pagination
 	/* if a file is given or the request is an explain, do not paginate */
 	if (isset($_REQUEST['paginate']) && !(isset($_FILES['script']) && $_FILES['script']['size'] > 0)
 			&& (preg_match('/^\s*explain/i', $_SESSION['sqlquery']) == 0)) {
 		include('./display.php');
 		exit;
 	}
-	
+
 	$subject = isset($_REQUEST['subject'])? $_REQUEST['subject'] : '';
 	$misc->printHtmlHeader($lang['strqueryresults']);
 	$misc->printBody();
@@ -121,12 +116,13 @@
 	if (function_exists('microtime')) {
 		list($usec, $sec) = explode(' ', microtime());
 		$start_time = ((float)$usec + (float)$sec);
+	} else {
+		$start_time = null;
 	}
-	else $start_time = null;
 	// Execute the query.  If it's a script upload, special handling is necessary
-	if (isset($_FILES['script']) && $_FILES['script']['size'] > 0)
+	if (isset($_FILES['script']) && $_FILES['script']['size'] > 0) {
 		$data->executeScript('script', 'sqlCallback');
-	else {
+	} else {
 		// Set fetch mode to NUM so that duplicate field names are properly returned
 		$data->conn->setFetchMode(ADODB_FETCH_NUM);
 		$rs = $data->conn->Execute($_SESSION['sqlquery']);
@@ -138,7 +134,7 @@
 				$misc->saveScriptHistory($_SESSION['sqlquery']);
 
 			// Now, depending on what happened do various things
-	
+
 			// First, if rows returned, then display the results
 			if ($rs->recordCount() > 0) {
 				echo "<table>\n<tr>";
@@ -177,8 +173,9 @@
 		$end_time = ((float)$usec + (float)$sec);	
 		// Get duration in milliseconds, round to 3dp's	
 		$duration = number_format(($end_time - $start_time) * 1000, 3);
+	} else {
+		$duration = null;
 	}
-	else $duration = null;
 
 	// Reload the browser as we may have made schema changes
 	$_reload_browser = true;
@@ -187,9 +184,9 @@
 	if ($duration !== null) {
 		echo "<p>", sprintf($lang['strruntime'], $duration), "</p>\n";
 	}
-	
+
 	echo "<p>{$lang['strsqlexecuted']}</p>\n";
-			
+
 	$navlinks = array();
 	$fields = array(
 		'server' => $_REQUEST['server'],
@@ -198,7 +195,7 @@
 
 	if(isset($_REQUEST['schema']))
 		$fields['schema'] = $_REQUEST['schema'];
-	
+
 	// Return
 	if (isset($_REQUEST['return'])) {
 		$urlvars = $misc->getSubjectParams($_REQUEST['return']);
@@ -213,7 +210,7 @@
 		);
 	}
 
-	$misc->printNavLinks($navlinks);
-	
+	$misc->printLinksList($navlinks, 'buttonslist');
+
 	$misc->printFooter();
 ?>

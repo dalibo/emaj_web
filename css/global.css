@@ -585,7 +585,7 @@ ul.toplink li:first-child, ul.navlink li:first-child {
 }
 
 ul.buttonslist{
-	margin: 10px;
+	margin: 20px 10px 10px 10px;
 	padding: 0px;
 }
 
@@ -595,7 +595,7 @@ ul.buttonslist li {
 	color: #ffffff;
 	font-size: 1em;
 	font-weight: bold;
-	margin: 2px 10px 2px 10px;
+	margin: 2px 15px 2px 15px;
 	padding: 2px 15px 2px 15px;
 	border: 1px solid #fa842f;
 	border-radius: 60px;

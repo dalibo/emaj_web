@@ -571,7 +571,7 @@
 					// the export button is disabled when no group exists
 					echo "\t<form id=\"exportGroupsConf_form\" action=\"emajgroups.php?action=export_groups&amp;back=list&amp;{$misc->href}\"";
 					echo " method=\"post\" enctype=\"multipart/form-data\">\n";
-					$disabled = ''; if ($nbGroup = 0) $disabled = ' disabled';
+					$disabled = ''; if ($nbGroup == 0) $disabled = ' disabled';
 					echo "\t\t<input type=\"submit\" name=\"exportButton\" value=\"${lang['strexport']}\"{$disabled}>\n";
 					echo "\t</form>\n";
 
@@ -668,70 +668,160 @@
 		// display the buttons corresponding to the available functions for the group, depending on its state
 
 		if ($emajdb->isEmaj_Adm()) {
-			echo "<p>\n";
+			$navlinks = array();
 
 			// start_group
 			if ($groupState == 'IDLE') {
-				echo "<form id=\"start_group_form\" action=\"emajgroups.php?action=start_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline;\">\n";
-				echo "  <input type=\"submit\" name=\"startgroup\" value=\"{$lang['strstart']}\" />";
-				echo "</form>\n";
+				$navlinks['start_group'] = array (
+					'content' => $lang['strstart'],
+					'attr'=> array (
+						'href' => array (
+							'url' => "emajgroups.php",
+							'urlvars' => array(
+								'action' => 'start_group',
+								'group' => $_REQUEST['group'],
+								'back' => 'detail',
+							)
+						)
+					),
+				);
 			}
 
 			// set_mark_group
 			if ($groupState == 'LOGGING') {
-				echo "<form id=\"set_mark_group_form\" action=\"emajgroups.php?action=set_mark_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline;\">\n";
-				echo "  <input type=\"submit\" name=\"setmarkgroup\" value=\"{$lang['emajsetmark']}\" />";
-				echo "</form>\n";
+				$navlinks['set_mark_group'] = array (
+					'content' => $lang['emajsetmark'],
+					'attr'=> array (
+						'href' => array (
+							'url' => "emajgroups.php",
+							'urlvars' => array(
+								'action' => 'set_mark_group',
+								'group' => $_REQUEST['group'],
+								'back' => 'detail',
+							)
+						)
+					),
+				);
 			}
 
 			// reset_group
 			if ($groupState == 'IDLE') {
-				echo "<form id=\"reset_group_form\" action=\"emajgroups.php?action=reset_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
-				echo "  <input type=\"submit\" name=\"resetgroup\" value=\"{$lang['strreset']}\" />";
-				echo "</form>\n";
+				$navlinks['reset_group'] = array (
+					'content' => $lang['strreset'],
+					'attr'=> array (
+						'href' => array (
+							'url' => "emajgroups.php",
+							'urlvars' => array(
+								'action' => 'reset_group',
+								'group' => $_REQUEST['group'],
+								'back' => 'detail',
+							)
+						)
+					),
+				);
 			}
 
 			// protect_group
 			if ($groupState == 'LOGGING' && $groupType == "ROLLBACKABLE") {
-				echo "<form id=\"protect_group_form\" action=\"emajgroups.php?action=protect_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
-				echo "  <input type=\"submit\" name=\"protectgroup\" value=\"{$lang['emajprotect']}\" />";
-				echo "</form>\n";
+				$navlinks['protect_group'] = array (
+					'content' => $lang['emajprotect'],
+					'attr'=> array (
+						'href' => array (
+							'url' => "emajgroups.php",
+							'urlvars' => array(
+								'action' => 'protect_group',
+								'group' => $_REQUEST['group'],
+								'back' => 'detail',
+							)
+						)
+					),
+				);
 			}
 
 			// unprotect_group
 			if ($groupState == 'LOGGING' && $groupType == "ROLLBACKABLE-PROTECTED") {
-				echo "<form id=\"unprotect_group_form\" action=\"emajgroups.php?action=unprotect_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
-				echo "  <input type=\"submit\" name=\"unprotectgroup\" value=\"{$lang['emajunprotect']}\" />";
-				echo "</form>\n";
+				$navlinks['unprotect_group'] = array (
+					'content' => $lang['emajunprotect'],
+					'attr'=> array (
+						'href' => array (
+							'url' => "emajgroups.php",
+							'urlvars' => array(
+								'action' => 'unprotect_group',
+								'group' => $_REQUEST['group'],
+								'back' => 'detail',
+							)
+						)
+					),
+				);
 			}
 
 			// stop_group
 			if ($groupState == 'LOGGING') {
-				echo "<form id=\"stop_group_form\" action=\"emajgroups.php?action=stop_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
-				echo "  <input type=\"submit\" name=\"stopgroup\" value=\"{$lang['strstop']}\" />";
-				echo "</form>\n";
+				$navlinks['stop_group'] = array (
+					'content' => $lang['strstop'],
+					'attr'=> array (
+						'href' => array (
+							'url' => "emajgroups.php",
+							'urlvars' => array(
+								'action' => 'stop_group',
+								'group' => $_REQUEST['group'],
+								'back' => 'detail',
+							)
+						)
+					),
+				);
 			}
 
 			// comment_group
-			echo "<form id=\"comment_group_form\" action=\"emajgroups.php?action=comment_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:30px;\">\n";
-			echo "  <input type=\"submit\" name=\"commentgroup\" value=\"{$lang['emajsetcomment']}\" />";
-			echo "</form>\n";
+			$navlinks['comment_group'] = array (
+				'content' => $lang['emajsetcomment'],
+				'attr'=> array (
+					'href' => array (
+						'url' => "emajgroups.php",
+						'urlvars' => array(
+							'action' => 'comment_group',
+							'group' => $_REQUEST['group'],
+							'back' => 'detail',
+						)
+					)
+				),
+			);
 
 			// alter_group
 			if ($hasWaitingChanges && ($groupState == 'IDLE' || $emajdb->getNumEmajVersion() >= 20100) && $emajdb->getNumEmajVersion() < 30200) {
-				echo "<form id=\"alter_group_form\" action=\"emajgroups.php?action=alter_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
-				echo "  <input type=\"submit\" name=\"altergroup\" value=\"{$lang['emajApplyConfChanges']}\" />";
-				echo "</form>\n";
+				$navlinks['alter_group'] = array (
+					'content' => $lang['emajApplyConfChanges'],
+					'attr'=> array (
+						'href' => array (
+							'url' => "emajgroups.php",
+							'urlvars' => array(
+								'action' => 'alter_group',
+								'group' => $_REQUEST['group'],
+								'back' => 'detail',
+							)
+						)
+					),
+				);
 			}
 
 			// drop_group
 			if ($groupState == 'IDLE') {
-				echo "<form id=\"drop_group_form\" action=\"emajgroups.php?action=drop_group&amp;&amp;group=",urlencode($_REQUEST['group']),"&amp;back=detail&amp;{$misc->href}\" method=\"post\" style=\"display:inline; margin-left:5px;\">\n";
-				echo "  <input type=\"submit\" name=\"dropgroup\" value=\"{$lang['strdrop']}\" />";
-				echo "</form>\n";
+				$navlinks['drop_group'] = array (
+					'content' => $lang['strdrop'],
+					'attr'=> array (
+						'href' => array (
+							'url' => "emajgroups.php",
+							'urlvars' => array(
+								'action' => 'drop_group',
+								'group' => $_REQUEST['group'],
+								'back' => 'detail',
+							)
+						)
+					),
+				);
 			}
 
-			echo "</p>\n";
+			$misc->printLinksList($navlinks, 'buttonslist');
 		}
 
 		// Show marks of the groups

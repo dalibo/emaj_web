@@ -795,7 +795,9 @@ class EmajDb {
 		if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
 			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, time_tx_timestamp as group_creation_datetime,
 					CASE WHEN group_is_logging THEN 'LOGGING' ELSE 'IDLE' END as group_state, 
-					CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END as group_type, 
+					CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
+						 WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
+						 ELSE 'ROLLBACKABLE-PROTECTED' END as group_type,
 					group_comment, 
 					pg_size_pretty((SELECT sum(pg_total_relation_size('\"' || rel_log_schema || '\".\"' || rel_log_table || '\"'))
 						FROM emaj.emaj_relation 

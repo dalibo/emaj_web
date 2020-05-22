@@ -474,8 +474,9 @@
 
 		if (($data->isSuperUser($server_info['username']))) {
 		//
-		// Extension management section
+		// Extension management section (for superusers only)
 		//
+			$navlinks = array();
 			if (! $isEnabled || $isExtension) {
 				echo "<hr/>\n";
 				$misc->printTitle($lang['emajextensionmngt']);
@@ -483,43 +484,62 @@
 
 			if (! $isEnabled) {
 				// the extension is not yet created
-				// form to create the extension
-				echo "<div style=\"margin:20px\">\n";
-				echo "\t<form name=\"createextension\" id=\"createextension\" enctype=\"multipart/form-data\" method=\"POST\"";
-				echo " action=\"emajenvir.php?action=create_extension&amp;{$misc->href}\">\n";
-				echo "\t\t<input type=\"submit\" name=\"creatextensionbutton\" value=\"{$lang['emajcreateextension']}\">\n";
-				echo "\t</form>\n";
-				echo "</div>\n";
+				// Add a button to create the extension
+				$navlinks['createextension'] = array (
+					'content' => $lang['emajcreateextension'],
+					'attr'=> array (
+						'href' => array (
+							'url' => "emajenvir.php",
+							'urlvars' => array(
+								'action' => 'create_extension'
+							)
+						)
+					),
+				);
 
 			} else {
 
 				if ($isExtension) {
 				// emaj exists as an extension
-					// can we update it with a more recent version ?
+					// Can we update it with a more recent version ?
 					if ($emajdb->areThereVersionsToUpdate()) {
-						// form to update the extension
-						echo "<div style=\"margin:20px\">\n";
-						echo "\t<form name=\"updateextension\" id=\"updateextension\" enctype=\"multipart/form-data\" method=\"POST\"";
-						echo " action=\"emajenvir.php?action=update_extension&amp;{$misc->href}\">\n";
-						echo "\t\t<input type=\"submit\" name=\"updateextensionbutton\" value=\"{$lang['emajupdateextension']}\">\n";
-						echo "\t</form>\n";
-						echo "</div>\n";
+						// Add a button to update the extension
+						$navlinks['updateextension'] = array (
+							'content' => $lang['emajupdateextension'],
+							'attr'=> array (
+								'href' => array (
+									'url' => "emajenvir.php",
+									'urlvars' => array(
+										'action' => 'update_extension'
+									)
+								)
+							),
+						);
 					}
 
-					// can we drop it ?
+					// Can we drop it ?
 					if ($emajdb->getNbGroups() > 0) {
 						echo "<p>" . $lang['emajdropextensiongroupsexist'] . "</p>\n";
 					} else {
-						// form to drop the extension
-						echo "<div style=\"margin:20px\">\n";
-						echo "\t<form name=\"dropextension\" id=\"dropextension\" enctype=\"multipart/form-data\" method=\"POST\"";
-						echo " action=\"emajenvir.php?action=drop_extension&amp;{$misc->href}\">\n";
-						echo "\t\t<input type=\"submit\" name=\"dropextensionbutton\" value=\"{$lang['emajdropextension']}\">\n";
-						echo "\t</form>\n";
-						echo "</div>\n";
+						// Add a button to drop the extension
+						$navlinks['dropextension'] = array (
+							'content' => $lang['emajdropextension'],
+							'attr'=> array (
+								'href' => array (
+									'url' => "emajenvir.php",
+									'urlvars' => array(
+										'action' => 'drop_extension'
+									)
+								)
+							),
+						);
 					}
+
 				}
 			}
+			// print the buttons list, if it contains at least 1 button
+			if ($navlinks != array())
+				$misc->printLinksList($navlinks, 'buttonslist');
 		}
 
 		if ($isEnabled) {
@@ -615,21 +635,31 @@
 
 			if (($emajdb->isEmaj_Adm()) && $emajdb->getNumEmajVersion() >= 30300) {
 
-				// form to export the parameter configuration
-				echo "<div style=\"float:left; margin:20px\">\n";
-				echo "\t<form name=\"exportparameters\" id=\"exportparameters\" enctype=\"multipart/form-data\" method=\"POST\"";
-				echo " action=\"emajenvir.php?action=export_parameters&amp;{$misc->href}\">\n";
-				echo "\t\t<input type=\"submit\" name=\"exportButton\" value=\"${lang['strexport']}\">\n";
-				echo "\t</form>\n";
-				echo "</div>\n";
-
-				// form to import a parameter configuration
-				echo "<div style=\"margin:20px\">\n";
-				echo "\t<form name=\"importparameters\" id=\"importparameters\" method=\"POST\"";
-				echo " action=\"emajenvir.php?action=import_parameters&amp;{$misc->href}\">\n";
-				echo "\t\t<input type=\"submit\" name=\"importButton\" value=\"${lang['strimport']}\">\n";
-				echo "\t</form>\n";
-				echo "</div>\n";
+				// Prepare and generate the export and import buttons list
+				$navlinks = array();
+				$navlinks['exportparameters'] = array (
+					'content' => $lang['strexport'],
+					'attr'=> array (
+						'href' => array (
+							'url' => "emajenvir.php",
+							'urlvars' => array(
+								'action' => 'export_parameters'
+							)
+						)
+					),
+				);
+				$navlinks['importparameters'] = array (
+					'content' => $lang['strimport'],
+					'attr'=> array (
+						'href' => array (
+							'url' => "emajenvir.php",
+							'urlvars' => array(
+								'action' => 'import_parameters'
+							)
+						)
+					),
+				);
+				$misc->printLinksList($navlinks, 'buttonslist');
 			}
 		}
 	}

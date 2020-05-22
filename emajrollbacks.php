@@ -18,7 +18,7 @@
 		} else {
 			$icon = 'EmajWarning';
 		}
-		return "<img src=\"".$misc->icon($icon)."\" style=\"vertical-align:bottom;\" />";
+		return "<img src=\"".$misc->icon($icon)."\" />";
 	}
 
 	// Callback function to dynamicaly replace the rollback status by a colored dot

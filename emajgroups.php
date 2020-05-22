@@ -136,7 +136,7 @@
 
 		if ($val == '{0,0,0,0,0}') {
 			$icon = 'CheckConstraint';
-			return "<img src=\"".$misc->icon($icon)."\" style=\"vertical-align:bottom;\" />";
+			return "<img src=\"".$misc->icon($icon)."\" />";
 		} else {
 			if (preg_match("/{(\d+),(\d+),(\d+),(\d+),(\d+)}/",$val,$cpt)) {
 				$msg = '';
@@ -1180,17 +1180,17 @@
 		$misc->printTitle(sprintf($lang['emajlogstattittle'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($w1), htmlspecialchars($_REQUEST['group'])));
 
 		// Display summary statistics
-		echo "<div style=\"margin-bottom:15px\">\n";
 		echo "<table class=\"data\"><tr>\n";
 		echo "<th class=\"data\" colspan=2>{$lang['emajestimates']}</th>\n";
 		echo "</tr><tr>\n";
 		echo "<th class=\"data\">{$lang['emajnbtbl']}</th>";
 		echo "<th class=\"data\">{$lang['emajnbchanges']}</th>";
 		echo "</tr><tr class=\"data1\">\n";
-		echo "<td><div style=\"text-align: center\">{$summary->fields['nb_tables']}</div></td>";
-		echo "<td><div style=\"text-align: center\">{$summary->fields['sum_rows']}</div></td>";
+		echo "<td class=\"center\">{$summary->fields['nb_tables']}</td>";
+		echo "<td class=\"center\">{$summary->fields['sum_rows']}</td>";
 		echo "</tr></table>\n";
-		echo "</div>\n";
+
+		echo "<hr/>\n";
 
 		if ($summary->fields['nb_tables'] > 0) {
 
@@ -1306,7 +1306,6 @@
 		$misc->printTitle(sprintf($lang['emajlogstattittle'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($w1), htmlspecialchars($_REQUEST['group'])));
 
 		// Display summary statistics
-		echo "<div style=\"margin-bottom:15px\">\n";
 		echo "<table class=\"data\"><tr>\n";
 		echo "<th class=\"data\">{$lang['emajnbtbl']}</th>";
 		echo "<th class=\"data\">{$lang['emajnbchanges']}</th>";
@@ -1317,16 +1316,16 @@
 		echo "<th class=\"data\">{$lang['emajnbrole']}</th>";
 		echo "<th class=\"data\">{$lang['strroles']}</th>";
 		echo "</tr><tr class=\"data1\">\n";
-		echo "<td><div style=\"text-align: center\">{$summary->fields['nb_tables']}</div></td>";
-		echo "<td><div style=\"text-align: center\">{$summary->fields['sum_rows']}</div></td>";
-		echo "<td><div style=\"text-align: center\">{$summary->fields['nb_ins']}</div></td>";
-		echo "<td><div style=\"text-align: center\">{$summary->fields['nb_upd']}</div></td>";
-		echo "<td><div style=\"text-align: center\">{$summary->fields['nb_del']}</div></td>";
-		echo "<td><div style=\"text-align: center\">{$summary->fields['nb_tru']}</div></td>";
-		echo "<td><div style=\"text-align: center\">{$summary->fields['nb_roles']}</div></td>";
-		echo "<td><div style=\"text-align: center\">{$roleList}</div></td>";
+		echo "<td class=\"center\">{$summary->fields['nb_tables']}</td>";
+		echo "<td class=\"center\">{$summary->fields['sum_rows']}</td>";
+		echo "<td class=\"center\">{$summary->fields['nb_ins']}</td>";
+		echo "<td class=\"center\">{$summary->fields['nb_upd']}</td>";
+		echo "<td class=\"center\">{$summary->fields['nb_del']}</td>";
+		echo "<td class=\"center\">{$summary->fields['nb_tru']}</td>";
+		echo "<td class=\"center\">{$summary->fields['nb_roles']}</td>";
+		echo "<td class=\"center\">{$roleList}</td>";
 		echo "</tr></table>\n";
-		echo "</div>\n";
+		echo "<hr/>\n";
 
 		if ($summary->fields['nb_tables'] > 0) {
 
@@ -3553,9 +3552,7 @@
 
 					echo "<p>" . sprintf($lang['emajreachaltergroup'], htmlspecialchars($_REQUEST['group']), htmlspecialchars($_REQUEST['mark'])) . "</p>\n";
 
-					echo "<div id=\"alterGroupStep\" style=\"margin-top:15px;margin-bottom:15px\" >\n";
 					$misc->printTable($alterGroupSteps, $columns, $actions, 'alterGroupStep');
-					echo "</div>\n";
 
 					echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 					echo "<p><input type=\"hidden\" name=\"action\" value=\"rollback_group_ok\" />\n";
@@ -3706,9 +3703,7 @@
 
 				$actions = array ();
 
-				echo "<div id=\"rlbkGroupReport\" style=\"margin-top:15px;margin-bottom:15px\" >\n";
 				$misc->printTable($rlbkReportMsgs, $columns, $actions, 'rlbkGroupReport', null, null, array('sorter' => true, 'filter' => false));
-				echo "</div>\n";
 
 				echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 				if ($_POST['back']=='list') {
@@ -3919,9 +3914,7 @@
 					$misc->printTitle($lang['emajrlbkgroups']);
 
 					echo "<p>" . sprintf($lang['emajreachaltergroups'], htmlspecialchars($_REQUEST['groups']), htmlspecialchars($_REQUEST['mark'])) . "</p>\n";
-					echo "<div id=\"alterGroupStep\" style=\"margin-top:15px;margin-bottom:15px\" >\n";
 					$misc->printTable($alterGroupSteps, $columns, $actions, 'alterGroupStep');
-					echo "</div>\n";
 
 					echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 					echo "<p><input type=\"hidden\" name=\"action\" value=\"rollback_groups_ok\" />\n";
@@ -4040,9 +4033,7 @@
 
 			$actions = array ();
 
-			echo "<div id=\"rlbkGroupsReport\" style=\"margin-top:15px;margin-bottom:15px\" >\n";
 			$misc->printTable($rlbkReportMsgs, $columns, $actions, 'rlbkGroupsReport', null, null, array('sorter' => true, 'filter' => false));
-			echo "</div>\n";
 
 			echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 			echo "<p><input type=\"hidden\" name=\"action\" value=\"show_groups\" />\n";

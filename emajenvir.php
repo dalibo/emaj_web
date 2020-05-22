@@ -22,7 +22,7 @@
 		} else {
 			return '?';
 		}
-		return "<img src=\"".$misc->icon($icon)."\" alt=\"\" style=\"vertical-align:bottom;\" />";
+		return "<img src=\"".$misc->icon($icon)."\" alt=\"\" />";
 	}
 
 	function displayOneParameter($param, $label, $info) {

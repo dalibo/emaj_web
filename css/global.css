@@ -133,6 +133,10 @@ input[type="file"] {
 	opacity: 0;
 	pointer-events: none;
 }
+input[type=number].priority {
+	width: 5em;
+	text-align: right;
+}
 
 .actionslist {
 	margin-top: 15px;

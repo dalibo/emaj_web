@@ -52,7 +52,7 @@
 	function renderSchemaOwner($val) {
 		global $misc, $lang;
 		if ($val == '!') {
-			return "<img src=\"".$misc->icon('ObjectNotFound')."\" alt=\"{$lang['emajunknownobject']}\" title=\"{$lang['emajunknownobject']}\" style=\"vertical-align:bottom;\" />";
+			return "<img src=\"".$misc->icon('ObjectNotFound')."\" alt=\"{$lang['emajunknownobject']}\" title=\"{$lang['emajunknownobject']}\" />";
 		}
 		return $val;
 	}
@@ -327,7 +327,7 @@
 		if ($_REQUEST['type'] == 'r+') {
 			echo "\t<div class=\"form-label\">{$lang['emajenterpriority']}</div>\n";
 			echo "\t<div class=\"form-input\">";
-			echo "<input type=\"number\" name=\"priority\" style=\"width:6em; text-align:right;\" min=\"0\" max=\"2147483647\" value=\"\" />";
+			echo "<input type=\"number\" name=\"priority\" class=\"priority\" min=\"0\" max=\"2147483647\" value=\"\" />";
 			echo "</div>\n";
 			echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajpriorityhelp']}\"/></div>\n";
 		} else {
@@ -502,7 +502,7 @@
 		if ($_REQUEST['type'] == 'r+') {
 			echo "\t<div class=\"form-label\">{$lang['emajenterpriority']}</div>\n";
 			echo "\t<div class=\"form-input\">";
-			echo "<input type=\"number\" name=\"priority\" style=\"width:6em; text-align:right;\" min=\"0\" max=\"2147483647\" value=\"{$_REQUEST['priority']}\" />";
+			echo "<input type=\"number\" name=\"priority\" class=\"priority\" min=\"0\" max=\"2147483647\" value=\"{$_REQUEST['priority']}\" />";
 			echo "</div>\n";
 			echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajpriorityhelp']}\"/></div>\n";
 		} else {

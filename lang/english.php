@@ -209,13 +209,15 @@
 	$lang['emajtriggeringevent'] = 'Triggering event';
 	$lang['emajcalledfunction'] = 'Called function';
 	$lang['emajisemaj'] = 'E-Maj?';
-	$lang['emajisautodisable'] = 'Auto disable?';
-	$lang['emajisautodisablehelp'] = 'Indicate whether the trigger is automatically disabled at E-maj rollback time (default = Yes)';
+	$lang['emajisautodisable'] = 'Auto disable';
+	$lang['emajisautodisablehelp'] = 'Indicate whether the trigger is automatically disabled at E-maj rollback time (default = ON = Yes)';
 	$lang['emajswitchautodisable'] = 'Switch auto disable';
-	$lang['emajtriggerpropswitchedok'] = 'The trigger %s property has been changed for the table %s.%s.';
+	$lang['emajtriggerautook'] = 'The trigger %s for the table %s.%s will be automatically disabled at E-Maj rollbacks time.';
+	$lang['emajtriggernoautook'] = 'The trigger %s for the table %s.%s will NOT be automatically disabled at E-Maj rollbacks time.';
 	$lang['emajtriggerprocerr'] = 'An error occured while processing the trigger %s of the table %s.%s.';
 	$lang['emajnoselectedtriggers'] = 'No selected trigger.';
-	$lang['emajtriggerspropswitchedok'] = 'The property has been changed for %s triggers.';
+	$lang['emajtriggersautook'] = '%s new triggers will be automatically disabled at E-Maj rollbacks time.';
+	$lang['emajtriggersnoautook'] = '%s new triggers will NOT be automatically disabled at E-Maj rollbacks time.';
 	$lang['emajorphantriggersexist'] = 'The table that contains the identifiers of triggers not to be automatically disabled at E-Maj rollbacks (emaj_ignored_app_trigger) references schemas, tables or triggers that do not exist anymore.';
 	$lang['emajtriggersremovedok'] = '%s triggers have been removed.';
 

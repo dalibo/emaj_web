@@ -70,9 +70,14 @@
 	// Function to dynamicaly modify actions list for each trigger
 	function triggerPre(&$rowdata, $actions) {
 
-		// disable the switch button if the trigger is an E-Maj trigger
-		if (isset($actions['switchkeepenabledtrigger']) && $rowdata->fields['tgisemaj'] == 't') {
-			$actions['switchkeepenabledtrigger']['disable'] = true;
+		// disable both buttons if the trigger is an E-Maj trigger, otherwise, disable the useless button
+		if ($rowdata->fields['tgisemaj'] == 't') {
+			$actions['autoDisableTrigger']['disable'] = true;
+			$actions['noAutoDisableTrigger']['disable'] = true;
+		} elseif ($rowdata->fields('tgisautodisable') == 't') {
+			$actions['autoDisableTrigger']['disable'] = true;
+		} else {
+			$actions['noAutoDisableTrigger']['disable'] = true;
 		}
 		return $actions;
 	}
@@ -229,7 +234,10 @@
 						'title' => $lang['emajisautodisable'],
 						'field' => field('tgisautodisable'),
 						'info'  => $lang['emajisautodisablehelp'],
-						'type'	=> 'yesno',
+						'params'=> array(
+							'map' => array('t' => 'ON', 'f' => 'OFF'),
+							'align' => 'center'
+						),
 					),
 					'actions' => array(
 						'title' => $lang['stractions'],
@@ -243,20 +251,33 @@
 			if ($emajdb->getNumEmajVersion() >= 30100) {			// version >= 3.1.0
 				if ($emajdb->isEmaj_Adm()) {
 					$actions = array_merge($actions, array(
-						'switchkeepenabledtrigger' => array(
-							'content' => $lang['emajswitchautodisable'],
+						'noAutoDisableTrigger' => array(
+							'content' => 'Manuel',
+							'icon' => 'Off',
 							'attr' => array (
 								'href' => array (
 									'url' => 'tblproperties.php',
 									'urlvars' => array_merge($urlvars, array (
-										'action' => 'switch_keep_enabled_trigger',
+										'action' => 'no_auto_disable_trigger',
 										'schema' => $_REQUEST['schema'],
 										'table' => $_REQUEST['table'],
 										'trigger' => field('tgname'),
-										'tgisdisableauto' => field('tgisautodisable'),
-									)))))
-						)
-					);
+									)))),
+						),
+						'autoDisableTrigger' => array(
+							'content' => 'Auto',
+							'icon' => 'On',
+							'attr' => array (
+								'href' => array (
+									'url' => 'tblproperties.php',
+									'urlvars' => array_merge($urlvars, array (
+										'action' => 'auto_disable_trigger',
+										'schema' => $_REQUEST['schema'],
+										'table' => $_REQUEST['table'],
+										'trigger' => field('tgname'),
+									)))),
+						),
+					));
 				}
 			}
 		}
@@ -265,23 +286,32 @@
 	}
 
 	/**
-	 * Switch the ignored_app_trigger state for the selected requested trigger.
-	 * Then show the updated table's properties
+	 * Register the selected trigger as 'not to be automatically disabled at rollback'
+	 * Then show the updated table properties
 	 */
-	function doSwitchIgnoredAppTriggerState() {
+	function noAutoDisableTrigger() {
 		global $lang, $emajdb;
 
-		if ($_REQUEST['tgisdisableauto'] == 't') {
-			// the trigger is currently NOT set as 'not to be automatically disabled at rollback', so set it
-			$action = 'ADD';
-		} else {
-			// the trigger is currently set as 'not to be automatically disabled at rollback', so unset it
-			$action = 'REMOVE';
-		}
-		$nbTriggers = $emajdb->ignoreAppTrigger($action, $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['trigger']);
+		$nbTriggers = $emajdb->ignoreAppTrigger('ADD', $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['trigger']);
 
 		if ($nbTriggers > 0) {
-			showProperties(sprintf($lang['emajtriggerpropswitchedok'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+			showProperties(sprintf($lang['emajtriggernoautook'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+		} else {
+			showProperties(sprintf($lang['emajtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+		}
+	}
+
+	/**
+	 * Register the selected trigger as 'to be automatically disabled at rollback'
+	 * Then show the updated table properties
+	 */
+	function autoDisableTrigger() {
+		global $lang, $emajdb;
+
+		$nbTriggers = $emajdb->ignoreAppTrigger('REMOVE', $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['trigger']);
+
+		if ($nbTriggers > 0) {
+			showProperties(sprintf($lang['emajtriggerautook'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		} else {
 			showProperties(sprintf($lang['emajtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		}
@@ -324,8 +354,11 @@
 	$misc->printBody();
 
 	switch ($action) {
-		case 'switch_keep_enabled_trigger':
-			doSwitchIgnoredAppTriggerState();
+		case 'auto_disable_trigger':
+			autoDisableTrigger();
+			break;
+		case 'no_auto_disable_trigger':
+			noAutoDisableTrigger();
 			break;
 		default:
 			showProperties();

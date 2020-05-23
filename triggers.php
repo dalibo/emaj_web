@@ -10,6 +10,17 @@
 	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 	if (!isset($msg)) $msg = '';
 
+	// Functions to modify dynamicaly actions list for each application trigger to display
+	function appTriggerPre(&$rowdata, $actions) {
+		// disable the noAutoDisableTrigger or the autoDisableTriggerbutton depending on the current state
+		if ($rowdata->fields('tgisautodisable') == 't') {
+			$actions['autoDisableTrigger']['disable'] = true;
+		} else {
+			$actions['noAutoDisableTrigger']['disable'] = true;
+		}
+		return $actions;
+	}
+
 	/**
 	 * Show the list of triggers in the database
 	 */
@@ -66,7 +77,10 @@
 						'title' => $lang['emajisautodisable'],
 						'field' => field('tgisautodisable'),
 						'info'  => $lang['emajisautodisablehelp'],
-						'type'	=> 'yesno',
+						'params'=> array(
+							'map' => array('t' => 'ON', 'f' => 'OFF'),
+							'align' => 'center'
+						),
 					),
 					'actions' => array(
 						'title' => $lang['stractions'],
@@ -89,27 +103,40 @@
 							),
 							'url' => 'triggers.php',
 						),
-						'doSwitchIgnoredAppTriggerState' => array(
-							'content' => $lang['emajswitchautodisable'],
+						'noAutoDisableTrigger' => array(
+							'content' => 'Manuel',
+							'icon' => 'Off',
 							'attr' => array (
 								'href' => array (
 									'url' => 'triggers.php',
 									'urlvars' => array_merge($urlvars, array (
-										'action' => 'switch_ignore_app_trigger_state',
+										'action' => 'no_auto_disable_trigger',
 										'schema' => field('nspname'),
 										'table' => field('relname'),
 										'trigger' => field('tgname'),
-										'tgisdisableauto' => field('tgisautodisable'),
 									)))),
-							'multiaction' => 'switch_ignore_app_trigger_states',
-							)
-						)
-					);
+							'multiaction' => 'no_auto_disable_triggers',
+						),
+						'autoDisableTrigger' => array(
+							'content' => 'Auto',
+							'icon' => 'On',
+							'attr' => array (
+								'href' => array (
+									'url' => 'triggers.php',
+									'urlvars' => array_merge($urlvars, array (
+										'action' => 'auto_disable_trigger',
+										'schema' => field('nspname'),
+										'table' => field('relname'),
+										'trigger' => field('tgname'),
+									)))),
+							'multiaction' => 'auto_disable_triggers',
+						),
+					));
 				}
 			}
 		}
 
-		$misc->printTable($triggers, $columns, $actions, 'triggers-triggers', $lang['strnoapptrigger'], null, array('sorter' => true, 'filter' => true));
+		$misc->printTable($triggers, $columns, $actions, 'triggers-triggers', $lang['strnoapptrigger'], 'appTriggerPre', array('sorter' => true, 'filter' => true));
 
 		// Check if orphan triggers exist in the emaj_ignored_app_trigger table
 		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
@@ -168,33 +195,42 @@
 	}
 
 	/**
-	 * Switch the ignored_app_trigger state for the selected required trigger.
-	 * Then show the updated table's properties
+	 * Register the selected trigger as 'not to be automatically disabled at rollback'
+	 * Then show the updated triggers properties
 	 */
-	function doSwitchIgnoredAppTriggerState() {
+	function noAutoDisableTrigger() {
 		global $lang, $emajdb;
 
-		if ($_REQUEST['tgisdisableauto'] == 't') {
-			// the trigger is currently NOT set as 'not to be automatically disabled at rollback', so set it
-			$action = 'ADD';
-		} else {
-			// the trigger is currently set as 'not to be automatically disabled at rollback', so unset it
-			$action = 'REMOVE';
-		}
-		$nbTriggers = $emajdb->ignoreAppTrigger($action, $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['trigger']);
+		$nbTriggers = $emajdb->ignoreAppTrigger('ADD', $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['trigger']);
 
 		if ($nbTriggers > 0) {
-			showTriggers(sprintf($lang['emajtriggerpropswitchedok'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+			showTriggers(sprintf($lang['emajtriggernoautook'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		} else {
 			showTriggers(sprintf($lang['emajtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		}
 	}
 
 	/**
-	 * Switch the keep_enabled_trigger state for the selected triggers.
-	 * Then show the updated table's properties
+	 * Register the selected trigger as 'to be automatically disabled at rollback'
+	 * Then show the updated triggers properties
 	 */
-	function doSwitchIgnoredAppTriggerStates() {
+	function autoDisableTrigger() {
+		global $lang, $emajdb;
+
+		$nbTriggers = $emajdb->ignoreAppTrigger('REMOVE', $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['trigger']);
+
+		if ($nbTriggers > 0) {
+			showTriggers(sprintf($lang['emajtriggerautook'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+		} else {
+			showTriggers(sprintf($lang['emajtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+		}
+	}
+
+	/**
+	 * Register the selected triggers as 'not to be automatically disabled at rollback'
+	 * Then show the updated triggers properties
+	 */
+	function noAutoDisableTriggers() {
 		global $lang, $data, $emajdb;
 
 		if (!isset($_REQUEST['ma'])) {
@@ -207,14 +243,7 @@
 		if ($status == 0) {
 			foreach($_REQUEST['ma'] as $v) {
 				$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-				if ($a['tgisdisableauto'] == 't') {
-					// the trigger is currently NOT set as 'not to be automatically disabled at rollback', so set it
-					$action = 'ADD';
-				} else {
-					// the trigger is currently set as 'not to be automatically disabled at rollback', so unset it
-					$action = 'REMOVE';
-				}
-				$status = $emajdb->ignoreAppTrigger($action, $a['schema'], $a['table'], $a['trigger']);
+				$status = $emajdb->ignoreAppTrigger('ADD', $a['schema'], $a['table'], $a['trigger']);
 				if ($status = 0) {
 					$data->rollbackTransaction();
 					showTriggers(sprintf($lang['emajtriggerprocerr'], htmlspecialchars($a['trigger']), htmlspecialchars($a['schema']), htmlspecialchars($a['table'])));
@@ -224,7 +253,37 @@
 			}
 		}
 		if($data->endTransaction() == 0)
-		showTriggers(sprintf($lang['emajtriggerspropswitchedok'], $nbTriggers));
+			showTriggers(sprintf($lang['emajtriggersnoautook'], $nbTriggers));
+	}
+
+	/**
+	 * Register the selected triggers as 'to be automatically disabled at rollback'
+	 * Then show the updated triggers properties
+	 */
+	function autoDisableTriggers() {
+		global $lang, $data, $emajdb;
+
+		if (!isset($_REQUEST['ma'])) {
+			showTriggers('',$lang['emajnoselectedtriggers']);
+			return;
+		}
+
+		$nbTriggers = 0;
+		$status = $data->beginTransaction();
+		if ($status == 0) {
+			foreach($_REQUEST['ma'] as $v) {
+				$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
+				$status = $emajdb->ignoreAppTrigger('REMOVE', $a['schema'], $a['table'], $a['trigger']);
+				if ($status = 0) {
+					$data->rollbackTransaction();
+					showTriggers(sprintf($lang['emajtriggerprocerr'], htmlspecialchars($a['trigger']), htmlspecialchars($a['schema']), htmlspecialchars($a['table'])));
+					return;
+				}
+				$nbTriggers++;
+			}
+		}
+		if($data->endTransaction() == 0)
+			showTriggers(sprintf($lang['emajtriggersautook'], $nbTriggers));
 	}
 
 	/**
@@ -277,17 +336,23 @@
 	if (isset($_POST['cancel'])) $action = '';
 
 	switch ($action) {
+		case 'auto_disable_trigger':
+			autoDisableTrigger();
+			break;
+		case 'auto_disable_triggers':
+			autoDisableTriggers();
+			break;
+		case 'no_auto_disable_trigger':
+			noAutoDisableTrigger();
+			break;
+		case 'no_auto_disable_triggers':
+			noAutoDisableTriggers();
+			break;
 		case 'remove_trigger':
 			doRemoveTrigger();
 			break;
 		case 'remove_triggers':
 			doRemoveTriggers();
-			break;
-		case 'switch_ignore_app_trigger_state':
-			doSwitchIgnoredAppTriggerState();
-			break;
-		case 'switch_ignore_app_trigger_states':
-			doSwitchIgnoredAppTriggerStates();
 			break;
 		default:
 			showTriggers();

@@ -12,7 +12,7 @@
 	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 	if (!isset($msg)) $msg = '';
 
-	// Function to dynamicaly modify actions list for tables and sequences
+	// Function to modify actions list for tables and sequences
 	function tblseqPre(&$rowdata, $actions) {
 		global $nbGroups;
 
@@ -40,11 +40,11 @@
 		return $actions;
 	}
 
-	// Callback function to dynamicaly modify the schema type column content
+	// Callback function to modify the schema type column content
 	// It replaces the database value by an icon
-	function renderSchemaType($val) {
+	function renderIsEmaj($val) {
 		global $misc, $lang;
-		if ($val == 'E') {
+		if ($val == 't') {
 			$icon = $misc->icon('EmajIcon');
 			$alt = $lang['emajschema'];
 			return "<img src=\"{$icon}\" alt=\"{$alt}\" title=\"{$alt}\"/>";
@@ -88,12 +88,13 @@
 		);
 		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
 			$columns = array_merge($columns, array(
-				'type' => array(
-					'title' => $lang['strtype'],
-					'field' => field('nsptype'),
+				'isemaj' => array(
+					'title' => $lang['emajisemaj'],
+					'field' => field('nspisemaj'),
 					'type'	=> 'callback',
-					'params'=> array('function' => 'renderSchemaType','align' => 'center'),
-					'filter' => false
+					'params'=> array('function' => 'renderIsEmaj','align' => 'center'),
+					'filter' => false,
+					'sorter_text_extraction' => 'img_alt',
 				),
 			));
 		}

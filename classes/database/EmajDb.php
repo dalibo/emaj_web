@@ -1100,7 +1100,7 @@ class EmajDb {
 		}
 		$sql .= "SELECT pn.nspname, pu.rolname AS nspowner,
 						pg_catalog.obj_description(pn.oid, 'pg_namespace') AS nspcomment,
-						CASE WHEN EXISTS (SELECT 0 FROM emaj_schemas WHERE sch_name = nspname) THEN 'E' ELSE '' END AS nsptype
+						EXISTS (SELECT 0 FROM emaj_schemas WHERE sch_name = nspname) AS nspisemaj
 				 FROM pg_catalog.pg_namespace pn
 					 LEFT JOIN pg_catalog.pg_roles pu ON (pn.nspowner = pu.oid)
 				 WHERE nspname NOT LIKE 'pg@_%' ESCAPE '@' AND nspname != 'information_schema'
@@ -3338,7 +3338,7 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 							 WHEN t.tgenabled = 'R' THEN 'Enabled on Replica'
 							 WHEN t.tgenabled = 'A' THEN 'Enabled Always'
 								END AS tgstate,
-						CASE WHEN tgname IN ('emaj_trunc_trg', 'emaj_log_trg') THEN true ELSE false END as tgisemaj,
+						tgname IN ('emaj_trunc_trg', 'emaj_log_trg') as tgisemaj,
 				";
 
 		if ($this->isEnabled() && $this->isAccessible()) {

@@ -9,7 +9,7 @@
 
 	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 
-	// Callback function to dynamically adjust the icons and links for constraints on table columns
+	// Callback function to adjust the icons and links for constraints on table columns
 	function cstrRender($s, $p) {
 		global $misc, $data;
 
@@ -40,7 +40,7 @@
 		return $str;
 	}
 
-	// Callback function to dynamicaly add a link to the tables group's description when the group name is suffixed by "###LINK###"
+	// Callback function to add a link to the tables group's description when the group name is suffixed by "###LINK###"
 	function renderlinktogroup($val) {
 		global $misc;
 
@@ -50,6 +50,18 @@
 		} else {
 			return $val;
 		}
+	}
+
+	// Callback function to modify the isemaj column content
+	// It replaces the database value by an icon
+	function renderIsEmaj($val) {
+		global $misc, $lang;
+		if ($val == 't') {
+			$icon = $misc->icon('EmajIcon');
+			$alt = $lang['emajschema'];
+			return "<img src=\"{$icon}\" alt=\"{$alt}\" title=\"{$alt}\"/>";
+		}
+		return;
 	}
 
 	// Function to dynamicaly modify actions list for each table column description
@@ -224,7 +236,9 @@
 			'tgisemaj' => array(
 				'title' => $lang['emajisemaj'],
 				'field' => field('tgisemaj'),
-				'type'	=> 'yesno',
+				'type'	=> 'callback',
+				'params'=> array('function' => 'renderIsEmaj', 'align' => 'center'),
+				'sorter_text_extraction' => 'img_alt',
 			),
 		);
 		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {

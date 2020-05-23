@@ -653,7 +653,7 @@
 
 			// language selection
 			echo "\t<div class=\"language\">\n";
-			if ($_SERVER["REQUEST_METHOD"] == 'GET')
+			if ($_SERVER["REQUEST_METHOD"] == 'GET' || $_SERVER["REQUEST_METHOD"] == 'POST')
 				echo "\t\t<form method=\"get\">\n";
 			else
 				echo "\t\t<form method=\"get\" action=\"intro.php\">\n";
@@ -669,6 +669,12 @@
 			if ($_SERVER["REQUEST_METHOD"] == 'GET') {
 				foreach ($_GET as $key => $val) {
 					if ($key == 'language') continue;
+					echo "\t\t\t<input type=\"hidden\" name=\"{$key}\" value=\"", htmlspecialchars($val), "\" />\n";
+				}
+			} elseif ($_SERVER["REQUEST_METHOD"] == 'POST') {
+				foreach ($_POST as $key => $val) {
+					if ($key == 'language') continue;
+					if ($key == 'action') continue;
 					echo "\t\t\t<input type=\"hidden\" name=\"{$key}\" value=\"", htmlspecialchars($val), "\" />\n";
 				}
 			}

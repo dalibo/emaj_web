@@ -119,11 +119,11 @@
 						'params'=> array('function' => 'renderlinktogroup')
 					),
 					'starttime' => array(
-						'title' => $lang['strbegin'],
+						'title' => $lang['emajassigned'],
 						'field' => field('start_datetime')
 					),
 					'stoptime' => array(
-						'title' => $lang['strend'],
+						'title' => $lang['emajremoved'],
 						'field' => field('stop_datetime')
 					),
 				);

@@ -163,7 +163,7 @@
 	$lang['strtables'] = 'Tables';
 	$lang['strtableslist'] = 'Tables du schéma "%s"';
 	$lang['strnotables'] = 'Aucune table trouvée.';
-	$lang['strestimatedrowcount'] = 'Nombre estimé de lignes';
+	$lang['strestimatedrowcount'] = 'Nb lignes estimé';
 	$lang['strtblproperties'] = 'Propriétés de la table "%s.%s"';
 	$lang['strtblcontent'] = 'Contenu de la table "%s.%s"';
 	$lang['emajemajlogtable'] = 'La table est une table de log E-Maj.';
@@ -240,6 +240,7 @@
 	$lang['emajgroup'] = 'Groupe';
 	$lang['emajgroups'] = 'Groupes';
 	$lang['emajmark'] = 'Marque';
+	$lang['emajmarksetat'] = 'Posée à';
 	$lang['emajgrouptype'] = 'Type de groupe';
 	$lang['emajrollback'] = 'Rollback E-Maj';
 	$lang['emajrollbacktype'] = 'Type de rollback';
@@ -262,6 +263,7 @@
 	$lang['emajestimatedduration'] = 'Durée estimée';
 	$lang['emajproperties'] = 'Propriétés E-Maj';
 	$lang['emajschema'] = 'Schéma E-Maj';
+	$lang['emajtrigger'] = 'Trigger E-Maj';
 	$lang['emajselectfile'] = 'Sélectionner un fichier';
 	$lang['emajnotjsonfile'] = 'Le fichier %s n\'a pas un format JSON valide.';
 	$lang['emajtxid'] = 'Id. transaction';
@@ -269,6 +271,11 @@
 	$lang['emajstartdatetime'] = 'Date-Heure début';
 	$lang['emajendmark'] = 'Marque fin';
 	$lang['emajenddatetime'] = 'Date-Heure fin';
+	$lang['emajassign'] = 'Affecter';
+	$lang['emajassigned'] = 'Affectée';
+	$lang['emajmove'] = 'Déplacer';
+	$lang['emajremove'] = 'Retirer';
+	$lang['emajremoved'] = 'Retirée';
 
 	// E-Maj html titles and tabs
 	$lang['emajgroupsmanagement'] = 'Gestion des groupes E-Maj';
@@ -354,11 +361,8 @@
 	$lang['emajparamconfigimporterr'] = 'Erreur à l\'importation de paramètres à partir du fichier %s';
 
 	// Dynamic groups content management
-	$lang['emajlogdattsp'] = 'Tablespace log';
+	$lang['emajlogdattsp'] = 'Tablespace table log';
 	$lang['emajlogidxtsp'] = 'Tablespace index log';
-	$lang['emajassign'] = 'Affecter';
-	$lang['emajmove'] = 'Déplacer';
-	$lang['emajremove'] = 'Retirer';
 	$lang['emajassigntable'] = 'E-Maj : Affecter des tables à un groupe de tables';
 	$lang['emajthetable'] = 'la table "%s.%s"';
 	$lang['emajconfirmassigntblseq'] = 'Affecter :';
@@ -420,10 +424,10 @@
 	$lang['emajlogginggrouphelp'] = 'Quand un groupe de tables est dans l\'état \'démarré\', les insertions, modifications et suppression de lignes sur ses tables sont enregistrées.';
  	$lang['emajidlegrouphelp'] = 'Quand un groupe de tables est dans l\'état \'arrêté\', les insertions, modifications et suppressions de lignes sur ses tables ne sont PAS enregistrées.';
 	$lang['emajconfiguredgrouphelp'] = 'La configuration d\'un groupe définit les tables et séquences qui vont le constituer. Une fois \'configuré\', le groupe doit être \'créé\', afin de préparer tous les objets nécessaires à son utilisation (tables de log, fonctions,...).';
-	$lang['emajcreationdatetime'] = 'Date/heure de création';
-	$lang['emajnbtbl'] = 'Nb tables';
-	$lang['emajnbseq'] = 'Nb séquences';
-	$lang['emajnbmark'] = 'Nb marques';
+	$lang['emajcreationdatetime'] = 'Création';
+	$lang['emajnbtbl'] = 'Tables';
+	$lang['emajnbseq'] = 'Séquences';
+	$lang['emajnbmark'] = 'Marques';
 	$lang['emajsetmark'] = 'Poser une marque';
 	$lang['emajsetcomment'] = 'Commenter';
 	$lang['emajApplyConfChanges'] = 'Appliquer changements conf';
@@ -444,19 +448,18 @@
 	$lang['emajrlbkstart'] = 'Début rollback';
 	$lang['emajrlbkend'] = 'Fin rollback';
 	$lang['emajduration'] = 'Durée';
-	$lang['emajmarksetat'] = 'Marque posée à';
 	$lang['emajislogged'] = 'Tracé ?';
-	$lang['emajnbsession'] = 'Nb sessions';
-	$lang['emajnbproctable'] = 'Nb tables traitées';
-	$lang['emajnbprocseq'] = 'Nb séquences traitées';
+	$lang['emajnbsession'] = 'Sessions';
+	$lang['emajnbproctable'] = 'Tables traitées';
+	$lang['emajnbprocseq'] = 'Séquences traitées';
 	$lang['emajcurrentduration'] = 'Durée actuelle';
 	$lang['emajestimremaining'] = 'Restant estimée';
 	$lang['emajpctcompleted'] = '% effectué';
 	$lang['emajinprogressrlbk'] = 'Rollbacks E-Maj en cours';
 	$lang['emajrlbkmonitornotavailable'] = 'Le suivi des rollbacks en cours n\'est pas disponible.';
 	$lang['emajcompletedrlbk'] = 'Rollbacks E-Maj terminés';
-	$lang['emajnbtabletoprocess'] = 'Nb tables à traiter';
-	$lang['emajnbseqtoprocess'] = 'Nb séquences à traiter';
+	$lang['emajnbtabletoprocess'] = 'Tables à traiter';
+	$lang['emajnbseqtoprocess'] = 'Séquences à traiter';
 	$lang['emajnorlbk'] = 'Aucun rollback.';
 	$lang['emajfilterrlbk1'] = 'Afficher les';
 	$lang['emajfilterrlbk2'] = 'plus récents';
@@ -465,10 +468,10 @@
 	$lang['emajfilter'] = 'Filtrer';
 	$lang['emajvisible'] = 'Visibles';
 	$lang['emajconsolidablerlbk'] = 'Rollbacks E-Maj tracés consolidables';
-	$lang['emajconsolidate'] = 'Consolider';
 	$lang['emajtargetmark'] = 'Marque cible';
 	$lang['emajendrollbackmark'] = 'Marque fin de rollback';
-	$lang['emajnbintermediatemark'] = 'Nb marques intermédiaires';
+	$lang['emajnbintermediatemark'] = 'Marques intermédiaires';
+	$lang['emajconsolidate'] = 'Consolider';
 	$lang['emajconsolidaterlbk'] = 'Consolider un rollback tracé';
 	$lang['emajconfirmconsolidaterlbk'] = 'Etes-vous sûr de vouloir consolider le rollback terminé par la marque "%s" du groupe de tables "%s" ?';
 	$lang['emajconsolidaterlbkok'] = 'Le rollback terminé par la marque "%s" du groupe de tables "%s" a été consolidé.';
@@ -504,8 +507,8 @@
 	$lang['emajcontent'] = 'Contenu';
 	$lang['emajgroupmarks'] = 'Marques du groupe de tables "%s"';
 	$lang['emajtimestamp'] = 'Date-Heure';
-	$lang['emajnbchanges'] = 'Nb<br>mises à jour';
-	$lang['emajcumchanges'] = 'Cumul<br>mises à jour';
+	$lang['emajnbchanges'] = 'Mises à jour';
+	$lang['emajcumchanges'] = 'Cumul mises à jour';
 	$lang['emajcumchangeshelp'] = 'Le cumul du nombre de mises à jour représente le nombre de mises à jour à annuler en cas de rollback E-Maj à la marque correspondante.';
 	$lang['emajrlbk'] = 'Rollback';
 	$lang['emajfirstmark'] = 'Première marque';
@@ -523,12 +526,12 @@
 	$lang['emajlogstatmark'] = 'la marque "%s"';
 	$lang['emajlogstattittle'] = 'Mises à jour de table entre la marque "%s" et %s pour le groupe de tables "%s"';
 	$lang['emajstatverb'] = 'Verbe SQL';
-	$lang['emajnbinsert'] = 'Nb INSERT';
-	$lang['emajnbupdate'] = 'Nb UPDATE';
-	$lang['emajnbdelete'] = 'Nb DELETE';
-	$lang['emajnbtruncate'] = 'Nb TRUNCATE';
-	$lang['emajnbrole'] = 'Nb rôles';
-	$lang['emajstatrows'] = 'Nb mises à jour';
+	$lang['emajnbinsert'] = 'INSERT';
+	$lang['emajnbupdate'] = 'UPDATE';
+	$lang['emajnbdelete'] = 'DELETE';
+	$lang['emajnbtruncate'] = 'TRUNCATE';
+	$lang['emajnbrole'] = 'Rôles';
+	$lang['emajstatrows'] = 'Mises à jour';
 	$lang['emajbrowsechanges'] = 'Voir les mises à jour';
 
 	// Group's content

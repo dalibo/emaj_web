@@ -845,7 +845,7 @@
 				'filter'=> false,
 			),
 			'datetime' => array(
-				'title' => $lang['emajtimestamp'],
+				'title' => $lang['emajmarksetat'],
 				'field' => field('mark_datetime'),
 			),
 			'logrows' => array(

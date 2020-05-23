@@ -240,6 +240,7 @@
 	$lang['emajgroup'] = 'Group';
 	$lang['emajgroups'] = 'Groups';
 	$lang['emajmark'] = 'Mark';
+	$lang['emajmarksetat'] = 'Set at';
 	$lang['emajgrouptype'] = 'Group type';
 	$lang['emajrollback'] = 'E-Maj rollback';
 	$lang['emajrollbacktype'] = 'Rollback type';
@@ -262,6 +263,7 @@
 	$lang['emajestimatedduration'] = 'Estimated duration';
 	$lang['emajproperties'] = 'E-Maj properties';
 	$lang['emajschema'] = 'E-Maj schema';
+	$lang['emajtrigger'] = 'E-Maj trigger';
 	$lang['emajselectfile'] = 'Select a file';
 	$lang['emajnotjsonfile'] = 'The file %s has not a valid JSON format.';
 	$lang['emajtxid'] = 'Transaction id.';
@@ -269,6 +271,11 @@
 	$lang['emajstartdatetime'] = 'Start date-time';
 	$lang['emajendmark'] = 'End mark';
 	$lang['emajenddatetime'] = 'End date-time';
+	$lang['emajassign'] = 'Assign';
+	$lang['emajassigned'] = 'Assigned';
+	$lang['emajmove'] = 'Move';
+	$lang['emajremove'] = 'Remove';
+	$lang['emajremoved'] = 'Removed';
 
 	// E-Maj html titles and tabs
 	$lang['emajgroupsmanagement'] = 'E-Maj groups management';
@@ -354,11 +361,8 @@
 	$lang['emajparamconfigimporterr'] = 'Error while importing parameters from file %s';
 
 	// Dynamic groups content management
-	$lang['emajlogdattsp'] = 'Log tablespace';
+	$lang['emajlogdattsp'] = 'Log table tablespace';
 	$lang['emajlogidxtsp'] = 'Log index tablespace';
-	$lang['emajassign'] = 'Assign';
-	$lang['emajmove'] = 'Move';
-	$lang['emajremove'] = 'Remove';
 	$lang['emajassigntable'] = 'E-Maj: Assign tables to a tables group';
 	$lang['emajthetable'] = 'the "%s.%s" table';
 	$lang['emajconfirmassigntblseq'] = 'Assign:';
@@ -420,10 +424,10 @@
 	$lang['emajlogginggrouphelp'] = 'When a tables group is in \'logging\' state, the row insertions, updates and deletions on its tables are recorded.';
  	$lang['emajidlegrouphelp'] = 'When a tables group is in \'idle\' state, the row insertions, updates and deletions on its tables are NOT recorded.';
 	$lang['emajconfiguredgrouphelp'] = 'The group configuration defines the tables and sequences that will compose it. Once \'configured\', the group must be \'created\' in order to prepare all abjects that will be needed for its use (log tables, functions,...).';
-	$lang['emajcreationdatetime'] = 'Creation date/time';
-	$lang['emajnbtbl'] = '# tables';
-	$lang['emajnbseq'] = '# sequences';
-	$lang['emajnbmark'] = '# marks';
+	$lang['emajcreationdatetime'] = 'Created at';
+	$lang['emajnbtbl'] = 'Tables';
+	$lang['emajnbseq'] = 'Sequences';
+	$lang['emajnbmark'] = 'Marks';
 	$lang['emajsetmark'] = 'Set a mark';
 	$lang['emajsetcomment'] = 'Set a comment';
 	$lang['emajApplyConfChanges'] = 'Apply conf changes';
@@ -444,19 +448,18 @@
 	$lang['emajrlbkstart'] = 'Rollback start';
 	$lang['emajrlbkend'] = 'Rollback end';
 	$lang['emajduration'] = 'Duration';
-	$lang['emajmarksetat'] = 'Mark set at';
 	$lang['emajislogged'] = 'Logged ?';
-	$lang['emajnbsession'] = 'Nb sessions';
-	$lang['emajnbproctable'] = 'Nb processed tables';
-	$lang['emajnbprocseq'] = 'Nb processed sequences';
+	$lang['emajnbsession'] = 'Sessions';
+	$lang['emajnbproctable'] = 'Processed tables';
+	$lang['emajnbprocseq'] = 'Processed sequences';
 	$lang['emajcurrentduration'] = 'Current duration';
 	$lang['emajestimremaining'] = 'Estimated remaining';
 	$lang['emajpctcompleted'] = '% completed';
 	$lang['emajinprogressrlbk'] = 'In progress E-Maj rollbacks';
 	$lang['emajrlbkmonitornotavailable'] = 'In progress rollbacks monitoring is not available.';
 	$lang['emajcompletedrlbk'] = 'Completed E-Maj rollbacks';
-	$lang['emajnbtabletoprocess'] = 'Nb tables to process';
-	$lang['emajnbseqtoprocess'] = 'Nb sequences to process';
+	$lang['emajnbtabletoprocess'] = 'Tables to process';
+	$lang['emajnbseqtoprocess'] = 'Sequences to process';
 	$lang['emajnorlbk'] = 'No E-Maj rollback.';
 	$lang['emajfilterrlbk1'] = 'Display the';
 	$lang['emajfilterrlbk2'] = 'most recent';
@@ -467,7 +470,7 @@
 	$lang['emajconsolidablerlbk'] = 'Consolidable E-Maj logged rollbacks';
 	$lang['emajtargetmark'] = 'Target mark';
 	$lang['emajendrollbackmark'] = 'End rollback mark';
-	$lang['emajnbintermediatemark'] = 'Nb intermediate marks';
+	$lang['emajnbintermediatemark'] = 'Intermediate marks';
 	$lang['emajconsolidate'] = 'Consolidate';
 	$lang['emajconsolidaterlbk'] = 'Consolidate a logged rollback';
 	$lang['emajconfirmconsolidaterlbk'] = 'Are you sure you want to consolidate the rollback ended with the mark "%s" of the tables group "%s"?';
@@ -504,8 +507,8 @@
 	$lang['emajcontent'] = 'Content';
 	$lang['emajgroupmarks'] = 'Tables group "%s" marks';
 	$lang['emajtimestamp'] = 'Date/Time';
-	$lang['emajnbchanges'] = '# row<br>changes';
-	$lang['emajcumchanges'] = 'Cumulative<br>changes';
+	$lang['emajnbchanges'] = 'Row changes';
+	$lang['emajcumchanges'] = 'Cumulative changes';
 	$lang['emajcumchangeshelp'] = 'The cummulative number of row changes represents the number of row changes to cancel in case of E-Maj rollback to the corresponding mark.';
 	$lang['emajrlbk'] = 'Rollback';
 	$lang['emajfirstmark'] = 'First mark';
@@ -523,12 +526,12 @@
 	$lang['emajlogstatmark'] = 'the mark "%s"';
 	$lang['emajlogstattittle'] = 'Table changes between the mark "%s" and %s for the tables group "%s"';
 	$lang['emajstatverb'] = 'SQL verb';
-	$lang['emajnbinsert'] = '# INSERT';
-	$lang['emajnbupdate'] = '# UPDATE';
-	$lang['emajnbdelete'] = '# DELETE';
-	$lang['emajnbtruncate'] = '# TRUNCATE';
-	$lang['emajnbrole'] = '# roles';
-	$lang['emajstatrows'] = '# row changes';
+	$lang['emajnbinsert'] = 'INSERT';
+	$lang['emajnbupdate'] = 'UPDATE';
+	$lang['emajnbdelete'] = 'DELETE';
+	$lang['emajnbtruncate'] = 'TRUNCATE';
+	$lang['emajnbrole'] = 'Roles';
+	$lang['emajstatrows'] = 'Row changes';
 	$lang['emajbrowsechanges'] = 'Browse changes';
 
 	// Group's content

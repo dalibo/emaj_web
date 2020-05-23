@@ -58,7 +58,7 @@
 		global $misc, $lang;
 		if ($val == 't') {
 			$icon = $misc->icon('EmajIcon');
-			$alt = $lang['emajschema'];
+			$alt = $lang['emajtrigger'];
 			return "<img src=\"{$icon}\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 		}
 		return;
@@ -185,11 +185,11 @@
 						'params'=> array('function' => 'renderlinktogroup')
 					),
 					'starttime' => array(
-						'title' => $lang['strbegin'],
+						'title' => $lang['emajassigned'],
 						'field' => field('start_datetime')
 					),
 					'stoptime' => array(
-						'title' => $lang['strend'],
+						'title' => $lang['emajremoved'],
 						'field' => field('stop_datetime')
 					),
 				);

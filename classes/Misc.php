@@ -1467,7 +1467,7 @@
 				echo "<tr>\n";
 
 				// Display column headings
-				$colnum = 0; $textExtractionJS = '';
+				$colnum = 0; $textExtractionJS = ''; $headersJS = '';
 				if ($has_ma || $filter) {
 					if ($filter) {
 						echo "<th class=\"data sorter-false filter-false filtericon\">";
@@ -1489,16 +1489,17 @@
 							break;
 						default:
 							// build classes
+							$thClass = 'data';
 							//   add a 'sorter_false' class to the data column header if a 'sorter' attribute is set to false
-							$class_sorter = ((isset($column['sorter']) && !$column['sorter']) || ($filter && ! $sorter)) ?
-												' sorter-false' : '';
+							if ((isset($column['sorter']) && !$column['sorter']) || ($filter && ! $sorter)) {
+								$thClass .=	' sorter-false';
+							}
 							//   add a 'filter_false' class to the data column header if a 'filter' attribute is set to false
-							$class_filter = ($filter && (isset($column['filter']) && !$column['filter'])) ? ' filter-false' : '';
-							//   add a 'comment' class to the data column header if the column's type is 'comment'
-							$class_comment = (isset($column['type']) && $column['type'] == 'comment') ? ' comment' : '';
-
+							if ($filter && (isset($column['filter']) && !$column['filter'])) {
+								$thClass .= ' filter-false';
+							}
 							// column title
-							echo "<th class=\"data{$class_sorter}{$class_filter}{$class_comment}\">";
+							echo "<th class=\"{$thClass}\">";
 							echo $column['title'];
 							// additional info if requested
 							if (isset($column['info']))
@@ -1509,10 +1510,15 @@
 							//     to build the text that tablesorter will use to sort
 							if ($sorter && isset($column['sorter_text_extraction'])) {
 								if ($column['sorter_text_extraction'] == 'img_alt') {
-									$textExtractionJS .= "\t\t\t\t$colnum: function(node, table, cellIndex) {return $(node).find('img').attr('alt');},\n";
+									$textExtractionJS .= "\t\t\t\t{$colnum}: function(node) {return $(node).find('img').attr('alt');},\n";
 								} elseif ($column['sorter_text_extraction'] == 'span_text') {
-									$textExtractionJS .= "\t\t\t\t$colnum: function(node, table, cellIndex) {return $(node).find('span').text();},\n";
+									$textExtractionJS .= "\t\t\t\t{$colnum}: function(node) {return $(node).find('span').text();},\n";
 								}
+							}
+							// When the column is of type 'spanned' with a 'dateformat' parameter, force a simple text sort
+							if ($sorter && strpos($thClass, 'sorter-false') === false &&
+								isset($column['type']) && $column['type'] == 'spanned' && isset($column['params']['dateformat'])) {
+								$headersJS .= "\t\t\t\t{$colnum}: {sorter: 'text'},\n";
 							}
 							$colnum++;
 							break;
@@ -1653,6 +1659,11 @@
 					echo "\t$(document).ready(function() {\n";
 					echo "\t\t$(\"#{$place} table\").tablesorter( {\n";
 					echo "\t\t\twidthFixed : true,\n";
+					if ($headersJS <> '') {
+						echo "\t\t\theaders: {\n";
+						echo $headersJS;
+						echo "\t\t\t\t},\n";
+					}
 					if ($textExtractionJS <> '') {
 						echo "\t\t\ttextExtraction: {\n";
 						echo $textExtractionJS;

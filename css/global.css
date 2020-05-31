@@ -203,10 +203,6 @@ span.comment {
 	color: #555555;
 }
 
-th.comment, td.comment {
-	white-space: nowrap;
-}
-
 .tooltip {
 	position: relative;
 	display: inline-block;

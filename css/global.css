@@ -207,25 +207,21 @@ th.comment, td.comment {
 	white-space: nowrap;
 }
 
-.comment-in-tooltip
-{
+.tooltip {
 	position: relative;
 	display: inline-block;
 	text-decoration: none;
 	outline: none;
 	white-space: nowrap;
-/*	cursor: help;*/
 }
 
-.comment-in-tooltip span
-{
+.tooltip span {
 	visibility: hidden;
     transition: 0s visibility;
 	position: absolute;
 	top: 27px;
-	right: -12px;
-	max-width: 230px;
-	margin-left: -210px;
+	min-width: 215px;
+	max-width: 250px;
 	padding: 7px;
 	white-space: normal;
 	z-index: 99;
@@ -236,26 +232,33 @@ th.comment, td.comment {
 	opacity: .9;
 	box-shadow: -1px 2px 5px rgba(0,0,0,.45);
 }
-
-.comment-in-tooltip:hover span
-{
+.tooltip:hover span {
 	visibility: visible;
 	transition-delay: 0.2s;
 }
-
-.comment-in-tooltip span:before,
-.comment-in-tooltip span:after
-{
+.tooltip span:before, .tooltip span:after {
 	content: "";
 	position: absolute;
 	z-index: 100;
 	top: -8px;
-/*  right: 80%;*/
-	right: 25px;
 	margin-left: -8px;
 	border-left: 8px solid transparent;
 	border-right: 8px solid transparent;
 	border-bottom: 8px solid #505050;
+}
+
+.left-aligned-tooltip span {
+	left: -20px;
+}
+.left-aligned-tooltip span:before, .left-aligned-tooltip span:after {
+	left: 25px;
+}
+.right-aligned-tooltip span {
+	right: -25px;
+	margin-left: -210px;
+}
+.right-aligned-tooltip span:before, .right-aligned-tooltip span:after {
+	right: 25px;
 }
 
 /**

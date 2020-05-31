@@ -161,14 +161,17 @@
 		 *			nbsp     - replace all spaces with &nbsp;'s
 		 *			verbatim - render exactly as supplied, no escaping what-so-ever.
 		 *			callback - render using a callback function supplied in the 'function' param.
-		 *			comment  - comment like data, clipped if larger than a cliplen parameter, the entire value being put into a tooltip
+		 *			spanned  - a data with an alternate content in a <span> element displayed in a tooltip.
+		 *						(the original data in displated in the tooltip, while the 'cliplen' and 'dateformat' parameters
+		 *						define the regular cell content)
 		 *
 		 * @param $params Type parameters (optional), known parameters:
 		 *			null     - string to display if $str is null, or set to TRUE to use a default 'NULL' string,
 		 *			           otherwise nothing is rendered.
 		 *			clip     - if true, clip the value to a fixed length, and append an ellipsis...
-		 *			cliplen  - the maximum length when clip is enabled (defaults to $conf['max_chars'])
+		 *			cliplen  - the maximum length when clip is enabled (defaults to $conf['max_chars']) or when the data type is 'spanned'
 		 *			ellipsis - the string to append to a clipped value (defaults to $lang['strellipsis'])
+		 *			dateformat - the date formating (as used in the strftime() php function) to build the cell content of a 'spanned' data
 		 *			tag      - an HTML element name to surround the value.
 		 *			class    - a class attribute to apply to any surrounding HTML element.
 		 *			align    - an align attribute ('left','right','center' etc.)
@@ -303,13 +306,30 @@
 						}
 					}
 					break;
-				case 'comment':
-					$maxlen = isset($params['cliplen']) && is_integer($params['cliplen']) ? $params['cliplen'] : $conf['max_chars'];
-					$ellipsis = isset($params['ellipsis']) ? $params['ellipsis'] : $lang['strellipsis'];
-					if (strlen($str) > $maxlen) {
-						// the full supplied string is added in a span tag after the clipped string
-						$out = htmlspecialchars(substr($str, 0, $maxlen-1)) . $ellipsis . "<span>" . htmlspecialchars($str) . "</span>";
+				case 'spanned':
+					if (isset($params['dateformat'])) {
+						$str2 = $str;
+						$str1 = strftime($params['dateformat'], strtotime($str));
 					} else {
+						// no date format has been supplied
+						$str1 = $str; $str2 = '';
+					}
+					if (isset($params['cliplen']) && is_integer($params['cliplen'])) {
+						// a cliplen parameter has been supplied
+						$maxlen = $params['cliplen'];
+						$ellipsis = isset($params['ellipsis']) ? $params['ellipsis'] : $lang['strellipsis'];
+						if (strlen($str1) > $maxlen) {
+							if ($str2 == '') {
+								$str2 = $str1;
+							}
+							$str1 = substr($str1, 0, $maxlen) . $ellipsis;
+						}
+					}
+					if ($str2 <> '') {
+						// the second part of the supplied string is added in a span tag after the first part, clipped if requested, string
+						$out = htmlspecialchars($str1) . "<span>" . htmlspecialchars($str2) . "</span>";
+					} else {
+						// no need for a span tag
 						$out = htmlspecialchars($str);
 					}
 					break;
@@ -1484,10 +1504,15 @@
 							if (isset($column['info']))
 								echo "<img src=\"{$this->icon('Info-inv')}\" alt=\"info\" class=\"info\" title=\"{$column['info']}\">";
 							echo "</th>\n";
-							// when the data column has a 'sorter_text_extraction' attribute set to 'img_alt',
-							//   add a function to extract the alt attribute of images to build the text that tablesorter will use to sort
-							if ($sorter && isset($column['sorter_text_extraction']) && $column['sorter_text_extraction'] = 'img_alt') {
-								$textExtractionJS .= "\t\t\t\t$colnum: function(s) {return $(s).find('img').attr('alt');}\n";
+							// when the data column has a 'sorter_text_extraction' attribute set to 'img_alt' or 'span_text',
+							//   add a function to extract either the alt attribute of images or the text content of the span
+							//     to build the text that tablesorter will use to sort
+							if ($sorter && isset($column['sorter_text_extraction'])) {
+								if ($column['sorter_text_extraction'] == 'img_alt') {
+									$textExtractionJS .= "\t\t\t\t$colnum: function(node, table, cellIndex) {return $(node).find('img').attr('alt');},\n";
+								} elseif ($column['sorter_text_extraction'] == 'span_text') {
+									$textExtractionJS .= "\t\t\t\t$colnum: function(node, table, cellIndex) {return $(node).find('span').text();},\n";
+								}
 							}
 							$colnum++;
 							break;

@@ -7,7 +7,13 @@
 
 	// Language and character set
 	$lang['applocale'] = 'en-US';
+	$lang['applocalearray'] = array('en-US','en_US');
 	$lang['applangdir'] = 'ltr';
+	// Php format for timestamp field, distinguishing the format for:
+	// - the recent times, producing something like 'Mon 23 Jun 12:34:56'
+	$lang['strrecenttimestampformat'] = '%a %d %b %H:%M:%S';
+	// - the old times, producing something like '23 Jun 2020 12:34:56'
+	$lang['stroldtimestampformat'] = '%d %b %Y %H:%M:%S';
 
 	// Welcome
 	$lang['strintro'] = 'Welcome to %s %s, the web client for';

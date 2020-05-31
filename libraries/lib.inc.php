@@ -154,6 +154,13 @@
 		$_SESSION['webdbLanguage'] = $_language;
 	}
 
+	// Set the locale if it exists in the language file
+	if (isset($lang['applocalearray'])) {
+		setlocale(LC_ALL, $lang['applocalearray']);
+	} elseif (isset($lang['applocale'])) {
+		setlocale(LC_ALL, $lang['applocale']);
+	}
+
 	// Check database support is properly compiled in
 	if (!function_exists('pg_connect')) {
 		echo $lang['strnotloaded'];

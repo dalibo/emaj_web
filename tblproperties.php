@@ -150,10 +150,10 @@
 			'comment' => array(
 				'title' => $lang['strcomment'],
 				'field' => field('comment'),
-				'type' => 'comment',
+				'type' => 'spanned',
 				'params'=> array(
 						'cliplen' => 32,
-						'class' => 'comment-in-tooltip',
+						'class' => 'tooltip right-aligned-tooltip',
 						),
 			),
 		);
@@ -186,11 +186,21 @@
 					),
 					'starttime' => array(
 						'title' => $lang['emajassigned'],
-						'field' => field('start_datetime')
+						'field' => field('start_datetime'),
+						'type' => 'spanned',
+						'params'=> array(
+							'dateformat' => $lang['stroldtimestampformat'],
+							'class' => 'tooltip left-aligned-tooltip',
+							),
 					),
 					'stoptime' => array(
 						'title' => $lang['emajremoved'],
-						'field' => field('stop_datetime')
+						'field' => field('stop_datetime'),
+						'type' => 'spanned',
+						'params'=> array(
+							'dateformat' => $lang['stroldtimestampformat'],
+							'class' => 'tooltip left-aligned-tooltip',
+							),
 					),
 				);
 		

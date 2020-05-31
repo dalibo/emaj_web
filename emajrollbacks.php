@@ -92,7 +92,11 @@
 			'rlbkStartDateTime' => array(
 				'title' => $lang['emajrlbkstart'],
 				'field' => field('rlbk_start_datetime'),
-				'params'=> array('align' => 'center'),
+				'type' => 'spanned',
+				'params'=> array(
+					'dateformat' => $lang['strrecenttimestampformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
 			),
 			'rlbkElapse' => array(
 				'title' => $lang['emajcurrentduration'],
@@ -149,12 +153,20 @@
 			'rlbkStartDateTime' => array(
 				'title' => $lang['emajrlbkstart'],
 				'field' => field('rlbk_start_datetime'),
-				'params'=> array('align' => 'center'),
+				'type' => 'spanned',
+				'params'=> array(
+					'dateformat' => $lang['strrecenttimestampformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
 			),
 			'rlbkEndDateTime' => array(
 				'title' => $lang['emajrlbkend'],
 				'field' => field('rlbk_end_datetime'),
-				'params'=> array('align' => 'center'),
+				'type' => 'spanned',
+				'params'=> array(
+					'dateformat' => $lang['strrecenttimestampformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
 			),
 			'rlbkDuration' => array(
 				'title' => $lang['emajduration'],
@@ -252,6 +264,11 @@
 				'consTargetMarkDateTime' => array(
 					'title' => $lang['emajmarksetat'],
 					'field' => field('cons_target_rlbk_mark_datetime'),
+					'type' => 'spanned',
+					'params'=> array(
+						'dateformat' => $lang['strrecenttimestampformat'],
+						'class' => 'tooltip left-aligned-tooltip',
+					),
 				),
 				'rlbkNbRow' => array(
 					'title' => $lang['emajnbchanges'],
@@ -270,6 +287,11 @@
 				'consEndMarkDateTime' => array(
 					'title' => $lang['emajmarksetat'],
 					'field' => field('cons_end_rlbk_mark_datetime'),
+					'type' => 'spanned',
+					'params'=> array(
+						'dateformat' => $lang['strrecenttimestampformat'],
+						'class' => 'tooltip left-aligned-tooltip',
+					),
 				),
 				'actions' => array(
 					'title' => $lang['stractions'],
@@ -349,6 +371,11 @@
 			'rlbkMarkDateTime' => array(
 				'title' => $lang['emajmarksetat'],
 				'field' => field('rlbk_mark_datetime'),
+				'type' => 'spanned',
+				'params'=> array(
+					'dateformat' => $lang['strrecenttimestampformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
 			),
 		);
 
@@ -365,12 +392,20 @@
 			'rlbkStartDateTime' => array(
 				'title' => $lang['emajrlbkstart'],
 				'field' => field('rlbk_start_datetime'),
-				'params'=> array('align' => 'center'),
+				'type' => 'spanned',
+				'params'=> array(
+					'dateformat' => $lang['strrecenttimestampformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
 			),
 			'rlbkEndDateTime' => array(
 				'title' => $lang['emajrlbkend'],
 				'field' => field('rlbk_end_datetime'),
-				'params'=> array('align' => 'center'),
+				'type' => 'spanned',
+				'params'=> array(
+					'dateformat' => $lang['strrecenttimestampformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
 			),
 			'rlbkDuration' => array(
 				'title' => $lang['emajduration'],
@@ -388,6 +423,11 @@
 				'title' => $lang['emajrlbkstart'],
 				'field' => field('rlbk_start_datetime'),
 				'params'=> array('align' => 'center'),
+				'type' => 'spanned',
+				'params'=> array(
+					'dateformat' => $lang['strrecenttimestampformat'],
+					'class' => 'tooltip',
+				),
 			),
 			'rlbkElapse' => array(
 				'title' => $lang['emajcurrentduration'],
@@ -452,10 +492,20 @@
 			'sessionStartDateTime' => array(
 				'title' => $lang['strbegin'],
 				'field' => field('rlbs_start_datetime'),
+				'type' => 'spanned',
+				'params'=> array(
+					'dateformat' => $lang['strrecenttimestampformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
 			),
 			'sessionEndDateTime' => array(
 				'title' => $lang['strend'],
 				'field' => field('rlbs_end_datetime'),
+				'type' => 'spanned',
+				'params'=> array(
+					'dateformat' => $lang['strrecenttimestampformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
 			),
 			'sessionDuration' => array(
 				'title' => $lang['emajduration'],
@@ -490,6 +540,11 @@
 			'startDateTime' => array(
 				'title' => $lang['strbegin'],
 				'field' => field('rlbp_start_datetime'),
+				'type' => 'spanned',
+				'params'=> array(
+					'dateformat' => $lang['strrecenttimestampformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
 			),
 			'duration' => array(
 				'title' => $lang['emajduration'],

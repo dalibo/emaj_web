@@ -106,10 +106,10 @@
 			'comment' => array(
 				'title' => $lang['strcomment'],
 				'field' => field('nspcomment'),
-				'type' => 'comment',
+				'type' => 'spanned',
 				'params'=> array(
 						'cliplen' => 32,
-						'class' => 'comment-in-tooltip',
+						'class' => 'tooltip right-aligned-tooltip',
 						),
 			),
 		));
@@ -126,7 +126,7 @@
 			$isEmajSchema = false;
 			if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
 				foreach ($schemas as $schema) {
-					if ($schema["nspname"] == $_REQUEST['schema'] && $schema["nsptype"] == 'E') {
+					if ($schema['nspname'] == $_REQUEST['schema'] && $schema['nspisemaj'] == 't') {
 						$isEmajSchema = true;
 					}
 				}
@@ -202,10 +202,10 @@
 				'comment' => array(
 					'title' => $lang['strcomment'],
 					'field' => field('relcomment'),
-				'type' => 'comment',
+				'type' => 'spanned',
 				'params'=> array(
 						'cliplen' => 32,
-						'class' => 'comment-in-tooltip',
+						'class' => 'tooltip right-aligned-tooltip',
 						),
 				),
 			));
@@ -341,10 +341,10 @@
 				'comment' => array(
 					'title' => $lang['strcomment'],
 					'field' => field('seqcomment'),
-					'type' => 'comment',
+					'type' => 'spanned',
 					'params'=> array(
 							'cliplen' => 32,
-							'class' => 'comment-in-tooltip',
+							'class' => 'tooltip right-aligned-tooltip',
 							),
 				),
 			));

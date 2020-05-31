@@ -46,10 +46,10 @@
 			'comment' => array(
 				'title' => $lang['strcomment'],
 				'field' => field('datcomment'),
-				'type' => 'comment',
+				'type' => 'spanned',
 				'params'=> array(
 						'cliplen' => 32,
-						'class' => 'comment-in-tooltip',
+						'class' => 'tooltip right-aligned-tooltip',
 						),
 			),
 		);

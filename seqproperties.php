@@ -120,11 +120,21 @@
 					),
 					'starttime' => array(
 						'title' => $lang['emajassigned'],
-						'field' => field('start_datetime')
+						'field' => field('start_datetime'),
+						'type' => 'spanned',
+						'params'=> array(
+							'dateformat' => $lang['stroldtimestampformat'],
+							'class' => 'tooltip left-aligned-tooltip',
+							),
 					),
 					'stoptime' => array(
 						'title' => $lang['emajremoved'],
-						'field' => field('stop_datetime')
+						'field' => field('stop_datetime'),
+						'type' => 'spanned',
+						'params'=> array(
+							'dateformat' => $lang['stroldtimestampformat'],
+							'class' => 'tooltip left-aligned-tooltip',
+							),
 					),
 				);
 

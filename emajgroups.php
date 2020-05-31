@@ -248,7 +248,12 @@
 			'creationdatetime' => array(
 				'title' => $lang['emajcreationdatetime'],
 				'field' => field('creation_datetime'),
-				'params'=> array('align' => 'center'),
+				'type' => 'spanned',
+				'params'=> array(
+					'dateformat' => $lang['stroldtimestampformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+					),
+				'sorter_text_extraction' => 'span_text',
 			),
 			'nbtbl' => array(
 				'title' => $lang['emajnbtbl'],
@@ -282,10 +287,10 @@
 			'comment' => array(
 				'title' => $lang['strcomment'],
 				'field' => field('group_comment'),
-				'type' => 'comment',
+				'type' => 'spanned',
 				'params'=> array(
 						'cliplen' => 12,
-						'class' => 'comment-in-tooltip',
+						'class' => 'tooltip right-aligned-tooltip',
 						),
 			),
 		);
@@ -616,7 +621,11 @@
 			'creationdatetime' => array(
 				'title' => $lang['emajcreationdatetime'],
 				'field' => field('group_creation_datetime'),
-				'params'=> array('align' => 'center'),
+				'type' => 'spanned',
+				'params'=> array(
+					'dateformat' => $lang['strrecenttimestampformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+					),
 			),
 			'rollbackable' => array(
 				'title' => $lang['strtype'],
@@ -847,6 +856,11 @@
 			'datetime' => array(
 				'title' => $lang['emajmarksetat'],
 				'field' => field('mark_datetime'),
+				'type' => 'spanned',
+				'params'=> array(
+					'dateformat' => $lang['strrecenttimestampformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+					),
 			),
 			'logrows' => array(
 				'title' => $lang['emajnbchanges'],
@@ -865,10 +879,10 @@
 			'comment' => array(
 				'title' => $lang['strcomment'],
 				'field' => field('mark_comment'),
-				'type' => 'comment',
+				'type' => 'spanned',
 				'params'=> array(
 						'cliplen' => 12,
-						'class' => 'comment-in-tooltip',
+						'class' => 'tooltip right-aligned-tooltip',
 						),
 			),
 		);
@@ -1219,6 +1233,11 @@
 					'start_datetime' => array(
 						'title' => $lang['emajstartdatetime'],
 						'field' => field('stat_first_mark_datetime'),
+						'type' => 'spanned',
+						'params'=> array(
+							'dateformat' => $lang['strrecenttimestampformat'],
+							'class' => 'tooltip left-aligned-tooltip',
+							),
 					),
 					'end_mark' => array(
 						'title' => $lang['emajendmark'],
@@ -1227,6 +1246,11 @@
 					'end_datetime' => array(
 						'title' => $lang['emajenddatetime'],
 						'field' => field('stat_last_mark_datetime'),
+						'type' => 'spanned',
+						'params'=> array(
+							'dateformat' => $lang['strrecenttimestampformat'],
+							'class' => 'tooltip left-aligned-tooltip',
+							),
 					),
 				));
 			}
@@ -1354,6 +1378,11 @@
 					'start_datetime' => array(
 						'title' => $lang['emajstartdatetime'],
 						'field' => field('stat_first_mark_datetime'),
+						'type' => 'spanned',
+						'params'=> array(
+							'dateformat' => $lang['strrecenttimestampformat'],
+							'class' => 'tooltip left-aligned-tooltip',
+							),
 					),
 					'end_mark' => array(
 						'title' => $lang['emajendmark'],
@@ -1362,6 +1391,11 @@
 					'end_datetime' => array(
 						'title' => $lang['emajenddatetime'],
 						'field' => field('stat_last_mark_datetime'),
+						'type' => 'spanned',
+						'params'=> array(
+							'dateformat' => $lang['strrecenttimestampformat'],
+							'class' => 'tooltip left-aligned-tooltip',
+							),
 					),
 				));
 			}
@@ -2155,10 +2189,10 @@
 			'comment' => array(
 				'title' => $lang['strcomment'],
 				'field' => field('group_comment'),
-				'type' => 'comment',
+				'type' => 'spanned',
 				'params'=> array(
 						'cliplen' => 20,
-						'class' => 'comment-in-tooltip',
+						'class' => 'tooltip right-aligned-tooltip',
 						),
 			),
 		);

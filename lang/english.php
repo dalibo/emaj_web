@@ -9,13 +9,15 @@
 	$lang['applocale'] = 'en-US';
 	$lang['applocalearray'] = array('en-US','en_US');
 	$lang['applangdir'] = 'ltr';
-	// Php format for timestamp field, distinguishing the format for:
+	// Php format for timestamp fields, distinguishing the format for:
 	// - the old times, producing something like '23 Jun 2020 12:34:56'
 	$lang['stroldtimestampformat'] = '%d %b %Y %H:%M:%S';
 	// - the recent times, producing something like 'Mon 23 Jun 12:34:56'
 	$lang['strrecenttimestampformat'] = '%a %d %b %H:%M:%S';
 	// - the timestamp abbreviated into precise time
 	$lang['strprecisetimeformat'] = '%H:%M:%S.%µ';
+	// Internal format for full interval display
+	$lang['strintervalformat'] = 'DD d HH h MM min SS.US s';
 
 	// Welcome
 	$lang['strintro'] = 'Welcome to %s %s, the web client for';

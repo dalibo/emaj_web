@@ -308,6 +308,7 @@
 					break;
 				case 'spanned':
 					if (isset($params['dateformat'])) {
+						// the data is a timestamp
 						$str2 = $str;
 						$str1 = strftime($params['dateformat'], strtotime($str));
 						// if micro-seconds are requested, adjust the result of the strftime function (as it doesn't process microseconds)
@@ -319,8 +320,26 @@
 							}
 							$str1 = str_replace('%µ', $decimal, $str1);
 						}
+					} elseif (isset($params['intervalformat'])) {
+						// the data is an interval
+						$str1 = $str; $str2 = '';
+						// extract all interval parts
+						if (preg_match('/(\\d\\d) (\\d\\d):(\\d\\d):(\\d\\d)\\.((\\d\\d\\d)(\\d\\d\\d))/', $str, $reg)) {
+							$dd=$reg[1]; $hh=$reg[2]; $mm=$reg[3]; $ss=$reg[4]; $ms=$reg[6]; $us=$reg[5];
+							// build the tooltip value
+							$str2 = str_replace(array('DD','HH','MM','SS','US'), array($dd,$hh,$mm,$ss,$us), $params['intervalformat']);
+							// build the main value
+							$hh += $dd * 24;			// days are added to the hours part
+							if ($hh > 0) {				// hours to show
+								$str1 = ($hh*1).':'.$mm.':'.$ss;
+							} elseif ($mm > 0) {		// minutes to show
+								$str1 = ($mm*1).':'.$ss.'.'.$ms;
+							} else {					// less than a minutes to show
+								$str1 = ($ss*1).'.'.$us;
+							}
+						}
 					} else {
-						// no date format has been supplied
+						// another data type to span
 						$str1 = $str; $str2 = '';
 					}
 					if (isset($params['cliplen']) && is_integer($params['cliplen'])) {

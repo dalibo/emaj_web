@@ -101,12 +101,20 @@
 			'rlbkElapse' => array(
 				'title' => $lang['emajcurrentduration'],
 				'field' => field('rlbk_current_elapse'),
-				'params'=> array('align' => 'center'),
+				'type' => 'spanned',
+				'params'=> array(
+					'intervalformat' => $lang['strintervalformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
 			),
 			'rlbkRemaining' => array(
 				'title' => $lang['emajestimremaining'],
 				'field' => field('rlbk_remaining'),
-				'params'=> array('align' => 'center'),
+				'type' => 'spanned',
+				'params'=> array(
+					'intervalformat' => $lang['strintervalformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
 			),
 			'rlbkCompletionPct' => array(
 				'title' => $lang['emajpctcompleted'],
@@ -149,6 +157,8 @@
 					'function' => 'renderRlbkStatusInList',
 					'align' => 'center',
 				),
+				'sorter' => false,
+				'filter' => false,
 			),
 			'rlbkStartDateTime' => array(
 				'title' => $lang['emajrlbkstart'],
@@ -158,6 +168,7 @@
 					'dateformat' => $lang['strrecenttimestampformat'],
 					'class' => 'tooltip left-aligned-tooltip',
 				),
+				'sorter_text_extraction' => 'span_text',
 			),
 			'rlbkEndDateTime' => array(
 				'title' => $lang['emajrlbkend'],
@@ -167,11 +178,18 @@
 					'dateformat' => $lang['strrecenttimestampformat'],
 					'class' => 'tooltip left-aligned-tooltip',
 				),
+				'sorter_text_extraction' => 'span_text',
 			),
 			'rlbkDuration' => array(
 				'title' => $lang['emajduration'],
 				'field' => field('rlbk_duration'),
-				'params'=> array('align' => 'center'),
+				'type' => 'spanned',
+				'params'=> array(
+					'intervalformat' => $lang['strintervalformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
+				'sorter_text_extraction' => 'span_text',
+				'filter' => false,
 			),
 			'rlbkMark' => array(
 				'title' => $lang['emajtargetmark'],
@@ -227,7 +245,7 @@
 		echo "<input type=\"submit\" name=\"filterrlbk\" value=\"{$lang['emajfilter']}\" />\n";
 		echo "</form></div>\n";
 
-		$misc->printTable($completedRlbks, $columnsCompletedRlbk, $actions, 'completedRlbk', $lang['emajnorlbk']);
+		$misc->printTable($completedRlbks, $columnsCompletedRlbk, $actions, 'completedRlbk', $lang['emajnorlbk'], null, array('sorter' => true, 'filter' => true));
 
 		// JQuery script to disable input field if the associated checkbox is not checked
 		echo "<script>\n";
@@ -410,7 +428,11 @@
 			'rlbkDuration' => array(
 				'title' => $lang['emajduration'],
 				'field' => field('rlbk_duration'),
-				'params'=> array('align' => 'center'),
+				'type' => 'spanned',
+				'params'=> array(
+					'intervalformat' => $lang['strintervalformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
 			),
 		);
 
@@ -432,12 +454,20 @@
 			'rlbkElapse' => array(
 				'title' => $lang['emajcurrentduration'],
 				'field' => field('rlbk_current_elapse'),
-				'params'=> array('align' => 'center'),
+				'type' => 'spanned',
+				'params'=> array(
+					'intervalformat' => $lang['strintervalformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
 			),
 			'rlbkRemaining' => array(
 				'title' => $lang['emajestimremaining'],
 				'field' => field('rlbk_remaining'),
-				'params'=> array('align' => 'center'),
+				'type' => 'spanned',
+				'params'=> array(
+					'intervalformat' => $lang['strintervalformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
 			),
 			'rlbkCompletionPct' => array(
 				'title' => $lang['emajpctcompleted'],
@@ -510,6 +540,11 @@
 			'sessionDuration' => array(
 				'title' => $lang['emajduration'],
 				'field' => field('rlbs_duration'),
+				'type' => 'spanned',
+				'params'=> array(
+					'intervalformat' => $lang['strintervalformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
 			),
 			'sessionTxId' => array(
 				'title' => $lang['emajtxid'],
@@ -549,6 +584,11 @@
 			'duration' => array(
 				'title' => $lang['emajduration'],
 				'field' => field('rlbp_duration'),
+				'type' => 'spanned',
+				'params'=> array(
+					'intervalformat' => $lang['strintervalformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
 			),
 			'quantity' => array(
 				'title' => $lang['strquantity'],
@@ -562,7 +602,11 @@
 				'estimatedDuration' => array(
 					'title' => $lang['emajestimatedduration'],
 					'field' => field('rlbp_estimated_duration'),
-					'params'=> array('class' => 'rlbkEstimates'),
+					'type' => 'spanned',
+					'params'=> array(
+						'intervalformat' => $lang['strintervalformat'],
+						'class' => 'tooltip left-aligned-tooltip rlbkEstimates',
+					),
 				),
 				'estimatedQuantity' => array(
 					'title' => $lang['emajestimatedquantity'],

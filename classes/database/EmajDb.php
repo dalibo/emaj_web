@@ -25,6 +25,8 @@ class EmajDb {
 	 */
 	// Output format for timestamptz values. This format will be interpreted by the GUI layer for smart displays.
 	private $tsFormat = 'YYYY/MM/DD HH24:MI:SS.US OF';
+	// Output format for interval values. This format will be interpreted by the GUI layer for smart displays.
+	private $intervalFormat = 'DD HH24:MI:SS.US';
 
 	/**
 	 * Constructor
@@ -2708,8 +2710,9 @@ class EmajDb {
 
 // get the latest rollback operations
 		$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,',') as rlbk_groups_list, rlbk_status,
-					rlbk_start_datetime, rlbk_end_datetime,
-					to_char(rlbk_end_datetime - rlbk_start_datetime,'HH24:MI:SS') as rlbk_duration, 
+					to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
+					to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
+					to_char(rlbk_end_datetime - rlbk_start_datetime, '{$this->intervalFormat}') as rlbk_duration,
 					rlbk_mark, rlbk_mark_datetime, rlbk_is_logged, rlbk_nb_session, rlbk_eff_nb_table,
 					rlbk_nb_sequence ";
 		if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
@@ -2738,10 +2741,12 @@ class EmajDb {
 	function getInProgressRlbk() {
 		global $data;
 
-		$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,',') as rlbk_groups_list, rlbk_mark,
-					rlbk_mark_datetime, rlbk_is_logged,	rlbk_nb_session, rlbk_nb_table, rlbk_nb_sequence,
-					rlbk_eff_nb_table, rlbk_status, rlbk_start_datetime,
-					to_char(rlbk_elapse,'HH24:MI:SS') as rlbk_current_elapse, rlbk_remaining,
+		$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,',') AS rlbk_groups_list, rlbk_mark,
+					to_char(rlbk_mark_datetime,'{$this->tsFormat}') AS rlbk_mark_datetime,
+					rlbk_is_logged,	rlbk_nb_session, rlbk_nb_table, rlbk_nb_sequence, rlbk_eff_nb_table, rlbk_status,
+					to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
+					to_char(rlbk_elapse,'{$this->intervalFormat}') AS rlbk_current_elapse,
+					to_char(rlbk_remaining, '{$this->intervalFormat}') AS rlbk_remaining,
 					rlbk_completion_pct 
 				FROM emaj.emaj_rollback_activity() 
 				ORDER BY rlbk_id DESC";
@@ -2810,10 +2815,10 @@ class EmajDb {
 		$data->execute($sql);
 
 // get the emaj_rlbk data
-		$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,',') as rlbk_groups_list, rlbk_status,
-					to_char(rlbk_start_datetime,'{$this->tsFormat}') as rlbk_start_datetime,
-					to_char(rlbk_end_datetime,'{$this->tsFormat}') as rlbk_end_datetime,
-					to_char(rlbk_end_datetime - rlbk_start_datetime,'HH24:MI:SS.MSFM') as rlbk_duration, 
+		$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,',') AS rlbk_groups_list, rlbk_status,
+					to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
+					to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
+					to_char(rlbk_end_datetime - rlbk_start_datetime,'{$this->intervalFormat}') AS rlbk_duration,
 					rlbk_mark, rlbk_mark_datetime, rlbk_is_logged, rlbk_nb_session, rlbk_eff_nb_table,
 					rlbk_nb_sequence ";
 		if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
@@ -2878,7 +2883,7 @@ class EmajDb {
 		$sql = "SELECT rlbs_session, rlbs_txid,
 				to_char(rlbs_start_datetime,'{$this->tsFormat}') AS rlbs_start_datetime,
 				to_char(rlbs_end_datetime,'{$this->tsFormat}') AS rlbs_end_datetime,
-				to_char(rlbs_end_datetime - rlbs_start_datetime,'HH24:MI:SS.MSFM') AS rlbs_duration
+				to_char(rlbs_end_datetime - rlbs_start_datetime,'{$this->intervalFormat}') AS rlbs_duration
 				FROM emaj.emaj_rlbk_session
 				WHERE rlbs_rlbk_id = {$rlbkId}
 				ORDER BY rlbs_session";
@@ -2920,14 +2925,14 @@ class EmajDb {
 							'{$lang['emajrlbkenalogtrg']}'
 						 ELSE '?'
 					   END AS rlbp_action,
-					   rlbp_batch_number, rlbp_session,
-					   rlbp_estimated_quantity, rlbp_estimated_duration,
+					   rlbp_batch_number, rlbp_session, rlbp_estimated_quantity,
+					   to_char(rlbp_estimated_duration,'{$this->intervalFormat}') AS rlbp_estimated_duration,
 					   CASE WHEN rlbp_estimate_method = 1 THEN 'STAT+'
 							WHEN rlbp_estimate_method = 2 THEN 'STAT'
 							WHEN rlbp_estimate_method = 3 THEN 'PARAM'
 					   END AS rlbp_estimate_method,
 					   to_char(rlbp_start_datetime,'{$this->tsFormat}') AS rlbp_start_datetime,
-					   rlbp_quantity, rlbp_duration
+					   rlbp_quantity, to_char(rlbp_duration,'{$this->intervalFormat}') AS rlbp_duration
 				FROM emaj.emaj_rlbk_plan,
 					(VALUES ('DIS_APP_TRG',1),('DIS_LOG_TRG',2),('DROP_FK',3),('SET_FK_DEF',4),
 							('RLBK_TABLE',5),('DELETE_LOG',6),('SET_FK_IMM',7),('ADD_FK',8),

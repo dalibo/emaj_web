@@ -2845,8 +2845,10 @@ class EmajDb {
 
 		$data->clean($rlbkId);
 
-		$sql = "SELECT rlbk_status, rlbk_start_datetime,
-					   to_char(rlbk_elapse,'HH24:MI:SS.MSFM') AS rlbk_current_elapse, rlbk_remaining,
+		$sql = "SELECT rlbk_status,
+					   to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
+					   to_char(rlbk_elapse,'{$this->intervalFormat}') AS rlbk_current_elapse,
+					   to_char(rlbk_remaining, '{$this->intervalFormat}') AS rlbk_remaining,
 					   rlbk_completion_pct
 				FROM emaj.emaj_rollback_activity()
 				WHERE rlbk_id = {$rlbkId}";

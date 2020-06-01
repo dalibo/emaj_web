@@ -631,18 +631,20 @@
 
 		// print rollback progress data
 		$rlbkInfo->moveFirst();
-		echo "<h4>{$lang['emajrlbkprogress']}</h4>";
-		if (! $isCompleted) {
-			// The rollback is in progress
-			$misc->printTable($rlbkInProgressInfo, $columnsInProgress, $actions, 'detailRlbkProgress', 'No rollback, internal error !');
-
-			// add a refresh button when the rollback is not completed
-			echo "<div style=\"margin-top:10px; margin-left:30px;\"><a href=\"emajrollbacks.php?action=show_rollback&amp;{$misc->href}&amp;rlbkid=" . htmlspecialchars($_REQUEST['rlbkid']) . "\">";
-			echo "<img src=\"{$misc->icon('Refresh')}\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\" /></a></div>";
+		if ($isCompleted) {
+			// The rollback is completed
+			echo "<h4>{$lang['emajrlbkprogress']}</h4>\n";
+			$misc->printTable($rlbkInfo, $columnsCompleted, $actions, 'detailRlbkProgress', 'No rollback, internal error !');
 
 		} else {
-			// The rollback is completed
-			$misc->printTable($rlbkInfo, $columnsCompleted, $actions, 'detailRlbkProgress', 'No rollback, internal error !');
+			// The rollback is in progress
+			// Insert a refresh button, before the data table
+			echo "<h4>{$lang['emajrlbkprogress']}\n";
+			echo "\t<a href=\"emajrollbacks.php?action=show_rollback&amp;{$misc->href}&amp;rlbkid=" . htmlspecialchars($_REQUEST['rlbkid']) . "\">\n";
+			echo "\t\t<img src=\"{$misc->icon('Refresh')}\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\" />";
+			echo "\t</a>\n</h4>\n";
+
+			$misc->printTable($rlbkInProgressInfo, $columnsInProgress, $actions, 'detailRlbkProgress', 'No rollback, internal error !');
 		}
 
 		// final execution report of the rollback operation

@@ -10,10 +10,12 @@
 	$lang['applocalearray'] = array('en-US','en_US');
 	$lang['applangdir'] = 'ltr';
 	// Php format for timestamp field, distinguishing the format for:
-	// - the recent times, producing something like 'Mon 23 Jun 12:34:56'
-	$lang['strrecenttimestampformat'] = '%a %d %b %H:%M:%S';
 	// - the old times, producing something like '23 Jun 2020 12:34:56'
 	$lang['stroldtimestampformat'] = '%d %b %Y %H:%M:%S';
+	// - the recent times, producing something like 'Mon 23 Jun 12:34:56'
+	$lang['strrecenttimestampformat'] = '%a %d %b %H:%M:%S';
+	// - the timestamp abbreviated into precise time
+	$lang['strprecisetimeformat'] = '%H:%M:%S.%µ';
 
 	// Welcome
 	$lang['strintro'] = 'Welcome to %s %s, the web client for';
@@ -728,8 +730,8 @@
 	$lang['emajrlbkagroup'] = 'E-Maj: Rollback a tables group';
 	$lang['emajconfirmrlbkgroup'] = 'Rollbacking the tables group "%s" to the mark "%s"';
 	$lang['emajunknownestimate'] = 'unknown';
-	$lang['emajdurationminutesseconds'] = '%s mn %s s';
-	$lang['emajdurationhoursminutes'] = '%s h %s mn';
+	$lang['emajdurationminutesseconds'] = '%s min %s s';
+	$lang['emajdurationhoursminutes'] = '%s h %s min';
 	$lang['emajdurationovertendays'] = '> 10 days';
 	$lang['emajselectmarkgroup'] = 'Rollbacking the tables group "%s" to the mark: ';
 	$lang['emajrlbkthenmonitor'] = 'Rollback and monitor';

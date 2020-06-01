@@ -2894,7 +2894,8 @@ class EmajDb {
 
 		$data->clean($rlbkId);
 
-		$sql = "SELECT row_number() over () AS rlbp_rank,
+		$sql = "SELECT row_number() over (ORDER BY rlbp_start_datetime, rlbp_batch_number, step_order, rlbp_table, rlbp_object)
+						 AS rlbp_rank,
 					   rlbp_schema || '.' || rlbp_table AS rlbk_schema_table,
 					   CASE 
 						 WHEN rlbp_step = 'DIS_APP_TRG' THEN
@@ -2925,7 +2926,8 @@ class EmajDb {
 							WHEN rlbp_estimate_method = 2 THEN 'STAT'
 							WHEN rlbp_estimate_method = 3 THEN 'PARAM'
 					   END AS rlbp_estimate_method,
-					   rlbp_start_datetime::TIME, rlbp_quantity, rlbp_duration
+					   to_char(rlbp_start_datetime,'{$this->tsFormat}') AS rlbp_start_datetime,
+					   rlbp_quantity, rlbp_duration
 				FROM emaj.emaj_rlbk_plan,
 					(VALUES ('DIS_APP_TRG',1),('DIS_LOG_TRG',2),('DROP_FK',3),('SET_FK_DEF',4),
 							('RLBK_TABLE',5),('DELETE_LOG',6),('SET_FK_IMM',7),('ADD_FK',8),

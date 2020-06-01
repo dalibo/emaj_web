@@ -542,7 +542,7 @@
 				'field' => field('rlbp_start_datetime'),
 				'type' => 'spanned',
 				'params'=> array(
-					'dateformat' => $lang['strrecenttimestampformat'],
+					'dateformat' => $lang['strprecisetimeformat'],
 					'class' => 'tooltip left-aligned-tooltip',
 				),
 			),

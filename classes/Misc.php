@@ -310,6 +310,15 @@
 					if (isset($params['dateformat'])) {
 						$str2 = $str;
 						$str1 = strftime($params['dateformat'], strtotime($str));
+						// if micro-seconds are requested, adjust the result of the strftime function (as it doesn't process microseconds)
+						if (strpos($str1,'%µ') > 0) {
+							if (preg_match('/\\.([0-9]+)/', $str, $reg)) {
+								$decimal = substr(str_pad($reg[1], 6, "0"), 0, 6);
+							} else {
+								$decimal = "000000";
+							}
+							$str1 = str_replace('%µ', $decimal, $str1);
+						}
 					} else {
 						// no date format has been supplied
 						$str1 = $str; $str2 = '';

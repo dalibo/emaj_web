@@ -10,10 +10,12 @@
 	$lang['applocalearray'] = array('fr-FR','fr_FR','fr','fra','fr_FR@euro','fr_FR.utf8');
 	$lang['applangdir'] = 'ltr';
 	// Php format for timestamp field, distinguishing the format for:
-	// - the recent times, producing something like 'Mon 23 Jun 12:34:56'
-	$lang['strrecenttimestampformat'] = '%a %d %b %H:%M:%S';
 	// - the old times, producing something like '23 Jun 2020 12:34:56'
 	$lang['stroldtimestampformat'] = '%d %b %Y %H:%M:%S';
+	// - the recent times, producing something like 'Mon 23 Jun 12:34:56'
+	$lang['strrecenttimestampformat'] = '%a %d %b %H:%M:%S';
+	// - the timestamp abbreviated into precise time
+	$lang['strprecisetimeformat'] = '%H:%M:%S.%µ';
 
 	// Welcome
 	$lang['strintro'] = 'Bienvenue dans %s %s, le client web pour';
@@ -729,8 +731,8 @@
 	$lang['emajconfirmrlbkgroup'] = 'Rollback du groupe de tables "%s" à la marque "%s"';
 	$lang['emajselectmarkgroup'] = 'Rollback du groupe de tables "%s" à la marque : ';
 	$lang['emajunknownestimate'] = 'non connue';
-	$lang['emajdurationminutesseconds'] = '%s mn %s s';
-	$lang['emajdurationhoursminutes'] = '%s h %s mn';
+	$lang['emajdurationminutesseconds'] = '%s min %s s';
+	$lang['emajdurationhoursminutes'] = '%s h %s min';
 	$lang['emajdurationovertendays'] = '> 10 jours';
 	$lang['emajrlbkthenmonitor'] = 'Rollback et suivi';
 	$lang['emajcantrlbkidlegroup'] = 'Le rollback du groupe de tables "%s" est impossible. Le groupe est arrêté.';

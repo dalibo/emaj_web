@@ -338,8 +338,12 @@
 								$str1 = ($ss*1).'.'.$us;
 							}
 						}
+					} elseif (isset($params['spanseparator'])) {
+						// a text to split in 2 parts, based on a separator (if the separator is not found, no tooltip is generated)
+						$str2 = '';
+						list($str1, $str2) = explode($params['spanseparator'], $str, 2);
 					} else {
-						// another data type to span
+						// otherwise ... (should never occur)
 						$str1 = $str; $str2 = '';
 					}
 					if (isset($params['cliplen']) && is_integer($params['cliplen'])) {

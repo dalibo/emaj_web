@@ -1505,17 +1505,16 @@
 					'title' => $lang['emajlogtable'],
 					'field' => field('full_log_table'),
 				),
-				'bytelogsize' => array(
+				'logsize' => array(
 					'title' => $lang['emajlogsize'],
-					'field' => field('byte_log_size'),
-					'params'=> array('align' => 'right'),
+					'field' => field('log_size'),
+					'type' => 'spanned',
+					'params'=> array(
+						'spanseparator' => '|',
+						'class' => 'tooltip right-aligned-tooltip',
+					),
+					'sorter_text_extraction' => 'span_text',
 					'filter'=> false,
-				),
-				'prettylogsize' => array(
-					'title' => $lang['emajlogsize'],
-					'field' => field('pretty_log_size'),
-					'params'=> array('align' => 'center'),
-					'sorter'=> false,
 				),
 			);
 

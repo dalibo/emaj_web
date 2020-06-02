@@ -265,7 +265,7 @@
 	$lang['emajprotectedmark'] = 'La protection mise sur la marque bloque les rollbacks E-Maj sur des marques antérieures.';
 	$lang['emajprotected'] = 'Protégé contre les rollbacks E-Maj';
 	$lang['emajpagebottom'] = 'Bas de la page';
-	$lang['emajlogsize'] = 'Taille du log';
+	$lang['emajlogsize'] = 'Taille log';
 	$lang['emajrequiredfield'] = 'Champ requis';
 	$lang['emajestimates'] = 'Estimations';
 	$lang['emajestimate'] = 'Estimer';

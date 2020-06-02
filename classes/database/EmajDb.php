@@ -1036,20 +1036,34 @@ class EmajDb {
 
 		$data->clean($group);
 
-		$sql = "SELECT rel_schema, rel_tblseq, rel_kind || '+' AS relkind, rel_priority,
-					rel_log_dat_tsp, rel_log_idx_tsp,
-					rel_log_schema || '.' || rel_log_table as full_log_table,
-					CASE WHEN rel_kind = 'r' THEN 
-						pg_size_pretty(pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table)))
-						|| '|' ||
-						pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table))::TEXT
-					END AS log_size
-				FROM emaj.emaj_relation
-				WHERE rel_group = '{$group}'";
 		if ($this->getNumEmajVersion() >= 22000){	// version >= 2.2.0
-			$sql .= " AND upper_inf(rel_time_range)";
+			$sql = "SELECT rel_kind || '+' AS relkind, rel_schema, rel_tblseq,
+						to_char(time_tx_timestamp,'{$this->tsFormat}') as start_time,
+						rel_priority, rel_log_dat_tsp, rel_log_idx_tsp,
+						rel_log_schema || '.' || rel_log_table as full_log_table,
+						CASE WHEN rel_kind = 'r' THEN 
+							pg_size_pretty(pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table)))
+							|| '|' ||
+							pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table))::TEXT
+						END AS log_size
+					FROM emaj.emaj_relation, emaj.emaj_time_stamp
+					WHERE lower(rel_time_range) = time_id
+					  AND rel_group = '{$group}'
+					  AND upper_inf(rel_time_range)
+					ORDER BY rel_schema, rel_tblseq";
+		} else {
+			$sql = "SELECT rel_kind || '+' AS relkind, rel_schema, rel_tblseq,
+						rel_priority, rel_log_dat_tsp, rel_log_idx_tsp,
+						rel_log_schema || '.' || rel_log_table as full_log_table,
+						CASE WHEN rel_kind = 'r' THEN 
+							pg_size_pretty(pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table)))
+							|| '|' ||
+							pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table))::TEXT
+						END AS log_size
+					FROM emaj.emaj_relation
+					WHERE rel_group = '{$group}'
+					ORDER BY rel_schema, rel_tblseq";
 		}
-		$sql .= "		ORDER BY rel_schema, rel_tblseq";
 
 		return $data->selectSet($sql);
 	}

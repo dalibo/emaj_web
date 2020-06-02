@@ -102,6 +102,7 @@
 	$lang['strmessage'] = 'Message';
 	$lang['strbegin'] = 'Begin';
 	$lang['strend'] = 'End';
+	$lang['strsince'] = 'Since';
 	$lang['strquantity'] = 'Quantity';
 
 	// User-supplied SQL editing

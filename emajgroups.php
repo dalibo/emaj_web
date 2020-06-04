@@ -3447,7 +3447,7 @@
 
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
-		if ($_REQUEST['back'] = 'list') {
+		if ($_REQUEST['back'] == 'list') {
 		// the mark name is not yet defined (we are coming from the 'list groups' page)
 			$marks=$emajdb->getRollbackMarkGroup($_REQUEST['group']);
 			echo sprintf($lang['emajselectmarkgroup'], htmlspecialchars($_REQUEST['group']));

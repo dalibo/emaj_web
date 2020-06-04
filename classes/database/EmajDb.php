@@ -1041,7 +1041,7 @@ class EmajDb {
 						to_char(time_tx_timestamp,'{$this->tsFormat}') as start_time,
 						rel_priority, rel_log_dat_tsp, rel_log_idx_tsp,
 						rel_log_schema || '.' || rel_log_table as full_log_table,
-						CASE WHEN rel_kind = 'r' THEN 
+						CASE WHEN rel_kind = 'r' THEN
 							pg_size_pretty(pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table)))
 							|| '|' ||
 							pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table))::TEXT
@@ -1055,7 +1055,7 @@ class EmajDb {
 			$sql = "SELECT rel_kind || '+' AS relkind, rel_schema, rel_tblseq,
 						rel_priority, rel_log_dat_tsp, rel_log_idx_tsp,
 						rel_log_schema || '.' || rel_log_table as full_log_table,
-						CASE WHEN rel_kind = 'r' THEN 
+						CASE WHEN rel_kind = 'r' THEN
 							pg_size_pretty(pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table)))
 							|| '|' ||
 							pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table))::TEXT

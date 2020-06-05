@@ -206,7 +206,7 @@ class EmajDb {
 					CREATE EXTENSION IF NOT EXISTS btree_gist;
 					CREATE EXTENSION emaj {$version};";
 		} else {
-			$sql = "CREATE EXTENSION emaj {$version};";
+			$sql = "CREATE EXTENSION emaj {$version} CASCADE;";
 		}
 
 		$status = $data->execute($sql);

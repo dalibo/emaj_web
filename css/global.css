@@ -347,7 +347,7 @@ nav {
 .tab, .tab-inactive{
 	background-color: #f4f4f4;
 	text-align: center;
-	vertical-align: top;
+	max-height:50px;
 	font-size: 1.1em;
 	border: 1px solid #dddddd;
 	border-top: #ffffff;

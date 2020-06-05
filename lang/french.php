@@ -291,7 +291,7 @@
 	// E-Maj html titles and tabs
 	$lang['emajgroupsmanagement'] = 'Gestion des groupes E-Maj';
 	$lang['emajgroupsconfiguration'] = 'Configuration des groupes de tables';
-	$lang['emajgroupsconf'] = 'Configuration groupes';
+	$lang['emajgroupsconf'] = 'Conf.groupes';
 	$lang['emajrollbacksmanagement'] = 'Gestion des rollbacks E-Maj';
 	$lang['emajrlbkop'] = 'Rollbacks E-Maj';
 	$lang['emajenvironment'] = 'Environnement E-Maj';

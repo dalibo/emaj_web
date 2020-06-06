@@ -320,10 +320,12 @@
 	$lang['emajextensionmngt'] = '"emaj" extension management';
 	$lang['emajcreateextension'] = 'Create extension';
 	$lang['emajcreateemajextension'] = 'Create the "emaj" extension';
+	$lang['emajnocompatibleemajversion'] = 'No installed emaj extension version is compatible with the PostgreSQL version.';
 	$lang['emajcreateextensionok'] = 'The "emaj" extension has been created.';
 	$lang['emajcreateextensionerr'] = 'Error while creating the "emaj" extension.';
 	$lang['emajupdateextension'] = 'Update extension';
 	$lang['emajupdateemajextension'] = 'Update the "emaj" extension';
+	$lang['emajnocompatibleemajupdate'] = 'No installed emaj extension update is compatible with the PostgreSQL version.';
 	$lang['emajupdateextensionok'] = 'The "emaj" extension has been updated.';
 	$lang['emajupdateextensionerr'] = 'Error while updating the "emaj" extension.';
 	$lang['emajdropextension'] = 'Drop extension';

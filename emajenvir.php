@@ -70,32 +70,51 @@
 	 */
 	function create_extension() {
 		global $misc, $lang, $emajdb;
+		global $xrefEmajPg;
 
 		$misc->printHeader('database', 'database', 'emajenvir');
 
 		$misc->printTitle($lang['emajcreateemajextension']);
 
+		// build the array of usable emaj versions
+		$server_info = $misc->getServerInfo();
 		$availableVersions = $emajdb->getAvailableExtensionVersions();
+
+		$usableVersions = array();
+		foreach($availableVersions as $v) {
+			if (!isset($xrefEmajPg[$v['version']]) ||
+				($server_info['pgVersion'] >= $xrefEmajPg[$v['version']]['minPostgresVersion'] &&
+				 $server_info['pgVersion'] <= $xrefEmajPg[$v['version']]['maxPostgresVersion'])) {
+				// if the emaj version is known in the xref and is compatible with the current PG version, keep it
+				// if the emaj version is unknown, keep it too
+				// otherwise, discard it
+				$usableVersions[] = $v['version'];
+			}
+		}
 
 		echo "<form action=\"emajenvir.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"create_extension_ok\" />\n";
 		echo $misc->form;
 
-		if ($availableVersions->recordCount() == 1) {
+		if (count($usableVersions) == 0) {
+			echo "<p>{$lang['emajnocompatibleemajversion']}</p>\n";
+		} elseif (count($usableVersions) == 1) {
 			// a single version is available, so just display the information
-			foreach($availableVersions as $v) {
-				echo "<p>{$lang['emajversion']}{$v['version']}</p>\n";
-				echo "<p><input type=\"hidden\" name=\"version\" value=\"". htmlspecialchars($v['version']) . "\" />\n";
+			foreach($usableVersions as $v) {
+				echo "<p>{$lang['emajversion']}{$v}</p>\n";
+				echo "<p><input type=\"hidden\" name=\"version\" value=\"". htmlspecialchars($v) . "\" />\n";
 			}
+			echo "<input type=\"submit\" name=\"createextension\" value=\"{$lang['strok']}\" />\n";
 		} else {
 			// several versions are available,
 			// display a select box so that the user can choose the version to install
 			echo "<p>{$lang['emajversion']}<select name=\"version\" id=\"version\">\n";
-			foreach($availableVersions as $v)
-				echo "\t<option value=\"", htmlspecialchars($v['version']), "\" >", htmlspecialchars($v['version']), "</option>\n";
+			foreach($usableVersions as $v) {
+				echo "\t<option value=\"", htmlspecialchars($v), "\" >", htmlspecialchars($v), "</option>\n";
+			}
 			echo "</select></p>\n";
+			echo "<input type=\"submit\" name=\"createextension\" value=\"{$lang['strok']}\" />\n";
 		}
-		echo "<input type=\"submit\" name=\"createextension\" value=\"{$lang['strok']}\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 	}
@@ -135,27 +154,44 @@
 
 		$misc->printTitle($lang['emajupdateemajextension']);
 
+		// build the array of usable emaj versions
+		$server_info = $misc->getServerInfo();
 		$availableVersions = $emajdb->getAvailableExtensionVersionsForUpdate();
+
+		$usableVersions = array();
+		foreach($availableVersions as $v) {
+			if (!isset($xrefEmajPg[$v['target']]) ||
+				($server_info['pgVersion'] >= $xrefEmajPg[$v['target']]['minPostgresVersion'] &&
+				 $server_info['pgVersion'] <= $xrefEmajPg[$v['target']]['maxPostgresVersion'])) {
+				// if the emaj version is known in the xref and is compatible with the current PG version, keep it
+				// if the emaj version is unknown, keep it too
+				// otherwise, discard it
+				$usableVersions[] = $v['target'];
+			}
+		}
 
 		echo "<form action=\"emajenvir.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"update_extension_ok\" />\n";
 		echo $misc->form;
 
-		if ($availableVersions->recordCount() == 1) {
+		if (count($usableVersions) == 0) {
+			echo "<p>{$lang['emajnocompatibleemajupdate']}</p>\n";
+		} elseif (count($usableVersions) == 1) {
 			// a single version is available, so just display the information
-			foreach($availableVersions as $v) {
-				echo "<p>{$lang['emajversion']}{$v['target']}</p>\n";
-				echo "<p><input type=\"hidden\" name=\"version\" value=\"". htmlspecialchars($v['target']) . "\" />\n";
+			foreach($usableVersions as $v) {
+				echo "<p>{$lang['emajversion']}{$v}</p>\n";
+				echo "<p><input type=\"hidden\" name=\"version\" value=\"". htmlspecialchars($v) . "\" />\n";
 			}
+			echo "<input type=\"submit\" name=\"updateextension\" value=\"{$lang['strok']}\" />\n";
 		} else {
 			// several versions are available
 			// display a select box so that the user can choose the version to install
 			echo "<p>{$lang['emajversion']}<select name=\"version\" id=\"version\">\n";
-			foreach($availableVersions as $v)
-				echo "\t<option value=\"", htmlspecialchars($v['target']), "\" >", htmlspecialchars($v['target']), "</option>\n";
+			foreach($usableVersions as $v)
+				echo "\t<option value=\"", htmlspecialchars($v), "\" >", htmlspecialchars($v), "</option>\n";
 			echo "</select></p>\n";
+			echo "<input type=\"submit\" name=\"updateextension\" value=\"{$lang['strok']}\" />\n";
 		}
-		echo "<input type=\"submit\" name=\"updateextension\" value=\"{$lang['strok']}\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 	}

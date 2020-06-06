@@ -4,28 +4,16 @@
 	 * Function library read in upon startup
 	 */
 
+	// Application name
+	$appName = 'Emaj_web';
+
+	include_once('./libraries/versions.inc.php');
 	include_once('./libraries/decorator.inc.php');
 	include_once('./lang/translations.php');
 
 	// Set error reporting level to max
 	error_reporting(E_ALL);
  
-	// Application name
-	$appName = 'Emaj_web';
-
-	// Application version
-	$appVersion = '3.3';
-
-	// PostgreSQL and PHP minimum version
-	$postgresqlMinVer = '9.1';
-	$phpMinVer = '5.0';
-
-	// E-Maj versions
-	$oldest_supported_emaj_version = '1.3.0';			// Oldest supported emaj version
-	$oldest_supported_emaj_version_num = 10300;
-	$last_known_emaj_version = '3.3.0';					// Most recent known emaj version
-	$last_known_emaj_version_num = 30300;
-
 	// Check the version of PHP
 	if (version_compare(phpversion(), $phpMinVer, '<'))
 		exit(sprintf('Version of PHP not supported. Please upgrade to version %s or later.', $phpMinVer));

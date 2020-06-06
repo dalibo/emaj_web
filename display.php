@@ -7,10 +7,7 @@
 	 * @param $count The same SQL query, but only retrieves the count of the rows (AS total)
 	 * @param $return The return section
 	 * @param $page The current page
-	 *
-	 * $Id: display.php,v 1.68 2008/04/14 12:44:27 ioguix Exp $
 	 */
-
 	// Prevent timeouts on large exports (non-safe mode only)
 	if (!ini_get('safe_mode')) set_time_limit(0);
 
@@ -284,6 +281,7 @@
 		if (isset($object)) $_gets[$subject] = $object;
 		if (isset($subject)) $_gets['subject'] = $subject;
 		if (isset($_REQUEST['query'])) $_gets['query'] = $_REQUEST['query'];
+		if (isset($_REQUEST['paginate'])) $_gets['paginate'] = $_REQUEST['paginate'];
 		if (isset($_REQUEST['count'])) $_gets['count'] = $_REQUEST['count'];
 		if (isset($_REQUEST['return'])) $_gets['return'] = $_REQUEST['return'];
 		if (isset($_REQUEST['search_path'])) $_gets['search_path'] = $_REQUEST['search_path'];

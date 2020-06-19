@@ -35,11 +35,14 @@
 		if (isset($paramValue[$param])) {
 			$value = $paramValue[$param];
 			// Specific adjustments for some parameters
-			if ($param == 'dblink_user_password' && $value == "<masked data>") {
-//TODO: better handle the case: for emaj_viewer, hide the entire row ?
-//								for emaj_adm, add an eye to show the string value ?
-				// Hide the dblink connection string for emaj_viewer only roles
-				$value = htmlspecialchars($value);
+			if ($param == 'dblink_user_password') {
+				if ($emajdb->isEmaj_Adm()) {
+					// For emaj_adm roles, display the parameter in tooltip
+					$value = "<div class=\"tooltip right-aligned-tooltip\">#############...<span>" . htmlspecialchars($value) . "</span></div>";
+				} else {
+					// For emaj_viewer roles, just a masked value
+					$value = "################";
+				}
 			}
 			if ($param == 'alter_log_table') {
 				// Add a line feed between ADD COLUMN directives

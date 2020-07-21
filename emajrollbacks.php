@@ -55,24 +55,6 @@
 
 		$misc->printHeader('database', 'database', 'emajrollbacks');
 
-		if (!isset($_SESSION['emaj']['RlbkNb'])) {
-			$_SESSION['emaj']['RlbkNb'] = 3;
-			$_SESSION['emaj']['NbRlbkChecked'] = 1;
-		}
-		if (!isset($_SESSION['emaj']['RlbkRetention'])) {
-			$_SESSION['emaj']['RlbkRetention'] = 24;
-		}
-		if (!isset($_SESSION['emaj']['NbRlbkChecked'])) {
-			$nbRlbk = -1;
-		} else {
-			$nbRlbk = $_SESSION['emaj']['RlbkNb'];
-		}
-		if (!isset($_SESSION['emaj']['DurationChecked'])) {
-			$rlbkRetention = -1;
-		} else {
-			$rlbkRetention = $_SESSION['emaj']['RlbkRetention'];
-		}
-
 		$columnsInProgressRlbk = array(
 			'rlbkId' => array(
 				'title' => $lang['emajrlbkid'],
@@ -223,47 +205,7 @@
 
 		$misc->printTitle($lang['emajcompletedrlbk']);
 
-		// Form to setup parameters for completed rollback operations filtering
-		echo "<div style=\"margin-bottom:10px;\">\n";
-		echo "<form action=\"emajrollbacks.php?action=filterrlbk\" method=\"post\">\n";
-		echo "{$lang['emajfilterrlbk1']} :&nbsp;&nbsp;\n";
-
-		echo "<input type=checkbox name=\"emajnbrlbkchecked\" id=\"nbrlbkchecked\"";
-		if (isset($_SESSION['emaj']['NbRlbkChecked'])) echo " checked";
-		echo "/>\n<input type=\"number\" name=\"emajRlbkNb\" style=\"width: 3em;\" id=\"rlbkNb\" min=\"1\" value=\"{$_SESSION['emaj']['RlbkNb']}\"";
-		if (!isset($_SESSION['emaj']['NbRlbkChecked'])) echo " disabled";
-		echo "/>\n{$lang['emajfilterrlbk2']}&nbsp;&nbsp;&nbsp;";
-
-		echo "<input type=checkbox name=\"emajdurationchecked\" id=\"durationchecked\"";
-		if (isset($_SESSION['emaj']['DurationChecked'])) echo " checked";
-		echo "/>\n {$lang['emajfilterrlbk3']} \n";
-		echo "<input type=\"number\" name=\"emajRlbkRetention\" style=\"width: 4em;\" id=\"rlbkRetention\" min=\"1\" value=\"{$_SESSION['emaj']['RlbkRetention']}\"";
-		if (!isset($_SESSION['emaj']['DurationChecked'])) echo " disabled";
-		echo "/>\n {$lang['emajfilterrlbk4']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-
-		echo $misc->form;
-		echo "<input type=\"submit\" name=\"filterrlbk\" value=\"{$lang['emajfilter']}\" />\n";
-		echo "</form></div>\n";
-
 		$misc->printTable($completedRlbks, $columnsCompletedRlbk, $actions, 'completedRlbk', $lang['emajnorlbk'], null, array('sorter' => true, 'filter' => true));
-
-		// JQuery script to disable input field if the associated checkbox is not checked
-		echo "<script>\n";
-		echo "  $(\"#nbrlbkchecked\").bind('click', function () {\n";
-		echo "    if ($(this).prop('checked')) {\n";
-		echo "      $(\"#rlbkNb\").removeAttr('disabled');\n";
-		echo "    } else {\n";
-		echo "      $(\"#rlbkNb\").attr('disabled', true);\n";
-		echo "    }\n";
-		echo "  });\n";
-		echo "  $(\"#durationchecked\").bind('click', function () {\n";
-		echo "    if ($(this).prop('checked')) {\n";
-		echo "      $(\"#rlbkRetention\").removeAttr('disabled');\n";
-		echo "    } else {\n";
-		echo "      $(\"#rlbkRetention\").attr('disabled', true);\n";
-		echo "    }\n";
-		echo "  });\n";
-		echo "</script>\n";
 
 		echo "<hr/>\n";
 
@@ -712,29 +654,6 @@
 	}
 
 	/**
-	 * Change the filtering parameters for the display of completed rollback operations
-	 */
-	function filterrlbk() {
-
-		if (isset($_POST['emajnbrlbkchecked'])) {
-			if (isset($_POST['emajRlbkNb'])) 
-				$_SESSION['emaj']['RlbkNb'] = $_POST['emajRlbkNb'];
-			$_SESSION['emaj']['NbRlbkChecked'] = $_POST['emajnbrlbkchecked'];
-		} else {
-			unset($_SESSION['emaj']['NbRlbkChecked']);
-		}
-		if (isset($_POST['emajdurationchecked'])) {
-			if (isset($_POST['emajRlbkRetention'])) 
-				$_SESSION['emaj']['RlbkRetention'] = $_POST['emajRlbkRetention'];
-			$_SESSION['emaj']['DurationChecked'] = $_POST['emajdurationchecked'];
-		} else {
-			unset($_SESSION['emaj']['DurationChecked']);
-		}
-
-		show_rollbacks();
-	}
-
-	/**
 	 * Perform a rollback consolidation
 	 */
 	function consolidate_rollback_ok() {
@@ -777,9 +696,6 @@
 			break;
 		case 'consolidate_rollback_ok':
 			consolidate_rollback_ok();
-			break;
-		case 'filterrlbk':
-			filterrlbk();
 			break;
 		case 'show_rollbacks':
 			show_rollbacks();

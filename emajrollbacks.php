@@ -310,7 +310,7 @@
 
 		if (! $isCompleted) {
 			$rlbkInProgressInfo = $emajdb->getOneInProgressRlbk($_REQUEST['rlbkid']);
-# TODO: if the rollback status has changed between both data access, may we should reread the emaj_rlbk table ?
+# TODO: if the rollback status has changed between both data access, may be we should reread the emaj_rlbk table ?
 		} else {
 			$rlbkReportMsgs = $emajdb->getRlbkReportMsg($_REQUEST['rlbkid']);
 		}
@@ -629,6 +629,9 @@
 			echo "</div>\n";
 
 			$misc->printTable($rlbkSteps, $columnsSteps, $actions, 'detailRlbkSteps', null, null, array('sorter' => true, 'filter' => true));
+		} else {
+			echo "<h4>{$lang['emajrlbkplanning']}</h4>\n";
+			echo "<p>{$lang['emajnorlbkstep']}</p>\n";
 		}
 	}
 

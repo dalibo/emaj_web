@@ -287,6 +287,7 @@
 	$lang['emajmove'] = 'Move';
 	$lang['emajremove'] = 'Remove';
 	$lang['emajremoved'] = 'Removed';
+	$lang['emajvisible'] = 'Visible';
 
 	// E-Maj html titles and tabs
 	$lang['emajgroupsmanagement'] = 'E-Maj groups management';
@@ -474,12 +475,6 @@
 	$lang['emajnbtabletoprocess'] = 'Tables to process';
 	$lang['emajnbseqtoprocess'] = 'Sequences to process';
 	$lang['emajnorlbk'] = 'No E-Maj rollback.';
-	$lang['emajfilterrlbk1'] = 'Display the';
-	$lang['emajfilterrlbk2'] = 'most recent';
-	$lang['emajfilterrlbk3'] = 'completed since less than';
-	$lang['emajfilterrlbk4'] = 'hours';
-	$lang['emajfilter'] = 'Filter';
-	$lang['emajvisible'] = 'Visible';
 	$lang['emajconsolidablerlbk'] = 'Consolidable E-Maj logged rollbacks';
 	$lang['emajtargetmark'] = 'Target mark';
 	$lang['emajendrollbackmark'] = 'End rollback mark';
@@ -497,8 +492,9 @@
 	$lang['emajrlbksession'] = 'Session';
 	$lang['emajrlbkexecreport'] = 'Execution report';
 	$lang['emajrlbkplanning'] = 'Planning';
-	$lang['emajrlbkplanninghelp'] = 'The elementary steps of the E-Maj Rollback execution. Are not included: the planning and the locks set on tables at the beginning of the operation, and the sequences processing at the end of the operation.';
+	$lang['emajrlbkplanninghelp'] = 'The main elementary steps of the E-Maj Rollback execution. Are not included: the planning and the locks set on tables at the beginning of the operation, and the sequences processing at the end of the operation.';
 	$lang['emajrlbkestimmethodhelp'] = 'At planning time, the duration of each step is estimated, using statistics of similar steps in the past, with the same order of magnitude of quantity to process (STAT+), or other orders of magnitude (STAT), or, by default, the extension parameters (PARAM).';
+	$lang['emajnorlbkstep'] = 'No elementary step for this rollback.';
 	$lang['emajhideestimates'] = 'Hide estimates';
 	$lang['emajshowestimates'] = 'Show estimates';
 	$lang['emajrlbkstep'] = 'Step';

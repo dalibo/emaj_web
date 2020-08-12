@@ -627,7 +627,7 @@ class EmajDb {
 					  CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END 
 						as group_type,
 					  to_char(time_tx_timestamp,'{$this->tsFormat}') as creation_datetime,";
-			if ($this->getNumEmajVersion() >= 30000){	// version >= 3.0.0
+			if ($this->getNumEmajVersion() >= 30000 && $this->getNumEmajVersion() < 40000){	// version 3.x
 				$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes,";
 			} else {
 				$sql .=	"1 as has_waiting_changes,";
@@ -664,7 +664,7 @@ class EmajDb {
 						   WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
 						   ELSE 'ROLLBACKABLE-PROTECTED' END as group_type,
 					  to_char(time_tx_timestamp,'{$this->tsFormat}') as creation_datetime,";
-			if ($this->getNumEmajVersion() >= 30000){	// version >= 3.0.0
+			if ($this->getNumEmajVersion() >= 30000 && $this->getNumEmajVersion() < 40000){	// version 3.x
 				$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes,";
 			} else {
 				$sql .=	"1 as has_waiting_changes,";
@@ -811,7 +811,7 @@ class EmajDb {
 					pg_size_pretty((SELECT sum(pg_total_relation_size('\"' || rel_log_schema || '\".\"' || rel_log_table || '\"'))
 						FROM emaj.emaj_relation 
 						WHERE rel_group = group_name AND rel_kind = 'r')::bigint) as log_size,";
-			if ($this->getNumEmajVersion() >= 30000){	// version >= 3.0.0
+			if ($this->getNumEmajVersion() >= 30000 && $this->getNumEmajVersion() < 40000){	// version 3.x
 				$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes,";
 			} else {
 				$sql .=	"1 as has_waiting_changes,";

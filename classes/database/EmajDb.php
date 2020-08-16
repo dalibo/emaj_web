@@ -1757,7 +1757,7 @@ class EmajDb {
 		$data->clean($group);
 		$data->clean($comment);
 
-		if ($isEmpty) {
+		if ($isEmpty && $this->getNumEmajVersion() < 40000) {
 			if ($isRollbackable){
 				$sql = "SELECT emaj.emaj_create_group('{$group}',true,true) AS nbtblseq";
 			}else{

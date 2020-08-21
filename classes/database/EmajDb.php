@@ -949,15 +949,20 @@ class EmajDb {
 	/**
 	 * Import a tables groups configuration
 	 */
-	function importGroupsConfig($groupsConfig, $groups) {
+	function importGroupsConfig($groupsConfig, $groups, $mark) {
 		global $data;
 
 		$data->clean($groupsConfig);
 		$data->clean($groups);
+		$data->clean($mark);
 
 		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 
-		$sql = "SELECT emaj._import_groups_conf_exec(E'{$groupsConfig}'::json, {$groupsArray}) AS nb_groups";
+		if ($this->getNumEmajVersion() >= 40000){	// version 4.0+
+			$sql = "SELECT emaj._import_groups_conf_exec(E'{$groupsConfig}'::json, {$groupsArray}, '{$mark}') AS nb_groups";
+		} else {
+			$sql = "SELECT emaj._import_groups_conf_exec(E'{$groupsConfig}'::json, {$groupsArray}, ) AS nb_groups";
+		}
 		$nbGroups = $data->selectField($sql,'nb_groups');
 
 		// Commit the transaction started in the importGroupsConfPrepare() function call

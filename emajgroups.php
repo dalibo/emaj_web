@@ -2354,7 +2354,7 @@
 					if ($errors->recordCount() == 0) {
 						// No error has been detected in the json structure, so display the tables groups to select
 
-						echo "<p>" . sprintf($lang['emajimportgroupsinfile'], $_FILES['file_name']['name']) . "</p>";
+						echo "<p>" . sprintf($lang['emajimportgroupsinfile'], $_FILES['file_name']['name']) . "</p>\n";
 
 						// Extract the list of configured tables groups
 						$groupsList='';
@@ -2424,7 +2424,8 @@
 										'file' => $_FILES['file_name']['name'],
 										'json' => json_encode($jsonStructure),
 									),
-									'checked' => true,								// all groups are selected by default
+									'checked' => true,							// all groups are selected by default
+									'close_form' => false,						// do not close the form in order to add additional inputs
 								),
 								'import_group' => array(
 									'content' => $lang['strimport'],
@@ -2435,13 +2436,22 @@
 
 						$misc->printTable($groups, $columns, $actions, 'groups', '', null, array('sorter' => true, 'filter' => true));
 
-						echo "<p></p>";
-
-						echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-						echo $misc->form;
-						echo "<input type=\"hidden\" name=\"json\" value=\"" . htmlspecialchars(json_encode($jsonStructure)) . "\">\n";
-						echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+						// Add an input to specify the mark name to set
+						if ($emajdb->getNumEmajVersion() >= 40000){	// version 4.0+
+							echo "<div class=\"form-container\" style=\"margin-top: 15px; margin-bottom: 15px;\">\n";
+							echo "\t<div class=\"form-label\">{$lang['emajmark']}</div>\n";
+							echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"IMPORT_%\" /></div>\n";
+							echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+							echo "</div>\n";
+						} else {
+							echo "<input type=\"hidden\" name=\"mark\" value=\"\">\n";
+						}
 						echo "</form>\n";
+
+						echo "<p><form action=\"emajgroups.php\" method=\"post\">\n";
+						echo $misc->form;
+						echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+						echo "</form></p>\n";
 
 					} else {
 					// The json structure contains errors. Display them.
@@ -2516,10 +2526,9 @@
 
 			// prepare the tables groups configuration import
 			$errors = $emajdb->importGroupsConfPrepare($_POST['json'], $groupsList);
-
 			if ($errors->recordCount() == 0) {
 				// no error detected, so execute the effective configuration import
-				$nbGroup = $emajdb->importGroupsConfig($_POST['json'], $groupsList);
+				$nbGroup = $emajdb->importGroupsConfig($_POST['json'], $groupsList, $_POST['mark']);
 				if ($nbGroup >= 0) {
 					$_reload_browser = true;
 					show_groups(sprintf($lang['emajgroupsconfimported'], $nbGroup, $_POST['file']));

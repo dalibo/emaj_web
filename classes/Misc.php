@@ -1680,7 +1680,9 @@
 					echo "</td>\n";
 					echo "</tr>\n";
 					echo "</table>\n";
-					echo "</form>\n";
+					if (!isset($ma['close_form']) || $ma['close_form']) {
+						echo "</form>\n";
+					}
 				} else {
 					echo "</div>\n";
 				};

@@ -15,7 +15,10 @@
 		// disable the noAutoDisableTrigger or the autoDisableTriggerbutton depending on the current state
 		if ($rowdata->fields('tgisautodisable') == 't') {
 			$actions['autoDisableTrigger']['disable'] = true;
+		} elseif ($rowdata->fields('tgisautodisable') == 'f') {
+			$actions['noAutoDisableTrigger']['disable'] = true;
 		} else {
+			$actions['autoDisableTrigger']['disable'] = true;
 			$actions['noAutoDisableTrigger']['disable'] = true;
 		}
 		return $actions;
@@ -206,7 +209,7 @@
 		if ($nbTriggers > 0) {
 			showTriggers(sprintf($lang['emajtriggernoautook'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		} else {
-			showTriggers(sprintf($lang['emajtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+			showTriggers('',sprintf($lang['emajtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		}
 	}
 
@@ -222,7 +225,7 @@
 		if ($nbTriggers > 0) {
 			showTriggers(sprintf($lang['emajtriggerautook'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		} else {
-			showTriggers(sprintf($lang['emajtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+			showTriggers('',sprintf($lang['emajtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		}
 	}
 
@@ -244,7 +247,7 @@
 			foreach($_REQUEST['ma'] as $v) {
 				$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
 				$status = $emajdb->ignoreAppTrigger('ADD', $a['schema'], $a['table'], $a['trigger']);
-				if ($status = 0) {
+				if ($status == 0) {
 					$data->rollbackTransaction();
 					showTriggers(sprintf($lang['emajtriggerprocerr'], htmlspecialchars($a['trigger']), htmlspecialchars($a['schema']), htmlspecialchars($a['table'])));
 					return;
@@ -252,7 +255,7 @@
 				$nbTriggers++;
 			}
 		}
-		if($data->endTransaction() == 0)
+		if ($data->endTransaction() == 0)
 			showTriggers(sprintf($lang['emajtriggersnoautook'], $nbTriggers));
 	}
 
@@ -274,7 +277,7 @@
 			foreach($_REQUEST['ma'] as $v) {
 				$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
 				$status = $emajdb->ignoreAppTrigger('REMOVE', $a['schema'], $a['table'], $a['trigger']);
-				if ($status = 0) {
+				if ($status == 0) {
 					$data->rollbackTransaction();
 					showTriggers(sprintf($lang['emajtriggerprocerr'], htmlspecialchars($a['trigger']), htmlspecialchars($a['schema']), htmlspecialchars($a['table'])));
 					return;
@@ -282,7 +285,7 @@
 				$nbTriggers++;
 			}
 		}
-		if($data->endTransaction() == 0)
+		if ($data->endTransaction() == 0)
 			showTriggers(sprintf($lang['emajtriggersautook'], $nbTriggers));
 	}
 

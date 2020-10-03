@@ -570,6 +570,8 @@
 	$lang['emajcheckconfgroups11'] = 'In the group "%s", the table "%s.%s" would have an already used emaj prefix "%s".';
 	$lang['emajcheckconfgroups12'] = 'In the group "%s", for the table "%s.%s", the data log tablespace %s does not exist.';
 	$lang['emajcheckconfgroups13'] = 'In the group "%s", for the table "%s.%s", the index log tablespace %s does not exist.';
+	$lang['emajcheckconfgroups15'] = 'In the group "%s", for the table "%s.%s", the trigger "%s" does not exist.';
+	$lang['emajcheckconfgroups16'] = 'In the group "%s", for the table "%s.%s", the trigger "%s" is an E-Maj trigger.';
 	$lang['emajcheckconfgroups20'] = 'In the group "%s", the table "%s.%s" is an UNLOGGED table.';
 	$lang['emajcheckconfgroups21'] = 'In the group "%s", the table "%s.%s" is declared WITH OIDS.';
 	$lang['emajcheckconfgroups22'] = 'In the group "%s", the table "%s.%s" has no PRIMARY KEY.';
@@ -770,6 +772,9 @@
 	$lang['emajalteredchangetbllogindextsp'] = 'The tablespace for the log index files of the table "%s.%s" has been changed';
 	$lang['emajalteredassignrel'] = 'The table or sequence "%s.%s" has been moved from the tables group "%s" to the tables group "%s"';
 	$lang['emajalteredchangerelpriority'] = 'The E-Maj priority for the table "%s.%s" has been changed';
+	$lang['emajalteredchangeignoredtriggers'] = 'the triggers to be ignored at rollback for the table "%s.%s" have been changed';
+	$lang['emajalteredmovetbl'] = 'The table "%s.%s" has been moved from the tables groupe "%s" to the tables group "%s"';
+	$lang['emajalteredmoveseq'] = 'The sequence "%s.%s" has been moved from the tables groupe "%s" to the tables group "%s"';
 	$lang['emajalteredaddtbl'] = 'The table "%s.%s" has been added to the tables group "%s"';
 	$lang['emajalteredaddseq'] = 'The sequence "%s.%s" has been added to the tables group "%s"';
 

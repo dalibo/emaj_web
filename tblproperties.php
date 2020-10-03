@@ -83,12 +83,12 @@
 	function triggerPre(&$rowdata, $actions) {
 
 		// disable both buttons if the trigger is an E-Maj trigger, otherwise, disable the useless button
-		if ($rowdata->fields['tgisemaj'] == 't') {
+		if ($rowdata->fields('tgisautodisable') == 't') {
 			$actions['autoDisableTrigger']['disable'] = true;
+		} elseif ($rowdata->fields('tgisautodisable') == 'f') {
 			$actions['noAutoDisableTrigger']['disable'] = true;
-		} elseif ($rowdata->fields('tgisautodisable') == 't') {
-			$actions['autoDisableTrigger']['disable'] = true;
 		} else {
+			$actions['autoDisableTrigger']['disable'] = true;
 			$actions['noAutoDisableTrigger']['disable'] = true;
 		}
 		return $actions;
@@ -321,7 +321,7 @@
 		if ($nbTriggers > 0) {
 			showProperties(sprintf($lang['emajtriggernoautook'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		} else {
-			showProperties(sprintf($lang['emajtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+			showProperties('',sprintf($lang['emajtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		}
 	}
 
@@ -337,7 +337,7 @@
 		if ($nbTriggers > 0) {
 			showProperties(sprintf($lang['emajtriggerautook'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		} else {
-			showProperties(sprintf($lang['emajtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+			showProperties('',sprintf($lang['emajtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		}
 	}
 

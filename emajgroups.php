@@ -3646,6 +3646,7 @@
 			} else {
 				show_group();
 			}
+			return;
 		} else {
 
 			// Check the group is always in LOGGING state and ROLLBACKABLE (i.e. not protected)
@@ -4004,6 +4005,7 @@
 		// process the click on the <cancel> button
 		if (isset($_POST['cancel'])) {
 			show_groups();
+			return;
 		} else {
 
 		// Check the groups are always in LOGGING state and not protected

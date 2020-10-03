@@ -910,6 +910,7 @@ class EmajDb {
 		// The transaction will be commited just later in the importGroupsConfig() function call
 		$status = $data->beginTransaction();
 
+		// rpt_msg_type 260 and 261 disappear in emaj 4.0+
 		$sql = "SELECT rpt_severity,
 				CASE rpt_msg_type
 					WHEN  1 THEN format('" . $data->clean($lang['emajcheckconfgroups01']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
@@ -921,6 +922,8 @@ class EmajDb {
 					WHEN 11 THEN format('" . $data->clean($lang['emajcheckconfgroups11']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
 					WHEN 12 THEN format('" . $data->clean($lang['emajcheckconfgroups12']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
 					WHEN 13 THEN format('" . $data->clean($lang['emajcheckconfgroups13']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
+					WHEN 15 THEN format('" . $data->clean($lang['emajcheckconfgroups15']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
+					WHEN 16 THEN format('" . $data->clean($lang['emajcheckconfgroups16']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
 					WHEN 20 THEN format('" . $data->clean($lang['emajcheckconfgroups20']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
 					WHEN 21 THEN format('" . $data->clean($lang['emajcheckconfgroups21']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
 					WHEN 22 THEN format('" . $data->clean($lang['emajcheckconfgroups22']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
@@ -2391,14 +2394,22 @@ class EmajDb {
 					format('{$emajlang['emajalteredchangetbllogindextsp']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
 				  WHEN altr_step = 'CHANGE_REL_PRIORITY' THEN
 					format('{$emajlang['emajalteredchangerelpriority']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
+				  WHEN altr_step = 'CHANGE_IGNORED_TRIGGERS' THEN
+					format('{$emajlang['emajalteredchangeignoredtriggers']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
+				  WHEN altr_step = 'MOVE_TBL' THEN
+					format('{$emajlang['emajalteredmovetbl']}', quote_ident(altr_schema), quote_ident(altr_tblseq),
+							quote_literal(altr_group), quote_ident(altr_new_group))
+				  WHEN altr_step = 'MOVE_SEQ' THEN
+					format('{$emajlang['emajalteredmoveseq']}', quote_ident(altr_schema), quote_ident(altr_tblseq),
+							quote_literal(altr_group), quote_ident(altr_new_group))
 				  WHEN altr_step = 'ADD_TBL' THEN
 					format('{$emajlang['emajalteredaddtbl']}', quote_ident(altr_schema), quote_ident(altr_tblseq), quote_literal(altr_group))
 				  WHEN altr_step = 'ADD_SEQ' THEN
 					format('{$emajlang['emajalteredaddseq']}', quote_ident(altr_schema), quote_ident(altr_tblseq), quote_literal(altr_group))
                   END AS altr_action, 
-				CASE WHEN altr_step IN ('ADD_TBL', 'ADD_SEQ', 'REMOVE_TBL', 'REMOVE_SEQ', 'REPAIR_TBL', 'REPAIR_SEQ',
+				CASE WHEN altr_step IN ('ADD_TBL', 'ADD_SEQ', 'REMOVE_TBL', 'REMOVE_SEQ', 'REPAIR_TBL', 'REPAIR_SEQ', 'MOVE_TBL', 'MOVE_SEQ',
 										'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP',
-										'CHANGE_TBL_LOG_INDEX_TSP', 'CHANGE_REL_PRIORITY')
+										'CHANGE_TBL_LOG_INDEX_TSP', 'CHANGE_REL_PRIORITY', 'CHANGE_IGNORED_TRIGGERS')
 					THEN false ELSE true END AS altr_auto_rolled_back
 				  FROM emaj.emaj_alter_plan, emaj.emaj_time_stamp
 				  WHERE time_id = altr_time_id
@@ -2406,9 +2417,9 @@ class EmajDb {
 					AND altr_time_id >
 						(SELECT mark_time_id FROM emaj.emaj_mark WHERE mark_group = '{$firstGroup}' AND mark_name = '{$mark}')
 					AND altr_rlbk_id IS NULL
-					AND altr_step IN ('ADD_TBL', 'ADD_SEQ', 'REMOVE_TBL', 'REMOVE_SEQ', 'REPAIR_TBL', 'REPAIR_SEQ',
-									  'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP',
-									  'CHANGE_TBL_LOG_INDEX_TSP', 'CHANGE_REL_PRIORITY')
+					AND altr_step IN ('ADD_TBL', 'ADD_SEQ', 'REMOVE_TBL', 'REMOVE_SEQ', 'REPAIR_TBL', 'REPAIR_SEQ', 'MOVE_TBL', 'MOVE_SEQ',
+										'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP',
+										'CHANGE_TBL_LOG_INDEX_TSP', 'CHANGE_REL_PRIORITY', 'CHANGE_IGNORED_TRIGGERS')
 				  ORDER BY time_tx_timestamp, altr_schema, altr_tblseq, altr_step";
 		return $data->selectSet($sql);
 	}
@@ -2521,7 +2532,6 @@ class EmajDb {
 		$data->clean($groups);
 		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 
-// Attention, this statement needs postgres 8.4+, because of array_agg() function use
 		if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
 			$sql = "SELECT t.mark_name, t.mark_datetime, t.mark_is_rlbk_protected 
 					FROM (SELECT mark_name, to_char(time_tx_timestamp,'{$this->tsFormat}') as mark_datetime, mark_is_rlbk_protected,
@@ -2580,7 +2590,6 @@ class EmajDb {
 		$data->clean($groups);
 		$groups="'".str_replace(', ',"','",$groups)."'";
 
-// Attention, this statement needs postgres 8.4+, because of array_agg() function use
 		$sql = "SELECT string_agg(group_name, ', ') AS groups 
 				  FROM emaj.emaj_group 
 				  WHERE group_name IN ($groups) AND group_is_rlbk_protected";
@@ -2722,11 +2731,11 @@ class EmajDb {
 		$data->clean($nb);
 		$data->clean($retention);
 
-// first cleanup recently completed rollback operation status
+		// first cleanup recently completed rollback operation status
 		$sql = "SELECT emaj.emaj_cleanup_rollback_state()";
 		$data->execute($sql);
 
-// get the latest rollback operations
+		// get the latest rollback operations
 		$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,',') as rlbk_groups_list, rlbk_status,
 					to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
 					to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
@@ -3273,7 +3282,18 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 							END AS tgstate,
 				";
 		if ($this->isEnabled() && $this->isAccessible()) {
-			if ($this->getNumEmajVersion() >= 30100) {
+			if ($this->getNumEmajVersion() >= 40000) {				# emaj version 4.0+
+				$sql .= "CASE
+							WHEN NOT EXISTS (
+								SELECT 1 FROM emaj.emaj_relation
+									WHERE rel_schema = rn.nspname AND rel_tblseq = relname AND upper_inf(rel_time_range))
+								THEN NULL
+							ELSE NOT EXISTS (
+								SELECT 1 FROM emaj.emaj_relation
+									WHERE rel_schema = rn.nspname AND rel_tblseq = relname AND upper_inf(rel_time_range)
+										AND tgname = ANY(rel_ignored_triggers))
+							END	AS tgisautodisable,";
+			} elseif ($this->getNumEmajVersion() >= 30100) {		# emaj version [3.1 - 4.0[
 				$sql .= "NOT EXISTS (
 							SELECT 1 FROM emaj.emaj_ignored_app_trigger
 								WHERE trg_schema = rn.nspname AND trg_table = relname AND trg_name = tgname)
@@ -3300,14 +3320,19 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 	}
 
 	/**
-	 * Gets the orphan application triggers in the emaj_ignored_app_trigger table, i.e. not currently created.
+	 * Gets the orphan application triggers in the emaj_relation table, i.e. not currently created.
 	 */
 	function getOrphanAppTriggers() {
 		global $data;
 
-		$sql = "	SELECT trg_schema, trg_table, trg_name
-						FROM emaj.emaj_ignored_app_trigger
-				EXCEPT
+		if ($this->getNumEmajVersion() >= 40000) {				# emaj version 4.0+
+			$sql = "	SELECT rel_schema, rel_tblseq, unnest(rel_ignored_triggers)
+							FROM emaj.emaj_relation";
+		} else {
+			$sql = "	SELECT trg_schema, trg_table, trg_name
+							FROM emaj.emaj_ignored_app_trigger";
+		}
+		$sql .= " EXCEPT
 					SELECT nspname, relname, tgname
 						FROM pg_catalog.pg_trigger t, pg_catalog.pg_class, pg_catalog.pg_namespace
 						WHERE relnamespace = pg_namespace.oid AND tgrelid = pg_class.oid
@@ -3384,7 +3409,18 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 				";
 
 		if ($this->isEnabled() && $this->isAccessible()) {
-			if ($this->getNumEmajVersion() >= 30100) {
+			if ($this->getNumEmajVersion() >= 40000) {
+				$sql .= " 	CASE WHEN tgname IN ('emaj_trunc_trg', 'emaj_log_trg') THEN NULL
+								 WHEN NOT EXISTS (
+									SELECT 1 FROM emaj.emaj_relation
+										WHERE rel_schema = '{$schema}' AND rel_tblseq = '{$table}' AND upper_inf(rel_time_range))
+									THEN NULL
+								 ELSE NOT EXISTS (
+									SELECT 1 FROM emaj.emaj_relation
+										WHERE rel_schema = '{$schema}' AND rel_tblseq = '{$table}' AND upper_inf(rel_time_range)
+											  AND tgname = ANY(rel_ignored_triggers))
+							END as tgisautodisable,";
+			} elseif ($this->getNumEmajVersion() >= 30100) {
 				$sql .= " 	CASE WHEN tgname IN ('emaj_trunc_trg', 'emaj_log_trg') THEN NULL 
 								ELSE NOT EXISTS (
 									SELECT 1 FROM emaj.emaj_ignored_app_trigger

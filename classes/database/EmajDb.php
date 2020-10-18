@@ -3450,7 +3450,6 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 
 	/**
 	 * Handle the list of triggers that must not be automatically disabled at rollback time: add or remove one
-	 * It usually returns 1 (unless the list has been just modified by someone else)
 	 */
 	function ignoreAppTrigger($action, $schema, $table, $trigger) {
 		global $data;
@@ -3460,9 +3459,26 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 		$data->clean($table);
 		$data->clean($trigger);
 
-		$sql = "SELECT emaj.emaj_ignore_app_trigger('{$action}', '{$schema}','{$table}','{$trigger}') AS nbtriggers";
+		if ($this->getNumEmajVersion() >= 40000) {				# emaj version 4.0+
+			# Build the new list of "triggers to ignore at rollback time", by adding or removing the given trigger to or from the existing triggers array
+			if ($action == 'ADD') {
+				$arrayFunction = 'array_append';
+			} else {
+				$arrayFunction = 'array_remove';
+			}
+			$sql = "SELECT array_to_json({$arrayFunction}(rel_ignored_triggers, '{$trigger}')) AS json_triggers_list
+					  FROM emaj.emaj_relation WHERE rel_schema = '{$schema}' AND rel_tblseq = '{$table}' AND upper_inf(rel_time_range)";
+			$jsonTriggersList = $data->selectField($sql,'json_triggers_list');
 
-		return $data->selectField($sql,'nbtriggers');
+			# Register the modified triggers list
+			$sql = "SELECT emaj.emaj_modify_table('{$schema}', '{$table}', '{\"ignored_triggers\": {$jsonTriggersList}}'::JSONB)";
+			$data->execute($sql);
+			return 1;
+
+		} else {
+			$sql = "SELECT emaj.emaj_ignore_app_trigger('{$action}', '{$schema}', '{$table}', '{$trigger}') AS nbtriggers";
+			return $data->selectField($sql,'nbtriggers');
+		}
 	}
 
 }

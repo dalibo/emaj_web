@@ -613,6 +613,8 @@
 	$lang['emajcheckjsongroupsconf223'] = 'In the tables group "%s" and for the table %s.%s, the "priority" attribute is not a number.';
 	$lang['emajcheckjsongroupsconf224'] = 'In the tables group "%s" and for the table %s.%s, the trigger #%s has no "trigger" attribute.';
 	$lang['emajcheckjsongroupsconf225'] = 'In the tables group "%s" and for a trigger of the table %s.%s, the keyword "%s" is unknown.';
+	$lang['emajcheckjsongroupsconf226'] = 'In the tables group "%s" and for the table %s.%s, the trigger #%s is not a string.';
+	$lang['emajcheckjsongroupsconf227'] = 'In the tables group "%s" and for the table %s.%s, the "ignored_triggers" attribute is not an array.';
 	$lang['emajcheckjsongroupsconf230'] = 'In the tables group "%s", the sequence #%s has no "schema" attribute.';
 	$lang['emajcheckjsongroupsconf231'] = 'In the tables group "%s", the sequence #%s has no "sequence" attribute.';
 	$lang['emajcheckjsongroupsconf232'] = 'In the tables group "%s" and for the sequence %s.%s, the keyword "%s" is unknown.';

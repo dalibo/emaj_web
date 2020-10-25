@@ -613,6 +613,8 @@
 	$lang['emajcheckjsongroupsconf223'] = 'Dans le groupe de tables "%s" et pour la table %s.%s, l\'attribut "priority" n\'est pas un nombre.';
 	$lang['emajcheckjsongroupsconf224'] = 'Dans le groupe de tables "%s" et pour la table %s.%s, le trigger #%s n\'a pas d\'attribut "trigger".';
 	$lang['emajcheckjsongroupsconf225'] = 'Dans le groupe de tables "%s" et pour un trigger de la table %s.%s, le mot clé "%s" est inconnu.';
+	$lang['emajcheckjsongroupsconf226'] = 'Dans le groupe de tables "%s" et pour la table %s.%s, le trigger #%s n\'est pas une chaîne de caractères.';
+	$lang['emajcheckjsongroupsconf227'] = 'Dans le groupe de tables "%s" et pour la table %s.%s, l\'attribut "ignored_triggers" n\'est pas un tableau.';
 	$lang['emajcheckjsongroupsconf230'] = 'Dans le groupe de tables "%s", la sequence #%s n\'a pas d\'attribut "schema".';
 	$lang['emajcheckjsongroupsconf231'] = 'Dans le groupe de tables "%s", la sequence #%s n\'a pas d\'attribut "sequence".';
 	$lang['emajcheckjsongroupsconf232'] = 'Dans le groupe de tables "%s" et pour la sequence %s.%s, le mot clé "%s" est inconnnu.';

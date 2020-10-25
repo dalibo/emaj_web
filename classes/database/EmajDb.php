@@ -1731,6 +1731,7 @@ class EmajDb {
 
 		$data->clean($json);
 
+		# error messages 224 and 225 disappeared in 4.0+
 		$sql = "SELECT
 				rpt_severity,
 				CASE rpt_msg_type
@@ -1745,6 +1746,8 @@ class EmajDb {
 					WHEN 223 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf223']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
 					WHEN 224 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf224']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_int_var_1)
 					WHEN 225 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf225']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
+					WHEN 226 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf226']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_int_var_1)
+					WHEN 227 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf227']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
 					WHEN 230 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf230']) . "', rpt_text_var_1, rpt_int_var_1)
 					WHEN 231 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf231']) . "', rpt_text_var_1, rpt_int_var_1)
 					WHEN 232 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf232']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)

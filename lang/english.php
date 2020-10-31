@@ -130,7 +130,7 @@
 
 	// Error handling
 	$lang['strnotloaded'] = 'Your PHP installation does not support PostgreSQL. You need to recompile PHP using the --with-pgsql configure option.';
-	$lang['strpostgresqlversionnotsupported'] = 'Version of PostgreSQL not supported. Please upgrade to version %s or later.';
+	$lang['strpostgresqlversionnotsupported'] = 'This PostgreSQL version is not supported. The minimum supported version is %s.';
 	$lang['strbadschema'] = 'Invalid schema specified.';
 	$lang['strsqlerror'] = 'SQL error:';
 	$lang['strinstatement'] = 'In statement:';

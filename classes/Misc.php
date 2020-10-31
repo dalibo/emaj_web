@@ -458,7 +458,7 @@
 		 * Creates a database accessor
 		 */
 		function getDatabaseAccessor($database, $server_id = null) {
-			global $lang, $conf, $misc, $_connection;
+			global $lang, $conf, $misc, $_connection, $postgresqlMinVer;
 
 			$server_info = $this->getServerInfo($server_id);
 

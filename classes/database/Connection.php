@@ -97,7 +97,7 @@ class Connection {
 		// if major version is 7 or less and wasn't cought in the
 		// switch/case block, we have an unsupported version.
 
-		if (substr($version, 1, 1) != '.' && (int)substr($version, 0, 1) < 8)
+		if (substr($version, 1, 1) == '.' && (int)substr($version, 0, 1) < 8)
 			return null;
 
 		// If unknown version, then default to latest driver

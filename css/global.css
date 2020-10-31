@@ -347,7 +347,6 @@ nav {
 .tab, .tab-inactive{
 	background-color: #f4f4f4;
 	text-align: center;
-	max-height:50px;
 	font-size: 1.1em;
 	border: 1px solid #dddddd;
 	border-top: #ffffff;
@@ -367,7 +366,7 @@ nav {
 }
 .tab .icon {
 	display: block;
-	padding-top: 10px;
+	padding-top: 5px;
 }
 nav .active a {
 	color: #3c424c;

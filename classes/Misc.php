@@ -877,6 +877,11 @@
 		function getNavTabs($section) {
 			global $data, $lang, $conf, $emajdb, $oldest_supported_emaj_version_num;
 
+			// For rare cases when the group to process is unknown while asking for the 'emajgroup' tabs bar, switch to the 'database' tabs bar
+			if ($section == 'emajgroup' && !isset($_REQUEST['group'])) {
+				$section = 'database';
+			}
+
 			$tabs = array();
 
 			switch ($section) {

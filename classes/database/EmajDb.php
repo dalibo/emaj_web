@@ -2377,53 +2377,101 @@ class EmajDb {
 		$firstGroup = substr($groups, 0, strpos($groups.',', ','));
 
 		// look at the alter group operations executed after the mark
-		$sql = "SELECT to_char(time_tx_timestamp,'{$this->tsFormat}') as time_tx_timestamp, altr_step,
-				  CASE
-				  WHEN altr_step = 'REMOVE_TBL' THEN
-					format('{$emajlang['emajalteredremovetbl']}', quote_ident(altr_schema), quote_ident(altr_tblseq), quote_literal(altr_group))
-				  WHEN altr_step = 'REMOVE_SEQ' THEN
-					format('{$emajlang['emajalteredremoveseq']}', quote_ident(altr_schema), quote_ident(altr_tblseq), quote_literal(altr_group))
-				  WHEN altr_step = 'REPAIR_TBL' THEN
-					format('{$emajlang['emajalteredrepairtbl']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
-				  WHEN altr_step = 'REPAIR_SEQ' THEN
-					format('{$emajlang['emajalteredrepairseq']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
-				  WHEN altr_step = 'CHANGE_TBL_LOG_SCHEMA' THEN
-					format('{$emajlang['emajalteredchangetbllogschema']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
-				  WHEN altr_step = 'CHANGE_TBL_NAMES_PREFIX' THEN
-					format('{$emajlang['emajalteredchangetblnamesprefix']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
-				  WHEN altr_step = 'CHANGE_TBL_LOG_DATA_TSP' THEN
-					format('{$emajlang['emajalteredchangetbllogdatatsp']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
-				  WHEN altr_step = 'CHANGE_TBL_LOG_INDEX_TSP' THEN
-					format('{$emajlang['emajalteredchangetbllogindextsp']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
-				  WHEN altr_step = 'CHANGE_REL_PRIORITY' THEN
-					format('{$emajlang['emajalteredchangerelpriority']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
-				  WHEN altr_step = 'CHANGE_IGNORED_TRIGGERS' THEN
-					format('{$emajlang['emajalteredchangeignoredtriggers']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
-				  WHEN altr_step = 'MOVE_TBL' THEN
-					format('{$emajlang['emajalteredmovetbl']}', quote_ident(altr_schema), quote_ident(altr_tblseq),
-							quote_literal(altr_group), quote_ident(altr_new_group))
-				  WHEN altr_step = 'MOVE_SEQ' THEN
-					format('{$emajlang['emajalteredmoveseq']}', quote_ident(altr_schema), quote_ident(altr_tblseq),
-							quote_literal(altr_group), quote_ident(altr_new_group))
-				  WHEN altr_step = 'ADD_TBL' THEN
-					format('{$emajlang['emajalteredaddtbl']}', quote_ident(altr_schema), quote_ident(altr_tblseq), quote_literal(altr_group))
-				  WHEN altr_step = 'ADD_SEQ' THEN
-					format('{$emajlang['emajalteredaddseq']}', quote_ident(altr_schema), quote_ident(altr_tblseq), quote_literal(altr_group))
-                  END AS altr_action, 
-				CASE WHEN altr_step IN ('ADD_TBL', 'ADD_SEQ', 'REMOVE_TBL', 'REMOVE_SEQ', 'REPAIR_TBL', 'REPAIR_SEQ', 'MOVE_TBL', 'MOVE_SEQ',
-										'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP',
-										'CHANGE_TBL_LOG_INDEX_TSP', 'CHANGE_REL_PRIORITY', 'CHANGE_IGNORED_TRIGGERS')
-					THEN false ELSE true END AS altr_auto_rolled_back
-				  FROM emaj.emaj_alter_plan, emaj.emaj_time_stamp
-				  WHERE time_id = altr_time_id
-					AND altr_group = ANY ({$groupsArray})
-					AND altr_time_id >
-						(SELECT mark_time_id FROM emaj.emaj_mark WHERE mark_group = '{$firstGroup}' AND mark_name = '{$mark}')
-					AND altr_rlbk_id IS NULL
-					AND altr_step IN ('ADD_TBL', 'ADD_SEQ', 'REMOVE_TBL', 'REMOVE_SEQ', 'REPAIR_TBL', 'REPAIR_SEQ', 'MOVE_TBL', 'MOVE_SEQ',
-										'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP',
-										'CHANGE_TBL_LOG_INDEX_TSP', 'CHANGE_REL_PRIORITY', 'CHANGE_IGNORED_TRIGGERS')
-				  ORDER BY time_tx_timestamp, altr_schema, altr_tblseq, altr_step";
+		if ($this->getNumEmajVersion() >= 40000){	// version >= 4.0.0
+			$sql = "SELECT to_char(time_tx_timestamp,'{$this->tsFormat}') as time_tx_timestamp, altr_step,
+					CASE
+					WHEN altr_step = 'REMOVE_TBL' THEN
+						format('{$emajlang['emajalteredremovetbl']}', quote_ident(altr_schema), quote_ident(altr_tblseq), quote_literal(altr_group))
+					WHEN altr_step = 'REMOVE_SEQ' THEN
+						format('{$emajlang['emajalteredremoveseq']}', quote_ident(altr_schema), quote_ident(altr_tblseq), quote_literal(altr_group))
+					WHEN altr_step = 'REPAIR_TBL' THEN
+						format('{$emajlang['emajalteredrepairtbl']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
+					WHEN altr_step = 'REPAIR_SEQ' THEN
+						format('{$emajlang['emajalteredrepairseq']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
+					WHEN altr_step = 'CHANGE_TBL_LOG_SCHEMA' THEN
+						format('{$emajlang['emajalteredchangetbllogschema']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
+					WHEN altr_step = 'CHANGE_TBL_NAMES_PREFIX' THEN
+						format('{$emajlang['emajalteredchangetblnamesprefix']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
+					WHEN altr_step = 'CHANGE_TBL_LOG_DATA_TSP' THEN
+						format('{$emajlang['emajalteredchangetbllogdatatsp']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
+					WHEN altr_step = 'CHANGE_TBL_LOG_INDEX_TSP' THEN
+						format('{$emajlang['emajalteredchangetbllogindextsp']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
+					WHEN altr_step = 'CHANGE_REL_PRIORITY' THEN
+						format('{$emajlang['emajalteredchangerelpriority']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
+					WHEN altr_step = 'CHANGE_IGNORED_TRIGGERS' THEN
+						format('{$emajlang['emajalteredchangeignoredtriggers']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
+					WHEN altr_step = 'MOVE_TBL' THEN
+						format('{$emajlang['emajalteredmovetbl']}', quote_ident(altr_schema), quote_ident(altr_tblseq),
+								quote_literal(altr_group), quote_ident(altr_new_group))
+					WHEN altr_step = 'MOVE_SEQ' THEN
+						format('{$emajlang['emajalteredmoveseq']}', quote_ident(altr_schema), quote_ident(altr_tblseq),
+								quote_literal(altr_group), quote_ident(altr_new_group))
+					WHEN altr_step = 'ADD_TBL' THEN
+						format('{$emajlang['emajalteredaddtbl']}', quote_ident(altr_schema), quote_ident(altr_tblseq), quote_literal(altr_group))
+					WHEN altr_step = 'ADD_SEQ' THEN
+						format('{$emajlang['emajalteredaddseq']}', quote_ident(altr_schema), quote_ident(altr_tblseq), quote_literal(altr_group))
+					END AS altr_action, 
+					CASE WHEN altr_step IN ('ADD_TBL', 'ADD_SEQ', 'REMOVE_TBL', 'REMOVE_SEQ', 'REPAIR_TBL', 'REPAIR_SEQ', 'MOVE_TBL', 'MOVE_SEQ',
+											'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP',
+											'CHANGE_TBL_LOG_INDEX_TSP', 'CHANGE_REL_PRIORITY', 'CHANGE_IGNORED_TRIGGERS')
+						THEN false ELSE true END AS altr_auto_rolled_back
+					FROM emaj.emaj_alter_plan, emaj.emaj_time_stamp
+					WHERE time_id = altr_time_id
+						AND altr_group = ANY ({$groupsArray})
+						AND altr_time_id >
+							(SELECT mark_time_id FROM emaj.emaj_mark WHERE mark_group = '{$firstGroup}' AND mark_name = '{$mark}')
+						AND altr_rlbk_id IS NULL
+						AND altr_step IN ('ADD_TBL', 'ADD_SEQ', 'REMOVE_TBL', 'REMOVE_SEQ', 'REPAIR_TBL', 'REPAIR_SEQ', 'MOVE_TBL', 'MOVE_SEQ',
+											'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP',
+											'CHANGE_TBL_LOG_INDEX_TSP', 'CHANGE_REL_PRIORITY', 'CHANGE_IGNORED_TRIGGERS')
+					ORDER BY time_tx_timestamp, altr_schema, altr_tblseq, altr_step";
+		} else {
+			$sql = "SELECT to_char(time_tx_timestamp,'{$this->tsFormat}') as time_tx_timestamp, altr_step,
+					CASE
+					WHEN altr_step = 'REMOVE_TBL' THEN
+						format('{$emajlang['emajalteredremovetbl']}', quote_ident(altr_schema), quote_ident(altr_tblseq), quote_literal(altr_group))
+					WHEN altr_step = 'REMOVE_SEQ' THEN
+						format('{$emajlang['emajalteredremoveseq']}', quote_ident(altr_schema), quote_ident(altr_tblseq), quote_literal(altr_group))
+					WHEN altr_step = 'REPAIR_TBL' THEN
+						format('{$emajlang['emajalteredrepairtbl']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
+					WHEN altr_step = 'REPAIR_SEQ' THEN
+						format('{$emajlang['emajalteredrepairseq']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
+					WHEN altr_step = 'CHANGE_TBL_LOG_SCHEMA' THEN
+						format('{$emajlang['emajalteredchangetbllogschema']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
+					WHEN altr_step = 'CHANGE_TBL_NAMES_PREFIX' THEN
+						format('{$emajlang['emajalteredchangetblnamesprefix']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
+					WHEN altr_step = 'CHANGE_TBL_LOG_DATA_TSP' THEN
+						format('{$emajlang['emajalteredchangetbllogdatatsp']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
+					WHEN altr_step = 'CHANGE_TBL_LOG_INDEX_TSP' THEN
+						format('{$emajlang['emajalteredchangetbllogindextsp']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
+					WHEN altr_step = 'CHANGE_REL_PRIORITY' THEN
+						format('{$emajlang['emajalteredchangerelpriority']}', quote_ident(altr_schema), quote_ident(altr_tblseq))
+					WHEN altr_step = 'MOVE_TBL' THEN
+						format('{$emajlang['emajalteredmovetbl']}', quote_ident(altr_schema), quote_ident(altr_tblseq),
+								quote_literal(altr_group), quote_ident(altr_new_group))
+					WHEN altr_step = 'MOVE_SEQ' THEN
+						format('{$emajlang['emajalteredmoveseq']}', quote_ident(altr_schema), quote_ident(altr_tblseq),
+								quote_literal(altr_group), quote_ident(altr_new_group))
+					WHEN altr_step = 'ADD_TBL' THEN
+						format('{$emajlang['emajalteredaddtbl']}', quote_ident(altr_schema), quote_ident(altr_tblseq), quote_literal(altr_group))
+					WHEN altr_step = 'ADD_SEQ' THEN
+						format('{$emajlang['emajalteredaddseq']}', quote_ident(altr_schema), quote_ident(altr_tblseq), quote_literal(altr_group))
+					END AS altr_action, 
+					CASE WHEN altr_step IN ('ADD_TBL', 'ADD_SEQ', 'REMOVE_TBL', 'REMOVE_SEQ', 'REPAIR_TBL', 'REPAIR_SEQ', 'MOVE_TBL', 'MOVE_SEQ',
+											'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP',
+											'CHANGE_TBL_LOG_INDEX_TSP', 'CHANGE_REL_PRIORITY')
+						THEN false ELSE true END AS altr_auto_rolled_back
+					FROM emaj.emaj_alter_plan, emaj.emaj_time_stamp
+					WHERE time_id = altr_time_id
+						AND altr_group = ANY ({$groupsArray})
+						AND altr_time_id >
+							(SELECT mark_time_id FROM emaj.emaj_mark WHERE mark_group = '{$firstGroup}' AND mark_name = '{$mark}')
+						AND altr_rlbk_id IS NULL
+						AND altr_step IN ('ADD_TBL', 'ADD_SEQ', 'REMOVE_TBL', 'REMOVE_SEQ', 'REPAIR_TBL', 'REPAIR_SEQ', 'MOVE_TBL', 'MOVE_SEQ',
+											'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP',
+											'CHANGE_TBL_LOG_INDEX_TSP', 'CHANGE_REL_PRIORITY')
+					ORDER BY time_tx_timestamp, altr_schema, altr_tblseq, altr_step";
+		}
 		return $data->selectSet($sql);
 	}
 

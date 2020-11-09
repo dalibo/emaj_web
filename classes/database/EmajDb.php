@@ -1644,10 +1644,14 @@ class EmajDb {
 
 		$data->clean($group);
 
-		$sql = "SELECT CASE WHEN 
-				(SELECT COUNT(*) FROM emaj.emaj_group WHERE group_name = '{$group}') +
-				(SELECT COUNT(*) FROM emaj.emaj_group_def WHERE grpdef_group = '{$group}')
-				= 0 THEN 1 ELSE 0 END AS result";
+		if ($this->getNumEmajVersion() >= 40000){	// version >= 4.0.0
+			$sql = "SELECT CASE WHEN EXISTS(SELECT 1 FROM emaj.emaj_group WHERE group_name = '{$group}') THEN 0 ELSE 1 END AS result";
+		} else {
+			$sql = "SELECT CASE WHEN 
+					(SELECT COUNT(*) FROM emaj.emaj_group WHERE group_name = '{$group}') +
+					(SELECT COUNT(*) FROM emaj.emaj_group_def WHERE grpdef_group = '{$group}')
+					= 0 THEN 1 ELSE 0 END AS result";
+		}
 
 		return $data->selectField($sql,'result');
 	}

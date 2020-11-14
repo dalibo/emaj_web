@@ -764,8 +764,8 @@
 	$lang['emajrlbkgroupsreport'] = 'Rapport d\'exécution du rollback des groupes de tables "%s" à la marque "%s"';
 
 	// Elementary alter group actions previously executed, reported at rollback time 
-	$lang['emajalteredremovetbl'] = 'La table "%s.%s" a été supprimée du groupe de tables %s';
-	$lang['emajalteredremoveseq'] = 'La séquence "%s.%s" a été supprimée du groupe de tables %s';
+	$lang['emajalteredremovetbl'] = 'La table "%s.%s" a été supprimée du groupe de tables "%s"';
+	$lang['emajalteredremoveseq'] = 'La séquence "%s.%s" a été supprimée du groupe de tables "%s"';
 	$lang['emajalteredrepairtbl'] = 'Les objets E-Maj pour la table "%s.%s" ont été reparés';
 	$lang['emajalteredrepairseq'] = 'Les objets E-Maj pour la séquence "%s.%s" ont été reparés';
 	$lang['emajalteredchangetbllogschema'] = 'Le schéma de log E-Maj pour la table "%s.%s" a été modifié';

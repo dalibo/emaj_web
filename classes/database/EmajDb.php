@@ -334,7 +334,17 @@ class EmajDb {
 						WHEN pg_catalog.has_function_privilege('emaj._dblink_open_cnx(text)', 'EXECUTE')
 							THEN 1 ELSE 0 END as grant_open_ok";
 			if ($data->selectField($sql,'grant_open_ok')) {
-				if ($this->getNumEmajVersion() >= 30100){	// version >= 3.1.0
+				if ($this->getNumEmajVersion() >= 40000){	// version >= 4.0.0
+					$sql = "SELECT CASE WHEN p_status >= 0 THEN 1 ELSE 0 END as cnx_ok, p_schema
+							FROM emaj._dblink_open_cnx('test')";
+					$rs = $data->selectSet($sql);
+					if ($rs->fields['cnx_ok']) {
+						$this->dblink_schema = $rs->fields['p_schema'];
+						$sql = "SELECT emaj._dblink_close_cnx('test', '{$this->dblink_schema}')";
+						$data->execute($sql);
+						$test_cnx_ok = 1;
+					}
+				} elseif ($this->getNumEmajVersion() >= 30100){	// version >= 3.1.0
 					$sql = "SELECT CASE WHEN v_status >= 0 THEN 1 ELSE 0 END as cnx_ok, v_schema
 							FROM emaj._dblink_open_cnx('test')";
 					$rs = $data->selectSet($sql);

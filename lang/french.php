@@ -502,6 +502,7 @@
 	$lang['emajestimationmethod'] = 'Méthode estimation';
 	$lang['emajrlbkdisapptrg'] = 'Désactiver le trigger %s';
 	$lang['emajrlbkdislogtrg'] = 'Désactiver le trigger de log';
+	$lang['emajrlbksetalwaysapptrg'] = 'Passer le trigger %s à ALWAYS';
 	$lang['emajrlbkdropfk'] = 'Supprimer la clé étrangère %s';
 	$lang['emajrlbksetfkdef'] = 'Positionner la clé étrangère %s DEFFERED';
 	$lang['emajrlbkrlbktable'] = 'Exécuter le Rollback';
@@ -509,6 +510,7 @@
 	$lang['emajrlbksetfkimm'] = 'Positionner la clé étrangère %s IMMEDIATE';
 	$lang['emajrlbkaddfk'] = 'Recréer la clé étrangère %s';
 	$lang['emajrlbkenaapptrg'] = 'Réactiver le trigger %s';
+	$lang['emajrlbksetlocalapptrg'] = 'Passer le trigger %s à LOCAL';
 	$lang['emajrlbkenalogtrg'] = 'Réactiver le trigger de log';
 
 	// Group's properties and marks

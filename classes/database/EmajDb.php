@@ -2983,31 +2983,35 @@ class EmajDb {
 
 		$data->clean($rlbkId);
 
-		$sql = "SELECT row_number() over (ORDER BY rlbp_start_datetime, rlbp_batch_number, step_order, rlbp_table, rlbp_object)
+		$sql = "SELECT row_number() over (ORDER BY rlbp_start_datetime, rlbp_batch_number, rlbp_step, rlbp_table, rlbp_object)
 						 AS rlbp_rank,
 					   rlbp_schema || '.' || rlbp_table AS rlbk_schema_table,
-					   CASE 
-						 WHEN rlbp_step = 'DIS_APP_TRG' THEN
+					   CASE rlbp_step::TEXT
+						 WHEN 'DIS_APP_TRG' THEN
 							format('{$lang['emajrlbkdisapptrg']}', quote_ident(rlbp_object))
-						 WHEN rlbp_step = 'DIS_LOG_TRG' THEN
+						 WHEN 'DIS_LOG_TRG' THEN
 							'{$lang['emajrlbkdislogtrg']}'
-						 WHEN rlbp_step = 'DROP_FK' THEN
+						 WHEN 'SET_ALWAYS_APP_TRG' THEN
+							format('{$lang['emajrlbksetalwaysapptrg']}', quote_ident(rlbp_object))
+						 WHEN 'DROP_FK' THEN
 							format('{$lang['emajrlbkdropfk']}',	quote_ident(rlbp_object))
-						 WHEN rlbp_step = 'SET_FK_DEF' THEN
+						 WHEN 'SET_FK_DEF' THEN
 							format('{$lang['emajrlbksetfkdef']}', quote_ident(rlbp_object))
-						 WHEN rlbp_step = 'RLBK_TABLE' THEN
+						 WHEN 'RLBK_TABLE' THEN
 							'{$lang['emajrlbkrlbktable']}'
-						 WHEN rlbp_step = 'DELETE_LOG' THEN
+						 WHEN 'DELETE_LOG' THEN
 							'{$lang['emajrlbkdeletelog']}'
-						 WHEN rlbp_step = 'SET_FK_IMM' THEN
+						 WHEN 'SET_FK_IMM' THEN
 							format('{$lang['emajrlbksetfkimm']}', quote_ident(rlbp_object))
-						 WHEN rlbp_step = 'ADD_FK' THEN
+						 WHEN 'ADD_FK' THEN
 							format('{$lang['emajrlbkaddfk']}', quote_ident(rlbp_object))
-						 WHEN rlbp_step = 'ENA_APP_TRG' THEN
+						 WHEN 'ENA_APP_TRG' THEN
 							format('{$lang['emajrlbkenaapptrg']}', quote_ident(rlbp_object))
-						 WHEN rlbp_step = 'ENA_LOG_TRG' THEN
+						 WHEN 'SET_LOCAL_APP_TRG' THEN
+							format('{$lang['emajrlbksetlocalapptrg']}', quote_ident(rlbp_object))
+						 WHEN 'ENA_LOG_TRG' THEN
 							'{$lang['emajrlbkenalogtrg']}'
-						 ELSE '?'
+						 ELSE rlbp_step || ' (?)'
 					   END AS rlbp_action,
 					   rlbp_batch_number, rlbp_session, rlbp_estimated_quantity,
 					   to_char(rlbp_estimated_duration,'{$this->intervalFormat}') AS rlbp_estimated_duration,
@@ -3017,14 +3021,10 @@ class EmajDb {
 					   END AS rlbp_estimate_method,
 					   to_char(rlbp_start_datetime,'{$this->tsFormat}') AS rlbp_start_datetime,
 					   rlbp_quantity, to_char(rlbp_duration,'{$this->intervalFormat}') AS rlbp_duration
-				FROM emaj.emaj_rlbk_plan,
-					(VALUES ('DIS_APP_TRG',1),('DIS_LOG_TRG',2),('DROP_FK',3),('SET_FK_DEF',4),
-							('RLBK_TABLE',5),('DELETE_LOG',6),('SET_FK_IMM',7),('ADD_FK',8),
-							('ENA_APP_TRG',9),('ENA_LOG_TRG',10)) AS step(step_name, step_order)
-				WHERE rlbp_step::TEXT = step.step_name
-				  AND rlbp_rlbk_id = {$rlbkId}
+				FROM emaj.emaj_rlbk_plan
+				WHERE rlbp_rlbk_id = {$rlbkId}
 				  AND rlbp_step NOT IN ('LOCK_TABLE','CTRL-DBLINK','CTRL+DBLINK')
-				ORDER BY rlbp_start_datetime, rlbp_batch_number, step_order, rlbp_table, rlbp_object";
+				ORDER BY rlbp_start_datetime, rlbp_batch_number, rlbp_step, rlbp_table, rlbp_object";
 
 		return $data->selectSet($sql);
 	}

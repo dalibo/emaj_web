@@ -502,6 +502,7 @@
 	$lang['emajestimationmethod'] = 'Estimation method';
 	$lang['emajrlbkdisapptrg'] = 'Disable the trigger %s';
 	$lang['emajrlbkdislogtrg'] = 'Disable the log trigger';
+	$lang['emajrlbksetalwaysapptrg'] = 'Set the trigger %s as ALWAYS';
 	$lang['emajrlbkdropfk'] = 'Drop the foreign key %s';
 	$lang['emajrlbksetfkdef'] = 'Set the foreign key %s DEFFERED';
 	$lang['emajrlbkrlbktable'] = 'Rollback';
@@ -509,6 +510,7 @@
 	$lang['emajrlbksetfkimm'] = 'Set the foreign key %s IMMEDIATE';
 	$lang['emajrlbkaddfk'] = 'Recreate the foreign key %s';
 	$lang['emajrlbkenaapptrg'] = 'Re-enable the trigger %s';
+	$lang['emajrlbksetlocalapptrg'] = 'Set the trigger %s as LOCAL';
 	$lang['emajrlbkenalogtrg'] = 'Re-enable the log trigger';
 
 	// Group's properties and marks

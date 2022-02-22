@@ -2435,31 +2435,31 @@ class EmajDb {
 			$sql = "SELECT to_char(time_tx_timestamp,'{$this->tsFormat}') as time_tx_timestamp, altr_step,
 					CASE
 					WHEN altr_step = 'REMOVE_TBL' THEN
-						format('{$emajlang['emajalteredremovetbl']}', rlchg_schema, rlchg_tblseq, rlchg_group)
+						format('{$emajlang['emajalteredremovetbl']}', altr_schema, altr_tblseq, altr_group)
 					WHEN altr_step = 'REMOVE_SEQ' THEN
-						format('{$emajlang['emajalteredremoveseq']}', rlchg_schema, rlchg_tblseq, rlchg_group)
+						format('{$emajlang['emajalteredremoveseq']}', altr_schema, altr_tblseq, altr_group)
 					WHEN altr_step = 'REPAIR_TBL' THEN
-						format('{$emajlang['emajalteredrepairtbl']}', rlchg_schema, rlchg_tblseq)
+						format('{$emajlang['emajalteredrepairtbl']}', altr_schema, altr_tblseq)
 					WHEN altr_step = 'REPAIR_SEQ' THEN
-						format('{$emajlang['emajalteredrepairseq']}', rlchg_schema, rlchg_tblseq)
+						format('{$emajlang['emajalteredrepairseq']}', altr_schema, altr_tblseq)
 					WHEN altr_step = 'CHANGE_TBL_LOG_SCHEMA' THEN
-						format('{$emajlang['emajalteredchangetbllogschema']}', rlchg_schema, rlchg_tblseq)
+						format('{$emajlang['emajalteredchangetbllogschema']}', altr_schema, altr_tblseq)
 					WHEN altr_step = 'CHANGE_TBL_NAMES_PREFIX' THEN
-						format('{$emajlang['emajalteredchangetblnamesprefix']}', rlchg_schema, rlchg_tblseq)
+						format('{$emajlang['emajalteredchangetblnamesprefix']}', altr_schema, altr_tblseq)
 					WHEN altr_step = 'CHANGE_TBL_LOG_DATA_TSP' THEN
-						format('{$emajlang['emajalteredchangetbllogdatatsp']}', rlchg_schema, rlchg_tblseq)
+						format('{$emajlang['emajalteredchangetbllogdatatsp']}', altr_schema, altr_tblseq)
 					WHEN altr_step = 'CHANGE_TBL_LOG_INDEX_TSP' THEN
-						format('{$emajlang['emajalteredchangetbllogindextsp']}', rlchg_schema, rlchg_tblseq)
+						format('{$emajlang['emajalteredchangetbllogindextsp']}', altr_schema, altr_tblseq)
 					WHEN altr_step = 'CHANGE_REL_PRIORITY' THEN
-						format('{$emajlang['emajalteredchangerelpriority']}', rlchg_schema, rlchg_tblseq)
+						format('{$emajlang['emajalteredchangerelpriority']}', altr_schema, altr_tblseq)
 					WHEN altr_step = 'MOVE_TBL' THEN
-						format('{$emajlang['emajalteredmovetbl']}', rlchg_schema, rlchg_tblseq, altr_group, altr_new_group)
+						format('{$emajlang['emajalteredmovetbl']}', altr_schema, altr_tblseq, altr_group, altr_new_group)
 					WHEN altr_step = 'MOVE_SEQ' THEN
-						format('{$emajlang['emajalteredmoveseq']}', rlchg_schema, rlchg_tblseq, altr_group, altr_new_group)
+						format('{$emajlang['emajalteredmoveseq']}', altr_schema, altr_tblseq, altr_group, altr_new_group)
 					WHEN altr_step = 'ADD_TBL' THEN
-						format('{$emajlang['emajalteredaddtbl']}', rlchg_schema, rlchg_tblseq, rlchg_group)
+						format('{$emajlang['emajalteredaddtbl']}', altr_schema, altr_tblseq, altr_group)
 					WHEN altr_step = 'ADD_SEQ' THEN
-						format('{$emajlang['emajalteredaddseq']}', rlchg_schema, rlchg_tblseq, rlchg_group)
+						format('{$emajlang['emajalteredaddseq']}', altr_schema, altr_tblseq, altr_group)
 					END AS altr_action, 
 					CASE WHEN altr_step IN ('ADD_TBL', 'ADD_SEQ', 'REMOVE_TBL', 'REMOVE_SEQ', 'REPAIR_TBL', 'REPAIR_SEQ', 'MOVE_TBL', 'MOVE_SEQ',
 											'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP',

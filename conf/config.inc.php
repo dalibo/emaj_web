@@ -98,6 +98,12 @@
 	$conf['servers'][11]['sslmode'] = 'allow';
 	$conf['servers'][11]['defaultdb'] = 'postgres';
 
+	$conf['servers'][12]['desc'] = 'Pg 15';
+	$conf['servers'][12]['host'] = 'localhost';
+	$conf['servers'][12]['port'] = 5415;
+	$conf['servers'][12]['sslmode'] = 'allow';
+	$conf['servers'][12]['defaultdb'] = 'postgres';
+
 	/* Groups definition */
 	/* Groups allow administrators to logicaly group servers together under
 	 * group nodes in the left browser tree
@@ -110,7 +116,7 @@
 	$conf['srv_groups'][2]['servers'] = '1,2,3,4';
 	$conf['srv_groups'][2]['parents'] = '1';
 	$conf['srv_groups'][3]['desc'] = 'DataCenter-2';
-	$conf['srv_groups'][3]['servers'] = '5,6,7,8,9,10,11';
+	$conf['srv_groups'][3]['servers'] = '5,6,7,8,9,10,11,12';
 	$conf['srv_groups'][3]['parents'] = '1';
 
 	// Default language. E.g.: 'english'.  See lang/ directory

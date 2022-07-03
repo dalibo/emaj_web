@@ -1165,7 +1165,7 @@ class EmajDb {
 		}
 
 		$sql = "SELECT nspname, c.relname,
-					c.relkind || case when (relkind = 'r' and ${goodTypeConditions}) then '+' else '-' end as relkind,
+					c.relkind::TEXT || case when (relkind = 'r' and ${goodTypeConditions}) then '+' else '-' end as relkind,
 					pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
 					pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment, spcname AS tablespace,
 					coalesce(rel_group, '') AS rel_group, coalesce(rel_priority::text, '') AS rel_priority,
@@ -1255,7 +1255,7 @@ class EmajDb {
 
 		if ($this->getNumEmajVersion() >= 30100){			// version >= 3.1.0
 			$sql = "SELECT 1, nspname, c.relname,
-						c.relkind || case when relkind = 'S' or (relkind = 'r' and ${goodTypeConditions}) then '+' else '-' end as relkind,
+						c.relkind::TEXT || case when relkind = 'S' or (relkind = 'r' and ${goodTypeConditions}) then '+' else '-' end as relkind,
 						pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
 						pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment, spcname AS tablespace,
 						grpdef_group, grpdef_priority, grpdef_log_dat_tsp, grpdef_log_idx_tsp
@@ -1274,7 +1274,7 @@ class EmajDb {
 					ORDER BY 1, relname";
 		} else {
 			$sql = "SELECT 1, nspname, c.relname,
-						c.relkind || case when relkind = 'S' or (relkind = 'r' and ${goodTypeConditions}) then '+' else '-' end as relkind,
+						c.relkind::TEXT || case when relkind = 'S' or (relkind = 'r' and ${goodTypeConditions}) then '+' else '-' end as relkind,
 						pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
 						pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment, spcname AS tablespace,
 						grpdef_group, grpdef_priority, grpdef_log_schema_suffix, grpdef_emaj_names_prefix, grpdef_log_dat_tsp, grpdef_log_idx_tsp

@@ -6,7 +6,7 @@
 	 */
 
 	// Emaj_web current version
-	$appVersion = '4.0';
+	$appVersion = '4.1';
 
 	// PostgreSQL and PHP minimum version
 	$postgresqlMinVer = '9.1';
@@ -15,8 +15,8 @@
 	// E-Maj versions
 	$oldest_supported_emaj_version = '1.3.0';			// Oldest supported emaj version
 	$oldest_supported_emaj_version_num = 10300;
-	$last_known_emaj_version = '4.0.1';					// Most recent known emaj version
-	$last_known_emaj_version_num = 40001;
+	$last_known_emaj_version = '4.1.0';					// Most recent known emaj version
+	$last_known_emaj_version_num = 40100;
 
 	// Cross references between the emaj extensions (as string) and the Postgres major versions (as float)
 	$xrefEmajPg['2.0.0']['minPostgresVersion'] = 9.1; $xrefEmajPg['2.0.0']['maxPostgresVersion'] = 9.6;
@@ -35,5 +35,6 @@
 	$xrefEmajPg['3.4.0']['minPostgresVersion'] = 9.5; $xrefEmajPg['3.4.0']['maxPostgresVersion'] = 14;
 	$xrefEmajPg['4.0.0']['minPostgresVersion'] = 9.5; $xrefEmajPg['4.0.0']['maxPostgresVersion'] = 14;
 	$xrefEmajPg['4.0.1']['minPostgresVersion'] = 9.5; $xrefEmajPg['4.0.1']['maxPostgresVersion'] = 14;
+	$xrefEmajPg['4.1.0']['minPostgresVersion'] = 9.5; $xrefEmajPg['4.0.1']['maxPostgresVersion'] = 15;
 
 ?>

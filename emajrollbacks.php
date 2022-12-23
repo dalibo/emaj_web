@@ -192,8 +192,7 @@
 		$actions = array();
 
 		// Get rollback information from the database
-		$completedRlbks = $emajdb->getCompletedRlbk($nbRlbk, $rlbkRetention);
-
+		$completedRlbks = $emajdb->getCompletedRlbk();
 		$misc->printTitle($lang['emajinprogressrlbk']);
 		if ($emajdb->isDblinkUsable()) {
 			$inProgressRlbks = $emajdb->getInProgressRlbk();

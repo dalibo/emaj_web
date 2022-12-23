@@ -2778,13 +2778,11 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the list of lastest completed rollback operations
+	 * Gets the list of completed rollback operations (the last 1000, if so many)
 	 */
-	function getCompletedRlbk($nb,$retention) {
+	function getCompletedRlbk() {
 		global $data;
-
-		$data->clean($nb);
-		$data->clean($retention);
+		$nb = 1000;
 
 		// first cleanup recently completed rollback operation status
 		$sql = "SELECT emaj.emaj_cleanup_rollback_state()";
@@ -2807,8 +2805,6 @@ class EmajDb {
 			$sql .= "FROM (SELECT * FROM emaj.emaj_rlbk 
 					WHERE rlbk_status IN ('COMPLETED','COMMITTED','ABORTED')";
 		}
-		if ($retention > 0)
-			$sql .= " AND rlbk_end_datetime > current_timestamp - '{$retention} hours'::interval "; 
 		$sql .= " ORDER BY rlbk_id DESC ";
 		if ($nb > 0)
 			$sql .= "LIMIT {$nb}";

@@ -14,8 +14,8 @@ class Postgres9211 extends Postgres {
 	 * Constructor
 	 * @param $conn The database connection
 	 */
-	function Postgres9211($conn) {
-		$this->Postgres($conn);
+	function __construct($conn) {
+		parent::__construct($conn);
 	}
 
     /**

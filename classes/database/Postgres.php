@@ -34,7 +34,7 @@ class Postgres extends ADODB_base {
 	 * Constructor
 	 * @param $conn The database connection
 	 */
-	function Postgres($conn) {
+	function __construct($conn) {
 		$this->ADODB_base($conn);
 	}
 

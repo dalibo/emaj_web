@@ -10,7 +10,7 @@
 
 	// PostgreSQL and PHP minimum version
 	$postgresqlMinVer = '9.1';
-	$phpMinVer = '5.0';
+	$phpMinVer = '7.0';
 
 	// E-Maj versions
 	$oldest_supported_emaj_version = '1.3.0';			// Oldest supported emaj version

@@ -35,6 +35,6 @@
 	$xrefEmajPg['3.4.0']['minPostgresVersion'] = 9.5; $xrefEmajPg['3.4.0']['maxPostgresVersion'] = 14;
 	$xrefEmajPg['4.0.0']['minPostgresVersion'] = 9.5; $xrefEmajPg['4.0.0']['maxPostgresVersion'] = 14;
 	$xrefEmajPg['4.0.1']['minPostgresVersion'] = 9.5; $xrefEmajPg['4.0.1']['maxPostgresVersion'] = 14;
-	$xrefEmajPg['4.1.0']['minPostgresVersion'] = 9.5; $xrefEmajPg['4.0.1']['maxPostgresVersion'] = 15;
+	$xrefEmajPg['4.1.0']['minPostgresVersion'] = 9.5; $xrefEmajPg['4.1.0']['maxPostgresVersion'] = 15;
 
 ?>

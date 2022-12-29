@@ -201,7 +201,7 @@ class EmajDb {
 			$version = '';
 
 		$server_info = $misc->getServerInfo();
-		if ($server_info["pgVersion"] < 9.6) {
+		if (version_compare($server_info['pgVersion'], '9.6', '<')) {
 			$sql = "CREATE EXTENSION IF NOT EXISTS dblink;
 					CREATE EXTENSION IF NOT EXISTS btree_gist;
 					CREATE EXTENSION emaj {$version};";
@@ -1219,7 +1219,7 @@ class EmajDb {
 
 		$server_info = $misc->getServerInfo();
 
-		if ($server_info["pgVersion"] < 10) {				// Postgres version < 10
+		if (version_compare($server_info['pgVersion'], '10', '<')) {				// Postgres version < 10
 			$sql = "SELECT last_value, is_called, start_value, min_value, max_value, increment_by, is_cycled AS cycle,
 							cache_value AS cache_size, log_cnt,
 							pg_catalog.obj_description(s.tableoid, 'pg_class') AS seqcomment

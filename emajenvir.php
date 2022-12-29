@@ -86,8 +86,8 @@
 		$usableVersions = array();
 		foreach($availableVersions as $v) {
 			if (!isset($xrefEmajPg[$v['version']]) ||
-				($server_info['pgVersion'] >= $xrefEmajPg[$v['version']]['minPostgresVersion'] &&
-				 $server_info['pgVersion'] <= $xrefEmajPg[$v['version']]['maxPostgresVersion'])) {
+				 (version_compare($server_info['pgVersion'], $xrefEmajPg[$v['version']]['minPostgresVersion'], '>=') &&
+				  version_compare($server_info['pgVersion'], $xrefEmajPg[$v['version']]['maxPostgresVersion'], '<='))) {
 				// if the emaj version is known in the xref and is compatible with the current PG version, keep it
 				// if the emaj version is unknown, keep it too
 				// otherwise, discard it
@@ -164,8 +164,8 @@
 		$usableVersions = array();
 		foreach($availableVersions as $v) {
 			if (!isset($xrefEmajPg[$v['target']]) ||
-				($server_info['pgVersion'] >= $xrefEmajPg[$v['target']]['minPostgresVersion'] &&
-				 $server_info['pgVersion'] <= $xrefEmajPg[$v['target']]['maxPostgresVersion'])) {
+				(version_compare($server_info['pgVersion'], $xrefEmajPg[$v['version']]['minPostgresVersion'], '>=') &&
+				 version_compare($server_info['pgVersion'], $xrefEmajPg[$v['version']]['maxPostgresVersion'], '<='))) {
 				// if the emaj version is known in the xref and is compatible with the current PG version, keep it
 				// if the emaj version is unknown, keep it too
 				// otherwise, discard it

@@ -623,7 +623,7 @@
 				'field' => field('group_creation_datetime'),
 				'type' => 'spanned',
 				'params'=> array(
-					'dateformat' => $lang['strrecenttimestampformat'],
+					'dateformat' => $lang['stroldtimestampformat'],
 					'class' => 'tooltip left-aligned-tooltip',
 					),
 			),

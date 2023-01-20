@@ -171,7 +171,9 @@
 		 *			clip     - if true, clip the value to a fixed length, and append an ellipsis...
 		 *			cliplen  - the maximum length when clip is enabled (defaults to $conf['max_chars']) or when the data type is 'spanned'
 		 *			ellipsis - the string to append to a clipped value (defaults to $lang['strellipsis'])
-		 *			dateformat - the date formating (as used in the strftime() php function) to build the cell content of a 'spanned' data
+		 *			dateformat - the date formating to build the cell content of a 'spanned' data
+		 *					 - (the pattern follows the ICU time formating rule)
+		 *			intervalformat - the time interval formating to build the cell content of a 'spanned' data
 		 *			tag      - an HTML element name to surround the value.
 		 *			class    - a class attribute to apply to any surrounding HTML element.
 		 *			align    - an align attribute ('left','right','center' etc.)
@@ -310,16 +312,8 @@
 					if (isset($params['dateformat'])) {
 						// the data is a timestamp
 						$str2 = $str;
-						$str1 = strftime($params['dateformat'], strtotime($str));
-						// if micro-seconds are requested, adjust the result of the strftime function (as it doesn't process microseconds)
-						if (strpos($str1,'%µ') > 0) {
-							if (preg_match('/\\.([0-9]+)/', $str, $reg)) {
-								$decimal = substr(str_pad($reg[1], 6, "0"), 0, 6);
-							} else {
-								$decimal = "000000";
-							}
-							$str1 = str_replace('%µ', $decimal, $str1);
-						}
+						$dateTimeObj = new DateTime($str);
+						$str1 = IntlDateFormatter::formatObject($dateTimeObj, $params['dateformat']);
 					} elseif (isset($params['intervalformat'])) {
 						// the data is an interval
 						$str1 = $str; $str2 = '';

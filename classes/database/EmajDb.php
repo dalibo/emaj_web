@@ -1952,7 +1952,7 @@ class EmajDb {
 		}
 
 		# replace the % characters by the time of day, in format 'HH24.MI.SS.MS'
-		$finalMark = str_replace('%', strftime('%H.%M.%S.') . substr(microtime(),2,3), $mark);
+		$finalMark = str_replace('%', date('H.i.s.') . substr(microtime(),2,3), $mark);
 
 		$sql = "SELECT CASE WHEN 
 				(SELECT COUNT(*) FROM emaj.emaj_mark 

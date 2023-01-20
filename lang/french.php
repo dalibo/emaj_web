@@ -11,11 +11,11 @@
 	$lang['applangdir'] = 'ltr';
 	// Php format for timestamp fields, distinguishing the format for:
 	// - the old times, producing something like '23 Jun 2020 12:34:56'
-	$lang['stroldtimestampformat'] = '%d %b %Y %H:%M:%S';
+	$lang['stroldtimestampformat'] = 'dd MMM YYYY HH:mm:ss';
 	// - the recent times, producing something like 'Mon 23 Jun 12:34:56'
-	$lang['strrecenttimestampformat'] = '%a %d %b %H:%M:%S';
-	// - the timestamp abbreviated into precise time
-	$lang['strprecisetimeformat'] = '%H:%M:%S.%µ';
+	$lang['strrecenttimestampformat'] = 'EEE dd MMM HH:mm:ss';
+	// - the timestamp abbreviated into time with milliseconds
+	$lang['strprecisetimeformat'] = 'HH:mm:ss.SSS';
 	// Internal format for full interval display
 	$lang['strintervalformat'] = 'DD j HH h MM min SS.US s';
 

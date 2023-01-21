@@ -817,7 +817,7 @@ class EmajDb {
 					CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
 						 WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
 						 ELSE 'ROLLBACKABLE-PROTECTED' END as group_type,
-					group_comment, 
+					coalesce(group_comment, '') as group_comment,
 					pg_size_pretty((SELECT sum(pg_total_relation_size('\"' || rel_log_schema || '\".\"' || rel_log_table || '\"'))
 						FROM emaj.emaj_relation 
 						WHERE rel_group = group_name AND rel_kind = 'r')::bigint) as log_size,";
@@ -836,7 +836,7 @@ class EmajDb {
 						CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
 							 WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE' 
 							 ELSE 'ROLLBACKABLE-PROTECTED' END as group_type, 
-						group_comment, 
+						coalesce(group_comment, '') as group_comment,
 						pg_size_pretty((SELECT sum(pg_total_relation_size(
 										'\"' || rel_log_schema || '\".\"' || rel_schema || '_' || rel_tblseq || '_log\"')) 
 										FROM emaj.emaj_relation WHERE rel_group = group_name AND rel_kind = 'r')::bigint) as log_size,
@@ -1930,7 +1930,11 @@ class EmajDb {
 		$data->clean($group);
 		$data->clean($comment);
 
-		$sql = "SELECT emaj.emaj_comment_group('{$group}','{$comment}')";
+		if ($comment <> '') {
+			$sql = "SELECT emaj.emaj_comment_group('{$group}','{$comment}')";
+		} else {
+			$sql = "SELECT emaj.emaj_comment_group('{$group}',NULL)";
+		}
 
 		return $data->execute($sql);
 	}
@@ -2195,7 +2199,7 @@ class EmajDb {
 		$data->clean($group);
 		$data->clean($mark);
 
-		$sql = "SELECT mark_name, mark_group, mark_comment 
+		$sql = "SELECT mark_name, mark_group, coalesce(mark_comment, '') as mark_comment
 				FROM emaj.emaj_mark
 				WHERE mark_group = '{$group}' AND mark_name = '{$mark}'";
 		return $data->selectSet($sql);
@@ -2211,7 +2215,11 @@ class EmajDb {
 		$data->clean($mark);
 		$data->clean($comment);
 
-		$sql = "SELECT emaj.emaj_comment_mark_group('{$group}','{$mark}','{$comment}')";
+		if ($comment <> '') {
+			$sql = "SELECT emaj.emaj_comment_mark_group('{$group}','{$mark}','{$comment}')";
+		} else {
+			$sql = "SELECT emaj.emaj_comment_mark_group('{$group}','{$mark}',NULL)";
+		}
 
 		return $data->execute($sql);
 	}

@@ -14,9 +14,6 @@ class Postgres extends ADODB_base {
 	var $_maxNameLen = 63;
 	// Store the current schema
 	var $_schema;
-	// Map of database encoding names to HTTP encoding names.  If a
-	// database encoding does not appear in this list, then its HTTP
-	// encoding name is the same as its database encoding name.
 	// Name of id column
 	var $id = 'oid';
 	// Supported join operations for use with view wizard
@@ -48,7 +45,7 @@ class Postgres extends ADODB_base {
 	function clean(&$str) {
 		if ($str === null) return null;
 		$str = str_replace("\r\n","\n",$str);
-		$str = pg_escape_string($str);
+		$str = pg_escape_string($this->conn->_connectionID, $str);
 		return $str;
 	}
 
@@ -84,7 +81,7 @@ class Postgres extends ADODB_base {
 	function arrayClean(&$arr) {
 		foreach ($arr as $k => $v) {
 			if ($v === null) continue;
-			$arr[$k] = pg_escape_string($v);
+			$arr[$k] = pg_escape_string($this->conn->_connectionID, $v);
 		}
 		return $arr;
 	}
@@ -351,7 +348,7 @@ class Postgres extends ADODB_base {
 		return pg_parameter_status($this->conn->_connectionID, 'server_encoding');
 	}
 
-	// Schema functons
+	// Schema functions
 
 	/**
 	 * Return all schemas in the current database.

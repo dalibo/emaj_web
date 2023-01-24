@@ -305,37 +305,6 @@
 		if (isset($_REQUEST['schema']))
 			$fields['schema'] = $_REQUEST['schema'];
 
-		// Expand/Collapse
-		if ($_REQUEST['strings'] == 'expanded')
-			$navlinks['collapse'] = array (
-				'attr' => array (
-					'href' => array (
-						'url' => 'display.php',
-						'urlvars' => array_merge(
-							$_gets,
-							array (
-								'strings' => 'collapsed',
-								'page' => $_REQUEST['page']
-						))
-					)
-				),
-				'content' => $lang['strcollapse']
-			);
-		else
-			$navlinks['collapse'] = array (
-				'attr' => array (
-					'href' => array (
-						'url' => 'display.php',
-						'urlvars' => array_merge(
-							$_gets,
-							array (
-								'strings' => 'expanded',
-								'page' => $_REQUEST['page']
-						))
-					)
-				),
-				'content' => $lang['strexpand']
-			);
 		// Refresh
 		$navlinks['refresh'] = array (
 			'attr'=> array (
@@ -351,6 +320,41 @@
 			),
 			'content' => $lang['strrefresh']
 		);
+
+		// Expand/Collapse
+		if (is_object($rs) && $rs->recordCount() > 0) {
+			if ($_REQUEST['strings'] == 'expanded')
+				$navlinks['collapse'] = array (
+					'attr' => array (
+						'href' => array (
+							'url' => 'display.php',
+							'urlvars' => array_merge(
+								$_gets,
+								array (
+									'strings' => 'collapsed',
+									'page' => $_REQUEST['page']
+							))
+						)
+					),
+					'content' => $lang['strcollapse']
+				);
+			else
+				$navlinks['collapse'] = array (
+					'attr' => array (
+						'href' => array (
+							'url' => 'display.php',
+							'urlvars' => array_merge(
+								$_gets,
+								array (
+									'strings' => 'expanded',
+									'page' => $_REQUEST['page']
+							))
+						)
+					),
+					'content' => $lang['strexpand']
+				);
+		}
+
 		$misc->printLinksList($navlinks, 'buttonslist');
 
 		if (is_object($rs) && $rs->recordCount() > 0) {
@@ -398,11 +402,12 @@
 			echo "<p>", $rs->recordCount(), " {$lang['strrows']}</p>\n";
 			// Show page navigation
 			$misc->printPages($_REQUEST['page'], $max_pages, $_gets);
-		}
-		else echo "<p>{$lang['strnodata']}</p>\n";
 
-		// regenerate the navigation links at the page bottom
-		$misc->printLinksList($navlinks, 'buttonslist');
+			// regenerate the navigation links at the page bottom
+			$misc->printLinksList($navlinks, 'buttonslist');
+		}
+
+		else echo "<p>{$lang['strnodata']}</p>\n";
 	}
 
 	/* shortcuts: this function exit the script for ajax purpose */

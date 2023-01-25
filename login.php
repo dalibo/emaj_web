@@ -11,7 +11,7 @@
 
 	$misc->printHtmlHeader($lang['strlogin']);
 	$misc->printBody();
-	$misc->printHeader('root', '', '');
+	$misc->printHeader('root', 'root', '');
 	
 	$server_info = $misc->getServerInfo($_REQUEST['server']);
 	

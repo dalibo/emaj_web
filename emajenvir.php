@@ -83,11 +83,12 @@
 		$server_info = $misc->getServerInfo();
 		$availableVersions = $emajdb->getAvailableExtensionVersions();
 
+		$pgMajorVersion = preg_replace('/\.\d+$/', '', $server_info['pgVersion']);
 		$usableVersions = array();
 		foreach($availableVersions as $v) {
 			if (!isset($xrefEmajPg[$v['version']]) ||
-				 (version_compare($server_info['pgVersion'], $xrefEmajPg[$v['version']]['minPostgresVersion'], '>=') &&
-				  version_compare($server_info['pgVersion'], $xrefEmajPg[$v['version']]['maxPostgresVersion'], '<='))) {
+				 (version_compare($pgMajorVersion, $xrefEmajPg[$v['version']]['minPostgresVersion'], '>=') &&
+				  version_compare($pgMajorVersion, $xrefEmajPg[$v['version']]['maxPostgresVersion'], '<='))) {
 				// if the emaj version is known in the xref and is compatible with the current PG version, keep it
 				// if the emaj version is unknown, keep it too
 				// otherwise, discard it
@@ -161,11 +162,12 @@
 		$server_info = $misc->getServerInfo();
 		$availableVersions = $emajdb->getAvailableExtensionVersionsForUpdate();
 
+		$pgMajorVersion = preg_replace('/\.\d+$/', '', $server_info['pgVersion']);
 		$usableVersions = array();
 		foreach($availableVersions as $v) {
 			if (!isset($xrefEmajPg[$v['target']]) ||
-				(version_compare($server_info['pgVersion'], $xrefEmajPg[$v['version']]['minPostgresVersion'], '>=') &&
-				 version_compare($server_info['pgVersion'], $xrefEmajPg[$v['version']]['maxPostgresVersion'], '<='))) {
+				(version_compare($pgMajorVersion, $xrefEmajPg[$v['version']]['minPostgresVersion'], '>=') &&
+				 version_compare($pgMajorVersion, $xrefEmajPg[$v['version']]['maxPostgresVersion'], '<='))) {
 				// if the emaj version is known in the xref and is compatible with the current PG version, keep it
 				// if the emaj version is unknown, keep it too
 				// otherwise, discard it

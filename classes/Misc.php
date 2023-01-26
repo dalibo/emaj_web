@@ -715,13 +715,23 @@
 			if ($_SERVER["REQUEST_METHOD"] == 'GET') {
 				foreach ($_GET as $key => $val) {
 					if ($key == 'language') continue;
-					echo "\t\t\t<input type=\"hidden\" name=\"{$key}\" value=\"", htmlspecialchars($val), "\" />\n";
+					if (is_array($val)) {
+						$cleanVal = array_map("htmlspecialchars", $val);
+					} else {
+						$cleanVal = htmlspecialchars($val);
+					}
+					echo "\t\t\t<input type=\"hidden\" name=\"{$key}\" value=\"", $cleanVal, "\" />\n";
 				}
 			} elseif ($_SERVER["REQUEST_METHOD"] == 'POST') {
 				foreach ($_POST as $key => $val) {
 					if ($key == 'language') continue;
 					if ($key == 'action') continue;
-					echo "\t\t\t<input type=\"hidden\" name=\"{$key}\" value=\"", htmlspecialchars($val), "\" />\n";
+					if (is_array($val)) {
+						$cleanVal = array_map("htmlspecialchars", $val);
+					} else {
+						$cleanVal = htmlspecialchars($val);
+					}
+					echo "\t\t\t<input type=\"hidden\" name=\"{$key}\" value=\"", $cleanVal, "\" />\n";
 				}
 			}
 			echo "\t\t</form>\n";

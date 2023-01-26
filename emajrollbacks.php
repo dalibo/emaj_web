@@ -209,78 +209,75 @@
 		echo "<hr/>\n";
 
 		// Display the E-Maj logged rollback operations that may be consolidated (i.e. transformed into unlogged rollback)
-		if ($emajdb->getNumEmajVersion() >= 20000) {			// version >= 2.0.0
-
-			$columnsConsRlbk = array(
-				'consGroup' => array(
-					'title' => $lang['emajgroup'],
-					'field' => field('cons_group'),
+		$columnsConsRlbk = array(
+			'consGroup' => array(
+				'title' => $lang['emajgroup'],
+				'field' => field('cons_group'),
+			),
+			'consTargetMark' => array(
+				'title' => $lang['emajtargetmark'],
+				'field' => field('cons_target_rlbk_mark_name'),
+			),
+			'consTargetMarkDateTime' => array(
+				'title' => $lang['emajmarksetat'],
+				'field' => field('cons_target_rlbk_mark_datetime'),
+				'type' => 'spanned',
+				'params'=> array(
+					'dateformat' => $lang['strrecenttimestampformat'],
+					'class' => 'tooltip left-aligned-tooltip',
 				),
-				'consTargetMark' => array(
-					'title' => $lang['emajtargetmark'],
-					'field' => field('cons_target_rlbk_mark_name'),
+			),
+			'rlbkNbRow' => array(
+				'title' => $lang['emajnbchanges'],
+				'field' => field('cons_rows'),
+				'params'=> array('align' => 'right'),
+			),
+			'rlbkNbMark' => array(
+				'title' => $lang['emajnbintermediatemark'],
+				'field' => field('cons_marks'),
+				'params'=> array('align' => 'right'),
+			),
+			'consEndMark' => array(
+				'title' => $lang['emajendrollbackmark'],
+				'field' => field('cons_end_rlbk_mark_name'),
+			),
+			'consEndMarkDateTime' => array(
+				'title' => $lang['emajmarksetat'],
+				'field' => field('cons_end_rlbk_mark_datetime'),
+				'type' => 'spanned',
+				'params'=> array(
+					'dateformat' => $lang['strrecenttimestampformat'],
+					'class' => 'tooltip left-aligned-tooltip',
 				),
-				'consTargetMarkDateTime' => array(
-					'title' => $lang['emajmarksetat'],
-					'field' => field('cons_target_rlbk_mark_datetime'),
-					'type' => 'spanned',
-					'params'=> array(
-						'dateformat' => $lang['strrecenttimestampformat'],
-						'class' => 'tooltip left-aligned-tooltip',
-					),
-				),
-				'rlbkNbRow' => array(
-					'title' => $lang['emajnbchanges'],
-					'field' => field('cons_rows'),
-					'params'=> array('align' => 'right'),
-				),
-				'rlbkNbMark' => array(
-					'title' => $lang['emajnbintermediatemark'],
-					'field' => field('cons_marks'),
-					'params'=> array('align' => 'right'),
-				),
-				'consEndMark' => array(
-					'title' => $lang['emajendrollbackmark'],
-					'field' => field('cons_end_rlbk_mark_name'),
-				),
-				'consEndMarkDateTime' => array(
-					'title' => $lang['emajmarksetat'],
-					'field' => field('cons_end_rlbk_mark_datetime'),
-					'type' => 'spanned',
-					'params'=> array(
-						'dateformat' => $lang['strrecenttimestampformat'],
-						'class' => 'tooltip left-aligned-tooltip',
-					),
-				),
-				'actions' => array(
-					'title' => $lang['stractions'],
+			),
+			'actions' => array(
+				'title' => $lang['stractions'],
+			),
+		);
+		if ($emajdb->isEmaj_Adm()) {
+			$actions = array(
+				'consolidate' => array(
+					'content' => $lang['emajconsolidate'],
+					'icon' => 'Consolidate',
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajrollbacks.php',
+							'urlvars' => array (
+								'action' => 'consolidate_rollback',
+								'group' => field('cons_group'),
+								'mark' => field('cons_end_rlbk_mark_name'),
+							)))
 				),
 			);
-			if ($emajdb->isEmaj_Adm()) {
-				$actions = array(
-					'consolidate' => array(
-						'content' => $lang['emajconsolidate'],
-						'icon' => 'Consolidate',
-						'attr' => array (
-							'href' => array (
-								'url' => 'emajrollbacks.php',
-								'urlvars' => array (
-									'action' => 'consolidate_rollback',
-									'group' => field('cons_group'),
-									'mark' => field('cons_end_rlbk_mark_name'),
-								)))
-					),
-				);
-			} else {
-				$actions = array();
-			}
-			// Get rollback information from the database
-			$consolidableRlbks = $emajdb->getConsolidableRlbk();
-
-			$misc->printTitle($lang['emajconsolidablerlbk']);
-			$inProgressRlbks = $emajdb->getInProgressRlbk();
-			$misc->printTable($consolidableRlbks, $columnsConsRlbk, $actions, 'consolidableRlbk', $lang['emajnorlbk']);
+		} else {
+			$actions = array();
 		}
+		// Get rollback information from the database
+		$consolidableRlbks = $emajdb->getConsolidableRlbk();
+
+		$misc->printTitle($lang['emajconsolidablerlbk']);
+		$inProgressRlbks = $emajdb->getInProgressRlbk();
+		$misc->printTable($consolidableRlbks, $columnsConsRlbk, $actions, 'consolidableRlbk', $lang['emajnorlbk']);
 	}
 
 	/**

@@ -2,8 +2,6 @@
 
 /**
  * Class to represent a database connection
- *
- * $Id: Connection.php,v 1.15 2008/02/18 21:42:47 ioguix Exp $
  */
 
 include_once('./classes/database/ADODB_base.php');
@@ -47,36 +45,35 @@ class Connection {
 	 * sets the platform.
 	 * @param (return-by-ref) $description A description of the database and version
 	 * @return The class name of the driver eg. Postgres84
-	 * @return null if version is < 7.4
+	 * @return null if version is < 9.1
 	 * @return -3 Database-specific failure
 	 */
 	function getDriver(&$description) {
 
 		$v = pg_version($this->conn->_connectionID);
 		if (isset($v['server'])) $version = $v['server'];
-		
+
 		// If we didn't manage to get the version without a query, query...
 		if (!isset($version)) {
 			$adodb = new ADODB_base($this->conn);
-	
-			$sql = "SELECT VERSION() AS version";
+
+			$sql = "SELECT version() AS version";
 			$field = $adodb->selectField($sql, 'version');
-	
-			// Check the platform, if it's mingw, set it
-			if (preg_match('/ mingw /i', $field))
-				$this->platform = 'MINGW';
-	
+
 			$params = explode(' ', $field);
 			if (!isset($params[1])) return -3;
-	
-			$version = $params[1]; // eg. 8.4.4
+
+			$version = $params[1]; // eg. 15.2
 		}
-		
+
 		$description = "PostgreSQL {$version}";
 
 		// Detect version and choose appropriate database driver
 
 		switch (substr($version,0,2)) {
+			case '15': return 'Postgres'; break;
+			case '14': return 'Postgres'; break;
+			case '13': return 'Postgres'; break;
 			case '12': return 'Postgres'; break;
 			case '11': return 'Postgres9211'; break;
 			case '10': return 'Postgres9211'; break;
@@ -88,16 +85,13 @@ class Connection {
 			case '9.3': return 'Postgres9211'; break;
 			case '9.2': return 'Postgres9211'; break;
 			case '9.1': return 'Postgres91'; break;
-			case '9.0': return 'Postgres90'; break;
-			case '8.4': return 'Postgres84'; break;
-			case '8.3': return 'Postgres83'; break;
 		}
 
-		/* All <7.4 versions are not supported */
-		// if major version is 7 or less and wasn't cought in the
+		/* All 9.0- versions are not supported */
+		// if major version is 9 or less and wasn't cought in the
 		// switch/case block, we have an unsupported version.
 
-		if (substr($version, 1, 1) == '.' && (int)substr($version, 0, 1) < 8)
+		if (substr($version, 1, 1) == '.' && (int)substr($version, 0, 1) <= 9)
 			return null;
 
 		// If unknown version, then default to latest driver

@@ -296,10 +296,10 @@ class EmajDb {
 
 		global $data;
 
-		// It checks that 
+		// It checks that
 		// - dblink is installed into the database by testing the existence of the dblink_connect_u function
 		// - the dblink_user_password E-Maj parameter has been configured
-		$sql = "SELECT CASE WHEN 
+		$sql = "SELECT CASE WHEN
                        EXISTS(SELECT 1 FROM pg_catalog.pg_proc WHERE proname = 'dblink_connect_u')
                    AND EXISTS(SELECT 1 FROM emaj.emaj_visible_param WHERE param_key = 'dblink_user_password')
                                  THEN 1 ELSE 0 END as cnx_ok";
@@ -327,7 +327,7 @@ class EmajDb {
 
 		// check if dblink is usable
 		if ($this->isDblinkUsable()) {
-			// if the _dblink_open_cnx() function is available for the user, 
+			// if the _dblink_open_cnx() function is available for the user,
 			//   open a test dblink connection, analyse the result and close it if effetively opened
 			$test_cnx_ok = 0;
 			$sql = "SELECT CASE
@@ -367,14 +367,14 @@ class EmajDb {
 				// check if the emaj_web parameters are set
 				if (isset($conf['psql_path']) && isset($conf['temp_dir'])) {
 
-					// check the psql exe path supplied in the config file, 
+					// check the psql exe path supplied in the config file,
 					// by executing a simple "psql --version" command
 					$psqlExe = $misc->escapeShellCmd($conf['psql_path']);
 					$version = array();
 					preg_match("/(\d+(?:\.\d+)?)(?:\.\d+)?.*$/", exec($psqlExe . " --version"), $version);
 					if (!empty($version)) {
 
-						// ok, check a file can be written into the temp directory supplied in the config file 
+						// ok, check a file can be written into the temp directory supplied in the config file
 						$sep = (substr(php_uname(), 0, 3) == "Win") ? '\\' : '/';
 						$testFileName = $conf['temp_dir'] . $sep . 'rlbk_report_test';
 						$f = fopen($testFileName,'w');
@@ -426,7 +426,7 @@ class EmajDb {
 		$this->emaj_version_num = 0;
 
 		// look at the postgres catalog to see if the emaj_visible_param view exists or not. If not (i.e. old emaj version), use the emaj_param table instead.
-		$sql = "SELECT CASE WHEN EXISTS 
+		$sql = "SELECT CASE WHEN EXISTS
 					(SELECT relname FROM pg_catalog.pg_class, pg_catalog.pg_namespace
 						WHERE relnamespace = pg_namespace.oid AND relname = 'emaj_visible_param' AND nspname = 'emaj')
 				THEN 'emaj_visible_param' ELSE 'emaj_param' END AS param_table";
@@ -459,22 +459,22 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the E-Maj size on disk 
+	 * Gets the E-Maj size on disk
 	 * = size of all relations in emaj primary and secondary schemas + size of linked toast tables
 	 */
 	function getEmajSize() {
 		global $data;
 
 		if ($this->emaj_adm){
-			$sql = "SELECT coalesce(pg_size_pretty(t.emajtotalsize) || 
-							to_char(t.emajtotalsize * 100 / pg_database_size(current_database())::float,' = FM990D0%'), '0 B = 0%') as emajsize 
-					FROM 
+			$sql = "SELECT coalesce(pg_size_pretty(t.emajtotalsize) ||
+							to_char(t.emajtotalsize * 100 / pg_database_size(current_database())::float,' = FM990D0%'), '0 B = 0%') as emajsize
+					FROM
 					(SELECT ((t1.totalpages + t2.totalpages) * setting::integer)::bigint as emajtotalsize
-						FROM pg_catalog.pg_settings, 
+						FROM pg_catalog.pg_settings,
 							(
 							SELECT sum(relpages) as totalpages
-							  FROM pg_catalog.pg_class, pg_catalog.pg_namespace 
-							  WHERE relnamespace = pg_namespace.oid 
+							  FROM pg_catalog.pg_class, pg_catalog.pg_namespace
+							  WHERE relnamespace = pg_namespace.oid
 								AND nspname IN ";
 			if ($this->getNumEmajVersion() >= 20200){	// version >= 2.2.0
 				$sql .= "			(SELECT sch_name FROM emaj.emaj_schema)";
@@ -485,10 +485,10 @@ class EmajDb {
 							(
 							SELECT sum(c2.relpages) as totalpages
 							  FROM pg_catalog.pg_class c1, pg_catalog.pg_namespace, emaj.emaj_relation,
-								   pg_catalog.pg_class c2 
-							  WHERE c1.relnamespace = pg_namespace.oid 
+								   pg_catalog.pg_class c2
+							  WHERE c1.relnamespace = pg_namespace.oid
 								AND c2.oid = c1.reltoastrelid
-								AND nspname = rel_log_schema 
+								AND nspname = rel_log_schema
 								AND c1.relname = rel_log_table
 							) as t2
 						WHERE pg_settings.name = 'block_size'
@@ -604,10 +604,10 @@ class EmajDb {
 
 		$sql = "SELECT group_name, group_comment";
 		if ($this->getNumEmajVersion() >= 30300){	// version >= 3.3.0
-			$sql .= ", group_nb_table, group_nb_sequence, 
-					  CASE WHEN group_is_logging THEN 'LOGGING' ELSE 'IDLE' END 
-						as group_state, 
-					  CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END 
+			$sql .= ", group_nb_table, group_nb_sequence,
+					  CASE WHEN group_is_logging THEN 'LOGGING' ELSE 'IDLE' END
+						as group_state,
+					  CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END
 						as group_type";
 		}
 		$sql .=	" FROM emaj.emaj_group ORDER BY group_name";
@@ -632,32 +632,20 @@ class EmajDb {
 	function getIdleGroups() {
 		global $data;
 
-		if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, group_comment,
-					  CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END 
-						as group_type,
-					  to_char(time_tx_timestamp,'{$this->tsFormat}') as creation_datetime,";
-			if ($this->getNumEmajVersion() >= 30000 && $this->getNumEmajVersion() < 40000){	// version 3.x
-				$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes,";
-			} else {
-				$sql .=	"1 as has_waiting_changes,";
-			}
-			$sql .= " (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
-					FROM emaj.emaj_group, emaj.emaj_time_stamp
-					WHERE NOT group_is_logging
-					  AND time_id = group_creation_time_id
-					ORDER BY group_name";
-		}else{
-			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, group_comment,
-					  CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END 
-						as group_type, 
-					  to_char(group_creation_datetime,'{$this->tsFormat}') as creation_datetime,
-					  1 as has_waiting_changes,
-					  (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
-					FROM emaj.emaj_group
-					WHERE NOT group_is_logging 
-					ORDER BY group_name";
+		$sql = "SELECT group_name, group_nb_table, group_nb_sequence, group_comment,
+				  CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END
+					as group_type,
+				  to_char(time_tx_timestamp,'{$this->tsFormat}') as creation_datetime,";
+		if ($this->getNumEmajVersion() >= 30000 && $this->getNumEmajVersion() < 40000){	// version 3.x
+			$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes,";
+		} else {
+			$sql .=	"1 as has_waiting_changes,";
 		}
+		$sql .= " (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
+				FROM emaj.emaj_group, emaj.emaj_time_stamp
+				WHERE NOT group_is_logging
+				  AND time_id = group_creation_time_id
+				ORDER BY group_name";
 
 		return $data->selectSet($sql);
 	}
@@ -668,33 +656,21 @@ class EmajDb {
 	function getLoggingGroups() {
 		global $data;
 
-		if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, group_comment,
-					  CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
-						   WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
-						   ELSE 'ROLLBACKABLE-PROTECTED' END as group_type,
-					  to_char(time_tx_timestamp,'{$this->tsFormat}') as creation_datetime,";
-			if ($this->getNumEmajVersion() >= 30000 && $this->getNumEmajVersion() < 40000){	// version 3.x
-				$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes,";
-			} else {
-				$sql .=	"1 as has_waiting_changes,";
-			}
-			$sql .= " (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
-					FROM emaj.emaj_group, emaj.emaj_time_stamp
-					WHERE group_is_logging
-					  AND time_id = group_creation_time_id
-					ORDER BY group_name";
-		}else{
-			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, group_comment,
-						CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
-							 WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
-							 ELSE 'ROLLBACKABLE-PROTECTED' END as group_type, 
-						to_char(group_creation_datetime,'{$this->tsFormat}') as creation_datetime,
-						(SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
-					FROM emaj.emaj_group
-					WHERE group_is_logging 
-					ORDER BY group_name";
+		$sql = "SELECT group_name, group_nb_table, group_nb_sequence, group_comment,
+				  CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
+					   WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
+					   ELSE 'ROLLBACKABLE-PROTECTED' END as group_type,
+				  to_char(time_tx_timestamp,'{$this->tsFormat}') as creation_datetime,";
+		if ($this->getNumEmajVersion() >= 30000 && $this->getNumEmajVersion() < 40000){	// version 3.x
+			$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes,";
+		} else {
+			$sql .=	"1 as has_waiting_changes,";
 		}
+		$sql .= " (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
+				FROM emaj.emaj_group, emaj.emaj_time_stamp
+				WHERE group_is_logging
+				  AND time_id = group_creation_time_id
+				ORDER BY group_name";
 
 		return $data->selectSet($sql);
 	}
@@ -749,7 +725,7 @@ class EmajDb {
 						CASE WHEN nspname IS NULL THEN true ELSE false END as no_schema,                -- the schema doesn't exist
 						CASE WHEN d.grpdef_schema like 'emaj%' THEN true ELSE false END as bad_schema,  -- the schema is an emaj_schema
 						CASE WHEN relname IS NULL THEN true ELSE false END as no_relation,              -- the relation doesn't exist
-						CASE WHEN relkind = 'r' AND ( ${badTypeConditions} ) 
+						CASE WHEN relkind = 'r' AND ( ${badTypeConditions} )
 								THEN true ELSE false END as bad_type,                                   -- the table has not the right type
 						CASE WHEN rel_group IS NOT NULL THEN true ELSE false END as duplicate           -- the relation is already assigned to another created group
 					FROM emaj.emaj_group_def d
@@ -785,7 +761,7 @@ class EmajDb {
 	function getGroupsToImport($configuredGroupsValues) {
 		global $data;
 
-		$sql = "SELECT grp_name, group_comment, group_nb_table, group_nb_sequence, 
+		$sql = "SELECT grp_name, group_comment, group_nb_table, group_nb_sequence,
 					   CASE WHEN group_is_logging THEN 'LOGGING'
 						    WHEN NOT group_is_logging THEN 'IDLE'
 						    ELSE NULL END as group_state,
@@ -793,7 +769,7 @@ class EmajDb {
 						    WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
 						    WHEN group_is_rollbackable AND group_is_rlbk_protected THEN 'ROLLBACKABLE-PROTECTED'
 						    ELSE NULL END as group_type,
-					   CASE WHEN length(group_comment) > 100 THEN substr(group_comment,1,97) || '...' ELSE group_comment END 
+					   CASE WHEN length(group_comment) > 100 THEN substr(group_comment,1,97) || '...' ELSE group_comment END
 					  	 as abbr_comment
 					FROM (VALUES $configuredGroupsValues) AS t(grp_name)
 						LEFT OUTER JOIN emaj.emaj_group ON (group_name = grp_name)
@@ -803,47 +779,32 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets properties of one emaj_group 
+	 * Gets properties of one emaj_group
 	 */
 	function getGroup($group) {
 		global $data;
 
 		$data->clean($group);
 
-		if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, 
-					to_char(time_tx_timestamp,'{$this->tsFormat}') as group_creation_datetime,
-					CASE WHEN group_is_logging THEN 'LOGGING' ELSE 'IDLE' END as group_state, 
-					CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
-						 WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
-						 ELSE 'ROLLBACKABLE-PROTECTED' END as group_type,
-					coalesce(group_comment, '') as group_comment,
-					pg_size_pretty((SELECT sum(pg_total_relation_size('\"' || rel_log_schema || '\".\"' || rel_log_table || '\"'))
-						FROM emaj.emaj_relation 
-						WHERE rel_group = group_name AND rel_kind = 'r')::bigint) as log_size,";
-			if ($this->getNumEmajVersion() >= 30000 && $this->getNumEmajVersion() < 40000){	// version 3.x
-				$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes,";
-			} else {
-				$sql .=	"1 as has_waiting_changes,";
-			}
-			$sql .= " (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
-					FROM emaj.emaj_group, emaj.emaj_time_stamp
-					WHERE group_name = '{$group}'
-					  AND time_id = group_creation_time_id";
+		$sql = "SELECT group_name, group_nb_table, group_nb_sequence,
+				to_char(time_tx_timestamp,'{$this->tsFormat}') as group_creation_datetime
+				CASE WHEN group_is_logging THEN 'LOGGING' ELSE 'IDLE' END as group_state,
+				CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
+					 WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
+					 ELSE 'ROLLBACKABLE-PROTECTED' END as group_type,
+				coalesce(group_comment, '') as group_comment,
+				pg_size_pretty((SELECT sum(pg_total_relation_size('\"' || rel_log_schema || '\".\"' || rel_log_table || '\"'))
+					FROM emaj.emaj_relation
+					WHERE rel_group = group_name AND rel_kind = 'r')::bigint) as log_size,";
+		if ($this->getNumEmajVersion() >= 30000 && $this->getNumEmajVersion() < 40000){	// version 3.x
+			$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes,";
 		} else {
-			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, to_char(group_creation_datetime,'{$this->tsFormat}'), 
-						CASE WHEN group_is_logging THEN 'LOGGING' ELSE 'IDLE' END as group_state, 
-						CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
-							 WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE' 
-							 ELSE 'ROLLBACKABLE-PROTECTED' END as group_type, 
-						coalesce(group_comment, '') as group_comment,
-						pg_size_pretty((SELECT sum(pg_total_relation_size(
-										'\"' || rel_log_schema || '\".\"' || rel_schema || '_' || rel_tblseq || '_log\"')) 
-										FROM emaj.emaj_relation WHERE rel_group = group_name AND rel_kind = 'r')::bigint) as log_size,
-						(SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
-							FROM emaj.emaj_group
-							WHERE group_name = '{$group}'";
+			$sql .=	"1 as has_waiting_changes,";
 		}
+		$sql .= " (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
+				FROM emaj.emaj_group, emaj.emaj_time_stamp
+				WHERE group_name = '{$group}'
+				  AND time_id = group_creation_time_id";
 		return $data->selectSet($sql);
 	}
 
@@ -992,43 +953,24 @@ class EmajDb {
 
 		$data->clean($group);
 
-		if ($this->getNumEmajVersion() >= 20000) {	// version >= 2.0.0
-			$sql = "WITH mark_1 as (
-						SELECT mark_time_id, mark_group, mark_name,
-							to_char(time_tx_timestamp,'{$this->tsFormat}') as mark_datetime, mark_comment,
-							CASE WHEN mark_is_deleted THEN 'DELETED'
-								 WHEN NOT mark_is_deleted AND mark_is_rlbk_protected THEN 'ACTIVE-PROTECTED'
-								 ELSE 'ACTIVE' END as mark_state, 
-							coalesce(mark_log_rows_before_next,
-							(SELECT SUM(stat_rows) 
-								FROM emaj.emaj_log_stat_group(emaj_mark.mark_group,emaj_mark.mark_name,NULL)),0)
-							 AS mark_logrows
-						FROM emaj.emaj_mark, emaj.emaj_time_stamp 
-						WHERE mark_group = '{$group}'
-						  AND time_id = mark_time_id
-						)
-					SELECT mark_group, mark_name, mark_datetime, mark_comment, mark_state, mark_logrows, 
-						   sum(mark_logrows) OVER (ORDER BY mark_time_id DESC) AS mark_cumlogrows
-					FROM mark_1
-					ORDER BY mark_time_id DESC";
-		} else {
-			$sql = "WITH mark_1 as (
-						SELECT mark_id, mark_group, mark_name, mark_datetime, mark_comment,
-							CASE WHEN mark_is_deleted THEN 'DELETED'
-								 WHEN NOT mark_is_deleted AND mark_is_rlbk_protected THEN 'ACTIVE-PROTECTED'
-								 ELSE 'ACTIVE' END as mark_state, 
-							coalesce(mark_log_rows_before_next,
-							(SELECT SUM(stat_rows) 
-								FROM emaj.emaj_log_stat_group(emaj_mark.mark_group,emaj_mark.mark_name,NULL)),0)
-							 AS mark_logrows
-						FROM emaj.emaj_mark
-						WHERE mark_group = '{$group}'
-						)
-					SELECT mark_group, mark_name, mark_datetime, mark_comment, mark_state, mark_logrows, 
-						   sum(mark_logrows) OVER (ORDER BY mark_id DESC) AS mark_cumlogrows
-					FROM mark_1
-					ORDER BY mark_id DESC";
-		}
+		$sql = "WITH mark_1 as (
+					SELECT mark_time_id, mark_group, mark_name,
+						to_char(time_tx_timestamp,'{$this->tsFormat}') as mark_datetime, mark_comment,
+						CASE WHEN mark_is_deleted THEN 'DELETED'
+							 WHEN NOT mark_is_deleted AND mark_is_rlbk_protected THEN 'ACTIVE-PROTECTED'
+							 ELSE 'ACTIVE' END as mark_state,
+						coalesce(mark_log_rows_before_next,
+						(SELECT SUM(stat_rows)
+							FROM emaj.emaj_log_stat_group(emaj_mark.mark_group,emaj_mark.mark_name,NULL)),0)
+						 AS mark_logrows
+					FROM emaj.emaj_mark, emaj.emaj_time_stamp
+					WHERE mark_group = '{$group}'
+					  AND time_id = mark_time_id
+					)
+				SELECT mark_group, mark_name, mark_datetime, mark_comment, mark_state, mark_logrows,
+					   sum(mark_logrows) OVER (ORDER BY mark_time_id DESC) AS mark_cumlogrows
+				FROM mark_1
+				ORDER BY mark_time_id DESC";
 
 		return $data->selectSet($sql);
 	}
@@ -1047,7 +989,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the content of one emaj_group 
+	 * Gets the content of one emaj_group
 	 */
 	function getContentGroup($group) {
 		global $data;
@@ -1108,7 +1050,7 @@ class EmajDb {
 					   pg_catalog.obj_description(pn.oid, 'pg_namespace') AS nspcomment
 				FROM pg_catalog.pg_namespace pn
 					 LEFT JOIN pg_catalog.pg_roles pu ON (pn.nspowner = pu.oid)
-				WHERE nspname NOT LIKE 'pg@_%' ESCAPE '@' AND 
+				WHERE nspname NOT LIKE 'pg@_%' ESCAPE '@' AND
 					  nspname != 'information_schema' AND nspname != 'emaj' ";
 		if ($this->getNumEmajVersion() >= 22000){			// version >= 2.2.0
 			$sql .=
@@ -1239,7 +1181,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Return all tables and sequences of a schema, 
+	 * Return all tables and sequences of a schema,
 	 * plus all non existent tables but listed in emaj_group_def with this schema
 	 */
 	function getTablesSequences($schema) {
@@ -1265,10 +1207,10 @@ class EmajDb {
 							LEFT JOIN pg_catalog.pg_tablespace pt ON pt.oid = c.reltablespace
 						WHERE c.relkind IN ('r','S','p') AND nspname='{$schema}'
 					UNION
-					SELECT 2, grpdef_schema AS nspname, grpdef_tblseq AS relname, '!' AS relkind, NULL, NULL, NULL, 
-						grpdef_group , grpdef_priority, grpdef_log_dat_tsp, grpdef_log_idx_tsp 
+					SELECT 2, grpdef_schema AS nspname, grpdef_tblseq AS relname, '!' AS relkind, NULL, NULL, NULL,
+						grpdef_group , grpdef_priority, grpdef_log_dat_tsp, grpdef_log_idx_tsp
 						FROM emaj.emaj_group_def
-						WHERE grpdef_schema = '{$schema}' AND grpdef_tblseq NOT IN 
+						WHERE grpdef_schema = '{$schema}' AND grpdef_tblseq NOT IN
 							(SELECT relname FROM pg_catalog.pg_class, pg_catalog.pg_namespace
 								WHERE relnamespace = pg_namespace.oid AND nspname = '{$schema}' AND relkind IN ('r','S'))
 					ORDER BY 1, relname";
@@ -1284,10 +1226,10 @@ class EmajDb {
 							LEFT JOIN pg_catalog.pg_tablespace pt ON pt.oid = c.reltablespace
 						WHERE c.relkind IN ('r','S','p') AND nspname='{$schema}'
 					UNION
-					SELECT 2, grpdef_schema AS nspname, grpdef_tblseq AS relname, '!' AS relkind, NULL, NULL, NULL, 
-						grpdef_group , grpdef_priority, grpdef_log_schema_suffix, grpdef_emaj_names_prefix, grpdef_log_dat_tsp, grpdef_log_idx_tsp 
+					SELECT 2, grpdef_schema AS nspname, grpdef_tblseq AS relname, '!' AS relkind, NULL, NULL, NULL,
+						grpdef_group , grpdef_priority, grpdef_log_schema_suffix, grpdef_emaj_names_prefix, grpdef_log_dat_tsp, grpdef_log_idx_tsp
 						FROM emaj.emaj_group_def
-						WHERE grpdef_schema = '{$schema}' AND grpdef_tblseq NOT IN 
+						WHERE grpdef_schema = '{$schema}' AND grpdef_tblseq NOT IN
 							(SELECT relname FROM pg_catalog.pg_class, pg_catalog.pg_namespace
 								WHERE relnamespace = pg_namespace.oid AND nspname = '{$schema}' AND relkind IN ('r','S'))
 					ORDER BY 1, relname";
@@ -1329,7 +1271,7 @@ class EmajDb {
 	function getKnownSuffix() {
 		global $data;
 
-		$sql = "SELECT DISTINCT grpdef_log_schema_suffix AS known_suffix 
+		$sql = "SELECT DISTINCT grpdef_log_schema_suffix AS known_suffix
 				FROM emaj.emaj_group_def
 				WHERE grpdef_log_schema_suffix <> '' AND grpdef_log_schema_suffix IS NOT NULL
 				ORDER BY 1";
@@ -1342,7 +1284,7 @@ class EmajDb {
 	function getKnownTsp() {
 		global $data;
 
-		$sql = "SELECT spcname  
+		$sql = "SELECT spcname
 				FROM pg_catalog.pg_tablespace
 				WHERE spcname NOT LIKE 'pg\_%'
 				ORDER BY 1";
@@ -1365,8 +1307,8 @@ class EmajDb {
 		$data->clean($logIdxTsp);
 
 		// get the relkind of the tblseq to process
-		$sql = "SELECT relkind 
-				FROM pg_catalog.pg_class, pg_catalog.pg_namespace 
+		$sql = "SELECT relkind
+				FROM pg_catalog.pg_class, pg_catalog.pg_namespace
 				WHERE pg_namespace.oid = relnamespace AND relname = '{$tblseq}' AND nspname = '{$schema}'";
 		$rs = $data->selectSet($sql);
 		if ($rs->recordCount() == 1){
@@ -1380,7 +1322,7 @@ class EmajDb {
 		if ($this->getNumEmajVersion() < 30100){			// version < 3.1.0
 			$sql .= "grpdef_log_schema_suffix, grpdef_emaj_names_prefix,";
 		}
-		$sql .= "grpdef_log_dat_tsp, grpdef_log_idx_tsp) 
+		$sql .= "grpdef_log_dat_tsp, grpdef_log_idx_tsp)
 					VALUES ('{$schema}', '{$tblseq}', '{$group}' ";
 		if ($priority == '')
 			$sql .= ", NULL";
@@ -1426,8 +1368,8 @@ class EmajDb {
 		$data->clean($logIdxTsp);
 
 		// get the relkind of the tblseq to process
-		$sql = "SELECT relkind 
-				FROM pg_catalog.pg_class, pg_catalog.pg_namespace 
+		$sql = "SELECT relkind
+				FROM pg_catalog.pg_class, pg_catalog.pg_namespace
 				WHERE pg_namespace.oid = relnamespace AND relname = '{$tblseq}' AND nspname = '{$schema}'";
 		$rs = $data->selectSet($sql);
 		if ($rs->recordCount() == 1){
@@ -1437,7 +1379,7 @@ class EmajDb {
 		}
 
 		// Update the row in the emaj_group_def table
-		$sql = "UPDATE emaj.emaj_group_def SET 
+		$sql = "UPDATE emaj.emaj_group_def SET
 					grpdef_group = '{$groupNew}'";
 		if ($priority == '')
 			$sql .= ", grpdef_priority = NULL";
@@ -1483,7 +1425,7 @@ class EmajDb {
 			return -1;
 		}
 
-		$sql = "DELETE FROM emaj.emaj_group_def 
+		$sql = "DELETE FROM emaj.emaj_group_def
 				WHERE grpdef_schema = '{$schema}' AND grpdef_tblseq = '{$tblseq}' AND grpdef_group = '{$group}'";
 		// Delete row
 		$status = $data->execute($sql);
@@ -1657,7 +1599,7 @@ class EmajDb {
 		if ($this->getNumEmajVersion() >= 40000){	// version >= 4.0.0
 			$sql = "SELECT CASE WHEN EXISTS(SELECT 1 FROM emaj.emaj_group WHERE group_name = '{$group}') THEN 0 ELSE 1 END AS result";
 		} else {
-			$sql = "SELECT CASE WHEN 
+			$sql = "SELECT CASE WHEN
 					(SELECT COUNT(*) FROM emaj.emaj_group WHERE group_name = '{$group}') +
 					(SELECT COUNT(*) FROM emaj.emaj_group_def WHERE grpdef_group = '{$group}')
 					= 0 THEN 1 ELSE 0 END AS result";
@@ -1850,7 +1792,7 @@ class EmajDb {
 		$isLogging = $data->selectField($sql,'is_logging');
 		// the group is idle, so return immediately
 		if (! $isLogging) { return 1; }
-		// the group is logging 
+		// the group is logging
 		// if the emaj version is prior 2.1.0, exit immediately
 		if ($this->getNumEmajVersion() < 20100){ return 0; }
 
@@ -1958,8 +1900,8 @@ class EmajDb {
 		# replace the % characters by the time of day, in format 'HH24.MI.SS.MS'
 		$finalMark = str_replace('%', date('H.i.s.') . substr(microtime(),2,3), $mark);
 
-		$sql = "SELECT CASE WHEN 
-				(SELECT COUNT(*) FROM emaj.emaj_mark 
+		$sql = "SELECT CASE WHEN
+				(SELECT COUNT(*) FROM emaj.emaj_mark
 				   WHERE mark_group = ANY ({$groupsArray}) AND mark_name = '{$finalMark}')
 				= 0 THEN 1 ELSE 0 END AS result";
 
@@ -1995,19 +1937,11 @@ class EmajDb {
 		$data->clean($group);
 		$data->clean($mark);
 
-		if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-			$sql = "SELECT CASE WHEN mark_time_id = 
-							(SELECT MIN (mark_time_id) FROM emaj.emaj_mark WHERE mark_group = '{$group}')
-							THEN 1 ELSE 0 END AS result
-					FROM emaj.emaj_mark
-					WHERE mark_group = '{$group}' AND mark_name = '{$mark}'";
-		} else {
-			$sql = "SELECT CASE WHEN mark_id = 
-							(SELECT MIN (mark_id) FROM emaj.emaj_mark WHERE mark_group = '{$group}')
-							THEN 1 ELSE 0 END AS result
-					FROM emaj.emaj_mark
-					WHERE mark_group = '{$group}' AND mark_name = '{$mark}'";
-		}
+		$sql = "SELECT CASE WHEN mark_time_id =
+						(SELECT MIN (mark_time_id) FROM emaj.emaj_mark WHERE mark_group = '{$group}')
+						THEN 1 ELSE 0 END AS result
+				FROM emaj.emaj_mark
+				WHERE mark_group = '{$group}' AND mark_name = '{$mark}'";
 
 		return $data->selectField($sql,'result');
 	}
@@ -2191,7 +2125,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets properties of one mark 
+	 * Gets properties of one mark
 	 */
 	function getMark($group,$mark) {
 		global $data;
@@ -2304,20 +2238,12 @@ class EmajDb {
 
 		$data->clean($group);
 
-		if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-			$sql = "SELECT mark_name, to_char(time_tx_timestamp,'{$this->tsFormat}') as mark_datetime, mark_is_rlbk_protected
-					FROM emaj.emaj_mark, emaj.emaj_time_stamp 
-					WHERE mark_group = '{$group}'
-					  AND NOT mark_is_deleted
-					  AND time_id = mark_time_id
-					ORDER BY mark_time_id DESC";
-		}else{
-			$sql = "SELECT mark_name, to_char(mark_datetime,'{$this->tsFormat}'), mark_is_rlbk_protected 
-					  FROM emaj.emaj_mark 
-					  WHERE NOT mark_is_deleted
-						AND mark_group = '$group'
-					  ORDER BY mark_id DESC";
-		}
+		$sql = "SELECT mark_name, to_char(time_tx_timestamp,'{$this->tsFormat}') as mark_datetime, mark_is_rlbk_protected
+				FROM emaj.emaj_mark, emaj.emaj_time_stamp
+				WHERE mark_group = '{$group}'
+				  AND NOT mark_is_deleted
+				  AND time_id = mark_time_id
+				ORDER BY mark_time_id DESC";
 		return $data->selectSet($sql);
 	}
 
@@ -2335,7 +2261,7 @@ class EmajDb {
 
 		// check the mark is active
 		$sql = "SELECT CASE WHEN EXISTS
-				 (SELECT 0 FROM emaj.emaj_mark 
+				 (SELECT 0 FROM emaj.emaj_mark
                    WHERE mark_group = '{$group}' AND mark_name = '{$mark}' AND NOT mark_is_deleted
 				  ) THEN 1 ELSE 0 END AS is_active";
 
@@ -2345,8 +2271,8 @@ class EmajDb {
 	/**
 	 * Determines whether or not a mark name is valid as a mark to rollback to for a group
 	 * Returns 1 if:
-	 *   - the mark name is known and in ACTIVE state and 
-	 *   - no intermediate protected mark would be covered by the rollback, 
+	 *   - the mark name is known and in ACTIVE state and
+	 *   - no intermediate protected mark would be covered by the rollback,
 	 * Retuns 0 otherwise.
 	 */
 	function isRollbackMarkValidGroup($group,$mark) {
@@ -2361,23 +2287,13 @@ class EmajDb {
 
 		if ($result == 1) {
 			// the mark is active, so now check there is no intermediate protected mark
-			if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-				$sql = "SELECT CASE WHEN 
-						(SELECT count(*) FROM emaj.emaj_mark 
-						WHERE mark_group = '{$group}' AND mark_time_id > 
-							(SELECT mark_time_id FROM emaj.emaj_mark 
-							WHERE mark_group = '{$group}' AND mark_name = '{$mark}'
-							) AND mark_is_rlbk_protected
-						) = 0 THEN 1 ELSE 0 END AS result";
-			} else {
-				$sql = "SELECT CASE WHEN 
-						(SELECT count(*) FROM emaj.emaj_mark 
-						WHERE mark_group = '{$group}' AND mark_id > 
-							(SELECT mark_id FROM emaj.emaj_mark 
-							WHERE mark_group = '{$group}' AND mark_name = '{$mark}'
-							) AND mark_is_rlbk_protected
-						) = 0 THEN 1 ELSE 0 END AS result";
-			}
+			$sql = "SELECT CASE WHEN
+					(SELECT count(*) FROM emaj.emaj_mark
+					WHERE mark_group = '{$group}' AND mark_time_id >
+						(SELECT mark_time_id FROM emaj.emaj_mark
+						WHERE mark_group = '{$group}' AND mark_name = '{$mark}'
+						) AND mark_is_rlbk_protected
+					) = 0 THEN 1 ELSE 0 END AS result";
 			$result = $data->selectField($sql,'result');
 		}
 
@@ -2424,7 +2340,7 @@ class EmajDb {
 						format('{$emajlang['emajalteredaddtbl']}', rlchg_schema, rlchg_tblseq, rlchg_group)
 					WHEN rlchg_change_kind = 'ADD_SEQUENCE' THEN
 						format('{$emajlang['emajalteredaddseq']}', rlchg_schema, rlchg_tblseq, rlchg_group)
-					END AS altr_action, 
+					END AS altr_action,
 					CASE WHEN rlchg_change_kind IN ('ADD_TABLE', 'ADD_SEQUENCE', 'REMOVE_TABLE', 'REMOVE_SEQUENCE',
 													'REPAIR_TABLE', 'MOVE_TABLE', 'MOVE_SEQUENCE', 'CHANGE_LOG_DATA_TABLESPACE',
 													'CHANGE_LOG_INDEX_TABLESPACE', 'CHANGE_PRIORITY', 'CHANGE_IGNORED_TRIGGERS')
@@ -2468,7 +2384,7 @@ class EmajDb {
 						format('{$emajlang['emajalteredaddtbl']}', altr_schema, altr_tblseq, altr_group)
 					WHEN altr_step = 'ADD_SEQ' THEN
 						format('{$emajlang['emajalteredaddseq']}', altr_schema, altr_tblseq, altr_group)
-					END AS altr_action, 
+					END AS altr_action,
 					CASE WHEN altr_step IN ('ADD_TBL', 'ADD_SEQ', 'REMOVE_TBL', 'REMOVE_SEQ', 'REPAIR_TBL', 'REPAIR_SEQ', 'MOVE_TBL', 'MOVE_SEQ',
 											'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP',
 											'CHANGE_TBL_LOG_INDEX_TSP', 'CHANGE_REL_PRIORITY')
@@ -2541,11 +2457,7 @@ class EmajDb {
 		// Initialize the rollback operation and get its rollback id
 		$isL = $isLogged ? 'true' : 'false';
 		$isM = $isMulti ? 'true' : 'false';
-		if ($this->getNumEmajVersion() >= 20100){	// version >= 2.1.0
-			$sql1 = "SELECT emaj._rlbk_init({$groupsArray}, '{$mark}', {$isL}, 1, {$isM}, true) as rlbk_id";
-		} else {
-			$sql1 = "SELECT emaj._rlbk_init({$groupsArray}, '{$mark}', {$isL}, 1, {$isM}) as rlbk_id";
-		}
+		$sql1 = "SELECT emaj._rlbk_init({$groupsArray}, '{$mark}', {$isL}, 1, {$isM}, true) as rlbk_id";
 		$rlbkId = $data->selectField($sql1,'rlbk_id');
 
 		// Build the psql report file name, the SQL command and submit the rollback execution asynchronously
@@ -2595,32 +2507,21 @@ class EmajDb {
 		$data->clean($groups);
 		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 
-		if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-			$sql = "SELECT t.mark_name, t.mark_datetime, t.mark_is_rlbk_protected 
-					FROM (SELECT mark_name, to_char(time_tx_timestamp,'{$this->tsFormat}') as mark_datetime, mark_is_rlbk_protected,
-								 array_agg (mark_group) AS groups 
-						  FROM emaj.emaj_mark,emaj.emaj_group,
-							   emaj.emaj_time_stamp
-						  WHERE mark_group = group_name AND time_id = mark_time_id 
-							AND NOT mark_is_deleted AND group_is_rollbackable GROUP BY 1,2,3) AS t 
-					WHERE t.groups @> $groupsArray
-					ORDER BY t.mark_datetime DESC";
-		}else{
-			$sql = "SELECT t.mark_name, t.mark_datetime, t.mark_is_rlbk_protected 
-					FROM (SELECT mark_name, to_char(mark_datetime,'{$this->tsFormat}'), mark_is_rlbk_protected, array_agg (mark_group) AS groups 
-							FROM emaj.emaj_mark,emaj.emaj_group 
-							WHERE mark_group = group_name AND NOT mark_is_deleted
-							  AND group_is_rollbackable GROUP BY 1,2,3) AS t 
-					WHERE t.groups @> $groupsArray
-					ORDER BY t.mark_datetime DESC";
-		}
+		$sql = "SELECT t.mark_name, t.mark_datetime, t.mark_is_rlbk_protected
+				FROM (SELECT mark_name, to_char(time_tx_timestamp,'{$this->tsFormat}') as mark_datetime, mark_is_rlbk_protected,
+							 array_agg (mark_group) AS groups
+					  FROM emaj.emaj_mark,emaj.emaj_group,
+						   emaj.emaj_time_stamp
+					  WHERE mark_group = group_name AND time_id = mark_time_id
+						AND NOT mark_is_deleted AND group_is_rollbackable GROUP BY 1,2,3) AS t
+				WHERE t.groups @> $groupsArray
+				ORDER BY t.mark_datetime DESC";
 
 		return $data->selectSet($sql);
 	}
 
 	/**
 	 * Get timestamp of the youngest protected mark of a groups list.
-	 * The function is only called when E-Maj version >= 1.3.0
 	 */
 	function getYoungestProtectedMarkTimestamp($groups) {
 
@@ -2629,16 +2530,10 @@ class EmajDb {
 		$data->clean($groups);
 		$groups="'".str_replace(', ',"','",$groups)."'";
 
-		if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-			$sql = "SELECT max(time_tx_timestamp) AS youngest_mark_datetime 
-					  FROM emaj.emaj_mark , emaj.emaj_time_stamp
-					  WHERE time_id = mark_time_id
-						AND mark_group IN ($groups) AND mark_is_rlbk_protected";
-		}else{
-			$sql = "SELECT max(mark_datetime) AS youngest_mark_datetime 
-					  FROM emaj.emaj_mark 
-					  WHERE mark_group IN ($groups) AND mark_is_rlbk_protected";
-		}
+		$sql = "SELECT max(time_tx_timestamp) AS youngest_mark_datetime
+				  FROM emaj.emaj_mark , emaj.emaj_time_stamp
+				  WHERE time_id = mark_time_id
+					AND mark_group IN ($groups) AND mark_is_rlbk_protected";
 
 		return $data->selectField($sql,'youngest_mark_datetime');
 	}
@@ -2653,8 +2548,8 @@ class EmajDb {
 		$data->clean($groups);
 		$groups="'".str_replace(', ',"','",$groups)."'";
 
-		$sql = "SELECT string_agg(group_name, ', ') AS groups 
-				  FROM emaj.emaj_group 
+		$sql = "SELECT string_agg(group_name, ', ') AS groups
+				  FROM emaj.emaj_group
 				  WHERE group_name IN ($groups) AND group_is_rlbk_protected";
 
 		return $data->selectField($sql,'groups');
@@ -2664,7 +2559,7 @@ class EmajDb {
 	 * Determines whether or not a mark name is valid as a mark to rollback to for a groups array
 	 * Returns 1 if:
 	 *   - the mark name is known and in ACTIVE state,
-	 *   - no intermediate protected mark for any group would be covered by the rollback, 
+	 *   - no intermediate protected mark for any group would be covered by the rollback,
 	 * Retuns 0 otherwise.
 	 */
 	function isRollbackMarkValidGroups($groups,$mark) {
@@ -2678,10 +2573,10 @@ class EmajDb {
 		$nbGroups = substr_count($groupsArray,',') + 1;
 
 		// check the mark is active (i.e. not deleted)
-		$sql = "SELECT CASE WHEN 
-				(SELECT COUNT(*) FROM emaj.emaj_mark, emaj.emaj_group 
-					WHERE mark_group = group_name 
-						AND mark_group = ANY ({$groupsArray}) AND group_is_rollbackable AND mark_name = '{$mark}' 
+		$sql = "SELECT CASE WHEN
+				(SELECT COUNT(*) FROM emaj.emaj_mark, emaj.emaj_group
+					WHERE mark_group = group_name
+						AND mark_group = ANY ({$groupsArray}) AND group_is_rollbackable AND mark_name = '{$mark}'
 						AND NOT mark_is_deleted
 				) = {$nbGroups} THEN 1 ELSE 0 END AS result";
 
@@ -2689,23 +2584,13 @@ class EmajDb {
 
 		if ($result == 1) {
 			// the mark is active, so now check there is no intermediate protected mark
-			if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-				$sql = "SELECT CASE WHEN 
-						(SELECT count(*) FROM emaj.emaj_mark 
-						  WHERE mark_group = ANY ({$groupsArray}) AND mark_time_id > 
-							(SELECT mark_time_id FROM emaj.emaj_mark 
-							 WHERE mark_group = ANY({$groupsArray}) AND mark_name = '{$mark}' LIMIT 1
-						    ) AND mark_is_rlbk_protected
-						) = 0 THEN 1 ELSE 0 END AS result";
-			} else{
-				$sql = "SELECT CASE WHEN 
-						(SELECT count(*) FROM emaj.emaj_mark 
-						  WHERE mark_group = ANY ({$groupsArray}) AND mark_id > 
-							(SELECT mark_id FROM emaj.emaj_mark 
-							 WHERE mark_group = ANY({$groupsArray}) AND mark_name = '{$mark}' LIMIT 1
-						    ) AND mark_is_rlbk_protected
-						) = 0 THEN 1 ELSE 0 END AS result";
-			}
+			$sql = "SELECT CASE WHEN
+					(SELECT count(*) FROM emaj.emaj_mark
+					  WHERE mark_group = ANY ({$groupsArray}) AND mark_time_id >
+						(SELECT mark_time_id FROM emaj.emaj_mark
+						 WHERE mark_group = ANY({$groupsArray}) AND mark_name = '{$mark}' LIMIT 1
+					    ) AND mark_is_rlbk_protected
+					) = 0 THEN 1 ELSE 0 END AS result";
 			$result = $data->selectField($sql,'result');
 		}
 
@@ -2761,7 +2646,7 @@ class EmajDb {
 		$data->clean($group);
 		$data->clean($mark);
 
-		$sql = "SELECT coalesce(sum(stat_rows),0) as sumrows, count(*) as nbtables 
+		$sql = "SELECT coalesce(sum(stat_rows),0) as sumrows, count(*) as nbtables
 					FROM emaj.emaj_log_stat_group('{$group}','{$mark}',NULL)
 					WHERE stat_rows > 0";
 
@@ -2786,7 +2671,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the list of completed rollback operations (the last 1000, if so many)
+	 * Gets the list of completed rollback operations (the latest 1000, if so many)
 	 */
 	function getCompletedRlbk() {
 		global $data;
@@ -2802,18 +2687,13 @@ class EmajDb {
 					to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
 					to_char(rlbk_end_datetime - rlbk_start_datetime, '{$this->intervalFormat}') as rlbk_duration,
 					rlbk_mark, rlbk_mark_datetime, rlbk_is_logged, rlbk_nb_session, rlbk_eff_nb_table,
-					rlbk_nb_sequence ";
-		if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-			$sql .= "FROM (SELECT *, tr.time_tx_timestamp as rlbk_start_datetime,
-						    tm.time_tx_timestamp as rlbk_mark_datetime
-						  FROM emaj.emaj_rlbk, emaj.emaj_time_stamp tr, emaj.emaj_time_stamp tm 
-						  WHERE tr.time_id = rlbk_time_id AND tm.time_id = rlbk_mark_time_id 
-							AND rlbk_status IN ('COMPLETED','COMMITTED','ABORTED')";
-		} else {
-			$sql .= "FROM (SELECT * FROM emaj.emaj_rlbk 
-					WHERE rlbk_status IN ('COMPLETED','COMMITTED','ABORTED')";
-		}
-		$sql .= " ORDER BY rlbk_id DESC ";
+					rlbk_nb_sequence
+				FROM (SELECT *, tr.time_tx_timestamp as rlbk_start_datetime,
+					    tm.time_tx_timestamp as rlbk_mark_datetime
+					  FROM emaj.emaj_rlbk, emaj.emaj_time_stamp tr, emaj.emaj_time_stamp tm
+					  WHERE tr.time_id = rlbk_time_id AND tm.time_id = rlbk_mark_time_id
+						AND rlbk_status IN ('COMPLETED','COMMITTED','ABORTED')
+				ORDER BY rlbk_id DESC ";
 		if ($nb > 0)
 			$sql .= "LIMIT {$nb}";
 		$sql .= ") AS t";
@@ -2833,8 +2713,8 @@ class EmajDb {
 					to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
 					to_char(rlbk_elapse,'{$this->intervalFormat}') AS rlbk_current_elapse,
 					to_char(rlbk_remaining, '{$this->intervalFormat}') AS rlbk_remaining,
-					rlbk_completion_pct 
-				FROM emaj.emaj_rollback_activity() 
+					rlbk_completion_pct
+				FROM emaj.emaj_rollback_activity()
 				ORDER BY rlbk_id DESC";
 
 		return $data->selectSet($sql);
@@ -2859,11 +2739,11 @@ class EmajDb {
 					ORDER BY cons_end_rlbk_mark_time_id, cons_group";
 		} else {
 			$sql = "SELECT cons_group,
-						cons_target_rlbk_mark_name, to_char(tt.time_tx_timestamp,'{$this->tsFormat}') AS cons_target_rlbk_mark_datetime, 
+						cons_target_rlbk_mark_name, to_char(tt.time_tx_timestamp,'{$this->tsFormat}') AS cons_target_rlbk_mark_datetime,
 						cons_end_rlbk_mark_name, to_char(rt.time_tx_timestamp,'{$this->tsFormat}') AS cons_end_rlbk_mark_datetime,
 						cons_rows, cons_marks
 					FROM emaj.emaj_get_consolidable_rollbacks(),
-						emaj.emaj_mark tm, emaj.emaj_time_stamp tt, 
+						emaj.emaj_mark tm, emaj.emaj_time_stamp tt,
 						emaj.emaj_mark rm, emaj.emaj_time_stamp rt
 					WHERE tt.time_id = tm.mark_time_id AND tm.mark_id = cons_target_rlbk_mark_id
 					  AND rt.time_id = rm.mark_time_id AND rm.mark_id = cons_end_rlbk_mark_id
@@ -2906,19 +2786,12 @@ class EmajDb {
 					to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
 					to_char(rlbk_end_datetime - rlbk_start_datetime,'{$this->intervalFormat}') AS rlbk_duration,
 					rlbk_mark, rlbk_mark_datetime, rlbk_is_logged, rlbk_nb_session, rlbk_eff_nb_table,
-					rlbk_nb_sequence ";
-		if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-			$sql .= "FROM (SELECT *, tr.time_tx_timestamp as rlbk_start_datetime, tm.time_tx_timestamp as rlbk_mark_datetime
-							FROM emaj.emaj_rlbk, emaj.emaj_time_stamp tr, emaj.emaj_time_stamp tm 
-							WHERE tr.time_id = rlbk_time_id AND tm.time_id = rlbk_mark_time_id 
-							  AND rlbk_id = {$rlbkId}
-						  ) AS t";
-		} else {
-			$sql .= "FROM (SELECT *
-							FROM emaj.emaj_rlbk 
-							WHERE rlbk_id = {$rlbkId}
-						  ) AS t";
-		}
+					rlbk_nb_sequence
+				FROM (SELECT *, tr.time_tx_timestamp as rlbk_start_datetime, tm.time_tx_timestamp as rlbk_mark_datetime
+						FROM emaj.emaj_rlbk, emaj.emaj_time_stamp tr, emaj.emaj_time_stamp tm
+						WHERE tr.time_id = rlbk_time_id AND tm.time_id = rlbk_mark_time_id
+						  AND rlbk_id = {$rlbkId}
+					  ) AS t";
 
 		return $data->selectSet($sql);
 	}
@@ -3048,7 +2921,7 @@ class EmajDb {
 			$sql = "CREATE TEMP TABLE tmp_stat AS
 					SELECT stat_group, stat_schema, stat_table,
 						   stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
-						   stat_rows, 
+						   stat_rows,
 						   'select * from ' || quote_ident(stat_log_schema) || '.' || quote_ident(stat_log_table) ||
 						   ' where emaj_gid > ' || stat_first_mark_gid::text ||
 						   coalesce (' and emaj_gid <= ' || stat_last_mark_gid::text, '') ||
@@ -3062,72 +2935,43 @@ class EmajDb {
 				if ($this->getNumEmajVersion() >= 20203){	// version >= 2.2.3
 					$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
 				}
-				$sql .= "stat_rows, 
-						'select * from ' || quote_ident(rel_log_schema)";
-				if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-					$sql .= " || '.' || quote_ident(rel_log_table) || 
-								' where emaj_gid > ' || strttime.time_last_emaj_gid ||
-								' order by emaj_gid' as sql_text
-							FROM emaj.emaj_log_stat_group('{$group}','{$firstMark}',NULL), 
-								emaj.emaj_mark strtmark, emaj.emaj_time_stamp strttime,
-								emaj.emaj_relation
-							WHERE stat_rows > 0 
-								AND strtmark.mark_group = '{$group}' 
-								AND strtmark.mark_name = '{$firstMark}' 
-								AND rel_schema = stat_schema AND rel_tblseq = stat_table
-								AND strtmark.mark_time_id = strttime.time_id";
-				}else{
-					$sql .= " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') || 
-								' where emaj_gid > ' || strtmark.mark_global_seq ||
-								' order by emaj_gid' as sql_text
-							FROM emaj.emaj_log_stat_group('{$group}','{$firstMark}',NULL), 
-								emaj.emaj_mark strtmark, 
-								emaj.emaj_relation
-							WHERE stat_rows > 0 
-								AND strtmark.mark_group = '{$group}' 
-								AND strtmark.mark_name = '{$firstMark}' 
-								AND rel_schema = stat_schema AND rel_tblseq = stat_table";
-				}
-			}else{
+				$sql .= "stat_rows,
+						'select * from ' || quote_ident(rel_log_schema) ||
+						    '.' || quote_ident(rel_log_table) ||
+							' where emaj_gid > ' || strttime.time_last_emaj_gid ||
+							' order by emaj_gid' as sql_text
+						FROM emaj.emaj_log_stat_group('{$group}','{$firstMark}',NULL),
+							emaj.emaj_mark strtmark, emaj.emaj_time_stamp strttime,
+							emaj.emaj_relation
+						WHERE stat_rows > 0
+							AND strtmark.mark_group = '{$group}'
+							AND strtmark.mark_name = '{$firstMark}'
+							AND rel_schema = stat_schema AND rel_tblseq = stat_table
+							AND strtmark.mark_time_id = strttime.time_id";
+			} else {
 				$sql = "CREATE TEMP TABLE tmp_stat AS
 						SELECT stat_group, stat_schema, stat_table, ";
 				if ($this->getNumEmajVersion() >= 20203){	// version >= 2.2.3
 					$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
 				}
-				$sql .= "stat_rows, 
-						'select * from ' || quote_ident(rel_log_schema)";
-				if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-					$sql .= " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') ||
-								' where emaj_gid > ' || strttime.time_last_emaj_gid ||
-								' and emaj_gid <= ' || stoptime.time_last_emaj_gid ||
-								' order by emaj_gid' as sql_text
-							FROM emaj.emaj_log_stat_group('{$group}','{$firstMark}','{$lastMark}'), 
-								emaj.emaj_mark strtmark, emaj.emaj_time_stamp strttime, 
-								emaj.emaj_mark stopmark, emaj.emaj_time_stamp stoptime, 
-								emaj.emaj_relation
-							WHERE stat_rows > 0 
-								AND strtmark.mark_group = '{$group}' 
-								AND strtmark.mark_name = '{$firstMark}' 
-								AND stopmark.mark_group = '{$group}' 
-								AND stopmark.mark_name = '{$lastMark}' 
-								AND rel_schema = stat_schema AND rel_tblseq = stat_table
-								AND strtmark.mark_time_id = strttime.time_id
-								AND stopmark.mark_time_id = stoptime.time_id";
-				}else{
-					$sql .= " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') ||
-								' where emaj_gid > ' || strtmark.mark_global_seq ||
-								' and emaj_gid <= ' || stopmark.mark_global_seq ||
-								' order by emaj_gid' as sql_text
-							FROM emaj.emaj_log_stat_group('{$group}','{$firstMark}','{$lastMark}'), 
-								emaj.emaj_mark strtmark , emaj.emaj_mark stopmark, 
-								emaj.emaj_relation
-							WHERE stat_rows > 0 
-								AND strtmark.mark_group = '{$group}' 
-								AND strtmark.mark_name = '{$firstMark}' 
-								AND stopmark.mark_group = '{$group}' 
-								AND stopmark.mark_name = '{$lastMark}' 
-								AND rel_schema = stat_schema AND rel_tblseq = stat_table";
-				}
+				$sql .= "stat_rows,
+						'select * from ' || quote_ident(rel_log_schema) ||
+						    '.' || quote_ident(stat_schema || '_' || stat_table || '_log') ||
+							' where emaj_gid > ' || strttime.time_last_emaj_gid ||
+							' and emaj_gid <= ' || stoptime.time_last_emaj_gid ||
+							' order by emaj_gid' as sql_text
+						FROM emaj.emaj_log_stat_group('{$group}','{$firstMark}','{$lastMark}'),
+							emaj.emaj_mark strtmark, emaj.emaj_time_stamp strttime,
+							emaj.emaj_mark stopmark, emaj.emaj_time_stamp stoptime,
+							emaj.emaj_relation
+						WHERE stat_rows > 0
+							AND strtmark.mark_group = '{$group}'
+							AND strtmark.mark_name = '{$firstMark}'
+							AND stopmark.mark_group = '{$group}'
+							AND stopmark.mark_name = '{$lastMark}'
+							AND rel_schema = stat_schema AND rel_tblseq = stat_table
+							AND strtmark.mark_time_id = strttime.time_id
+							AND stopmark.mark_time_id = stoptime.time_id";
 			}
 		}
 
@@ -3149,7 +2993,7 @@ class EmajDb {
 	function getLogStatSummary() {
 		global $data;
 
-		$sql = "SELECT coalesce(sum(stat_rows),0) AS sum_rows, count(distinct stat_schema || '.' || stat_table) AS nb_tables 
+		$sql = "SELECT coalesce(sum(stat_rows),0) AS sum_rows, count(distinct stat_schema || '.' || stat_table) AS nb_tables
 				FROM tmp_stat";
 
 		return $data->selectSet($sql);
@@ -3186,75 +3030,45 @@ class EmajDb {
 				if ($this->getNumEmajVersion() >= 20203){	// version >= 2.2.3
 					$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
 				}
-				$sql .= "stat_role, stat_verb, stat_rows, 
-						'select * from ' || quote_ident(rel_log_schema)";
-				if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-					$sql .=    " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') || 
-								' where emaj_gid > ' || strttime.time_last_emaj_gid ||
-								' and emaj_verb = ' || quote_literal(substring(stat_verb from 1 for 3)) || 
-								' order by emaj_gid' as sql_text
-							FROM emaj.emaj_detailed_log_stat_group('{$group}','{$firstMark}',NULL), 
-								emaj.emaj_mark strtmark, emaj.emaj_time_stamp strttime, 
-								emaj.emaj_relation
-							WHERE stat_rows > 0 
-								AND strtmark.mark_group = '{$group}' 
-								AND strtmark.mark_name = '{$firstMark}' 
-								AND rel_schema = stat_schema AND rel_tblseq = stat_table
-								AND strtmark.mark_time_id = strttime.time_id";
-				}else{
-					$sql .=    " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') || 
-								' where emaj_gid > ' || strtmark.mark_global_seq ||
-								' and emaj_verb = ' || quote_literal(substring(stat_verb from 1 for 3)) || 
-								' order by emaj_gid' as sql_text
-							FROM emaj.emaj_detailed_log_stat_group('{$group}','{$firstMark}',NULL), 
-								emaj.emaj_mark strtmark, emaj.emaj_relation
-							WHERE stat_rows > 0 
-								AND strtmark.mark_group = '{$group}' 
-								AND strtmark.mark_name = '{$firstMark}' 
-								AND rel_schema = stat_schema AND rel_tblseq = stat_table";
-				}
-			}else{
+				$sql .= "stat_role, stat_verb, stat_rows,
+						'select * from ' || quote_ident(rel_log_schema) ||
+							'.' || quote_ident(stat_schema || '_' || stat_table || '_log') ||
+							' where emaj_gid > ' || strttime.time_last_emaj_gid ||
+							' and emaj_verb = ' || quote_literal(substring(stat_verb from 1 for 3)) ||
+							' order by emaj_gid' as sql_text
+						FROM emaj.emaj_detailed_log_stat_group('{$group}','{$firstMark}',NULL),
+							emaj.emaj_mark strtmark, emaj.emaj_time_stamp strttime,
+							emaj.emaj_relation
+						WHERE stat_rows > 0
+							AND strtmark.mark_group = '{$group}'
+							AND strtmark.mark_name = '{$firstMark}'
+							AND rel_schema = stat_schema AND rel_tblseq = stat_table
+							AND strtmark.mark_time_id = strttime.time_id";
+			} else {
 				$sql = "CREATE TEMP TABLE tmp_stat AS
 						SELECT stat_group, stat_schema, stat_table, ";
 				if ($this->getNumEmajVersion() >= 20203){	// version >= 2.2.3
 					$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
 				}
-				$sql .= "stat_role, stat_verb, stat_rows, 
-						'select * from ' || quote_ident(rel_log_schema)";
-				if ($this->getNumEmajVersion() >= 20000){	// version >= 2.0.0
-					$sql .=    " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') || 
-								' where emaj_gid > ' || strttime.time_last_emaj_gid ||
-								' and emaj_gid <= ' || stoptime.time_last_emaj_gid ||
-								' and emaj_verb = ' || quote_literal(substring(stat_verb from 1 for 3)) || 
-								' order by emaj_gid' as sql_text
-							FROM emaj.emaj_detailed_log_stat_group('{$group}','{$firstMark}','{$lastMark}'), 
-								emaj.emaj_mark strtmark, emaj.emaj_time_stamp strttime, 
-								emaj.emaj_mark stopmark, emaj.emaj_time_stamp stoptime, 
-								emaj.emaj_relation
-							WHERE stat_rows > 0 
-								AND strtmark.mark_group = '{$group}' 
-								AND strtmark.mark_name = '{$firstMark}' 
-								AND stopmark.mark_group = '{$group}' 
-								AND stopmark.mark_name = '{$lastMark}' 
-								AND rel_schema = stat_schema AND rel_tblseq = stat_table
-								AND strtmark.mark_time_id = strttime.time_id
-								AND stopmark.mark_time_id = stoptime.time_id";
-				}else{
-					$sql .=    " || '.' || quote_ident(stat_schema || '_' || stat_table || '_log') || 
-								' where emaj_gid > ' || strtmark.mark_global_seq ||
-								' and emaj_gid <= ' || stopmark.mark_global_seq ||
-								' and emaj_verb = ' || quote_literal(substring(stat_verb from 1 for 3)) || 
-								' order by emaj_gid' as sql_text
-							FROM emaj.emaj_detailed_log_stat_group('{$group}','{$firstMark}','{$lastMark}'), 
-								emaj.emaj_mark strtmark , emaj.emaj_mark stopmark, 
-								emaj.emaj_relation
-							WHERE stat_rows > 0 
-								AND strtmark.mark_group = '{$group}' 
-								AND strtmark.mark_name = '{$firstMark}' 
-								AND stopmark.mark_group = '{$group}' 
-								AND stopmark.mark_name = '{$lastMark}' 
-								AND rel_schema = stat_schema AND rel_tblseq = stat_table";
-				}
+				$sql .= "stat_role, stat_verb, stat_rows,
+						'select * from ' || quote_ident(rel_log_schema) ||
+							'.' || quote_ident(stat_schema || '_' || stat_table || '_log') ||
+							' where emaj_gid > ' || strttime.time_last_emaj_gid ||
+							' and emaj_gid <= ' || stoptime.time_last_emaj_gid ||
+							' and emaj_verb = ' || quote_literal(substring(stat_verb from 1 for 3)) ||
+							' order by emaj_gid' as sql_text
+						FROM emaj.emaj_detailed_log_stat_group('{$group}','{$firstMark}','{$lastMark}'),
+							emaj.emaj_mark strtmark, emaj.emaj_time_stamp strttime,
+							emaj.emaj_mark stopmark, emaj.emaj_time_stamp stoptime,
+							emaj.emaj_relation
+						WHERE stat_rows > 0
+							AND strtmark.mark_group = '{$group}'
+							AND strtmark.mark_name = '{$firstMark}'
+							AND stopmark.mark_group = '{$group}'
+							AND stopmark.mark_name = '{$lastMark}'
+							AND rel_schema = stat_schema AND rel_tblseq = stat_table
+							AND strtmark.mark_time_id = strttime.time_id
+							AND stopmark.mark_time_id = stoptime.time_id";
 			}
 		}
 		$data->execute($sql);
@@ -3301,9 +3115,9 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 
 	/**
 	 * Gets the 'E-Maj type' of a table or sequence
-	 * returns 
-     *   'L' when the table or sequence is a Log object, or 
-     *   'E' if it is an internal E-maj object, or 
+	 * returns
+     *   'L' when the table or sequence is a Log object, or
+     *   'E' if it is an internal E-maj object, or
      *   '' in other cases
 	 */
 	function getEmajTypeTblSeq($schema, $tblseq) {
@@ -3334,8 +3148,8 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 					substring(pg_catalog.pg_get_triggerdef(t.oid) FROM 'FOR EACH (\S+) EXECUTE') as tglevel,
 					substring(pg_catalog.pg_get_triggerdef(t.oid) FROM 'CREATE TRIGGER \S+ (.*?) ON ') as tgevent,
                        quote_ident(pn.nspname) || '.' || quote_ident(proname) as tgfnct,
-					CASE WHEN t.tgenabled = 'D' THEN 'Disabled' 
-						 WHEN t.tgenabled = 'O' THEN 'Enabled' 
+					CASE WHEN t.tgenabled = 'D' THEN 'Disabled'
+						 WHEN t.tgenabled = 'O' THEN 'Enabled'
 						 WHEN t.tgenabled = 'R' THEN 'Enabled on Replica'
 						 WHEN t.tgenabled = 'A' THEN 'Enabled Always'
 							END AS tgstate,
@@ -3459,8 +3273,8 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 						substring(pg_catalog.pg_get_triggerdef(t.oid) FROM 'FOR EACH (\S+) EXECUTE') as tglevel,
 						substring(pg_catalog.pg_get_triggerdef(t.oid) FROM 'CREATE TRIGGER \S+ (.*?) ON ') as tgevent,
                         quote_ident(pn.nspname) || '.' || quote_ident(proname) as tgfnct,
-						CASE WHEN t.tgenabled = 'D' THEN 'Disabled' 
-							 WHEN t.tgenabled = 'O' THEN 'Enabled' 
+						CASE WHEN t.tgenabled = 'D' THEN 'Disabled'
+							 WHEN t.tgenabled = 'O' THEN 'Enabled'
 							 WHEN t.tgenabled = 'R' THEN 'Enabled on Replica'
 							 WHEN t.tgenabled = 'A' THEN 'Enabled Always'
 								END AS tgstate,
@@ -3480,7 +3294,7 @@ array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 
 											  AND tgname = ANY(rel_ignored_triggers))
 							END as tgisautodisable,";
 			} elseif ($this->getNumEmajVersion() >= 30100) {
-				$sql .= " 	CASE WHEN tgname IN ('emaj_trunc_trg', 'emaj_log_trg') THEN NULL 
+				$sql .= " 	CASE WHEN tgname IN ('emaj_trunc_trg', 'emaj_log_trg') THEN NULL
 								ELSE NOT EXISTS (
 									SELECT 1 FROM emaj.emaj_ignored_app_trigger
 										WHERE trg_schema = '{$schema}' AND trg_table = '{$table}' AND trg_name = tgname)

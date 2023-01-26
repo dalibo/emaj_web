@@ -787,7 +787,7 @@ class EmajDb {
 		$data->clean($group);
 
 		$sql = "SELECT group_name, group_nb_table, group_nb_sequence,
-				to_char(time_tx_timestamp,'{$this->tsFormat}') as group_creation_datetime
+				to_char(time_tx_timestamp,'{$this->tsFormat}') as group_creation_datetime,
 				CASE WHEN group_is_logging THEN 'LOGGING' ELSE 'IDLE' END as group_state,
 				CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
 					 WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'

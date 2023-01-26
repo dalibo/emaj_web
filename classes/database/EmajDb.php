@@ -1927,26 +1927,6 @@ class EmajDb {
 	}
 
 	/**
-	 * Determines whether or not a mark name is the first mark of its group
-	 * Returns 1 if the mark is the oldest of its group, 0 otherwise.
-	 */
-	function isFirstMarkGroup($group,$mark) {
-
-		global $data;
-
-		$data->clean($group);
-		$data->clean($mark);
-
-		$sql = "SELECT CASE WHEN mark_time_id =
-						(SELECT MIN (mark_time_id) FROM emaj.emaj_mark WHERE mark_group = '{$group}')
-						THEN 1 ELSE 0 END AS result
-				FROM emaj.emaj_mark
-				WHERE mark_group = '{$group}' AND mark_name = '{$mark}'";
-
-		return $data->selectField($sql,'result');
-	}
-
-	/**
 	 * Starts a group
 	 */
 	function startGroup($group,$mark,$resetLog) {
@@ -2595,26 +2575,6 @@ class EmajDb {
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Rollbacks a groups array to a mark (the old version, to be used with emaj prior 2.1)
-	 * It returns the number of tables and sequences processed.
-	 */
-	function oldRollbackGroups($groups,$mark,$isLogged) {
-		global $data;
-
-		$data->clean($groups);
-		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
-		$data->clean($mark);
-
-		if ($isLogged){
-			$sql = "SELECT emaj.emaj_logged_rollback_groups({$groupsArray},'{$mark}') AS nbtblseq";
-		}else{
-			$sql = "SELECTemaj.emaj_rollback_groups({$groupsArray},'{$mark}') AS nbtblseq";
-		}
-
-		return $data->execute($sql);
 	}
 
 	/**

@@ -459,10 +459,12 @@
 
 		// check if E-Maj is installed in the current database
 		$isEnabled = $emajdb->isEnabled();
+		$isExtensionAvailable = $emajdb->isExtensionAvailable();
+
 		if (! $isEnabled) {
 			// emaj is not installed,
 			// check if the extension is available
-			if ($emajdb->isExtensionAvailable())
+			if ($isExtensionAvailable)
 				$msg = $lang['emajextnotcreated'];
 			else
 				$msg = $lang['emajextnotavailable'];
@@ -513,7 +515,7 @@
 			}
 		}
 
-		if (($data->isSuperUser($server_info['username']))) {
+		if ($data->isSuperUser($server_info['username']) && $isExtensionAvailable) {
 		//
 		// Extension management section (for superusers only)
 		//

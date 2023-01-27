@@ -35,9 +35,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Determines whether or not Emaj is installed in the current
-	 * database.
-	 * @post Will populate version and schema fields, etc.
+	 * Determines whether Emaj is installed in the current database, by looking for a schema named 'emaj'.
 	 * @return True if Emaj is installed, false otherwise.
 	 */
 	function isEnabled() {
@@ -50,7 +48,7 @@ class EmajDb {
 		// Check for the emaj schema in the namespace relation.
 		$sql = "SELECT nspname AS schema
 				FROM pg_catalog.pg_namespace
-				WHERE nspname='emaj'";
+				WHERE nspname = 'emaj'";
 		$rs = $data->selectSet($sql);
 		if ($rs->recordCount() == 1) {
 			$schema = $rs->fields['schema'];
@@ -61,7 +59,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Determines whether or not the current user is granted to access emaj schema.
+	 * Determines whether the current user is granted to access emaj schema.
 	 * @return True if enabled Emaj is accessible by the current user, false otherwise.
 	 */
 	function isAccessible() {
@@ -74,7 +72,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Determines whether or not the current user is granted the 'emaj_adm' role.
+	 * Determines whether the current user is granted the 'emaj_adm' role.
 	 * @return True if Emaj is accessible by the current user as E-maj administrator, false otherwise.
 	 */
 	function isEmaj_Adm() {
@@ -97,7 +95,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Determines whether or not the current user is granted the 'emaj_viewer' role.
+	 * Determines whether the current user is granted the 'emaj_viewer' role.
 	 * @return True if Emaj is accessible by the current user as E-maj viewer, false otherwise.
 	 * Note that an 'emaj_adm' role is also considered as 'emaj_viewer'
 	 */
@@ -120,7 +118,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Determines whether or not the E-Maj extension has been installed in the instance.
+	 * Determines whether the E-Maj extension has been installed in the instance.
 	 */
 	function isExtensionAvailable() {
 		global $data;
@@ -134,7 +132,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Determines whether or not E-Maj has been created as an extension.
+	 * Determines whether E-Maj has been created as an extension.
 	 */
 	function isExtension() {
 		global $data;

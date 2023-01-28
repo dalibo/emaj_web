@@ -286,7 +286,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Determines whether or not a dblink connection can be used for rollbacks (not necessarily for this user).
+	 * Determines whether a dblink connection can be used for rollbacks (not necessarily for this user).
 	 */
 	function isDblinkUsable() {
 		// Access cache
@@ -307,7 +307,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Determines whether or not the asynchronous rollback can be used for the current user.
+	 * Determines whether the asynchronous rollback can be used for the current user.
 	 * Parameter: $useCache = boolean to be explicitely set to false to force the check
 	 * It checks that:
 	 * - dblink is effectively usable
@@ -392,7 +392,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets emaj version from either from cache or from a getVersion() call
+	 * Gets the emaj version from either the cache or a getVersion() call
 	 */
 	function getEmajVersion() {
 		// Access cache
@@ -403,7 +403,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets emaj version in numeric format from either from cache or from a getVersion() call
+	 * Gets the emaj version in numeric format from either the cache or a getVersion() call
 	 */
 	function getNumEmajVersion() {
 		// Access cache
@@ -414,43 +414,31 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets emaj version from the emaj_param table or the emaj_visible_param if it exists
+	 * Gets emaj version from the emaj_visible_param
 	 */
 	function getVersion() {
 		global $data;
 
-		// init version values
+		// Initialize version values
 		$this->emaj_version = '?';
 		$this->emaj_version_num = 0;
 
-		// look at the postgres catalog to see if the emaj_visible_param view exists or not. If not (i.e. old emaj version), use the emaj_param table instead.
-		$sql = "SELECT CASE WHEN EXISTS
-					(SELECT relname FROM pg_catalog.pg_class, pg_catalog.pg_namespace
-						WHERE relnamespace = pg_namespace.oid AND relname = 'emaj_visible_param' AND nspname = 'emaj')
-				THEN 'emaj_visible_param' ELSE 'emaj_param' END AS param_table";
+		// Get the 'emaj_version' parameter from the emaj_visible_param view.
+		$sql = "SELECT param_value_text AS version
+				FROM emaj.emaj_visible_param
+				WHERE param_key = 'emaj_version'";
 		$rs = $data->selectSet($sql);
 		if ($rs->recordCount() == 1){
-			$param_table = $rs->fields['param_table'];
-
-			// search the 'emaj_version' parameter into the proper view or table
-			$sql = "SELECT param_value_text AS version
-					FROM emaj.{$param_table}
-					WHERE param_key = 'emaj_version'";
-			$rs = $data->selectSet($sql);
-			if ($rs->recordCount() == 1){
-				$this->emaj_version = $rs->fields['version'];
-				if (substr_count($this->emaj_version, '.')==2){
-					list($v1,$v2,$v3) = explode(".",$this->emaj_version);
-					$this->emaj_version_num = 10000 * $v1 + 100 * $v2 + $v3;
-				}
-				if (substr_count($this->emaj_version, '.')==1){
-					list($v1,$v2) = explode(".",$this->emaj_version);
-					$this->emaj_version_num = 10000 * $v1 + 100 * $v2;
-				}
-				if ($this->emaj_version == '<NEXT_VERSION>' || $this->emaj_version == '<devel>'){
-					$this->emaj_version = htmlspecialchars($this->emaj_version);
-					$this->emaj_version_num = 999999;
-				}
+			$this->emaj_version = $rs->fields['version'];
+			if (substr_count($this->emaj_version, '.') == 2) {
+				list($v1,$v2,$v3) = explode(".",$this->emaj_version);
+				$this->emaj_version_num = 10000 * $v1 + 100 * $v2 + $v3;
+			} elseif (substr_count($this->emaj_version, '.') == 1) {
+				list($v1,$v2) = explode(".",$this->emaj_version);
+				$this->emaj_version_num = 10000 * $v1 + 100 * $v2;
+			} else {
+				$this->emaj_version = htmlspecialchars($this->emaj_version);
+				$this->emaj_version_num = 999999;
 			}
 		}
 		return;

@@ -25,9 +25,9 @@
 		$_GET = array_merge($_GET, $urlvars);
 	}
 
-	if ($url['url'] != '') {
+	if (isset($url['url'])) {
 		require $url['url'];
 	} else {
-		require 'intro.php';
+		require './intro.php';
 	}
 ?>

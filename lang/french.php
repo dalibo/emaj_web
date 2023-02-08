@@ -379,7 +379,8 @@
 	$lang['emajlogidxtsp'] = 'Tablespace index log';
 	$lang['emajassigntable'] = 'E-Maj : Affecter des tables à un groupe de tables';
 	$lang['emajthetable'] = 'la table "%s.%s"';
-	$lang['emajconfirmassigntblseq'] = 'Affecter :';
+	$lang['emajconfirmassigntable'] = 'Affecter ces %s tables du schéma "%s" :';
+	$lang['emajconfirmassignsequence'] = 'Affecter ces %s séquences du schéma "%s" :';
 	$lang['emajenterpriority'] = 'Priorité de traitement';
 	$lang['emajpriorityhelp'] = 'Les tables sont traitées par ordre croissant de priorité, et par ordre alphabétique de nom si aucune priorité n\'est définie.';
 	$lang['emajenterlogdattsp'] = 'Tablespace pour la table de log';
@@ -388,14 +389,17 @@
 	$lang['emajdynassigntablesok'] = '%s tables ont été assignées au groupe de tables %s.';
 	$lang['emajmodifygrouperr'] = 'Erreur lors du changement de composition des groupes de tables.';
 	$lang['emajmovetable'] = 'E-Maj : Déplacer des tables dans un autre groupe de tables';
+	$lang['emajthetblseqingroup'] = '%s (groupe %s)';
 	$lang['emajthetableingroup'] = 'la table "%s.%s" (groupe %s)';
-	$lang['emajconfirmmovetblseq'] = 'Déplacer :';
+	$lang['emajconfirmmovetable'] = 'Déplacer les %s tables du schéma "%s" :';
+	$lang['emajconfirmmovesequence'] = 'Déplacer les %s séquences du schéma "%s" :';
 	$lang['emajdynmovetablesok'] = '%s tables ont été déplacées dans le groupe de tables %s.';
 	$lang['emajmodifytable'] = 'E-Maj : Modifier les propriétés E-Maj des tables';
 //	$lang['emajconfirmmodifytblseq'] = 'Etes-vous sûr de vouloir modifier les propriétés de :';
 	$lang['emajdynmodifytablesok'] = 'Les propriétés de %s tables ont été modifiées.';
 	$lang['emajremovetable'] = 'E-Maj : Retirer des tables de leur groupe de tables';
-	$lang['emajconfirmremovetblseq'] = 'Etes-vous sûr de vouloir retirer :';
+	$lang['emajconfirmremovetable'] = 'Retirer ces %s tables du schéma "%s" :';
+	$lang['emajconfirmremovesequence'] = 'Retirer ces %s séquences du schéma "%s" :';
 	$lang['emajdynremovetablesok'] = '%s tables ont été retirées de leur groupe de tables.';
 	$lang['emajassignsequence'] = 'E-Maj : Affecter des séquences à un groupe de tables';
 	$lang['emajthesequence'] = 'la séquence "%s.%s"';
@@ -797,8 +801,8 @@
 
 	// Marks deletion
 	$lang['emajdelmarks'] = 'E-Maj : Effacer des marques';
-	$lang['emajconfirmdelmarks'] = 'Etes-vous sûr de vouloir effacer les marques "%s" pour le groupe de tables "%s" ?';
-	$lang['emajdelmarksok'] = 'Les marques "%s" ont été effacées pour le groupe de tables "%s".';
+	$lang['emajconfirmdelmarks'] = 'Etes-vous sûr de vouloir effacer ces %s marques pour le groupe de tables "%s" ?';
+	$lang['emajdelmarksok'] = 'Les %s marques ont été effacées pour le groupe de tables "%s".';
 	$lang['emajdelmarkserr'] = 'Erreur lors de l\'effacement des marques "%s" pour le groupe de tables "%s" !';
 
 	// Marks before mark deletion

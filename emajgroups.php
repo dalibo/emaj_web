@@ -4208,15 +4208,18 @@
 		$misc->printTitle($lang['emajdelmarks']);
 
 		// build the marks list
-		$marksList=''; $nbMarks=0;
+		$nbMarks = count($_REQUEST['ma']);
+		$marksList='';
+		$fullList = "<div class=\"longlist\"><ul>\n";
 		foreach($_REQUEST['ma'] as $v) {
 			$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-			$marksList.=$a['mark'].', ';
-			$nbMarks++;
+			$marksList .= $a['mark'].', ';
+			$fullList .= "\t<li>{$a['mark']}</li>\n";
 		}
-		$marksList=substr($marksList,0,strlen($marksList)-2);
+		$marksList = substr($marksList, 0, strlen($marksList) - 2);
+		$fullList .= "</ul></div>\n";
 
-		echo "<p>", sprintf($lang['emajconfirmdelmarks'], htmlspecialchars($marksList), htmlspecialchars($_REQUEST['group'])), "</p>\n";
+		echo "<p>", sprintf($lang['emajconfirmdelmarks'], $nbMarks, htmlspecialchars($_REQUEST['group'])), "</p>\n{$fullList}\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"delete_marks_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -4251,7 +4254,7 @@
 				}
 			}
 			if($data->endTransaction() == 0)
-				show_group(sprintf($lang['emajdelmarksok'], htmlspecialchars($_POST['marks']), htmlspecialchars($_POST['group'])));
+				show_group(sprintf($lang['emajdelmarksok'], count($marks), htmlspecialchars($_POST['group'])));
 			else
 				show_group('',sprintf($lang['emajdelmarkserr'], htmlspecialchars($_POST['marks']), htmlspecialchars($_POST['group'])));
 		}

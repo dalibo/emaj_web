@@ -430,23 +430,31 @@
 		echo "<form action=\"schemas.php\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"assign_tables_ok\" />\n";
 
-		if (isset($_REQUEST['ma'])) {
+		if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) > 1) {
+
 		// multiple assign
+			$nbTbl = count($_REQUEST['ma']);
 			$tablesList = '';
-			$fullList = "<ul>";
+			$fullList = "<div class=\"longlist\"><ul>\n";
 			foreach($_REQUEST['ma'] as $t) {
 				$a = unserialize(htmlspecialchars_decode($t, ENT_QUOTES));
 				$tablesList .= $a['table'] . ', ';
-				$fullList .= "<li>" . sprintf($lang['emajthetable'],$a['appschema'],$a['table']) . "</li>\n";
+				$fullList .= "\t<li>{$a['table']}</li>\n";
 			}
-			$tablesList = substr($tablesList,0,strlen($tablesList)-2);
-			$fullList .= "</ul>\n";
-			echo "<p>{$lang['emajconfirmassigntblseq']}{$fullList}</p>\n";
+			$tablesList = substr($tablesList, 0, strlen($tablesList) - 2);
+			$fullList .= "</ul></div>\n";
+			echo "<p>". sprintf($lang['emajconfirmassigntable'], $nbTbl, $_REQUEST['schema']) . "</p>\n{$fullList}";
 		} else {
 
 		// single assign
-			$tablesList = $_REQUEST['table'];
-			$tableName = sprintf($lang['emajthetable'],$_REQUEST['schema'],$_REQUEST['table']);
+			if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) == 1) {
+				$a = unserialize(htmlspecialchars_decode($_REQUEST['ma'][0], ENT_QUOTES));
+				$tableName = sprintf($lang['emajthetable'], $a['appschema'], $a['table']);
+				$tablesList = $a['table'];
+			} else {
+				$tableName = sprintf($lang['emajthetable'], $_REQUEST['schema'], $_REQUEST['table']);
+				$tablesList = $_REQUEST['table'];
+			}
 			echo "<p>{$lang['emajassign']} {$tableName}</p>\n";
 		}
 		echo "<input type=\"hidden\" name=\"schema\" value=\"", htmlspecialchars($_REQUEST['schema']), "\" />\n";
@@ -558,25 +566,34 @@
 		echo "<form action=\"schemas.php\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"move_tables_ok\" />\n";
 
-		if (isset($_REQUEST['ma'])) {
+		if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) > 1) {
+
 		// multiple move
+			$nbTbl = count($_REQUEST['ma']);
 			$tablesList = '';
-			$fullList = "<ul>";
+			$fullList = "<div class=\"longlist\"><ul>\n";
 			foreach($_REQUEST['ma'] as $t) {
 				$a = unserialize(htmlspecialchars_decode($t, ENT_QUOTES));
 				$tablesList .= $a['table'] . ', ';
-				$fullList .= "<li>" . sprintf($lang['emajthetableingroup'],$a['appschema'],$a['table'],$a['group']) . "</li>\n";
+				$fullList .= "\t<li>" . sprintf($lang['emajthetblseqingroup'], $a['table'], $a['group']) . "</li>\n";
 			}
-			$tablesList = substr($tablesList,0,strlen($tablesList)-2);
-			$fullList .= "</ul>\n";
-			echo "<p>{$lang['emajconfirmmovetblseq']}{$fullList}</p>\n";
+			$tablesList = substr($tablesList, 0, strlen($tablesList) - 2);
+			$fullList .= "</ul></div>\n";
+			echo "<p>". sprintf($lang['emajconfirmmovetable'], $nbTbl, $_REQUEST['schema']) . "</p>\n{$fullList}";
 		} else {
 
 		// single move
-			$tablesList = $_REQUEST['table'];
-			$tableName = sprintf($lang['emajthetableingroup'],$_REQUEST['schema'],$_REQUEST['table'],$_REQUEST['group']);
+			if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) == 1) {
+				$a = unserialize(htmlspecialchars_decode($_REQUEST['ma'][0], ENT_QUOTES));
+				$tableName = sprintf($lang['emajthetableingroup'], $a['appschema'], $a['table'], $a['group']);
+				$tablesList = $a['table'];
+			} else {
+				$tableName = sprintf($lang['emajthetableingroup'], $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['group']);
+				$tablesList = $_REQUEST['table'];
+			}
 			echo "<p>{$lang['emajmove']} {$tableName}</p>\n";
 		}
+
 		echo "<input type=\"hidden\" name=\"schema\" value=\"", htmlspecialchars($_REQUEST['schema']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"tables\" value=\"", htmlspecialchars($tablesList), "\" />\n";
 
@@ -595,6 +612,7 @@
 		echo "\t<div class=\"form-label\">{$lang['emajmarkiflogginggroup']}</div>\n";
 		echo "\t<div class=\"form-input\"><input type=\"text\" name=\"mark\" size=\"22\" value=\"MOVE_%\" /></div>\n";
 		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+		echo"</div>\n";
 
 		echo $misc->form;
 		echo "<p><input type=\"submit\" name=\"movetable\" value=\"{$lang['emajmove']}\" id=\"ok\" />\n";
@@ -757,25 +775,34 @@
 		echo "<form action=\"schemas.php\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"remove_tables_ok\" />\n";
 
-		if (isset($_REQUEST['ma'])) {
+		if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) > 1) {
+
 		// multiple removal
+			$nbTbl = count($_REQUEST['ma']);
 			$tablesList = '';
-			$fullList = "<ul>";
+			$fullList = "<div class=\"longlist\"><ul>\n";
 			foreach($_REQUEST['ma'] as $t) {
 				$a = unserialize(htmlspecialchars_decode($t, ENT_QUOTES));
 				$tablesList .= $a['table'] . ', ';
-				$fullList .= "<li>" . sprintf($lang['emajthetableingroup'],$a['appschema'],$a['table'],$a['group']) . "</li>\n";
+				$fullList .= "\t<li>" . sprintf($lang['emajthetblseqingroup'], $a['table'], $a['group']) . "</li>\n";
 			}
-			$tablesList = substr($tablesList,0,strlen($tablesList)-2);
-			$fullList .= "</ul>\n";
-			echo "<p>{$lang['emajconfirmremovetblseq']}{$fullList}</p>\n";
+			$tablesList = substr($tablesList, 0, strlen($tablesList) - 2);
+			$fullList .= "</ul></div>\n";
+			echo "<p>". sprintf($lang['emajconfirmremovetable'], $nbTbl, $_REQUEST['schema']) . "</p>\n{$fullList}";
 		} else {
 
 		// single removal
-			$tablesList = $_REQUEST['table'];
-			$tableName = sprintf($lang['emajthetableingroup'],$_REQUEST['schema'],$_REQUEST['table'],$_REQUEST['group']);
+			if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) == 1) {
+				$a = unserialize(htmlspecialchars_decode($_REQUEST['ma'][0], ENT_QUOTES));
+				$tableName = sprintf($lang['emajthetableingroup'], $a['appschema'], $a['table'], $a['group']);
+				$tablesList = $a['table'];
+			} else {
+				$tableName = sprintf($lang['emajthetableingroup'], $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['group']);
+				$tablesList = $_REQUEST['table'];
+			}
 			echo "<p>{$lang['emajremove']} {$tableName}</p>\n";
 		}
+
 		echo "<input type=\"hidden\" name=\"schema\" value=\"", htmlspecialchars($_REQUEST['schema']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"tables\" value=\"", htmlspecialchars($tablesList), "\" />\n";
 
@@ -786,6 +813,7 @@
 		echo "\t<div class=\"form-label\">{$lang['emajmarkiflogginggroup']}</div>\n";
 		echo "\t<div class=\"form-input\"><input type=\"text\" name=\"mark\" size=\"22\" value=\"REMOVE_%\" /></div>\n";
 		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+		echo"</div>\n";
 
 		echo $misc->form;
 		echo "<p><input type=\"submit\" name=\"removetable\" value=\"{$lang['emajremove']}\" id=\"ok\" />\n";
@@ -833,29 +861,38 @@
 		// Get created group names
 		$knownGroups = $emajdb->getCreatedGroups();
 
-		// Build the list of tables to processs and count them
+		// Build the list of sequences to processs and count them
 		echo "<form action=\"schemas.php\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"assign_sequences_ok\" />\n";
 
-		if (isset($_REQUEST['ma'])) {
+		if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) > 1) {
+
 		// multiple assign
+			$nbSeq = count($_REQUEST['ma']);
 			$sequencesList = '';
-			$fullList = "<ul>";
+			$fullList = "<div class=\"longlist\"><ul>\n";
 			foreach($_REQUEST['ma'] as $t) {
 				$a = unserialize(htmlspecialchars_decode($t, ENT_QUOTES));
 				$sequencesList .= $a['sequence'] . ', ';
-				$fullList .= "<li>" . sprintf($lang['emajthesequence'],$a['appschema'],$a['sequence']) . "</li>\n";
+				$fullList .= "\t<li>{$a['sequence']}</li>\n";
 			}
-			$sequencesList = substr($sequencesList,0,strlen($sequencesList)-2);
-			$fullList .= "</ul>\n";
-			echo "<p>{$lang['emajconfirmassigntblseq']}{$fullList}</p>\n";
+			$sequencesList = substr($sequencesList, 0, strlen($sequencesList)-2);
+			$fullList .= "</ul></div>\n";
+			echo "<p>". sprintf($lang['emajconfirmassignsequence'], $nbSeq, $_REQUEST['schema']) . "</p>\n{$fullList}";
 		} else {
 
 		// single assign
-			$sequencesList = $_REQUEST['sequence'];
-			$sequenceName = sprintf($lang['emajthesequence'],$_REQUEST['schema'],$_REQUEST['sequence']);
+			if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) == 1) {
+				$a = unserialize(htmlspecialchars_decode($_REQUEST['ma'][0], ENT_QUOTES));
+				$sequenceName = sprintf($lang['emajthesequence'], $a['appschema'], $a['sequence']);
+				$sequencesList = $a['sequence'];
+			} else {
+				$sequenceName = sprintf($lang['emajthesequence'], $_REQUEST['schema'], $_REQUEST['sequence']);
+				$sequencesList = $_REQUEST['sequence'];
+			}
 			echo "<p>{$lang['emajassign']} {$sequenceName}</p>\n";
 		}
+
 		echo "<input type=\"hidden\" name=\"schema\" value=\"", htmlspecialchars($_REQUEST['schema']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"sequences\" value=\"", htmlspecialchars($sequencesList), "\" />\n";
 
@@ -919,25 +956,34 @@
 		echo "<form action=\"schemas.php\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"move_sequences_ok\" />\n";
 
-		if (isset($_REQUEST['ma'])) {
+		if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) > 1) {
+
 		// multiple move
+			$nbSeq = count($_REQUEST['ma']);
 			$sequencesList = '';
-			$fullList = "<ul>";
+			$fullList = "<div class=\"longlist\"><ul>\n";
 			foreach($_REQUEST['ma'] as $t) {
 				$a = unserialize(htmlspecialchars_decode($t, ENT_QUOTES));
 				$sequencesList .= $a['sequence'] . ', ';
-				$fullList .= "<li>" . sprintf($lang['emajthesequenceingroup'],$a['appschema'],$a['sequence'],$a['group']) . "</li>\n";
+				$fullList .= "\t<li>" . sprintf($lang['emajthetblseqingroup'], $a['sequence'], $a['group']) . "</li>\n";
 			}
-			$sequencesList = substr($sequencesList,0,strlen($sequencesList)-2);
-			$fullList .= "</ul>\n";
-			echo "<p>{$lang['emajconfirmmovetblseq']}{$fullList}</p>\n";
+			$sequencesList = substr($sequencesList, 0, strlen($sequencesList)-2);
+			$fullList .= "</ul></div>\n";
+			echo "<p>". sprintf($lang['emajconfirmmovesequence'], $nbSeq, $_REQUEST['schema']) . "</p>\n{$fullList}";
 		} else {
 
 		// single move
-			$sequencesList = $_REQUEST['sequence'];
-			$sequenceName = sprintf($lang['emajthesequenceingroup'],$_REQUEST['schema'],$_REQUEST['sequence'],$_REQUEST['group']);
+			if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) == 1) {
+				$a = unserialize(htmlspecialchars_decode($_REQUEST['ma'][0], ENT_QUOTES));
+				$sequenceName = sprintf($lang['emajthesequenceingroup'], $a['appschema'], $a['sequence'], $a['group']);
+				$sequencesList = $a['sequence'];
+			} else {
+				$sequenceName = sprintf($lang['emajthesequenceingroup'], $_REQUEST['schema'], $_REQUEST['sequence'], $_REQUEST['group']);
+				$sequencesList = $_REQUEST['sequence'];
+			}
 			echo "<p>{$lang['emajmove']} {$sequenceName}</p>\n";
 		}
+
 		echo "<input type=\"hidden\" name=\"schema\" value=\"", htmlspecialchars($_REQUEST['schema']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"sequences\" value=\"", htmlspecialchars($sequencesList), "\" />\n";
 
@@ -956,6 +1002,7 @@
 		echo "\t<div class=\"form-label\">{$lang['emajmarkiflogginggroup']}</div>\n";
 		echo "\t<div class=\"form-input\"><input type=\"text\" name=\"mark\" size=\"22\" value=\"MOVE_%\" /></div>\n";
 		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+		echo"</div>\n";
 
 		echo $misc->form;
 		echo "<p><input type=\"submit\" name=\"movesequence\" value=\"{$lang['emajmove']}\" id=\"ok\" />\n";
@@ -996,25 +1043,34 @@
 		echo "<form action=\"schemas.php\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"remove_sequences_ok\" />\n";
 
-		if (isset($_REQUEST['ma'])) {
+		if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) > 1) {
+
 		// multiple removal
+			$nbSeq = count($_REQUEST['ma']);
 			$sequencesList = '';
-			$fullList = "<ul>";
+			$fullList = "<div class=\"longlist\"><ul>\n";
 			foreach($_REQUEST['ma'] as $t) {
 				$a = unserialize(htmlspecialchars_decode($t, ENT_QUOTES));
 				$sequencesList .= $a['sequence'] . ', ';
-				$fullList .= "<li>" . sprintf($lang['emajthesequenceingroup'],$a['appschema'],$a['sequence'],$a['group']) . "</li>\n";
+				$fullList .= "\t<li>" . sprintf($lang['emajthetblseqingroup'], $a['sequence'], $a['group']) . "</li>\n";
 			}
-			$tablesList = substr($sequencesList,0,strlen($sequencesList)-2);
-			$fullList .= "</ul>\n";
-			echo "<p>{$lang['emajconfirmremovetblseq']}{$fullList}</p>\n";
+			$sequencesList = substr($sequencesList, 0, strlen($sequencesList)-2);
+			$fullList .= "</ul></div>\n";
+			echo "<p>". sprintf($lang['emajconfirmremovesequence'], $nbSeq, $_REQUEST['schema']) . "</p>\n{$fullList}";
 		} else {
 
 		// single removal
-			$sequencesList = $_REQUEST['sequence'];
-			$sequenceName = sprintf($lang['emajthesequenceingroup'],$_REQUEST['schema'],$_REQUEST['sequence'],$_REQUEST['group']);
+			if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) == 1) {
+				$a = unserialize(htmlspecialchars_decode($_REQUEST['ma'][0], ENT_QUOTES));
+				$sequenceName = sprintf($lang['emajthesequenceingroup'], $a['appschema'], $a['sequence'], $a['group']);
+				$sequencesList = $a['sequence'];
+			} else {
+				$sequenceName = sprintf($lang['emajthesequenceingroup'], $_REQUEST['schema'], $_REQUEST['sequence'], $_REQUEST['group']);
+				$sequencesList = $_REQUEST['sequence'];
+			}
 			echo "<p>{$lang['emajremove']} {$sequenceName}</p>\n";
 		}
+
 		echo "<input type=\"hidden\" name=\"schema\" value=\"", htmlspecialchars($_REQUEST['schema']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"sequences\" value=\"", htmlspecialchars($sequencesList), "\" />\n";
 
@@ -1025,6 +1081,7 @@
 		echo "\t<div class=\"form-label\">{$lang['emajmarkiflogginggroup']}</div>\n";
 		echo "\t<div class=\"form-input\"><input type=\"text\" name=\"mark\" size=\"22\" value=\"REMOVE_%\" /></div>\n";
 		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+		echo"</div>\n";
 
 		echo $misc->form;
 		echo "<p><input type=\"submit\" name=\"removesequence\" value=\"{$lang['emajremove']}\" id=\"ok\" />\n";

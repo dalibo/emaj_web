@@ -379,7 +379,8 @@
 	$lang['emajlogidxtsp'] = 'Log index tablespace';
 	$lang['emajassigntable'] = 'E-Maj: Assign tables to a tables group';
 	$lang['emajthetable'] = 'the "%s.%s" table';
-	$lang['emajconfirmassigntblseq'] = 'Assign:';
+	$lang['emajconfirmassigntable'] = 'Assign these %s tables from schema "%s":';
+	$lang['emajconfirmassignsequence'] = 'Assign these %s sequences from schema "%s":';
 	$lang['emajenterpriority'] = 'Processing priority';
 	$lang['emajpriorityhelp'] = 'Tables are processed in priority ascending order, and in names alphabetic order if no priority is defined.';
 	$lang['emajenterlogdattsp'] = 'Log table tablespace';
@@ -388,14 +389,17 @@
 	$lang['emajdynassigntablesok'] = '%s tables have been assigned to the tables group %s.';
 	$lang['emajmodifygrouperr'] = 'Error while updating tables groups content.';
 	$lang['emajmovetable'] = 'E-Maj: Move tables to another tables group';
+	$lang['emajthetblseqingroup'] = '%s (group %s)';
 	$lang['emajthetableingroup'] = 'the "%s.%s" table (group %s)';
-	$lang['emajconfirmmovetblseq'] = 'Move:';
+	$lang['emajconfirmmovetable'] = 'Move the %s tables from schema "%s":';
+	$lang['emajconfirmmovesequence'] = 'Move the %s sequences from schema "%s":';
 	$lang['emajdynmovetablesok'] = '%s tables have been moved to the tables group %s.';
 	$lang['emajmodifytable'] = 'E-Maj: Modify tables E-Maj properties';
 //	$lang['emajconfirmmodifytblseq'] = 'Are you sure you want to modify properties for:';
 	$lang['emajdynmodifytablesok'] = 'Properties for %s tables have been modified.';
 	$lang['emajremovetable'] = 'E-Maj : Remove tables from their tables group';
-	$lang['emajconfirmremovetblseq'] = 'Are you sure you want to remove:';
+	$lang['emajconfirmremovetable'] = 'Remove these %s tables from schema "%s" :';
+	$lang['emajconfirmremovesequence'] = 'Remove these %s sequences from schema "%s" :';
 	$lang['emajdynremovetablesok'] = '%s tables have been removed from their tables group.';
 	$lang['emajassignsequence'] = 'E-Maj: Assign sequences to a tables group';
 	$lang['emajthesequence'] = 'the "%s.%s" sequence';
@@ -797,8 +801,8 @@
 
 	// Marks deletion
 	$lang['emajdelmarks'] = 'E-Maj: Delete marks';
-	$lang['emajconfirmdelmarks'] = 'Are you sure you want to delete the marks "%s" for the tables group "%s"?';
-	$lang['emajdelmarksok'] = 'The marks "%s" have been deleted for the tables group "%s".';
+	$lang['emajconfirmdelmarks'] = 'Are you sure you want to delete these %s marks for the tables group "%s"?';
+	$lang['emajdelmarksok'] = 'The %s marks have been deleted for the tables group "%s".';
 	$lang['emajdelmarkserr'] = 'Error during marks "%s" deletion for the tables group "%s"!';
 
 	// Marks before mark deletion

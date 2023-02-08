@@ -106,7 +106,7 @@
 	$lang['strquantity'] = 'Quantité';
 
 	// User-supplied SQL editing
-	$lang['strsqledit'] = 'Edition de requête SQL';
+	$lang['strsqledit'] = 'Édition de requête SQL';
 	$lang['strsearchpath'] = 'Chemin de recherche des schémas ';
 
 	// User-supplied SQL history
@@ -217,7 +217,7 @@
 	$lang['emajapptriggershelp'] = 'Liste des triggers de la base de données, hors triggers système et E-Maj.';
 	$lang['strnoapptrigger'] = 'Aucun trigger applicatif dans la base de données.';
 	$lang['emajexecorder'] = 'Ordre Exec';
-	$lang['emajtriggeringevent'] = 'Evénement déclencheur';
+	$lang['emajtriggeringevent'] = 'Événement déclencheur';
 	$lang['emajcalledfunction'] = 'Fonction appelée';
 	$lang['emajisemaj'] = 'E-Maj ?';
 	$lang['emajisautodisable'] = 'Désactivation<br>auto';
@@ -245,7 +245,7 @@
 //
 	// Basic strings
 	$lang['emajnotavail'] = 'Désolé, E-Maj n\'est pas disponible ou accessible sur cette base de données. Plus de détails sur l\'onglet %s.';
-	$lang['emajstate'] = 'Etat';
+	$lang['emajstate'] = 'État';
 	$lang['emajnoselectedgroup'] = 'Aucun groupe de tables n\'a été sélectionné !';
 	$lang['emajtablesgroup'] = 'Groupe de tables';
 	$lang['emajgroup'] = 'Groupe';
@@ -395,7 +395,7 @@
 	$lang['emajconfirmmovesequence'] = 'Déplacer les %s séquences du schéma "%s" :';
 	$lang['emajdynmovetablesok'] = '%s tables ont été déplacées dans le groupe de tables %s.';
 	$lang['emajmodifytable'] = 'E-Maj : Modifier les propriétés E-Maj des tables';
-//	$lang['emajconfirmmodifytblseq'] = 'Etes-vous sûr de vouloir modifier les propriétés de :';
+//	$lang['emajconfirmmodifytblseq'] = 'Êtes-vous sûr de vouloir modifier les propriétés de :';
 	$lang['emajdynmodifytablesok'] = 'Les propriétés de %s tables ont été modifiées.';
 	$lang['emajremovetable'] = 'E-Maj : Retirer des tables de leur groupe de tables';
 	$lang['emajconfirmremovetable'] = 'Retirer ces %s tables du schéma "%s" :';
@@ -431,7 +431,7 @@
 	$lang['emajspecifytblseqtoremove'] = 'Spécifiez au moins une table ou séquence à retirer';
 	$lang['emajtblseqnogroup'] = 'Erreur, "%s.%s" n\'est actuellement affecté à aucun groupe de tables.';
 	$lang['emajremovetblseq'] = 'E-Maj : Retirer des tables / séquences de groupes de tables';
-	$lang['emajconfirmremove1tblseq'] = 'Etes-vous sûr de vouloir retirer %s du groupe de tables "%s" ?';
+	$lang['emajconfirmremove1tblseq'] = 'Êtes-vous sûr de vouloir retirer %s du groupe de tables "%s" ?';
 	$lang['emajmodifygroupok'] = 'Le changement de configuration est enregistré. Il sera effectif après (re)création des groupes de tables concernés ou application des changements de configuration pour ces groupes.';
 	$lang['emajspecifytblseqtoprocess'] = 'Spécifiez au moins une table ou séquence à traiter.';
 
@@ -485,7 +485,7 @@
 	$lang['emajnbintermediatemark'] = 'Marques intermédiaires';
 	$lang['emajconsolidate'] = 'Consolider';
 	$lang['emajconsolidaterlbk'] = 'Consolider un rollback tracé';
-	$lang['emajconfirmconsolidaterlbk'] = 'Etes-vous sûr de vouloir consolider le rollback terminé par la marque "%s" du groupe de tables "%s" ?';
+	$lang['emajconfirmconsolidaterlbk'] = 'Êtes-vous sûr de vouloir consolider le rollback terminé par la marque "%s" du groupe de tables "%s" ?';
 	$lang['emajconsolidaterlbkok'] = 'Le rollback terminé par la marque "%s" du groupe de tables "%s" a été consolidé.';
 	$lang['emajconsolidaterlbkerr'] = 'Erreur lors de la consolidation du rollback terminé par la marque "%s" du groupe de tables "%s" !';
 	$lang['emajrlbkdetail'] = 'Détail du rollback E-Maj #%s';
@@ -557,7 +557,7 @@
 
 	// Group creation
 	$lang['emajcreateagroup'] = 'E-Maj : Créer un groupe de tables';
-	$lang['emajconfirmcreategroup'] = 'Etes-vous sûr de vouloir créer le groupe de tables "%s" ?';
+	$lang['emajconfirmcreategroup'] = 'Êtes-vous sûr de vouloir créer le groupe de tables "%s" ?';
 	$lang['emajinvalidemptygroup'] = 'Erreur, le groupe de table "%s" est déjà créé ou configuré !';
 	$lang['emajcreategroupok'] = 'Le groupe de tables "%s" a été créé.';
 	$lang['emajcreategrouperr'] = 'Erreur lors de la création du groupe de tables "%s" !';
@@ -588,14 +588,14 @@
 
 	// Group drop
 	$lang['emajdropagroup'] = 'E-Maj : Supprimer un groupe de tables';
-	$lang['emajconfirmdropgroup'] = 'Etes-vous sûr de vouloir supprimer le groupe de tables "%s" ?';
+	$lang['emajconfirmdropgroup'] = 'Êtes-vous sûr de vouloir supprimer le groupe de tables "%s" ?';
 	$lang['emajcantdropgroup'] = 'La suppression du groupe de tables "%s" est impossible. Le groupe est démarré.';
 	$lang['emajdropgroupok'] = 'Le groupe de tables "%s" a été supprimé.';
 	$lang['emajdropgrouperr'] = 'Erreur lors de la suppression du groupe de tables "%s" !';
 
 	// Groups drop
 	$lang['emajdropgroups'] = 'E-Maj : Supprimer les groupes de tables';
-	$lang['emajconfirmdropgroups'] = 'Etes-vous sûr de vouloir supprimer les groupes de tables "%s" ?';
+	$lang['emajconfirmdropgroups'] = 'Êtes-vous sûr de vouloir supprimer les groupes de tables "%s" ?';
 	$lang['emajcantdropgroups'] = 'La suppression des groupes de tables "%s" est impossible. Au moins un des groupes est démarré.';
 	$lang['emajdropgroupsok'] = 'Les groupes de tables "%s" ont été supprimés.';
 	$lang['emajdropgroupserr'] = 'Erreur lors de la suppression des groupes de tables "%s" !';
@@ -635,7 +635,7 @@
 
 	// Group alter
 	$lang['emajalteraloggingroup'] = 'Le groupe "%s" est actif. Vous pouvez spécifier un nom de marque.';
-	$lang['emajconfirmaltergroup'] = 'Etes-vous sûr de vouloir appliquer les changements de configuration pour le groupe de tables "%s" ?';
+	$lang['emajconfirmaltergroup'] = 'Êtes-vous sûr de vouloir appliquer les changements de configuration pour le groupe de tables "%s" ?';
 	$lang['emajcantaltergroup'] = 'La modification du groupe "%s" générerait des actions qui ne peuvent être effectuées sur un groupe actif. Arrêtez le groupe avant de le modifier.';
 	$lang['emajaltergroupok'] = 'Les changements de configuration du groupe de tables "%s" ont été appliqués.';
 	$lang['emajaltergrouperr'] = 'Erreur lors de l\'application des changements de configuration pour le groupe de tables "%s" !';
@@ -643,7 +643,7 @@
 	// Groups alter
 	$lang['emajaltergroups'] = 'E-Maj : Appliquer les changements de configuration';
 	$lang['emajalterallloggingroups'] = 'Les groupes "%s" sont actifs. Vous pouvez spécifier un nom de marque.';
-	$lang['emajconfirmaltergroups'] = 'Etes-vous sûr de vouloir appliquer les changements de configuration pour les groupes de tables "%s" ?';
+	$lang['emajconfirmaltergroups'] = 'Êtes-vous sûr de vouloir appliquer les changements de configuration pour les groupes de tables "%s" ?';
 	$lang['emajaltergroupsok'] = 'Les changements de configuration des groupes de tables "%s" ont été appliqués.';
 	$lang['emajaltergroupserr'] = 'Erreur lors de l\'application des changements de configuration pour les groupes de tables "%s" !';
 
@@ -697,14 +697,14 @@
 
 	// Group reset
 	$lang['emajresetagroup'] = 'E-Maj : Réinitialiser un groupe de tables';
-	$lang['emajconfirmresetgroup'] = 'Etes-vous sûr de vouloir réinitialiser le groupe de tables "%s" ?';
+	$lang['emajconfirmresetgroup'] = 'Êtes-vous sûr de vouloir réinitialiser le groupe de tables "%s" ?';
 	$lang['emajcantresetgroup'] = 'La réinitialisation du groupe de tables "%s" est impossible. Le groupe est démarré.';
 	$lang['emajresetgroupok'] = 'Le groupe de tables "%s" est réinitialisé.';
 	$lang['emajresetgrouperr'] = 'Erreur lors de la réinitialisation du groupe de tables "%s" !';
 
 	// Groups reset
 	$lang['emajresetgroups'] = 'E-Maj : Réinitialiser des groupes de tables';
-	$lang['emajconfirmresetgroups'] = 'Etes-vous sûr de vouloir réinitialiser les groupe de tables "%s" ?';
+	$lang['emajconfirmresetgroups'] = 'Êtes-vous sûr de vouloir réinitialiser les groupe de tables "%s" ?';
 	$lang['emajcantresetgroups'] = 'La réinitialisation des groupes de tables "%s" est impossible. Au moins un groupe est démarré.';
 	$lang['emajresetgroupsok'] = 'Les groupes de tables "%s" ont été réinitialisés.';
 	$lang['emajresetgroupserr'] = 'Erreur lors de la réinitialisation des groupes de tables "%s" !';
@@ -795,19 +795,19 @@
 
 	// Mark deletion
 	$lang['emajdelamark'] = 'E-Maj : Effacer une marque';
-	$lang['emajconfirmdelmark'] = 'Etes-vous sûr de vouloir effacer la marque "%s" pour le groupe de tables "%s" ?';
+	$lang['emajconfirmdelmark'] = 'Êtes-vous sûr de vouloir effacer la marque "%s" pour le groupe de tables "%s" ?';
 	$lang['emajdelmarkok'] = 'La marque "%s" a été effacée pour le groupe de tables "%s".';
 	$lang['emajdelmarkerr'] = 'Erreur lors de l\'effacement de la marque "%s" pour le groupe de tables "%s" !';
 
 	// Marks deletion
 	$lang['emajdelmarks'] = 'E-Maj : Effacer des marques';
-	$lang['emajconfirmdelmarks'] = 'Etes-vous sûr de vouloir effacer ces %s marques pour le groupe de tables "%s" ?';
+	$lang['emajconfirmdelmarks'] = 'Êtes-vous sûr de vouloir effacer ces %s marques pour le groupe de tables "%s" ?';
 	$lang['emajdelmarksok'] = 'Les %s marques ont été effacées pour le groupe de tables "%s".';
 	$lang['emajdelmarkserr'] = 'Erreur lors de l\'effacement des marques "%s" pour le groupe de tables "%s" !';
 
 	// Marks before mark deletion
 	$lang['emajdelmarksprior'] = 'E-Maj : Supprimer des marques';
-	$lang['emajconfirmdelmarksprior'] = 'Etes-vous sûr de vouloir supprimer toutes les marques et log antérieurs à la marque "%s" pour le groupe de tables "%s" ?';
+	$lang['emajconfirmdelmarksprior'] = 'Êtes-vous sûr de vouloir supprimer toutes les marques et log antérieurs à la marque "%s" pour le groupe de tables "%s" ?';
 	$lang['emajdelmarkspriorok'] = 'Les (%s) marques antérieures à la marque "%s" ont été supprimées pour le groupe de tables "%s".';
 	$lang['emajdelmarkspriorerr'] = 'Erreur lors de la suppression des marques antérieures à la marque "%s" pour le groupe de tables "%s" !';
 

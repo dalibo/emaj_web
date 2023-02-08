@@ -715,6 +715,7 @@
 			if ($_SERVER["REQUEST_METHOD"] == 'GET') {
 				foreach ($_GET as $key => $val) {
 					if ($key == 'language') continue;
+					if ($key == 'ma') continue;
 					if (is_array($val)) {
 						$cleanVal = array_map("htmlspecialchars", $val);
 					} else {
@@ -726,6 +727,7 @@
 				foreach ($_POST as $key => $val) {
 					if ($key == 'language') continue;
 					if ($key == 'action') continue;
+					if ($key == 'ma') continue;
 					if (is_array($val)) {
 						$cleanVal = array_map("htmlspecialchars", $val);
 					} else {

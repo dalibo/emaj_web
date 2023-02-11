@@ -454,22 +454,22 @@ class Postgres extends ADODB_base {
 
 		$sql = "
 			SELECT
-			  c.relname, n.nspname, u.usename AS relowner,
+			  c.relname, n.nspname, c.relkind, u.usename AS relowner,
 			  pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment,
 			  (SELECT spcname FROM pg_catalog.pg_tablespace pt WHERE pt.oid=c.reltablespace) AS tablespace
 			FROM pg_catalog.pg_class c
 			     LEFT JOIN pg_catalog.pg_user u ON u.usesysid = c.relowner
 			     LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
-			WHERE c.relkind = 'r'
+			WHERE c.relkind in ('r', 'p')
 			      AND n.nspname = '{$c_schema}'
-			      AND n.oid = c.relnamespace
 			      AND c.relname = '{$table}'";
 
 		return $this->selectSet($sql);
 	}
 
 	/**
-	 * Return all tables in current database (and schema)
+	 * Return all tables in current database (and schema).
+	 * Filter regular tables and partitioned tables.
 	 * @param $all True to fetch all tables, false for just in current schema
 	 * @return All tables, sorted alphabetically
 	 */
@@ -489,7 +489,7 @@ class Postgres extends ADODB_base {
 						(SELECT spcname FROM pg_catalog.pg_tablespace pt WHERE pt.oid=c.reltablespace) AS tablespace
 					FROM pg_catalog.pg_class c
 					LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
-					WHERE c.relkind = 'r'
+					WHERE c.relkind in ('r', 'p')
 					AND nspname='{$c_schema}'
 					ORDER BY c.relname";
 		}

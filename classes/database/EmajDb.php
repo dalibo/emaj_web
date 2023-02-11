@@ -1079,7 +1079,8 @@ class EmajDb {
 	}
 
 	/**
-	 * Return all tables of a schema, with their current E-Maj characteristics
+	 * Return all tables of a schema, with their current E-Maj characteristics.
+	 * Filter regular tables and partitioned tables.
 	 */
 	function getTables($schema) {
 		global $data;

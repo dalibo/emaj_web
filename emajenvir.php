@@ -158,20 +158,28 @@
 
 		$misc->printTitle($lang['emajupdateemajextension']);
 
-		// build the array of usable emaj versions
 		$server_info = $misc->getServerInfo();
+
+		// Count the number of event triggers and report if some event triggers are missing for postgres 9.5+
+		$nbEventTrigger = $emajdb->getNumberEventTriggers();
+		if (version_compare($server_info['pgVersion'], '9.5', '>=') && $nbEventTrigger < 3) {
+			echo "<p>{$lang['emajmissingeventtriggers']}</p>\n";
+		}
+
+		// build the array of usable emaj versions
 		$availableVersions = $emajdb->getAvailableExtensionVersionsForUpdate();
 
 		$pgMajorVersion = preg_replace('/\.\d+$/', '', $server_info['pgVersion']);
 		$usableVersions = array();
 		foreach($availableVersions as $v) {
+			// filter unknown emaj versions (i.e. devel) or emaj version compatible with the current PG version
 			if (!isset($xrefEmajPg[$v['target']]) ||
 				(version_compare($pgMajorVersion, $xrefEmajPg[$v['version']]['minPostgresVersion'], '>=') &&
 				 version_compare($pgMajorVersion, $xrefEmajPg[$v['version']]['maxPostgresVersion'], '<='))) {
-				// if the emaj version is known in the xref and is compatible with the current PG version, keep it
-				// if the emaj version is unknown, keep it too
-				// otherwise, discard it
-				$usableVersions[] = $v['target'];
+				// block version update > = 4.2 if some event triggers are missing
+				if ($v['target'] < '4.2.0' || $nbEventTrigger >= 3) {
+					$usableVersions[] = $v['target'];
+				}
 			}
 		}
 

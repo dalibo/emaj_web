@@ -326,6 +326,7 @@
 	$lang['emajcreateextensionerr'] = 'Error while creating the "emaj" extension.';
 	$lang['emajupdateextension'] = 'Update extension';
 	$lang['emajupdateemajextension'] = 'Update the "emaj" extension';
+	$lang['emajmissingeventtriggers'] = 'Some event triggers are missing. It blocks any version update >= 4.2.0. Execute the sql/emaj_upgrade_after_postgres_upgrade.sql script or drop and recreate the extension.';
 	$lang['emajnocompatibleemajupdate'] = 'No installed emaj extension update is compatible with the PostgreSQL version.';
 	$lang['emajupdateextensionok'] = 'The "emaj" extension has been updated.';
 	$lang['emajupdateextensionerr'] = 'Error while updating the "emaj" extension.';

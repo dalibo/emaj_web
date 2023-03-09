@@ -173,6 +173,18 @@ class EmajDb {
 	}
 
 	/**
+	 * Returns the number of E-Maj event triggers.
+	 */
+	function getNumberEventTriggers() {
+		global $data;
+
+		$sql = "SELECT count(*) nb_event_trigger FROM pg_catalog.pg_event_trigger
+				  WHERE evtname IN ('emaj_protection_trg','emaj_sql_drop_trg','emaj_table_rewrite_trg')";
+
+		return $data->selectField($sql,'nb_event_trigger');
+	}
+
+	/**
 	 * Returns the E-Maj extension versions available as target for an ALTER EXTENSION UPDATE.
 	 */
 	function getAvailableExtensionVersionsForUpdate() {

@@ -2744,8 +2744,16 @@ class EmajDb {
 					to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
 					to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
 					to_char(rlbk_end_datetime - rlbk_start_datetime,'{$this->intervalFormat}') AS rlbk_duration,
-					rlbk_mark, rlbk_mark_datetime, rlbk_is_logged, rlbk_nb_session, rlbk_eff_nb_table,
-					rlbk_nb_sequence
+					rlbk_mark, rlbk_mark_datetime, rlbk_is_logged, rlbk_nb_session,
+					format('%s / %s', rlbk_eff_nb_table, rlbk_nb_table) AS rlbk_tbl,";
+		if ($this->getNumEmajVersion() >= 40200){	// version >= 4.2.0
+			$sql = $sql . "
+					format('%s / %s', coalesce(rlbk_eff_nb_sequence::TEXT, '?'), rlbk_nb_sequence) AS rlbk_seq";
+		} else {
+			$sql = $sql . "
+					format('%s / %s', rlbk_nb_sequence, rlbk_nb_sequence) AS rlbk_seq";
+		}
+		$sql = $sql . "
 				FROM (SELECT *, tr.time_tx_timestamp as rlbk_start_datetime, tm.time_tx_timestamp as rlbk_mark_datetime
 						FROM emaj.emaj_rlbk, emaj.emaj_time_stamp tr, emaj.emaj_time_stamp tm
 						WHERE tr.time_id = rlbk_time_id AND tm.time_id = rlbk_mark_time_id

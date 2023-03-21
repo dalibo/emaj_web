@@ -427,12 +427,12 @@
 			),
 			'rlbkNbTable' => array(
 				'title' => $lang['emajnbtabletoprocess'],
-				'field' => field('rlbk_eff_nb_table'),
+				'field' => field('rlbk_tbl'),
 				'params'=> array('align' => 'center'),
 			),
 			'rlbkNbSeq' => array(
 				'title' => $lang['emajnbseqtoprocess'],
-				'field' => field('rlbk_nb_sequence'),
+				'field' => field('rlbk_seq'),
 				'params'=> array('align' => 'center'),
 			),
 		);

@@ -497,7 +497,7 @@
 	$lang['emajrlbksession'] = 'Session';
 	$lang['emajrlbkexecreport'] = 'Execution report';
 	$lang['emajrlbkplanning'] = 'Planning';
-	$lang['emajrlbkplanninghelp'] = 'The main elementary steps of the E-Maj Rollback execution. Are not included: the planning and the locks set on tables at the beginning of the operation, and the sequences processing at the end of the operation.';
+	$lang['emajrlbkplanninghelp'] = 'The main elementary steps of the E-Maj Rollback execution. Are not included: the planning and the locks set on tables at the beginning of the operation, and, for emaj version < 4.2, the sequences processing at the end of the operation.';
 	$lang['emajrlbkestimmethodhelp'] = 'At planning time, the duration of each step is estimated, using statistics of similar steps in the past, with the same order of magnitude of quantity to process (STAT+), or other orders of magnitude (STAT), or, by default, the extension parameters (PARAM).';
 	$lang['emajnorlbkstep'] = 'No elementary step for this rollback.';
 	$lang['emajhideestimates'] = 'Hide estimates';
@@ -505,6 +505,7 @@
 	$lang['emajrlbkstep'] = 'Step';
 	$lang['emajestimatedquantity'] = 'Estimated quantity';
 	$lang['emajestimationmethod'] = 'Estimation method';
+	$lang['emajrlbksequences'] = 'Rollback sequences';
 	$lang['emajrlbkdisapptrg'] = 'Disable the trigger %s';
 	$lang['emajrlbkdislogtrg'] = 'Disable the log trigger';
 	$lang['emajrlbksetalwaysapptrg'] = 'Set the trigger %s as ALWAYS';

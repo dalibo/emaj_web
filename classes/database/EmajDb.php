@@ -2829,8 +2829,13 @@ class EmajDb {
 
 		$sql = "SELECT row_number() over (ORDER BY rlbp_start_datetime, rlbp_batch_number, rlbp_step, rlbp_table, rlbp_object)
 						 AS rlbp_rank,
-					   rlbp_schema || '.' || rlbp_table AS rlbk_schema_table,
+					   CASE
+						 WHEN rlbp_schema = '' AND rlbp_table = '' THEN ''
+						 ELSE rlbp_schema || '.' || rlbp_table
+					   END AS rlbk_schema_table,
 					   CASE rlbp_step::TEXT
+						 WHEN 'RLBK_SEQUENCES' THEN
+							'{$lang['emajrlbksequences']}'
 						 WHEN 'DIS_APP_TRG' THEN
 							format('{$lang['emajrlbkdisapptrg']}', quote_ident(rlbp_object))
 						 WHEN 'DIS_LOG_TRG' THEN

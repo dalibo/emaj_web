@@ -497,7 +497,7 @@
 	$lang['emajrlbksession'] = 'Session';
 	$lang['emajrlbkexecreport'] = 'Rapport d\'exécution';
 	$lang['emajrlbkplanning'] = 'Planification';
-	$lang['emajrlbkplanninghelp'] = 'Les principales étapes élémentaires d\'exécution du Rollback E-Maj. Ne sont pas inclus : la planification et la pose des verrous sur les tables en début d\'opération et le traitement des séquences en fin d\'opération.';
+	$lang['emajrlbkplanninghelp'] = 'Les principales étapes élémentaires d\'exécution du Rollback E-Maj. Ne sont pas inclus : la planification et la pose des verrous sur les tables en début d\'opération et, pour les versions emaj < 4.2, le traitement des séquences en fin d\'opération.';
 	$lang['emajrlbkestimmethodhelp'] = 'En phase de planification, la durée de chaque étape est estimée, en utilisant en priorité des statistiques d\'exécutions similaires passées, avec le même ordre de grandeur de quantités à traiter (STAT+), ou des ordres de grandeur différentes (STAT), ou, à défaut, les paramètres de l\'extension (PARAM).';
 	$lang['emajnorlbkstep'] = 'Pas d\'étape élémentaire pour ce rollback.';
 	$lang['emajhideestimates'] = 'Cacher estimations';
@@ -505,6 +505,7 @@
 	$lang['emajrlbkstep'] = 'Étape';
 	$lang['emajestimatedquantity'] = 'Quantité estimée';
 	$lang['emajestimationmethod'] = 'Méthode estimation';
+	$lang['emajrlbksequences'] = 'Rollbacker les séquences';
 	$lang['emajrlbkdisapptrg'] = 'Désactiver le trigger %s';
 	$lang['emajrlbkdislogtrg'] = 'Désactiver le trigger de log';
 	$lang['emajrlbksetalwaysapptrg'] = 'Passer le trigger %s à ALWAYS';

@@ -1110,7 +1110,7 @@
 			}
 
 			// JQuery to set the selected end mark by default 
-			// (the previous requested end mark or the current situation if no stat are already displayed)
+			// (the previous requested end mark or the current state if no stat are already displayed)
 			if (isset($_REQUEST['rangeend'])) {
 				echo "  $(\"#rangeend option[value='{$_REQUEST['rangeend']}']\").attr(\"selected\", true);\n";
 			} else {

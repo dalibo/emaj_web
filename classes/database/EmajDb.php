@@ -2641,21 +2641,28 @@ class EmajDb {
 		$data->execute($sql);
 
 		// get the latest rollback operations
-		$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,',') as rlbk_groups_list, rlbk_status,
-					to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
-					to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
-					to_char(rlbk_end_datetime - rlbk_start_datetime, '{$this->intervalFormat}') as rlbk_duration,
-					rlbk_mark, rlbk_mark_datetime, rlbk_is_logged, rlbk_nb_session, rlbk_eff_nb_table,
-					rlbk_nb_sequence
-				FROM (SELECT *, tr.time_tx_timestamp as rlbk_start_datetime,
-					    tm.time_tx_timestamp as rlbk_mark_datetime
-					  FROM emaj.emaj_rlbk, emaj.emaj_time_stamp tr, emaj.emaj_time_stamp tm
-					  WHERE tr.time_id = rlbk_time_id AND tm.time_id = rlbk_mark_time_id
-						AND rlbk_status IN ('COMPLETED','COMMITTED','ABORTED')
-				ORDER BY rlbk_id DESC ";
-		if ($nb > 0)
-			$sql .= "LIMIT {$nb}";
-		$sql .= ") AS t";
+		if ($this->getNumEmajVersion() >= 40300){	// version >= 4.3.0
+			$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,',') as rlbk_groups_list, rlbk_status,
+						to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
+						to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
+						to_char(rlbk_end_datetime - rlbk_start_datetime, '{$this->intervalFormat}') as rlbk_duration,
+						rlbk_mark, rlbk_is_logged, rlbk_nb_session
+					FROM emaj.emaj_rlbk
+					WHERE rlbk_status IN ('COMPLETED','COMMITTED','ABORTED')
+					ORDER BY rlbk_id DESC
+					LIMIT {$nb}";
+		} else {
+			$sql = "SELECT rlbk_id, rlbk_groups, array_to_string(rlbk_groups,',') as rlbk_groups_list, rlbk_status,
+						to_char(tr.time_tx_timestamp,'{$this->tsFormat}') AS rlbk_start_datetime,
+						to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
+						to_char(rlbk_end_datetime - tr.time_tx_timestamp, '{$this->intervalFormat}') as rlbk_duration,
+						rlbk_mark, rlbk_is_logged, rlbk_nb_session
+					FROM emaj.emaj_rlbk
+						 JOIN emaj.emaj_time_stamp tr ON (tr.time_id = rlbk_time_id)
+					WHERE rlbk_status IN ('COMPLETED','COMMITTED','ABORTED')
+					ORDER BY rlbk_id DESC
+					LIMIT {$nb}";
+		}
 
 		return $data->selectSet($sql);
 	}
@@ -2740,25 +2747,41 @@ class EmajDb {
 		$data->execute($sql);
 
 // get the emaj_rlbk data
-		$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,',') AS rlbk_groups_list, rlbk_status,
-					to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
-					to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
-					to_char(rlbk_end_datetime - rlbk_start_datetime,'{$this->intervalFormat}') AS rlbk_duration,
-					rlbk_mark, rlbk_mark_datetime, rlbk_is_logged, rlbk_nb_session,
-					format('%s / %s', rlbk_eff_nb_table, rlbk_nb_table) AS rlbk_tbl,";
-		if ($this->getNumEmajVersion() >= 40200){	// version >= 4.2.0
-			$sql = $sql . "
-					format('%s / %s', coalesce(rlbk_eff_nb_sequence::TEXT, '?'), rlbk_nb_sequence) AS rlbk_seq";
+		if ($this->getNumEmajVersion() >= 40300){	// version >= 4.3.0
+			$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,',') AS rlbk_groups_list, rlbk_status,
+						to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
+						to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
+						to_char(rlbk_end_datetime - rlbk_start_datetime,'{$this->intervalFormat}') AS rlbk_global_duration,
+						to_char(rlbk_end_planning_datetime - rlbk_start_datetime,'{$this->intervalFormat}') AS rlbk_planning_duration,
+						to_char(rlbk_end_locking_datetime - rlbk_end_planning_datetime,'{$this->intervalFormat}') AS rlbk_locking_duration,
+						rlbk_mark, tm.time_tx_timestamp as rlbk_mark_datetime, rlbk_is_logged, rlbk_nb_session,
+						format('%s / %s', rlbk_eff_nb_table, rlbk_nb_table) AS rlbk_tbl,
+						format('%s / %s', coalesce(rlbk_eff_nb_sequence::TEXT, '?'), rlbk_nb_sequence) AS rlbk_seq
+					FROM emaj.emaj_rlbk
+						 JOIN emaj.emaj_time_stamp tm ON (tm.time_id = rlbk_mark_time_id)
+					WHERE rlbk_id = {$rlbkId}";
 		} else {
+			$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,',') AS rlbk_groups_list, rlbk_status,
+						to_char(tr.time_tx_timestamp,'{$this->tsFormat}') AS rlbk_start_datetime,
+						to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
+						to_char(rlbk_end_datetime - tr.time_tx_timestamp,'{$this->intervalFormat}') AS rlbk_global_duration,
+						'' AS rlbk_planning_duration,
+						'' AS rlbk_locking_duration,
+						rlbk_mark, tm.time_tx_timestamp as rlbk_mark_datetime, rlbk_is_logged, rlbk_nb_session,
+						format('%s / %s', rlbk_eff_nb_table, rlbk_nb_table) AS rlbk_tbl,";
+			if ($this->getNumEmajVersion() >= 40200){	// version >= 4.2.0
+				$sql = $sql . "
+						format('%s / %s', coalesce(rlbk_eff_nb_sequence::TEXT, '?'), rlbk_nb_sequence) AS rlbk_seq";
+			} else {
+				$sql = $sql . "
+						format('%s / %s', rlbk_nb_sequence, rlbk_nb_sequence) AS rlbk_seq";
+			}
 			$sql = $sql . "
-					format('%s / %s', rlbk_nb_sequence, rlbk_nb_sequence) AS rlbk_seq";
+					FROM emaj.emaj_rlbk
+						 JOIN emaj.emaj_time_stamp tm ON (tm.time_id = rlbk_mark_time_id)
+						 JOIN emaj.emaj_time_stamp tr ON (tr.time_id = rlbk_time_id)
+					WHERE rlbk_id = {$rlbkId}";
 		}
-		$sql = $sql . "
-				FROM (SELECT *, tr.time_tx_timestamp as rlbk_start_datetime, tm.time_tx_timestamp as rlbk_mark_datetime
-						FROM emaj.emaj_rlbk, emaj.emaj_time_stamp tr, emaj.emaj_time_stamp tm
-						WHERE tr.time_id = rlbk_time_id AND tm.time_id = rlbk_mark_time_id
-						  AND rlbk_id = {$rlbkId}
-					  ) AS t";
 
 		return $data->selectSet($sql);
 	}
@@ -2772,13 +2795,22 @@ class EmajDb {
 		$data->clean($rlbkId);
 
 		$sql = "SELECT rlbk_status,
-					   to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
-					   to_char(rlbk_elapse,'{$this->intervalFormat}') AS rlbk_current_elapse,
-					   to_char(rlbk_remaining, '{$this->intervalFormat}') AS rlbk_remaining,
-					   rlbk_completion_pct
+					to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
+					to_char(rlbk_elapse,'{$this->intervalFormat}') AS rlbk_current_elapse,";
+		if ($this->getNumEmajVersion() >= 40300){	// version >= 4.3.0
+			$sql = $sql . "
+					to_char(rlbk_planning_duration,'{$this->intervalFormat}') AS rlbk_planning_duration,
+					to_char(rlbk_locking_duration,'{$this->intervalFormat}') AS rlbk_locking_duration,";
+		} else {
+			$sql = $sql . "
+					'' AS rlbk_planning_duration,
+					'' AS rlbk_locking_duration,";
+		}
+		$sql = $sql . "
+					to_char(rlbk_remaining, '{$this->intervalFormat}') AS rlbk_remaining,
+					rlbk_completion_pct
 				FROM emaj.emaj_rollback_activity()
 				WHERE rlbk_id = {$rlbkId}";
-
 		return $data->selectSet($sql);
 	}
 

@@ -363,9 +363,27 @@
 					'class' => 'tooltip left-aligned-tooltip',
 				),
 			),
-			'rlbkDuration' => array(
-				'title' => $lang['emajduration'],
-				'field' => field('rlbk_duration'),
+			'rlbkGlobalDuration' => array(
+				'title' => $lang['emajglobalduration'],
+				'field' => field('rlbk_global_duration'),
+				'type' => 'spanned',
+				'params'=> array(
+					'intervalformat' => $lang['strintervalformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
+			),
+			'rlbkPlanningDuration' => array(
+				'title' => $lang['emajplanningduration'],
+				'field' => field('rlbk_planning_duration'),
+				'type' => 'spanned',
+				'params'=> array(
+					'intervalformat' => $lang['strintervalformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
+			),
+			'rlbkLockingDuration' => array(
+				'title' => $lang['emajlockingduration'],
+				'field' => field('rlbk_locking_duration'),
 				'type' => 'spanned',
 				'params'=> array(
 					'intervalformat' => $lang['strintervalformat'],
@@ -392,6 +410,24 @@
 			'rlbkElapse' => array(
 				'title' => $lang['emajcurrentduration'],
 				'field' => field('rlbk_current_elapse'),
+				'type' => 'spanned',
+				'params'=> array(
+					'intervalformat' => $lang['strintervalformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
+			),
+			'rlbkPlanningDuration' => array(
+				'title' => $lang['emajplanningduration'],
+				'field' => field('rlbk_planning_duration'),
+				'type' => 'spanned',
+				'params'=> array(
+					'intervalformat' => $lang['strintervalformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
+			),
+			'rlbkLockingDuration' => array(
+				'title' => $lang['emajlockingduration'],
+				'field' => field('rlbk_locking_duration'),
 				'type' => 'spanned',
 				'params'=> array(
 					'intervalformat' => $lang['strintervalformat'],

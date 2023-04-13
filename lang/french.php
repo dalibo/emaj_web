@@ -472,6 +472,9 @@
 	$lang['emajnbproctable'] = 'Tables traitées';
 	$lang['emajnbprocseq'] = 'Séquences traitées';
 	$lang['emajcurrentduration'] = 'Durée actuelle';
+	$lang['emajglobalduration'] = 'Durée globale';
+	$lang['emajplanningduration'] = 'Durée planification';
+	$lang['emajlockingduration'] = 'Durée pose verrous';
 	$lang['emajestimremaining'] = 'Restant estimée';
 	$lang['emajpctcompleted'] = '% effectué';
 	$lang['emajinprogressrlbk'] = 'Rollbacks E-Maj en cours';

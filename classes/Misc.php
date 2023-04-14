@@ -542,7 +542,7 @@
 			// Javascript
 			if (!$frameset) {
 				echo "<script src=\"js/global.js\"></script>\n";
-				echo "<script src=\"libraries/js/jquery-3.3.1.min.js\"></script>\n";
+				echo "<script src=\"libraries/js/jquery-3.6.4.min.js\"></script>\n";
 				echo "<script src=\"libraries/js/jquery.tablesorter.min.js\"></script>\n";
 				echo "<script src=\"libraries/js/jquery.tablesorter.widgets.min.js\"></script>\n";
 			}

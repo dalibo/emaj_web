@@ -415,7 +415,7 @@
 		doBrowseFK();
 	}
 
-	$scripts = "<script src=\"libraries/js/jquery-ui.min.js\"></script>";
+	$scripts = "<script src=\"libraries/js/jquery-ui.min.js\"></script>";	// the jquery-ui script is used to have the fk display div draggable when clicking on any header cell
 	$scripts .= "<script src=\"js/display.js\"></script>";
 	$scripts .= "<script>\n";
 	$scripts .= "var Display = {\n";

@@ -1221,7 +1221,7 @@ class Postgres extends ADODB_base {
 
 		// Figure out ORDER BY.  Sort key is always the column number (based from one)
 		// of the column to order by.  Only need to do this for non-TABLE queries
-		if ($type != 'TABLE' && preg_match('/^[0-9]+$/', $sortkey) && $sortkey > 0) {
+		if ($type != 'TABLE' && isset($sortKey) && preg_match('/^[0-9]+$/', $sortkey) && $sortkey > 0) {
 			$orderby = " ORDER BY {$sortkey}";
 			// Add sort order
 			if ($sortdir == 'desc')

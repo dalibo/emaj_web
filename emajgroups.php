@@ -3472,6 +3472,16 @@
 		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"logged\" {$loggedChecked}>{$lang['emajlogged']}\n";
 		echo "</p>\n";
 
+		// comment line
+		if ($emajdb->getNumEmajVersion() >= 40300) {	// version >= 4.3.0) {
+			echo "<p>{$lang['strcomment']} : \n";
+			$comment = (isset($_REQUEST['comment'])) ? $_REQUEST['comment'] : '';
+			echo "\t<input name=\"comment\" size=\"80\" value=\"", htmlspecialchars($comment), "\" />\n";
+			echo "</p>\n";
+		} else {
+			echo "<input type=\"hidden\" name=\"comment\" value=\"\" />\n";
+		}
+
 		// estimated duration line
 		echo "<p>{$lang['emajestimatedduration']}&nbsp;:&nbsp;\n";
 		if (isset($estimatedDuration)) {
@@ -3606,6 +3616,7 @@
 					if (isset($_POST['async'])) {
 						echo "<input type=\"hidden\" name=\"async\"", htmlspecialchars($_REQUEST['async']), "\" />\n";
 					}
+					echo "<input type=\"hidden\" name=\"comment\" value=\"", htmlspecialchars($_REQUEST['comment']), "\" />\n";
 					echo $misc->form;
 					echo "<input type=\"submit\" name=\"rollbackgroup\" value=\"{$lang['strconfirm']}\" />\n";
 					echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -3678,7 +3689,7 @@
 				// perform the rollback in asynchronous mode and switch to the rollback monitoring page
 				$psqlExe = $misc->escapeShellCmd($conf['psql_path']);
 				$sep = (substr(php_uname(), 0, 3) == "Win") ? '\\' : '/';
-				$rlbkId = $emajdb->asyncRollbackGroups($_POST['group'],$_POST['mark'],$_POST['rollbacktype']=='logged', $psqlExe, $conf['temp_dir'].$sep, false);
+				$rlbkId = $emajdb->asyncRollbackGroups($_POST['group'],$_POST['mark'],$_POST['rollbacktype']=='logged',$psqlExe,$conf['temp_dir'].$sep,false,$_POST['comment']);
 
 				// automatic form to go to the emajrollbacks.php page
 				echo "<form id=\"auto\" action=\"emajrollbacks.php\" method=\"get\">\n";
@@ -3729,7 +3740,7 @@
 				echo "<p>" . sprintf($lang['emajrlbkgroupreport'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark'])) . "</p>\n";
 
 				// execute the rollback operation and get the execution report
-				$rlbkReportMsgs = $emajdb->rollbackGroup($_POST['group'],$_POST['mark'],$_POST['rollbacktype']=='logged');
+				$rlbkReportMsgs = $emajdb->rollbackGroup($_POST['group'],$_POST['mark'],$_POST['rollbacktype']=='logged',$_POST['comment']);
 
 				$columns = array(
 					'severity' => array(
@@ -3843,6 +3854,16 @@
 		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"unlogged\" {$unloggedChecked}>{$lang['emajunlogged']}\n";
 		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"logged\" {$loggedChecked}>{$lang['emajlogged']}\n";
 		echo "</p>\n";
+
+		// comment line
+		if ($emajdb->getNumEmajVersion() >= 40300) {	// version >= 4.3.0) {
+			echo "<p>{$lang['strcomment']} : \n";
+			$comment = (isset($_REQUEST['comment'])) ? $_REQUEST['comment'] : '';
+			echo "\t<input name=\"comment\" size=\"80\" value=\"", htmlspecialchars($comment), "\" />\n";
+			echo "</p>\n";
+		} else {
+			echo "<input type=\"hidden\" name=\"comment\" value=\"\" />\n";
+		}
 
 		// estimated duration line
 		echo "<p>{$lang['emajestimatedduration']}&nbsp;:&nbsp;\n";
@@ -3969,6 +3990,7 @@
 					if (isset($_POST['async'])) {
 						echo "<input type=\"hidden\" name=\"async\"", htmlspecialchars($_REQUEST['async']), "\" />\n";
 					}
+					echo "<input type=\"hidden\" name=\"comment\" value=\"", htmlspecialchars($_REQUEST['comment']), "\" />\n";
 					echo $misc->form;
 					echo "<input type=\"submit\" name=\"rollbackgroups\" value=\"{$lang['strconfirm']}\" />\n";
 					echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
@@ -4022,7 +4044,7 @@
 			// perform the rollback in asynchronous mode and switch to the rollback monitoring page
 			$psqlExe = $misc->escapeShellCmd($conf['psql_path']);
 			$sep = (substr(php_uname(), 0, 3) == "Win") ? '\\' : '/';
-			$rlbkId = $emajdb->asyncRollbackGroups($_POST['groups'],$_POST['mark'],$_POST['rollbacktype']=='logged', $psqlExe, $conf['temp_dir'].$sep, true);
+			$rlbkId = $emajdb->asyncRollbackGroups($_POST['groups'],$_POST['mark'],$_POST['rollbacktype']=='logged',$psqlExe,$conf['temp_dir'].$sep,true,$_POST['comment']);
 
 			// automatic form to go to the emajrollbacks.php page
 			echo "<form id=\"auto\" action=\"emajrollbacks.php\" method=\"get\">\n";
@@ -4060,8 +4082,7 @@
 			echo "<p>" . sprintf($lang['emajrlbkgroupsreport'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark'])) . "</p>\n";
 
 			// execute the rollback operation and get the execution report
-			$rlbkReportMsgs = $emajdb->rollbackGroups($_POST['groups'],$_POST['mark'],$_POST['rollbacktype']=='logged');
-
+			$rlbkReportMsgs = $emajdb->rollbackGroups($_POST['groups'],$_POST['mark'],$_POST['rollbacktype']=='logged',$_POST['comment']);
 			$columns = array(
 				'severity' => array(
 					'title' => '',

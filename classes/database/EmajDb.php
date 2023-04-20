@@ -2405,16 +2405,25 @@ class EmajDb {
 	 * Rollbacks a group to a mark
 	 * It returns a set of messages
 	 */
-	function rollbackGroup($group,$mark,$isLogged) {
+	function rollbackGroup($group,$mark,$isLogged,$comment) {
 		global $data;
 
 		$data->clean($group);
 		$data->clean($mark);
+		$data->clean($comment);
 
-		if ($isLogged){
-			$sql = "SELECT * FROM emaj.emaj_logged_rollback_group('{$group}','{$mark}',true)";
+		if ($comment <> '') {
+			if ($isLogged){
+				$sql = "SELECT * FROM emaj.emaj_logged_rollback_group('{$group}','{$mark}',true,'{$comment}')";
+			} else {
+				$sql = "SELECT * FROM emaj.emaj_rollback_group('{$group}','{$mark}',true,'{$comment}')";
+			}
 		} else {
-			$sql = "SELECT * FROM emaj.emaj_rollback_group('{$group}','{$mark}',true)";
+			if ($isLogged){
+				$sql = "SELECT * FROM emaj.emaj_logged_rollback_group('{$group}','{$mark}',true)";
+			} else {
+				$sql = "SELECT * FROM emaj.emaj_rollback_group('{$group}','{$mark}',true)";
+			}
 		}
 
 		return $data->selectSet($sql);
@@ -2423,20 +2432,25 @@ class EmajDb {
 	/**
 	 * rollbacks asynchronously one or several groups to a mark, using a single session
 	 */
-	function asyncRollbackGroups($groups,$mark,$isLogged,$psqlExe,$tempDir,$isMulti) {
+	function asyncRollbackGroups($groups,$mark,$isLogged,$psqlExe,$tempDir,$isMulti,$comment) {
 		global $data, $misc;
 
 		$data->clean($groups);
 		$data->clean($mark);
 		$data->clean($psqlExe);
 		$data->clean($tempDir);
+		$data->clean($comment);
 
 		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 
 		// Initialize the rollback operation and get its rollback id
 		$isL = $isLogged ? 'true' : 'false';
 		$isM = $isMulti ? 'true' : 'false';
-		$sql1 = "SELECT emaj._rlbk_init({$groupsArray}, '{$mark}', {$isL}, 1, {$isM}, true) as rlbk_id";
+		if ($comment <> '') {
+			$sql1 = "SELECT emaj._rlbk_init({$groupsArray}, '{$mark}', {$isL}, 1, {$isM}, true, '{$comment}') as rlbk_id";
+		} else {
+			$sql1 = "SELECT emaj._rlbk_init({$groupsArray}, '{$mark}', {$isL}, 1, {$isM}, true) as rlbk_id";
+		}
 		$rlbkId = $data->selectField($sql1,'rlbk_id');
 
 		// Build the psql report file name, the SQL command and submit the rollback execution asynchronously
@@ -2580,17 +2594,26 @@ class EmajDb {
 	 * Rollbacks a groups array to a mark
 	 * It returns a set of messages
 	 */
-	function rollbackGroups($groups,$mark,$isLogged) {
+	function rollbackGroups($groups,$mark,$isLogged,$comment) {
 		global $data;
 
 		$data->clean($groups);
 		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 		$data->clean($mark);
+		$data->clean($comment);
 
-		if ($isLogged){
-			$sql = "SELECT * FROM emaj.emaj_logged_rollback_groups({$groupsArray},'{$mark}',true)";
-		}else{
-			$sql = "SELECT * FROM emaj.emaj_rollback_groups({$groupsArray},'{$mark}',true)";
+		if ($comment <> '') {
+			if ($isLogged){
+				$sql = "SELECT * FROM emaj.emaj_logged_rollback_groups({$groupsArray},'{$mark}',true,'{$comment}')";
+			}else{
+				$sql = "SELECT * FROM emaj.emaj_rollback_groups({$groupsArray},'{$mark}',true,'{$comment}')";
+			}
+		} else {
+			if ($isLogged){
+				$sql = "SELECT * FROM emaj.emaj_logged_rollback_groups({$groupsArray},'{$mark}',true)";
+			}else{
+				$sql = "SELECT * FROM emaj.emaj_rollback_groups({$groupsArray},'{$mark}',true)";
+			}
 		}
 
 		return $data->selectSet($sql);
@@ -2646,7 +2669,7 @@ class EmajDb {
 						to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
 						to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
 						to_char(rlbk_end_datetime - rlbk_start_datetime, '{$this->intervalFormat}') as rlbk_duration,
-						rlbk_mark, rlbk_is_logged, rlbk_nb_session
+						rlbk_mark, rlbk_is_logged, rlbk_nb_session, rlbk_comment
 					FROM emaj.emaj_rlbk
 					WHERE rlbk_status IN ('COMPLETED','COMMITTED','ABORTED')
 					ORDER BY rlbk_id DESC
@@ -2679,8 +2702,11 @@ class EmajDb {
 					to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
 					to_char(rlbk_elapse,'{$this->intervalFormat}') AS rlbk_current_elapse,
 					to_char(rlbk_remaining, '{$this->intervalFormat}') AS rlbk_remaining,
-					rlbk_completion_pct
-				FROM emaj.emaj_rollback_activity()
+					rlbk_completion_pct";
+		if ($this->getNumEmajVersion() >= 40300){	// version >= 4.3.0
+			$sql .= ", rlbk_comment";
+		}
+		$sql .= " FROM emaj.emaj_rollback_activity()
 				ORDER BY rlbk_id DESC";
 
 		return $data->selectSet($sql);
@@ -2748,7 +2774,7 @@ class EmajDb {
 
 // get the emaj_rlbk data
 		if ($this->getNumEmajVersion() >= 40300){	// version >= 4.3.0
-			$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,',') AS rlbk_groups_list, rlbk_status,
+			$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,',') AS rlbk_groups_list, rlbk_status, rlbk_comment,
 						to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
 						to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
 						to_char(rlbk_end_datetime - rlbk_start_datetime,'{$this->intervalFormat}') AS rlbk_global_duration,

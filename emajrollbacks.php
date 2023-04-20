@@ -118,6 +118,19 @@
 				'params'=> array('align' => 'right'),
 			),
 		);
+		if ($emajdb->getNumEmajVersion() >= 40300) {	// version >= 4.3
+			$columnsInProgressRlbk = array_merge($columnsInProgressRlbk, array(
+				'comment' => array(
+					'title' => $lang['strcomment'],
+					'field' => field('rlbk_comment'),
+					'type' => 'spanned',
+					'params'=> array(
+							'cliplen' => 12,
+							'class' => 'tooltip right-aligned-tooltip',
+							),
+				),
+			));
+		};
 
 		$columnsCompletedRlbk = array(
 			'rlbkId' => array(
@@ -188,7 +201,19 @@
 				'params'=> array('align' => 'right'),
 			),
 		);
-
+		if ($emajdb->getNumEmajVersion() >= 40300) {	// version >= 4.3
+			$columnsCompletedRlbk = array_merge($columnsCompletedRlbk, array(
+				'comment' => array(
+					'title' => $lang['strcomment'],
+					'field' => field('rlbk_comment'),
+					'type' => 'spanned',
+					'params'=> array(
+							'cliplen' => 12,
+							'class' => 'tooltip right-aligned-tooltip',
+							),
+				),
+			));
+		};
 		$actions = array();
 
 		// Get rollback information from the database
@@ -472,6 +497,14 @@
 				'params'=> array('align' => 'center'),
 			),
 		);
+		if ($emajdb->getNumEmajVersion() >= 40300) {	// version >= 4.3
+			$columnsCharacteristics = array_merge($columnsCharacteristics, array(
+				'comment' => array(
+					'title' => $lang['strcomment'],
+					'field' => field('rlbk_comment'),
+				),
+			));
+		};
 
 		$columnsReport = array(
 			'severity' => array(

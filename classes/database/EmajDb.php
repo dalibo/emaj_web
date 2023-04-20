@@ -2383,25 +2383,6 @@ class EmajDb {
 	}
 
 	/**
-	 * Rollbacks a group to a mark (the old version, to be used with emaj prior 2.1)
-	 * It returns the number of tables and sequences processed.
-	 */
-	function oldRollbackGroup($group,$mark,$isLogged) {
-		global $data;
-
-		$data->clean($group);
-		$data->clean($mark);
-
-		if ($isLogged){
-			$sql = "SELECTemaj.emaj_logged_rollback_group('{$group}','{$mark}') AS nbtblseq";
-		} else {
-			$sql = "SELECT emaj.emaj_rollback_group('{$group}','{$mark}') AS nbtblseq";
-		}
-
-		return $data->execute($sql);
-	}
-
-	/**
 	 * Rollbacks a group to a mark
 	 * It returns a set of messages
 	 */

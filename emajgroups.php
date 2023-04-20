@@ -380,7 +380,7 @@
 							))))
 				))
 			);
-			if ($emajdb->getNumEmajVersion() >= 20100 && $emajdb->getNumEmajVersion() < 30200) {	// 2.1 <= version < 3.2
+			if ($emajdb->getNumEmajVersion() < 30200) {	// version < 3.2
 				$loggingActions = array_merge($loggingActions, array(
 					'alter_group' => array(
 						'content' => $lang['emajApplyConfChanges'],
@@ -793,7 +793,7 @@
 			);
 
 			// alter_group
-			if ($hasWaitingChanges && ($groupState == 'IDLE' || $emajdb->getNumEmajVersion() >= 20100) && $emajdb->getNumEmajVersion() < 30200) {
+			if ($hasWaitingChanges && $emajdb->getNumEmajVersion() < 30200) {
 				$navlinks['alter_group'] = array (
 					'content' => $lang['emajApplyConfChanges'],
 					'attr'=> array (
@@ -3540,92 +3540,87 @@
 
 		} else {
 			// process a rollback
-			if ($emajdb->getNumEmajVersion() < 20100) {	// version < 2.1.0) {
-				// for emaj version prior 2.1, directly call the function that executes the rollback
-				rollback_group_ok();
-			} else {
-				// Check the group is always in LOGGING state and ROLLBACKABLE (i.e. not protected)
-				$group = $emajdb->getGroup($_POST['group']);
-				if ($group->fields['group_state'] != 'LOGGING') {
-					if ($_POST['back']=='list') {
-						show_groups('',sprintf($lang['emajcantrlbkidlegroup'], htmlspecialchars($_POST['group'])));
-					} else {
-						show_group('',sprintf($lang['emajcantrlbkidlegroup'], htmlspecialchars($_POST['group'])));
-					}
-					return;
-				}
-				if ($group->fields['group_type'] != 'ROLLBACKABLE') {
-					if ($_POST['back']=='list') {
-						show_groups('',sprintf($lang['emajcantrlbkprotgroup'], htmlspecialchars($_POST['group'])));
-					} else {
-						show_group('',sprintf($lang['emajcantrlbkprotgroup'], htmlspecialchars($_POST['group'])));
-					}
-					return;
-				}
-				// Check the mark is always valid for a rollback
-				if (!$emajdb->isRollbackMarkValidGroup($_POST['group'],$_POST['mark'])) {
-					if ($_POST['back']=='list') {
-						show_groups('',sprintf($lang['emajcantrlbkinvalidmarkgroup'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark'])));
-					} else {
-						show_group('',sprintf($lang['emajcantrlbkinvalidmarkgroup'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark'])));
-					}
-					return;
-				}
-
-				$alterGroupSteps = $emajdb->getAlterAfterMarkGroups($_POST['group'],$_POST['mark'],$lang);
-
-				if ($alterGroupSteps->recordCount() > 0) {
-					// there are alter_group operation to cross over, so ask for a confirmation
-
-					$columns = array(
-						'time' => array(
-							'title' => $lang['emajtimestamp'],
-							'field' => field('time_tx_timestamp'),
-						),
-						'step' => array(
-							'title' => $lang['straction'],
-							'field' => field('altr_action'),
-						),
-						'autorollback' => array(
-							'title' => $lang['emajautorolledback'],
-							'field' => field('altr_auto_rolled_back'),
-							'type'	=> 'callback',
-							'params'=> array('function' => 'renderBooleanIcon','align' => 'center')
-						),
-					);
-
-					$actions = array ();
-
-					if ($_REQUEST['back']=='list')
-						$misc->printHeader('database', 'database','emajgroups');
-					else
-						$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
-
-					$misc->printTitle($lang['emajrlbkagroup']);
-
-					echo "<p>" . sprintf($lang['emajreachaltergroup'], htmlspecialchars($_REQUEST['group']), htmlspecialchars($_REQUEST['mark'])) . "</p>\n";
-
-					$misc->printTable($alterGroupSteps, $columns, $actions, 'alterGroupStep');
-
-					echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-					echo "<p><input type=\"hidden\" name=\"action\" value=\"rollback_group_ok\" />\n";
-					echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
-					echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
-					echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
-					echo "<input type=\"hidden\" name=\"rollbacktype\"", htmlspecialchars($_REQUEST['rollbacktype']), "\" />\n";
-					if (isset($_POST['async'])) {
-						echo "<input type=\"hidden\" name=\"async\"", htmlspecialchars($_REQUEST['async']), "\" />\n";
-					}
-					echo "<input type=\"hidden\" name=\"comment\" value=\"", htmlspecialchars($_REQUEST['comment']), "\" />\n";
-					echo $misc->form;
-					echo "<input type=\"submit\" name=\"rollbackgroup\" value=\"{$lang['strconfirm']}\" />\n";
-					echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-					echo "</form>\n";
-
+			// Check the group is always in LOGGING state and ROLLBACKABLE (i.e. not protected)
+			$group = $emajdb->getGroup($_POST['group']);
+			if ($group->fields['group_state'] != 'LOGGING') {
+				if ($_POST['back']=='list') {
+					show_groups('',sprintf($lang['emajcantrlbkidlegroup'], htmlspecialchars($_POST['group'])));
 				} else {
-					// otherwise, directly execute the rollback
-					rollback_group_ok();
+					show_group('',sprintf($lang['emajcantrlbkidlegroup'], htmlspecialchars($_POST['group'])));
 				}
+				return;
+			}
+			if ($group->fields['group_type'] != 'ROLLBACKABLE') {
+				if ($_POST['back']=='list') {
+					show_groups('',sprintf($lang['emajcantrlbkprotgroup'], htmlspecialchars($_POST['group'])));
+				} else {
+					show_group('',sprintf($lang['emajcantrlbkprotgroup'], htmlspecialchars($_POST['group'])));
+				}
+				return;
+			}
+			// Check the mark is always valid for a rollback
+			if (!$emajdb->isRollbackMarkValidGroup($_POST['group'],$_POST['mark'])) {
+				if ($_POST['back']=='list') {
+					show_groups('',sprintf($lang['emajcantrlbkinvalidmarkgroup'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark'])));
+				} else {
+					show_group('',sprintf($lang['emajcantrlbkinvalidmarkgroup'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark'])));
+				}
+				return;
+			}
+
+			$alterGroupSteps = $emajdb->getAlterAfterMarkGroups($_POST['group'],$_POST['mark'],$lang);
+
+			if ($alterGroupSteps->recordCount() > 0) {
+				// there are alter_group operation to cross over, so ask for a confirmation
+
+				$columns = array(
+					'time' => array(
+						'title' => $lang['emajtimestamp'],
+						'field' => field('time_tx_timestamp'),
+					),
+					'step' => array(
+						'title' => $lang['straction'],
+						'field' => field('altr_action'),
+					),
+					'autorollback' => array(
+						'title' => $lang['emajautorolledback'],
+						'field' => field('altr_auto_rolled_back'),
+						'type'	=> 'callback',
+						'params'=> array('function' => 'renderBooleanIcon','align' => 'center')
+					),
+				);
+
+				$actions = array ();
+
+				if ($_REQUEST['back']=='list')
+					$misc->printHeader('database', 'database','emajgroups');
+				else
+					$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
+
+				$misc->printTitle($lang['emajrlbkagroup']);
+
+				echo "<p>" . sprintf($lang['emajreachaltergroup'], htmlspecialchars($_REQUEST['group']), htmlspecialchars($_REQUEST['mark'])) . "</p>\n";
+
+				$misc->printTable($alterGroupSteps, $columns, $actions, 'alterGroupStep');
+
+				echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+				echo "<p><input type=\"hidden\" name=\"action\" value=\"rollback_group_ok\" />\n";
+				echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
+				echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
+				echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
+				echo "<input type=\"hidden\" name=\"rollbacktype\"", htmlspecialchars($_REQUEST['rollbacktype']), "\" />\n";
+				if (isset($_POST['async'])) {
+					echo "<input type=\"hidden\" name=\"async\"", htmlspecialchars($_REQUEST['async']), "\" />\n";
+				}
+				echo "<input type=\"hidden\" name=\"comment\" value=\"", htmlspecialchars($_REQUEST['comment']), "\" />\n";
+				echo $misc->form;
+				echo "<input type=\"submit\" name=\"rollbackgroup\" value=\"{$lang['strconfirm']}\" />\n";
+				echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+				echo "</form>\n";
+
+			} else {
+				// otherwise, directly execute the rollback
+				rollback_group_ok();
 			}
 		}
 	}
@@ -3707,71 +3702,47 @@
 
 			if (!ini_get('safe_mode')) set_time_limit(0);		// Prevent timeouts on large rollbacks (non-safe mode only)
 
-			if ($emajdb->getNumEmajVersion() < 20100) {	// version < 2.1.0) {
-				// for emaj version prior 2.1, call the old emaj_rollback_group() function
-				if (isset($_POST['rollbacktype'])) {
-					$status = $emajdb->oldRollbackGroup($_POST['group'],$_POST['mark'],$_POST['rollbacktype']=='logged');
-				} else {
-					$status = $emajdb->oldRollbackGroup($_POST['group'],$_POST['mark'],false);
-				}
-				if ($status == 0) {
-					if ($_POST['back']=='list') {
-						show_groups(sprintf($lang['emajrlbkgroupok'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark'])));
-					} else {
-						show_group(sprintf($lang['emajrlbkgroupok'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark'])));
-					}
-				} else {
-					if ($_POST['back']=='list') {
-						show_groups('',sprintf($lang['emajrlbkgrouperr'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark'])));
-					} else {
-						show_group('',sprintf($lang['emajrlbkgrouperr'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark'])));
-					}
-				}
+			if ($_REQUEST['back']=='list')
+				$misc->printHeader('database', 'database','emajgroups');
+			else
+				$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
+
+			$misc->printTitle($lang['emajrlbkagroup']);
+
+			echo "<p>" . sprintf($lang['emajrlbkgroupreport'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark'])) . "</p>\n";
+
+			// execute the rollback operation and get the execution report
+			$rlbkReportMsgs = $emajdb->rollbackGroup($_POST['group'],$_POST['mark'],$_POST['rollbacktype']=='logged',$_POST['comment']);
+
+			$columns = array(
+				'severity' => array(
+					'title' => '',
+					'field' => field('rlbk_severity'),
+					'type'	=> 'callback',
+					'params'=> array('function' => 'renderRlbkExecSeverity','align' => 'center'),
+					'sorter' => false,
+				),
+				'msg' => array(
+					'title' => $lang['strmessage'],
+					'field' => field('rlbk_message'),
+				),
+			);
+
+			$actions = array ();
+
+			$misc->printTable($rlbkReportMsgs, $columns, $actions, 'rlbkGroupReport', null, null, array('sorter' => true, 'filter' => false));
+
+			echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+			if ($_POST['back']=='list') {
+				echo "<p><input type=\"hidden\" name=\"action\" value=\"show_groups\" />\n";
 			} else {
-
-				// recent version: get and display the full rollback execution report
-				if ($_REQUEST['back']=='list')
-					$misc->printHeader('database', 'database','emajgroups');
-				else
-					$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
-
-				$misc->printTitle($lang['emajrlbkagroup']);
-
-				echo "<p>" . sprintf($lang['emajrlbkgroupreport'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark'])) . "</p>\n";
-
-				// execute the rollback operation and get the execution report
-				$rlbkReportMsgs = $emajdb->rollbackGroup($_POST['group'],$_POST['mark'],$_POST['rollbacktype']=='logged',$_POST['comment']);
-
-				$columns = array(
-					'severity' => array(
-						'title' => '',
-						'field' => field('rlbk_severity'),
-						'type'	=> 'callback',
-						'params'=> array('function' => 'renderRlbkExecSeverity','align' => 'center'),
-						'sorter' => false,
-					),
-					'msg' => array(
-						'title' => $lang['strmessage'],
-						'field' => field('rlbk_message'),
-					),
-				);
-
-				$actions = array ();
-
-				$misc->printTable($rlbkReportMsgs, $columns, $actions, 'rlbkGroupReport', null, null, array('sorter' => true, 'filter' => false));
-
-				echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-				if ($_POST['back']=='list') {
-					echo "<p><input type=\"hidden\" name=\"action\" value=\"show_groups\" />\n";
-				} else {
-					echo "<p><input type=\"hidden\" name=\"action\" value=\"show_group\" />\n";
-				}
-				echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
-				echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
-				echo $misc->form;
-				echo "<input type=\"submit\" name=\"rollbackgroup\" value=\"{$lang['strok']}\" />\n";
-				echo "</form>\n";
+				echo "<p><input type=\"hidden\" name=\"action\" value=\"show_group\" />\n";
 			}
+			echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
+			echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
+			echo $misc->form;
+			echo "<input type=\"submit\" name=\"rollbackgroup\" value=\"{$lang['strok']}\" />\n";
+			echo "</form>\n";
 		}
 	}
 
@@ -3913,8 +3884,8 @@
 		} elseif (isset($_POST['estimaterollbackduration'])) {
 			// process the click on the <estimate> button (compute the estimaged duration and go back to the previous page
 			// check the rollback target mark is always valid
-			// if ok, estimate the rollback duration and go back to the rollback_group() function
 			if ($emajdb->isRollbackMarkValidGroups($_POST['groups'], $_POST['mark'])) {
+				// if ok, estimate the rollback duration and go back to the rollback_group() function
 				$estimatedDuration = $emajdb->estimateRollbackGroups($_POST['groups'], $_POST['mark'], $_POST['rollbacktype']);
 			} else {
 				$estimatedDuration = "-";
@@ -3924,82 +3895,77 @@
 
 		} else {
 			// process a rollback
-			if ($emajdb->getNumEmajVersion() < 20100) {	// version < 2.1.0) {
-				// for emaj version prior 2.1, directly go call the function that executes the rollback
-				rollback_groups_ok();
+			$groups = explode(', ',$_POST['groups']);
+			// Check the groups are always in LOGGING state and not protected
+			foreach($groups as $g) {
+				if ($emajdb->getGroup($g)->fields['group_state'] != 'LOGGING') {
+					show_groups('',sprintf($lang['emajcantrlbkidlegroups'], htmlspecialchars($groups), htmlspecialchars($g)));
+					return;
+				}
+			}
+			// if at least one selected group is protected, stop
+			$protectedGroups=$emajdb->getProtectedGroups($_POST['groups']);
+			if ($protectedGroups != '') {
+				show_groups('',sprintf($lang['emajcantrlbkprotgroups'], htmlspecialchars($groups), htmlspecialchars($protectedGroups)));
+				return;
+			}
+
+			// Check the mark is always valid
+			if (!$emajdb->isRollbackMarkValidGroups($_POST['groups'],$_POST['mark'])) {
+				show_groups('',sprintf($lang['emajcantrlbkinvalidmarkgroups'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark'])));
+				return;
+			}
+
+			// check that the rollback would not reach a mark set before any alter group operation
+			$alterGroupSteps = $emajdb->getAlterAfterMarkGroups($_POST['groups'],$_POST['mark'],$lang);
+
+			if ($alterGroupSteps->recordCount() > 0) {
+				// there are alter_group operations to cross over, so ask for a confirmation
+
+				$columns = array(
+					'time' => array(
+						'title' => $lang['emajtimestamp'],
+						'field' => field('time_tx_timestamp'),
+					),
+					'step' => array(
+						'title' => $lang['straction'],
+						'field' => field('altr_action'),
+					),
+					'autorollback' => array(
+						'title' => $lang['emajautorolledback'],
+						'field' => field('altr_auto_rolled_back'),
+						'type'	=> 'callback',
+						'params'=> array('function' => 'renderBooleanIcon','align' => 'center')
+					),
+				);
+
+				$actions = array ();
+
+				$misc->printHeader('database', 'database','emajgroups');
+
+				$misc->printTitle($lang['emajrlbkgroups']);
+
+				echo "<p>" . sprintf($lang['emajreachaltergroups'], htmlspecialchars($_REQUEST['groups']), htmlspecialchars($_REQUEST['mark'])) . "</p>\n";
+				$misc->printTable($alterGroupSteps, $columns, $actions, 'alterGroupStep');
+
+				echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+				echo "<p><input type=\"hidden\" name=\"action\" value=\"rollback_groups_ok\" />\n";
+				echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($_REQUEST['groups']), "\" />\n";
+				echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
+				echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
+				echo "<input type=\"hidden\" name=\"rollbacktype\" value=\"", htmlspecialchars($_REQUEST['rollbacktype']), "\" />\n";
+				if (isset($_POST['async'])) {
+					echo "<input type=\"hidden\" name=\"async\"", htmlspecialchars($_REQUEST['async']), "\" />\n";
+				}
+				echo "<input type=\"hidden\" name=\"comment\" value=\"", htmlspecialchars($_REQUEST['comment']), "\" />\n";
+				echo $misc->form;
+				echo "<input type=\"submit\" name=\"rollbackgroups\" value=\"{$lang['strconfirm']}\" />\n";
+				echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+				echo "</form>\n";
+
 			} else {
-				// check that the rollback would not reach a mark set before any alter group operation
-				// Check the groups are always in LOGGING state and not protected
-				$groups = explode(', ',$_POST['groups']);
-				foreach($groups as $g) {
-					if ($emajdb->getGroup($g)->fields['group_state'] != 'LOGGING') {
-						show_groups('',sprintf($lang['emajcantrlbkidlegroups'], htmlspecialchars($groups), htmlspecialchars($g)));
-						return;
-					}
-				}
-				// if at least one selected group is protected, stop
-				$protectedGroups=$emajdb->getProtectedGroups($_POST['groups']);
-				if ($protectedGroups != '') {
-					show_groups('',sprintf($lang['emajcantrlbkprotgroups'], htmlspecialchars($groups), htmlspecialchars($protectedGroups)));
-					return;
-				}
-
-				// Check the mark is always valid
-				if (!$emajdb->isRollbackMarkValidGroups($_POST['groups'],$_POST['mark'])) {
-					show_groups('',sprintf($lang['emajcantrlbkinvalidmarkgroups'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark'])));
-					return;
-				}
-
-				$alterGroupSteps = $emajdb->getAlterAfterMarkGroups($_POST['groups'],$_POST['mark'],$lang);
-
-				if ($alterGroupSteps->recordCount() > 0) {
-					// there are alter_group operations to cross over, so ask for a confirmation
-
-					$columns = array(
-						'time' => array(
-							'title' => $lang['emajtimestamp'],
-							'field' => field('time_tx_timestamp'),
-						),
-						'step' => array(
-							'title' => $lang['straction'],
-							'field' => field('altr_action'),
-						),
-						'autorollback' => array(
-							'title' => $lang['emajautorolledback'],
-							'field' => field('altr_auto_rolled_back'),
-							'type'	=> 'callback',
-							'params'=> array('function' => 'renderBooleanIcon','align' => 'center')
-						),
-					);
-
-					$actions = array ();
-
-					$misc->printHeader('database', 'database','emajgroups');
-
-					$misc->printTitle($lang['emajrlbkgroups']);
-
-					echo "<p>" . sprintf($lang['emajreachaltergroups'], htmlspecialchars($_REQUEST['groups']), htmlspecialchars($_REQUEST['mark'])) . "</p>\n";
-					$misc->printTable($alterGroupSteps, $columns, $actions, 'alterGroupStep');
-
-					echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-					echo "<p><input type=\"hidden\" name=\"action\" value=\"rollback_groups_ok\" />\n";
-					echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($_REQUEST['groups']), "\" />\n";
-					echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
-					echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
-					echo "<input type=\"hidden\" name=\"rollbacktype\" value=\"", htmlspecialchars($_REQUEST['rollbacktype']), "\" />\n";
-					if (isset($_POST['async'])) {
-						echo "<input type=\"hidden\" name=\"async\"", htmlspecialchars($_REQUEST['async']), "\" />\n";
-					}
-					echo "<input type=\"hidden\" name=\"comment\" value=\"", htmlspecialchars($_REQUEST['comment']), "\" />\n";
-					echo $misc->form;
-					echo "<input type=\"submit\" name=\"rollbackgroups\" value=\"{$lang['strconfirm']}\" />\n";
-					echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-					echo "</form>\n";
-
-				} else {
-					// otherwise, directly execute the rollback
-					rollback_groups_ok();
-				}
+				// otherwise, directly execute the rollback
+				rollback_groups_ok();
 			}
 		}
 	}
@@ -4061,52 +4027,37 @@
 
 		if (!ini_get('safe_mode')) set_time_limit(0);		// Prevent timeouts on large rollbacks (non-safe mode only)
 
-		if ($emajdb->getNumEmajVersion() < 20100) {	// version < 2.1.0) {
-				// for emaj version prior 2.1, call the old emaj_rollback_group() function
-			if (isset($_POST['rollbacktype'])) {
-				$status = $emajdb->rollbackGroups($_POST['groups'],$_POST['mark'],$_POST['rollbacktype']=='logged');
-			} else {
-				$status = $emajdb->rollbackGroups($_POST['groups'],$_POST['mark'],false);
-			}
-			if ($status == 0) {
-				show_groups(sprintf($lang['emajrlbkgroupsok'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark'])));
-			} else {
-				show_groups('',sprintf($lang['emajrlbkgroupserr'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark'])));
-			}
-		} else {
-			// recent version: get and display the full rollback execution report
-			$misc->printHeader('database', 'database','emajgroups');
+		$misc->printHeader('database', 'database','emajgroups');
 
-			$misc->printTitle($lang['emajrlbkgroups']);
+		$misc->printTitle($lang['emajrlbkgroups']);
 
-			echo "<p>" . sprintf($lang['emajrlbkgroupsreport'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark'])) . "</p>\n";
+		echo "<p>" . sprintf($lang['emajrlbkgroupsreport'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark'])) . "</p>\n";
 
-			// execute the rollback operation and get the execution report
-			$rlbkReportMsgs = $emajdb->rollbackGroups($_POST['groups'],$_POST['mark'],$_POST['rollbacktype']=='logged',$_POST['comment']);
-			$columns = array(
-				'severity' => array(
-					'title' => '',
-					'field' => field('rlbk_severity'),
-					'type'	=> 'callback',
-					'params'=> array('function' => 'renderRlbkExecSeverity','align' => 'center'),
-					'sorter' => false,
-				),
-				'msg' => array(
-					'title' => $lang['strmessage'],
-					'field' => field('rlbk_message'),
-				),
-			);
+		// execute the rollback operation and get the execution report
+		$rlbkReportMsgs = $emajdb->rollbackGroups($_POST['groups'],$_POST['mark'],$_POST['rollbacktype']=='logged',$_POST['comment']);
+		$columns = array(
+			'severity' => array(
+				'title' => '',
+				'field' => field('rlbk_severity'),
+				'type'	=> 'callback',
+				'params'=> array('function' => 'renderRlbkExecSeverity','align' => 'center'),
+				'sorter' => false,
+			),
+			'msg' => array(
+				'title' => $lang['strmessage'],
+				'field' => field('rlbk_message'),
+			),
+		);
 
-			$actions = array ();
+		$actions = array ();
 
-			$misc->printTable($rlbkReportMsgs, $columns, $actions, 'rlbkGroupsReport', null, null, array('sorter' => true, 'filter' => false));
+		$misc->printTable($rlbkReportMsgs, $columns, $actions, 'rlbkGroupsReport', null, null, array('sorter' => true, 'filter' => false));
 
-			echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-			echo "<p><input type=\"hidden\" name=\"action\" value=\"show_groups\" />\n";
-			echo $misc->form;
-			echo "<input type=\"submit\" name=\"rollbackgroup\" value=\"{$lang['strok']}\" />\n";
-			echo "</form>\n";
-		}
+		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+		echo "<p><input type=\"hidden\" name=\"action\" value=\"show_groups\" />\n";
+		echo $misc->form;
+		echo "<input type=\"submit\" name=\"rollbackgroup\" value=\"{$lang['strok']}\" />\n";
+		echo "</form>\n";
 	}
 
 	/**

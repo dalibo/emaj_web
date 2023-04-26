@@ -118,6 +118,13 @@
 				'params'=> array('align' => 'right'),
 			),
 		);
+		if ($emajdb->getNumEmajVersion() >= 40300 && $emajdb->isEmaj_Adm()) {	// version >= 4.3
+			$columnsInProgressRlbk = array_merge($columnsInProgressRlbk, array(
+				'actions' => array(
+					'title' => $lang['stractions'],
+				),
+			));
+		};
 		if ($emajdb->getNumEmajVersion() >= 40300) {	// version >= 4.3
 			$columnsInProgressRlbk = array_merge($columnsInProgressRlbk, array(
 				'comment' => array(
@@ -201,6 +208,13 @@
 				'params'=> array('align' => 'right'),
 			),
 		);
+		if ($emajdb->getNumEmajVersion() >= 40300 && $emajdb->isEmaj_Adm()) {	// version >= 4.3
+			$columnsCompletedRlbk = array_merge($columnsCompletedRlbk, array(
+				'actions' => array(
+					'title' => $lang['stractions'],
+				),
+			));
+		};
 		if ($emajdb->getNumEmajVersion() >= 40300) {	// version >= 4.3
 			$columnsCompletedRlbk = array_merge($columnsCompletedRlbk, array(
 				'comment' => array(
@@ -214,7 +228,24 @@
 				),
 			));
 		};
+
 		$actions = array();
+		if ($emajdb->getNumEmajVersion() >= 40300 && $emajdb->isEmaj_Adm()) {	// version >= 4.3
+			$actions = array_merge($actions, array(
+				'comment_rollback' => array(
+					'content' => $lang['emajsetcomment'],
+					'icon' => 'Bubble',
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajrollbacks.php',
+							'urlvars' => array (
+								'action' => 'comment_rollback',
+								'rlbkid' => field('rlbk_id'),
+								'back' => 'list',
+							)))
+				))
+			);
+		};
 
 		// Get rollback information from the database
 		$completedRlbks = $emajdb->getCompletedRlbk();
@@ -325,7 +356,7 @@
 
 		$rlbkInfo = $emajdb->getOneRlbk($_REQUEST['rlbkid']);
 
-		// Save some piece of informations
+		// Save some pieces of informations
 		$status = $rlbkInfo->fields['rlbk_status'];
 		$isCompleted = ($status == 'COMPLETED' || $status == 'COMMITTED' || $status == 'ABORTED');
 
@@ -497,6 +528,13 @@
 				'params'=> array('align' => 'center'),
 			),
 		);
+		if ($emajdb->getNumEmajVersion() >= 40300 && $emajdb->isEmaj_Adm()) {	// version >= 4.3
+			$columnsCharacteristics = array_merge($columnsCharacteristics, array(
+				'actions' => array(
+					'title' => $lang['stractions'],
+				),
+			));
+		};
 		if ($emajdb->getNumEmajVersion() >= 40300) {	// version >= 4.3
 			$columnsCharacteristics = array_merge($columnsCharacteristics, array(
 				'comment' => array(
@@ -663,9 +701,28 @@
 		}
 
 		// print rollback characteristics data
+		if ($emajdb->getNumEmajVersion() >= 40300 && $emajdb->isEmaj_Adm()) {	// version >= 4.3
+			$actions = array_merge($actions, array(
+				'comment_rollback' => array(
+					'content' => $lang['emajsetcomment'],
+					'icon' => 'Bubble',
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajrollbacks.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'comment_rollback',
+								'rlbkid' => field('rlbk_id'),
+								'back' => 'detail',
+							))))
+				))
+			);
+		};
+
 		$rlbkInfo->moveFirst();
 		echo "<h4>{$lang['emajrlbkcharacteristics']}</h4>";
 		$misc->printTable($rlbkInfo, $columnsCharacteristics, $actions, 'detailRlbkChar', null);
+
+		$actions = array();
 
 		// print sessions data
 		if ($rlbkSessions->recordCount() > 0) {
@@ -697,6 +754,65 @@
 		} else {
 			echo "<h4>{$lang['emajrlbkplanning']}</h4>\n";
 			echo "<p>{$lang['emajnorlbkstep']}</p>\n";
+		}
+	}
+
+	/**
+	 * Prepare comment rollback: ask for comment and confirmation
+	 */
+	function comment_rollback() {
+		global $misc, $lang, $emajdb;
+
+		$misc->printHeader('database', 'database', 'emajrollbacks');
+
+		$misc->printTitle($lang['emajcommentarollback']);
+
+		$rlbk = $emajdb->getOneRlbk($_REQUEST['rlbkid']);
+
+		echo "<p>", sprintf($lang['emajcommentrollback'], htmlspecialchars($_REQUEST['rlbkid'])), "</p>\n";
+		echo "<form action=\"emajrollbacks.php\" method=\"post\">\n";
+		echo "<div class=\"form-container\">\n";
+		echo "\t<div class=\"form-label required\">{$lang['strcomment']}</div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"comment\" size=\"80\" value=\"", htmlspecialchars($rlbk->fields['rlbk_comment']), "\" /></div>\n";
+		echo "\t<div class=\"form-comment\"></div>\n";
+		echo "</div>\n";
+		echo "<p><input type=\"hidden\" name=\"action\" value=\"comment_rollback_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"rlbkid\" value=\"", htmlspecialchars($_REQUEST['rlbkid']), "\" />\n";
+		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
+		echo $misc->form;
+		echo "<input type=\"submit\" name=\"commentrollback\" value=\"{$lang['strok']}\" />\n";
+		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+		echo "</form>\n";
+	}
+
+	/**
+	 * Perform comment rollback
+	 */
+	function comment_rollback_ok() {
+		global $lang, $emajdb;
+
+		// process the click on the <cancel> button
+		if (isset($_POST['cancel'])) {
+			if ($_POST['back'] == 'list') {
+				show_rollbacks();
+			} else {
+				show_rollback();
+			}
+		} else {
+
+			$status = $emajdb->setCommentRollback($_POST['rlbkid'],$_POST['comment']);
+			if ($status == 0)
+				if ($_POST['back']=='list') {
+					show_rollbacks(sprintf($lang['emajcommentrollbackok'], htmlspecialchars($_POST['rlbkid'])));
+				} else {
+					show_rollback(sprintf($lang['emajcommentrollbackok'], htmlspecialchars($_POST['rlbkid'])));
+				}
+			else
+				if ($_POST['back']=='list') {
+					show_rollbacks('',sprintf($lang['emajcommentrollbackerr'], htmlspecialchars($_POST['rlbkid'])));
+				} else {
+					show_rollback('',sprintf($lang['emajcommentrollbackerr'], htmlspecialchars($_POST['rlbkid'])));
+				}
 		}
 	}
 
@@ -759,6 +875,12 @@
 	$misc->printBody();
 
 	switch ($action) {
+		case 'comment_rollback':
+			comment_rollback();
+			break;
+		case 'comment_rollback_ok':
+			comment_rollback_ok();
+			break;
 		case 'consolidate_rollback':
 			consolidate_rollback();
 			break;

@@ -2728,6 +2728,23 @@ class EmajDb {
 	}
 
 	/**
+	 * Sets a comment for a rollback
+	 */
+	function setCommentRollback($rlbkId,$comment) {
+		global $data;
+
+		$data->clean($comment);
+
+		if ($comment <> '') {
+			$sql = "SELECT emaj.emaj_comment_rollback('{$rlbkId}','{$comment}')";
+		} else {
+			$sql = "SELECT emaj.emaj_comment_rollback('{$rlbkId}',NULL)";
+		}
+
+		return $data->execute($sql);
+	}
+
+	/**
 	 * Consolidates a rollback operation
 	 */
 	function consolidateRollback($group,$mark) {
@@ -2755,7 +2772,7 @@ class EmajDb {
 
 // get the emaj_rlbk data
 		if ($this->getNumEmajVersion() >= 40300){	// version >= 4.3.0
-			$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,',') AS rlbk_groups_list, rlbk_status, rlbk_comment,
+			$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,',') AS rlbk_groups_list, rlbk_status, coalesce(rlbk_comment,'') AS rlbk_comment,
 						to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
 						to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
 						to_char(rlbk_end_datetime - rlbk_start_datetime,'{$this->intervalFormat}') AS rlbk_global_duration,

@@ -522,6 +522,12 @@
 	$lang['emajrlbksetlocalapptrg'] = 'Set the trigger %s as LOCAL';
 	$lang['emajrlbkenalogtrg'] = 'Re-enable the log trigger';
 
+	// Rollback comment
+	$lang['emajcommentarollback'] = 'E-Maj: Record a comment for a rollback';
+	$lang['emajcommentrollback'] = 'Enter, modify or erase the comment for the rollback %s';
+	$lang['emajcommentrollbackok'] = 'The comment for the rollback %s has been recorded.';
+	$lang['emajcommentrollbackerr'] = 'Error during comment recording for the rollback %s!';
+
 	// Group's properties and marks
 	$lang['emajgroupproperties'] = 'Tables group "%s" properties';
 	$lang['emajcontent'] = 'Content';

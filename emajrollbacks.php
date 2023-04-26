@@ -356,9 +356,12 @@
 
 		$rlbkInfo = $emajdb->getOneRlbk($_REQUEST['rlbkid']);
 
-		// Save some pieces of informations
+		// Save some pieces of information
 		$status = $rlbkInfo->fields['rlbk_status'];
 		$isCompleted = ($status == 'COMPLETED' || $status == 'COMMITTED' || $status == 'ABORTED');
+		if ($emajdb->getNumEmajVersion() >= 40300) {	// version >= 4.3
+			$comment = $rlbkInfo->fields['rlbk_comment'];
+		};
 
 		if (! $isCompleted) {
 			$rlbkInProgressInfo = $emajdb->getOneInProgressRlbk($_REQUEST['rlbkid']);
@@ -371,7 +374,7 @@
 
 		$rlbkSteps = $emajdb->getRlbkSteps($_REQUEST['rlbkid']);
 
-		$columnsIdent = array(
+		$columnsProperties = array(
 			'rlbkGroups' => array(
 				'title' => $lang['emajgroups'],
 				'field' => field('rlbk_groups_list'),
@@ -388,6 +391,26 @@
 					'dateformat' => $lang['strrecenttimestampformat'],
 					'class' => 'tooltip left-aligned-tooltip',
 				),
+			),
+			'isLogged' => array(
+				'title' => $lang['emajislogged'],
+				'field' => field('rlbk_is_logged'),
+				'type'	=> 'yesno',
+			),
+			'rlbkNbSession' => array(
+				'title' => $lang['emajnbsession'],
+				'field' => field('rlbk_nb_session'),
+				'params'=> array('align' => 'center'),
+			),
+			'rlbkNbTable' => array(
+				'title' => $lang['emajnbtabletoprocess'],
+				'field' => field('rlbk_tbl'),
+				'params'=> array('align' => 'center'),
+			),
+			'rlbkNbSeq' => array(
+				'title' => $lang['emajnbseqtoprocess'],
+				'field' => field('rlbk_seq'),
+				'params'=> array('align' => 'center'),
 			),
 		);
 
@@ -505,44 +528,6 @@
 				'params'=> array('align' => 'center'),
 			),
 		);
-
-		$columnsCharacteristics = array(
-			'isLogged' => array(
-				'title' => $lang['emajislogged'],
-				'field' => field('rlbk_is_logged'),
-				'type'	=> 'yesno',
-			),
-			'rlbkNbSession' => array(
-				'title' => $lang['emajnbsession'],
-				'field' => field('rlbk_nb_session'),
-				'params'=> array('align' => 'center'),
-			),
-			'rlbkNbTable' => array(
-				'title' => $lang['emajnbtabletoprocess'],
-				'field' => field('rlbk_tbl'),
-				'params'=> array('align' => 'center'),
-			),
-			'rlbkNbSeq' => array(
-				'title' => $lang['emajnbseqtoprocess'],
-				'field' => field('rlbk_seq'),
-				'params'=> array('align' => 'center'),
-			),
-		);
-		if ($emajdb->getNumEmajVersion() >= 40300 && $emajdb->isEmaj_Adm()) {	// version >= 4.3
-			$columnsCharacteristics = array_merge($columnsCharacteristics, array(
-				'actions' => array(
-					'title' => $lang['stractions'],
-				),
-			));
-		};
-		if ($emajdb->getNumEmajVersion() >= 40300) {	// version >= 4.3
-			$columnsCharacteristics = array_merge($columnsCharacteristics, array(
-				'comment' => array(
-					'title' => $lang['strcomment'],
-					'field' => field('rlbk_comment'),
-				),
-			));
-		};
 
 		$columnsReport = array(
 			'severity' => array(
@@ -670,9 +655,42 @@
 
 		$actions = array();
 
-		// print rollback identification data
-		echo "<h4>{$lang['emajrlbkident']}</h4>";
-		$misc->printTable($rlbkInfo, $columnsIdent, $actions, 'detailRlbkIdent', 'No rollback, internal error !');
+		// print rollback properties
+		echo "<h4>{$lang['strproperties']}</h4>";
+		$misc->printTable($rlbkInfo, $columnsProperties, $actions, 'detailRlbkProperties', 'No rollback, internal error !');
+
+		// display group's comment if exists
+		if ($emajdb->getNumEmajVersion() >= 40300 && $comment<>'') {	// version >= 4.3
+			echo "<p>{$lang['strcommentlabel']}<span class=\"comment\">{$comment}</span></p>\n";
+		}
+
+		// display the buttons corresponding to the available functions for the rollback
+
+		if ($emajdb->isEmaj_Adm()) {
+			$navlinks = array();
+
+			// comment_group
+			if ($emajdb->getNumEmajVersion() >= 40300) {	// version >= 4.3
+
+				$navlinks['comment_rollback'] = array (
+					'content' => $lang['emajsetcomment'],
+					'attr'=> array (
+						'href' => array (
+							'url' => 'emajrollbacks.php',
+							'urlvars' => array (
+								'action' => 'comment_rollback',
+								'rlbkid' => $_REQUEST['rlbkid'],
+								'back' => 'detail',
+							)
+						)
+					),
+				);
+			}
+
+			$misc->printLinksList($navlinks, 'buttonslist');
+		}
+
+		$actions = array();
 
 		// print rollback progress data
 		$rlbkInfo->moveFirst();
@@ -699,30 +717,6 @@
 			$misc->printTable($rlbkReportMsgs, $columnsReport, $actions, 'rlbkReport', null, null, array('sorter' => true, 'filter' => false));
 			echo "</div>\n";
 		}
-
-		// print rollback characteristics data
-		if ($emajdb->getNumEmajVersion() >= 40300 && $emajdb->isEmaj_Adm()) {	// version >= 4.3
-			$actions = array_merge($actions, array(
-				'comment_rollback' => array(
-					'content' => $lang['emajsetcomment'],
-					'icon' => 'Bubble',
-					'attr' => array (
-						'href' => array (
-							'url' => 'emajrollbacks.php',
-							'urlvars' => array_merge($urlvars, array (
-								'action' => 'comment_rollback',
-								'rlbkid' => field('rlbk_id'),
-								'back' => 'detail',
-							))))
-				))
-			);
-		};
-
-		$rlbkInfo->moveFirst();
-		echo "<h4>{$lang['emajrlbkcharacteristics']}</h4>";
-		$misc->printTable($rlbkInfo, $columnsCharacteristics, $actions, 'detailRlbkChar', null);
-
-		$actions = array();
 
 		// print sessions data
 		if ($rlbkSessions->recordCount() > 0) {

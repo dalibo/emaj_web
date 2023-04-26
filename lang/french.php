@@ -493,9 +493,7 @@
 	$lang['emajconsolidaterlbkok'] = 'Le rollback terminé par la marque "%s" du groupe de tables "%s" a été consolidé.';
 	$lang['emajconsolidaterlbkerr'] = 'Erreur lors de la consolidation du rollback terminé par la marque "%s" du groupe de tables "%s" !';
 	$lang['emajrlbkdetail'] = 'Détail du rollback E-Maj #%s';
-	$lang['emajrlbkident'] = 'Identification du rollback';
 	$lang['emajrlbkprogress'] = 'Progression du rollback';
-	$lang['emajrlbkcharacteristics'] = 'Caractéristiques du rollback';
 	$lang['emajrlbksessions'] = 'Sessions';
 	$lang['emajrlbksession'] = 'Session';
 	$lang['emajrlbkexecreport'] = 'Rapport d\'exécution';

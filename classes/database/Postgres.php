@@ -1057,19 +1057,10 @@ class Postgres extends ADODB_base {
 
 		// If an empty array is passed in, then show all columns
 		if (sizeof($show) == 0) {
-			if ($this->hasObjectID($table))
-				$sql = "SELECT \"{$this->id}\", * FROM ";
-			else
-				$sql = "SELECT * FROM ";
+			$sql = "SELECT * FROM ";
 		}
 		else {
-			// Add oid column automatically to results for editing purposes
-			if (!in_array($this->id, $show) && $this->hasObjectID($table))
-				$sql = "SELECT \"{$this->id}\", \"";
-			else
-				$sql = "SELECT \"";
-
-			$sql .= join('","', $show) . "\" FROM ";
+			$sql = "SELECT \"" . join('","', $show) . "\" FROM ";
 		}
 
 		$this->fieldClean($table);
@@ -1197,7 +1188,6 @@ class Postgres extends ADODB_base {
 					}
 				}
 
-
 		// Count the number of rows
 		$total = $this->browseQueryCount($query, $count);
 		if ($total < 0) {
@@ -1243,8 +1233,7 @@ class Postgres extends ADODB_base {
     			}
 
 	/**
-	 * Finds the number of rows that would be returned by a
-	 * query.
+	 * Finds the number of rows that would be returned by a query.
 	 * @param $query The SQL query
 	 * @param $count The count query
 	 * @return The count of rows
@@ -1259,7 +1248,7 @@ class Postgres extends ADODB_base {
 	 * @param $table The name of a table
 	 * @param $key The associative array holding the key to retrieve
 	 * @return A recordset
-    					 */
+     */
 	function browseRow($table, $key) {
 		$f_schema = $this->_schema;
 		$this->fieldClean($f_schema);

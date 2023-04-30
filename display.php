@@ -64,16 +64,12 @@
 	/* Print table header cells 
 	 * @param $args - associative array for sort link parameters
 	 * */
-	function printTableHeaderCells(&$rs, $args, $withOid) {
+	function printTableHeaderCells(&$rs, $args) {
 		global $misc, $data, $conf;
 		$j = 0;
 
 		foreach ($rs->fields as $k => $v) {
 
-			if (($k === $data->id) && ( !($withOid && $conf['show_oids']) )) {
-				$j++;
-				continue;
-			}
 			$finfo = $rs->fetchField($j);
 
 			if ($args === false) {
@@ -101,7 +97,7 @@
 	}
 
 	/* Print data-row cells */
-	function printTableRowCells(&$rs, &$fkey_information, $withOid) {
+	function printTableRowCells(&$rs, &$fkey_information) {
 		global $data, $misc, $conf;
 		$j = 0;
 		
@@ -110,8 +106,7 @@
 		foreach ($rs->fields as $k => $v) {
 			$finfo = $rs->fetchField($j++);
 
-			if (($k === $data->id) && ( !($withOid && $conf['show_oids']) )) continue;
-			elseif ($v !== null && $v == '') echo "<td>&nbsp;</td>";
+			if ($v !== null && $v == '') echo "<td>&nbsp;</td>";
 			else {
 				echo "<td style=\"white-space:nowrap;\">";
 
@@ -171,10 +166,10 @@
 			 * as 3rd paramter */
 		
 			echo "<table><tr>";
-				printTableHeaderCells($rs, false, true);
+				printTableHeaderCells($rs, false);
 			echo "</tr>";
 			echo "<tr class=\"data1\">\n";
-				printTableRowCells($rs, $fkinfo, true);
+				printTableRowCells($rs, $fkinfo);
 			echo "</tr>\n";
 			echo "</table>\n";
 		}
@@ -380,8 +375,7 @@
 			$actions = array(
 			);
 
-			/* we show OIDs only if we are in TABLE or SELECT type browsing */
-			printTableHeaderCells($rs, $_gets, isset($object));
+			printTableHeaderCells($rs, $_gets);
 
 			echo "</tr>\n";
 
@@ -391,7 +385,7 @@
 				$id = (($i % 2) == 0 ? '1' : '2');
 				echo "<tr class=\"data{$id}\">\n";
 
-				print printTableRowCells($rs, $fkey_information, isset($object));
+				print printTableRowCells($rs, $fkey_information);
 
 				echo "</tr>\n";
 				$rs->moveNext();

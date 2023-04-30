@@ -96,9 +96,6 @@
 	// Max chars of each field to display by default in browse mode
 	$conf['max_chars'] = 50;
 
-	// Send XHTML strict headers?
-	$conf['use_xhtml_strict'] = false;
-
 	// Configuration for ajax scripts
 	// Time in seconds. If set to 0, refreshing data using ajax will be disabled (locks and activity pages)
 	$conf['ajax_refresh'] = 3;

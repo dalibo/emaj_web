@@ -80,7 +80,7 @@
 	$lang['strellipsis'] = '...';
 	$lang['strexpand'] = 'Étendre';
 	$lang['strcollapse'] = 'Réduire';
-	$lang['strrefresh'] = 'Rafraichir';
+	$lang['strrefresh'] = 'Rafraîchir';
 	$lang['strdownload'] = 'Télécharger';
 	$lang['strexport'] = 'Exporter';
 	$lang['strimport'] = 'Importer';

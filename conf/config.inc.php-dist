@@ -81,9 +81,6 @@
 	// other means. (e.g. Run 'SELECT * FROM pg_database' in the SQL area.)
 	$conf['owned_only'] = false;
 
-	// Display "system" objects?
-	$conf['show_system'] = false;
-
 	// Width of the left frame in pixels (object browser)
 	$conf['left_width'] = 200;
 

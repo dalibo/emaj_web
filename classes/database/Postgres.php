@@ -14,8 +14,6 @@ class Postgres extends ADODB_base {
 	var $_maxNameLen = 63;
 	// Store the current schema
 	var $_schema;
-	// Name of id column
-	var $id = 'oid';
 	// Supported join operations for use with view wizard
 	// Select operators
 	var $selectOps = array('=' => 'i', '!=' => 'i', '<' => 'i', '>' => 'i', '<=' => 'i', '>=' => 'i',
@@ -295,10 +293,10 @@ class Postgres extends ADODB_base {
 		else
 			$orderby = "ORDER BY pdb.datname";
 
-		if (!$conf['show_system'])
-			$where = ' AND NOT pdb.datistemplate';
-		else
-			$where = ' AND pdb.datallowconn';
+//		if (!$conf['show_system'])
+//			$where = ' AND NOT pdb.datistemplate';
+//		else
+//			$where = ' AND pdb.datallowconn';
 
 		$sql = "
 			SELECT pdb.datname AS datname, pr.rolname AS datowner, pg_encoding_to_char(encoding) AS datencoding,
@@ -310,8 +308,7 @@ class Postgres extends ADODB_base {
 				END as dbsize, pdb.datcollate, pdb.datctype
 			FROM pg_catalog.pg_database pdb
 				LEFT JOIN pg_catalog.pg_roles pr ON (pdb.datdba = pr.oid)
-			WHERE true
-				{$where}
+			WHERE NOT pdb.datistemplate
 				{$clause}
 			{$orderby}";
 
@@ -357,17 +354,12 @@ class Postgres extends ADODB_base {
 	function getSchemas() {
 		global $conf;
 
-		if (!$conf['show_system']) {
-			$where = "WHERE nspname NOT LIKE 'pg@_%' ESCAPE '@' AND nspname != 'information_schema'";
-
-		}
-		else $where = "WHERE nspname !~ '^pg_t(emp_[0-9]+|oast)$'";
 		$sql = "
 			SELECT pn.nspname, pu.rolname AS nspowner,
-				pg_catalog.obj_description(pn.oid, 'pg_namespace') AS nspcomment
+				   pg_catalog.obj_description(pn.oid, 'pg_namespace') AS nspcomment
 			FROM pg_catalog.pg_namespace pn
-				LEFT JOIN pg_catalog.pg_roles pu ON (pn.nspowner = pu.oid)
-			{$where}
+				 LEFT JOIN pg_catalog.pg_roles pu ON (pn.nspowner = pu.oid)
+			WHERE nspname NOT LIKE 'pg@_%' ESCAPE '@' AND nspname != 'information_schema'
 			ORDER BY nspname";
 
 		return $this->selectSet($sql);

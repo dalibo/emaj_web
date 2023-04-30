@@ -293,11 +293,6 @@ class Postgres extends ADODB_base {
 		else
 			$orderby = "ORDER BY pdb.datname";
 
-//		if (!$conf['show_system'])
-//			$where = ' AND NOT pdb.datistemplate';
-//		else
-//			$where = ' AND pdb.datallowconn';
-
 		$sql = "
 			SELECT pdb.datname AS datname, pr.rolname AS datowner, pg_encoding_to_char(encoding) AS datencoding,
 				(SELECT description FROM pg_catalog.pg_shdescription pd WHERE pdb.oid=pd.objoid AND pd.classoid='pg_database'::regclass) AS datcomment,

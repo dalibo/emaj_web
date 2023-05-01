@@ -722,25 +722,6 @@ div.form-param-button {
 	font-style: italic;
 }
 
-/** Specific div for the intro.php page **/
-.intro-welcome {
-	margin: 20px 20px 40px 20px;
-	text-align:center;
-}
-.intro-welcome img {
-	width: 400px;
-}
-.intro-link li {
-	font-weight: normal;
-}
-.intro-footer {
-	margin-top: 20px;
-	margin-bottom: 20px;
-	color: grey;
-	font-style: italic;
-	font-size: 0.9em;
-}
-
 /** Specific div for the long objects lists (tables, sequences, marks, ...) **/
 div.longlist {
 	overflow: auto;
@@ -872,4 +853,41 @@ button.filterreset:hover {
 th.filtericon {
 	vertical-align: bottom;
 	width: 3.8em;
+}
+
+/** Specific div for the intro.php page **/
+.intro-welcome {
+	margin: 20px 20px 40px 20px;
+	text-align:center;
+}
+.intro-welcome img {
+	width: 400px;
+}
+.intro-link li {
+	font-weight: normal;
+}
+.intro-footer {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	color: grey;
+	font-style: italic;
+	font-size: 0.9em;
+}
+
+/** Specific div for the emajrollbacks.php page **/
+div.rlbk-nav {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: space-between;
+}
+div.rlbk-nav >div {
+	text-align: center;
+}
+div.rlbk-nav-side {
+	min-width: 80px;
+}
+div.rlbk-nav-title {
+	font-size: larger;
+	font-weight: bold;
+	margin-bottom: 5px;
 }

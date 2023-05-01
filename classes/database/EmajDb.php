@@ -2772,7 +2772,13 @@ class EmajDb {
 
 // get the emaj_rlbk data
 		if ($this->getNumEmajVersion() >= 40300){	// version >= 4.3.0
-			$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,',') AS rlbk_groups_list, rlbk_status, coalesce(rlbk_comment,'') AS rlbk_comment,
+			$sql = "WITH rlbks AS (
+					SELECT rlbk_id AS id,
+						lag(rlbk_id) OVER (ORDER BY rlbk_id) AS rlbk_prior,
+						lead(rlbk_id) OVER (ORDER BY rlbk_id) AS rlbk_next
+						FROM emaj.emaj_rlbk
+					)
+					SELECT rlbk_id, array_to_string(rlbk_groups,',') AS rlbk_groups_list, rlbk_status, coalesce(rlbk_comment,'') AS rlbk_comment,
 						to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
 						to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
 						to_char(rlbk_end_datetime - rlbk_start_datetime,'{$this->intervalFormat}') AS rlbk_global_duration,
@@ -2780,12 +2786,20 @@ class EmajDb {
 						to_char(rlbk_end_locking_datetime - rlbk_end_planning_datetime,'{$this->intervalFormat}') AS rlbk_locking_duration,
 						rlbk_mark, tm.time_tx_timestamp as rlbk_mark_datetime, rlbk_is_logged, rlbk_nb_session,
 						format('%s / %s', rlbk_eff_nb_table, rlbk_nb_table) AS rlbk_tbl,
-						format('%s / %s', coalesce(rlbk_eff_nb_sequence::TEXT, '?'), rlbk_nb_sequence) AS rlbk_seq
+						format('%s / %s', coalesce(rlbk_eff_nb_sequence::TEXT, '?'), rlbk_nb_sequence) AS rlbk_seq,
+						rlbk_prior, rlbk_next
 					FROM emaj.emaj_rlbk
 						 JOIN emaj.emaj_time_stamp tm ON (tm.time_id = rlbk_mark_time_id)
+						 JOIN rlbks ON (id = rlbk_id)
 					WHERE rlbk_id = {$rlbkId}";
 		} else {
-			$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,',') AS rlbk_groups_list, rlbk_status,
+			$sql = "WITH rlbks AS (
+					SELECT rlbk_id AS id,
+						lag(rlbk_id) OVER (ORDER BY rlbk_id) AS rlbk_prior,
+						lead(rlbk_id) OVER (ORDER BY rlbk_id) AS rlbk_next
+						FROM emaj.emaj_rlbk
+					)
+					SELECT rlbk_id, array_to_string(rlbk_groups,',') AS rlbk_groups_list, rlbk_status,
 						to_char(tr.time_tx_timestamp,'{$this->tsFormat}') AS rlbk_start_datetime,
 						to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
 						to_char(rlbk_end_datetime - tr.time_tx_timestamp,'{$this->intervalFormat}') AS rlbk_global_duration,
@@ -2795,15 +2809,17 @@ class EmajDb {
 						format('%s / %s', rlbk_eff_nb_table, rlbk_nb_table) AS rlbk_tbl,";
 			if ($this->getNumEmajVersion() >= 40200){	// version >= 4.2.0
 				$sql = $sql . "
-						format('%s / %s', coalesce(rlbk_eff_nb_sequence::TEXT, '?'), rlbk_nb_sequence) AS rlbk_seq";
+						format('%s / %s', coalesce(rlbk_eff_nb_sequence::TEXT, '?'), rlbk_nb_sequence) AS rlbk_seq,";
 			} else {
 				$sql = $sql . "
-						format('%s / %s', rlbk_nb_sequence, rlbk_nb_sequence) AS rlbk_seq";
+						format('%s / %s', rlbk_nb_sequence, rlbk_nb_sequence) AS rlbk_seq,";
 			}
 			$sql = $sql . "
+						rlbk_prior, rlbk_next
 					FROM emaj.emaj_rlbk
 						 JOIN emaj.emaj_time_stamp tm ON (tm.time_id = rlbk_mark_time_id)
 						 JOIN emaj.emaj_time_stamp tr ON (tr.time_id = rlbk_time_id)
+						 JOIN rlbks ON (id = rlbk_id)
 					WHERE rlbk_id = {$rlbkId}";
 		}
 

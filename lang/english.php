@@ -104,6 +104,7 @@
 	$lang['strend'] = 'End';
 	$lang['strsince'] = 'Since';
 	$lang['strquantity'] = 'Quantity';
+	$lang['strbacktolist'] = 'Back to the list';
 
 	// User-supplied SQL editing
 	$lang['strsqledit'] = 'SQL statement editing';
@@ -492,7 +493,6 @@
 	$lang['emajconfirmconsolidaterlbk'] = 'Are you sure you want to consolidate the rollback ended with the mark "%s" of the tables group "%s"?';
 	$lang['emajconsolidaterlbkok'] = 'The rollback ended with the mark "%s" of the tables group "%s" has been consolidated.';
 	$lang['emajconsolidaterlbkerr'] = 'Error while consolidating the rollback ended by the mark "%s" of the tables group "%s"!';
-	$lang['emajrlbkdetail'] = 'E-Maj rollback #%s details';
 	$lang['emajrlbkprogress'] = 'Rollback progress';
 	$lang['emajrlbksessions'] = 'Sessions';
 	$lang['emajrlbksession'] = 'Session';

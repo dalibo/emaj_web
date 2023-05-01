@@ -352,11 +352,11 @@
 			// An asynchronous rollback has just been spawned, report the rollback id
 			$misc->printMsg(sprintf($lang['emajasyncrlbkstarted'], $_REQUEST['rlbkid']));
 
-		$misc->printTitle(sprintf($lang['emajrlbkdetail'], htmlspecialchars($_REQUEST['rlbkid'])));
-
 		$rlbkInfo = $emajdb->getOneRlbk($_REQUEST['rlbkid']);
 
 		// Save some pieces of information
+		$priorRlbk = isset($rlbkInfo->fields['rlbk_prior']) ? $rlbkInfo->fields['rlbk_prior'] : '';
+		$nextRlbk = isset($rlbkInfo->fields['rlbk_next']) ? $rlbkInfo->fields['rlbk_next'] : '';
 		$status = $rlbkInfo->fields['rlbk_status'];
 		$isCompleted = ($status == 'COMPLETED' || $status == 'COMMITTED' || $status == 'ABORTED');
 		if ($emajdb->getNumEmajVersion() >= 40300) {	// version >= 4.3
@@ -655,23 +655,52 @@
 
 		$actions = array();
 
+		// display the navigation links
+
+		echo "<div class=\"rlbk-nav\">\n";
+		echo "\t<div class=\"rlbk-nav-side\">\n";
+		if ($priorRlbk <> '') {
+			echo "\t\t<a href=\"emajrollbacks.php?action=show_rollback&amp;{$misc->href}&amp;rlbkid={$priorRlbk}\">\n";
+			echo "\t\t\t<div><b>&lt;</b></div>\n";
+			echo "\t\t\t<div>#{$priorRlbk}</div>\n";
+			echo "\t\t</a>\n";
+		}
+		echo "\t</div>\n";
+		echo "\t<div>\n";
+		echo "\t\t<div class=\"rlbk-nav-title\">\n";
+		echo "\t\t<a href=\"emajrollbacks.php?action=show_rollback&amp;{$misc->href}&amp;rlbkid=" . htmlspecialchars($_REQUEST['rlbkid']) . "\">\n";
+		echo "\t\t\t{$lang['emajrollback']} #" . htmlspecialchars($_REQUEST['rlbkid']) . "</a>\n";
+		echo "\t\t</div>\n";
+		echo "\t\t<div>\n";
+		echo "\t\t\t<a href=\"emajrollbacks.php?action=show_rollbacks&amp;{$misc->href}\">{$lang['strbacktolist']}</a>\n";
+		echo "\t\t</div>\n";
+		echo "\t</div>\n";
+		echo "\t<div class=\"rlbk-nav-side\">\n";
+		if ($nextRlbk <> '') {
+			echo "\t\t<a href=\"emajrollbacks.php?action=show_rollback&amp;{$misc->href}&amp;rlbkid={$nextRlbk}\">\n";
+			echo "\t\t\t<div><b>&gt;</b></div>\n";
+			echo "\t\t\t<div>#{$nextRlbk}</div>\n";
+			echo "\t\t</a>\n";
+		}
+		echo "\t</div>\n";
+		echo "</div>\n";
+
 		// print rollback properties
-		echo "<h4>{$lang['strproperties']}</h4>";
+		$misc->printTitle($lang['strproperties']);
 		$misc->printTable($rlbkInfo, $columnsProperties, $actions, 'detailRlbkProperties', 'No rollback, internal error !');
 
-		// display group's comment if exists
+		// display rollback comment if exists
 		if ($emajdb->getNumEmajVersion() >= 40300 && $comment<>'') {	// version >= 4.3
 			echo "<p>{$lang['strcommentlabel']}<span class=\"comment\">{$comment}</span></p>\n";
 		}
 
 		// display the buttons corresponding to the available functions for the rollback
 
+		$navlinks = array();
 		if ($emajdb->isEmaj_Adm()) {
-			$navlinks = array();
 
 			// comment_group
 			if ($emajdb->getNumEmajVersion() >= 40300) {	// version >= 4.3
-
 				$navlinks['comment_rollback'] = array (
 					'content' => $lang['emajsetcomment'],
 					'attr'=> array (
@@ -686,49 +715,31 @@
 					),
 				);
 			}
-
-			$misc->printLinksList($navlinks, 'buttonslist');
 		}
-
-		$actions = array();
+		$misc->printLinksList($navlinks, 'buttonslist');
 
 		// print rollback progress data
 		$rlbkInfo->moveFirst();
+		echo "<h4>{$lang['emajrlbkprogress']}</h4>\n";
 		if ($isCompleted) {
 			// The rollback is completed
-			echo "<h4>{$lang['emajrlbkprogress']}</h4>\n";
 			$misc->printTable($rlbkInfo, $columnsCompleted, $actions, 'detailRlbkProgress', 'No rollback, internal error !');
-
 		} else {
 			// The rollback is in progress
-			// Insert a refresh button, before the data table
-			echo "<h4>{$lang['emajrlbkprogress']}\n";
-			echo "\t<a href=\"emajrollbacks.php?action=show_rollback&amp;{$misc->href}&amp;rlbkid=" . htmlspecialchars($_REQUEST['rlbkid']) . "\">\n";
-			echo "\t\t<img src=\"{$misc->icon('Refresh')}\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\" />";
-			echo "\t</a>\n</h4>\n";
-
 			$misc->printTable($rlbkInProgressInfo, $columnsInProgress, $actions, 'detailRlbkProgress', 'No rollback, internal error !');
 		}
 
 		// final execution report of the rollback operation
 		if ($isCompleted) {
-			echo "<h4>{$lang['emajrlbkexecreport']}</h4>";
+			$misc->printTitle($lang['emajrlbkexecreport']);
 			echo "<div id=\"rlbkReport\" style=\"margin-top:15px;margin-bottom:15px\" >\n";
 			$misc->printTable($rlbkReportMsgs, $columnsReport, $actions, 'rlbkReport', null, null, array('sorter' => true, 'filter' => false));
 			echo "</div>\n";
 		}
 
-		// print sessions data
-		if ($rlbkSessions->recordCount() > 0) {
-			echo "<h4>{$lang['emajrlbksessions']}</h4>";
-			$misc->printTable($rlbkSessions, $columnsSessions, $actions, 'detailRlbkSession', null);
-		}
-
 		// print planning data
 		if ($rlbkSteps->recordCount() > 0) {
-			echo "<h4 style=\"float:left; margin-right:430px\">{$lang['emajrlbkplanning']}\n";
-			echo "&nbsp;&nbsp;<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajrlbkplanninghelp']}\"/>\n";
-			echo "</h4>\n";
+			$misc->printTitle($lang['emajrlbkplanning'] . "&nbsp;&nbsp;<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['emajrlbkplanninghelp']}\"/>");
 
 			// Button to hide or show estimates columns
 			echo "<div style=\"margin:13px\">\n";
@@ -746,8 +757,14 @@
 
 			$misc->printTable($rlbkSteps, $columnsSteps, $actions, 'detailRlbkSteps', null, null, array('sorter' => true, 'filter' => true));
 		} else {
-			echo "<h4>{$lang['emajrlbkplanning']}</h4>\n";
+			$misc->printTitle($lang['emajrlbkplanning']);
 			echo "<p>{$lang['emajnorlbkstep']}</p>\n";
+		}
+
+		// print sessions data
+		if ($rlbkSessions->recordCount() > 0) {
+			$misc->printTitle($lang['emajrlbksessions']);
+			$misc->printTable($rlbkSessions, $columnsSessions, $actions, 'detailRlbkSession', null);
 		}
 	}
 

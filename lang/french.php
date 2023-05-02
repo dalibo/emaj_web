@@ -506,13 +506,13 @@
 	$lang['emajrlbkstep'] = 'Étape';
 	$lang['emajestimatedquantity'] = 'Quantité estimée';
 	$lang['emajestimationmethod'] = 'Méthode estimation';
-	$lang['emajrlbksequences'] = 'Rollbacker les séquences';
+	$lang['emajrlbksequences'] = 'Effectuer le rollback des séquences';
 	$lang['emajrlbkdisapptrg'] = 'Désactiver le trigger %s';
 	$lang['emajrlbkdislogtrg'] = 'Désactiver le trigger de log';
 	$lang['emajrlbksetalwaysapptrg'] = 'Passer le trigger %s à ALWAYS';
 	$lang['emajrlbkdropfk'] = 'Supprimer la clé étrangère %s';
 	$lang['emajrlbksetfkdef'] = 'Positionner la clé étrangère %s DEFFERED';
-	$lang['emajrlbkrlbktable'] = 'Exécuter le Rollback';
+	$lang['emajrlbkrlbktable'] = 'Effectuer le rollback de la table';
 	$lang['emajrlbkdeletelog'] = 'Supprimer des log';
 	$lang['emajrlbksetfkimm'] = 'Positionner la clé étrangère %s IMMEDIATE';
 	$lang['emajrlbkaddfk'] = 'Recréer la clé étrangère %s';

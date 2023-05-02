@@ -512,7 +512,7 @@
 	$lang['emajrlbksetalwaysapptrg'] = 'Set the trigger %s as ALWAYS';
 	$lang['emajrlbkdropfk'] = 'Drop the foreign key %s';
 	$lang['emajrlbksetfkdef'] = 'Set the foreign key %s DEFFERED';
-	$lang['emajrlbkrlbktable'] = 'Rollback';
+	$lang['emajrlbkrlbktable'] = 'Rollback the table';
 	$lang['emajrlbkdeletelog'] = 'Delete logs';
 	$lang['emajrlbksetfkimm'] = 'Set the foreign key %s IMMEDIATE';
 	$lang['emajrlbkaddfk'] = 'Recreate the foreign key %s';

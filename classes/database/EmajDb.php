@@ -2646,7 +2646,7 @@ class EmajDb {
 
 		// get the latest rollback operations
 		if ($this->getNumEmajVersion() >= 40300){	// version >= 4.3.0
-			$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,',') as rlbk_groups_list, rlbk_status,
+			$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,', ') as rlbk_groups_list, rlbk_status,
 						to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
 						to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
 						to_char(rlbk_end_datetime - rlbk_start_datetime, '{$this->intervalFormat}') as rlbk_duration,
@@ -2656,7 +2656,7 @@ class EmajDb {
 					ORDER BY rlbk_id DESC
 					LIMIT {$nb}";
 		} else {
-			$sql = "SELECT rlbk_id, rlbk_groups, array_to_string(rlbk_groups,',') as rlbk_groups_list, rlbk_status,
+			$sql = "SELECT rlbk_id, rlbk_groups, array_to_string(rlbk_groups,', ') as rlbk_groups_list, rlbk_status,
 						to_char(tr.time_tx_timestamp,'{$this->tsFormat}') AS rlbk_start_datetime,
 						to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
 						to_char(rlbk_end_datetime - tr.time_tx_timestamp, '{$this->intervalFormat}') as rlbk_duration,
@@ -2677,7 +2677,7 @@ class EmajDb {
 	function getInProgressRlbk() {
 		global $data;
 
-		$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,',') AS rlbk_groups_list, rlbk_mark,
+		$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,', ') AS rlbk_groups_list, rlbk_mark,
 					to_char(rlbk_mark_datetime,'{$this->tsFormat}') AS rlbk_mark_datetime,
 					rlbk_is_logged,	rlbk_nb_session, rlbk_nb_table, rlbk_nb_sequence, rlbk_eff_nb_table, rlbk_status,
 					to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
@@ -2778,7 +2778,7 @@ class EmajDb {
 						lead(rlbk_id) OVER (ORDER BY rlbk_id) AS rlbk_next
 						FROM emaj.emaj_rlbk
 					)
-					SELECT rlbk_id, array_to_string(rlbk_groups,',') AS rlbk_groups_list, rlbk_status, coalesce(rlbk_comment,'') AS rlbk_comment,
+					SELECT rlbk_id, array_to_string(rlbk_groups,', ') AS rlbk_groups_list, rlbk_status, coalesce(rlbk_comment,'') AS rlbk_comment,
 						to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
 						to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
 						to_char(rlbk_end_datetime - rlbk_start_datetime,'{$this->intervalFormat}') AS rlbk_global_duration,
@@ -2799,7 +2799,7 @@ class EmajDb {
 						lead(rlbk_id) OVER (ORDER BY rlbk_id) AS rlbk_next
 						FROM emaj.emaj_rlbk
 					)
-					SELECT rlbk_id, array_to_string(rlbk_groups,',') AS rlbk_groups_list, rlbk_status,
+					SELECT rlbk_id, array_to_string(rlbk_groups,', ') AS rlbk_groups_list, rlbk_status,
 						to_char(tr.time_tx_timestamp,'{$this->tsFormat}') AS rlbk_start_datetime,
 						to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
 						to_char(rlbk_end_datetime - tr.time_tx_timestamp,'{$this->intervalFormat}') AS rlbk_global_duration,

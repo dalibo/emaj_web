@@ -340,7 +340,7 @@
 	 * Display the details of a rollback operation
 	 */
 	function show_rollback() {
-		global $lang, $misc, $emajdb;
+		global $lang, $misc, $emajdb, $conf;
 
 		if (!isset($_SESSION['emaj']['RlbkShowEstimates'])) {
 			$_SESSION['emaj']['RlbkShowEstimates'] = true;
@@ -365,7 +365,6 @@
 
 		if (! $isCompleted) {
 			$rlbkInProgressInfo = $emajdb->getOneInProgressRlbk($_REQUEST['rlbkid']);
-# TODO: if the rollback status has changed between both data access, may be we should reread the emaj_rlbk table ?
 		} else {
 			$rlbkReportMsgs = $emajdb->getRlbkReportMsg($_REQUEST['rlbkid']);
 		}
@@ -655,10 +654,38 @@
 
 		$actions = array();
 
-		// display the navigation links
+		// Get the auto-refresh configuration parameter (10 seconds if not found in the config.inc.php file)
+		if (isset($conf['auto_refresh'])) {
+			$autoRefreshTimeout = $conf['auto_refresh'];
+		} else {
+			$autoRefreshTimeout = 10;
+		}
 
+		// Manage the autorefresh_rlbkid cookie if it exists
+		if ($autoRefreshTimeout > 0) {
+			if ($isCompleted) {
+				// Delete the autorefresh_rlbkid cookie if it exists
+				if (isset($_COOKIE['autorefresh_rlbkid'])) {
+					echo "<script>deleteARCookie();</script>\n";
+				}
+			} else {
+				$refreshUrl = "emajrollbacks.php?action=show_rollback&amp;{$misc->href}&amp;rlbkid=" . htmlspecialchars($_REQUEST['rlbkid']);
+				$checked = '';
+				if (isset($_COOKIE['autorefresh_rlbkid'])) {
+					if ($_COOKIE['autorefresh_rlbkid'] == $_REQUEST['rlbkid']) {
+						$checked = 'checked';
+						echo "<script>schedulePageReload({$autoRefreshTimeout}, '" . htmlspecialchars_decode($refreshUrl) . "');</script>\n";
+					} else {
+						echo "<script>deleteARCookie();</script>\n";
+					}
+				}
+			}
+		}
+
+		// Display the navigation links
+		// ... in column 1, the prior rollback link, if any
 		echo "<div class=\"rlbk-nav\">\n";
-		echo "\t<div class=\"rlbk-nav-side\">\n";
+		echo "\t<div class=\"rlbk-nav-15\">\n";
 		if ($priorRlbk <> '') {
 			echo "\t\t<a href=\"emajrollbacks.php?action=show_rollback&amp;{$misc->href}&amp;rlbkid={$priorRlbk}\">\n";
 			echo "\t\t\t<div><b>&lt;</b></div>\n";
@@ -666,7 +693,12 @@
 			echo "\t\t</a>\n";
 		}
 		echo "\t</div>\n";
-		echo "\t<div>\n";
+
+		// ... an empty column 2
+		echo "\t<div class=\"rlbk-nav-24\"></div>\n";
+
+		// ... in column 3, the title and the rollbacks list link
+		echo "\t<div class=\"rlbk-nav-3\">\n";
 		echo "\t\t<div class=\"rlbk-nav-title\">\n";
 		echo "\t\t<a href=\"emajrollbacks.php?action=show_rollback&amp;{$misc->href}&amp;rlbkid=" . htmlspecialchars($_REQUEST['rlbkid']) . "\">\n";
 		echo "\t\t\t{$lang['emajrollback']} #" . htmlspecialchars($_REQUEST['rlbkid']) . "</a>\n";
@@ -675,7 +707,22 @@
 		echo "\t\t\t<a href=\"emajrollbacks.php?action=show_rollbacks&amp;{$misc->href}\">{$lang['strbacktolist']}</a>\n";
 		echo "\t\t</div>\n";
 		echo "\t</div>\n";
-		echo "\t<div class=\"rlbk-nav-side\">\n";
+
+		// ... in column 4, the autorefresh toogle button, if relevant
+		echo "\t<div class=\"rlbk-nav-24\">\n";
+		echo "\t\t<div class=\"rlbk-nav-arbutton\">\n";
+		if ($autoRefreshTimeout > 0 && !$isCompleted) {
+			echo "\t\t<label class=\"switch\">\n";
+			echo "\t\t\t<input type=\"checkbox\" name=\"autorefresh\" {$checked} onchange=\"toggleAutoRefresh(this, {$_REQUEST['rlbkid']}, '" . htmlspecialchars_decode($refreshUrl) . "')\">\n";
+			echo "\t\t\t<span class=\"slider\"></span>";
+			echo "\t\t</label>";
+			echo "\t\t\t<br>{$lang['strautorefresh']}\n";
+		}
+		echo "\t\t</div>\n";
+		echo "\t</div>\n";
+
+		// ... in column 5, the next rollback link, if any
+		echo "\t<div class=\"rlbk-nav-15\">\n";
 		if ($nextRlbk <> '') {
 			echo "\t\t<a href=\"emajrollbacks.php?action=show_rollback&amp;{$misc->href}&amp;rlbkid={$nextRlbk}\">\n";
 			echo "\t\t\t<div><b>&gt;</b></div>\n";
@@ -710,6 +757,7 @@
 								'action' => 'comment_rollback',
 								'rlbkid' => $_REQUEST['rlbkid'],
 								'back' => 'detail',
+								'autorefresh' => '0',
 							)
 						)
 					),
@@ -722,9 +770,11 @@
 		$rlbkInfo->moveFirst();
 		echo "<h4>{$lang['emajrlbkprogress']}</h4>\n";
 		if ($isCompleted) {
+
 			// The rollback is completed
 			$misc->printTable($rlbkInfo, $columnsCompleted, $actions, 'detailRlbkProgress', 'No rollback, internal error !');
 		} else {
+
 			// The rollback is in progress
 			$misc->printTable($rlbkInProgressInfo, $columnsInProgress, $actions, 'detailRlbkProgress', 'No rollback, internal error !');
 		}
@@ -838,7 +888,7 @@
 		$misc->printTitle($lang['emajconsolidaterlbk']);
 
 		echo "<p>", sprintf($lang['emajconfirmconsolidaterlbk'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])), "</p>\n";
-		echo "<form action=\"emajrollbacks.php?\" method=\"post\">\n";
+		echo "<form action=\"emajrollbacks.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"consolidate_rollback_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
@@ -882,8 +932,17 @@
 		header('Location: emajenvir.php?' . $_SERVER["QUERY_STRING"]);
 	}
 
-	$misc->printHtmlHeader($lang['emajrollbacksmanagement']);
+	$scripts = "<script src=\"js/emajrollbacks.js\"></script>";
+
+	$misc->printHtmlHeader($lang['emajrollbacksmanagement'], $scripts);
 	$misc->printBody();
+
+	if (isset($_COOKIE['autorefresh_rlbkid'])) {
+		// Delete the autorefresh cookie if it is not relevant for the requested action
+		if ($action != 'show_rollback') {
+			echo "<script>deleteARCookie();</script>\n";
+		}
+	}
 
 	switch ($action) {
 		case 'comment_rollback':

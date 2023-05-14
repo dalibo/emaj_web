@@ -90,9 +90,9 @@
 	// Max chars of each field to display by default in browse mode
 	$conf['max_chars'] = 50;
 
-	// Configuration for ajax scripts
-	// Time in seconds. If set to 0, refreshing data using ajax will be disabled (locks and activity pages)
-	$conf['ajax_refresh'] = 3;
+	// Configuration for automatic page refresh (for the detailled rollback page)
+	// Time in seconds. If set to 0, automatic page refresh will be disabled
+	$conf['auto_refresh'] = 10;
 
 	/* Uncomment and adjust the value of both parameters */
 

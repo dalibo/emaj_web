@@ -104,6 +104,7 @@
 	$lang['strend'] = 'Fin';
 	$lang['strsince'] = 'Depuis';
 	$lang['strquantity'] = 'Quantité';
+	$lang['strautorefresh'] = 'Rafraîchissement auto';
 	$lang['strbacktolist'] = 'Retour à la liste';
 
 	// User-supplied SQL editing

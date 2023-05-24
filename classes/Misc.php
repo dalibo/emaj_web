@@ -102,7 +102,6 @@
 						'params' => array (
 							'server' => $_REQUEST['server'],
 							'subject' => 'emajgroup',
-							'action' => $_REQUEST['action'],
 							'database' => $_REQUEST['database'],
 							'group' => $_REQUEST['group'],
 					));
@@ -113,7 +112,6 @@
 						'params' => array (
 							'server' => $_REQUEST['server'],
 							'subject' => 'emajrollback',
-							'action' => $_REQUEST['action'],
 							'database' => $_REQUEST['database'],
 							'rlbkid' => $_REQUEST['rlbkid'],
 					));

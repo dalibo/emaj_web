@@ -4507,7 +4507,10 @@
 			unprotect_mark_group();
 			break;
 		default:
-			show_groups();
+			if (isset($_REQUEST['group']))
+				show_group();
+			else
+				show_groups();
 	}
 
 	$misc->printFooter();

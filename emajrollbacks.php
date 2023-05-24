@@ -824,7 +824,7 @@
 	function comment_rollback() {
 		global $misc, $lang, $emajdb;
 
-		$misc->printHeader('database', 'database', 'emajrollbacks');
+		$misc->printHeader('emajrollback', 'database', 'emajrollbacks');
 
 		$misc->printTitle($lang['emajcommentarollback']);
 
@@ -967,7 +967,10 @@
 			toggle_estimates();
 			break;
 		default:
-			show_rollbacks();
+			if (isset($_REQUEST['rlbkid']))
+				show_rollback();
+			else
+				show_rollbacks();
 	}
 
 	$misc->printFooter();

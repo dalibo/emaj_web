@@ -2936,6 +2936,15 @@ class EmajDb {
 					   END AS rlbp_action,
 					   rlbp_batch_number, rlbp_session, rlbp_estimated_quantity,
 					   to_char(rlbp_estimated_duration,'{$this->intervalFormat}') AS rlbp_estimated_duration,
+--						The estimate quality is composed of a quality indicator (a letter between A and D) and the effective duration in 100th seconds
+					   CASE WHEN rlbp_duration IS NULL OR rlbp_duration <= '10 milliseconds' OR rlbp_estimated_duration IS NULL THEN 'A'
+							ELSE
+								CASE WHEN rlbp_duration < rlbp_estimated_duration * 2 AND rlbp_estimated_duration < rlbp_duration * 2 THEN 'B:'
+									 WHEN rlbp_duration < rlbp_estimated_duration * 5 AND rlbp_estimated_duration < rlbp_duration * 5 THEN 'C:'
+									 ELSE 'D:'
+								END
+								|| ((extract(epoch from (rlbp_start_datetime + rlbp_duration)) - extract(epoch from rlbp_start_datetime)) * 100)::TEXT
+					   END AS rlbp_estimate_quality,
 					   CASE WHEN rlbp_estimate_method = 1 THEN 'STAT+'
 							WHEN rlbp_estimate_method = 2 THEN 'STAT'
 							WHEN rlbp_estimate_method = 3 THEN 'PARAM'

@@ -23,7 +23,6 @@
 
 	// Callback function to dynamicaly replace the rollback status by a colored dot
 	function renderRlbkStatusInList($val) {
-		global $misc;
 		if ($val == 'COMMITTED') {
 			$ret = "<div title=\"COMMITED\"><span class=\"dot greenbg\"></span></div>";
 		} elseif ($val == 'ABORTED') {
@@ -36,7 +35,6 @@
 
 	// Callback function to dynamicaly add a colored dot before rollback status
 	function renderRlbkStatusInDetail($val) {
-		global $misc;
 		if ($val == 'COMMITTED') {
 			$img = "<span class=\"dot greenbg\"></span>&nbsp;";
 		} elseif ($val == 'ABORTED') {
@@ -45,6 +43,17 @@
 			$img='';
 		}
 		return $img . $val;
+	}
+
+	// Callback function to dynamicaly transform the duration estimate quality into a colored rectangle
+	// The value is composed of 2 parts: the first indicator is transformed into a color, the second is the effective duration transformed into the rectangle width.
+	function renderEstimateQuality($val) {
+		$indicators = explode(':', $val);
+		if ($indicators[0] == 'A') return '';	// empty cell if the duration is unknown or < 10ms
+		$bg['B'] = 'greenbg'; $bg['C'] = 'orangebg'; $bg['D'] = 'redbg';
+		$px = ceil(log($indicators[1], 2)) * 2;
+		$ret = "<div class=\"rectangle {$bg[$indicators[0]]}\" style=\"width: {$px}px;\"><span>$val</span></div>";
+		return $ret;
 	}
 
 	/**
@@ -619,11 +628,6 @@
 					'class' => 'tooltip left-aligned-tooltip',
 				),
 			),
-			'quantity' => array(
-				'title' => $lang['strquantity'],
-				'field' => field('rlbp_quantity'),
-				'params'=> array('align' => 'right'),
-			),
 		);
 
 		if ($_SESSION['emaj']['RlbkShowEstimates']) {
@@ -637,6 +641,30 @@
 						'class' => 'tooltip left-aligned-tooltip rlbkEstimates',
 					),
 				),
+				'estimateQuality' => array(
+					'title' => 'Q',
+					'field' => field('rlbp_estimate_quality'),
+					'type'	=> 'callback',
+					'params'=> array(
+						'function' => 'renderEstimateQuality',
+					),
+					'sorter_text_extraction' => 'span_text',
+					'filter' => false,
+				),
+			));
+		}
+
+		$columnsSteps = array_merge($columnsSteps, array(
+			'quantity' => array(
+				'title' => $lang['strquantity'],
+				'field' => field('rlbp_quantity'),
+				'params'=> array('align' => 'right'),
+				),
+			),
+		);
+
+		if ($_SESSION['emaj']['RlbkShowEstimates']) {
+			$columnsSteps = array_merge($columnsSteps, array(
 				'estimatedQuantity' => array(
 					'title' => $lang['emajestimatedquantity'],
 					'field' => field('rlbp_estimated_quantity'),
@@ -801,11 +829,13 @@
 				$buttonText = $lang['emajshowestimates'];
 			echo "<input type=\"hidden\" name=\"rlbkid\" value=\"{$_REQUEST['rlbkid']}\" />\n";
 			echo "\t\t<input type=\"submit\" name=\"showHideEstimates\" value=\"{$buttonText}\">\n";
-			echo "&nbsp;&nbsp;<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajrlbkestimmethodhelp']}\"/>\n";
+			if ($_SESSION['emaj']['RlbkShowEstimates'])
+				echo "&nbsp;&nbsp;<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajrlbkestimmethodhelp']}\"/>\n";
 			echo "\t</form>\n";
 			echo "</div>\n";
 
 			$misc->printTable($rlbkSteps, $columnsSteps, $actions, 'detailRlbkSteps', null, null, array('sorter' => true, 'filter' => true));
+
 		} else {
 			$misc->printTitle($lang['emajrlbkplanning']);
 			echo "<p>{$lang['emajnorlbkstep']}</p>\n";

@@ -625,12 +625,25 @@ ul.buttonslist li a {
 	border-radius: 50%;
 	display: inline-block;
 }
+.rectangle {
+	height: 1.2em;
+	vertical-align:middle;
+	display: inline-block;
+	width: 1px;
+}
+.rectangle span {
+	display: none;
+}
 .redbg {
 	background-color: #ff0000;
+}
+.orangebg {
+	background-color: #ffa500;
 }
 .greenbg {
 	background-color: #00dd00;
 }
+
 pre {
 	font-size: 110%;
 }
@@ -959,4 +972,9 @@ input:checked + .slider:before {
 	-webkit-transform: translateX(20px);
 	-ms-transform: translateX(20px);
 	transform: translateX(20px);
+}
+
+/* The 9th column of the steps table */
+div#detailRlbkSteps td:nth-child(9) {
+	padding: 0px;
 }

@@ -320,6 +320,7 @@
 	$lang['emajtooold'] = 'Sorry, this E-Maj version (%s) is too old. The minimum version supported by Emaj_web is %s.';
 	$lang['emajversionmorerecent'] = 'A more recent "emaj" extension version exists, compatible with this Emaj_web version.';
 	$lang['emajwebversionmorerecent'] = 'A more recent Emaj_web version probably exists.';
+	$lang['emajwarningdevel'] = 'Accessing an emaj extension in <devel> version may generate trouble. It is advisable to get a stable emaj version from pgxn.org.';
 	$lang['emajextensionmngt'] = '"emaj" extension management';
 	$lang['emajcreateextension'] = 'Create extension';
 	$lang['emajcreateemajextension'] = 'Create the "emaj" extension';

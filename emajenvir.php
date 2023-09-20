@@ -494,32 +494,39 @@
 			}
 
 			// OK, now display the E-Maj version
+			$emajVersion = $emajdb->getEmajVersion();
+			$numEmajVersion = $emajdb->getNumEmajVersion();
+
 			$isExtension = $emajdb->isExtension();
 			if ($isExtension) {
 				$installationMode = $lang['emajasextension'];
 			} else {
 				$installationMode = $lang['emajasscript'];
 			}
-			echo "<p>{$lang['emajversion']}{$emajdb->getEmajVersion()} ({$installationMode})</p>\n";
+			echo "<p>{$lang['emajversion']}$emajVersion ({$installationMode})</p>\n";
 
 			// check if the emaj version is not too old for this emaj_web
-			if ($emajdb->getNumEmajVersion() < $oldest_supported_emaj_version_num) {
-				echo "<p>" . sprintf($lang['emajtooold'],$emajdb->getEmajVersion(),$oldest_supported_emaj_version) . "</p>\n";
+			if ($numEmajVersion < $oldest_supported_emaj_version_num) {
+				echo "<p>" . sprintf($lang['emajtooold'],$emajVersion,$oldest_supported_emaj_version) . "</p>\n";
 				return;
-			} else {
+			}
 
-				// if there are more recent emaj or emaj_web versions, tell it
-				if ($emajdb->getNumEmajVersion() <> 999999) {
-					if ($emajdb->getNumEmajVersion() < $last_known_emaj_version_num) {
-						if ($data->isSuperUser($server_info['username']))
-							echo "<p>{$lang['emajversionmorerecent']}</p>\n";
-						else
-							echo "<p>{$lang['emajversionmorerecent']} {$lang['emajcontactdba']}</p>\n";
-					}
-					if ($emajdb->getNumEmajVersion() > $last_known_emaj_version_num) {
-						echo "<p>{$lang['emajwebversionmorerecent']} {$lang['emajcontactdba']}</p>\n";
-					}
+			// if there are more recent emaj or emaj_web versions, tell it
+			if ($numEmajVersion <> 999999) {
+				if ($numEmajVersion < $last_known_emaj_version_num) {
+					if ($data->isSuperUser($server_info['username']))
+						echo "<p>{$lang['emajversionmorerecent']}</p>\n";
+					else
+						echo "<p>{$lang['emajversionmorerecent']} {$lang['emajcontactdba']}</p>\n";
 				}
+				if ($numEmajVersion > $last_known_emaj_version_num) {
+					echo "<p>{$lang['emajwebversionmorerecent']} {$lang['emajcontactdba']}</p>\n";
+				}
+			}
+
+			// if the version is <devel>, raise a warning
+			if ($numEmajVersion == 999999) {
+				echo "<p><img src=\"" . $misc->icon('EmajWarning') . "\" alt=\"\" /> " . htmlspecialchars($lang['emajwarningdevel']) . "</p>\n";
 			}
 		}
 

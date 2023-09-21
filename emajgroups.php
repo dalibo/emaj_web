@@ -1481,8 +1481,8 @@
 				'tblseq' => array(
 					'title' => $lang['strname'],
 					'field' => field('rel_tblseq'),
-					'url'	=> "redirect.php?subject=table&amp;{$misc->href}&amp;",
-					'vars'  => array('schema' => 'rel_schema', 'table' => 'rel_tblseq'),
+					'url'	=> "redirect.php?{$misc->href}&amp;",
+					'vars'  => array('subject' => 'rel_type' , 'schema' => 'rel_schema', 'table' => 'rel_tblseq', 'sequence' => 'rel_tblseq'),
 				));
 			if ($emajdb->getNumEmajVersion() >= 20200) {			// version >= 2.2.0
 				$columns = array_merge($columns, array(

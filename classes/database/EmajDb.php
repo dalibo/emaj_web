@@ -1003,7 +1003,8 @@ class EmajDb {
 							pg_size_pretty(pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table)))
 							|| '|' ||
 							pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table))::TEXT
-						END AS log_size
+						END AS log_size,
+						CASE WHEN rel_kind = 'r' THEN 'table' ELSE 'sequence' END as rel_type
 					FROM emaj.emaj_relation, emaj.emaj_time_stamp
 					WHERE lower(rel_time_range) = time_id
 					  AND rel_group = '{$group}'
@@ -1017,7 +1018,8 @@ class EmajDb {
 							pg_size_pretty(pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table)))
 							|| '|' ||
 							pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table))::TEXT
-						END AS log_size
+						END AS log_size,
+						CASE WHEN rel_kind = 'r' THEN 'table' ELSE 'sequence' END as rel_type
 					FROM emaj.emaj_relation
 					WHERE rel_group = '{$group}'
 					ORDER BY rel_schema, rel_tblseq";

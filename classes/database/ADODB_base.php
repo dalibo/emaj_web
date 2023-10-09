@@ -314,6 +314,11 @@ class ADODB_base {
 	 * @return A PHP array
 	 */
 	function phpArray($dbarr) {
+
+		// If the db array is empty, just return an empty PHP array;
+		if ($dbarr == '')
+			return array ();
+
 		// Take off the first and last characters (the braces)
 		$arr = substr($dbarr, 1, strlen($dbarr) - 2);
 

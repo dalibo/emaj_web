@@ -1127,6 +1127,28 @@ class EmajDb {
 	}
 
 	/**
+	 * Return a boolean indicating whether the table has a PRIMARY KEY
+	 */
+	function hasTablePK($schema, $table) {
+		global $data;
+
+		$data->clean($schema);
+		$data->clean($table);
+
+		$sql = "SELECT CASE WHEN EXISTS(
+					SELECT 0
+					FROM pg_catalog.pg_constraint
+						JOIN pg_catalog.pg_class c ON (conrelid = c.oid)
+						JOIN pg_catalog.pg_namespace n ON (relnamespace = n.oid)
+					WHERE nspname = '{$schema}'
+					  AND relname = '{$table}'
+					  AND contype = 'p'
+					) THEN 1 ELSE 0 END AS has_pk";
+
+		return $data->selectField($sql,'has_pk');
+	}
+
+	/**
 	 * Return all sequences of a schema, with their current E-Maj characteristics
 	 */
 	function getSequences($schema) {
@@ -3157,15 +3179,85 @@ class EmajDb {
 
 	/**
 	 * Gets distinct roles from the temporary log_stat table created by the just previously called getDetailedLogStatGroup() function
-TODO : when 8.3 will not be supported any more, an aggregate function would be to be included into getDetailedLogStatSummary()
-array_to_string(array_agg(stat_role), ',') puis (string_agg(stat_role), ',') en 9.0+
 	 */
 	function getDetailedLogStatRoles() {
 		global $data;
 
-		$sql = "SELECT distinct stat_role FROM tmp_stat ORDER BY 1";
+		$sql = "SELECT array_agg(distinct stat_role ORDER BY stat_role) AS roles FROM tmp_stat";
+
+		return $data->phpArray($data->selectField($sql,'roles'));
+	}
+
+	/**
+	 * Get the E-Maj technical columns names for a log table linked to an application table at a given mark.
+	 */
+	function getEmajColumns($group, $schema, $table, $mark) {
+		global $data;
+
+		$data->clean($group);
+		$data->clean($schema);
+		$data->clean($table);
+		$data->clean($mark);
+
+		$sql = "SELECT attname
+					FROM emaj.emaj_relation
+						 JOIN pg_catalog.pg_class ON (relname = rel_log_table)
+						 JOIN pg_catalog.pg_namespace ON (pg_namespace.oid = relnamespace AND nspname = rel_log_schema)
+						 JOIN pg_catalog.pg_attribute ON (attrelid = pg_class.oid)
+					WHERE rel_schema = '$schema' AND rel_tblseq = '$table'
+					  AND rel_time_range @> (SELECT mark_time_id FROM emaj.emaj_mark WHERE mark_group = '$group' AND mark_name = '$mark')
+					  AND attnum >= rel_emaj_verb_attnum AND NOT attisdropped";
 
 		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Generate the SQL statement that dumps changes for a table of a group on a mark range.
+	 * Various options are provided.
+	 */
+	function genSqlDumpChanges($group, $schema, $table, $startMark, $endMark, $consolidation, $emajColumnsList, $colsOrder, $orderBy) {
+		global $data;
+
+		$data->clean($group);
+		$data->clean($schema);
+		$data->clean($table);
+		$data->clean($startMark);
+		$data->clean($endMark);
+		$data->clean($consolidation);
+		$data->clean($emajColumnsList);
+		$data->clean($colsOrder);
+		$data->clean($orderBy);
+
+		if ($endMark == '') {
+			// No supplied end mark. The upper emaj_gid is set to the maximum value a bigint can hold.
+			$sql = "SELECT emaj._gen_sql_dump_changes_tbl(rel_log_schema, rel_log_table, rel_emaj_verb_attnum, rel_pk_cols,
+														t1.time_last_emaj_gid, +9223372036854775807, '$consolidation',
+														'$emajColumnsList', '$colsOrder', '$orderBy') AS sql_text
+						FROM emaj.emaj_relation
+							JOIN emaj.emaj_mark m1 ON (m1.mark_group = '$group' AND m1.mark_name = '$startMark')
+							JOIN emaj.emaj_time_stamp t1 ON (t1.time_id = m1.mark_time_id)
+						WHERE rel_schema = '$schema' AND rel_tblseq = '$table' AND upper_inf(rel_time_range)";
+		} else {
+			// The end mark is known
+			$sql = "SELECT emaj._gen_sql_dump_changes_tbl(rel_log_schema, rel_log_table, rel_emaj_verb_attnum, rel_pk_cols,
+														t1.time_last_emaj_gid, t2.time_last_emaj_gid, '$consolidation',
+														'$emajColumnsList', '$colsOrder', '$orderBy') AS sql_text
+						FROM emaj.emaj_relation
+							JOIN emaj.emaj_mark m1 ON (m1.mark_group = '$group' AND m1.mark_name = '$startMark')
+							JOIN emaj.emaj_time_stamp t1 ON (t1.time_id = m1.mark_time_id)
+							JOIN emaj.emaj_mark m2 ON (m2.mark_group = '$group' AND m2.mark_name = '$endMark')
+							JOIN emaj.emaj_time_stamp t2 ON (t2.time_id = m2.mark_time_id)
+						WHERE rel_schema = '$schema' AND rel_tblseq = '$table' AND rel_time_range && int8range(m1.mark_time_id, m2.mark_time_id,'[)')";
+		}
+
+		$sqlText = $data->selectField($sql,'sql_text') . ";";
+
+		// For performance reason, add the GUC adjusment when the consolidation level is FULL
+		if ($consolidation == 'FULL') {
+			$sqlText = "--SET enable_nestloop = FALSE;\n" . $sqlText; // . "\nRESET enable_nestloop;";
+		}
+
+		return $sqlText;
 	}
 
 	/**

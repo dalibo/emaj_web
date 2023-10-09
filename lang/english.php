@@ -204,6 +204,7 @@
 
 	// Constraints
 	$lang['strconstraints'] = 'Constraints';
+	$lang['strpk'] = 'Primary key';
 
 	// Types
 	$lang['strtype'] = 'Type';
@@ -559,6 +560,30 @@
 	$lang['emajnbrole'] = 'Roles';
 	$lang['emajstatrows'] = 'Row changes';
 	$lang['emajbrowsechanges'] = 'Browse changes';
+
+	// Dump changes SQL generation
+	$lang['emajsqlgentitle'] = 'Generate the changes dump SQL statement';
+	$lang['emajsqlgenmarksinterval'] = 'Marks interval';
+	$lang['emajsqlgennopk'] = 'The table has no primary key. Consolidated views are not possible.';
+	$lang['emajsqlgenconsolidation'] = 'Consolidation';
+	$lang['emajsqlgenconsonone'] = 'None';
+	$lang['emajsqlgenconsopartial'] = 'Partial';
+	$lang['emajsqlgenconsofull'] = 'Full';
+	$lang['emajsqlgenconsohelp'] = 'Without consolidation, all elementary changes recorded into log tables for the selected marks frame are returned. With a (partial or full) consolidation, only the initial and the final states of each primary key are returned. With a full consolidation, no data is returned when both initial and final states are strictly equal.';
+	$lang['emajsqlgenverbs'] = 'SQL verbs';
+	$lang['emajsqlgenverbshelp'] = 'Without consolidation, it is possible to filter returned changes on SQL verbs.';
+	$lang['emajsqlgenknownroles'] = 'Known roles:';
+	$lang['emajsqlgenroleshelp'] = 'Without consolidation, it is possible to filter returned changes on roles having generated the changes. If filled, the field must contain a comma separated roles list.';
+	$lang['emajsqlgentechcols'] = 'E-Maj technical columns';
+	$lang['emajsqlgentechcolshelp'] = 'In the SQl statement result, most E-Maj technical columns can be masked.';
+	$lang['emajsqlgencolsorder'] = 'Columns order';
+	$lang['emajsqlgencolsorderlog'] = 'As the log table';
+	$lang['emajsqlgencolsorderpk'] = 'Primary key ahead';
+	$lang['emajsqlgencolsorderhelp'] = 'In the SQl statement result, either returned columns are in the same order as in the log table, or the primary key columns (those of the application table + emaj_tuple) are ahead.';
+	$lang['emajsqlgenroworder'] = 'Rows order';
+	$lang['emajsqlgenrowordertime'] = 'Chronological';
+	$lang['emajsqlgenroworderhelp'] = 'In the SQl statement result, rows can be returned either in the chronological recording order or in primary keys order.';
+	$lang['emajsqlgenerate'] = 'Generate SQL';
 
 	// Group's content
 	$lang['emajgroupcontent'] = 'Current content of the tables group "%s"';

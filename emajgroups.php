@@ -1261,21 +1261,44 @@
 				),
 			));
 
-			$actions = array(
-				'sql' => array(
-					'content' => $lang['emajbrowsechanges'],
-					'icon' => 'Eye',
-					'attr' => array (
-						'href' => array (
-							'url' => 'emajgroups.php',
-							'urlvars' => array_merge($urlvars, array (
-								'action' => 'call_sqledit',
-								'subject' => 'table',
-								'sqlquery' => field('sql_text'),
-								'paginate' => 'true',
-					)))),
-				),
-			);
+			if ($emajdb->getNumEmajVersion() >= 40300) {			// version >= 4.3.0
+				// Request parameters to prepare the SQL statement to edit
+				$actions = array(
+					'gen_sql_dump_changes' => array(
+						'content' => $lang['emajbrowsechanges'],
+						'icon' => 'Eye',
+						'attr' => array (
+							'href' => array (
+								'url' => 'emajgroups.php',
+								'urlvars' => array_merge($urlvars, array (
+									'action' => 'gen_sql_dump_changes',
+									'group' => field('stat_group'),
+									'schema' => field('stat_schema'),
+									'table' => field('stat_table'),
+									'startMark' => field('stat_first_mark'),
+									'endMark' => field('stat_last_mark'),
+									'verb' => '',
+									'role' => '',
+									'knownRoles' => ''
+						)))),
+					),
+				);
+			} else {
+				// Direct call to the sql editor
+				$actions = array(
+					'gen_sql_dump_changes' => array(
+						'content' => $lang['emajbrowsechanges'],
+						'icon' => 'Eye',
+						'attr' => array (
+							'href' => array (
+								'url' => 'emajgroups.php',
+								'urlvars' => array_merge($urlvars, array (
+									'action' => 'call_sqledit',
+									'sqlquery' => field('sql_text')
+						)))),
+					),
+				);
+			}
 
 			$misc->printTable($stats, $columns, $actions, 'logStats', null, null, array('sorter' => true, 'filter' => true));
 
@@ -1284,7 +1307,7 @@
 			$sql_window_id = htmlentities('emaj_sqledit:'.$_REQUEST['server']);
 			echo "<script>
 			$(\"#logStats\").find(\"td.textbutton a:contains('SQL'), td.iconbutton a\").click(function() {
-				window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=400,resizable=yes,scrollbars=yes').focus();
+				window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=550,resizable=yes,scrollbars=yes').focus();
 				return false;
 			});
 			</script>\n";
@@ -1309,17 +1332,8 @@
 			$stats = $emajdb->getDetailedLogStatGroup($_REQUEST['group'],$_REQUEST['rangestart'],$_REQUEST['rangeend']);
 		}
 		$summary = $emajdb->getDetailedLogStatSummary();
-
 		$roles = $emajdb->getDetailedLogStatRoles();
-		$roleList = '';
-		while (!$roles->EOF) {
-			if ($roleList == '') {
-				$roleList = $roles->fields['stat_role'];
-			} else {
-				$roleList .= ', '.$roles->fields['stat_role'];
-			}
-			$roles->moveNext();
-		}
+		$rolesList = implode(', ', $roles);
 
 		// Title
 		echo "<hr/>\n";
@@ -1343,7 +1357,7 @@
 		echo "<td class=\"center\">{$summary->fields['nb_del']}</td>";
 		echo "<td class=\"center\">{$summary->fields['nb_tru']}</td>";
 		echo "<td class=\"center\">{$summary->fields['nb_roles']}</td>";
-		echo "<td class=\"center\">{$roleList}</td>";
+		echo "<td class=\"center\">{$rolesList}</td>";
 		echo "</tr></table>\n";
 		echo "<hr/>\n";
 
@@ -1414,30 +1428,55 @@
 				),
 			));
 
-			$actions = array(
-				'sql' => array(
-					'content' => $lang['emajbrowsechanges'],
-					'icon' => 'Eye',
-					'attr' => array (
-						'href' => array (
-							'url' => 'emajgroups.php',
-							'urlvars' => array_merge($urlvars, array (
-								'action' => 'call_sqledit',
-								'subject' => 'table',
-								'sqlquery' => field('sql_text'),
-								'paginate' => 'true',
-					)))),
-				),
-			);
+			if ($emajdb->getNumEmajVersion() >= 40300) {			// version >= 4.3.0
+				// Request parameters to prepare the SQL statement to edit
+				$actions = array(
+					'gen_sql_dump_changes' => array(
+						'content' => $lang['emajbrowsechanges'],
+						'icon' => 'Eye',
+						'attr' => array (
+							'href' => array (
+								'url' => 'emajgroups.php',
+								'urlvars' => array_merge($urlvars, array (
+									'action' => 'gen_sql_dump_changes',
+									'subject' => 'table',
+									'group' => field('stat_group'),
+									'schema' => field('stat_schema'),
+									'table' => field('stat_table'),
+									'startMark' => field('stat_first_mark'),
+									'endMark' => field('stat_last_mark'),
+									'verb' => field('stat_verb'),
+									'role' => field('stat_role'),
+									'knownRoles' => $rolesList
+						)))),
+					),
+				);
+			} else {
+				// Direct call to the sql editor
+				$actions = array(
+					'gen_sql_dump_changes' => array(
+						'content' => $lang['emajbrowsechanges'],
+						'icon' => 'Eye',
+						'attr' => array (
+							'href' => array (
+								'url' => 'emajgroups.php',
+								'urlvars' => array_merge($urlvars, array (
+									'action' => 'call_sqledit',
+									'subject' => 'table',
+									'sqlquery' => field('sql_text'),
+									'paginate' => 'true',
+						)))),
+					),
+				);
+			}
 
 			$misc->printTable($stats, $columns, $actions, 'detailedLogStats', null, null, array('sorter' => true, 'filter' => true));
 
-			// dynamicaly change the behaviour of the SQL link using JQuery code: open a new window
-			// the link may be either a text button with a SQL content (td of type textbutton) or an icon (td of type iconbutton)
+			// Dynamicaly change the behaviour of the SQL link using JQuery code: open a new window
 			$sql_window_id = htmlentities('emaj_sqledit:'.$_REQUEST['server']);
 			echo "<script>
 			$(\"#detailedLogStats\").find(\"td.textbutton a:contains('SQL'), td.iconbutton a\").click(function() {
-				window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=400,resizable=yes,scrollbars=yes').focus();
+				window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=550,resizable=yes,scrollbars=yes').focus();
 				return false;
 			});
 			</script>\n";
@@ -4277,6 +4316,19 @@
 	 * Call the sqleditor.php page passing the sqlquery to display in $_SESSION
 	 * We are already in the target frame
 	 */
+	function gen_sql_dump_changes() {
+		global $misc;
+
+		echo "<meta http-equiv=\"refresh\" content=\"0;url=sqledit.php?subject=table&amp;{$misc->href}&amp;action=gen_sql_dump_changes" .
+			 "&amp;group={$_REQUEST['group']}&amp;schema={$_REQUEST['schema']}&amp;table={$_REQUEST['table']}" .
+			 "&amp;startMark={$_REQUEST['startMark']}&amp;endMark={$_REQUEST['endMark']}&amp;verb={$_REQUEST['verb']}" .
+			 "&amp;role={$_REQUEST['role']}&amp;knownRoles={$_REQUEST['knownRoles']}\">";
+	}
+
+	/**
+	 * Call the sqleditor.php page passing the sqlquery to display in $_SESSION
+	 * We are already in the target frame
+	 */
 	function call_sqledit() {
 		global $misc;
 
@@ -4400,6 +4452,9 @@
 			break;
 		case 'export_groups':
 			export_groups();
+			break;
+		case 'gen_sql_dump_changes':
+			gen_sql_dump_changes();
 			break;
 		case 'import_groups':
 			import_groups();

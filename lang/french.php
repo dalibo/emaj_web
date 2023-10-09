@@ -75,7 +75,7 @@
 	$lang['strqueryresults'] = 'Résultats de la requête';
 	$lang['strencoding'] = 'Codage';
 	$lang['strsql'] = 'SQL';
-	$lang['strexecute'] = 'Lancer';
+	$lang['strexecute'] = 'Exécuter';
 	$lang['strconfirm'] = 'Confirmer';
 	$lang['strellipsis'] = '...';
 	$lang['strexpand'] = 'Étendre';
@@ -204,6 +204,7 @@
 
 	// Constraints
 	$lang['strconstraints'] = 'Contraintes';
+	$lang['strpk'] = 'Clé primaire';
 
 	// Types
 	$lang['strtype'] = 'Type';
@@ -559,6 +560,30 @@
 	$lang['emajnbrole'] = 'Rôles';
 	$lang['emajstatrows'] = 'Mises à jour';
 	$lang['emajbrowsechanges'] = 'Voir les mises à jour';
+
+	// Dump changes SQL generation
+	$lang['emajsqlgentitle'] = 'Générer la requête SQL d\'extraction des mises à jour';
+	$lang['emajsqlgenmarksinterval'] = 'Intervalle de marques';
+	$lang['emajsqlgennopk'] = 'La table n\'a pas de clé primaire. Aucune vision consolidée des mises à jour n\'est possible';
+	$lang['emajsqlgenconsolidation'] = 'Consolidation';
+	$lang['emajsqlgenconsonone'] = 'Aucune';
+	$lang['emajsqlgenconsopartial'] = 'Partielle';
+	$lang['emajsqlgenconsofull'] = 'Complète';
+	$lang['emajsqlgenconsohelp'] = 'Sans consolidation, toutes les mises à jour élémentaires enregistrées dans la table de log, pour la tranche de marques sélectionnée, sont restituées. Avec une consolidation (partielle ou totale), ne sont restitués que l\'état initial et/ou l\'état final de chaque clé primaire. Avec une consolidation totale, aucune donnée n\'est restituée lorsque l\'état initial et l\'état final de la ligne sont strictement identiques.';
+	$lang['emajsqlgenverbs'] = 'Verbes SQL';
+	$lang['emajsqlgenverbshelp'] = 'Lorsqu\'il n\'y a pas de consolidation, il est possible de filtrer les mises à jour restituées sur les verbes SQL.';
+	$lang['emajsqlgenknownroles'] = 'Rôles connus :';
+	$lang['emajsqlgenroleshelp'] = 'Lorsqu\'il n\'y a pas de consolidation, il est possible de filtrer les mises à jour restituées sur les rôles à l\'origine des mises à jour. Si alimenté, le champs doit contenir une liste de rôles séparés par des virgules.';
+	$lang['emajsqlgentechcols'] = 'Colonnes techniques E-Maj';
+	$lang['emajsqlgentechcolshelp'] = 'Dans le résultat de la requête, la plupart des colonnes techniques E-Maj peuvent être masquées.';
+	$lang['emajsqlgencolsorder'] = 'Ordre des colonnes';
+	$lang['emajsqlgencolsorderlog'] = 'Comme la table de log';
+	$lang['emajsqlgencolsorderpk'] = 'Clé primaire en tête';
+	$lang['emajsqlgencolsorderhelp'] = 'Dans le résultat de la requête, soit les colonnes restituées sont dans le même ordre que la table de log, soit les colonnes de la clé primaire (celles de la table applicative + emaj_tuple) sont placées en tête.';
+	$lang['emajsqlgenroworder'] = 'Ordre des lignes';
+	$lang['emajsqlgenrowordertime'] = 'Chronologique';
+	$lang['emajsqlgenroworderhelp'] = 'Dans le résultat de la requête, les lignes peuvent être présentées dans l\'ordre chronologique d\'enregistrement des mises à jour ou dans l\'ordre des clés primaires.';
+	$lang['emajsqlgenerate'] = 'Générer le SQL';
 
 	// Group's content
 	$lang['emajgroupcontent'] = 'Contenu actuel du groupe de tables "%s"';

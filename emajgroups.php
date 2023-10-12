@@ -198,25 +198,33 @@
 		global $misc;
 		if ($val == 'Notice') {
 			$icon = 'CheckConstraint';
+			$style = '';
 		} else {
-			$icon = 'EmajWarning';
+			$icon = 'Warning';
+			$style = 'style="width: 20px;"';
 		}
-		return "<img src=\"".$misc->icon($icon)."\" />";
+		return "<img src=\"{$misc->icon($icon)}\" alt=\"$val\" $style/>";
 	}
 
 	// Callback function to dynamicaly transform a message severity level into an icon
 	function renderMsgSeverity($val) {
 		global $misc;
+		$style = '';
+		$alt='';
 		if ($val == '1' || $val == '2') {
 			$icon = 'Delete';
+			$alt = 'Error';
 		} elseif ($val == '3') {
-			$icon = 'EmajWarning';
+			$icon = 'Warning';
+			$alt = 'Warning';
+			$style = 'style="width: 20px;"';
 		} elseif ($val == '4') {
 			$icon = 'CheckConstraint';
+			$alt = 'OK';
 		} else {
 			return '?';
 		}
-		return "<img src=\"".$misc->icon($icon)."\" />";
+		return "<img src=\"{$misc->icon($icon)}\" alt=\"$val\" $style/>";
 	}
 
 /********************************************************************************************************
@@ -1034,7 +1042,7 @@
 
 		$misc->printHeader('emaj', 'emajgroup', 'emajlogstat');
 
-		$misc->printTitle(sprintf($lang['emajshowstat'], htmlspecialchars($_REQUEST['group'])));
+		$misc->printTitle(sprintf($lang['emajchangesgroup'], htmlspecialchars($_REQUEST['group'])));
 
 		// display the stat form
 
@@ -1090,9 +1098,9 @@
 
 			// Buttons
 			echo "\t<p><input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
-			echo "\t\t<input type=\"submit\" name=\"globalstatgroup\" value=\"{$lang['emajestimates']}\" />&nbsp;&nbsp;&nbsp;\n";
+			echo "\t\t<input type=\"submit\" name=\"globalstatgroup\" value=\"{$lang['emajestimate']}\" />&nbsp;&nbsp;&nbsp;\n";
 			echo "\t\t<input type=\"submit\" name=\"detailedstatgroup\" value=\"{$lang['emajdetailedstat']}\" />\n";
-			echo "\t\t<img src=\"{$misc->icon('EmajWarning')}\" alt=\"warning\" title=\"{$lang['emajdetailedlogstatwarning']}\" style=\"vertical-align:middle\"/>";
+			echo "\t\t<img src=\"{$misc->icon('Warning')}\" alt=\"warning\" title=\"{$lang['emajdetailedlogstatwarning']}\" style=\"vertical-align:middle; height:22px;\"/>";
 			echo "</p></form>\n";
 
 			// JQuery scripts
@@ -1187,7 +1195,7 @@
 
 		// Title
 		echo "<hr/>\n";
-		$misc->printTitle(sprintf($lang['emajlogstattittle'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($w1), htmlspecialchars($_REQUEST['group'])));
+		$misc->printTitle(sprintf($lang['emajchangestbl'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($w1)));
 
 		// Display summary statistics
 		echo "<table class=\"data\"><tr>\n";
@@ -1337,7 +1345,7 @@
 
 		// Title
 		echo "<hr/>\n";
-		$misc->printTitle(sprintf($lang['emajlogstattittle'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($w1), htmlspecialchars($_REQUEST['group'])));
+		$misc->printTitle(sprintf($lang['emajchangestbl'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($w1)));
 
 		// Display summary statistics
 		echo "<table class=\"data\"><tr>\n";

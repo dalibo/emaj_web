@@ -545,13 +545,13 @@
 	$lang['emajunprotect'] = 'Déprotéger';
 
 	// Statistics
-	$lang['emajshowstat'] = 'Statistiques issues du log E-Maj pour le groupe de tables "%s"';
+	$lang['emajchangesgroup'] = 'Mises à jour enregistrées pour le groupe de tables "%s"';
 	$lang['emajcurrentsituation'] = 'Situation courante';
 	$lang['emajdetailedstat'] = 'Stats détaillées';
-	$lang['emajdetailedlogstatwarning'] = 'Attention, le parcours des tables de log nécessaire à l\'obtention des statistiques détaillées peut être long';
+	$lang['emajdetailedlogstatwarning'] = 'Le parcours des tables de log nécessaire à l\'obtention des statistiques détaillées peut être long. Bien que moins détaillée et moins précise, l\'estimation du nombre de mises à jour est plus rapide car elle n\'utilise que les valeurs des séquences de log enregistrées à chaque marque.';
 	$lang['emajlogstatcurrentsituation'] = 'la situation courante';
 	$lang['emajlogstatmark'] = 'la marque "%s"';
-	$lang['emajlogstattittle'] = 'Mises à jour de table entre la marque "%s" et %s pour le groupe de tables "%s"';
+	$lang['emajchangestbl'] = 'Mises à jour de table entre la marque "%s" et %s';
 	$lang['emajstatverb'] = 'Verbe SQL';
 	$lang['emajnbinsert'] = 'INSERT';
 	$lang['emajnbupdate'] = 'UPDATE';

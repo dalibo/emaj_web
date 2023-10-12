@@ -545,13 +545,13 @@
 	$lang['emajunprotect'] = 'Unprotect';
 
 	// Statistics
-	$lang['emajshowstat'] = 'Statistics from E-Maj logs for the tables group "%s"';
+	$lang['emajchangesgroup'] = 'Recorded changes for the tables group "%s"';
 	$lang['emajcurrentsituation'] = 'Current state';
 	$lang['emajdetailedstat'] = 'Detailed stats';
-	$lang['emajdetailedlogstatwarning'] = 'Attention, scanning the log tables needed to get detailed statistics may take a long time';
+	$lang['emajdetailedlogstatwarning'] = 'Scanning the log tables needed to get detailed statistics may take a long time. Although less detailed and precise, the changes number estimate is quicker because it only uses the log sequence values recorded at each mark.';
 	$lang['emajlogstatcurrentsituation'] = 'the current state';
 	$lang['emajlogstatmark'] = 'the mark "%s"';
-	$lang['emajlogstattittle'] = 'Table changes between the mark "%s" and %s for the tables group "%s"';
+	$lang['emajchangestbl'] = 'Table changes between the mark "%s" and %s';
 	$lang['emajstatverb'] = 'SQL verb';
 	$lang['emajnbinsert'] = 'INSERT';
 	$lang['emajnbupdate'] = 'UPDATE';

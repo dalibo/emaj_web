@@ -58,7 +58,7 @@
 			echo " {$lang['emajcurrentsituation']}</p>\n";
 
 		if (! $hasPk)
-			echo "<p><img src=\"{$misc->icon('EmajWarning')}\" alt=\"warning\"/> {$lang['emajsqlgennopk']}</p>\n";
+			echo "<p><img src=\"{$misc->icon('Warning')}\" alt=\"Warning\" style=\"width: 20px;\"/> {$lang['emajsqlgennopk']}</p>\n";
 
 		echo "<form action=\"sqledit.php\" method=\"post\">\n";
 		echo "\t<p><input type=\"hidden\" name=\"action\" value=\"gen_sql_dump_changes_ok\" />\n";

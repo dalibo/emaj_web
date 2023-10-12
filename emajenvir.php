@@ -13,16 +13,22 @@
 	// Callback function to dynamicaly transform a message severity level into an icon
 	function renderMsgSeverity($val) {
 		global $misc;
+		$style = '';
+		$alt='';
 		if ($val == '1' || $val == '2') {
 			$icon = 'Delete';
+			$alt = 'Error';
 		} elseif ($val == '3') {
-			$icon = 'EmajWarning';
+			$icon = 'Warning';
+			$alt = 'Warning';
+			$style = 'style="width: 20px;"';
 		} elseif ($val == '4') {
 			$icon = 'CheckConstraint';
+			$alt = 'OK';
 		} else {
 			return '?';
 		}
-		return "<img src=\"".$misc->icon($icon)."\" alt=\"\" />";
+		return "<img src=\"{$misc->icon($icon)}\" alt=\"$alt\" $style/>";
 	}
 
 	function displayOneParameter($param, $label, $info) {
@@ -526,7 +532,7 @@
 
 			// if the version is <devel>, raise a warning
 			if ($numEmajVersion == 999999) {
-				echo "<p><img src=\"" . $misc->icon('EmajWarning') . "\" alt=\"\" /> " . htmlspecialchars($lang['emajwarningdevel']) . "</p>\n";
+				echo "<p><img src=\"{$misc->icon('Warning')}\" alt=\"Warning\" style=\"width: 20px;\"/> " . htmlspecialchars($lang['emajwarningdevel']) . "</p>\n";
 			}
 		}
 

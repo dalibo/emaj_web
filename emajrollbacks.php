@@ -15,10 +15,12 @@
 		global $misc;
 		if ($val == 'Notice') {
 			$icon = 'CheckConstraint';
+			$style = '';
 		} else {
-			$icon = 'EmajWarning';
+			$icon = 'Warning';
+			$style = 'style="width: 20px;"';
 		}
-		return "<img src=\"".$misc->icon($icon)."\" />";
+		return "<img src=\"{$misc->icon($icon)}\" alt=\"$val\" $style/>";
 	}
 
 	// Callback function to dynamicaly replace the rollback status by a colored dot

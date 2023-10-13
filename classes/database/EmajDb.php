@@ -1710,7 +1710,7 @@ class EmajDb {
 
 		$data->clean($json);
 
-		# error messages 224 and 225 disappeared in 4.0+
+		# error messages 224 and 225 disappeared in 4.0+
 		$sql = "SELECT
 				rpt_severity,
 				CASE rpt_msg_type
@@ -3191,13 +3191,28 @@ class EmajDb {
 	/**
 	 * Get the E-Maj technical columns names for a log table linked to an application table at a given mark.
 	 */
-	function getEmajColumns($group, $schema, $table, $mark) {
+	function getEmajColumns($group, $schema, $table, $mark, $markTs) {
 		global $data;
 
 		$data->clean($group);
 		$data->clean($schema);
 		$data->clean($table);
 		$data->clean($mark);
+		$data->clean($markTs);
+
+		if ($mark == '[deleted mark]') {
+			// The mark name is unknown. So get the time id from the start mark timestamp.
+			$sql = "SELECT time_id
+						FROM emaj.emaj_relation
+							JOIN emaj.emaj_time_stamp ON (time_id = lower(rel_time_range))
+						WHERE rel_schema = '$schema' AND rel_tblseq = '$table'
+						  AND time_clock_timestamp = '$markTs'";
+			$markTimeId = $data->selectField($sql,'time_id');
+		} else {
+			// The mark name is known. So get the time id from the emaj_mark table.
+			$sql = "SELECT mark_time_id FROM emaj.emaj_mark WHERE mark_group = '$group' AND mark_name = '$mark'";
+			$markTimeId = $data->selectField($sql,'mark_time_id');
+		}
 
 		$sql = "SELECT attname
 					FROM emaj.emaj_relation
@@ -3205,7 +3220,7 @@ class EmajDb {
 						 JOIN pg_catalog.pg_namespace ON (pg_namespace.oid = relnamespace AND nspname = rel_log_schema)
 						 JOIN pg_catalog.pg_attribute ON (attrelid = pg_class.oid)
 					WHERE rel_schema = '$schema' AND rel_tblseq = '$table'
-					  AND rel_time_range @> (SELECT mark_time_id FROM emaj.emaj_mark WHERE mark_group = '$group' AND mark_name = '$mark')
+					  AND rel_time_range @> $markTimeId::BIGINT
 					  AND attnum >= rel_emaj_verb_attnum AND NOT attisdropped";
 
 		return $data->selectSet($sql);
@@ -3215,39 +3230,79 @@ class EmajDb {
 	 * Generate the SQL statement that dumps changes for a table of a group on a mark range.
 	 * Various options are provided.
 	 */
-	function genSqlDumpChanges($group, $schema, $table, $startMark, $endMark, $consolidation, $emajColumnsList, $colsOrder, $orderBy) {
+	function genSqlDumpChanges($group, $schema, $table, $startMark, $startTs, $endMark, $endTs, $consolidation, $emajColumnsList, $colsOrder, $orderBy) {
 		global $data;
 
 		$data->clean($group);
 		$data->clean($schema);
 		$data->clean($table);
 		$data->clean($startMark);
+		$data->clean($startTs);
 		$data->clean($endMark);
+		$data->clean($endTs);
 		$data->clean($consolidation);
 		$data->clean($emajColumnsList);
 		$data->clean($colsOrder);
 		$data->clean($orderBy);
 
+		// Compute the lower bound last_emaj_gid.
+		// Use the start mark name.
+		// If it is unknown (in the case when the mark at the table assign time has been deleted), use the start timestamp.
+		if ($startMark == '[deleted mark]') {
+			$sql = "SELECT time_id, time_last_emaj_gid
+						FROM emaj.emaj_relation
+							 JOIN emaj.emaj_time_stamp ON (time_id = lower(rel_time_range))
+						WHERE rel_schema = '$schema' AND rel_tblseq = '$table'
+						  AND time_clock_timestamp = '$startTs'";
+		} else {
+			$sql = "SELECT time_id, time_last_emaj_gid
+						FROM emaj.emaj_mark
+							 JOIN emaj.emaj_time_stamp ON (time_id = mark_time_id)
+						WHERE mark_group = '$group' AND mark_name = '$startMark'";
+		}
+		$res = $data->selectSet($sql);
+		$lowerTimeId = $res->fields['time_id'];
+		$lowerLastEmajGid = $res->fields['time_last_emaj_gid'];
+
+		// Compute the upper bound last_emaj_gid.
+		// If the there is no upper mark, use the highest bigint value.
+		// Otherwise, use the end mark name.
+		// If it is unknown (in the case when the mark at the table removal time has been deleted), use the end timestamp.
 		if ($endMark == '') {
-			// No supplied end mark. The upper emaj_gid is set to the maximum value a bigint can hold.
+			$upperLastEmajGid = '+9223372036854775807';
+		} else {
+			if ($endMark == '[deleted mark]') {
+				$sql = "SELECT time_id, time_last_emaj_gid
+							FROM emaj.emaj_relation
+								 JOIN emaj.emaj_time_stamp ON (time_id = upper(rel_time_range))
+							WHERE rel_schema = '$schema' AND rel_tblseq = '$table'
+							  AND time_clock_timestamp = '$endTs'";
+			} else {
+				$sql = "SELECT time_id, time_last_emaj_gid
+							FROM emaj.emaj_mark
+								JOIN emaj.emaj_time_stamp ON (time_id = mark_time_id)
+							WHERE mark_group = '$group' AND mark_name = '$endMark'";
+			}
+			$res = $data->selectSet($sql);
+			$upperTimeId = $res->fields['time_id'];
+			$upperLastEmajGid = $res->fields['time_last_emaj_gid'];
+		}
+
+		// Build the SQL statement.
+		if ($endMark == '') {
+			// No end mark
 			$sql = "SELECT emaj._gen_sql_dump_changes_tbl(rel_log_schema, rel_log_table, rel_emaj_verb_attnum, rel_pk_cols,
-														t1.time_last_emaj_gid, +9223372036854775807, '$consolidation',
+														$lowerLastEmajGid, $upperLastEmajGid, '$consolidation',
 														'$emajColumnsList', '$colsOrder', '$orderBy') AS sql_text
 						FROM emaj.emaj_relation
-							JOIN emaj.emaj_mark m1 ON (m1.mark_group = '$group' AND m1.mark_name = '$startMark')
-							JOIN emaj.emaj_time_stamp t1 ON (t1.time_id = m1.mark_time_id)
 						WHERE rel_schema = '$schema' AND rel_tblseq = '$table' AND upper_inf(rel_time_range)";
 		} else {
 			// The end mark is known
 			$sql = "SELECT emaj._gen_sql_dump_changes_tbl(rel_log_schema, rel_log_table, rel_emaj_verb_attnum, rel_pk_cols,
-														t1.time_last_emaj_gid, t2.time_last_emaj_gid, '$consolidation',
+														$lowerLastEmajGid, $upperLastEmajGid, '$consolidation',
 														'$emajColumnsList', '$colsOrder', '$orderBy') AS sql_text
 						FROM emaj.emaj_relation
-							JOIN emaj.emaj_mark m1 ON (m1.mark_group = '$group' AND m1.mark_name = '$startMark')
-							JOIN emaj.emaj_time_stamp t1 ON (t1.time_id = m1.mark_time_id)
-							JOIN emaj.emaj_mark m2 ON (m2.mark_group = '$group' AND m2.mark_name = '$endMark')
-							JOIN emaj.emaj_time_stamp t2 ON (t2.time_id = m2.mark_time_id)
-						WHERE rel_schema = '$schema' AND rel_tblseq = '$table' AND rel_time_range && int8range(m1.mark_time_id, m2.mark_time_id,'[)')";
+						WHERE rel_schema = '$schema' AND rel_tblseq = '$table' AND rel_time_range && int8range($lowerTimeId, $upperTimeId,'[)')";
 		}
 
 		$sqlText = $data->selectField($sql,'sql_text') . ";";

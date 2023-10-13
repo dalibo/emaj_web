@@ -1284,7 +1284,9 @@
 									'schema' => field('stat_schema'),
 									'table' => field('stat_table'),
 									'startMark' => field('stat_first_mark'),
+									'startTs' => field('stat_first_mark_datetime'),
 									'endMark' => field('stat_last_mark'),
+									'endTs' => field('stat_last_mark_datetime'),
 									'verb' => '',
 									'role' => '',
 									'knownRoles' => ''
@@ -1452,7 +1454,9 @@
 									'schema' => field('stat_schema'),
 									'table' => field('stat_table'),
 									'startMark' => field('stat_first_mark'),
+									'startTs' => field('stat_first_mark_datetime'),
 									'endMark' => field('stat_last_mark'),
+									'endTs' => field('stat_last_mark_datetime'),
 									'verb' => field('stat_verb'),
 									'role' => field('stat_role'),
 									'knownRoles' => $rolesList
@@ -4328,9 +4332,12 @@
 		global $misc;
 
 		echo "<meta http-equiv=\"refresh\" content=\"0;url=sqledit.php?subject=table&amp;{$misc->href}&amp;action=gen_sql_dump_changes" .
-			 "&amp;group={$_REQUEST['group']}&amp;schema={$_REQUEST['schema']}&amp;table={$_REQUEST['table']}" .
-			 "&amp;startMark={$_REQUEST['startMark']}&amp;endMark={$_REQUEST['endMark']}&amp;verb={$_REQUEST['verb']}" .
-			 "&amp;role={$_REQUEST['role']}&amp;knownRoles={$_REQUEST['knownRoles']}\">";
+			 "&amp;group=" . urlencode($_REQUEST['group']) .
+			 "&amp;schema=" . urlencode($_REQUEST['schema']) . "&amp;table=" . urlencode($_REQUEST['table']) .
+			 "&amp;startMark=" . urlencode($_REQUEST['startMark']) . "&amp;startTs=" . urlencode($_REQUEST['startTs']) . 
+			 "&amp;endMark=" . urlencode($_REQUEST['endMark']) . "&amp;endTs=" . urlencode($_REQUEST['endTs']) .
+			 "&amp;verb=" . urlencode($_REQUEST['verb']) . "&amp;role=" . urlencode($_REQUEST['role']) .
+			 "&amp;knownRoles=" . urlencode($_REQUEST['knownRoles']) . "\">";
 	}
 
 	/**

@@ -620,6 +620,10 @@ ul.buttonslist li:hover {
 ul.buttonslist li a {
 	color: inherit;
 }
+img.cellicon {
+	width: 18px;
+	margin: 1px;
+}
 .dot {
 	height: 10px;
 	width: 10px;
@@ -636,13 +640,13 @@ ul.buttonslist li a {
 	display: none;
 }
 .redbg {
-	background-color: #ff0000;
+	background-color: #ff2f2f;
 }
 .orangebg {
-	background-color: #ffa500;
+	background-color: #fa842f;
 }
 .greenbg {
-	background-color: #00dd00;
+	background-color: #33e62c;
 }
 
 pre {

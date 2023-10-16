@@ -13,22 +13,19 @@
 	// Callback function to dynamicaly transform a message severity level into an icon
 	function renderMsgSeverity($val) {
 		global $misc;
-		$style = '';
-		$alt='';
 		if ($val == '1' || $val == '2') {
-			$icon = 'Delete';
+			$icon = 'RedX';
 			$alt = 'Error';
 		} elseif ($val == '3') {
 			$icon = 'Warning';
 			$alt = 'Warning';
-			$style = 'style="width: 20px;"';
 		} elseif ($val == '4') {
-			$icon = 'CheckConstraint';
+			$icon = 'Checkmark';
 			$alt = 'OK';
 		} else {
 			return '?';
 		}
-		return "<img src=\"{$misc->icon($icon)}\" alt=\"$alt\" $style/>";
+		return "<img src=\"{$misc->icon($icon)}\" alt=\"$alt\" class=\"cellicon\"/>";
 	}
 
 	function displayOneParameter($param, $label, $info) {

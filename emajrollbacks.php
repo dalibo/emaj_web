@@ -14,13 +14,11 @@
 	function renderRlbkExecSeverity($val) {
 		global $misc;
 		if ($val == 'Notice') {
-			$icon = 'CheckConstraint';
-			$style = '';
+			$icon = 'Checkmark';
 		} else {
 			$icon = 'Warning';
-			$style = 'style="width: 20px;"';
 		}
-		return "<img src=\"{$misc->icon($icon)}\" alt=\"$val\" $style/>";
+		return "<img src=\"{$misc->icon($icon)}\" alt=\"$val\" class=\"cellicon\"/>";
 	}
 
 	// Callback function to dynamicaly replace the rollback status by a colored dot

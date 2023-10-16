@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg:svg
+   version="1.0"
+   width="100"
+   height="100"
+   id="svg8978"
+   sodipodi:docname="RedX.svg"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="6.74"
+     inkscape:cx="49.925816"
+     inkscape:cy="49.925816"
+     inkscape:window-width="1800"
+     inkscape:window-height="908"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <svg:defs
+     id="defs8980" />
+  <svg:g
+     id="layer1">
+    <svg:path
+       d="M 6.3895625,6.4195626 C 93.580437,93.610437 93.580437,93.610437 93.580437,93.610437"
+       style="fill:none;fill-rule:evenodd;stroke:#ff2f2f;stroke-width:18.05195999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path8986" />
+    <svg:path
+       d="M 6.3893997,93.6106 C 93.830213,6.4194007 93.830213,6.4194007 93.830213,6.4194007"
+       style="fill:none;fill-rule:evenodd;stroke:#ff2f2f;stroke-width:17.802;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;opacity:1"
+       id="path8988" />
+  </svg:g>
+  <script />
+</svg:svg>

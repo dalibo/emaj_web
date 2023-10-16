@@ -8,7 +8,7 @@
 	$_no_db_connection = true;
 	include_once('./libraries/lib.inc.php');
 
-	$misc->printHtmlHeader();
+	$misc->printHtmlHeader('', '', 'intro');
 	$misc->printBody();
 
 	$misc->printHeader('root', 'root', 'intro');

@@ -1,0 +1,22 @@
+/* intro.css
+ *
+ * Specific css source for the intro.php page
+ */
+
+.intro-welcome {
+	margin: 20px 20px 40px 20px;
+	text-align:center;
+}
+.intro-welcome img {
+	width: 400px;
+}
+.intro-link li {
+	font-weight: normal;
+}
+.intro-footer {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	color: grey;
+	font-style: italic;
+	font-size: 0.9em;
+}

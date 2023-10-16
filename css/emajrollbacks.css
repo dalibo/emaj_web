@@ -1,0 +1,32 @@
+/* emajrollbacks.css
+ *
+ * Specific css source for the emajrollbacks.php page
+ */
+
+div.rlbk-nav {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: space-between;
+}
+div.rlbk-nav >div {
+	text-align: center;
+}
+/* columns 1 and 5 */
+div.rlbk-nav-15 {
+	min-width: 80px;
+}
+/* columns 2 and 4 */
+div.rlbk-nav-24 {
+	min-width: 200px;
+}
+/* column 3 */
+div.rlbk-nav-title {
+	font-size: larger;
+	font-weight: bold;
+	margin-bottom: 8px;
+}
+
+/* The 9th column of the steps table */
+div#detailRlbkSteps td:nth-child(9) {
+	padding: 0px;
+}

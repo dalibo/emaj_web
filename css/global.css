@@ -873,51 +873,6 @@ th.filtericon {
 	width: 3.8em;
 }
 
-/** Specific div for the intro.php page **/
-.intro-welcome {
-	margin: 20px 20px 40px 20px;
-	text-align:center;
-}
-.intro-welcome img {
-	width: 400px;
-}
-.intro-link li {
-	font-weight: normal;
-}
-.intro-footer {
-	margin-top: 20px;
-	margin-bottom: 20px;
-	color: grey;
-	font-style: italic;
-	font-size: 0.9em;
-}
-
-/*
- * Specific div for the emajrollbacks.php page
- */
-div.rlbk-nav {
-	display: flex;
-	flex-flow: row wrap;
-	justify-content: space-between;
-}
-div.rlbk-nav >div {
-	text-align: center;
-}
-/* columns 1 and 5 */
-div.rlbk-nav-15 {
-	min-width: 80px;
-}
-/* columns 2 and 4 */
-div.rlbk-nav-24 {
-	min-width: 200px;
-}
-/* column 3 */
-div.rlbk-nav-title {
-	font-size: larger;
-	font-weight: bold;
-	margin-bottom: 8px;
-}
-
 /* The autorefresh slider */
 
 /* The switch - the box around the slider */
@@ -977,9 +932,4 @@ input:checked + .slider:before {
 	-webkit-transform: translateX(20px);
 	-ms-transform: translateX(20px);
 	transform: translateX(20px);
-}
-
-/* The 9th column of the steps table */
-div#detailRlbkSteps td:nth-child(9) {
-	padding: 0px;
 }

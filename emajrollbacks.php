@@ -964,7 +964,7 @@
 
 	$scripts = "<script src=\"js/emajrollbacks.js\"></script>";
 
-	$misc->printHtmlHeader($lang['emajrollbacksmanagement'], $scripts);
+	$misc->printHtmlHeader($lang['emajrollbacksmanagement'], $scripts, 'emajrollbacks');
 	$misc->printBody();
 
 	if (isset($_COOKIE['autorefresh_rlbkid'])) {

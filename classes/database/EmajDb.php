@@ -2994,7 +2994,14 @@ class EmajDb {
 		$data->clean($firstMark);
 		$data->clean($lastMark);
 
-		if ($this->getNumEmajVersion() >= 20300){	// version >= 2.3.0
+		if ($this->getNumEmajVersion() >= 40300) {			// version >= 4.3.0
+			$sql = "CREATE TEMP TABLE tmp_stat AS
+					SELECT stat_group, stat_schema, stat_table,
+						   stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
+						   stat_rows
+						FROM emaj.emaj_log_stat_group('{$group}','{$firstMark}','{$lastMark}')
+						WHERE stat_rows > 0";
+		} elseif ($this->getNumEmajVersion() >= 20300) {	// version >= 2.3.0
 			$sql = "CREATE TEMP TABLE tmp_stat AS
 					SELECT stat_group, stat_schema, stat_table,
 						   stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
@@ -3054,12 +3061,19 @@ class EmajDb {
 
 		$data->execute($sql);
 
-		$sql = "SELECT stat_group, stat_schema, stat_table, ";
-		if ($this->getNumEmajVersion() >= 20300){	// version >= 2.3.0
-			$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
+		if ($this->getNumEmajVersion() >= 40300) {				// version >= 4.3.0
+			$sql = "SELECT stat_group, stat_schema, stat_table,	stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, stat_rows
+						FROM tmp_stat
+						ORDER BY stat_group, stat_schema, stat_table";
+		} elseif ($this->getNumEmajVersion() >= 20300) {		// version >= 2.3.0
+			$sql = "SELECT stat_group, stat_schema, stat_table,	stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, stat_rows, sql_text
+						FROM tmp_stat
+						ORDER BY stat_group, stat_schema, stat_table";
+		} else {
+			$sql = "SELECT stat_group, stat_schema, stat_table,	stat_rows
+						FROM tmp_stat
+						ORDER BY stat_group, stat_schema, stat_table";
 		}
-        $sql .= "stat_rows, sql_text FROM tmp_stat
-				ORDER BY stat_group, stat_schema, stat_table";
 
 		return $data->selectSet($sql);
 	}
@@ -3088,7 +3102,14 @@ class EmajDb {
 		$data->clean($firstMark);
 		$data->clean($lastMark);
 
-		if ($this->getNumEmajVersion() >= 20300){	// version >= 2.3.0
+		if ($this->getNumEmajVersion() >= 40300) {	// version >= 4.3.0
+			$sql = "CREATE TEMP TABLE tmp_stat AS
+					SELECT stat_group, stat_schema, stat_table,
+						   stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
+						   stat_role, stat_verb, stat_rows
+						FROM emaj.emaj_detailed_log_stat_group('{$group}','{$firstMark}','{$lastMark}')
+						WHERE stat_rows > 0";
+		} elseif ($this->getNumEmajVersion() >= 20300) {	// version >= 2.3.0
 			$sql = "CREATE TEMP TABLE tmp_stat AS
 					SELECT stat_group, stat_schema, stat_table,
 						   stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
@@ -3150,12 +3171,21 @@ class EmajDb {
 		}
 		$data->execute($sql);
 
-		$sql = "SELECT stat_group, stat_schema, stat_table, ";
-		if ($this->getNumEmajVersion() >= 20300){	// version >= 2.3.0
-			$sql .= "stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, ";
+		if ($this->getNumEmajVersion() >= 40300) {				// version >= 4.3.0
+			$sql = "SELECT stat_group, stat_schema, stat_table,	stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
+						   stat_role, stat_verb, stat_rows
+						FROM tmp_stat
+						ORDER BY stat_group, stat_schema, stat_table, stat_role, stat_verb";
+		} elseif ($this->getNumEmajVersion() >= 20300) {		// version >= 2.3.0
+			$sql = "SELECT stat_group, stat_schema, stat_table,	stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
+						   stat_role, stat_verb, stat_rows, sql_text
+						FROM tmp_stat
+						ORDER BY stat_group, stat_schema, stat_table, stat_role, stat_verb";
+		} else {
+			$sql = "SELECT stat_group, stat_schema, stat_table,	stat_role, stat_verb, stat_rows
+						FROM tmp_stat
+						ORDER BY stat_group, stat_schema, stat_table, stat_role, stat_verb";
 		}
-        $sql .= "stat_role, stat_verb, stat_rows, sql_text FROM tmp_stat
-				ORDER BY stat_group, stat_schema, stat_table, stat_role, stat_verb";
 
 		return $data->selectSet($sql);
 	}
@@ -3200,6 +3230,7 @@ class EmajDb {
 		$data->clean($mark);
 		$data->clean($markTs);
 
+		// Get the start mark time_id
 		if ($mark == '[deleted mark]') {
 			// The mark name is unknown. So get the time id from the start mark timestamp.
 			$sql = "SELECT time_id
@@ -3207,13 +3238,15 @@ class EmajDb {
 							JOIN emaj.emaj_time_stamp ON (time_id = lower(rel_time_range))
 						WHERE rel_schema = '$schema' AND rel_tblseq = '$table'
 						  AND time_clock_timestamp = '$markTs'";
-			$markTimeId = $data->selectField($sql,'time_id');
 		} else {
 			// The mark name is known. So get the time id from the emaj_mark table.
-			$sql = "SELECT mark_time_id FROM emaj.emaj_mark WHERE mark_group = '$group' AND mark_name = '$mark'";
-			$markTimeId = $data->selectField($sql,'mark_time_id');
+			$sql = "SELECT mark_time_id AS time_id
+						FROM emaj.emaj_mark
+						WHERE mark_group = '$group' AND mark_name = '$mark'";
 		}
+		$markTimeId = $data->selectField($sql,'time_id');
 
+		// Get the requested column names
 		$sql = "SELECT attname
 					FROM emaj.emaj_relation
 						 JOIN pg_catalog.pg_class ON (relname = rel_log_table)
@@ -3288,7 +3321,7 @@ class EmajDb {
 			$upperLastEmajGid = $res->fields['time_last_emaj_gid'];
 		}
 
-		// Build the SQL statement.
+		// Build the SQL statement
 		if ($endMark == '') {
 			// No end mark
 			$sql = "SELECT emaj._gen_sql_dump_changes_tbl(rel_log_schema, rel_log_table, rel_emaj_verb_attnum, rel_pk_cols,
@@ -3305,6 +3338,7 @@ class EmajDb {
 						WHERE rel_schema = '$schema' AND rel_tblseq = '$table' AND rel_time_range && int8range($lowerTimeId, $upperTimeId,'[)')";
 		}
 
+		// Generate the statement
 		$sqlText = $data->selectField($sql,'sql_text') . ";";
 
 		// For performance reason, add the GUC adjusment when the consolidation level is FULL

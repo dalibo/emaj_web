@@ -1030,12 +1030,12 @@
 	}
 
 	/**
-	 * Show global or detailed log statistics between 2 marks or since a mark
+	 * Show changes statistics between 2 marks or since a mark for tables or sequences
 	 */
-	function log_stat_group() {
+	function changes_stat_group() {
 		global $misc, $lang, $emajdb;
 
-		$misc->printHeader('emaj', 'emajgroup', 'emajlogstat');
+		$misc->printHeader('emaj', 'emajgroup', 'emajchangesstat');
 
 		$misc->printTitle(sprintf($lang['emajchangesgroup'], htmlspecialchars($_REQUEST['group'])));
 
@@ -1065,7 +1065,7 @@
 		} else {
 
 			// form for statistics selection
-			echo "<form id=\"statistics_form\" action=\"emajgroups.php?action=log_stat_group&amp;back=detail&amp;{$misc->href}\"";
+			echo "<form id=\"statistics_form\" action=\"emajgroups.php?action=changes_stat_group&amp;back=detail&amp;{$misc->href}\"";
 			echo "  method=\"post\" enctype=\"multipart/form-data\">\n";
 
 			echo "<div class=\"form-container\">\n";
@@ -1159,46 +1159,54 @@
 
 			echo "</script>\n";
 
-			// If global stat display is requested
-			if ($globalStat) {
-				disp_global_log_stat_section();
+			// If any stat is requested, get common data
+			if ($globalStat || $detailedStat) {
+				$groupStat = $emajdb->getNbObjectsGroupInPeriod($_REQUEST['group'],$_REQUEST['rangestart'],$_REQUEST['rangeend']);
 			}
 
-			// If detailed stat display is requested
+			// If logs global stats are requested, display them
+			if ($globalStat) {
+				disp_global_log_stat_section($groupStat);
+			}
+
+			// If logs detailed stats are requested, display them
 			if ($detailedStat) {
-				disp_detailed_log_stat_section();
+				disp_detailed_log_stat_section($groupStat);
 			}
 		}
 	}
 
 	/**
-	 * This function is called by the log_stat_group() function.
-	 * It generates the page section corresponding to the statistics output
+	 * This function is called by the changes_stat_group() function.
+	 * It generates the page section corresponding to the logs global statistics output
 	 */
-	function disp_global_log_stat_section() {
+	function disp_global_log_stat_section($groupStat) {
 		global $misc, $lang, $emajdb;
 
 		// Get statistics from E-Maj
-		if ($_REQUEST['rangeend']=='currentsituation') {
-			$w1 = $lang['emajlogstatcurrentsituation'];
+		if ($_REQUEST['rangeend'] == 'currentsituation')
 			$stats = $emajdb->getLogStatGroup($_REQUEST['group'],$_REQUEST['rangestart'],'');
-		} else {
-			$w1 = sprintf($lang['emajlogstatmark'], $_REQUEST['rangeend']);
+		else
 			$stats = $emajdb->getLogStatGroup($_REQUEST['group'],$_REQUEST['rangestart'],$_REQUEST['rangeend']);
-		}
+
 		$summary = $emajdb->getLogStatSummary();
 
 		// Title
 		echo "<hr/>\n";
-		$misc->printTitle(sprintf($lang['emajchangestbl'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($w1)));
+		if ($_REQUEST['rangeend'] == 'currentsituation')
+			$misc->printTitle(sprintf($lang['emajchangestblsince'], htmlspecialchars($_REQUEST['rangestart'])));
+		else
+			$misc->printTitle(sprintf($lang['emajchangestblbetween'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($_REQUEST['rangeend'])));
 
 		// Display summary statistics
 		echo "<table class=\"data\"><tr>\n";
-		echo "<th class=\"data\" colspan=2>{$lang['emajestimates']}</th>\n";
-		echo "</tr><tr>\n";
-		echo "<th class=\"data\">{$lang['emajnbtbl']}</th>";
+		echo "<th class=\"data\"></th>";
+		echo "<th class=\"data\">{$lang['emajtblingroup']}</th>";
+		echo "<th class=\"data\">{$lang['emajtblwithchanges']}</th>";
 		echo "<th class=\"data\">{$lang['emajnbchanges']}</th>";
 		echo "</tr><tr class=\"data1\">\n";
+		echo "<th class=\"data\" style=\"font-size: larger;\">{$lang['emajestimates']}</td>\n";
+		echo "<td class=\"center\">{$groupStat->fields['nb_tbl_in_group']}</td>";
 		echo "<td class=\"center\">{$summary->fields['nb_tables']}</td>";
 		echo "<td class=\"center\">{$summary->fields['sum_rows']}</td>";
 		echo "</tr></table>\n";
@@ -1320,33 +1328,35 @@
 	}
 
 	/**
-	 * This function is called by the log_stat_group() function.
+	 * This function is called by the changes_stat_group() function.
 	 * It generates the page section corresponding to the statistics output
 	 */
-	function disp_detailed_log_stat_section() {
+	function disp_detailed_log_stat_section($groupStat) {
 		global $misc, $lang, $emajdb;
 
 		if (!ini_get('safe_mode')) set_time_limit(0);		// Prevent timeouts on large stats (non-safe mode only)
 
 		// Get statistics from E-Maj
-		if ($_REQUEST['rangeend']=='currentsituation') {
-			$w1 = $lang['emajlogstatcurrentsituation'];
+		if ($_REQUEST['rangeend']=='currentsituation')
 			$stats = $emajdb->getDetailedLogStatGroup($_REQUEST['group'],$_REQUEST['rangestart'],'');
-		} else {
-			$w1 = sprintf($lang['emajlogstatmark'], $_REQUEST['rangeend']);
+		else
 			$stats = $emajdb->getDetailedLogStatGroup($_REQUEST['group'],$_REQUEST['rangestart'],$_REQUEST['rangeend']);
-		}
+
 		$summary = $emajdb->getDetailedLogStatSummary();
 		$roles = $emajdb->getDetailedLogStatRoles();
 		$rolesList = implode(', ', $roles);
 
 		// Title
 		echo "<hr/>\n";
-		$misc->printTitle(sprintf($lang['emajchangestbl'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($w1)));
+		if ($_REQUEST['rangeend'] == 'currentsituation')
+			$misc->printTitle(sprintf($lang['emajchangestblsince'], htmlspecialchars($_REQUEST['rangestart'])));
+		else
+			$misc->printTitle(sprintf($lang['emajchangestblbetween'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($_REQUEST['rangeend'])));
 
 		// Display summary statistics
 		echo "<table class=\"data\"><tr>\n";
-		echo "<th class=\"data\">{$lang['emajnbtbl']}</th>";
+		echo "<th class=\"data\">{$lang['emajtblingroup']}</th>";
+		echo "<th class=\"data\">{$lang['emajtblwithchanges']}</th>";
 		echo "<th class=\"data\">{$lang['emajnbchanges']}</th>";
 		echo "<th class=\"data\">{$lang['emajnbinsert']}</th>";
 		echo "<th class=\"data\">{$lang['emajnbupdate']}</th>";
@@ -1355,6 +1365,7 @@
 		echo "<th class=\"data\">{$lang['emajnbrole']}</th>";
 		echo "<th class=\"data\">{$lang['strroles']}</th>";
 		echo "</tr><tr class=\"data1\">\n";
+		echo "<td class=\"center\">{$groupStat->fields['nb_tbl_in_group']}</td>";
 		echo "<td class=\"center\">{$summary->fields['nb_tables']}</td>";
 		echo "<td class=\"center\">{$summary->fields['sum_rows']}</td>";
 		echo "<td class=\"center\">{$summary->fields['nb_ins']}</td>";
@@ -4406,6 +4417,9 @@
 		case 'call_sqledit':
 			call_sqledit();
 			break;
+		case 'changes_stat_group':
+			changes_stat_group();
+			break;
 		case 'comment_group':
 			comment_group();
 			break;
@@ -4474,9 +4488,6 @@
 			break;
 		case 'import_groups_ok':
 			import_groups_ok();
-			break;
-		case 'log_stat_group':
-			log_stat_group();
 			break;
 		case 'protect_group':
 			protect_group();

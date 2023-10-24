@@ -300,7 +300,7 @@
 	$lang['emajrlbkop'] = 'Rollbacks E-Maj';
 	$lang['emajenvironment'] = 'Environnement E-Maj';
 	$lang['emajenvir'] = 'E-Maj';
-	$lang['emajlogstat'] = 'Statistiques log';
+	$lang['emajchangesstat'] = 'Statistiques / Mises à jour';
 
 	// Common help messages
 	$lang['emajmarknamehelp'] = 'Le nom de la marque doit être unique pour le groupe. Un caractère % représente l\'heure courante (format hh.mn.ss.ms).';
@@ -549,9 +549,10 @@
 	$lang['emajcurrentsituation'] = 'Situation courante';
 	$lang['emajdetailedstat'] = 'Stats détaillées';
 	$lang['emajdetailedlogstatwarning'] = 'Le parcours des tables de log nécessaire à l\'obtention des statistiques détaillées peut être long. Bien que moins détaillée et moins précise, l\'estimation du nombre de mises à jour est plus rapide car elle n\'utilise que les valeurs des séquences de log enregistrées à chaque marque.';
-	$lang['emajlogstatcurrentsituation'] = 'la situation courante';
-	$lang['emajlogstatmark'] = 'la marque "%s"';
-	$lang['emajchangestbl'] = 'Mises à jour de table entre la marque "%s" et %s';
+	$lang['emajchangestblbetween'] = 'Mises à jour de table entre les marques "%s" et "%s"';
+	$lang['emajchangestblsince'] = 'Mises à jour de table depuis la marque "%s"';
+	$lang['emajtblingroup'] = 'Tables dans le groupe';
+	$lang['emajtblwithchanges'] = 'Tables mises à jour';
 	$lang['emajstatverb'] = 'Verbe SQL';
 	$lang['emajnbinsert'] = 'INSERT';
 	$lang['emajnbupdate'] = 'UPDATE';

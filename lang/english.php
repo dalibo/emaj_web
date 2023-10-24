@@ -300,7 +300,7 @@
 	$lang['emajrlbkop'] = 'E-Maj Rollbacks';
 	$lang['emajenvironment'] = 'E-Maj environment';
 	$lang['emajenvir'] = 'E-Maj';
-	$lang['emajlogstat'] = 'Log statistics';
+	$lang['emajchangesstat'] = 'Changes statistics';
 
 	// Common help messages
 	$lang['emajmarknamehelp'] = 'The mark name must be unique within the group. A % character represents the current time (format hh.mn.ss.ms).';
@@ -549,9 +549,10 @@
 	$lang['emajcurrentsituation'] = 'Current state';
 	$lang['emajdetailedstat'] = 'Detailed stats';
 	$lang['emajdetailedlogstatwarning'] = 'Scanning the log tables needed to get detailed statistics may take a long time. Although less detailed and precise, the changes number estimate is quicker because it only uses the log sequence values recorded at each mark.';
-	$lang['emajlogstatcurrentsituation'] = 'the current state';
-	$lang['emajlogstatmark'] = 'the mark "%s"';
-	$lang['emajchangestbl'] = 'Table changes between the mark "%s" and %s';
+	$lang['emajchangestblbetween'] = 'Table changes between marks "%s" and "%s"';
+	$lang['emajchangestblsince'] = 'Table changes since mark "%s"';
+	$lang['emajtblingroup'] = 'Tables in group';
+	$lang['emajtblwithchanges'] = 'Tables with changes';
 	$lang['emajstatverb'] = 'SQL verb';
 	$lang['emajnbinsert'] = 'INSERT';
 	$lang['emajnbupdate'] = 'UPDATE';

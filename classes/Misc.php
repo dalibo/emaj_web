@@ -994,12 +994,12 @@
 							),
 							'icon' => 'Property'
 						),
-						'emajlogstat' => array (
-							'title' => $lang['emajlogstat'],
+						'emajchangesstat' => array (
+							'title' => $lang['emajchangesstat'],
 							'url' => 'emajgroups.php',
 							'urlvars' => array(
 								'subject' => 'emajgroups',
-								'action' => 'log_stat_group',
+								'action' => 'changes_stat_group',
 								'group' => $_REQUEST['group']
 							),
 							'icon' => 'EmajStat'

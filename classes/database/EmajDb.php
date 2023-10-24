@@ -2982,6 +2982,40 @@ class EmajDb {
 
 		return $data->selectSet($sql);
 	}
+
+	/**
+	 * Gets the number of tables and sequences that a tables group owned during a marks interval
+	 */
+	function getNbObjectsGroupInPeriod($group,$firstMark,$lastMark) {
+		global $data;
+
+		$data->clean($group);
+		$data->clean($firstMark);
+		$data->clean($lastMark);
+
+		if ($this->getNumEmajVersion() >= 20203) {			// version >= 2.2.3
+			if ($lastMark == 'currentsituation') {
+				$sql = "SELECT count(DISTINCT(rel_schema, rel_tblseq)) FILTER (WHERE rel_kind = 'r') AS nb_tbl_in_group,
+							   count(DISTINCT(rel_schema, rel_tblseq)) FILTER (WHERE rel_kind = 'S') AS nb_seq_in_group
+						FROM emaj.emaj_relation
+							 JOIN emaj.emaj_mark strtmark ON (strtmark.mark_group = rel_group AND strtmark.mark_name = '{$firstMark}')
+						WHERE rel_group = '{$group}'
+						  AND rel_time_range @> strtmark.mark_time_id";
+			} else {
+				$sql = "SELECT count(DISTINCT(rel_schema, rel_tblseq)) FILTER (WHERE rel_kind = 'r') AS nb_tbl_in_group,
+							   count(DISTINCT(rel_schema, rel_tblseq)) FILTER (WHERE rel_kind = 'S') AS nb_seq_in_group
+						FROM emaj.emaj_relation
+							 JOIN emaj.emaj_mark strtmark ON (strtmark.mark_group = rel_group AND strtmark.mark_name = '{$firstMark}')
+							 JOIN emaj.emaj_mark endmark ON (endmark.mark_group = rel_group AND endmark.mark_name = '{$lastMark}')
+						WHERE rel_group = '{$group}'
+						  AND rel_time_range && int8range(strtmark.mark_time_id, endmark.mark_time_id,'[)')";
+			}
+		} else {
+			$sql = "SELECT '' AS nb_tbl_in_group, '' AS nb_seq_in_group";
+		}
+
+		return $data->selectSet($sql);
+	}
 	/**
 	 * Gets the global log statistics for a group between 2 marks
 	 * It also delivers the sql queries to look at the corresponding log rows
@@ -3197,11 +3231,11 @@ class EmajDb {
 		global $data;
 
 		$sql = "SELECT coalesce(sum(stat_rows),0) AS sum_rows, count(distinct stat_table) AS nb_tables,
-				coalesce((SELECT sum(stat_rows) FROM tmp_stat WHERE stat_verb = 'INSERT'),0) as nb_ins,
-				coalesce((SELECT sum(stat_rows) FROM tmp_stat WHERE stat_verb = 'UPDATE'),0) as nb_upd,
-				coalesce((SELECT sum(stat_rows) FROM tmp_stat WHERE stat_verb = 'DELETE'),0) as nb_del,
-				coalesce((SELECT sum(stat_rows) FROM tmp_stat WHERE stat_verb = 'TRUNCATE'),0) as nb_tru,
-				coalesce((SELECT count(distinct stat_role) FROM tmp_stat),0) as nb_roles
+					   coalesce((SELECT sum(stat_rows) FROM tmp_stat WHERE stat_verb = 'INSERT'),0) as nb_ins,
+					   coalesce((SELECT sum(stat_rows) FROM tmp_stat WHERE stat_verb = 'UPDATE'),0) as nb_upd,
+					   coalesce((SELECT sum(stat_rows) FROM tmp_stat WHERE stat_verb = 'DELETE'),0) as nb_del,
+					   coalesce((SELECT sum(stat_rows) FROM tmp_stat WHERE stat_verb = 'TRUNCATE'),0) as nb_tru,
+					   coalesce((SELECT count(distinct stat_role) FROM tmp_stat),0) as nb_roles
 				FROM tmp_stat";
 
 		return $data->selectSet($sql);

@@ -547,12 +547,20 @@
 	// Statistics
 	$lang['emajchangesgroup'] = 'Recorded changes for the tables group "%s"';
 	$lang['emajcurrentsituation'] = 'Current state';
-	$lang['emajdetailedstat'] = 'Detailed stats';
+	$lang['emajestimatetables'] = 'Estimate tables';
+	$lang['emajestimatesequences'] = 'Estimate sequences';
+	$lang['emajdetailtables'] = 'Detail tables';
 	$lang['emajdetailedlogstatwarning'] = 'Scanning the log tables needed to get detailed statistics may take a long time. Although less detailed and precise, the changes number estimate is quicker because it only uses the log sequence values recorded at each mark.';
 	$lang['emajchangestblbetween'] = 'Table changes between marks "%s" and "%s"';
 	$lang['emajchangestblsince'] = 'Table changes since mark "%s"';
 	$lang['emajtblingroup'] = 'Tables in group';
 	$lang['emajtblwithchanges'] = 'Tables with changes';
+	$lang['emajchangesseqbetween'] = 'Sequence changes between marks "%s" and "%s"';
+	$lang['emajchangesseqsince'] = 'Sequence changes since mark "%s"';
+	$lang['emajseqingroup'] = 'Sequences in group';
+	$lang['emajseqwithchanges'] = 'Sequences with changes';
+	$lang['emajstatincrements'] = 'Increments';
+	$lang['emajstatstructurechanged'] = 'Structure changed ?';
 	$lang['emajstatverb'] = 'SQL verb';
 	$lang['emajnbinsert'] = 'INSERT';
 	$lang['emajnbupdate'] = 'UPDATE';

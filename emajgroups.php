@@ -1039,17 +1039,11 @@
 
 		$misc->printTitle(sprintf($lang['emajchangesgroup'], htmlspecialchars($_REQUEST['group'])));
 
-		// display the stat form
+		// display the form
 
-		$globalStat = false; $detailedStat = false;
-		if (isset($_REQUEST['globalstatgroup'])) {
-			$globalStat = true;
-			$urlExt = 'globalstatgroup='.urlencode($_REQUEST['globalstatgroup']);
-		}
-		if (isset($_REQUEST['detailedstatgroup'])) {
-			$detailedStat = true;
-			$urlExt = 'detailedstatgroup='.urlencode($_REQUEST['detailedstatgroup']);
-		}
+		$estimateTables = (isset($_REQUEST['estimatetables'])) ? true : false;
+		$estimateSequences = (isset($_REQUEST['estimatesequences'])) ? true : false;
+		$detailTables = (isset($_REQUEST['detailtables'])) ? true : false;
 
 		// get marks from database
 		$marks = $emajdb->getMarks($_REQUEST['group']);
@@ -1092,11 +1086,16 @@
 			echo "</div>\n";
 
 			// Buttons
-			echo "\t<p><input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
-			echo "\t\t<input type=\"submit\" name=\"globalstatgroup\" value=\"{$lang['emajestimate']}\" />&nbsp;&nbsp;&nbsp;\n";
-			echo "\t\t<input type=\"submit\" name=\"detailedstatgroup\" value=\"{$lang['emajdetailedstat']}\" />\n";
-			echo "\t\t<img src=\"{$misc->icon('Warning')}\" alt=\"warning\" title=\"{$lang['emajdetailedlogstatwarning']}\" style=\"vertical-align:middle; height:22px;\"/>";
-			echo "</p></form>\n";
+			echo "<div class=\"actionslist\">\n";
+			echo "\t<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
+			echo "\t<input type=\"submit\" name=\"estimatetables\" value=\"{$lang['emajestimatetables']}\" />\n";
+			if ($emajdb->getNumEmajVersion() >= 40301) {			// version >= 4.3.1
+				echo "\t<input type=\"submit\" name=\"estimatesequences\" value=\"{$lang['emajestimatesequences']}\" />\n";
+			}
+			echo "\t<input type=\"submit\" name=\"detailtables\" value=\"{$lang['emajdetailtables']}\" />\n";
+			echo "\t<img src=\"{$misc->icon('Warning')}\" alt=\"warning\" title=\"{$lang['emajdetailedlogstatwarning']}\" style=\"vertical-align:middle; height:22px;\"/>";
+			echo "</div>\n";
+			echo "</form>\n";
 
 			// JQuery scripts
 			echo "<script>\n";
@@ -1160,27 +1159,32 @@
 			echo "</script>\n";
 
 			// If any stat is requested, get common data
-			if ($globalStat || $detailedStat) {
+			if ($estimateTables || $estimateSequences || $detailTables) {
 				$groupStat = $emajdb->getNbObjectsGroupInPeriod($_REQUEST['group'],$_REQUEST['rangestart'],$_REQUEST['rangeend']);
 			}
 
-			// If logs global stats are requested, display them
-			if ($globalStat) {
-				disp_global_log_stat_section($groupStat);
+			// If tables estimates stats are requested, display them
+			if ($estimateTables) {
+				disp_tables_estimates_stat_section($groupStat);
 			}
 
-			// If logs detailed stats are requested, display them
-			if ($detailedStat) {
-				disp_detailed_log_stat_section($groupStat);
+			// If Sequences estimates stats are requested, display them
+			if ($estimateSequences) {
+				disp_sequences_estimates_stat_section($groupStat);
+			}
+
+			// If tables detailed stats are requested, display them
+			if ($detailTables) {
+				disp_tables_details_stat_section($groupStat);
 			}
 		}
 	}
 
 	/**
 	 * This function is called by the changes_stat_group() function.
-	 * It generates the page section corresponding to the logs global statistics output
+	 * It generates the page section corresponding to the tables estimates statistics output
 	 */
-	function disp_global_log_stat_section($groupStat) {
+	function disp_tables_estimates_stat_section($groupStat) {
 		global $misc, $lang, $emajdb;
 
 		// Get statistics from E-Maj
@@ -1329,9 +1333,106 @@
 
 	/**
 	 * This function is called by the changes_stat_group() function.
-	 * It generates the page section corresponding to the statistics output
+	 * It generates the page section corresponding to the sequences estimates statistics output
 	 */
-	function disp_detailed_log_stat_section($groupStat) {
+	function disp_sequences_estimates_stat_section($groupStat) {
+		global $misc, $lang, $emajdb;
+
+		// Get statistics from E-Maj
+		if ($_REQUEST['rangeend'] == 'currentsituation')
+			$stats = $emajdb->getSeqStatGroup($_REQUEST['group'],$_REQUEST['rangestart'],'');
+		else
+			$stats = $emajdb->getSeqStatGroup($_REQUEST['group'],$_REQUEST['rangestart'],$_REQUEST['rangeend']);
+
+		$summary = $emajdb->getSeqStatSummary();
+
+		// Title
+		echo "<hr/>\n";
+		if ($_REQUEST['rangeend'] == 'currentsituation')
+			$misc->printTitle(sprintf($lang['emajchangesseqsince'], htmlspecialchars($_REQUEST['rangestart'])));
+		else
+			$misc->printTitle(sprintf($lang['emajchangesseqbetween'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($_REQUEST['rangeend'])));
+
+		// Display summary statistics
+		echo "<table class=\"data\"><tr>\n";
+		echo "<th class=\"data\"></th>";
+		echo "<th class=\"data\">{$lang['emajseqingroup']}</th>";
+		echo "<th class=\"data\">{$lang['emajseqwithchanges']}</th>";
+		echo "</tr><tr class=\"data1\">\n";
+		echo "<th class=\"data\" style=\"font-size: larger;\">{$lang['emajestimates']}</td>\n";
+		echo "<td class=\"center\">{$groupStat->fields['nb_seq_in_group']}</td>";
+		echo "<td class=\"center\">{$summary->fields['nb_sequences']}</td>";
+		echo "</tr></table>\n";
+
+		echo "<hr/>\n";
+
+		if ($summary->fields['nb_sequences'] > 0) {
+
+			// Display per sequence statistics
+			$urlvars = $misc->getRequestVars();
+
+			$columns = array(
+				'schema' => array(
+					'title' => $lang['strschema'],
+					'field' => field('stat_schema'),
+					'url'   => "redirect.php?subject=schema&amp;{$misc->href}&amp;",
+					'vars'  => array('schema' => 'stat_schema'),
+				),
+				'sequence' => array(
+					'title' => $lang['strsequence'],
+					'field' => field('stat_sequence'),
+					'url'	=> "redirect.php?subject=sequence&amp;{$misc->href}&amp;",
+					'vars'  => array('schema' => 'stat_schema', 'sequence' => 'stat_sequence'),
+				),
+				'start_mark' => array(
+					'title' => $lang['emajstartmark'],
+					'field' => field('stat_first_mark'),
+				),
+				'start_datetime' => array(
+					'title' => $lang['emajstartdatetime'],
+					'field' => field('stat_first_mark_datetime'),
+					'type' => 'spanned',
+					'params'=> array(
+						'dateformat' => $lang['strrecenttimestampformat'],
+						'class' => 'tooltip left-aligned-tooltip',
+						),
+				),
+				'end_mark' => array(
+					'title' => $lang['emajendmark'],
+					'field' => field('stat_last_mark'),
+				),
+				'end_datetime' => array(
+					'title' => $lang['emajenddatetime'],
+					'field' => field('stat_last_mark_datetime'),
+					'type' => 'spanned',
+					'params'=> array(
+						'dateformat' => $lang['strrecenttimestampformat'],
+						'class' => 'tooltip left-aligned-tooltip',
+						),
+				),
+				'nbincrement' => array(
+					'title' => $lang['emajstatincrements'],
+					'field' => field('stat_increments'),
+					'type'  => 'numeric'
+				),
+				'hasstructurechanged' => array(
+					'title' => $lang['emajstatstructurechanged'],
+					'field' => field('stat_has_structure_changed'),
+					'type'	=> 'callback',
+					'params'=> array('function' => 'renderBooleanIcon','align' => 'center')
+				),
+			);
+			$actions = '';
+
+			$misc->printTable($stats, $columns, $action, 'seqStats', null, null, array('sorter' => true, 'filter' => true));
+		}
+	}
+
+	/**
+	 * This function is called by the changes_stat_group() function.
+	 * It generates the page section corresponding to the detailed tables statistics output
+	 */
+	function disp_tables_details_stat_section($groupStat) {
 		global $misc, $lang, $emajdb;
 
 		if (!ini_get('safe_mode')) set_time_limit(0);		// Prevent timeouts on large stats (non-safe mode only)

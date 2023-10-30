@@ -3016,6 +3016,7 @@ class EmajDb {
 
 		return $data->selectSet($sql);
 	}
+
 	/**
 	 * Gets the global log statistics for a group between 2 marks
 	 * It also delivers the sql queries to look at the corresponding log rows
@@ -3119,6 +3120,47 @@ class EmajDb {
 		global $data;
 
 		$sql = "SELECT coalesce(sum(stat_rows),0) AS sum_rows, count(distinct stat_schema || '.' || stat_table) AS nb_tables
+				FROM tmp_stat";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Gets the sequences statistics for a group between 2 marks
+	 * It creates a temp table to easily compute aggregates in other functions called in the same conversation
+	 */
+	function getSeqStatGroup($group,$firstMark,$lastMark) {
+		global $data;
+
+		$data->clean($group);
+		$data->clean($firstMark);
+		$data->clean($lastMark);
+
+		$sql = "CREATE TEMP TABLE tmp_stat AS
+				SELECT stat_group, stat_schema, stat_sequence,
+					   stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
+					   stat_increments, stat_has_structure_changed
+					FROM emaj.emaj_sequence_stat_group('{$group}','{$firstMark}','{$lastMark}')
+					WHERE stat_increments <> 0 OR stat_has_structure_changed";
+
+		$data->execute($sql);
+
+		$sql = "SELECT stat_group, stat_schema, stat_sequence,
+					   stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
+					   stat_increments, stat_has_structure_changed
+					FROM tmp_stat
+					ORDER BY stat_group, stat_schema, stat_sequence, stat_first_mark_datetime";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Gets some aggregates from the temporary tmp_stat table created by the just previously called getSeqStatGroup() function
+	 */
+	function getSeqStatSummary() {
+		global $data;
+
+		$sql = "SELECT count(DISTINCT stat_schema || '.' || stat_sequence) AS nb_sequences
 				FROM tmp_stat";
 
 		return $data->selectSet($sql);

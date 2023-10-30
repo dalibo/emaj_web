@@ -547,12 +547,20 @@
 	// Statistics
 	$lang['emajchangesgroup'] = 'Mises à jour enregistrées pour le groupe de tables "%s"';
 	$lang['emajcurrentsituation'] = 'Situation courante';
-	$lang['emajdetailedstat'] = 'Stats détaillées';
+	$lang['emajestimatetables'] = 'Estimer tables';
+	$lang['emajestimatesequences'] = 'Estimer séquences';
+	$lang['emajdetailtables'] = 'Détailler tables';
 	$lang['emajdetailedlogstatwarning'] = 'Le parcours des tables de log nécessaire à l\'obtention des statistiques détaillées peut être long. Bien que moins détaillée et moins précise, l\'estimation du nombre de mises à jour est plus rapide car elle n\'utilise que les valeurs des séquences de log enregistrées à chaque marque.';
 	$lang['emajchangestblbetween'] = 'Mises à jour de table entre les marques "%s" et "%s"';
 	$lang['emajchangestblsince'] = 'Mises à jour de table depuis la marque "%s"';
 	$lang['emajtblingroup'] = 'Tables dans le groupe';
 	$lang['emajtblwithchanges'] = 'Tables mises à jour';
+	$lang['emajchangesseqbetween'] = 'Mises à jour de séquence entre les marques "%s" et "%s"';
+	$lang['emajchangesseqsince'] = 'Mises à jour de séquence depuis la marque "%s"';
+	$lang['emajseqingroup'] = 'Séquences dans le groupe';
+	$lang['emajseqwithchanges'] = 'Séquences mises à jour';
+	$lang['emajstatincrements'] = 'Incréments';
+	$lang['emajstatstructurechanged'] = 'Changement structure ?';
 	$lang['emajstatverb'] = 'Verbe SQL';
 	$lang['emajnbinsert'] = 'INSERT';
 	$lang['emajnbupdate'] = 'UPDATE';

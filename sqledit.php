@@ -156,9 +156,9 @@
 
 		echo "</div>\n";
 
-		echo "<div class=\"actionslist\" style=\"text-align: center;\">\n";
-		echo "\t<input type=\"reset\" value=\"{$lang['strreset']}\" />\n";
+		echo "<div class=\"actionslist\">\n";
 		echo "\t<input type=\"submit\" value=\"{$lang['emajsqlgenerate']}\" />\n";
+		echo "\t<input type=\"reset\" value=\"{$lang['strreset']}\" />\n";
 		echo "</div>\n";
 
 		echo "</form>\n";
@@ -239,8 +239,8 @@
 		echo "\t<p><label for=\"paginate\"><input type=\"checkbox\" id=\"paginate\" name=\"paginate\"", (isset($_REQUEST['paginate']) ? ' checked="checked"' : ''), " />&nbsp;{$lang['strpaginate']}</label></p>\n";
 
 		echo "  <div class=\"actionslist\">\n";
-		echo "\t<input type=\"reset\" value=\"{$lang['strreset']}\" />\n";
 		echo "\t<input type=\"submit\" value=\"{$lang['strexecute']}\" />\n";
+		echo "\t<input type=\"reset\" value=\"{$lang['strreset']}\" />\n";
 		echo "\t</form>\n";
 		echo "  </div>\n";
 		echo "</div>\n";

@@ -1226,7 +1226,7 @@
 				'schema' => array(
 					'title' => $lang['strschema'],
 					'field' => field('stat_schema'),
-					'url'   => "redirect.php?subject=schema&amp;{$misc->href}&amp;",
+					'url'   => "redirect.php?subject=database&amp;{$misc->href}&amp;",
 					'vars'  => array('schema' => 'stat_schema'),
 				),
 				'table' => array(
@@ -1375,7 +1375,7 @@
 				'schema' => array(
 					'title' => $lang['strschema'],
 					'field' => field('stat_schema'),
-					'url'   => "redirect.php?subject=schema&amp;{$misc->href}&amp;",
+					'url'   => "redirect.php?subject=database&amp;{$misc->href}&amp;",
 					'vars'  => array('schema' => 'stat_schema'),
 				),
 				'sequence' => array(
@@ -1487,7 +1487,7 @@
 				'schema' => array(
 					'title' => $lang['strschema'],
 					'field' => field('stat_schema'),
-					'url'   => "redirect.php?subject=schema&amp;{$misc->href}&amp;",
+					'url'   => "redirect.php?subject=database&amp;{$misc->href}&amp;",
 					'vars'  => array('schema' => 'stat_schema'),
 				),
 				'table' => array(

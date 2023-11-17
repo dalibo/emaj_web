@@ -958,15 +958,24 @@ class EmajDb {
 							 WHEN NOT mark_is_deleted AND mark_is_rlbk_protected THEN 'ACTIVE-PROTECTED'
 							 ELSE 'ACTIVE' END as mark_state,
 						coalesce(mark_log_rows_before_next,
-						(SELECT SUM(stat_rows)
-							FROM emaj.emaj_log_stat_group(emaj_mark.mark_group,emaj_mark.mark_name,NULL)),0)
-						 AS mark_logrows
+							(SELECT SUM(stat_rows)
+								FROM emaj.emaj_log_stat_group(emaj_mark.mark_group,emaj_mark.mark_name,NULL)),0)
+							AS mark_logrows,
+						(mark_is_deleted OR
+						 count(*) FILTER (where mark_is_rlbk_protected)
+									OVER (ORDER BY mark_time_id DESC
+										  ROWS BETWEEN UNBOUNDED PRECEDING AND 0 FOLLOWING EXCLUDE CURRENT ROW) > 0) AS no_rollback_action,
+						(mark_is_deleted OR mark_is_rlbk_protected) AS no_protect_action,
+						NOT mark_is_rlbk_protected AS no_unprotect_action,
+						first_value(mark_time_id) OVER (ORDER BY mark_time_id) = mark_time_id AS no_first_mark_action
 					FROM emaj.emaj_mark, emaj.emaj_time_stamp
 					WHERE mark_group = '{$group}'
 					  AND time_id = mark_time_id
+					GROUP BY 1,2,3,4,5
 					)
 				SELECT mark_group, mark_name, mark_datetime, mark_comment, mark_state, mark_logrows,
-					   sum(mark_logrows) OVER (ORDER BY mark_time_id DESC) AS mark_cumlogrows
+					   sum(mark_logrows) OVER (ORDER BY mark_time_id DESC) AS mark_cumlogrows,
+					   no_rollback_action, no_protect_action, no_unprotect_action, no_first_mark_action
 				FROM mark_1
 				ORDER BY mark_time_id DESC";
 

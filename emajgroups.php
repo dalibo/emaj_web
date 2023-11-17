@@ -3,9 +3,6 @@
 	 * Manage the E-Maj tables groups
 	 */
 
-	global $previous_cumlogrows;								// used to compute accumulated updates in marks'table
-	global $protected_mark_flag;								// used to hide the rollback button for marks prior a protected mark 
-
 	// Include application functions
 	include_once('./libraries/lib.inc.php');
 
@@ -61,28 +58,22 @@
 
 	// Function to dynamicaly modify actions list for each mark
 	function markPre(&$rowdata, $actions) {
-		global $emajdb, $protected_mark_flag;
 
-		// disable the rollback button if the mark is deleted
-		if (isset($actions['rollbackgroup']) && $rowdata->fields['mark_state'] == 'DELETED') {
+		// disable the rollback button if the mark is deleted or if a previous mark is protected
+		if (isset($actions['rollbackgroup']) && $rowdata->fields['no_rollback_action'] == 't') {
 			$actions['rollbackgroup']['disable'] = true;
 		}
-		// disable the rollback button if a previous mark is protected
-		if ($protected_mark_flag == 1) {
-			$actions['rollbackgroup']['disable'] = true;
+		// disable the first mark button if the mark is the last displayed
+		if (isset($actions['deletebeforemark']) && $rowdata->fields['no_first_mark_action'] == 't') {
+			$actions['deletebeforemark']['disable'] = true;
 		}
 		// disable the protect button if the mark is already protected
-		if (isset($actions['protectmark']) && $rowdata->fields['mark_state'] != 'ACTIVE') {
+		if (isset($actions['protectmark']) && $rowdata->fields['no_protect_action'] == 't') {
 			$actions['protectmark']['disable'] = true;
 		}
 		// disable the unprotect button if the mark is not protected
-		if (isset($actions['unprotectmark']) && $rowdata->fields['mark_state'] != 'ACTIVE-PROTECTED') {
+		if (isset($actions['unprotectmark']) && $rowdata->fields['no_unprotect_action'] == 't') {
 			$actions['unprotectmark']['disable'] = true;
-		}
-		// if the mark is protected, set the flag to disable the rollback button for next marks
-		// (this is not done in SQL because windowing functions are not available with pg version 8.3-)
-		if ($rowdata->fields['mark_state']== 'ACTIVE-PROTECTED') {
-			$protected_mark_flag = 1;
 		}
 		return $actions;
 	}
@@ -594,7 +585,7 @@
 	 * Displays all detailed information about one group, including marks
 	 */
 	function show_group($msg = '', $errMsg = '') {
-		global $misc, $lang, $emajdb, $previous_cumlogrows;
+		global $misc, $lang, $emajdb;
 
 		$misc->printHeader('emaj', 'emajgroup', 'emajgroupproperties');
 
@@ -914,6 +905,36 @@
 				),
 			));
 		}
+		if ($emajdb->isEmaj_Adm() && $groupState == 'LOGGING' && $groupType != "AUDIT_ONLY") {
+			$actions = array_merge($actions, array(
+				'protectmark' => array(
+					'content' => $lang['emajprotect'],
+					'icon' => 'PadLockOn',
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'protect_mark_group',
+								'back' => 'detail',
+								'group' => field('mark_group'),
+								'mark' => field('mark_name'),
+							))))
+				),
+				'unprotectmark' => array(
+					'content' => $lang['emajunprotect'],
+					'icon' => 'PadLockOff',
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajgroups.php',
+							'urlvars' => array_merge($urlvars, array (
+								'action' => 'unprotect_mark_group',
+								'back' => 'detail',
+								'group' => field('mark_group'),
+								'mark' => field('mark_name'),
+							))))
+				),
+			));
+		};
 		if ($emajdb->isEmaj_Adm()) {
 			$actions = array_merge($actions, array(
 				'renamemark' => array(
@@ -966,36 +987,6 @@
 				),
 			));
 		}
-		if ($emajdb->isEmaj_Adm() && $groupState == 'LOGGING' && $groupType != "AUDIT_ONLY") {
-			$actions = array_merge($actions, array(
-				'protectmark' => array(
-					'content' => $lang['emajprotect'],
-					'icon' => 'PadLockOn',
-					'attr' => array (
-						'href' => array (
-							'url' => 'emajgroups.php',
-							'urlvars' => array_merge($urlvars, array (
-								'action' => 'protect_mark_group',
-								'back' => 'detail',
-								'group' => field('mark_group'),
-								'mark' => field('mark_name'),
-							))))
-				),
-				'unprotectmark' => array(
-					'content' => $lang['emajunprotect'],
-					'icon' => 'PadLockOff',
-					'attr' => array (
-						'href' => array (
-							'url' => 'emajgroups.php',
-							'urlvars' => array_merge($urlvars, array (
-								'action' => 'unprotect_mark_group',
-								'back' => 'detail',
-								'group' => field('mark_group'),
-								'mark' => field('mark_name'),
-							))))
-				),
-			));
-		};
 		if ($emajdb->isEmaj_Adm()) {
 			$actions = array_merge($actions, array(
 				'commentmark' => array(
@@ -1014,19 +1005,8 @@
 			));
 		};
 
-		// reset the flag for protected marks that will be used in the markPre function
-		$protected_mark_flag = 0;
-
 		// display the marks list
 		$misc->printTable($marks, $columns, $actions, 'marks', $lang['emajnomark'], 'markPre', array('sorter' => false, 'filter' => true));
-
-		// JQuery to remove the last deleteBeforeMark button as it is meaningless on the first set mark
-		echo "<script>\n";
-		echo "  $(\"table.data tr:last td.textbutton a:contains('{$lang['emajfirstmark']}')\").remove()\n";
-		echo "  $(\"table.data tr:last td.iconbutton a img[alt='{$lang['emajfirstmark']}']\").parent('a').remove()\n";
-		echo "  $(\"table.data tr:last td:empty\").removeClass()\n";
-		echo "  $(\"table.data tr:last td:empty\").addClass('emptybutton')\n";
-		echo "</script>\n";
 	}
 
 	/**

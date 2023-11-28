@@ -1619,8 +1619,7 @@
 								}
 								break;
 							default:
-								//   add a 'comment' class to the cell if the column's type is 'comment'
-								$class = (isset($column['type']) && $column['type'] == 'comment') ? ' class="comment"' : '';
+								$class = (isset($column['class'])) ? " class=\"{$column['class']}\"" : '';
 								echo "<td{$class}>";
 								$val = value($column['field'], $tabledata->fields);
 								if (!is_null($val)) {

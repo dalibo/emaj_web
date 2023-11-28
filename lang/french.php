@@ -254,6 +254,7 @@
 	$lang['emajgroup'] = 'Groupe';
 	$lang['emajgroups'] = 'Groupes';
 	$lang['emajmark'] = 'Marque';
+	$lang['emajlogsession'] = 'Session de log';
 	$lang['emajmarksetat'] = 'Posée à';
 	$lang['emajgrouptype'] = 'Type de groupe';
 	$lang['emajrollback'] = 'Rollback E-Maj';
@@ -533,6 +534,9 @@
 	$lang['emajgroupproperties'] = 'Propriétés du groupe de tables "%s"';
 	$lang['emajcontent'] = 'Contenu';
 	$lang['emajgroupmarks'] = 'Marques du groupe de tables "%s"';
+	$lang['emajlogsessionshelp'] = 'Session de log, représentant l\'intervalle de temps entre le démarrage et l\'arrêt du groupe de tables.';
+	$lang['emajlogsessionstart'] = 'Session de log démarrée à : %s';
+	$lang['emajlogsessionstop'] = ' et arrêtée à : %s';
 	$lang['emajtimestamp'] = 'Date-Heure';
 	$lang['emajnbchanges'] = 'Mises à jour';
 	$lang['emajcumchanges'] = 'Cumul mises à jour';

@@ -169,6 +169,26 @@
 		return "<img src=\"" . $misc->icon($icon) . "\" class=\"cellicon\" />";
 	}
 
+	// Callback function to dynamicaly modify the mark position in log session column content
+	// The value is composed of 3 parts: the position of the mark in its log session and the log session start and stop times
+	function renderLogSession($val) {
+		global $misc, $lang;
+
+		$parts = explode('#', $val);
+		if ($parts[0] == '')
+			$parts[0] = 'Simple';
+		$logSessionInfo = sprintf($lang['emajlogsessionstart'], $parts[1]);
+		if ($parts[2] == '') {
+			$color = 'Green';
+		} else {
+			$color = 'Grey';
+			$logSessionInfo .= "\n" . sprintf($lang['emajlogsessionstop'], $parts[2]);
+		}
+		$icon = $color . $parts[0] . 'Mark';
+		$div = "<div title=\"$logSessionInfo\"><img src=\"{$misc->icon($icon)}\" alt=\"$icon\" title=\"$logSessionInfo\" class=\"fullsizecellicon\" /></div>";
+		return $div;
+	}
+
 	// Callback function to dynamicaly modify the mark state column content
 	// It replaces the database value by an icon
 	function renderMarkState($val) {
@@ -831,7 +851,22 @@
 		echo "<hr/>\n";
 		$misc->printTitle(sprintf($lang['emajgroupmarks'], htmlspecialchars($_REQUEST['group'])));
 
-		$columns = array(
+		$columns = array();
+		if ($emajdb->getNumEmajVersion() >= 40400) {
+			$columns = array_merge($columns, array(
+				'log_session' => array(
+					'title' => '',
+					'info'  => $lang['emajlogsessionshelp'],
+					'field' => field('mark_log_session'),
+					'type'	=> 'callback',
+					'params'=> array('function' => 'renderLogSession'),
+					'class' => 'nopadding center',
+					'filter'=> false,
+			),
+			));
+		}
+
+		$columns = array_merge($columns, array(
 			'mark' => array(
 				'title' => $lang['emajmark'],
 				'field' => field('mark_name'),
@@ -840,7 +875,7 @@
 				'title' => $lang['emajstate'],
 				'field' => field('mark_state'),
 				'type'	=> 'callback',
-				'params'=> array('function' => 'renderMarkState','align' => 'center'),
+				'params'=> array('function' => 'renderMarkState', 'align' => 'center'),
 				'filter'=> false,
 			),
 			'datetime' => array(
@@ -875,7 +910,7 @@
 						'class' => 'tooltip right-aligned-tooltip',
 						),
 			),
-		);
+		));
 
 		$urlvars = $misc->getRequestVars();
 

@@ -202,6 +202,9 @@ tr th.data{
 th.required {
 	text-decoration: underline
 }
+td.nopadding {
+	padding: 0px;
+}
 
 /*
  * Comments
@@ -623,6 +626,10 @@ ul.buttonslist li a {
 img.cellicon {
 	width: 18px;
 	margin: 1px;
+}
+img.fullsizecellicon {
+	height: 23px;
+	margin: 0px;
 }
 .dot {
 	height: 10px;

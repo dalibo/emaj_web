@@ -254,6 +254,7 @@
 	$lang['emajgroup'] = 'Group';
 	$lang['emajgroups'] = 'Groups';
 	$lang['emajmark'] = 'Mark';
+	$lang['emajlogsession'] = 'Log session';
 	$lang['emajmarksetat'] = 'Set at';
 	$lang['emajgrouptype'] = 'Group type';
 	$lang['emajrollback'] = 'E-Maj rollback';
@@ -533,6 +534,9 @@
 	$lang['emajgroupproperties'] = 'Tables group "%s" properties';
 	$lang['emajcontent'] = 'Content';
 	$lang['emajgroupmarks'] = 'Tables group "%s" marks';
+	$lang['emajlogsessionshelp'] = 'Log session, representing the time interval between the tables group start and stop.';
+	$lang['emajlogsessionstart'] = 'Log session started at: %s';
+	$lang['emajlogsessionstop'] = ' and stopped at: %s';
 	$lang['emajtimestamp'] = 'Date/Time';
 	$lang['emajnbchanges'] = 'Row changes';
 	$lang['emajcumchanges'] = 'Cumulative changes';

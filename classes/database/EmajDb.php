@@ -951,33 +951,80 @@ class EmajDb {
 
 		$data->clean($group);
 
-		$sql = "WITH mark_1 as (
-					SELECT mark_time_id, mark_group, mark_name,
-						to_char(time_tx_timestamp,'{$this->tsFormat}') as mark_datetime, mark_comment,
-						CASE WHEN mark_is_deleted THEN 'DELETED'
-							 WHEN NOT mark_is_deleted AND mark_is_rlbk_protected THEN 'ACTIVE-PROTECTED'
-							 ELSE 'ACTIVE' END as mark_state,
-						coalesce(mark_log_rows_before_next,
-							(SELECT SUM(stat_rows)
-								FROM emaj.emaj_log_stat_group(emaj_mark.mark_group,emaj_mark.mark_name,NULL)),0)
-							AS mark_logrows,
-						(mark_is_deleted OR
-						 count(*) FILTER (where mark_is_rlbk_protected)
-									OVER (ORDER BY mark_time_id DESC
-										  ROWS BETWEEN UNBOUNDED PRECEDING AND 0 FOLLOWING EXCLUDE CURRENT ROW) > 0) AS no_rollback_action,
-						(mark_is_deleted OR mark_is_rlbk_protected) AS no_protect_action,
-						NOT mark_is_rlbk_protected AS no_unprotect_action,
-						first_value(mark_time_id) OVER (ORDER BY mark_time_id) = mark_time_id AS no_first_mark_action
-					FROM emaj.emaj_mark, emaj.emaj_time_stamp
-					WHERE mark_group = '{$group}'
-					  AND time_id = mark_time_id
-					GROUP BY 1,2,3,4,5
-					)
-				SELECT mark_group, mark_name, mark_datetime, mark_comment, mark_state, mark_logrows,
-					   sum(mark_logrows) OVER (ORDER BY mark_time_id DESC) AS mark_cumlogrows,
-					   no_rollback_action, no_protect_action, no_unprotect_action, no_first_mark_action
-				FROM mark_1
-				ORDER BY mark_time_id DESC";
+		if ($this->getNumEmajVersion() >= 40400){	// version 4.4+
+//			The mark_log_session column is the concatetion of 3 fields separeted with #: the position of the mark in its log session,
+//				and the log session start and stop times
+			$sql = "WITH mark_1 AS (
+						SELECT mark_time_id, mark_group, mark_name, mark_comment,
+							to_char(m.time_tx_timestamp,'{$this->tsFormat}') AS mark_datetime,
+							CASE WHEN mark_time_id = lower(lses_time_range) THEN 'Start'
+								 WHEN first_value(mark_name) OVER (PARTITION BY lses_group, lses_time_range ORDER BY mark_time_id
+										RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) = mark_name THEN 'First'
+								 ELSE '' END
+							||
+							CASE WHEN mark_time_id = upper(lses_time_range) - 1 THEN 'Stop'
+								 WHEN last_value(mark_name) OVER (PARTITION BY lses_group, lses_time_range order by mark_time_id
+										RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) = mark_name
+									AND NOT upper_inf(lses_time_range) THEN 'Last'
+								 ELSE '' END
+							|| '#' || coalesce(l.time_clock_timestamp::TEXT, '') || '#' || coalesce(u.time_clock_timestamp::TEXT, '')
+								AS mark_log_session,
+							CASE WHEN mark_is_deleted THEN 'DELETED'
+								WHEN NOT mark_is_deleted AND mark_is_rlbk_protected THEN 'ACTIVE-PROTECTED'
+								ELSE 'ACTIVE' END As mark_state,
+							coalesce(mark_log_rows_before_next,
+								(SELECT SUM(stat_rows)
+									FROM emaj.emaj_log_stat_group(emaj_mark.mark_group,emaj_mark.mark_name,NULL)),0)
+									AS mark_logrows,
+							(mark_is_deleted OR
+								count(*) FILTER (where mark_is_rlbk_protected)
+										OVER (ORDER BY mark_time_id DESC
+											ROWS BETWEEN UNBOUNDED PRECEDING AND 0 FOLLOWING EXCLUDE CURRENT ROW) > 0) AS no_rollback_action,
+							(mark_is_deleted OR mark_is_rlbk_protected) AS no_protect_action,
+							NOT mark_is_rlbk_protected AS no_unprotect_action,
+							first_value(mark_time_id) OVER (ORDER BY mark_time_id) = mark_time_id AS no_first_mark_action
+						FROM emaj.emaj_mark
+							JOIN emaj.emaj_time_stamp m ON (time_id = mark_time_id)
+							LEFT OUTER JOIN emaj.emaj_log_session ON (lses_group = mark_group AND lses_time_range @> mark_time_id)
+							LEFT OUTER JOIN emaj.emaj_time_stamp l ON (l.time_id = lower(lses_time_range))
+							LEFT OUTER JOIN emaj.emaj_time_stamp u ON (u.time_id = upper(lses_time_range) - 1)
+						WHERE mark_group = '{$group}'
+						GROUP BY 1,2,3,4,5, lses_time_range, lses_group, l.time_clock_timestamp, u.time_clock_timestamp
+						)
+					SELECT mark_group, mark_name, mark_datetime, mark_comment, mark_state, mark_logrows, mark_log_session,
+						sum(mark_logrows) OVER (ORDER BY mark_time_id DESC) AS mark_cumlogrows,
+						no_rollback_action, no_protect_action, no_unprotect_action, no_first_mark_action
+					FROM mark_1
+					ORDER BY mark_time_id DESC";
+		} else {
+			$sql = "WITH mark_1 AS (
+						SELECT mark_time_id, mark_group, mark_name,
+							to_char(time_tx_timestamp,'{$this->tsFormat}') as mark_datetime, mark_comment,
+							CASE WHEN mark_is_deleted THEN 'DELETED'
+								WHEN NOT mark_is_deleted AND mark_is_rlbk_protected THEN 'ACTIVE-PROTECTED'
+								ELSE 'ACTIVE' END as mark_state,
+							coalesce(mark_log_rows_before_next,
+								(SELECT SUM(stat_rows)
+									FROM emaj.emaj_log_stat_group(emaj_mark.mark_group,emaj_mark.mark_name,NULL)),0)
+								AS mark_logrows,
+							(mark_is_deleted OR
+							count(*) FILTER (where mark_is_rlbk_protected)
+										OVER (ORDER BY mark_time_id DESC
+											ROWS BETWEEN UNBOUNDED PRECEDING AND 0 FOLLOWING EXCLUDE CURRENT ROW) > 0) AS no_rollback_action,
+							(mark_is_deleted OR mark_is_rlbk_protected) AS no_protect_action,
+							NOT mark_is_rlbk_protected AS no_unprotect_action,
+							first_value(mark_time_id) OVER (ORDER BY mark_time_id) = mark_time_id AS no_first_mark_action
+						FROM emaj.emaj_mark, emaj.emaj_time_stamp
+						WHERE mark_group = '{$group}'
+						AND time_id = mark_time_id
+						GROUP BY 1,2,3,4,5
+						)
+					SELECT mark_group, mark_name, mark_datetime, mark_comment, mark_state, mark_logrows,
+						sum(mark_logrows) OVER (ORDER BY mark_time_id DESC) AS mark_cumlogrows,
+						no_rollback_action, no_protect_action, no_unprotect_action, no_first_mark_action
+					FROM mark_1
+					ORDER BY mark_time_id DESC";
+		}
 
 		return $data->selectSet($sql);
 	}

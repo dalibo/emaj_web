@@ -20,6 +20,7 @@
 	// Functions to dynamicaly modify actions list for each table group in logging state to display
 	function loggingGroupPre(&$rowdata, $loggingActions) {
 		global $emajdb;
+
 		// disable the rollback button for audit_only groups
 		$isGroupRollbackable = $emajdb->isGroupRollbackable($rowdata->fields['group_name']);
 		if (isset($loggingActions['rollback_group']) && !$isGroupRollbackable) {
@@ -47,6 +48,7 @@
 	// Functions to dynamicaly modify actions list for each table group in idle state to display
 	function idleGroupPre(&$rowdata, $idleActions) {
 		global $emajdb;
+
 		if ($emajdb->getNumEmajVersion() >= 30000) {
 		// disable the alter_group button when there is no configuration change to apply
 			if (isset($idleActions['alter_group']) && (!$rowdata->fields['has_waiting_changes'])) {
@@ -101,6 +103,7 @@
 	// Callback function to dynamicaly replace the group type from the database by one or two icons
 	function renderGroupType($val) {
 		global $misc, $lang;
+
 		if ($val == 'ROLLBACKABLE') {
 			$icon = $misc->icon('EmajRollbackable');
 			$alt = $lang['emajrollbackable'];
@@ -148,6 +151,7 @@
 	// It replaces the database value by an icon
 	function renderGroupState($val) {
 		global $misc, $lang;
+
 		if ($val == 'IDLE') {
 			$icon = $misc->icon('EmajIdle');
 			$alt = $lang['emajidle'];
@@ -161,6 +165,7 @@
 	// Callback function to dynamicaly translate a boolean column into an icon
 	function renderBooleanIcon($val) {
 		global $misc;
+
 		if ($val == 't') {
 			$icon = 'Checkmark';
 		} else {
@@ -192,14 +197,23 @@
 	// Callback function to dynamicaly modify the mark state column content
 	// It replaces the database value by an icon
 	function renderMarkState($val) {
-		global $misc, $lang;
-		if ($val == 'ACTIVE') {
-			$img = "<img src=\"{$misc->icon('ActiveMark')}\" alt=\"active_mark\" title=\"{$lang['emajactivemark']}\"/>";
-		} elseif ($val == 'DELETED') {
-			$img = "<img src=\"{$misc->icon('DeletedMark')}\" alt=\"deleted_mark\" title=\"{$lang['emajdeletedmark']}\"/>";
-		} elseif ($val == 'ACTIVE-PROTECTED') {
-			$img = "<img src=\"{$misc->icon('ActiveMark')}\" alt=\"active_mark\" title=\"{$lang['emajactivemark']}\"/>";
-			$img .= "<img src=\"{$misc->icon('EmajPadlock')}\" alt=\"protected\" title=\"{$lang['emajprotectedmark']}\"/>";
+		global $misc, $lang, $emajdb;
+
+		if ($emajdb->getNumEmajVersion() >= 40400) {	// version >= 4.4
+			if ($val == 'PROTECTED') {
+				$img = "<img src=\"{$misc->icon('EmajPadlock')}\" alt=\"protected\" title=\"{$lang['emajprotectedmark']}\"/>";
+			} else {
+				$img = '';
+			}
+		} else {
+			if ($val == 'ACTIVE') {
+				$img = "<img src=\"{$misc->icon('ActiveMark')}\" alt=\"active_mark\" title=\"{$lang['emajactivemark']}\"/>";
+			} elseif ($val == 'DELETED') {
+				$img = "<img src=\"{$misc->icon('DeletedMark')}\" alt=\"deleted_mark\" title=\"{$lang['emajdeletedmark']}\"/>";
+			} elseif ($val == 'ACTIVE-PROTECTED') {
+				$img = "<img src=\"{$misc->icon('ActiveMark')}\" alt=\"active_mark\" title=\"{$lang['emajactivemark']}\"/>";
+				$img .= "<img src=\"{$misc->icon('EmajPadlock')}\" alt=\"protected\" title=\"{$lang['emajprotectedmark']}\"/>";
+			}
 		}
 		return $img;
 	}
@@ -207,6 +221,7 @@
 	// Callback function to dynamicaly add an icon to each rollback execution report
 	function renderRlbkExecSeverity($val) {
 		global $misc;
+
 		if ($val == 'Notice') {
 			$icon = 'Checkmark';
 		} else {
@@ -218,6 +233,7 @@
 	// Callback function to dynamicaly transform a message severity level into an icon
 	function renderMsgSeverity($val) {
 		global $misc;
+
 		if ($val == '1' || $val == '2') {
 			$icon = 'RedX';
 			$alt = 'Error';
@@ -906,7 +922,7 @@
 				'field' => field('mark_comment'),
 				'type' => 'spanned',
 				'params'=> array(
-						'cliplen' => 12,
+						'cliplen' => 15,
 						'class' => 'tooltip right-aligned-tooltip',
 						),
 			),

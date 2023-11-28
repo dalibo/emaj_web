@@ -969,9 +969,7 @@ class EmajDb {
 								 ELSE '' END
 							|| '#' || coalesce(l.time_clock_timestamp::TEXT, '') || '#' || coalesce(u.time_clock_timestamp::TEXT, '')
 								AS mark_log_session,
-							CASE WHEN mark_is_deleted THEN 'DELETED'
-								WHEN NOT mark_is_deleted AND mark_is_rlbk_protected THEN 'ACTIVE-PROTECTED'
-								ELSE 'ACTIVE' END As mark_state,
+							CASE WHEN mark_is_rlbk_protected THEN 'PROTECTED' ELSE '' END AS mark_state,
 							coalesce(mark_log_rows_before_next,
 								(SELECT SUM(stat_rows)
 									FROM emaj.emaj_log_stat_group(emaj_mark.mark_group,emaj_mark.mark_name,NULL)),0)

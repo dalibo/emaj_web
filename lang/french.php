@@ -539,7 +539,7 @@
 	$lang['emajlogsessionstop'] = ' et arrêtée à : %s';
 	$lang['emajtimestamp'] = 'Date-Heure';
 	$lang['emajnbchanges'] = 'Mises à jour';
-	$lang['emajcumchanges'] = 'Cumul mises à jour';
+	$lang['emajcumchanges'] = 'Cumul mises<br>à jour';
 	$lang['emajcumchangeshelp'] = 'Le cumul du nombre de mises à jour représente le nombre de mises à jour à annuler en cas de rollback E-Maj à la marque correspondante.';
 	$lang['emajrlbk'] = 'Rollback';
 	$lang['emajfirstmark'] = 'Première marque';

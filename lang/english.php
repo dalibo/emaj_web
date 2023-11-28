@@ -539,7 +539,7 @@
 	$lang['emajlogsessionstop'] = ' and stopped at: %s';
 	$lang['emajtimestamp'] = 'Date/Time';
 	$lang['emajnbchanges'] = 'Row changes';
-	$lang['emajcumchanges'] = 'Cumulative changes';
+	$lang['emajcumchanges'] = 'Cumulated<br>changes';
 	$lang['emajcumchangeshelp'] = 'The cummulative number of row changes represents the number of row changes to cancel in case of E-Maj rollback to the corresponding mark.';
 	$lang['emajrlbk'] = 'Rollback';
 	$lang['emajfirstmark'] = 'First mark';

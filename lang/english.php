@@ -571,6 +571,7 @@
 	$lang['emajnbdelete'] = 'DELETE';
 	$lang['emajnbtruncate'] = 'TRUNCATE';
 	$lang['emajnbrole'] = 'Roles';
+	$lang['emajlogsessionwarning'] = 'This marks range covers several log sessions. Data changes may have been not recorded.';
 	$lang['emajstatrows'] = 'Row changes';
 	$lang['emajbrowsechanges'] = 'Browse changes';
 

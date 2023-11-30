@@ -1220,11 +1220,17 @@
 
 		// Get statistics from E-Maj
 		if ($_REQUEST['rangeend'] == 'currentsituation')
-			$stats = $emajdb->getLogStatGroup($_REQUEST['group'],$_REQUEST['rangestart'],'');
+			$stats = $emajdb->getLogStatGroup($_REQUEST['group'], $_REQUEST['rangestart'],'');
 		else
-			$stats = $emajdb->getLogStatGroup($_REQUEST['group'],$_REQUEST['rangestart'],$_REQUEST['rangeend']);
+			$stats = $emajdb->getLogStatGroup($_REQUEST['group'], $_REQUEST['rangestart'], $_REQUEST['rangeend']);
 
 		$summary = $emajdb->getLogStatSummary();
+
+		if ($emajdb->getNumEmajVersion() >= 40400) {			// version >= 4.4.0
+			$nbLogSession = $emajdb->getNbLogSessionInPeriod($_REQUEST['group'], $_REQUEST['rangestart'], $_REQUEST['rangeend']);
+		} else {
+			$nbLogSession = 0;
+		}
 
 		// Title
 		echo "<hr/>\n";
@@ -1246,6 +1252,9 @@
 		echo "<td class=\"center\">{$summary->fields['sum_rows']}</td>";
 		echo "</tr></table>\n";
 
+		if ($nbLogSession > 1) {
+			echo "<p><img src=\"{$misc->icon('Warning')}\" alt=\"warning\" style=\"vertical-align:middle; height:22px;\"/> {$lang['emajlogsessionwarning']}</p>";
+		}
 		echo "<hr/>\n";
 
 		if ($summary->fields['nb_tables'] > 0) {
@@ -1475,8 +1484,15 @@
 			$stats = $emajdb->getDetailedLogStatGroup($_REQUEST['group'],$_REQUEST['rangestart'],$_REQUEST['rangeend']);
 
 		$summary = $emajdb->getDetailedLogStatSummary();
+
 		$roles = $emajdb->getDetailedLogStatRoles();
 		$rolesList = implode(', ', $roles);
+
+		if ($emajdb->getNumEmajVersion() >= 40400) {			// version >= 4.4.0
+			$nbLogSession = $emajdb->getNbLogSessionInPeriod($_REQUEST['group'], $_REQUEST['rangestart'], $_REQUEST['rangeend']);
+		} else {
+			$nbLogSession = 0;
+		}
 
 		// Title
 		echo "<hr/>\n";
@@ -1507,6 +1523,9 @@
 		echo "<td class=\"center\">{$summary->fields['nb_roles']}</td>";
 		echo "<td class=\"center\">{$rolesList}</td>";
 		echo "</tr></table>\n";
+		if ($nbLogSession > 1) {
+			echo "<p><img src=\"{$misc->icon('Warning')}\" alt=\"warning\" style=\"vertical-align:middle; height:22px;\"/> {$lang['emajlogsessionwarning']}</p>";
+		}
 		echo "<hr/>\n";
 
 		if ($summary->fields['nb_tables'] > 0) {

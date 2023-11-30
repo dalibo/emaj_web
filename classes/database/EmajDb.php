@@ -3072,6 +3072,39 @@ class EmajDb {
 	}
 
 	/**
+	 * Gets the number of log sessions covering a marks interval for a tables group
+	 */
+	function getNbLogSessionInPeriod($group,$firstMark,$lastMark) {
+		global $data;
+
+		$data->clean($group);
+		$data->clean($firstMark);
+		$data->clean($lastMark);
+
+		if ($lastMark == 'currentsituation') {
+			$sql = "SELECT count(*) AS nb_log_session FROM (
+						SELECT 0
+							FROM emaj.emaj_log_session
+								 JOIN emaj.emaj_mark fm ON (fm.mark_group = lses_group AND fm.mark_name = '{$firstMark}')
+							WHERE lses_group = '{$group}'
+							  AND (fm.mark_time_id < upper(lses_time_range) OR upper_inf(lses_time_range))
+						) AS ls";
+		} else {
+			$sql = "SELECT count(*) AS nb_log_session FROM (
+						SELECT 0
+							FROM emaj.emaj_log_session
+								 JOIN emaj.emaj_mark fm ON (fm.mark_group = lses_group AND fm.mark_name = '{$firstMark}')
+								 JOIN emaj.emaj_mark lm ON (lm.mark_group = lses_group AND lm.mark_name = '{$lastMark}')
+							WHERE lses_group = '{$group}'
+							  AND lm.mark_time_id >= lower(lses_time_range)
+							  AND (fm.mark_time_id < upper(lses_time_range) OR upper_inf(lses_time_range))
+						) AS ls";
+		}
+
+		return $data->selectField($sql,'nb_log_session');
+	}
+
+	/**
 	 * Gets the global log statistics for a group between 2 marks
 	 * It also delivers the sql queries to look at the corresponding log rows
 	 * It creates a temp table to easily compute aggregates in other functions called in the same conversation

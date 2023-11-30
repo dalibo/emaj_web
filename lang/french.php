@@ -571,6 +571,7 @@
 	$lang['emajnbdelete'] = 'DELETE';
 	$lang['emajnbtruncate'] = 'TRUNCATE';
 	$lang['emajnbrole'] = 'Rôles';
+	$lang['emajlogsessionwarning'] = 'Cet intervalle de marques couvre plusieurs sessions de log. Des mises à jour de données peuvent ne pas avoir été enregistrées.';
 	$lang['emajstatrows'] = 'Mises à jour';
 	$lang['emajbrowsechanges'] = 'Voir les mises à jour';
 

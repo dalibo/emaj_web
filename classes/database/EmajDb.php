@@ -974,11 +974,11 @@ class EmajDb {
 								(SELECT SUM(stat_rows)
 									FROM emaj.emaj_log_stat_group(emaj_mark.mark_group,emaj_mark.mark_name,NULL)),0)
 									AS mark_logrows,
-							(mark_is_deleted OR
+							(upper(lses_time_range) IS NOT NULL OR
 								count(*) FILTER (where mark_is_rlbk_protected)
 										OVER (ORDER BY mark_time_id DESC
 											ROWS BETWEEN UNBOUNDED PRECEDING AND 0 FOLLOWING EXCLUDE CURRENT ROW) > 0) AS no_rollback_action,
-							(mark_is_deleted OR mark_is_rlbk_protected) AS no_protect_action,
+							(upper(lses_time_range) IS NOT NULL OR mark_is_rlbk_protected) AS no_protect_action,
 							NOT mark_is_rlbk_protected AS no_unprotect_action,
 							first_value(mark_time_id) OVER (ORDER BY mark_time_id) = mark_time_id AS no_first_mark_action
 						FROM emaj.emaj_mark
@@ -2295,18 +2295,29 @@ class EmajDb {
 
 		$data->clean($group);
 
-		$sql = "SELECT mark_name, to_char(time_tx_timestamp,'{$this->tsFormat}') as mark_datetime, mark_is_rlbk_protected
-				FROM emaj.emaj_mark, emaj.emaj_time_stamp
-				WHERE mark_group = '{$group}'
-				  AND NOT mark_is_deleted
-				  AND time_id = mark_time_id
-				ORDER BY mark_time_id DESC";
+		if ($this->getNumEmajVersion() >= 40400){	// version 4.4+
+			$sql = "SELECT mark_name, to_char(time_tx_timestamp,'{$this->tsFormat}') as mark_datetime, mark_is_rlbk_protected
+					FROM emaj.emaj_mark
+						JOIN emaj.emaj_time_stamp ON (time_id = mark_time_id)
+						JOIN emaj.emaj_log_session ON (lses_group = mark_group AND lses_time_range @> mark_time_id)
+					WHERE mark_group = '{$group}'
+					AND upper_inf(lses_time_range)
+					ORDER BY mark_time_id DESC";
+		} else {
+			$sql = "SELECT mark_name, to_char(time_tx_timestamp,'{$this->tsFormat}') as mark_datetime, mark_is_rlbk_protected
+					FROM emaj.emaj_mark, emaj.emaj_time_stamp
+					WHERE mark_group = '{$group}'
+					AND NOT mark_is_deleted
+					AND time_id = mark_time_id
+					ORDER BY mark_time_id DESC";
+		}
+
 		return $data->selectSet($sql);
 	}
 
 	/**
-	 * Determines whether or not a mark name for a group is ACTIVE (ie. not deleted)
-	 * Returns 1 if the mark name is known and is not deleted
+	 * Determines whether or not a mark name for a group is ACTIVE
+	 * Returns 1 if the mark name is known and belongs to a group currently in logging state
 	 * Retuns 0 otherwise.
 	 */
 	function isMarkActiveGroup($group,$mark) {
@@ -2317,10 +2328,20 @@ class EmajDb {
 		$data->clean($mark);
 
 		// check the mark is active
-		$sql = "SELECT CASE WHEN EXISTS
-				 (SELECT 0 FROM emaj.emaj_mark
-                   WHERE mark_group = '{$group}' AND mark_name = '{$mark}' AND NOT mark_is_deleted
-				  ) THEN 1 ELSE 0 END AS is_active";
+		if ($this->getNumEmajVersion() >= 40400){	// version 4.4+
+			$sql = "SELECT CASE WHEN EXISTS
+					(SELECT 0 FROM emaj.emaj_mark
+								   JOIN emaj.emaj_log_session ON (lses_group = mark_group AND lses_time_range @> mark_time_id)
+					WHERE mark_group = '{$group}'
+					  AND mark_name = '{$mark}'
+					  AND upper_inf(lses_time_range)
+					) THEN 1 ELSE 0 END AS is_active";
+		} else {
+			$sql = "SELECT CASE WHEN EXISTS
+					(SELECT 0 FROM emaj.emaj_mark
+					WHERE mark_group = '{$group}' AND mark_name = '{$mark}' AND NOT mark_is_deleted
+					) THEN 1 ELSE 0 END AS is_active";
+		}
 
 		return $data->selectField($sql,'is_active');
 	}
@@ -2559,15 +2580,30 @@ class EmajDb {
 		$data->clean($groups);
 		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 
-		$sql = "SELECT t.mark_name, t.mark_datetime, t.mark_is_rlbk_protected
-				FROM (SELECT mark_name, to_char(time_tx_timestamp,'{$this->tsFormat}') as mark_datetime, mark_is_rlbk_protected,
-							 array_agg (mark_group) AS groups
-					  FROM emaj.emaj_mark,emaj.emaj_group,
-						   emaj.emaj_time_stamp
-					  WHERE mark_group = group_name AND time_id = mark_time_id
-						AND NOT mark_is_deleted AND group_is_rollbackable GROUP BY 1,2,3) AS t
-				WHERE t.groups @> $groupsArray
-				ORDER BY t.mark_datetime DESC";
+		if ($this->getNumEmajVersion() >= 40400){	// version 4.4+
+			$sql = "SELECT t.mark_name, t.mark_datetime, t.mark_is_rlbk_protected
+					FROM (SELECT mark_name, to_char(time_tx_timestamp,'{$this->tsFormat}') as mark_datetime, mark_is_rlbk_protected,
+								 array_agg (mark_group) AS groups
+						FROM emaj.emaj_mark
+							 JOIN emaj.emaj_group ON (mark_group = group_name)
+							 JOIN emaj.emaj_time_stamp ON (time_id = mark_time_id)
+							 JOIN emaj.emaj_log_session ON (lses_group = mark_group AND lses_time_range @> mark_time_id)
+						WHERE group_is_rollbackable
+						  AND upper_inf(lses_time_range)
+						GROUP BY 1,2,3) AS t
+					WHERE t.groups @> $groupsArray
+					ORDER BY t.mark_datetime DESC";
+		} else {
+			$sql = "SELECT t.mark_name, t.mark_datetime, t.mark_is_rlbk_protected
+					FROM (SELECT mark_name, to_char(time_tx_timestamp,'{$this->tsFormat}') as mark_datetime, mark_is_rlbk_protected,
+								array_agg (mark_group) AS groups
+						FROM emaj.emaj_mark,emaj.emaj_group,
+							emaj.emaj_time_stamp
+						WHERE mark_group = group_name AND time_id = mark_time_id
+							AND NOT mark_is_deleted AND group_is_rollbackable GROUP BY 1,2,3) AS t
+					WHERE t.groups @> $groupsArray
+					ORDER BY t.mark_datetime DESC";
+		}
 
 		return $data->selectSet($sql);
 	}
@@ -2610,7 +2646,7 @@ class EmajDb {
 	/**
 	 * Determines whether or not a mark name is valid as a mark to rollback to for a groups array
 	 * Returns 1 if:
-	 *   - the mark name is known and in ACTIVE state,
+	 *   - the mark name is known and belongs to groups in logging state,
 	 *   - no intermediate protected mark for any group would be covered by the rollback,
 	 * Retuns 0 otherwise.
 	 */
@@ -2624,13 +2660,26 @@ class EmajDb {
 
 		$nbGroups = substr_count($groupsArray,',') + 1;
 
-		// check the mark is active (i.e. not deleted)
-		$sql = "SELECT CASE WHEN
-				(SELECT COUNT(*) FROM emaj.emaj_mark, emaj.emaj_group
-					WHERE mark_group = group_name
-						AND mark_group = ANY ({$groupsArray}) AND group_is_rollbackable AND mark_name = '{$mark}'
-						AND NOT mark_is_deleted
-				) = {$nbGroups} THEN 1 ELSE 0 END AS result";
+		// check the mark is active (i.e. belongs to logging groups)
+		if ($this->getNumEmajVersion() >= 40400){	// version 4.4+
+			$sql = "SELECT CASE WHEN
+					(SELECT COUNT(*)
+						FROM emaj.emaj_mark
+							 JOIN emaj.emaj_group ON (mark_group = group_name)
+							 JOIN emaj.emaj_log_session ON (lses_group = mark_group AND lses_time_range @> mark_time_id)
+						WHERE mark_group = ANY ({$groupsArray})
+						  AND group_is_rollbackable
+						  AND mark_name = '{$mark}'
+						  AND upper_inf(lses_time_range)
+					) = {$nbGroups} THEN 1 ELSE 0 END AS result";
+		} else {
+			$sql = "SELECT CASE WHEN
+					(SELECT COUNT(*) FROM emaj.emaj_mark, emaj.emaj_group
+						WHERE mark_group = group_name
+							AND mark_group = ANY ({$groupsArray}) AND group_is_rollbackable AND mark_name = '{$mark}'
+							AND NOT mark_is_deleted
+					) = {$nbGroups} THEN 1 ELSE 0 END AS result";
+		}
 
 		$result = $data->selectField($sql,'result');
 

@@ -255,6 +255,8 @@
 	$lang['emajgroups'] = 'Groups';
 	$lang['emajmark'] = 'Mark';
 	$lang['emajlogsession'] = 'Log session';
+	$lang['emajgroupcreatedat'] = 'Created at';
+	$lang['emajgroupstartedat'] = 'Started at';
 	$lang['emajmarksetat'] = 'Set at';
 	$lang['emajgrouptype'] = 'Group type';
 	$lang['emajrollback'] = 'E-Maj rollback';
@@ -448,7 +450,6 @@
 	$lang['emajlogginggrouphelp'] = 'When a tables group is in \'logging\' state, the row insertions, updates and deletions on its tables are recorded.';
  	$lang['emajidlegrouphelp'] = 'When a tables group is in \'idle\' state, the row insertions, updates and deletions on its tables are NOT recorded.';
 	$lang['emajconfiguredgrouphelp'] = 'The group configuration defines the tables and sequences that will compose it. Once \'configured\', the group must be \'created\' in order to prepare all abjects that will be needed for its use (log tables, functions,...).';
-	$lang['emajcreationdatetime'] = 'Created at';
 	$lang['emajnbtbl'] = 'Tables';
 	$lang['emajnbseq'] = 'Sequences';
 	$lang['emajnbmark'] = 'Marks';

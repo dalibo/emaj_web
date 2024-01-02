@@ -255,7 +255,9 @@
 	$lang['emajgroups'] = 'Groupes';
 	$lang['emajmark'] = 'Marque';
 	$lang['emajlogsession'] = 'Session de log';
-	$lang['emajmarksetat'] = 'Posée à';
+	$lang['emajgroupcreatedat'] = 'Créé le';
+	$lang['emajgroupstartedat'] = 'Démarré le';
+	$lang['emajmarksetat'] = 'Posée le';
 	$lang['emajgrouptype'] = 'Type de groupe';
 	$lang['emajrollback'] = 'Rollback E-Maj';
 	$lang['emajrollbacktype'] = 'Type de rollback';
@@ -448,7 +450,6 @@
 	$lang['emajlogginggrouphelp'] = 'Quand un groupe de tables est dans l\'état \'démarré\', les insertions, modifications et suppression de lignes sur ses tables sont enregistrées.';
  	$lang['emajidlegrouphelp'] = 'Quand un groupe de tables est dans l\'état \'arrêté\', les insertions, modifications et suppressions de lignes sur ses tables ne sont PAS enregistrées.';
 	$lang['emajconfiguredgrouphelp'] = 'La configuration d\'un groupe définit les tables et séquences qui vont le constituer. Une fois \'configuré\', le groupe doit être \'créé\', afin de préparer tous les objets nécessaires à son utilisation (tables de log, fonctions,...).';
-	$lang['emajcreationdatetime'] = 'Création';
 	$lang['emajnbtbl'] = 'Tables';
 	$lang['emajnbseq'] = 'Séquences';
 	$lang['emajnbmark'] = 'Marques';

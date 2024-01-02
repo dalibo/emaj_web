@@ -276,7 +276,7 @@
 				'vars'  => array('group' => 'group_name'),
 			),
 			'creationdatetime' => array(
-				'title' => $lang['emajcreationdatetime'],
+				'title' => $lang['emajgroupcreatedat'],
 				'field' => field('creation_datetime'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -638,14 +638,8 @@
 		$hasWaitingChanges = $group->fields['has_waiting_changes'];
 
 		$columns = array(
-			'state' => array(
-				'title' => $lang['emajstate'],
-				'field' => field('group_state'),
-				'type'	=> 'callback',
-				'params'=> array('function' => 'renderGroupState','align' => 'center')
-			),
-			'creationdatetime' => array(
-				'title' => $lang['emajcreationdatetime'],
+			'createdat' => array(
+				'title' => $lang['emajgroupcreatedat'],
 				'field' => field('group_creation_datetime'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -672,6 +666,29 @@
 				'field' => field('group_nb_sequence'),
 				'type'  => 'numeric'
 			),
+			'state' => array(
+				'title' => $lang['emajstate'],
+				'field' => field('group_state'),
+				'type'	=> 'callback',
+				'params'=> array('function' => 'renderGroupState','align' => 'center')
+			),
+		);
+		if ($emajdb->getNumEmajVersion() >= 40400) {					// version 4.4+
+			if ($groupState == 'LOGGING') {
+				$columns = array_merge($columns, array(
+					'startedat' => array(
+						'title' => $lang['emajgroupstartedat'],
+						'field' => field('group_start_datetime'),
+						'type' => 'spanned',
+						'params'=> array(
+							'dateformat' => $lang['stroldtimestampformat'],
+							'class' => 'tooltip left-aligned-tooltip',
+							),
+					),
+				));
+			}
+		}
+		$columns = array_merge($columns, array(
 			'nbmark' => array(
 				'title' => $lang['emajnbmark'],
 				'field' => field('nb_mark'),
@@ -685,7 +702,7 @@
 			'actions' => array(
 				'title' => $lang['stractions'],
 			),
-		);
+		));
 
 		$urlvars = $misc->getRequestVars();
 

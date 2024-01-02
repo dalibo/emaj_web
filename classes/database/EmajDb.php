@@ -630,20 +630,33 @@ class EmajDb {
 	function getIdleGroups() {
 		global $data;
 
-		$sql = "SELECT group_name, group_nb_table, group_nb_sequence, group_comment,
-				  CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END
-					as group_type,
-				  to_char(time_tx_timestamp,'{$this->tsFormat}') as creation_datetime,";
-		if ($this->getNumEmajVersion() >= 30000 && $this->getNumEmajVersion() < 40000){	// version 3.x
-			$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes,";
+		if ($this->getNumEmajVersion() >= 40400) {		// version 4.4+
+			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, group_comment,
+						CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END as group_type,
+						to_char(time_tx_timestamp,'{$this->tsFormat}') as creation_datetime,
+						1 as has_waiting_changes,
+						(SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
+					FROM emaj.emaj_group
+						LEFT OUTER JOIN emaj.emaj_group_hist ON (grph_group = group_name AND upper_inf(grph_time_range))
+						LEFT OUTER JOIN emaj.emaj_time_stamp ON (time_id = lower(grph_time_range))
+					WHERE NOT group_is_logging
+					ORDER BY group_name";
 		} else {
-			$sql .=	"1 as has_waiting_changes,";
+			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, group_comment,
+					CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END
+						as group_type,
+					to_char(time_tx_timestamp,'{$this->tsFormat}') as creation_datetime, ";
+			if ($this->getNumEmajVersion() >= 30000 && $this->getNumEmajVersion() < 40000){	// version 3.x
+				$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes, ";
+			} else {
+				$sql .=	"1 as has_waiting_changes, ";
+			}
+			$sql .= " (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
+					FROM emaj.emaj_group, emaj.emaj_time_stamp
+					WHERE NOT group_is_logging
+					AND time_id = group_creation_time_id
+					ORDER BY group_name";
 		}
-		$sql .= " (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
-				FROM emaj.emaj_group, emaj.emaj_time_stamp
-				WHERE NOT group_is_logging
-				  AND time_id = group_creation_time_id
-				ORDER BY group_name";
 
 		return $data->selectSet($sql);
 	}
@@ -654,21 +667,36 @@ class EmajDb {
 	function getLoggingGroups() {
 		global $data;
 
-		$sql = "SELECT group_name, group_nb_table, group_nb_sequence, group_comment,
-				  CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
-					   WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
-					   ELSE 'ROLLBACKABLE-PROTECTED' END as group_type,
-				  to_char(time_tx_timestamp,'{$this->tsFormat}') as creation_datetime,";
-		if ($this->getNumEmajVersion() >= 30000 && $this->getNumEmajVersion() < 40000){	// version 3.x
-			$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes,";
+		if ($this->getNumEmajVersion() >= 40400) {		// version 4.4+
+			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, group_comment,
+						CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
+							WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
+							ELSE 'ROLLBACKABLE-PROTECTED' END as group_type,
+						to_char(time_tx_timestamp,'{$this->tsFormat}') as creation_datetime,
+						1 as has_waiting_changes,
+						(SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
+					FROM emaj.emaj_group
+						LEFT OUTER JOIN emaj.emaj_group_hist ON (grph_group = group_name AND upper_inf(grph_time_range))
+						LEFT OUTER JOIN emaj.emaj_time_stamp ON (time_id = lower(grph_time_range))
+					WHERE group_is_logging
+					ORDER BY group_name";
 		} else {
-			$sql .=	"1 as has_waiting_changes,";
+			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, group_comment,
+					CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
+						WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
+						ELSE 'ROLLBACKABLE-PROTECTED' END as group_type,
+					to_char(time_tx_timestamp,'{$this->tsFormat}') as creation_datetime, ";
+			if ($this->getNumEmajVersion() >= 30000 && $this->getNumEmajVersion() < 40000){	// version 3.x
+				$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes, ";
+			} else {
+				$sql .=	"1 as has_waiting_changes, ";
+			}
+			$sql .= " (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
+					FROM emaj.emaj_group, emaj.emaj_time_stamp
+					WHERE group_is_logging
+					AND time_id = group_creation_time_id
+					ORDER BY group_name";
 		}
-		$sql .= " (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
-				FROM emaj.emaj_group, emaj.emaj_time_stamp
-				WHERE group_is_logging
-				  AND time_id = group_creation_time_id
-				ORDER BY group_name";
 
 		return $data->selectSet($sql);
 	}
@@ -784,25 +812,48 @@ class EmajDb {
 
 		$data->clean($group);
 
-		$sql = "SELECT group_name, group_nb_table, group_nb_sequence,
-				to_char(time_tx_timestamp,'{$this->tsFormat}') as group_creation_datetime,
-				CASE WHEN group_is_logging THEN 'LOGGING' ELSE 'IDLE' END as group_state,
-				CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
-					 WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
-					 ELSE 'ROLLBACKABLE-PROTECTED' END as group_type,
-				coalesce(group_comment, '') as group_comment,
-				pg_size_pretty((SELECT sum(pg_total_relation_size('\"' || rel_log_schema || '\".\"' || rel_log_table || '\"'))
-					FROM emaj.emaj_relation
-					WHERE rel_group = group_name AND rel_kind = 'r')::bigint) as log_size,";
-		if ($this->getNumEmajVersion() >= 30000 && $this->getNumEmajVersion() < 40000){	// version 3.x
-			$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes,";
+		if ($this->getNumEmajVersion() >= 40400) {		// version 4.4+
+			$sql = "SELECT group_name, group_nb_table, group_nb_sequence,
+						to_char(c.time_tx_timestamp,'{$this->tsFormat}') as group_creation_datetime,
+						to_char(s.time_tx_timestamp,'{$this->tsFormat}') as group_start_datetime,
+						CASE WHEN group_is_logging THEN 'LOGGING' ELSE 'IDLE' END as group_state,
+						CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
+							WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
+							ELSE 'ROLLBACKABLE-PROTECTED' END as group_type,
+						coalesce(group_comment, '') as group_comment,
+						pg_size_pretty((SELECT sum(pg_total_relation_size('\"' || rel_log_schema || '\".\"' || rel_log_table || '\"'))
+							FROM emaj.emaj_relation
+							WHERE rel_group = group_name AND rel_kind = 'r')::bigint) as log_size,
+						1 as has_waiting_changes,
+						(SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
+					FROM emaj.emaj_group
+						LEFT OUTER JOIN emaj.emaj_group_hist ON (grph_group = group_name AND upper_inf(grph_time_range))
+						LEFT OUTER JOIN emaj.emaj_time_stamp c ON (c.time_id = lower(grph_time_range))
+						LEFT OUTER JOIN emaj.emaj_log_session ON (lses_group = group_name AND upper_inf(lses_time_range))
+						LEFT OUTER JOIN emaj.emaj_time_stamp s ON (s.time_id = lower(lses_time_range))
+					WHERE group_name = '{$group}'";
 		} else {
-			$sql .=	"1 as has_waiting_changes,";
+			$sql = "SELECT group_name, group_nb_table, group_nb_sequence,
+					to_char(time_tx_timestamp,'{$this->tsFormat}') as group_creation_datetime,
+					CASE WHEN group_is_logging THEN 'LOGGING' ELSE 'IDLE' END as group_state,
+					CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
+						WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
+						ELSE 'ROLLBACKABLE-PROTECTED' END as group_type,
+					coalesce(group_comment, '') as group_comment,
+					pg_size_pretty((SELECT sum(pg_total_relation_size('\"' || rel_log_schema || '\".\"' || rel_log_table || '\"'))
+						FROM emaj.emaj_relation
+						WHERE rel_group = group_name AND rel_kind = 'r')::bigint) as log_size, ";
+			if ($this->getNumEmajVersion() >= 30000 && $this->getNumEmajVersion() < 40000){	// version 3.x
+				$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes, ";
+			} else {
+				$sql .=	"1 as has_waiting_changes,";
+			}
+			$sql .= " (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
+					FROM emaj.emaj_group, emaj.emaj_time_stamp
+					WHERE group_name = '{$group}'
+					AND time_id = group_creation_time_id";
 		}
-		$sql .= " (SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
-				FROM emaj.emaj_group, emaj.emaj_time_stamp
-				WHERE group_name = '{$group}'
-				  AND time_id = group_creation_time_id";
+
 		return $data->selectSet($sql);
 	}
 

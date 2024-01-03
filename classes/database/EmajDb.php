@@ -3008,7 +3008,7 @@ class EmajDb {
 						to_char(rlbk_end_datetime - rlbk_start_datetime,'{$this->intervalFormat}') AS rlbk_global_duration,
 						to_char(rlbk_end_planning_datetime - rlbk_start_datetime,'{$this->intervalFormat}') AS rlbk_planning_duration,
 						to_char(rlbk_end_locking_datetime - rlbk_end_planning_datetime,'{$this->intervalFormat}') AS rlbk_locking_duration,
-						rlbk_mark, tm.time_tx_timestamp as rlbk_mark_datetime, rlbk_is_logged, rlbk_nb_session,
+						rlbk_mark, to_char(tm.time_tx_timestamp,'{$this->tsFormat}') as rlbk_mark_datetime, rlbk_is_logged, rlbk_nb_session,
 						format('%s / %s', rlbk_eff_nb_table, rlbk_nb_table) AS rlbk_tbl,
 						format('%s / %s', coalesce(rlbk_eff_nb_sequence::TEXT, '?'), rlbk_nb_sequence) AS rlbk_seq,
 						rlbk_prior, rlbk_next
@@ -3029,7 +3029,7 @@ class EmajDb {
 						to_char(rlbk_end_datetime - tr.time_tx_timestamp,'{$this->intervalFormat}') AS rlbk_global_duration,
 						'' AS rlbk_planning_duration,
 						'' AS rlbk_locking_duration,
-						rlbk_mark, tm.time_tx_timestamp as rlbk_mark_datetime, rlbk_is_logged, rlbk_nb_session,
+						rlbk_mark, to_char(tm.time_tx_timestamp,'{$this->tsFormat}') as rlbk_mark_datetime, rlbk_is_logged, rlbk_nb_session,
 						format('%s / %s', rlbk_eff_nb_table, rlbk_nb_table) AS rlbk_tbl,";
 			if ($this->getNumEmajVersion() >= 40200){	// version >= 4.2.0
 				$sql = $sql . "

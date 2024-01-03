@@ -124,6 +124,7 @@
 						'type' => 'spanned',
 						'params'=> array(
 							'dateformat' => $lang['stroldtimestampformat'],
+							'locale' => $lang['applocale'],
 							'class' => 'tooltip left-aligned-tooltip',
 							),
 					),
@@ -133,6 +134,7 @@
 						'type' => 'spanned',
 						'params'=> array(
 							'dateformat' => $lang['stroldtimestampformat'],
+							'locale' => $lang['applocale'],
 							'class' => 'tooltip left-aligned-tooltip',
 							),
 					),

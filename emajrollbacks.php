@@ -86,6 +86,7 @@
 				'type' => 'spanned',
 				'params'=> array(
 					'dateformat' => $lang['strrecenttimestampformat'],
+					'locale' => $lang['applocale'],
 					'class' => 'tooltip left-aligned-tooltip',
 				),
 			),
@@ -177,6 +178,7 @@
 				'type' => 'spanned',
 				'params'=> array(
 					'dateformat' => $lang['strrecenttimestampformat'],
+					'locale' => $lang['applocale'],
 					'class' => 'tooltip left-aligned-tooltip',
 				),
 				'sorter_text_extraction' => 'span_text',
@@ -187,6 +189,7 @@
 				'type' => 'spanned',
 				'params'=> array(
 					'dateformat' => $lang['strrecenttimestampformat'],
+					'locale' => $lang['applocale'],
 					'class' => 'tooltip left-aligned-tooltip',
 				),
 				'sorter_text_extraction' => 'span_text',
@@ -289,6 +292,7 @@
 				'type' => 'spanned',
 				'params'=> array(
 					'dateformat' => $lang['strrecenttimestampformat'],
+					'locale' => $lang['applocale'],
 					'class' => 'tooltip left-aligned-tooltip',
 				),
 			),
@@ -312,6 +316,7 @@
 				'type' => 'spanned',
 				'params'=> array(
 					'dateformat' => $lang['strrecenttimestampformat'],
+					'locale' => $lang['applocale'],
 					'class' => 'tooltip left-aligned-tooltip',
 				),
 			),
@@ -397,6 +402,7 @@
 				'type' => 'spanned',
 				'params'=> array(
 					'dateformat' => $lang['strrecenttimestampformat'],
+					'locale' => $lang['applocale'],
 					'class' => 'tooltip left-aligned-tooltip',
 				),
 			),
@@ -438,6 +444,7 @@
 				'type' => 'spanned',
 				'params'=> array(
 					'dateformat' => $lang['strrecenttimestampformat'],
+					'locale' => $lang['applocale'],
 					'class' => 'tooltip left-aligned-tooltip',
 				),
 			),
@@ -447,6 +454,7 @@
 				'type' => 'spanned',
 				'params'=> array(
 					'dateformat' => $lang['strrecenttimestampformat'],
+					'locale' => $lang['applocale'],
 					'class' => 'tooltip left-aligned-tooltip',
 				),
 			),
@@ -491,6 +499,7 @@
 				'type' => 'spanned',
 				'params'=> array(
 					'dateformat' => $lang['strrecenttimestampformat'],
+					'locale' => $lang['applocale'],
 					'class' => 'tooltip',
 				),
 			),
@@ -563,6 +572,7 @@
 				'type' => 'spanned',
 				'params'=> array(
 					'dateformat' => $lang['strrecenttimestampformat'],
+					'locale' => $lang['applocale'],
 					'class' => 'tooltip left-aligned-tooltip',
 				),
 			),
@@ -572,6 +582,7 @@
 				'type' => 'spanned',
 				'params'=> array(
 					'dateformat' => $lang['strrecenttimestampformat'],
+					'locale' => $lang['applocale'],
 					'class' => 'tooltip left-aligned-tooltip',
 				),
 			),
@@ -616,6 +627,7 @@
 				'type' => 'spanned',
 				'params'=> array(
 					'dateformat' => $lang['strprecisetimeformat'],
+					'locale' => $lang['applocale'],
 					'class' => 'tooltip left-aligned-tooltip',
 				),
 			),

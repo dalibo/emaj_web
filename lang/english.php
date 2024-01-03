@@ -256,7 +256,9 @@
 	$lang['emajmark'] = 'Mark';
 	$lang['emajlogsession'] = 'Log session';
 	$lang['emajgroupcreatedat'] = 'Created at';
+	$lang['emajgroupcreateddroppedat'] = 'Created/dropped at';
 	$lang['emajgroupstartedat'] = 'Started at';
+	$lang['emajgroupstoppedat'] = 'Stopped at';
 	$lang['emajmarksetat'] = 'Set at';
 	$lang['emajgrouptype'] = 'Group type';
 	$lang['emajrollback'] = 'E-Maj rollback';
@@ -304,6 +306,7 @@
 	$lang['emajenvironment'] = 'E-Maj environment';
 	$lang['emajenvir'] = 'E-Maj';
 	$lang['emajchangesstat'] = 'Changes statistics';
+	$lang['emajhistory'] = 'History';
 
 	// Common help messages
 	$lang['emajmarknamehelp'] = 'The mark name must be unique within the group. A % character represents the current time (format hh.mn.ss.ms).';
@@ -605,6 +608,15 @@
 	$lang['emajemptygroup'] = 'The tables group "%s" is currently empty.';
 	$lang['emajpriority'] = 'Priority';
 	$lang['emajlogtable'] = 'Log table';
+
+	// Group's history
+	$lang['emajgrouphistory'] = 'Tables group "%s" history';
+	$lang['emajnohistory'] = 'There is no history to display for this group.';
+	$lang['emajgrouphistoryorder'] = 'Most recent creations, drops and log sessions are placed ahead on the sheet.';
+	$lang['emajnblogsessions'] = 'Log sessions';
+	$lang['emajgroupcreate'] = 'Group creation';
+	$lang['emajgroupdrop'] = 'Group drop';
+	$lang['emajdeletedlogsessions'] = 'Some deleted log sessions';
 
 	// Group creation
 	$lang['emajcreateagroup'] = 'E-Maj: Create a tables group';

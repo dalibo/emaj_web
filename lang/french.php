@@ -256,7 +256,9 @@
 	$lang['emajmark'] = 'Marque';
 	$lang['emajlogsession'] = 'Session de log';
 	$lang['emajgroupcreatedat'] = 'Créé le';
+	$lang['emajgroupcreateddroppedat'] = 'Créé/supprimé le';
 	$lang['emajgroupstartedat'] = 'Démarré le';
+	$lang['emajgroupstoppedat'] = 'Arrêté le';
 	$lang['emajmarksetat'] = 'Posée le';
 	$lang['emajgrouptype'] = 'Type de groupe';
 	$lang['emajrollback'] = 'Rollback E-Maj';
@@ -304,6 +306,7 @@
 	$lang['emajenvironment'] = 'Environnement E-Maj';
 	$lang['emajenvir'] = 'E-Maj';
 	$lang['emajchangesstat'] = 'Statistiques / Mises à jour';
+	$lang['emajhistory'] = 'Historique';
 
 	// Common help messages
 	$lang['emajmarknamehelp'] = 'Le nom de la marque doit être unique pour le groupe. Un caractère % représente l\'heure courante (format hh.mn.ss.ms).';
@@ -605,6 +608,15 @@
 	$lang['emajemptygroup'] = 'Le groupe de tables "%s" est actuellement vide.';
 	$lang['emajpriority'] = 'Priorité';
 	$lang['emajlogtable'] = 'Table de log';
+
+	// Group's history
+	$lang['emajgrouphistory'] = 'Historique du groupe de tables "%s"';
+	$lang['emajnohistory'] = 'Il n\'y a aucun historique à afficher pour ce groupe.';
+	$lang['emajgrouphistoryorder'] = 'Les plus récentes créations, suppressions et sessions de log sont placées en début de tableau.';
+	$lang['emajnblogsessions'] = 'Sessions de log';
+	$lang['emajgroupcreate'] = 'Création du groupe';
+	$lang['emajgroupdrop'] = 'Suppression du groupe';
+	$lang['emajdeletedlogsessions'] = 'Des sessions de log supprimées';
 
 	// Group creation
 	$lang['emajcreateagroup'] = 'E-Maj : Créer un groupe de tables';

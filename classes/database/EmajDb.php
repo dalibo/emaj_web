@@ -1134,6 +1134,52 @@ class EmajDb {
 	}
 
 	/**
+	 * Return the history of create-drop and log sessions for a tables group
+	 */
+	function getHistoryGroup($group) {
+
+		global $data;
+
+		$data->clean($group);
+
+		$sql = "SELECT lower(lses_time_range), 'LS' AS event, 'emajlogsession#GreySimple' AS graphic,
+					   NULL AS create_drop_time,NULL AS grph_log_sessions,
+					   to_char(b.time_tx_timestamp,'{$this->tsFormat}') AS start_time,
+					   to_char(e.time_tx_timestamp,'{$this->tsFormat}') AS stop_time,
+					   lses_marks, lses_log_rows
+					FROM emaj.emaj_log_session
+					     LEFT OUTER JOIN emaj.emaj_time_stamp b ON (b.time_id = lower(lses_time_range))
+					     LEFT OUTER JOIN emaj.emaj_time_stamp e ON (e.time_id = upper(lses_time_range) - 1)
+					WHERE lses_group = '{$group}'
+			UNION ALL
+				SELECT lower(grph_time_range), 'C', 'emajgroupcreate#GreyBegin',
+					   to_char(time_tx_timestamp,'{$this->tsFormat}'), grph_log_sessions,
+					   NULL, NULL, NULL, NULL
+					FROM emaj.emaj_group_hist
+					     LEFT OUTER JOIN emaj.emaj_time_stamp ON (time_id = lower(grph_time_range))
+					WHERE grph_group = '{$group}'
+						AND NOT lower_inf(grph_time_range)
+			UNION ALL
+				SELECT upper(grph_time_range) - 1, 'D', 'emajgroupdrop#GreyEnd',
+					   to_char(time_tx_timestamp,'{$this->tsFormat}'), grph_log_sessions,
+					   NULL, NULL, NULL, NULL
+					FROM emaj.emaj_group_hist
+					     LEFT OUTER JOIN emaj.emaj_time_stamp ON (time_id = upper(grph_time_range) -1)
+					WHERE grph_group = '{$group}'
+						AND NOT upper_inf(grph_time_range)
+			UNION ALL
+				SELECT lower(grph_time_range), 'DLS', 'emajdeletedlogsessions#GreyDotted',
+					   NULL, NULL, NULL, NULL, NULL, NULL
+					FROM emaj.emaj_group_hist
+					WHERE grph_group = '{$group}'
+						AND grph_log_sessions > (SELECT count(*) FROM emaj.emaj_log_session
+													WHERE lses_group = '{$group}' AND lses_time_range <@ grph_time_range)
+			ORDER BY 1 DESC, 2 DESC";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
 	 * Return the list of all existing emaj schemas recorded in the emaj_schema table
 	 */
 	function getEmajSchemasList() {

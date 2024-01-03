@@ -218,6 +218,18 @@
 		return $img;
 	}
 
+	// Callback function to dynamicaly add an icon to each group history row
+	function renderHistoryGraphic($val) {
+		global $misc, $lang;
+
+		$parts = explode('#', $val);
+		$title = $lang[$parts[0]];
+		$icon = $misc->icon($parts[1]);
+
+		$div = "<div title=\"$title\"><img src=\"$icon\" alt=\"$icon\" title=\"$title\" class=\"fullsizecellicon\" /></div>";
+		return $div;
+	}
+
 	// Callback function to dynamicaly add an icon to each rollback execution report
 	function renderRlbkExecSeverity($val) {
 		global $misc;
@@ -1758,6 +1770,90 @@
 
 			echo "<p></p>";
 			$misc->printTable($groupContent, $columns, $actions, 'groupContent', null, null, array('sorter' => true, 'filter' => true));
+		}
+	}
+
+	/**
+	 * Displays the history of the tables group, ie. group creation, drop, start and stop events
+	 */
+	function show_history_group() {
+		global $misc, $lang, $emajdb;
+
+		$misc->printHeader('emaj', 'emajgroup', 'emajhistory');
+
+		$misc->printTitle(sprintf($lang['emajgrouphistory'],htmlspecialchars($_REQUEST['group'])));
+
+		$groupHistory = $emajdb->getHistoryGroup($_REQUEST['group']);
+
+		if ($groupHistory->recordCount() < 1) {
+
+			// There is no history to display
+			echo "<p>" . sprintf($lang['emajnohistory'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
+
+		} else {
+
+			echo "<p>{$lang['emajgrouphistoryorder']}</p>\n";
+
+			$columns = array(
+				'graphic' => array(
+					'title' => '',
+					'field' => field('graphic'),
+					'type'	=> 'callback',
+					'params'=> array('function' => 'renderHistoryGraphic'),
+					'class' => 'nopadding center',
+					'filter'=> false,
+				),
+				'createdroptime' => array(
+					'title' => $lang['emajgroupcreateddroppedat'],
+					'field' => field('create_drop_time'),
+					'type' => 'spanned',
+					'params'=> array(
+						'dateformat' => $lang['stroldtimestampformat'],
+						'class' => 'tooltip left-aligned-tooltip',
+					),
+					'sorter_text_extraction' => 'span_text',
+				),
+				'nb_log_sessions' => array(
+					'title' => $lang['emajnblogsessions'],
+					'field' => field('grph_log_sessions'),
+					'type'  => 'numeric'
+				),
+				'starttime' => array(
+					'title' => $lang['emajgroupstartedat'],
+					'field' => field('start_time'),
+					'type' => 'spanned',
+					'params'=> array(
+						'dateformat' => $lang['stroldtimestampformat'],
+						'class' => 'tooltip left-aligned-tooltip',
+					),
+					'sorter_text_extraction' => 'span_text',
+				),
+				'stoptime' => array(
+					'title' => $lang['emajgroupstoppedat'],
+					'field' => field('stop_time'),
+					'type' => 'spanned',
+					'params'=> array(
+						'dateformat' => $lang['stroldtimestampformat'],
+						'class' => 'tooltip left-aligned-tooltip',
+					),
+					'sorter_text_extraction' => 'span_text',
+				),
+				'nb_marks' => array(
+					'title' => $lang['emajnbmark'],
+					'field' => field('lses_marks'),
+					'type'  => 'numeric'
+				),
+				'nb_log_rows' => array(
+					'title' => $lang['emajnbchanges'],
+					'field' => field('lses_log_rows'),
+					'type'  => 'numeric'
+				),
+			);
+
+			$actions = array ();
+
+			echo "<p></p>";
+			$misc->printTable($groupHistory, $columns, $actions, 'groupHistory', null, null, array('sorter' => false, 'filter' => true));
 		}
 	}
 
@@ -4719,6 +4815,9 @@
 			break;
 		case 'show_groups':
 			show_groups();
+			break;
+		case 'show_history_group':
+			show_history_group();
 			break;
 		case 'start_group':
 			start_group();

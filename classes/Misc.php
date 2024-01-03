@@ -983,6 +983,7 @@
 					break;
 
 				case 'emajgroup':
+					$historyNotAvail = ($emajdb->getNumEmajVersion() < 40400);
 					$tabs = array (
 						'emajgroupproperties' => array (
 							'title' => $lang['strproperties'],
@@ -1013,6 +1014,17 @@
 								'group' => $_REQUEST['group']
 							),
 							'icon' => 'Content'
+						),
+						'emajhistory' => array (
+							'title' => $lang['emajhistory'],
+							'url' => 'emajgroups.php',
+							'urlvars' => array(
+								'subject' => 'emajgroups',
+								'action' => 'show_history_group',
+								'group' => $_REQUEST['group']
+							),
+							'hide' => $historyNotAvail,
+							'icon' => 'History'
 						),
 					);
 					break;

@@ -1008,12 +1008,12 @@ class EmajDb {
 			$sql = "WITH mark_1 AS (
 						SELECT mark_time_id, mark_group, mark_name, mark_comment,
 							to_char(m.time_tx_timestamp,'{$this->tsFormat}') AS mark_datetime,
-							CASE WHEN mark_time_id = lower(lses_time_range) THEN 'Start'
+							CASE WHEN mark_time_id = lower(lses_time_range) THEN 'Begin'
 								 WHEN first_value(mark_name) OVER (PARTITION BY lses_group, lses_time_range ORDER BY mark_time_id
 										RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) = mark_name THEN 'First'
 								 ELSE '' END
 							||
-							CASE WHEN mark_time_id = upper(lses_time_range) - 1 THEN 'Stop'
+							CASE WHEN mark_time_id = upper(lses_time_range) - 1 THEN 'End'
 								 WHEN last_value(mark_name) OVER (PARTITION BY lses_group, lses_time_range order by mark_time_id
 										RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) = mark_name
 									AND NOT upper_inf(lses_time_range) THEN 'Last'

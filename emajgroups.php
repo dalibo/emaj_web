@@ -189,7 +189,7 @@
 			$color = 'Grey';
 			$logSessionInfo .= "\n" . sprintf($lang['emajlogsessionstop'], $parts[2]);
 		}
-		$icon = $color . $parts[0] . 'Mark';
+		$icon = $color . $parts[0];
 		$div = "<div title=\"$logSessionInfo\"><img src=\"{$misc->icon($icon)}\" alt=\"$icon\" title=\"$logSessionInfo\" class=\"fullsizecellicon\" /></div>";
 		return $div;
 	}

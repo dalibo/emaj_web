@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="23" viewBox="0 0 23 23" preserveAspectRatio="xMinYMid">
-<defs><style>.cls-1{fill:#b0b0b0;}</style></defs>
-<title>GreyStartMark</title>
-<g id="layer1">
-  <rect id="rect1" class="cls-1" x="9" y="0" width="5" height="14" />
-  <path id="path1" class="cls-1" d="M 6.5,9 A 2.5,2.5 0 0 0 4,11.5 2.5,2.5 0 0 0 6.5,14 H 16.6 A 2.5,2.5 0 0 0 19,11.5 2.5,2.5 0 0 0 16.5,9 Z" />
-</g>
-</svg>

@@ -55,6 +55,7 @@
 	$lang['strfirst'] = '<< First';
 	$lang['strlast'] = 'Last >>';
 	$lang['strcreate'] = 'Create';
+	$lang['strrecreate'] = 'Recreate';
 	$lang['strcomment'] = 'Comment';
 	$lang['strcommentlabel'] = 'Comment: ';
 	$lang['strdefault'] = 'Default';
@@ -258,6 +259,7 @@
 	$lang['emajlogsession'] = 'Log session';
 	$lang['emajgroupcreatedat'] = 'Created at';
 	$lang['emajgroupcreateddroppedat'] = 'Created/dropped at';
+	$lang['emajgrouplatestdropat'] = 'Latest drop at';
 	$lang['emajgroupstartedat'] = 'Started at';
 	$lang['emajgroupstoppedat'] = 'Stopped at';
 	$lang['emajmarksetat'] = 'Set at';
@@ -471,6 +473,8 @@
 	$lang['emajnoconfiguredgroup'] = 'To create a (another) tables group, go first to the groups configuration tab.<br>Alternatively, you can create an empty group, then add tables and sequences into it, and apply the configuration change.';
 	$lang['emajcreateemptygroup'] = 'Create an empty group';
 	$lang['emajnewgroup'] = 'New group';
+	$lang['emajdroppedgroupslist'] = 'Old dropped tables groups';
+	$lang['emajnodroppedgroup'] = 'No old dropped tables groups.';
 
 	// Rollback activity
 	$lang['emajrlbkid'] = 'Rlbk Id.';

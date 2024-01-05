@@ -646,6 +646,59 @@
 				echo "</div>\n";
 			}
 		}
+		if ($emajdb->getNumEmajVersion() >= 40400) {					// version >= 4.4
+		// display the list of dropped tables group
+
+			$droppedGroups = $emajdb->getDroppedGroups();
+
+			$columns = array(
+				'group' => array(
+					'title' => $lang['emajgroup'],
+					'field' => field('grph_group'),
+					'url'   => "emajgroups.php?action=show_history_group&amp;{$misc->href}&amp;",
+					'vars'  => array('group' => 'grph_group'),
+				),
+				'latestdropdatetime' => array(
+					'title' => $lang['emajgrouplatestdropat'],
+					'field' => field('latest_drop_datetime'),
+					'type' => 'spanned',
+					'params'=> array(
+						'dateformat' => $lang['stroldtimestampformat'],
+						'locale' => $lang['applocale'],
+						'class' => 'tooltip left-aligned-tooltip',
+						),
+					'sorter_text_extraction' => 'span_text',
+				),
+				'actions' => array(
+					'title' => $lang['stractions'],
+				),
+			);
+
+			if ($emajdb->isEmaj_Adm()) {
+				$droppedActions = array(
+					'create_group' => array(
+						'content' => $lang['strrecreate'],
+						'icon' => 'Create',
+						'attr' => array (
+							'href' => array (
+								'url' => 'emajgroups.php',
+								'urlvars' => array_merge($urlvars, array (
+									'action' => 'create_group',
+									'back' => 'list',
+									'group' => field('grph_group'),
+								))))
+					),
+				);
+			} else {
+				$droppedActions = array();
+			}
+
+			echo "<hr>";
+			$misc->printTitle($lang['emajdroppedgroupslist']);
+
+			$misc->printTable($droppedGroups, $columns, $droppedActions, 'droppedgroups', $lang['emajnodroppedgroup'], null, array('sorter' => true, 'filter' => true));
+
+		}
 	}
 
 	/**
@@ -1909,13 +1962,15 @@
 
 		$misc->printTitle($lang['emajcreateagroup']);
 
+		if (!isset($_REQUEST['group'])) $_REQUEST['group'] = '';
+
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"create_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 
 		echo "<div class=\"form-container\">\n";
 		echo "\t<div class=\"form-label required\">{$lang['emajgroup']}</div>\n";
-		echo "\t<div class=\"form-input\"><input type=\"text\" id=\"group\" name=\"group\" size=\"32\" required pattern=\"\S+.*\" value=\"\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\"></div>\n";
+		echo "\t<div class=\"form-input\"><input type=\"text\" id=\"group\" name=\"group\" size=\"32\" required pattern=\"\S+.*\" value=\"", htmlspecialchars($_REQUEST['group']) , "\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\"></div>\n";
 		echo "\t<div class=\"form-comment\"></div>\n";
 		echo "</div>\n";
 

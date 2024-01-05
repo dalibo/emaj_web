@@ -702,6 +702,22 @@ class EmajDb {
 	}
 
 	/**
+	 * Gets all inexistent tables groups that are known as having existed in the past and having been dropped.
+	 */
+	function getDroppedGroups() {
+		global $data;
+
+		$sql = "SELECT grph_group, to_char(max(time_tx_timestamp),'{$this->tsFormat}') AS latest_drop_datetime
+				FROM emaj.emaj_group_hist
+					 JOIN emaj.emaj_time_stamp ON (time_id = upper(grph_time_range) - 1)
+				WHERE NOT EXISTS (SELECT 0 FROM emaj.emaj_group WHERE group_name = grph_group)
+				GROUP BY 1
+				ORDER BY 1";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
 	 * Gets all configured but not yet created groups.
 	 * They are referenced in emaj_group_def but not in emaj_group tables.
 	 * Also return counters: number of tables, sequences.

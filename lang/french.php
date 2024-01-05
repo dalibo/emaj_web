@@ -55,6 +55,7 @@
 	$lang['strfirst'] = '<< Début';
 	$lang['strlast'] = 'Fin >>';
 	$lang['strcreate'] = 'Créer';
+	$lang['strrecreate'] = 'Recréer';
 	$lang['strcomment'] = 'Commentaire';
 	$lang['strcommentlabel'] = 'Commentaire : ';
 	$lang['strdefault'] = 'Défaut';
@@ -258,6 +259,7 @@
 	$lang['emajlogsession'] = 'Session de log';
 	$lang['emajgroupcreatedat'] = 'Créé le';
 	$lang['emajgroupcreateddroppedat'] = 'Créé/supprimé le';
+	$lang['emajgrouplatestdropat'] = 'Dernière suppression à';
 	$lang['emajgroupstartedat'] = 'Démarré le';
 	$lang['emajgroupstoppedat'] = 'Arrêté le';
 	$lang['emajmarksetat'] = 'Posée le';
@@ -471,6 +473,8 @@
 	$lang['emajnoconfiguredgroup'] = 'Pour créer un (autre) groupe de tables, allez d\'abord dans l\'onglet de configuration des groupes.<br>Vous pouvez aussi créer un groupe vide puis y ajouter des tables et séquences puis appliquer le changement de configuration.';
 	$lang['emajcreateemptygroup'] = 'Créer un groupe vide';
 	$lang['emajnewgroup'] = 'Nouveau groupe';
+	$lang['emajdroppedgroupslist'] = 'Anciens groupes de tables supprimés';
+	$lang['emajnodroppedgroup'] = 'Aucun ancien groupe de tables supprimé.';
 
 	// Rollback activity
 	$lang['emajrlbkid'] = 'Id. Rlbk';

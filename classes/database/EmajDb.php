@@ -805,6 +805,23 @@ class EmajDb {
 	}
 
 	/**
+	 * Verify whether a group currently exists
+	 */
+	function existsGroup($group) {
+		global $data;
+
+		$data->clean($group);
+
+		$sql = "SELECT exists(
+					SELECT 0
+						FROM emaj.emaj_group
+						WHERE group_name = '{$group}'
+					) as group_exists";
+
+		return $data->selectField($sql,'group_exists');
+	}
+
+	/**
 	 * Gets properties of one emaj_group
 	 */
 	function getGroup($group) {

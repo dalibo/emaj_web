@@ -262,6 +262,24 @@
 	}
 
 /********************************************************************************************************
+ * Other elementary functions
+ *******************************************************************************************************/
+
+	/**
+	 * Check that a group still exists
+	 */
+	function recheckGroupExists($group) {
+		global $lang, $emajdb, $_reload_browser, $misc;
+
+		if ($emajdb->existsGroup($group) != 't') {
+			show_groups('', sprintf($lang['emajnomoregroup'], htmlspecialchars($group)));
+			$_reload_browser = true;
+			$misc->printFooter();
+			exit();
+		}
+	}
+
+/********************************************************************************************************
  * Main functions displaying pages
  *******************************************************************************************************/
 
@@ -635,6 +653,8 @@
 	 */
 	function show_group($msg = '', $errMsg = '') {
 		global $misc, $lang, $emajdb;
+
+		recheckGroupExists($_REQUEST['group']);
 
 		$misc->printHeader('emaj', 'emajgroup', 'emajgroupproperties');
 
@@ -1098,6 +1118,8 @@
 	 */
 	function changes_stat_group() {
 		global $misc, $lang, $emajdb;
+
+		recheckGroupExists($_REQUEST['group']);
 
 		$misc->printHeader('emaj', 'emajgroup', 'emajchangesstat');
 
@@ -1692,10 +1714,12 @@
 	}
 
 	/**
-	 * Displays the list of tables and sequences that composes a group
+	 * Displays the list of tables and sequences owned by a group
 	 */
 	function show_content_group() {
 		global $misc, $lang, $emajdb;
+
+		recheckGroupExists($_REQUEST['group']);
 
 		$misc->printHeader('emaj', 'emajgroup', 'emajcontent');
 
@@ -2061,7 +2085,7 @@
 			}
 		} else {
 
-		// Check the group is always in IDLE state
+		// Check the group is still in IDLE state
 			$group = $emajdb->getGroup($_REQUEST['group']);
 			if ($group->fields['group_state'] != 'IDLE') {
 				if ($_POST['back']=='list') {

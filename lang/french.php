@@ -253,6 +253,7 @@
 	$lang['emajtablesgroup'] = 'Groupe de tables';
 	$lang['emajgroup'] = 'Groupe';
 	$lang['emajgroups'] = 'Groupes';
+	$lang['emajnomoregroup'] = 'Le groupe de tables "%s" n\'existe plus !';
 	$lang['emajmark'] = 'Marque';
 	$lang['emajlogsession'] = 'Session de log';
 	$lang['emajgroupcreatedat'] = 'Créé le';
@@ -612,7 +613,7 @@
 	// Group's history
 	$lang['emajgrouphistory'] = 'Historique du groupe de tables "%s"';
 	$lang['emajnohistory'] = 'Il n\'y a aucun historique à afficher pour ce groupe.';
-	$lang['emajgrouphistoryorder'] = 'Les plus récentes créations, suppressions et sessions de log sont placées en début de tableau.';
+	$lang['emajgrouphistoryorder'] = 'Les plus récentes créations de groupe, suppressions de groupe et sessions de log sont placées en début de tableau.';
 	$lang['emajnblogsessions'] = 'Sessions de log';
 	$lang['emajgroupcreate'] = 'Création du groupe';
 	$lang['emajgroupdrop'] = 'Suppression du groupe';

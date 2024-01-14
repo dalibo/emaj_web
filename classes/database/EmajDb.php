@@ -821,24 +821,74 @@ class EmajDb {
 	}
 
 	/**
-	 * Verify whether a group currently exists
+	 * Verifies whether a group currently exists
 	 */
 	function existsGroup($group) {
 		global $data;
 
 		$data->clean($group);
 
-		$sql = "SELECT exists(
-					SELECT 0
+		$sql = "SELECT CASE WHEN EXISTS
+					(SELECT 0
 						FROM emaj.emaj_group
 						WHERE group_name = '{$group}'
-					) as group_exists";
+					) THEN 1 ELSE 0 END AS group_exists";
 
 		return $data->selectField($sql,'group_exists');
 	}
 
 	/**
-	 * Gets properties of one emaj_group
+	 * Detects groups that no longer exist
+	 */
+	function missingGroups($groupsList) {
+		global $data;
+
+		$data->clean($groupsList);
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groupsList)."']";
+
+		$sql = "SELECT count(*) AS nb_groups, string_agg(name, ', ') AS groups_list
+					FROM unnest({$groupsArray}) AS name
+					WHERE NOT EXISTS(SELECT 0 FROM emaj.emaj_group WHERE group_name = name)";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Detects groups in logging state
+	 */
+	function loggingGroups($groupsList) {
+		global $data;
+
+		$data->clean($groupsList);
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groupsList)."']";
+
+		$sql = "SELECT count(*) AS nb_groups, string_agg(group_name, ', ') AS groups_list
+					FROM emaj.emaj_group
+					WHERE group_name = ANY({$groupsArray})
+					  AND group_is_logging";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Detects groups in idle state
+	 */
+	function idleGroups($groupsList) {
+		global $data;
+
+		$data->clean($groupsList);
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groupsList)."']";
+
+		$sql = "SELECT count(*) AS nb_groups, string_agg(group_name, ', ') AS groups_list
+					FROM emaj.emaj_group
+					WHERE group_name = ANY({$groupsArray})
+					  AND NOT group_is_logging";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Gets properties of a single tables group
 	 */
 	function getGroup($group) {
 		global $data;

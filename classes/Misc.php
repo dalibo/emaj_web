@@ -984,7 +984,7 @@
 					break;
 
 				case 'emajgroup':
-					$droppedGroup = ($emajdb->existsGroup($_REQUEST['group']) != 't');
+					$droppedGroup = (! $emajdb->existsGroup($_REQUEST['group']));
 					$historyNotAvail = ($emajdb->getNumEmajVersion() < 40400);
 					$tabs = array (
 						'emajgroupproperties' => array (

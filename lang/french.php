@@ -107,6 +107,7 @@
 	$lang['strquantity'] = 'Quantité';
 	$lang['strautorefresh'] = 'Rafraîchissement auto';
 	$lang['strbacktolist'] = 'Retour à la liste';
+	$lang['strset'] = 'Poser';
 
 	// User-supplied SQL editing
 	$lang['strsqledit'] = 'Édition de requête SQL';
@@ -247,6 +248,7 @@
 //
 // E-Maj strings
 //
+
 	// Basic strings
 	$lang['emajnotavail'] = 'Désolé, E-Maj n\'est pas disponible ou accessible sur cette base de données. Plus de détails sur l\'onglet %s.';
 	$lang['emajstate'] = 'État';
@@ -254,7 +256,6 @@
 	$lang['emajtablesgroup'] = 'Groupe de tables';
 	$lang['emajgroup'] = 'Groupe';
 	$lang['emajgroups'] = 'Groupes';
-	$lang['emajnomoregroup'] = 'Le groupe de tables "%s" n\'existe plus !';
 	$lang['emajmark'] = 'Marque';
 	$lang['emajlogsession'] = 'Session de log';
 	$lang['emajgroupcreatedat'] = 'Créé le';
@@ -299,6 +300,9 @@
 	$lang['emajremove'] = 'Retirer';
 	$lang['emajremoved'] = 'Retirée';
 	$lang['emajvisible'] = 'Visibles';
+	$lang['emajsetmark'] = 'Poser une marque';
+	$lang['emajsetcomment'] = 'Commenter';
+	$lang['emajdorollbackfor'] = 'Exécuter un rollback pour';
 
 	// E-Maj html titles and tabs
 	$lang['emajgroupsmanagement'] = 'Gestion des groupes E-Maj';
@@ -459,8 +463,6 @@
 	$lang['emajnbtbl'] = 'Tables';
 	$lang['emajnbseq'] = 'Séquences';
 	$lang['emajnbmark'] = 'Marques';
-	$lang['emajsetmark'] = 'Poser une marque';
-	$lang['emajsetcomment'] = 'Commenter';
 	$lang['emajApplyConfChanges'] = 'Appliquer changements conf';
 	$lang['emajnoidlegroup'] = 'Il n\'y a actuellement aucun groupe de tables en état "arrêté".';
 	$lang['emajnologginggroup'] = 'Il n\'y a actuellement aucun groupe de tables en état "démarré".';
@@ -623,6 +625,19 @@
 	$lang['emajgroupdrop'] = 'Suppression du groupe';
 	$lang['emajdeletedlogsessions'] = 'Des sessions de log supprimées';
 
+	// Groups checks for actions
+	$lang['emajimpossibleactiongroup'] = 'Impossible de %s le groupe de tables "%s".';
+	$lang['emajimpossibleactiongroups'] = 'Impossible de %s les groupes de tables "%s".';
+	$lang['emajimpossibleactionmarkgroup'] = 'Impossible de %s une marque pour le groupe de tables "%s".';
+	$lang['emajimpossibleactionmarkgroups'] = 'Impossible de %s une marque pour les groupes de tables "%s".';
+	$lang['emajimpossibleactionmarksgroup'] = 'Impossible de %s des marques pour le groupe de tables "%s".';
+	$lang['emajgroupmissing'] = 'Le groupe de tables "%s" n\'existe plus.';
+	$lang['emajgroupsmissing'] = '%s groupes de tables (%s) n\'existent plus.';
+	$lang['emajgroupnotstopped'] = 'Le groupe de tables "%s" n\'est plus arrêté.';
+	$lang['emajgroupsnotstopped'] = '%s groupes de tables (%s) ne sont plus arrêtés.';
+	$lang['emajgroupnotstarted'] = 'Le groupe de tables "%s" n\'est plus démarré.';
+	$lang['emajgroupsnotstarted'] = '%s groupes de tables (%s) ne sont plus démarrés.';
+
 	// Group creation
 	$lang['emajcreateagroup'] = 'E-Maj : Créer un groupe de tables';
 	$lang['emajconfirmcreategroup'] = 'Êtes-vous sûr de vouloir créer le groupe de tables "%s" ?';
@@ -657,14 +672,12 @@
 	// Group drop
 	$lang['emajdropagroup'] = 'E-Maj : Supprimer un groupe de tables';
 	$lang['emajconfirmdropgroup'] = 'Êtes-vous sûr de vouloir supprimer le groupe de tables "%s" ?';
-	$lang['emajcantdropgroup'] = 'La suppression du groupe de tables "%s" est impossible. Le groupe est démarré.';
 	$lang['emajdropgroupok'] = 'Le groupe de tables "%s" a été supprimé.';
 	$lang['emajdropgrouperr'] = 'Erreur lors de la suppression du groupe de tables "%s" !';
 
 	// Groups drop
 	$lang['emajdropgroups'] = 'E-Maj : Supprimer les groupes de tables';
 	$lang['emajconfirmdropgroups'] = 'Êtes-vous sûr de vouloir supprimer les groupes de tables "%s" ?';
-	$lang['emajcantdropgroups'] = 'La suppression des groupes de tables "%s" est impossible. Au moins un des groupes est démarré.';
 	$lang['emajdropgroupsok'] = 'Les groupes de tables "%s" ont été supprimés.';
 	$lang['emajdropgroupserr'] = 'Erreur lors de la suppression des groupes de tables "%s" !';
 
@@ -721,29 +734,17 @@
 	$lang['emajcommentgroupok'] = 'Le commentaire a été enregistré pour le groupe de tables "%s".';
 	$lang['emajcommentgrouperr'] = 'Erreur lors de l\'enregistrement du commentaire pour le groupe de tables "%s" !';
 
-	// Group protect
-	$lang['emajcantprotectgroup'] = 'La protection du groupe de tables "%s" est impossible. Le groupe est arrêté.';
-	$lang['emajprotectgroupok'] = 'Le groupe de tables "%s" est maintenant protégé contre les rollbacks.';
-	$lang['emajprotectgrouperr'] = 'Erreur lors de la protection du groupe de tables "%s" !';
-
-	// Group unprotect
-	$lang['emajcantunprotectgroup'] = 'La déprotection du groupe de tables "%s" est impossible. Le groupe est arrêté.';
-	$lang['emajunprotectgroupok'] = 'Le groupe de tables "%s" est maintenant déprotégé.';
-	$lang['emajunprotectgrouperr'] = 'Erreur lors de la deprotection du groupe de tables "%s" !';
-
 	// Group start
 	$lang['emajstartagroup'] = 'E-Maj : Démarrer un groupe de tables';
 	$lang['emajconfirmstartgroup'] = 'Démarrage du groupe de tables "%s"';
 	$lang['emajinitmark'] = 'Marque initiale';
 	$lang['emajoldlogsdeletion'] = 'Suppression des anciens logs';
-	$lang['emajcantstartgroup'] = 'Le démarrage du groupe de tables "%s" est impossible. Le groupe est déjà démarré.';
 	$lang['emajstartgroupok'] = 'Le groupe de tables "%s" est démarré avec la marque "%s".';
 	$lang['emajstartgrouperr'] = 'Erreur lors du démarrage du groupe de tables "%s" !';
 
 	// Groups start
 	$lang['emajstartgroups'] = 'E-Maj : Démarrer des groupes de tables';
 	$lang['emajconfirmstartgroups'] = 'Démarrage des groupes de tables "%s"';
-	$lang['emajcantstartgroups'] = 'Le démarrage des groupes de tables "%s" est impossible. Le groupe "%s" est déjà démarré.';
 	$lang['emajstartgroupsok'] = 'Les groupes de tables "%s" ont été démarrés avec la marque "%s".';
 	$lang['emajstartgroupserr'] = 'Erreur lors du démarrage des groupes de tables "%s" !';
 
@@ -752,50 +753,50 @@
 	$lang['emajconfirmstopgroup'] = 'Arrêt du groupe de tables "%s"';
 	$lang['emajstopmark'] = 'Marque finale';
 	$lang['emajforcestop'] = 'Forcer l\'arrêt (en cas de problème seulement)';
-	$lang['emajcantstopgroup'] = 'L\'arrêt du groupe de tables "%s" est impossible. Le groupe est déjà arrêté.';
 	$lang['emajstopgroupok'] = 'Le groupe de tables "%s" a été arrêté.';
 	$lang['emajstopgrouperr'] = 'Erreur lors de l\'arrêt du groupe de tables "%s" !';
 
 	// Groups stop
 	$lang['emajstopgroups'] = 'E-Maj : Arrêter des groupes de tables';
 	$lang['emajconfirmstopgroups'] = 'Arrêt des groupes de tables "%s"';
-	$lang['emajcantstopgroups'] = 'L\'arrêt des groupes de tables "%s" est impossible. Le groupe "%s" est déjà arrêté.';
 	$lang['emajstopgroupsok'] = 'Les groupes de tables "%s" ont été arrêtés.';
 	$lang['emajstopgroupserr'] = 'Erreur lors de l\'arrêt des groupes de tables "%s" !';
 
 	// Group reset
 	$lang['emajresetagroup'] = 'E-Maj : Réinitialiser un groupe de tables';
 	$lang['emajconfirmresetgroup'] = 'Êtes-vous sûr de vouloir réinitialiser le groupe de tables "%s" ?';
-	$lang['emajcantresetgroup'] = 'La réinitialisation du groupe de tables "%s" est impossible. Le groupe est démarré.';
 	$lang['emajresetgroupok'] = 'Le groupe de tables "%s" est réinitialisé.';
 	$lang['emajresetgrouperr'] = 'Erreur lors de la réinitialisation du groupe de tables "%s" !';
 
 	// Groups reset
 	$lang['emajresetgroups'] = 'E-Maj : Réinitialiser des groupes de tables';
 	$lang['emajconfirmresetgroups'] = 'Êtes-vous sûr de vouloir réinitialiser les groupe de tables "%s" ?';
-	$lang['emajcantresetgroups'] = 'La réinitialisation des groupes de tables "%s" est impossible. Au moins un groupe est démarré.';
 	$lang['emajresetgroupsok'] = 'Les groupes de tables "%s" ont été réinitialisés.';
 	$lang['emajresetgroupserr'] = 'Erreur lors de la réinitialisation des groupes de tables "%s" !';
+
+	// Group protect
+	$lang['emajprotectgroupok'] = 'Le groupe de tables "%s" est maintenant protégé contre les rollbacks.';
+	$lang['emajprotectgrouperr'] = 'Erreur lors de la protection du groupe de tables "%s" !';
+
+	// Group unprotect
+	$lang['emajunprotectgroupok'] = 'Le groupe de tables "%s" est maintenant déprotégé.';
+	$lang['emajunprotectgrouperr'] = 'Erreur lors de la deprotection du groupe de tables "%s" !';
 
 	// Set Mark for one or several groups
 	$lang['emajsetamark'] = 'E-Maj : Poser une marque';
 	$lang['emajconfirmsetmarkgroup'] = 'Pose d\'une marque pour le groupe de tables "%s" :';
-	$lang['emajcantsetmarkgroup'] = 'La pose d\'une marque pour le groupe de tables "%s" est impossible. Le groupe est arrêté.';
 	$lang['emajinvalidmark'] = 'La marque saisie (%s) est invalide.';
 	$lang['emajsetmarkgroupok'] = 'La marque "%s" est posée pour le groupe de tables "%s".';
 	$lang['emajsetmarkgrouperr'] = 'Erreur lors de la pose de la marque "%s" pour le groupe de tables "%s" !';
 	$lang['emajconfirmsetmarkgroups'] = 'Pose d\'une marque pour les groupes de tables "%s" :';
-	$lang['emajcantsetmarkgroups'] = 'La pose d\'une marque pour le groupe de tables "%s" est impossible. Le groupe "%s" est arrêté.';
 	$lang['emajsetmarkgroupsok'] = 'La marque "%s" est posée pour les groupes de tables "%s".';
 	$lang['emajsetmarkgroupserr'] = 'Erreur lors de la pose de la marque "%s" pour les groupes de tables "%s" !';
 
 	// Protect mark
-	$lang['emajcantprotectmarkgroup'] = 'La protection d\'une marque pour le groupe de tables "%s" est impossible. Le groupe est arrêté.';
 	$lang['emajprotectmarkgroupok'] = 'La marque "%s" du groupe de tables "%s" est maintenant protégé contre les rollbacks.';
 	$lang['emajprotectmarkgrouperr'] = 'Erreur lors de la protection de la marque "%s" du groupe de tables "%s" !';
 
 	// Unprotect mark
-	$lang['emajcantunprotectmarkgroup'] = 'La déprotection d\'une marque pour le groupe de tables "%s" est impossible. Le groupe est arrêté.';
 	$lang['emajunprotectmarkgroupok'] = 'La marque "%s" du groupe de tables "%s" est maintenant déprotégé.';
 	$lang['emajunprotectmarkgrouperr'] = 'Erreur lors de la déprotection de la marque "%s" du groupe de tables "%s" !';
 
@@ -814,7 +815,6 @@
 	$lang['emajdurationhoursminutes'] = '%s h %s min';
 	$lang['emajdurationovertendays'] = '> 10 jours';
 	$lang['emajrlbkthenmonitor'] = 'Rollback et suivi';
-	$lang['emajcantrlbkidlegroup'] = 'Le rollback du groupe de tables "%s" est impossible. Le groupe est arrêté.';
 	$lang['emajcantrlbkprotgroup'] = 'Le rollback du groupe de tables "%s" est impossible. Le groupe est protégé.';
 	$lang['emajcantrlbkinvalidmarkgroup'] = 'Le rollback du groupe de tables "%s" est impossible. La marque "%s" n\'est pas valide.';
 	$lang['emajreachaltergroup'] = 'Le rollback du groupe de tables "%s" à la marque "%s" remonterait à un point dans le temps antérieur à des opérations de modification du groupe. Veuillez confirmer le rollback.';
@@ -828,7 +828,6 @@
 	// Groups rollback
 	$lang['emajrlbkgroups'] = 'E-Maj : Rollbacker des groupes de tables';
 	$lang['emajselectmarkgroups'] = 'Rollback des groupes de tables "%s" à la marque : ';
-	$lang['emajcantrlbkidlegroups'] = 'Le rollback des groupes de tables "%s" est impossible. Le groupe "%s" est arrêté.';
 	$lang['emajcantrlbkprotgroups'] = 'Le rollback des groupes de tables "%s" est impossible. Les groupes "%s" sont protégés.';
 	$lang['emajnomarkgroups'] = 'Aucune marque commune aux groupes de tables "%s" ne peut être utilisée pour un rollback.';
 	$lang['emajcantrlbkinvalidmarkgroups'] = 'Le rollback des groupes de tables "%s" est impossible. La marque "%s" n\'est pas valide.';

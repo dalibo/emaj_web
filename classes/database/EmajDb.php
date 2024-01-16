@@ -2605,7 +2605,7 @@ class EmajDb {
 						THEN false ELSE true END AS altr_auto_rolled_back
 					FROM emaj.emaj_relation_change, emaj.emaj_time_stamp
 					WHERE time_id = rlchg_time_id
-						AND rlchg_group = ANY ({$groupsArray})
+						AND (rlchg_group = ANY ({$groupsArray}) OR rlchg_new_group = ANY ({$groupsArray}))
 						AND rlchg_time_id >
 							(SELECT mark_time_id FROM emaj.emaj_mark WHERE mark_group = '{$firstGroup}' AND mark_name = '{$mark}')
 						AND rlchg_change_kind IN   ('ADD_TABLE', 'ADD_SEQUENCE', 'REMOVE_TABLE', 'REMOVE_SEQUENCE',

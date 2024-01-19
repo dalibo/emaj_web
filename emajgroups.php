@@ -266,6 +266,23 @@
  *******************************************************************************************************/
 
 	/**
+	 * Process the click on the <cancel> button.
+	 */
+	function processCancelButton($back) {
+		global $misc;
+
+		// Call either the show_groups or the show_group function depending on the $back parameter.
+		if (isset($_POST['cancel'])) {
+			if ($back == 'list')
+				show_groups();
+			else
+				show_group();
+			$misc->printFooter();
+			exit();
+		}
+	}
+
+	/**
 	 * Transforms a groups array into a groups list, separated by ', '
 	 */
 	function groupsArray2list($groups) {
@@ -2209,14 +2226,8 @@
 	function drop_group_ok() {
 		global $lang, $emajdb, $_reload_browser;
 
-	// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			if ($_POST['back'] == 'list')
-				show_groups();
-			else
-				show_group();
-			return;
-		}
+		// Process the click on the <cancel> button
+		processCancelButton($_POST['back']);
 
 		// Check the group still exists and is in IDLE state
 		recheckGroups($_REQUEST['group'], 'emajimpossibleactiongroup', 'strdrop', 'IDLE', $_REQUEST['back']);
@@ -2268,11 +2279,8 @@
 	function drop_groups_ok() {
 		global $lang, $emajdb, $_reload_browser;
 
-		// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			show_groups();
-			return;
-		}
+		// Process the click on the <cancel> button
+		processCancelButton('list');
 
 		// Check that all groups exist and are in IDLE state
 		recheckGroups($_POST['groups'], 'emajimpossibleactiongroups', 'strdrop', 'IDLE', 'list');
@@ -2592,14 +2600,8 @@
 	function comment_group_ok() {
 		global $lang, $emajdb;
 
-		// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			if ($_POST['back'] == 'list')
-				show_groups();
-			else
-				show_group();
-			return;
-		}
+		// Process the click on the <cancel> button
+		processCancelButton($_POST['back']);
 
 		// Check the group still exists
 		recheckGroups($_REQUEST['group'], 'emajimpossibleactiongroup', 'emajsetcomment');
@@ -2793,178 +2795,175 @@
 
 		global $misc, $lang, $emajdb;
 
-		// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			show_groups();
-		} else {
+		// Process the click on the <cancel> button
+		processCancelButton('list');
 
 		// Process the uploaded file
 
-			// If the file is properly loaded,
-			if (is_uploaded_file($_FILES['file_name']['tmp_name'])) {
-				$jsonContent = file_get_contents($_FILES['file_name']['tmp_name']);
-				$jsonStructure = json_decode($jsonContent, true);
-			// ... and contains a valid JSON structure,
-				if (json_last_error()===JSON_ERROR_NONE) {
+		// If the file is properly loaded,
+		if (is_uploaded_file($_FILES['file_name']['tmp_name'])) {
+			$jsonContent = file_get_contents($_FILES['file_name']['tmp_name']);
+			$jsonStructure = json_decode($jsonContent, true);
+		// ... and contains a valid JSON structure,
+			if (json_last_error()===JSON_ERROR_NONE) {
 
-					$misc->printHeader('database', 'database','emajgroups');
+				$misc->printHeader('database', 'database','emajgroups');
 
-					$misc->printTitle($lang['emajimportgroupsconf']);
+				$misc->printTitle($lang['emajimportgroupsconf']);
 
-					// check that the json content is valid
+				// check that the json content is valid
 
-					$errors = $emajdb->checkJsonGroupsConf($jsonContent);
+				$errors = $emajdb->checkJsonGroupsConf($jsonContent);
 
-					if ($errors->recordCount() == 0) {
-						// No error has been detected in the json structure, so display the tables groups to select
+				if ($errors->recordCount() == 0) {
+					// No error has been detected in the json structure, so display the tables groups to select
 
-						echo "<p>" . sprintf($lang['emajimportgroupsinfile'], $_FILES['file_name']['name']) . "</p>\n";
+					echo "<p>" . sprintf($lang['emajimportgroupsinfile'], $_FILES['file_name']['name']) . "</p>\n";
 
-						// Extract the list of configured tables groups
-						$groupsList='';
-						foreach($jsonStructure["tables_groups"] as $jsonGroup){
-							if (isSet($jsonGroup["group"])) {
-								$groupsList .= "('" . htmlspecialchars_decode($jsonGroup["group"], ENT_QUOTES) . "'), ";
-							}
+					// Extract the list of configured tables groups
+					$groupsList='';
+					foreach($jsonStructure["tables_groups"] as $jsonGroup){
+						if (isSet($jsonGroup["group"])) {
+							$groupsList .= "('" . htmlspecialchars_decode($jsonGroup["group"], ENT_QUOTES) . "'), ";
 						}
-						$groupsList=substr($groupsList,0,strlen($groupsList)-2);
-
-						// Get data about existing groups
-						$groups = $emajdb->getGroupsToImport($groupsList);
-
-						// Display the groups list
-						$columns = array(
-							'group' => array(
-								'title' => $lang['emajgroup'],
-								'field' => field('grp_name'),
-							),
-							'state' => array(
-								'title' => $lang['emajstate'],
-								'field' => field('group_state'),
-								'type'	=> 'callback',
-								'params'=> array(
-									'function' => 'renderGroupState',
-									'align' => 'center'
-									),
-								'filter' => false,
-							),
-							'rollbackable' => array(
-								'title' => $lang['strtype'],
-								'field' => field('group_type'),
-								'type'	=> 'callback',
-								'params'=> array(
-									'function' => 'renderGroupType',
-									'align' => 'center'
-									),
-								'sorter_text_extraction' => 'img_alt',
-								'filter' => false,
-							),
-							'nbtbl' => array(
-								'title' => $lang['emajnbtbl'],
-								'field' => field('group_nb_table'),
-								'type'  => 'numeric'
-							),
-							'nbseq' => array(
-								'title' => $lang['emajnbseq'],
-								'field' => field('group_nb_sequence'),
-								'type'  => 'numeric'
-							),
-							'comment' => array(
-								'title' => $lang['strcomment'],
-								'field' => field('group_comment'),
-							),
-						);
-
-						$urlvars = $misc->getRequestVars();
-
-						$actions = array();
-						if ($emajdb->isEmaj_Adm()) {
-							$actions = array_merge($actions, array(
-								'multiactions' => array(
-									'keycols' => array('group' => 'grp_name'),
-									'url' => "emajgroups.php",
-									'vars' => array (
-										'back' => 'list',
-										'file' => $_FILES['file_name']['name'],
-										'json' => json_encode($jsonStructure),
-									),
-									'checked' => true,							// all groups are selected by default
-									'close_form' => false,						// do not close the form in order to add additional inputs
-								),
-								'import_group' => array(
-									'content' => $lang['strimport'],
-									'multiaction' => 'import_groups_ok',
-								),
-							));
-						};
-
-						$misc->printTable($groups, $columns, $actions, 'groups', '', null, array('sorter' => true, 'filter' => true));
-
-						// Add an input to specify the mark name to set
-						if ($emajdb->getNumEmajVersion() >= 40000){	// version 4.0+
-							echo "<div class=\"form-container\" style=\"margin-top: 15px; margin-bottom: 15px;\">\n";
-							echo "\t<div class=\"form-label\">{$lang['emajmark']}</div>\n";
-							echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"IMPORT_%\" /></div>\n";
-							echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
-							echo "</div>\n";
-						} else {
-							echo "<input type=\"hidden\" name=\"mark\" value=\"\">\n";
-						}
-						echo "</form>\n";
-
-						echo "<p><form action=\"emajgroups.php\" method=\"post\">\n";
-						echo $misc->form;
-						echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
-						echo "</form></p>\n";
-
-					} else {
-					// The json structure contains errors. Display them.
-
-						echo "<p>" . sprintf($lang['emajimportgroupsinfileerr'], $_FILES['file_name']['name']) . "</p>";
-
-						$columns = array(
-							'severity' => array(
-								'title' => '',
-								'field' => field('rpt_severity'),
-								'type'	=> 'callback',
-								'params'=> array('function' => 'renderMsgSeverity','align' => 'center'),
-								'sorter' => false,
-							),
-							'message' => array(
-								'title' => $lang['emajdiagnostics'],
-								'field' => field('rpt_message'),
-							),
-						);
-
-						$actions = array ();
-
-						$misc->printTable($errors, $columns, $actions, 'checks', null, null, array('sorter' => true, 'filter' => false));
-
-						echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-						echo "<p><input type=\"hidden\" name=\"action\" value=\"import_groups_ok\" />\n";
-						echo $misc->form;
-						echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strok']}\" /></p>\n";
-						echo "</form>\n";
-
 					}
+					$groupsList=substr($groupsList,0,strlen($groupsList)-2);
+
+					// Get data about existing groups
+					$groups = $emajdb->getGroupsToImport($groupsList);
+
+					// Display the groups list
+					$columns = array(
+						'group' => array(
+							'title' => $lang['emajgroup'],
+							'field' => field('grp_name'),
+						),
+						'state' => array(
+							'title' => $lang['emajstate'],
+							'field' => field('group_state'),
+							'type'	=> 'callback',
+							'params'=> array(
+								'function' => 'renderGroupState',
+								'align' => 'center'
+								),
+							'filter' => false,
+						),
+						'rollbackable' => array(
+							'title' => $lang['strtype'],
+							'field' => field('group_type'),
+							'type'	=> 'callback',
+							'params'=> array(
+								'function' => 'renderGroupType',
+								'align' => 'center'
+								),
+							'sorter_text_extraction' => 'img_alt',
+							'filter' => false,
+						),
+						'nbtbl' => array(
+							'title' => $lang['emajnbtbl'],
+							'field' => field('group_nb_table'),
+							'type'  => 'numeric'
+						),
+						'nbseq' => array(
+							'title' => $lang['emajnbseq'],
+							'field' => field('group_nb_sequence'),
+							'type'  => 'numeric'
+						),
+						'comment' => array(
+							'title' => $lang['strcomment'],
+							'field' => field('group_comment'),
+						),
+					);
+
+					$urlvars = $misc->getRequestVars();
+
+					$actions = array();
+					if ($emajdb->isEmaj_Adm()) {
+						$actions = array_merge($actions, array(
+							'multiactions' => array(
+								'keycols' => array('group' => 'grp_name'),
+								'url' => "emajgroups.php",
+								'vars' => array (
+									'back' => 'list',
+									'file' => $_FILES['file_name']['name'],
+									'json' => json_encode($jsonStructure),
+								),
+								'checked' => true,							// all groups are selected by default
+								'close_form' => false,						// do not close the form in order to add additional inputs
+							),
+							'import_group' => array(
+								'content' => $lang['strimport'],
+								'multiaction' => 'import_groups_ok',
+							),
+						));
+					};
+
+					$misc->printTable($groups, $columns, $actions, 'groups', '', null, array('sorter' => true, 'filter' => true));
+
+					// Add an input to specify the mark name to set
+					if ($emajdb->getNumEmajVersion() >= 40000){	// version 4.0+
+						echo "<div class=\"form-container\" style=\"margin-top: 15px; margin-bottom: 15px;\">\n";
+						echo "\t<div class=\"form-label\">{$lang['emajmark']}</div>\n";
+						echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"IMPORT_%\" /></div>\n";
+						echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+						echo "</div>\n";
+					} else {
+						echo "<input type=\"hidden\" name=\"mark\" value=\"\">\n";
+					}
+					echo "</form>\n";
+
+					echo "<p><form action=\"emajgroups.php\" method=\"post\">\n";
+					echo $misc->form;
+					echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+					echo "</form></p>\n";
+
 				} else {
-					show_groups('', sprintf($lang['emajnotjsonfile'], $_FILES['file_name']['name']));
+				// The json structure contains errors. Display them.
+
+					echo "<p>" . sprintf($lang['emajimportgroupsinfileerr'], $_FILES['file_name']['name']) . "</p>";
+
+					$columns = array(
+						'severity' => array(
+							'title' => '',
+							'field' => field('rpt_severity'),
+							'type'	=> 'callback',
+							'params'=> array('function' => 'renderMsgSeverity','align' => 'center'),
+							'sorter' => false,
+						),
+						'message' => array(
+							'title' => $lang['emajdiagnostics'],
+							'field' => field('rpt_message'),
+						),
+					);
+
+					$actions = array ();
+
+					$misc->printTable($errors, $columns, $actions, 'checks', null, null, array('sorter' => true, 'filter' => false));
+
+					echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+					echo "<p><input type=\"hidden\" name=\"action\" value=\"import_groups_ok\" />\n";
+					echo $misc->form;
+					echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strok']}\" /></p>\n";
+					echo "</form>\n";
+
 				}
 			} else {
-				switch($_FILES['file_name']['error']){
-					case 1: //uploaded file exceeds the upload_max_filesize directive in php.ini
-					case 2: //uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the html form
-						$errMsg = $lang['strimportfiletoobig'];
-						break;
-					case 3: //uploaded file was only partially uploaded
-					case 4: //no file was uploaded
-					case 0: //no error; possible file attack!
-					default: //a default error, just in case!  :)
-						$errMsg = $lang['strimporterror-uploadedfile'];
-						break;
-				}
-				show_groups('', $errMsg);
+				show_groups('', sprintf($lang['emajnotjsonfile'], $_FILES['file_name']['name']));
 			}
+		} else {
+			switch($_FILES['file_name']['error']){
+				case 1: //uploaded file exceeds the upload_max_filesize directive in php.ini
+				case 2: //uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the html form
+					$errMsg = $lang['strimportfiletoobig'];
+					break;
+				case 3: //uploaded file was only partially uploaded
+				case 4: //no file was uploaded
+				case 0: //no error; possible file attack!
+				default: //a default error, just in case!  :)
+					$errMsg = $lang['strimporterror-uploadedfile'];
+					break;
+			}
+			show_groups('', $errMsg);
 		}
 	}
 
@@ -2975,63 +2974,60 @@
 
 		global $lang, $emajdb, $misc, $_reload_browser;
 
-		// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			show_groups();
-		} else {
+		// Process the click on the <cancel> button
+		processCancelButton('list');
 
-			// build the groups list
-			$groupsList='';
-			foreach($_REQUEST['ma'] as $v) {
-				$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-				$groupsList .= $a['group'] . ', ';
-			}
-			$groupsList = substr($groupsList,0,strlen($groupsList)-2);
+		// build the groups list
+		$groupsList='';
+		foreach($_REQUEST['ma'] as $v) {
+			$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
+			$groupsList .= $a['group'] . ', ';
+		}
+		$groupsList = substr($groupsList,0,strlen($groupsList)-2);
 
-			// prepare the tables groups configuration import
-			$errors = $emajdb->importGroupsConfPrepare($_POST['json'], $groupsList);
-			if ($errors->recordCount() == 0) {
-				// no error detected, so execute the effective configuration import
-				$nbGroup = $emajdb->importGroupsConfig($_POST['json'], $groupsList, $_POST['mark']);
-				if ($nbGroup >= 0) {
-					$_reload_browser = true;
-					show_groups(sprintf($lang['emajgroupsconfimported'], $nbGroup, $_POST['file']));
-				} else {
-					show_groups('', sprintf($lang['emajgroupsconfimporterr'], $_POST['file']));
-				}
+		// prepare the tables groups configuration import
+		$errors = $emajdb->importGroupsConfPrepare($_POST['json'], $groupsList);
+		if ($errors->recordCount() == 0) {
+			// no error detected, so execute the effective configuration import
+			$nbGroup = $emajdb->importGroupsConfig($_POST['json'], $groupsList, $_POST['mark']);
+			if ($nbGroup >= 0) {
+				$_reload_browser = true;
+				show_groups(sprintf($lang['emajgroupsconfimported'], $nbGroup, $_POST['file']));
 			} else {
-				// there are errors to report to the user
-
-				$misc->printHeader('database', 'database','emajgroups');
-
-				$misc->printTitle($lang['emajimportgroupsconf']);
-
-				echo "<p>" . sprintf($lang['emajgroupsconfimportpreperr'], htmlspecialchars($groupsList), htmlspecialchars($_POST['file'])) . "</p>\n";
-
-				$columns = array(
-					'severity' => array(
-						'title' => '',
-						'field' => field('rpt_severity'),
-						'type'	=> 'callback',
-						'params'=> array('function' => 'renderMsgSeverity','align' => 'center'),
-						'sorter' => false,
-					),
-					'message' => array(
-						'title' => $lang['emajdiagnostics'],
-						'field' => field('rpt_message'),
-					),
-				);
-
-				$actions = array ();
-
-				$misc->printTable($errors, $columns, $actions, 'errors', null, null, array('sorter' => true, 'filter' => false));
-
-				echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-				echo "<p><input type=\"hidden\" name=\"action\" value=\"import_group_ok\" />\n";
-				echo $misc->form;
-				echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strok']}\" /></p>\n";
-				echo "</form>\n";
+				show_groups('', sprintf($lang['emajgroupsconfimporterr'], $_POST['file']));
 			}
+		} else {
+			// there are errors to report to the user
+
+			$misc->printHeader('database', 'database','emajgroups');
+
+			$misc->printTitle($lang['emajimportgroupsconf']);
+
+			echo "<p>" . sprintf($lang['emajgroupsconfimportpreperr'], htmlspecialchars($groupsList), htmlspecialchars($_POST['file'])) . "</p>\n";
+
+			$columns = array(
+				'severity' => array(
+					'title' => '',
+					'field' => field('rpt_severity'),
+					'type'	=> 'callback',
+					'params'=> array('function' => 'renderMsgSeverity','align' => 'center'),
+					'sorter' => false,
+				),
+				'message' => array(
+					'title' => $lang['emajdiagnostics'],
+					'field' => field('rpt_message'),
+				),
+			);
+
+			$actions = array ();
+
+			$misc->printTable($errors, $columns, $actions, 'errors', null, null, array('sorter' => true, 'filter' => false));
+
+			echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+			echo "<p><input type=\"hidden\" name=\"action\" value=\"import_group_ok\" />\n";
+			echo $misc->form;
+			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strok']}\" /></p>\n";
+			echo "</form>\n";
 		}
 	}
 
@@ -3088,15 +3084,8 @@
 	function start_group_ok() {
 		global $lang, $emajdb;
 
-		// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			if ($_POST['back'] == 'list') {
-				show_groups();
-			} else {
-				show_group();
-			}
-			return;
-		}
+		// Process the click on the <cancel> button
+		processCancelButton($_POST['back']);
 
 		// Check the group still exists and is in IDLE state
 		recheckGroups($_REQUEST['group'], 'emajimpossibleactiongroup', 'strstart', 'IDLE', $_POST['back']);
@@ -3195,11 +3184,8 @@
 	function start_groups_ok() {
 		global $lang, $emajdb;
 
-		// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			show_groups();
-			return;
-		}
+		// Process the click on the <cancel> button
+		processCancelButton('list');
 
 		// Check that all groups exist and are in IDLE state
 		recheckGroups($_POST['groups'], 'emajimpossibleactiongroups', 'strstart', 'IDLE', 'list');
@@ -3264,15 +3250,8 @@
 	function stop_group_ok() {
 		global $lang, $emajdb;
 
-		// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			if ($_POST['back'] == 'list') {
-				show_groups();
-			} else {
-				show_group();
-			}
-			return;
-		}
+		// Process the click on the <cancel> button
+		processCancelButton($_POST['back']);
 
 		// Check the group still exists and is in LOGGING state
 		recheckGroups($_REQUEST['group'], 'emajimpossibleactiongroup', 'strstop', 'LOGGING', $_POST['back']);
@@ -3346,11 +3325,8 @@
 	function stop_groups_ok() {
 		global $lang, $emajdb;
 
-		// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			show_groups();
-			return;
-		}
+		// Process the click on the <cancel> button
+		processCancelButton('list');
 
 		// Check that all groups exist and are in LOGGING state
 		recheckGroups($_POST['groups'], 'emajimpossibleactiongroups', 'strstop', 'LOGGING', 'list');
@@ -3396,15 +3372,8 @@
 	function reset_group_ok() {
 		global $lang, $emajdb;
 
-		// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			if ($_POST['back'] == 'list') {
-				show_groups();
-			} else {
-				show_group();
-			}
-			return;
-		}
+		// Process the click on the <cancel> button
+		processCancelButton($_POST['back']);
 
 		// Check the group still exists and is in IDLE state
 		recheckGroups($_REQUEST['group'], 'emajimpossibleactiongroup', 'strreset', 'IDLE', $_POST['back']);
@@ -3472,11 +3441,8 @@
 	function reset_groups_ok() {
 		global $lang, $emajdb;
 
-	// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			show_groups();
-			return;
-		}
+		// Process the click on the <cancel> button
+		processCancelButton('list');
 
 		// Check that all groups exist and are in IDLE state
 		recheckGroups($_POST['groups'], 'emajimpossibleactiongroups', 'strreset', 'IDLE', 'list');
@@ -3598,15 +3564,8 @@
 	function set_mark_group_ok() {
 		global $lang, $emajdb;
 
-		// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			if ($_POST['back'] == 'list') {
-				show_groups();
-			} else {
-				show_group();
-			}
-			return;
-		}
+		// Process the click on the <cancel> button
+		processCancelButton($_POST['back']);
 
 		// Check the group still exists and is in LOGGING state
 		recheckGroups($_POST['group'], 'emajimpossibleactionmarkgroup', 'strset', 'LOGGING', $_POST['back']);
@@ -3713,11 +3672,8 @@
 	function set_mark_groups_ok() {
 		global $lang, $emajdb;
 
-		// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			show_groups();
-			return;
-		}
+		// Process the click on the <cancel> button
+		processCancelButton('list');
 
 		// Check the groups still exists and are in LOGGING state
 		recheckGroups($_POST['groups'], 'emajimpossibleactionmarkgroups', 'strset', 'LOGGING', 'list');
@@ -3809,11 +3765,8 @@
 	function comment_mark_group_ok() {
 		global $lang, $emajdb;
 
-		// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			show_group();
-			return;
-		}
+		// Process the click on the <cancel> button
+		processCancelButton('detail');
 
 		// Check the group still exists
 		recheckGroups($_POST['group'], 'emajimpossibleactionmarkgroup', 'emajsetcomment');
@@ -3923,14 +3876,8 @@
 	function rollback_group_confirm_alter() {
 		global $lang, $misc, $emajdb;
 
-		// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			if ($_POST['back'] == 'list')
-				show_groups();
-			else
-				show_group();
-			return;
-		}
+		// Process the click on the <cancel> button
+		processCancelButton($_POST['back']);
 
 		// Check the group still exists and is in LOGGING state
 		recheckGroups($_POST['group'], 'emajimpossibleactiongroup', 'emajdorollbackfor', 'LOGGING', $_POST['back']);
@@ -4031,14 +3978,8 @@
 	function rollback_group_ok() {
 		global $lang, $misc, $emajdb, $conf;
 
-		// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			if ($_POST['back'] == 'list')
-				show_groups();
-			else
-				show_group();
-			return;
-		}
+		// Process the click on the <cancel> button
+		processCancelButton($_POST['back']);
 
 		// Check the group still exists and is in LOGGING state
 		recheckGroups($_POST['group'], 'emajimpossibleactiongroup', 'emajdorollbackfor', 'LOGGING', $_POST['back']);
@@ -4266,15 +4207,8 @@
 	function rollback_groups_confirm_alter() {
 		global $lang, $misc, $emajdb;
 
-		// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			if ($_POST['back'] == 'list') {
-				show_groups();
-			} else {
-				show_group();
-			}
-			return;
-		}
+		// Process the click on the <cancel> button
+		processCancelButton('list');
 
 		// Check the groups still exist and are in LOGGING state
 		recheckGroups($_POST['groups'], 'emajimpossibleactiongroups', 'emajdorollbackfor', 'LOGGING', 'list');
@@ -4366,11 +4300,8 @@
 	function rollback_groups_ok() {
 		global $lang, $misc, $emajdb, $conf;
 
-		// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			show_groups();
-			return;
-		}
+		// Process the click on the <cancel> button
+		processCancelButton('list');
 
 		// Check the groups still exist and are in LOGGING state
 		recheckGroups($_POST['groups'], 'emajimpossibleactiongroups', 'emajdorollbackfor', 'LOGGING', 'list');
@@ -4495,11 +4426,8 @@
 	function rename_mark_group_ok() {
 		global $lang, $emajdb;
 
-		// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			show_group();
-			return;
-		}
+		// Process the click on the <cancel> button
+		processCancelButton('detail');
 
 		// Check the group still exists
 		recheckGroups($_POST['group'], 'emajimpossibleactionmarkgroup', 'emajrename');
@@ -4549,11 +4477,8 @@
 	function delete_mark_ok() {
 		global $lang, $emajdb, $lang;
 
-		// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			show_group();
-			return;
-		}
+		// Process the click on the <cancel> button
+		processCancelButton('detail');
 
 		// Check the group still exists
 		recheckGroups($_POST['group'], 'emajimpossibleactionmarkgroup', 'strdelete');
@@ -4607,11 +4532,8 @@
 	function delete_marks_ok() {
 		global $data, $lang, $emajdb;
 
-		// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			show_group();
-			return;
-		}
+		// Process the click on the <cancel> button
+		processCancelButton('detail');
 
 		// Check the group still exists
 		recheckGroups($_POST['group'], 'emajimpossibleactionmarksgroup', 'strdelete');
@@ -4665,11 +4587,8 @@
 	function delete_before_mark_ok() {
 		global $lang, $emajdb;
 
-		// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			show_group();
-			return;
-		}
+		// Process the click on the <cancel> button
+		processCancelButton('detail');
 
 		// Check the group still exists
 		recheckGroups($_POST['group'], 'emajimpossibleactionmarksgroup', 'strdelete');

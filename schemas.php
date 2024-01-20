@@ -52,6 +52,28 @@
 		return;
 	}
 
+/********************************************************************************************************
+ * Other elementary functions
+ *******************************************************************************************************/
+
+	/**
+	 * Process the click on the <cancel> button.
+	 */
+	function processCancelButton() {
+		global $misc;
+
+		// Call the schemas list display back.
+		if (isset($_POST['cancel'])) {
+			list_schemas();
+			$misc->printFooter();
+			exit();
+		}
+	}
+
+/********************************************************************************************************
+ * Main functions displaying pages
+ *******************************************************************************************************/
+
 	/**
 	 * Show the list of schemas in the database
 	 * and the tables and sequences lists if a schema has already been selected
@@ -410,6 +432,10 @@
 		}
 	}
 
+/********************************************************************************************************
+ * Functions preparing or performing actions
+ *******************************************************************************************************/
+
 	/**
 	 * Prepare assign tables to a group: ask for properties and confirmation
 	 */
@@ -524,28 +550,25 @@
 	function assign_tables_ok() {
 		global $lang, $data, $emajdb, $_reload_browser;
 
-	// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			list_schemas();
-		} else {
+	// Process the click on the <cancel> button.
+		processCancelButton();
 
 	// process the tables assignment
-			// get the list of emaj_schema before the assignment
-			$emajSchemasBefore = $emajdb->getEmajSchemasList();
+		// get the list of emaj_schema before the assignment
+		$emajSchemasBefore = $emajdb->getEmajSchemasList();
 
-			if ($_POST['logdattsp'] == "<{$lang['strnone']}>") $_POST['logdattsp'] = '';
-			if ($_POST['logidxtsp'] == "<{$lang['strnone']}>") $_POST['logidxtsp'] = '';
-			$nbTables = $emajdb->assignTables($_POST['schema'],$_POST['tables'],$_POST['group'],
-								$_POST['priority'], $_POST['logdattsp'], $_POST['logidxtsp'], $_POST['mark']);
-			if ($nbTables >= 0) {
-				// reload the browser only if new emaj schemas have been created
-				$emajSchemasAfter = $emajdb->getEmajSchemasList();
-				if ($emajdb->getEmajSchemasList() <> $emajSchemasBefore)
-					$_reload_browser = true;
-				list_schemas(sprintf($lang['emajdynassigntablesok'], $nbTables, htmlspecialchars($_POST['group'])));
-			} else {
-				list_schemas($lang['emajmodifygrouperr']);
-			}
+		if ($_POST['logdattsp'] == "<{$lang['strnone']}>") $_POST['logdattsp'] = '';
+		if ($_POST['logidxtsp'] == "<{$lang['strnone']}>") $_POST['logidxtsp'] = '';
+		$nbTables = $emajdb->assignTables($_POST['schema'],$_POST['tables'],$_POST['group'],
+							$_POST['priority'], $_POST['logdattsp'], $_POST['logidxtsp'], $_POST['mark']);
+		if ($nbTables >= 0) {
+			// reload the browser only if new emaj schemas have been created
+			$emajSchemasAfter = $emajdb->getEmajSchemasList();
+			if ($emajdb->getEmajSchemasList() <> $emajSchemasBefore)
+				$_reload_browser = true;
+			list_schemas(sprintf($lang['emajdynassigntablesok'], $nbTables, htmlspecialchars($_POST['group'])));
+		} else {
+			list_schemas($lang['emajmodifygrouperr']);
 		}
 	}
 
@@ -626,18 +649,15 @@
 	function move_tables_ok() {
 		global $lang, $data, $emajdb;
 
-	// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			list_schemas();
-		} else {
+	// Process the click on the <cancel> button.
+		processCancelButton();
 
-	// process the tables assignment
-			$nbTables = $emajdb->moveTables($_POST['schema'],$_POST['tables'],$_POST['group'],$_POST['mark']);
-			if ($nbTables >= 0)
-				list_schemas(sprintf($lang['emajdynmovetablesok'], $nbTables, htmlspecialchars($_POST['group'])));
-			else
-				list_schemas($lang['emajmodifygrouperr']);
-		}
+	// process the tables move
+		$nbTables = $emajdb->moveTables($_POST['schema'],$_POST['tables'],$_POST['group'],$_POST['mark']);
+		if ($nbTables >= 0)
+			list_schemas(sprintf($lang['emajdynmovetablesok'], $nbTables, htmlspecialchars($_POST['group'])));
+		else
+			list_schemas($lang['emajmodifygrouperr']);
 	}
 
 	/**
@@ -744,21 +764,18 @@
 	function modify_tables_ok() {
 		global $lang, $data, $emajdb;
 
-	// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			list_schemas();
-		} else {
+	// Process the click on the <cancel> button.
+		processCancelButton();
 
 	// process the tables modification
-			if ($_POST['logdattsp'] == "<{$lang['strnone']}>") $_POST['logdattsp'] = '';
-			if ($_POST['logidxtsp'] == "<{$lang['strnone']}>") $_POST['logidxtsp'] = '';
-			$nbTables = $emajdb->modifyTables($_POST['schema'],$_POST['tables'],
-								$_POST['priority'], $_POST['logdattsp'], $_POST['logidxtsp'], $_POST['mark']);
-			if ($nbTables >= 0)
-				list_schemas(sprintf($lang['emajdynmodifytablesok'], $nbTables));
-			else
-				list_schemas($lang['emajmodifygrouperr']);
-		}
+		if ($_POST['logdattsp'] == "<{$lang['strnone']}>") $_POST['logdattsp'] = '';
+		if ($_POST['logidxtsp'] == "<{$lang['strnone']}>") $_POST['logidxtsp'] = '';
+		$nbTables = $emajdb->modifyTables($_POST['schema'],$_POST['tables'],
+							$_POST['priority'], $_POST['logdattsp'], $_POST['logidxtsp'], $_POST['mark']);
+		if ($nbTables >= 0)
+			list_schemas(sprintf($lang['emajdynmodifytablesok'], $nbTables));
+		else
+			list_schemas($lang['emajmodifygrouperr']);
 	}
 
 	/**
@@ -827,24 +844,21 @@
 	function remove_tables_ok() {
 		global $lang, $data, $emajdb, $_reload_browser;
 
-	// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			list_schemas();
-		} else {
+	// Process the click on the <cancel> button.
+		processCancelButton();
 
 	// process the tables removal
-			// get the list of emaj_schema before the removal
-			$emajSchemasBefore = $emajdb->getEmajSchemasList();
+		// get the list of emaj_schema before the removal
+		$emajSchemasBefore = $emajdb->getEmajSchemasList();
 
-			$nbTables = $emajdb->removeTables($_POST['schema'],$_POST['tables'],$_POST['mark']);
-			if ($nbTables >= 0) {
-				// reload the browser only if emaj schemas have been dropped
-				if ($emajdb->getEmajSchemasList() <> $emajSchemasBefore)
-					$_reload_browser = true;
-				list_schemas(sprintf($lang['emajdynremovetablesok'], $nbTables));
-			} else {
-				list_schemas($lang['emajmodifygrouperr']);
-			}
+		$nbTables = $emajdb->removeTables($_POST['schema'],$_POST['tables'],$_POST['mark']);
+		if ($nbTables >= 0) {
+			// reload the browser only if emaj schemas have been dropped
+			if ($emajdb->getEmajSchemasList() <> $emajSchemasBefore)
+				$_reload_browser = true;
+			list_schemas(sprintf($lang['emajdynremovetablesok'], $nbTables));
+		} else {
+			list_schemas($lang['emajmodifygrouperr']);
 		}
 	}
 
@@ -925,18 +939,15 @@
 	function assign_sequences_ok() {
 		global $lang, $data, $emajdb;
 
-	// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			list_schemas();
-		} else {
+	// Process the click on the <cancel> button.
+		processCancelButton();
 
 	// process the sequences assignment
-			$nbSequences = $emajdb->assignSequences($_POST['schema'],$_POST['sequences'],$_POST['group'],$_POST['mark']);
-			if ($nbSequences>= 0)
-				list_schemas(sprintf($lang['emajdynassignsequencesok'], $nbSequences, htmlspecialchars($_POST['group'])));
-			else
-				list_schemas($lang['emajmodifygrouperr']);
-		}
+		$nbSequences = $emajdb->assignSequences($_POST['schema'],$_POST['sequences'],$_POST['group'],$_POST['mark']);
+		if ($nbSequences>= 0)
+			list_schemas(sprintf($lang['emajdynassignsequencesok'], $nbSequences, htmlspecialchars($_POST['group'])));
+		else
+			list_schemas($lang['emajmodifygrouperr']);
 	}
 
 	/**
@@ -1016,18 +1027,15 @@
 	function move_sequences_ok() {
 		global $lang, $data, $emajdb;
 
-	// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			list_schemas();
-		} else {
+	// Process the click on the <cancel> button.
+		processCancelButton();
 
-	// process the sequences assignment
-			$nbSequences = $emajdb->moveSequences($_POST['schema'],$_POST['sequences'],$_POST['group'],$_POST['mark']);
-			if ($nbSequences>= 0)
-				list_schemas(sprintf($lang['emajdynmovesequencesok'], $nbSequences, htmlspecialchars($_POST['group'])));
-			else
-				list_schemas($lang['emajmodifygrouperr']);
-		}
+	// process the sequences move
+		$nbSequences = $emajdb->moveSequences($_POST['schema'],$_POST['sequences'],$_POST['group'],$_POST['mark']);
+		if ($nbSequences>= 0)
+			list_schemas(sprintf($lang['emajdynmovesequencesok'], $nbSequences, htmlspecialchars($_POST['group'])));
+		else
+			list_schemas($lang['emajmodifygrouperr']);
 	}
 	/**
 	 * Prepare remove sequences: ask for confirmation
@@ -1095,18 +1103,15 @@
 	function remove_sequences_ok() {
 		global $lang, $data, $emajdb;
 
-	// process the click on the <cancel> button
-		if (isset($_POST['cancel'])) {
-			list_schemas();
-		} else {
+	// Process the click on the <cancel> button.
+		processCancelButton();
 
 	// process the sequences removal
-			$nbSequences = $emajdb->removeSequences($_POST['schema'],$_POST['sequences'],$_POST['mark']);
-			if ($nbSequences>= 0)
-				list_schemas(sprintf($lang['emajdynremovesequencesok'], $nbSequences));
-			else
-				list_schemas($lang['emajmodifygrouperr']);
-		}
+		$nbSequences = $emajdb->removeSequences($_POST['schema'],$_POST['sequences'],$_POST['mark']);
+		if ($nbSequences>= 0)
+			list_schemas(sprintf($lang['emajdynremovesequencesok'], $nbSequences));
+		else
+			list_schemas($lang['emajmodifygrouperr']);
 	}
 
 	/**

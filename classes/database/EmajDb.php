@@ -888,6 +888,24 @@ class EmajDb {
 	}
 
 	/**
+	 * Detects groups that already have a given new mark.
+	 */
+	function knownMarkGroups($groupsList,$mark) {
+		global $data;
+
+		$data->clean($groupsList);
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groupsList)."']";
+		$data->clean($mark);
+
+		$sql = "SELECT count(*) AS nb_groups, string_agg(mark_group, ', ') AS groups_list
+					FROM emaj.emaj_mark
+					WHERE mark_name = '{$mark}'
+					  AND mark_group = ANY ({$groupsArray})";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
 	 * Gets properties of a single tables group
 	 */
 	function getGroup($group) {
@@ -2136,37 +2154,6 @@ class EmajDb {
 		}
 
 		return $data->execute($sql);
-	}
-
-	/**
-	 * Determines whether or not a mark name is valid as a new mark to set for a group or a groups array
-     * It also resolves the % meta character in the mark name
-	 * Returns NULL if the mark is not valid, or the final mark name (with % characters replaced).
-	 */
-	function isNewMarkValidGroups($groups,$mark) {
-		global $data;
-
-		$data->clean($groups);
-		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
-		$data->clean($mark);
-
-		if ($mark == '' or $mark == 'EMAJ_LAST_MARK') {
-			return NULL;
-		}
-
-		# replace the % characters by the time of day, in format 'HH24.MI.SS.MS'
-		$finalMark = str_replace('%', date('H.i.s.') . substr(microtime(),2,3), $mark);
-
-		$sql = "SELECT CASE WHEN
-				(SELECT COUNT(*) FROM emaj.emaj_mark
-				   WHERE mark_group = ANY ({$groupsArray}) AND mark_name = '{$finalMark}')
-				= 0 THEN 1 ELSE 0 END AS result";
-
-		if ($data->selectField($sql,'result') == 0) {
-			return NULL;
-		} else {
-			return $finalMark;
-		}
 	}
 
 	/**

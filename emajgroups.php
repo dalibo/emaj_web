@@ -356,6 +356,58 @@
 		}
 	}
 
+	/**
+	 * Check that a supplied mark name is valid for one or several groups.
+	 * It returns the mark name, modified with resolved % characters, if any.
+	 * If the mark is not valid or is already known by any groups, it directly branches to the calling page with an error message.
+	 */
+	function checkNewMarkGroups($groupsList, $mark, $messageTemplate, $messageAction, $back, $duplicateCheck = 1) {
+		global $emajdb, $lang, $misc;
+
+		$actionMessage = sprintf($lang[$messageTemplate], strtolower($lang[$messageAction]), htmlspecialchars($groupsList));
+
+		// Check the forbidden values.
+		if ($mark == '' or $mark == 'EMAJ_LAST_MARK') {
+			$errorMessage = sprintf($lang['emajinvalidmark'], htmlspecialchars($mark));
+			if ($back == 'list') {
+				show_groups('', $actionMessage . ' ' . $errorMessage);
+			} else {
+				show_group('', $actionMessage . ' ' . $errorMessage);
+			}
+			$misc->printFooter();
+			exit();
+		}
+
+		// Resolve the mark name. Replace the % characters by the time of day, in format 'HH24.MI.SS.MS'.
+		$finalMarkName = str_replace('%', date('H.i.s.') . substr(microtime(),2,3), $mark);
+
+		// Check the new mark doesn't already exist for the groups, if requested.
+		if ($duplicateCheck) {
+			$errorGroups = $emajdb->knownMarkGroups($groupsList, $finalMarkName);
+			$errorMessage = '';
+			if ($errorGroups->fields['nb_groups'] == 1) {
+				// The mark already exists for one group
+				$errorMessage = sprintf($lang['emajduplicatemarkgroup'], htmlspecialchars($mark), htmlspecialchars($errorGroups->fields['groups_list']));
+			}
+			if ($errorGroups->fields['nb_groups'] > 1) {
+				// The mark already exist for several groups
+				$errorMessage = sprintf($lang['emajduplicatemarkgroups'], htmlspecialchars($mark),
+										$errorGroups->fields['nb_groups'], htmlspecialchars($errorGroups->fields['groups_list']));
+			}
+			if ($errorMessage != '') {
+				if ($back == 'list') {
+					show_groups('', $actionMessage . ' ' . $errorMessage);
+				} else {
+					show_group('', $actionMessage . ' ' . $errorMessage);
+				}
+				$misc->printFooter();
+				exit();
+			}
+		}
+
+		return $finalMarkName;
+	}
+
 /********************************************************************************************************
  * Main functions displaying pages
  *******************************************************************************************************/
@@ -3088,21 +3140,13 @@
 		processCancelButton($_POST['back']);
 
 		// Check the group still exists and is in IDLE state
-		recheckGroups($_REQUEST['group'], 'emajimpossibleactiongroup', 'strstart', 'IDLE', $_POST['back']);
+		recheckGroups($_POST['group'], 'emajimpossibleactiongroup', 'strstart', 'IDLE', $_POST['back']);
 
 		// Check the supplied mark is valid for the group
-		$finalMarkName = $emajdb->isNewMarkValidGroups($_POST['group'],$_POST['mark']);
-		if (is_null($finalMarkName)) {
-			if ($_POST['back']=='list') {
-				show_groups('',sprintf($lang['emajinvalidmark'], htmlspecialchars($_POST['mark'])));
-			} else {
-				show_group('',sprintf($lang['emajinvalidmark'], htmlspecialchars($_POST['mark'])));
-			}
-			return;
-		}
+		$finalMarkName = checkNewMarkGroups($_POST['group'], $_POST['mark'], 'emajimpossibleactiongroup', 'strstart', $_POST['back'], !isset($_POST['resetlog']));
 
 		// OK
-		$status = $emajdb->startGroup($_POST['group'],$finalMarkName,isSet($_POST['resetlog']));
+		$status = $emajdb->startGroup($_POST['group'], $finalMarkName, isset($_POST['resetlog']));
 		if ($status == 0)
 			if ($_POST['back']=='list') {
 				show_groups(sprintf($lang['emajstartgroupok'], htmlspecialchars($_POST['group']), htmlspecialchars($finalMarkName)));
@@ -3190,19 +3234,11 @@
 		// Check that all groups exist and are in IDLE state
 		recheckGroups($_POST['groups'], 'emajimpossibleactiongroups', 'strstart', 'IDLE', 'list');
 
-		// check the supplied mark is valid for the groups
-		$finalMarkName = $emajdb->isNewMarkValidGroups($_POST['groups'],$_POST['mark']);
-		if (is_null($finalMarkName)) {
-			if ($_POST['back']=='list') {
-				show_groups('', sprintf($lang['emajinvalidmark'], htmlspecialchars($_POST['mark'])));
-			} else {
-				show_group('', sprintf($lang['emajinvalidmark'], htmlspecialchars($_POST['mark'])));
-			}
-			return;
-		}
+		// Check the supplied mark is valid for the groups
+		$finalMarkName = checkNewMarkGroups($_POST['groups'], $_POST['mark'], 'emajimpossibleactiongroups', 'strstart', $_POST['back'], !isset($_POST['resetlog']));
 
 		// OK
-		$status = $emajdb->startGroups($_POST['groups'],$finalMarkName,isSet($_POST['resetlog']));
+		$status = $emajdb->startGroups($_POST['groups'],$finalMarkName,isset($_POST['resetlog']));
 		if ($status == 0)
 			if ($_POST['back']=='list')
 				show_groups(sprintf($lang['emajstartgroupsok'], htmlspecialchars($_POST['groups']), htmlspecialchars($finalMarkName)));
@@ -3254,10 +3290,13 @@
 		processCancelButton($_POST['back']);
 
 		// Check the group still exists and is in LOGGING state
-		recheckGroups($_REQUEST['group'], 'emajimpossibleactiongroup', 'strstop', 'LOGGING', $_POST['back']);
+		recheckGroups($_POST['group'], 'emajimpossibleactiongroup', 'strstop', 'LOGGING', $_POST['back']);
+
+		// Check the supplied mark is valid for the group
+		$finalMarkName = checkNewMarkGroups($_POST['group'], $_POST['mark'], 'emajimpossibleactiongroup', 'strstop', $_POST['back'], !isset($_POST['forcestop']));
 
 		// OK
-		$status = $emajdb->stopGroup($_POST['group'],$_POST['mark'],isSet($_POST['forcestop']));
+		$status = $emajdb->stopGroup($_POST['group'], $finalMarkName, isset($_POST['forcestop']));
 		if ($status == 0)
 			if ($_POST['back']=='list') {
 				show_groups(sprintf($lang['emajstopgroupok'], htmlspecialchars($_POST['group'])));
@@ -3331,8 +3370,11 @@
 		// Check that all groups exist and are in LOGGING state
 		recheckGroups($_POST['groups'], 'emajimpossibleactiongroups', 'strstop', 'LOGGING', 'list');
 
+		// Check the supplied mark is valid for the groups
+		$finalMarkName = checkNewMarkGroups($_POST['groups'], $_POST['mark'], 'emajimpossibleactiongroups', 'strstop', $_POST['back']);
+
 		// OK
-		$status = $emajdb->stopGroups($_POST['groups'],$_POST['mark']);
+		$status = $emajdb->stopGroups($_POST['groups'],$finalMarkName);
 		if ($status == 0)
 			show_groups(sprintf($lang['emajstopgroupsok'], htmlspecialchars($_POST['groups'])));
 		else
@@ -3570,16 +3612,8 @@
 		// Check the group still exists and is in LOGGING state
 		recheckGroups($_POST['group'], 'emajimpossibleactionmarkgroup', 'strset', 'LOGGING', $_POST['back']);
 
-		// Check the supplied mark group is valid
-		$finalMarkName = $emajdb->isNewMarkValidGroups($_POST['group'],$_POST['mark']);
-		if (is_null($finalMarkName)) {
-			if ($_POST['back']=='list') {
-				show_groups('',sprintf($lang['emajinvalidmark'], htmlspecialchars($_POST['mark'])));
-			} else {
-				show_group('',sprintf($lang['emajinvalidmark'], htmlspecialchars($_POST['mark'])));
-			}
-			return;
-		}
+		// Check the supplied mark is valid for the group
+		$finalMarkName = checkNewMarkGroups($_POST['group'], $_POST['mark'], 'emajimpossibleactionmarkgroup', 'strset', $_POST['back']);
 
 		// OK
 		$status = $emajdb->setMarkGroup($_POST['group'],$finalMarkName,$_POST['comment']);
@@ -3678,12 +3712,8 @@
 		// Check the groups still exists and are in LOGGING state
 		recheckGroups($_POST['groups'], 'emajimpossibleactionmarkgroups', 'strset', 'LOGGING', 'list');
 
-		// Check the supplied mark group is valid
-		$finalMarkName = $emajdb->isNewMarkValidGroups($_POST['groups'],$_POST['mark']);
-		if (is_null($finalMarkName)) {
-			show_groups('',sprintf($lang['emajinvalidmark'], htmlspecialchars($_POST['mark'])));
-			return;
-		}
+		// Check the supplied mark is valid for the groups
+		$finalMarkName = checkNewMarkGroups($_POST['groups'], $_POST['mark'], 'emajimpossibleactionmarkgroups', 'strset', $_POST['back']);
 
 		// OK
 		$status = $emajdb->setMarkGroups($_POST['groups'],$finalMarkName,$_POST['comment']);
@@ -4432,18 +4462,15 @@
 		// Check the group still exists
 		recheckGroups($_POST['group'], 'emajimpossibleactionmarkgroup', 'emajrename');
 
-		// Check the supplied mark group is valid
-		$finalMarkName = $emajdb->isNewMarkValidGroups($_POST['group'],$_POST['newmark']);
-		if (is_null($finalMarkName)) {
-			show_group('', sprintf($lang['emajinvalidmark'], htmlspecialchars($_POST['newmark'])));
-		} else {
+		// Check the supplied mark is valid for the group
+		$finalMarkName = checkNewMarkGroups($_POST['group'], $_POST['newmark'], 'emajimpossibleactionmarkgroup', 'emajrename', 'detail');
+
 		// OK
-			$status = $emajdb->renameMarkGroup($_POST['group'],$_POST['mark'], $finalMarkName);
-			if ($status >= 0)
-				show_group(sprintf($lang['emajrenamemarkok'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group']), htmlspecialchars($finalMarkName)));
-			else
-				show_group('', sprintf($lang['emajrenamemarkerr'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group']), htmlspecialchars($finalMarkName)));
-		}
+		$status = $emajdb->renameMarkGroup($_POST['group'],$_POST['mark'], $finalMarkName);
+		if ($status >= 0)
+			show_group(sprintf($lang['emajrenamemarkok'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group']), htmlspecialchars($finalMarkName)));
+		else
+			show_group('', sprintf($lang['emajrenamemarkerr'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group']), htmlspecialchars($finalMarkName)));
 	}
 
 	/**

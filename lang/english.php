@@ -637,6 +637,8 @@
 	$lang['emajgroupsnotstopped'] = '%s tables group (%s) are not stopped anymore.';
 	$lang['emajgroupnotstarted'] = 'The tables group "%s" is not started anymore.';
 	$lang['emajgroupsnotstarted'] = '%s tables group (%s) are not started anymore.';
+	$lang['emajduplicatemarkgroup'] = 'The mark "%s" already exists in the tables group "%s".';
+	$lang['emajduplicatemarkgroups'] = 'The mark "%s" already exists in %s tables groups (%s)';
 
 	// Group creation
 	$lang['emajcreateagroup'] = 'E-Maj: Create a tables group';

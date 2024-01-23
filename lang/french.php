@@ -639,6 +639,8 @@
 	$lang['emajgroupsnotstarted'] = '%s groupes de tables (%s) ne sont plus démarrés.';
 	$lang['emajduplicatemarkgroup'] = 'La marque "%s" existe déjà dans le groupe de tables "%s".';
 	$lang['emajduplicatemarkgroups'] = 'La marque "%s" existe déjà dans %s groupes de tables (%s)';
+	$lang['emajmarkmissing'] = 'La marque "%s" n\'existe plus.';
+	$lang['emajmarksmissing'] = '%s marques (%s) n\'existent plus.';
 
 	// Group creation
 	$lang['emajcreateagroup'] = 'E-Maj : Créer un groupe de tables';

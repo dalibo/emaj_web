@@ -408,6 +408,30 @@
 		return $finalMarkName;
 	}
 
+	/**
+	 * Check that one or several marks still exist for a group. The group has been rechecked just before.
+	 */
+	function recheckMarksGroup($group, $marksList, $messageTemplate, $messageAction) {
+		global $lang, $emajdb, $_reload_browser, $misc;
+
+		$actionMessage = sprintf($lang[$messageTemplate], strtolower($lang[$messageAction]), htmlspecialchars($group));
+
+		// Check the marks existence
+		$missingMarks = $emajdb->missingMarksGroup($group, $marksList);
+		if ($missingMarks->fields['nb_marks'] > 0) {
+			if ($missingMarks->fields['nb_marks'] == 1)
+				// One mark doesn't exist anymore
+				show_group('', $actionMessage . ' ' .
+					sprintf($lang['emajmarkmissing'], htmlspecialchars($missingMarks->fields['marks_list'])));
+			else
+				// Several marks do not exist anymore
+				show_group('', $actionMessage . ' ' .
+					sprintf($lang['emajmarksmissing'], $missingMarks->fields['nb_marks'], htmlspecialchars($missingMarks->fields['marks_list'])));
+			$misc->printFooter();
+			exit();
+		}
+	}
+
 /********************************************************************************************************
  * Main functions displaying pages
  *******************************************************************************************************/
@@ -3732,8 +3756,11 @@
 		// Check the group still exists and is in LOGGING state
 		recheckGroups($_REQUEST['group'], 'emajimpossibleactionmarkgroup', 'emajprotect', 'LOGGING', $_REQUEST['back']);
 
+		// Check the mark still exists for the group
+		recheckMarksGroup($_REQUEST['group'], $_REQUEST['mark'], 'emajimpossibleactionmarkgroup', 'emajprotect');
+
 		// OK
-		$status = $emajdb->protectMarkGroup($_REQUEST['group'],$_REQUEST['mark']);
+		$status = $emajdb->protectMarkGroup($_REQUEST['group'], $_REQUEST['mark']);
 		if ($status == 0)
 			show_group(sprintf($lang['emajprotectmarkgroupok'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])));
 		else
@@ -3748,6 +3775,9 @@
 
 		// Check the group still exists and is in LOGGING state
 		recheckGroups($_REQUEST['group'], 'emajimpossibleactionmarkgroup', 'emajunprotect', 'LOGGING', $_REQUEST['back']);
+
+		// Check the mark still exists for the group
+		recheckMarksGroup($_REQUEST['group'], $_REQUEST['mark'], 'emajimpossibleactionmarkgroup', 'emajunprotect');
 
 		// OK
 		$status = $emajdb->unprotectMarkGroup($_REQUEST['group'],$_REQUEST['mark']);
@@ -3765,6 +3795,9 @@
 
 		// Check the group still exists
 		recheckGroups($_REQUEST['group'], 'emajimpossibleactionmarkgroup', 'emajsetcomment');
+
+		// Check the mark still exists for the group
+		recheckMarksGroup($_REQUEST['group'], $_REQUEST['mark'], 'emajimpossibleactionmarkgroup', 'emajsetcomment');
 
 		$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
@@ -3800,6 +3833,9 @@
 
 		// Check the group still exists
 		recheckGroups($_POST['group'], 'emajimpossibleactionmarkgroup', 'emajsetcomment');
+
+		// Check the mark still exists for the group
+		recheckMarksGroup($_POST['group'], $_POST['mark'], 'emajimpossibleactionmarkgroup', 'emajsetcomment');
 
 		// OK
 		$status = $emajdb->setCommentMarkGroup($_POST['group'],$_POST['mark'],$_POST['comment']);
@@ -4417,6 +4453,9 @@
 		// Check the group still exists
 		recheckGroups($_REQUEST['group'], 'emajimpossibleactionmarkgroup', 'emajrename');
 
+		// Check the mark still exists for the group
+		recheckMarksGroup($_REQUEST['group'], $_REQUEST['mark'], 'emajimpossibleactionmarkgroup', 'emajrename');
+
 		$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
 		$misc->printTitle($lang['emajrenameamark']);
@@ -4462,6 +4501,9 @@
 		// Check the group still exists
 		recheckGroups($_POST['group'], 'emajimpossibleactionmarkgroup', 'emajrename');
 
+		// Check the mark still exists for the group
+		recheckMarksGroup($_POST['group'], $_POST['mark'], 'emajimpossibleactionmarkgroup', 'emajrename');
+
 		// Check the supplied mark is valid for the group
 		$finalMarkName = checkNewMarkGroups($_POST['group'], $_POST['newmark'], 'emajimpossibleactionmarkgroup', 'emajrename', 'detail');
 
@@ -4481,6 +4523,9 @@
 
 		// Check the group still exists
 		recheckGroups($_REQUEST['group'], 'emajimpossibleactionmarkgroup', 'strdelete');
+
+		// Check the mark still exists for the group
+		recheckMarksGroup($_REQUEST['group'], $_REQUEST['mark'], 'emajimpossibleactionmarkgroup', 'strdelete');
 
 		$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
@@ -4510,6 +4555,9 @@
 		// Check the group still exists
 		recheckGroups($_POST['group'], 'emajimpossibleactionmarkgroup', 'strdelete');
 
+		// Check the mark still exists for the group
+		recheckMarksGroup($_POST['group'], $_POST['mark'], 'emajimpossibleactionmarkgroup', 'strdelete');
+
 		$status = $emajdb->deleteMarkGroup($_POST['group'],$_POST['mark']);
 		if ($status >= 0)
 			show_group(sprintf($lang['emajdelmarkok'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group'])));
@@ -4526,23 +4574,26 @@
 		// Check the group still exists
 		recheckGroups($_REQUEST['group'], 'emajimpossibleactionmarksgroup', 'strdelete');
 
+		// build the marks list
+		$nbMarks = count($_REQUEST['ma']);
+		$marksList='';
+		$htmlList = "<div class=\"longlist\"><ul>\n";
+		foreach($_REQUEST['ma'] as $v) {
+			$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
+			$marksList .= $a['mark'].', ';
+			$htmlList .= "\t<li>{$a['mark']}</li>\n";
+		}
+		$marksList = substr($marksList, 0, strlen($marksList) - 2);
+		$htmlList .= "</ul></div>\n";
+
+		// Check the marks still exist for the group
+		recheckMarksGroup($_REQUEST['group'], $marksList, 'emajimpossibleactionmarksgroup', 'strdelete');
+
 		$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
 		$misc->printTitle($lang['emajdelmarks']);
 
-		// build the marks list
-		$nbMarks = count($_REQUEST['ma']);
-		$marksList='';
-		$fullList = "<div class=\"longlist\"><ul>\n";
-		foreach($_REQUEST['ma'] as $v) {
-			$a = unserialize(htmlspecialchars_decode($v, ENT_QUOTES));
-			$marksList .= $a['mark'].', ';
-			$fullList .= "\t<li>{$a['mark']}</li>\n";
-		}
-		$marksList = substr($marksList, 0, strlen($marksList) - 2);
-		$fullList .= "</ul></div>\n";
-
-		echo "<p>", sprintf($lang['emajconfirmdelmarks'], $nbMarks, htmlspecialchars($_REQUEST['group'])), "</p>\n{$fullList}\n";
+		echo "<p>", sprintf($lang['emajconfirmdelmarks'], $nbMarks, htmlspecialchars($_REQUEST['group'])), "</p>\n{$htmlList}\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"delete_marks_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -4565,6 +4616,9 @@
 		// Check the group still exists
 		recheckGroups($_POST['group'], 'emajimpossibleactionmarksgroup', 'strdelete');
 
+		// Check the marks still exist for the group
+		recheckMarksGroup($_POST['group'], $_POST['marks'], 'emajimpossibleactionmarksgroup', 'strdelete');
+
 		$marks = explode(', ',$_POST['marks']);
 		$status = $data->beginTransaction();
 		if ($status == 0) {
@@ -4572,12 +4626,12 @@
 				$status = $emajdb->deleteMarkGroup($_POST['group'],$m);
 				if ($status != 0) {
 					$data->rollbackTransaction();
-					show_group('',sprintf($lang['emajdelmarkserr'], htmlspecialchars($_POST['marks']), htmlspecialchars($_POST['group'])));
+					show_group('', sprintf($lang['emajdelmarkserr'], htmlspecialchars($_POST['marks']), htmlspecialchars($_POST['group'])));
 					return;
 				}
 			}
 		}
-		if($data->endTransaction() == 0)
+		if ($data->endTransaction() == 0)
 			show_group(sprintf($lang['emajdelmarksok'], count($marks), htmlspecialchars($_POST['group'])));
 		else
 			show_group('', sprintf($lang['emajdelmarkserr'], htmlspecialchars($_POST['marks']), htmlspecialchars($_POST['group'])));
@@ -4591,6 +4645,9 @@
 
 		// Check the group still exists
 		recheckGroups($_REQUEST['group'], 'emajimpossibleactionmarksgroup', 'strdelete');
+
+		// Check the mark still exists for the group
+		recheckMarksGroup($_REQUEST['group'], $_REQUEST['mark'], 'emajimpossibleactionmarksgroup', 'strdelete');
 
 		$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
@@ -4619,6 +4676,9 @@
 
 		// Check the group still exists
 		recheckGroups($_POST['group'], 'emajimpossibleactionmarksgroup', 'strdelete');
+
+		// Check the mark still exists for the group
+		recheckMarksGroup($_POST['group'], $_POST['mark'], 'emajimpossibleactionmarksgroup', 'strdelete');
 
 		$status = $emajdb->deleteBeforeMarkGroup($_POST['group'],$_POST['mark']);
 		if ($status > 0)

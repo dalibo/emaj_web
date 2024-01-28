@@ -625,20 +625,19 @@
 	$lang['emajgroupdrop'] = 'Suppression du groupe';
 	$lang['emajdeletedlogsessions'] = 'Des sessions de log supprimées';
 
-	// Groups checks for actions
-	$lang['emajimpossibleactiongroup'] = 'Impossible de %s le groupe de tables "%s".';
-	$lang['emajimpossibleactiongroups'] = 'Impossible de %s les groupes de tables "%s".';
-	$lang['emajimpossibleactionmarkgroup'] = 'Impossible de %s une marque pour le groupe de tables "%s".';
-	$lang['emajimpossibleactionmarkgroups'] = 'Impossible de %s une marque pour les groupes de tables "%s".';
-	$lang['emajimpossibleactionmarksgroup'] = 'Impossible de %s des marques pour le groupe de tables "%s".';
+	// Generic error messages for groups and marks checks
 	$lang['emajgroupmissing'] = 'Le groupe de tables "%s" n\'existe plus.';
 	$lang['emajgroupsmissing'] = '%s groupes de tables (%s) n\'existent plus.';
+	$lang['emajduplicategroup'] = 'Le groupe de table "%s" existe déjà.';
 	$lang['emajgroupnotstopped'] = 'Le groupe de tables "%s" n\'est plus arrêté.';
 	$lang['emajgroupsnotstopped'] = '%s groupes de tables (%s) ne sont plus arrêtés.';
 	$lang['emajgroupnotstarted'] = 'Le groupe de tables "%s" n\'est plus démarré.';
 	$lang['emajgroupsnotstarted'] = '%s groupes de tables (%s) ne sont plus démarrés.';
+	$lang['emajgroupprotected'] = 'Le groupe de table "%s" est protégé.';
+	$lang['emajgroupsprotected'] = '%s groupes de tables (%s) sont protégés.';
+	$lang['emajinvalidmark'] = 'La marque saisie (%s) est invalide.';
 	$lang['emajduplicatemarkgroup'] = 'La marque "%s" existe déjà dans le groupe de tables "%s".';
-	$lang['emajduplicatemarkgroups'] = 'La marque "%s" existe déjà dans %s groupes de tables (%s)';
+	$lang['emajduplicatemarkgroups'] = 'La marque "%s" existe déjà dans %s groupes de tables (%s).';
 	$lang['emajmarkmissing'] = 'La marque "%s" n\'existe plus.';
 	$lang['emajmarksmissing'] = '%s marques (%s) n\'existent plus.';
 
@@ -647,7 +646,7 @@
 	$lang['emajconfirmcreategroup'] = 'Êtes-vous sûr de vouloir créer le groupe de tables "%s" ?';
 	$lang['emajinvalidemptygroup'] = 'Erreur, le groupe de table "%s" est déjà créé ou configuré !';
 	$lang['emajcreategroupok'] = 'Le groupe de tables "%s" a été créé.';
-	$lang['emajcreategrouperr'] = 'Erreur lors de la création du groupe de tables "%s" !';
+	$lang['emajcreategrouperr'] = 'Erreur lors de la création du groupe de tables "%s".';
 
 	// Groups content checks
 	$lang['emajgroupconfok'] = 'La configuration du groupe de tables "%s" est correcte.';
@@ -677,17 +676,18 @@
 	$lang['emajdropagroup'] = 'E-Maj : Supprimer un groupe de tables';
 	$lang['emajconfirmdropgroup'] = 'Êtes-vous sûr de vouloir supprimer le groupe de tables "%s" ?';
 	$lang['emajdropgroupok'] = 'Le groupe de tables "%s" a été supprimé.';
-	$lang['emajdropgrouperr'] = 'Erreur lors de la suppression du groupe de tables "%s" !';
+	$lang['emajdropgrouperr'] = 'Erreur lors de la suppression du groupe de tables "%s".';
 
 	// Groups drop
 	$lang['emajdropgroups'] = 'E-Maj : Supprimer les groupes de tables';
 	$lang['emajconfirmdropgroups'] = 'Êtes-vous sûr de vouloir supprimer les groupes de tables "%s" ?';
 	$lang['emajdropgroupsok'] = 'Les groupes de tables "%s" ont été supprimés.';
-	$lang['emajdropgroupserr'] = 'Erreur lors de la suppression des groupes de tables "%s" !';
+	$lang['emajdropgroupserr'] = 'Erreur lors de la suppression des groupes de tables "%s".';
 
 	// Export groups configuration
 	$lang['emajexportgroupsconf'] = 'Exporter une configuration de groupes de tables';
 	$lang['emajexportgroupsconfselect'] = 'Sélectionnez les groupes de tables dont la configuration sera exportée sur un fichier local.';
+	$lang['emajexportgroupserr'] = 'Erreur lors de l\'exportation des groupes de tables "%s".';
 
 	// Import groups configuration
 	$lang['emajimportgroupsconf'] = 'Importer une configuration de groupes de tables';
@@ -736,7 +736,7 @@
 	$lang['emajcommentagroup'] = 'E-Maj : Enregistrer un commentaire pour un groupe de tables ';
 	$lang['emajcommentgroup'] = 'Entrer, modifier ou supprimer un commentaire pour le groupe de tables "%s"';
 	$lang['emajcommentgroupok'] = 'Le commentaire a été enregistré pour le groupe de tables "%s".';
-	$lang['emajcommentgrouperr'] = 'Erreur lors de l\'enregistrement du commentaire pour le groupe de tables "%s" !';
+	$lang['emajcommentgrouperr'] = 'Erreur lors de l\'enregistrement du commentaire pour le groupe de tables "%s".';
 
 	// Group start
 	$lang['emajstartagroup'] = 'E-Maj : Démarrer un groupe de tables';
@@ -744,13 +744,15 @@
 	$lang['emajinitmark'] = 'Marque initiale';
 	$lang['emajoldlogsdeletion'] = 'Suppression des anciens logs';
 	$lang['emajstartgroupok'] = 'Le groupe de tables "%s" est démarré avec la marque "%s".';
-	$lang['emajstartgrouperr'] = 'Erreur lors du démarrage du groupe de tables "%s" !';
+	$lang['emajstartgrouperr'] = 'Erreur lors du démarrage du groupe de tables "%s".';
+	$lang['emajstartgrouperr2'] = 'Erreur lors du démarrage du groupe de tables "%s" avec la marque "%s".';
 
 	// Groups start
 	$lang['emajstartgroups'] = 'E-Maj : Démarrer des groupes de tables';
 	$lang['emajconfirmstartgroups'] = 'Démarrage des groupes de tables "%s"';
 	$lang['emajstartgroupsok'] = 'Les groupes de tables "%s" ont été démarrés avec la marque "%s".';
-	$lang['emajstartgroupserr'] = 'Erreur lors du démarrage des groupes de tables "%s" !';
+	$lang['emajstartgroupserr'] = 'Erreur lors du démarrage des groupes de tables "%s".';
+	$lang['emajstartgroupserr2'] = 'Erreur lors du démarrage des groupes de tables "%s" avec la marque "%s".';
 
 	// Group stop
 	$lang['emajstopagroup'] = 'E-Maj : Arrêter un groupe de tables ';
@@ -758,57 +760,48 @@
 	$lang['emajstopmark'] = 'Marque finale';
 	$lang['emajforcestop'] = 'Forcer l\'arrêt (en cas de problème seulement)';
 	$lang['emajstopgroupok'] = 'Le groupe de tables "%s" a été arrêté.';
-	$lang['emajstopgrouperr'] = 'Erreur lors de l\'arrêt du groupe de tables "%s" !';
+	$lang['emajstopgrouperr'] = 'Erreur lors de l\'arrêt du groupe de tables "%s".';
+	$lang['emajstopgrouperr2'] = 'Erreur lors de l\'arrêt du groupe de tables "%s" avec la marque "%s".';
 
 	// Groups stop
 	$lang['emajstopgroups'] = 'E-Maj : Arrêter des groupes de tables';
 	$lang['emajconfirmstopgroups'] = 'Arrêt des groupes de tables "%s"';
 	$lang['emajstopgroupsok'] = 'Les groupes de tables "%s" ont été arrêtés.';
-	$lang['emajstopgroupserr'] = 'Erreur lors de l\'arrêt des groupes de tables "%s" !';
+	$lang['emajstopgroupserr'] = 'Erreur lors de l\'arrêt des groupes de tables "%s".';
+	$lang['emajstopgroupserr2'] = 'Erreur lors de l\'arrêt des groupes de tables "%s" avec la marque "%s".';
 
 	// Group reset
 	$lang['emajresetagroup'] = 'E-Maj : Réinitialiser un groupe de tables';
 	$lang['emajconfirmresetgroup'] = 'Êtes-vous sûr de vouloir réinitialiser le groupe de tables "%s" ?';
 	$lang['emajresetgroupok'] = 'Le groupe de tables "%s" est réinitialisé.';
-	$lang['emajresetgrouperr'] = 'Erreur lors de la réinitialisation du groupe de tables "%s" !';
+	$lang['emajresetgrouperr'] = 'Erreur lors de la réinitialisation du groupe de tables "%s".';
 
 	// Groups reset
 	$lang['emajresetgroups'] = 'E-Maj : Réinitialiser des groupes de tables';
 	$lang['emajconfirmresetgroups'] = 'Êtes-vous sûr de vouloir réinitialiser les groupe de tables "%s" ?';
 	$lang['emajresetgroupsok'] = 'Les groupes de tables "%s" ont été réinitialisés.';
-	$lang['emajresetgroupserr'] = 'Erreur lors de la réinitialisation des groupes de tables "%s" !';
+	$lang['emajresetgroupserr'] = 'Erreur lors de la réinitialisation des groupes de tables "%s".';
 
 	// Group protect
 	$lang['emajprotectgroupok'] = 'Le groupe de tables "%s" est maintenant protégé contre les rollbacks.';
-	$lang['emajprotectgrouperr'] = 'Erreur lors de la protection du groupe de tables "%s" !';
+	$lang['emajprotectgrouperr'] = 'Erreur lors de la protection du groupe de tables "%s".';
 
 	// Group unprotect
 	$lang['emajunprotectgroupok'] = 'Le groupe de tables "%s" est maintenant déprotégé.';
-	$lang['emajunprotectgrouperr'] = 'Erreur lors de la deprotection du groupe de tables "%s" !';
+	$lang['emajunprotectgrouperr'] = 'Erreur lors de la deprotection du groupe de tables "%s".';
 
-	// Set Mark for one or several groups
+	// Set Mark for one group
 	$lang['emajsetamark'] = 'E-Maj : Poser une marque';
 	$lang['emajconfirmsetmarkgroup'] = 'Pose d\'une marque pour le groupe de tables "%s" :';
-	$lang['emajinvalidmark'] = 'La marque saisie (%s) est invalide.';
 	$lang['emajsetmarkgroupok'] = 'La marque "%s" est posée pour le groupe de tables "%s".';
-	$lang['emajsetmarkgrouperr'] = 'Erreur lors de la pose de la marque "%s" pour le groupe de tables "%s" !';
+	$lang['emajsetmarkgrouperr'] = 'Erreur lors de la pose d\'une marque pour le groupe de tables "%s".';
+	$lang['emajsetmarkgrouperr2'] = 'Erreur lors de la pose de la marque "%s" pour le groupe de tables "%s".';
+
+	// Set Mark for several groups
 	$lang['emajconfirmsetmarkgroups'] = 'Pose d\'une marque pour les groupes de tables "%s" :';
 	$lang['emajsetmarkgroupsok'] = 'La marque "%s" est posée pour les groupes de tables "%s".';
-	$lang['emajsetmarkgroupserr'] = 'Erreur lors de la pose de la marque "%s" pour les groupes de tables "%s" !';
-
-	// Protect mark
-	$lang['emajprotectmarkgroupok'] = 'La marque "%s" du groupe de tables "%s" est maintenant protégé contre les rollbacks.';
-	$lang['emajprotectmarkgrouperr'] = 'Erreur lors de la protection de la marque "%s" du groupe de tables "%s" !';
-
-	// Unprotect mark
-	$lang['emajunprotectmarkgroupok'] = 'La marque "%s" du groupe de tables "%s" est maintenant déprotégé.';
-	$lang['emajunprotectmarkgrouperr'] = 'Erreur lors de la déprotection de la marque "%s" du groupe de tables "%s" !';
-
-	// Comment mark
-	$lang['emajcommentamark'] = 'E-Maj : Enregistrer un commentaire pour une marque';
-	$lang['emajcommentmark'] = 'Entrer, modifier ou supprimer le commentaire pour la marque "%s" du groupe de tables "%s".';
-	$lang['emajcommentmarkok'] = 'Le commentaire a été enregistré pour la marque "%s" du groupe de tables "%s".';
-	$lang['emajcommentmarkerr'] = 'Erreur lors de l\'enregistrement du commentaire pour la marque "%s" du groupe de tables "%s" !';
+	$lang['emajsetmarkgroupserr'] = 'Erreur lors de la pose d\'une marque pour les groupes de tables "%s".';
+	$lang['emajsetmarkgroupserr2'] = 'Erreur lors de la pose de la marque "%s" pour les groupes de tables "%s".';
 
 	// Group rollback
 	$lang['emajrlbkagroup'] = 'E-Maj : Rollbacker un groupe de tables';
@@ -819,12 +812,12 @@
 	$lang['emajdurationhoursminutes'] = '%s h %s min';
 	$lang['emajdurationovertendays'] = '> 10 jours';
 	$lang['emajrlbkthenmonitor'] = 'Rollback et suivi';
-	$lang['emajcantrlbkprotgroup'] = 'Le rollback du groupe de tables "%s" est impossible. Le groupe est protégé.';
-	$lang['emajcantrlbkinvalidmarkgroup'] = 'Le rollback du groupe de tables "%s" est impossible. La marque "%s" n\'est pas valide.';
+	$lang['emajcantrlbkinvalidmarkgroup'] = 'La marque "%s" n\'est pas valide.';
 	$lang['emajreachaltergroup'] = 'Le rollback du groupe de tables "%s" à la marque "%s" remonterait à un point dans le temps antérieur à des opérations de modification du groupe. Veuillez confirmer le rollback.';
 	$lang['emajautorolledback'] = 'Annulé automatiquement ?';
 	$lang['emajrlbkgroupok'] = 'Le rollback du groupe de tables "%s" à la marque "%s" est effectué.';
-	$lang['emajrlbkgrouperr'] = 'Erreur lors du rollback du groupe de tables "%s" à la marque "%s" !';
+	$lang['emajrlbkgrouperr'] = 'Erreur lors du rollback du groupe de tables "%s".';
+	$lang['emajrlbkgrouperr2'] = 'Erreur lors du rollback du groupe de tables "%s" à la marque "%s".';
 	$lang['emajbadconfparam'] = 'Erreur : le rollback asynchrone n\'est plus possible. Vérifiez l\'existence de l\'extension dblink et la valeur des deux paramètres de configuration du chemin de la commande psql (%s) et du répertoire temporaire (%s).';
 	$lang['emajasyncrlbkstarted'] = 'Rollback #%s démarré.';
 	$lang['emajrlbkgroupreport'] = 'Rapport d\'exécution du rollback du groupe de tables "%s" à la marque "%s"';
@@ -832,12 +825,12 @@
 	// Groups rollback
 	$lang['emajrlbkgroups'] = 'E-Maj : Rollbacker des groupes de tables';
 	$lang['emajselectmarkgroups'] = 'Rollback des groupes de tables "%s" à la marque : ';
-	$lang['emajcantrlbkprotgroups'] = 'Le rollback des groupes de tables "%s" est impossible. Les groupes "%s" sont protégés.';
 	$lang['emajnomarkgroups'] = 'Aucune marque commune aux groupes de tables "%s" ne peut être utilisée pour un rollback.';
 	$lang['emajcantrlbkinvalidmarkgroups'] = 'Le rollback des groupes de tables "%s" est impossible. La marque "%s" n\'est pas valide.';
 	$lang['emajreachaltergroups'] = 'Le rollback des groupes de tables "%s" à la marque "%s" remonterait à un point dans le temps antérieur à des opérations de modification de groupes. Veuillez confirmer le rollback.';
 	$lang['emajrlbkgroupsok'] = 'Le rollback des groupes de tables "%s" à la marque "%s" est effectué.';
-	$lang['emajrlbkgroupserr'] = 'Erreur lors du rollback des groupes de tables "%s" à la marque "%s" !';
+	$lang['emajrlbkgroupserr'] = 'Erreur lors du rollback des groupes de tables "%s".';
+	$lang['emajrlbkgroupserr2'] = 'Erreur lors du rollback des groupes de tables "%s" à la marque "%s".';
 	$lang['emajrlbkgroupsreport'] = 'Rapport d\'exécution du rollback des groupes de tables "%s" à la marque "%s"';
 
 	// Elementary alter group actions previously executed, reported at rollback time 
@@ -857,29 +850,44 @@
 	$lang['emajalteredaddtbl'] = 'La table "%s.%s" a été ajoutée au groupe de tables "%s"';
 	$lang['emajalteredaddseq'] = 'La séquence "%s.%s" a été ajoutée au groupe de tables "%s"';
 
+	// Protect mark
+	$lang['emajprotectmarkok'] = 'La marque "%s" du groupe de tables "%s" est maintenant protégée contre les rollbacks.';
+	$lang['emajprotectmarkerr'] = 'Erreur lors de la protection de la marque "%s" du groupe de tables "%s".';
+
+	// Unprotect mark
+	$lang['emajunprotectmarkok'] = 'La marque "%s" du groupe de tables "%s" est maintenant déprotégée.';
+	$lang['emajunprotectmarkerr'] = 'Erreur lors de la déprotection de la marque "%s" du groupe de tables "%s".';
+
+	// Comment mark
+	$lang['emajcommentamark'] = 'E-Maj : Enregistrer un commentaire pour une marque';
+	$lang['emajcommentmark'] = 'Entrer, modifier ou supprimer le commentaire pour la marque "%s" du groupe de tables "%s".';
+	$lang['emajcommentmarkok'] = 'Le commentaire a été enregistré pour la marque "%s" du groupe de tables "%s".';
+	$lang['emajcommentmarkerr'] = 'Erreur lors de l\'enregistrement du commentaire pour la marque "%s" du groupe de tables "%s".';
+
 	// Mark renaming
 	$lang['emajrenameamark'] = 'E-Maj : Renommer une marque';
 	$lang['emajconfirmrenamemark'] = 'Renomage de la marque "%s" du groupe de tables "%s"';
 	$lang['emajnewnamemark'] = 'Nouveau nom';
 	$lang['emajrenamemarkok'] = 'La marque "%s" du groupe de tables "%s" a été renommée en "%s".';
-	$lang['emajrenamemarkerr'] = 'Erreur lors du renommage de la marque "%s" du groupe de tables "%s" en "%s" !';
+	$lang['emajrenamemarkerr'] = 'Erreur lors du renommage de la marque "%s" du groupe de tables "%s".';
+	$lang['emajrenamemarkerr2'] = 'Erreur lors du renommage de la marque "%s" du groupe de tables "%s" en "%s".';
 
 	// Mark deletion
-	$lang['emajdelamark'] = 'E-Maj : Effacer une marque';
-	$lang['emajconfirmdelmark'] = 'Êtes-vous sûr de vouloir effacer la marque "%s" pour le groupe de tables "%s" ?';
-	$lang['emajdelmarkok'] = 'La marque "%s" a été effacée pour le groupe de tables "%s".';
-	$lang['emajdelmarkerr'] = 'Erreur lors de l\'effacement de la marque "%s" pour le groupe de tables "%s" !';
+	$lang['emajdeleteamark'] = 'E-Maj : Effacer une marque';
+	$lang['emajconfirmdeletemark'] = 'Êtes-vous sûr de vouloir effacer la marque "%s" pour le groupe de tables "%s" ?';
+	$lang['emajdeletemarkok'] = 'La marque "%s" a été effacée pour le groupe de tables "%s".';
+	$lang['emajdeletemarkerr'] = 'Erreur lors de l\'effacement de la marque "%s" pour le groupe de tables "%s".';
 
 	// Marks deletion
-	$lang['emajdelmarks'] = 'E-Maj : Effacer des marques';
-	$lang['emajconfirmdelmarks'] = 'Êtes-vous sûr de vouloir effacer ces %s marques pour le groupe de tables "%s" ?';
-	$lang['emajdelmarksok'] = 'Les %s marques ont été effacées pour le groupe de tables "%s".';
-	$lang['emajdelmarkserr'] = 'Erreur lors de l\'effacement des marques "%s" pour le groupe de tables "%s" !';
+	$lang['emajdeletemarks'] = 'E-Maj : Effacer des marques';
+	$lang['emajconfirmdeletemarks'] = 'Êtes-vous sûr de vouloir effacer ces %s marques pour le groupe de tables "%s" ?';
+	$lang['emajdeletemarksok'] = 'Les %s marques ont été effacées pour le groupe de tables "%s".';
+	$lang['emajdeletemarkserr'] = 'Erreur lors de l\'effacement des marques "%s" pour le groupe de tables "%s".';
 
 	// Marks before mark deletion
 	$lang['emajdelmarksprior'] = 'E-Maj : Supprimer des marques';
 	$lang['emajconfirmdelmarksprior'] = 'Êtes-vous sûr de vouloir supprimer toutes les marques et log antérieurs à la marque "%s" pour le groupe de tables "%s" ?';
 	$lang['emajdelmarkspriorok'] = 'Les (%s) marques antérieures à la marque "%s" ont été supprimées pour le groupe de tables "%s".';
-	$lang['emajdelmarkspriorerr'] = 'Erreur lors de la suppression des marques antérieures à la marque "%s" pour le groupe de tables "%s" !';
+	$lang['emajdelmarkspriorerr'] = 'Erreur lors de la suppression des marques antérieures à la marque "%s" pour le groupe de tables "%s".';
 
 ?>

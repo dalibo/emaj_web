@@ -2819,11 +2819,12 @@ class EmajDb {
 		$data->clean($groups);
 		$groups="'".str_replace(', ',"','",$groups)."'";
 
-		$sql = "SELECT string_agg(group_name, ', ') AS groups
-				  FROM emaj.emaj_group
-				  WHERE group_name IN ($groups) AND group_is_rlbk_protected";
+		$sql = "SELECT count(*) AS nb_groups, string_agg(group_name, ', ') AS groups_list
+					FROM emaj.emaj_group
+					WHERE group_name IN ($groups)
+						AND group_is_rlbk_protected";
 
-		return $data->selectField($sql,'groups');
+		return $data->selectSet($sql);
 	}
 
 	/**

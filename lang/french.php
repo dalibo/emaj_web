@@ -640,6 +640,7 @@
 	$lang['emajduplicatemarkgroups'] = 'La marque "%s" existe déjà dans %s groupes de tables (%s).';
 	$lang['emajmarkmissing'] = 'La marque "%s" n\'existe plus.';
 	$lang['emajmarksmissing'] = '%s marques (%s) n\'existent plus.';
+	$lang['emajadoreturncode'] = 'Code retour de la couche ADO = %s.';
 
 	// Group creation
 	$lang['emajcreateagroup'] = 'E-Maj : Créer un groupe de tables';

@@ -640,6 +640,8 @@
 	$lang['emajduplicatemarkgroups'] = 'The mark "%s" already exists in %s tables groups (%s)!';
 	$lang['emajmarkmissing'] = 'The mark "%s" does not exist anymore!';
 	$lang['emajmarksmissing'] = '%s marks (%s) do not exist anymore!';
+	$lang['emajmissingmarkgroup'] = 'The mark does not exist anymore in the tables group "%s"!';
+	$lang['emajmissingmarkgroups'] = 'The mark does not exist anymore in %s tables groups (%s)!';
 	$lang['emajadoreturncode'] = 'Return code from the ADO layer = %s.';
 
 	// Group creation
@@ -819,6 +821,7 @@
 	$lang['emajrlbkgroupok'] = 'The tables group "%s" has been rollbacked to the mark "%s".';
 	$lang['emajrlbkgrouperr'] = 'Error while rollbacking the tables group "%s".';
 	$lang['emajrlbkgrouperr2'] = 'Error while rollbacking the tables group "%s" to the mark "%s".';
+	$lang['emajestimrlbkgrouperr'] = 'Error while estimating the rollback duration for the tables group "%s" to the mark "%s".';
 	$lang['emajbadconfparam'] = 'Error: asynchronous rollback is not possible anymore. Check the dblink extension exists and both the pathname of the psql command (%s) and the temporary directory (%s) configuration parameters are correct.';
 	$lang['emajasyncrlbkstarted'] = 'Rollback #%s started.';
 	$lang['emajrlbkgroupreport'] = 'Rollback execution report for the tables group "%s" to the mark "%s"';
@@ -832,6 +835,7 @@
 	$lang['emajrlbkgroupsok'] = 'The tables groups "%s" have been rollbacked to mark "%s".';
 	$lang['emajrlbkgroupserr'] = 'Error while rollbacking tables groups "%s".';
 	$lang['emajrlbkgroupserr2'] = 'Error while rollbacking tables groups "%s" to mark "%s".';
+	$lang['emajestimrlbkgroupserr'] = 'Error while estimating the rollback duration for the tables groups "%s" to the mark "%s".';
 	$lang['emajrlbkgroupreport'] = 'Rollback execution report for the tables groups "%s" to the mark "%s"';
 
 	// Elementary alter group actions previously executed, reported at rollback time 

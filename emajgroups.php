@@ -350,6 +350,50 @@
 	}
 
 	/**
+	 * Check that one or several marks still exist for a group. The group has been rechecked just before.
+	 */
+	function recheckMarksGroup($group, $marksList, $errMsgAction) {
+		global $lang, $emajdb, $misc;
+
+		// Check the marks existence
+		$missingMarks = $emajdb->missingMarksGroup($group, $marksList);
+		if ($missingMarks->fields['nb_marks'] > 0) {
+			if ($missingMarks->fields['nb_marks'] == 1)
+				// One mark doesn't exist anymore
+				show_group('', $errMsgAction . '<br>' .
+					sprintf($lang['emajmarkmissing'], htmlspecialchars($missingMarks->fields['marks_list'])));
+			else
+				// Several marks do not exist anymore
+				show_group('', $errMsgAction . '<br>' .
+					sprintf($lang['emajmarksmissing'], $missingMarks->fields['nb_marks'], htmlspecialchars($missingMarks->fields['marks_list'])));
+			$misc->printFooter();
+			exit();
+		}
+	}
+
+	/**
+	 * Check that a mark still exist for several groups. The group has been rechecked just before.
+	 */
+	function recheckMarkGroups($groupList, $mark, $errMsgAction) {
+		global $lang, $emajdb, $misc;
+
+		// Check the mark existence for the groups
+		$missingGroups = $emajdb->missingMarkGroups($groupList, $mark);
+		if ($missingGroups->fields['nb_groups'] > 0) {
+			if ($missingGroups->fields['nb_groups'] == 1)
+				// The mark doesn't exist anymore for one group
+				show_groups('', $errMsgAction . '<br>' .
+					sprintf($lang['emajmissingmarkgroup'], htmlspecialchars($missingGroups->fields['groups_list'])));
+			else
+				// The mark doesn't exist anymore for several groups
+				show_groups('', $errMsgAction . '<br>' .
+					sprintf($lang['emajmissingmarkgroups'], $missingGroups->fields['nb_groups'], htmlspecialchars($missingGroups->fields['groups_list'])));
+			$misc->printFooter();
+			exit();
+		}
+	}
+
+	/**
 	 * Check that a supplied mark name is valid for one or several groups.
 	 * It returns the mark name, modified with resolved % characters, if any.
 	 * If the mark is not valid or is already known by any groups, it directly branches to the calling page with an error message.
@@ -417,28 +461,6 @@
 		}
 
 		return;
-	}
-
-	/**
-	 * Check that one or several marks still exist for a group. The group has been rechecked just before.
-	 */
-	function recheckMarksGroup($group, $marksList, $errMsgAction) {
-		global $lang, $emajdb, $_reload_browser, $misc;
-
-		// Check the marks existence
-		$missingMarks = $emajdb->missingMarksGroup($group, $marksList);
-		if ($missingMarks->fields['nb_marks'] > 0) {
-			if ($missingMarks->fields['nb_marks'] == 1)
-				// One mark doesn't exist anymore
-				show_group('', $errMsgAction . '<br>' .
-					sprintf($lang['emajmarkmissing'], htmlspecialchars($missingMarks->fields['marks_list'])));
-			else
-				// Several marks do not exist anymore
-				show_group('', $errMsgAction . '<br>' .
-					sprintf($lang['emajmarksmissing'], $missingMarks->fields['nb_marks'], htmlspecialchars($missingMarks->fields['marks_list'])));
-			$misc->printFooter();
-			exit();
-		}
 	}
 
 /********************************************************************************************************
@@ -2397,7 +2419,7 @@
 	function alter_group() {
 		global $misc, $lang, $emajdb;
 
-		if ($_REQUEST['back']=='list')
+		if ($_REQUEST['back'] == 'list')
 			$misc->printHeader('database', 'database','emajgroups');
 		else
 			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
@@ -2668,7 +2690,7 @@
 		// Check the group still exists
 		recheckGroups($_REQUEST['group'], $errMsgAction);
 
-		if ($_REQUEST['back']=='list')
+		if ($_REQUEST['back'] == 'list')
 			$misc->printHeader('database', 'database','emajgroups');
 		else
 			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
@@ -3155,7 +3177,7 @@
 
 		if (!isset($_POST['mark'])) $_POST['mark'] = '';
 
-		if ($_REQUEST['back']=='list')
+		if ($_REQUEST['back'] == 'list')
 			$misc->printHeader('database', 'database','emajgroups');
 		else
 			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
@@ -3322,7 +3344,7 @@
 		// Check the group still exists and is in LOGGING state
 		recheckGroups($_REQUEST['group'], $errMsgAction, 'LOGGING', $_REQUEST['back']);
 
-		if ($_REQUEST['back']=='list')
+		if ($_REQUEST['back'] == 'list')
 			$misc->printHeader('database', 'database','emajgroups');
 		else
 			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
@@ -3463,7 +3485,7 @@
 		// Check the group still exists and is in IDLE state
 		recheckGroups($_REQUEST['group'], $errMsgAction, 'IDLE', $_REQUEST['back']);
 
-		if ($_REQUEST['back']=='list')
+		if ($_REQUEST['back'] == 'list')
 			$misc->printHeader('database', 'database','emajgroups');
 		else
 			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
@@ -3589,13 +3611,13 @@
 		// OK, perform the action
 		$status = $emajdb->protectGroup($_REQUEST['group']);
 		if ($status == 0)
-			if ($_REQUEST['back']=='list') {
+			if ($_REQUEST['back'] == 'list') {
 				show_groups(sprintf($lang['emajprotectgroupok'], htmlspecialchars($_REQUEST['group'])));
 			} else {
 				show_group(sprintf($lang['emajprotectgroupok'], htmlspecialchars($_REQUEST['group'])));
 			}
 		else
-			if ($_REQUEST['back']=='list') {
+			if ($_REQUEST['back'] == 'list') {
 				show_groups('', $errMsgAction);
 			} else {
 				show_group('', $errMsgAction);
@@ -3619,7 +3641,7 @@
 
 		// Check the result and exit
 		checkADOReturnCode($status, $errMsgAction, $_REQUEST['back']);
-		if ($_REQUEST['back']=='list')
+		if ($_REQUEST['back'] == 'list')
 			show_groups(sprintf($lang['emajunprotectgroupok'], htmlspecialchars($_REQUEST['group'])));
 		else
 			show_group(sprintf($lang['emajunprotectgroupok'], htmlspecialchars($_REQUEST['group'])));
@@ -3639,7 +3661,7 @@
 
 		if (!isset($_POST['mark'])) $_POST['mark'] = '';
 
-		if ($_REQUEST['back']=='list')
+		if ($_REQUEST['back'] == 'list')
 			$misc->printHeader('database', 'database','emajgroups');
 		else
 			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
@@ -3820,7 +3842,12 @@
 		// Check the group still exists and is in LOGGING state
 		recheckGroups($_REQUEST['group'], $errMsgAction, 'LOGGING', $_REQUEST['back']);
 
-		if ($_REQUEST['back']=='list')
+		// If the mark is already defined, check the mark still exists for the group
+		if ($_REQUEST['back'] != 'list') {
+			recheckMarksGroup($_REQUEST['group'], $_REQUEST['mark'], $errMsgAction);
+		}
+
+		if ($_REQUEST['back'] == 'list')
 			$misc->printHeader('database', 'database','emajgroups');
 		else
 			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
@@ -3911,11 +3938,17 @@
 		// Process the click on the <cancel> button
 		processCancelButton($_POST['back']);
 
-		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajrlbkgrouperr2'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark']));
+		// Prepare the action part of potential error messages, depending on the real performed action
+		if (isset($_POST['estimaterollbackduration']))
+			$errMsgAction = sprintf($lang['emajestimrlbkgrouperr'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark']));
+		else
+			$errMsgAction = sprintf($lang['emajrlbkgrouperr2'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark']));
 
 		// Check the group still exists and is in LOGGING state
 		recheckGroups($_POST['group'], $errMsgAction, 'LOGGING', $_POST['back']);
+
+		// Check the mark still exists for the group
+		recheckMarksGroup($_POST['group'], $_POST['mark'], $errMsgAction);
 
 		if (isset($_POST['estimaterollbackduration'])) {
 			// process the click on the <estimate> button (compute the estimaged duration and go back to the previous page
@@ -3976,7 +4009,7 @@
 
 			$actions = array ();
 
-			if ($_REQUEST['back']=='list')
+			if ($_REQUEST['back'] == 'list')
 				$misc->printHeader('database', 'database','emajgroups');
 			else
 				$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
@@ -4022,6 +4055,9 @@
 
 		// Check the group still exists and is in LOGGING state
 		recheckGroups($_POST['group'], $errMsgAction, 'LOGGING', $_POST['back']);
+
+		// Check the mark still exists for the group
+		recheckMarksGroup($_POST['group'], $_POST['mark'], $errMsgAction);
 
 		// Check the group is still ROLLBACKABLE (i.e. not protected)
 		$group = $emajdb->getGroup($_POST['group']);
@@ -4075,7 +4111,7 @@
 
 		// perform the rollback in regular synchronous mode
 
-		if ($_REQUEST['back']=='list')
+		if ($_REQUEST['back'] == 'list')
 			$misc->printHeader('database', 'database','emajgroups');
 		else
 			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
@@ -4257,11 +4293,17 @@
 		// Process the click on the <cancel> button
 		processCancelButton('list');
 
-		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajrlbkgroupserr2'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark']));
+		// Prepare the action part of potential error messages, depending on the real performed action
+		if (isset($_POST['estimaterollbackduration']))
+			$errMsgAction = sprintf($lang['emajestimrlbkgroupserr'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark']));
+		else
+			$errMsgAction = sprintf($lang['emajrlbkgroupserr2'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark']));
 
 		// Check the groups still exist and are in LOGGING state
 		recheckGroups($_POST['groups'], $errMsgAction, 'LOGGING', 'list');
+
+		// Check the mark still exists for the groups
+		recheckMarkGroups($_POST['groups'], $_POST['mark'], $errMsgAction);
 
 		if (isset($_POST['estimaterollbackduration'])) {
 			// process the click on the <estimate> button (compute the estimaged duration and go back to the previous page)
@@ -4363,6 +4405,9 @@
 
 		// Check the groups still exist and are in LOGGING state
 		recheckGroups($_POST['groups'], $errMsgAction, 'LOGGING', 'list');
+
+		// Check the mark still exists for the groups
+		recheckMarkGroups($_POST['groups'], $_POST['mark'], $errMsgAction);
 
 		// if at least one selected group is protected, stop
 		$protectedGroups=$emajdb->getProtectedGroups($_POST['groups']);

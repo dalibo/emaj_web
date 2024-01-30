@@ -923,6 +923,23 @@ class EmajDb {
 	}
 
 	/**
+	 * Detects groups that no longer have a mark
+	 */
+	function missingMarkGroups($groupsList, $mark) {
+		global $data;
+
+		$data->clean($groupList);
+		$data->clean($mark);
+		$groupsArray = "ARRAY['".str_replace(', ',"','",$groupsList)."']";
+
+		$sql = "SELECT count(*) AS nb_groups, string_agg(name, ', ') AS groups_list
+					FROM unnest({$groupsArray}) AS name
+					WHERE NOT EXISTS(SELECT 0 FROM emaj.emaj_mark WHERE mark_group = name AND mark_name = '{$mark}')";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
 	 * Gets properties of a single tables group
 	 */
 	function getGroup($group) {

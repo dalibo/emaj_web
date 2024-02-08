@@ -223,6 +223,19 @@
 		if (!isset($_REQUEST['schema'])) $_REQUEST['schema'] = $prevSchema;
 		if (is_array($_REQUEST['schema'])) $_REQUEST['schema'] = $_REQUEST['schema'][0];
 
+		// If a schema has been selected, check it still exists
+		if (isset($_REQUEST['schema']) && $_REQUEST['schema'] != '') {
+			if (! $emajdb->existsSchema($_REQUEST['schema'])) {
+				// If the schema doesn't exist anymore, recall the function with an error message and reload the browser
+				$errorMessage = sprintf($lang['emajschemamissing'], htmlspecialchars($_REQUEST['schema']));
+				unset($_REQUEST['schema']);
+				list_schemas('', $errorMessage);
+				$_reload_browser = true;
+				$misc->printFooter();
+				exit();
+			}
+		}
+
 		if (isset($_REQUEST['schema']) && $_REQUEST['schema'] != '') {	// the trail differs if a schema is selected
 			$misc->printHeader('schema', 'database', 'schemas');
 		} else {

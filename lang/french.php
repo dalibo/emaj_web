@@ -256,6 +256,7 @@
 	$lang['emajtablesgroup'] = 'Groupe de tables';
 	$lang['emajgroup'] = 'Groupe';
 	$lang['emajgroups'] = 'Groupes';
+	$lang['emajnewgroup'] = 'Nouveau groupe';
 	$lang['emajmark'] = 'Marque';
 	$lang['emajlogsession'] = 'Session de log';
 	$lang['emajgroupcreatedat'] = 'Créé le';
@@ -392,41 +393,94 @@
 	$lang['emajnewmodifiedconf'] = 'Configuration modifiée';
 	$lang['emajparamconfigimporterr'] = 'Erreur à l\'importation de paramètres à partir du fichier %s';
 
-	// Dynamic groups content management
+	// Dynamic groups content management: common messages
 	$lang['emajlogdattsp'] = 'Tablespace table log';
 	$lang['emajlogidxtsp'] = 'Tablespace index log';
-	$lang['emajassigntable'] = 'E-Maj : Affecter des tables à un groupe de tables';
 	$lang['emajthetable'] = 'la table "%s.%s"';
-	$lang['emajconfirmassigntable'] = 'Affecter ces %s tables du schéma "%s" :';
-	$lang['emajconfirmassignsequence'] = 'Affecter ces %s séquences du schéma "%s" :';
+	$lang['emajthesequence'] = 'la séquence "%s.%s"';
+	$lang['emajthetblseqingroup'] = '%s (groupe %s)';
+	$lang['emajthetableingroup'] = 'la table "%s.%s" (groupe %s)';
+	$lang['emajthesequenceingroup'] = 'la séquence "%s.%s" (groupe %s)';
 	$lang['emajenterpriority'] = 'Priorité de traitement';
 	$lang['emajpriorityhelp'] = 'Les tables sont traitées par ordre croissant de priorité, et par ordre alphabétique de nom si aucune priorité n\'est définie.';
 	$lang['emajenterlogdattsp'] = 'Tablespace pour la table de log';
 	$lang['emajenterlogidxtsp'] = 'Tablespace pour l\'index de la table de log';
 	$lang['emajmarkiflogginggroup'] = 'Marque (si groupe démarré)';
-	$lang['emajdynassigntablesok'] = '%s tables ont été assignées au groupe de tables %s.';
-	$lang['emajmodifygrouperr'] = 'Erreur lors du changement de composition des groupes de tables.';
+
+	// Dynamic groups content management: generic error messages
+	$lang['emajschemamissing'] = 'Le schéma "%s" n\'existe plus.';
+	$lang['emajtablemissing'] = 'La table "%s.%s" n\'existe plus.';
+	$lang['emajsequencemissing'] = 'La séquence "%s.%s" n\'existe plus';
+	$lang['emajtablesmissing'] = '%s tables (%s) n\'existent plus.';
+	$lang['emajsequencesmissing'] = '%s séquences (%s) n\'existent plus.';
+
+	// Assign tables
+	$lang['emajassigntable'] = 'E-Maj : Affecter des tables à un groupe de tables';
+	$lang['emajconfirmassigntable'] = 'Affecter la table "%s.%s"';
+	$lang['emajconfirmassigntables'] = 'Affecter ces %s tables du schéma "%s" :';
+	$lang['emajassigntableok'] = '%s table a été affectée au groupe de tables %s.';
+	$lang['emajassigntablesok'] = '%s tables ont été affectées au groupe de tables %s.';
+	$lang['emajassigntableerr'] = 'Erreur lors de l\'affectation de la table "%s.%s".';
+	$lang['emajassigntableerr2'] = 'Erreur lors de l\'affectation de la table "%s.%s" dans le groupe de tables "%s".';
+	$lang['emajassigntableserr'] = 'Erreur lors de l\'affectation des %s tables du schéma "%s".';
+	$lang['emajassigntableserr2'] = 'Erreur lors de l\'affectation des %s tables du schéma "%s" dans le groupe de tables "%s".';
+
+	// Move tables
 	$lang['emajmovetable'] = 'E-Maj : Déplacer des tables dans un autre groupe de tables';
-	$lang['emajthetblseqingroup'] = '%s (groupe %s)';
-	$lang['emajthetableingroup'] = 'la table "%s.%s" (groupe %s)';
-	$lang['emajconfirmmovetable'] = 'Déplacer les %s tables du schéma "%s" :';
-	$lang['emajconfirmmovesequence'] = 'Déplacer les %s séquences du schéma "%s" :';
-	$lang['emajdynmovetablesok'] = '%s tables ont été déplacées dans le groupe de tables %s.';
-	$lang['emajmodifytable'] = 'E-Maj : Modifier les propriétés E-Maj des tables';
-//	$lang['emajconfirmmodifytblseq'] = 'Êtes-vous sûr de vouloir modifier les propriétés de :';
-	$lang['emajdynmodifytablesok'] = 'Les propriétés de %s tables ont été modifiées.';
+	$lang['emajconfirmmovetable'] = 'Déplacer la table "%s.%s" de son groupe de tables "%s".';
+	$lang['emajconfirmmovetables'] = 'Déplacer ces %s tables du schéma "%s" :';
+	$lang['emajmovetableok'] = '%s table a été déplacée dans le groupe de tables %s.';
+	$lang['emajmovetablesok'] = '%s tables ont été déplacées dans le groupe de tables %s.';
+	$lang['emajmovetableerr'] = 'Erreur lors du déplacement de la table "%s.%s".';
+	$lang['emajmovetableerr2'] = 'Erreur lors du déplacement de la table "%s.%s" du groupe de tables "%s" vers le groupe de tables "%s".';
+	$lang['emajmovetableserr'] = 'Erreur lors du déplacement des %s tables du schéma "%s".';
+	$lang['emajmovetableserr2'] = 'Erreur lors du déplacement des %s tables du schéma "%s" de leur groupe de tables vers le groupe de tables "%s".';
+
+	// Modify table
+	$lang['emajmodifytable'] = 'E-Maj : Modifier les propriétés E-Maj de tables';
+	$lang['emajconfirmmodifytable'] = 'Modifier les propriétés de la table "%s.%s".';
+	$lang['emajmodifytablesok'] = 'Les propriétés E-Maj de %s tables ont été modifiées.';
+	$lang['emajmodifytableerr'] = 'Erreur lors de la modification des propiétés E-Maj de la table "%s.%s".';
+
+	// Remove tables
 	$lang['emajremovetable'] = 'E-Maj : Retirer des tables de leur groupe de tables';
-	$lang['emajconfirmremovetable'] = 'Retirer ces %s tables du schéma "%s" :';
-	$lang['emajconfirmremovesequence'] = 'Retirer ces %s séquences du schéma "%s" :';
-	$lang['emajdynremovetablesok'] = '%s tables ont été retirées de leur groupe de tables.';
+	$lang['emajconfirmremovetable'] = 'Retirer la table "%s.%s" de son groupe de tables "%s".';
+	$lang['emajconfirmremovetables'] = 'Retirer ces %s tables du schéma "%s" de leur groupe de tables :';
+	$lang['emajremovetableok'] = '%s table a été retirée de son groupe de tables.';
+	$lang['emajremovetablesok'] = '%s tables ont été retirées de leur groupe de tables.';
+	$lang['emajremovetableerr'] = 'Erreur lors de la sortie de la table "%s.%s" du groupe de tables "%s".';
+	$lang['emajremovetableserr'] = 'Erreur lors de la sortie des %s tables du schéma "%s" de leur groupe de tables.';
+
+	// Assign sequences
 	$lang['emajassignsequence'] = 'E-Maj : Affecter des séquences à un groupe de tables';
-	$lang['emajthesequence'] = 'la séquence "%s.%s"';
-	$lang['emajdynassignsequencesok'] = '%s sequences ont été assignées au groupe de tables %s.';
+	$lang['emajconfirmassignsequence'] = 'Affecter la séquence "%s.%s"';
+	$lang['emajconfirmassignsequences'] = 'Affecter ces %s séquences du schéma "%s" :';
+	$lang['emajassignsequenceok'] = '%s sequence a été affectée au groupe de tables %s.';
+	$lang['emajassignsequencesok'] = '%s sequences ont été affectées au groupe de tables %s.';
+	$lang['emajassignsequenceerr'] = 'Erreur lors de l\'affectation de la séquence "%s.%s".';
+	$lang['emajassignsequenceerr2'] = 'Erreur lors de l\'affectation de la séquence "%s.%s" dans le groupe de tables "%s".';
+	$lang['emajassignsequenceserr'] = 'Erreur lors de l\'affectation des %s séquences du schéma "%s".';
+	$lang['emajassignsequenceserr2'] = 'Erreur lors de l\'affectation des %s séquences du schéma "%s" dans le groupe de tables "%s".';
+
+	// Move sequences
 	$lang['emajmovesequence'] = 'E-Maj : Déplacer des séquences dans un autre groupe de tables';
-	$lang['emajthesequenceingroup'] = 'la séquence "%s.%s" (groupe %s)';
-	$lang['emajdynmovesequencesok'] = '%s sequences ont été déplacées dans le groupe de tables %s.';
+	$lang['emajconfirmmovesequence'] = 'Déplacer la sequence "%s.%s" de son groupe de tables "%s".';
+	$lang['emajconfirmmovesequences'] = 'Déplacer ces %s séquences du schéma "%s" :';
+	$lang['emajmovesequenceok'] = '%s séquence a été déplacée dans le groupe de tables %s.';
+	$lang['emajmovesequencesok'] = '%s séquences ont été déplacées dans le groupe de tables %s.';
+	$lang['emajmovesequenceerr'] = 'Erreur lors du déplacement de la séquence "%s.%s".';
+	$lang['emajmovesequenceerr2'] = 'Erreur lors du déplacement de la séquence "%s.%s" du groupe de tables "%s" vers le groupe de tables "%s".';
+	$lang['emajmovesequenceserr'] = 'Erreur lors du déplacement des %s séquences du schéma "%s".';
+	$lang['emajmovesequenceserr2'] = 'Erreur lors du déplacement des %s séquences du schéma "%s" de leur groupe de tables vers le groupe de tables "%s".';
+
+	// Remove sequences
 	$lang['emajremovesequence'] = 'E-Maj : Retirer des séquences de leur groupe de tables';
-	$lang['emajdynremovesequencesok'] = '%s séquences ont été retirées de leur groupe de tables.';
+	$lang['emajconfirmremovesequence'] = 'Retirer la séquence "%s.%s" de son groupe de tables "%s".';
+	$lang['emajconfirmremovesequences'] = 'Retirer ces %s séquences du schéma "%s" :';
+	$lang['emajremovesequenceok'] = '%s séquence a été retirée de son groupe de tables.';
+	$lang['emajremovesequencesok'] = '%s séquences ont été retirées de leur groupe de tables.';
+	$lang['emajremovesequenceerr'] = 'Erreur lors de la sortie de la sequence "%s.%s" du groupe de tables "%s".';
+	$lang['emajremovesequenceserr'] = 'Erreur lors de la sortie des %s sequences du schéma "%s" de leur groupe de tables.';
 
 	// Old Groups' content setup
 	$lang['emajappschemas'] = 'Les schémas applicatifs';

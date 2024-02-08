@@ -821,6 +821,51 @@ class EmajDb {
 	}
 
 	/**
+	 * Verifies whether a schema currently exists
+	 */
+	function existsSchema($schema) {
+		global $data;
+
+		$data->clean($schema);
+
+		$sql = "SELECT CASE WHEN EXISTS
+					(SELECT 0
+						FROM pg_catalog.pg_namespace
+						WHERE nspname = '{$schema}'
+					) THEN 1 ELSE 0 END AS schema_exists";
+
+		return $data->selectField($sql,'schema_exists');
+	}
+
+	/**
+	 * Detects tables or sequences that no longer exist for a schema
+	 */
+	function missingTblSeqs($schema, $tblSeqsList, $relKind) {
+		global $data;
+
+		$data->clean($schema);
+		$data->clean($tblSeqsList);
+		$data->clean($relKind);
+		$relsArray = "ARRAY['".str_replace(', ',"','",$tblSeqsList)."']";
+		if ($relKind == 'table')
+			$kind = 'r';
+		else
+			$kind = 'S';
+
+		$sql = "SELECT count(*) AS nb_tblseqs, string_agg(name, ', ') AS tblseqs_list
+					FROM unnest({$relsArray}) AS name
+					WHERE NOT EXISTS(
+						SELECT 0
+							FROM pg_catalog.pg_class
+								 JOIN pg_catalog.pg_namespace ON (pg_namespace.oid = relnamespace)
+							WHERE nspname = '{$schema}'
+							  AND relname = name
+							  AND relkind = '{$kind}' )";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
 	 * Verifies whether a group currently exists
 	 */
 	function existsGroup($group) {

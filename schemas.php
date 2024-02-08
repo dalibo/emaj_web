@@ -70,6 +70,145 @@
 		}
 	}
 
+	/**
+	 * Process the multiactions list.
+	 * It returns the number of relations (tables or sequences), the simple relations list the html formatted list,
+	 *   and the group names list if the groups processing is requested.
+	 */
+	function processMultiActions($array, $relkind, $withGroup = false) {
+		global $lang;
+
+		$nbRelations = count($array);
+		$relationsList = '';
+		$groupsList = '';
+		$htmlList = "<div class=\"longlist\"><ul>\n";
+		foreach($array as $t) {
+			$a = unserialize(htmlspecialchars_decode($t, ENT_QUOTES));
+			$relationsList .= $a[$relkind] . ', ';
+			$htmlList .= "\t<li>";
+			if ($withGroup) {
+				$htmlList .= sprintf($lang['emajthetblseqingroup'], $a[$relkind], $a['group']);
+				if (strpos($groupsList, $a['group'] . ', ') === false) {
+					$groupsList .= $a['group'] . ', ';
+				}
+			} else {
+				$htmlList .= $a[$relkind];
+			}
+			$htmlList .= "</li>\n";
+		}
+		$groupsList = substr($groupsList, 0, strlen($groupsList) - 2);
+		$relationsList = substr($relationsList, 0, strlen($relationsList) - 2);
+		$htmlList .= "</ul></div>\n";
+		return array($nbRelations, $relationsList, $htmlList, $groupsList);
+	}
+
+	/**
+	 * Check that groups still exists
+	 */
+	function recheckGroups($groupsList, $errMsgAction) {
+		global $lang, $emajdb, $_reload_browser, $misc;
+
+		// Check the groups existence
+		$missingGroups = $emajdb->missingGroups($groupsList);
+		if ($missingGroups->fields['nb_groups'] > 0) {
+			if ($missingGroups->fields['nb_groups'] == 1)
+				// One group doesn't exist anymore
+				list_schemas('', $errMsgAction . '<br>' .
+					sprintf($lang['emajgroupmissing'], htmlspecialchars($missingGroups->fields['groups_list'])));
+			else
+				// Several groups do not exist anymore
+				list_schemas('', $errMsgAction . '<br>' .
+					sprintf($lang['emajgroupsmissing'], $missingGroups->fields['nb_groups'], htmlspecialchars($missingGroups->fields['groups_list'])));
+			$_reload_browser = true;
+			$misc->printFooter();
+			exit();
+		}
+	}
+
+	/**
+	 * Check that a supplied mark name is valid for one or several groups.
+	 * It returns the mark name, modified with resolved % characters, if any.
+	 * If the mark is not valid or is already known by any groups, it directly branches to the calling page with an error message.
+	 */
+	function checkNewMarkGroups($groupsList, $mark, $errMsgAction) {
+		global $emajdb, $lang, $misc;
+
+		// Check the forbidden values.
+		if ($mark == '' or $mark == 'EMAJ_LAST_MARK') {
+			$errorMessage = sprintf($lang['emajinvalidmark'], htmlspecialchars($mark));
+			list_schemas('', $errMsgAction . '<br>' . $errorMessage);
+			$misc->printFooter();
+			exit();
+		}
+
+		// Resolve the mark name. Replace the % characters by the time of day, in format 'HH24.MI.SS.MS'.
+		$finalMarkName = str_replace('%', date('H.i.s.') . substr(microtime(),2,3), $mark);
+
+		// Check the new mark doesn't already exist for the groups, if requested.
+		$errorGroups = $emajdb->knownMarkGroups($groupsList, $finalMarkName);
+		$errorMessage = '';
+		if ($errorGroups->fields['nb_groups'] == 1) {
+			// The mark already exists for one group
+			$errorMessage = sprintf($lang['emajduplicatemarkgroup'], htmlspecialchars($mark), htmlspecialchars($errorGroups->fields['groups_list']));
+		}
+		if ($errorGroups->fields['nb_groups'] > 1) {
+			// The mark already exist for several groups
+			$errorMessage = sprintf($lang['emajduplicatemarkgroups'], htmlspecialchars($mark),
+									$errorGroups->fields['nb_groups'], htmlspecialchars($errorGroups->fields['groups_list']));
+		}
+		if ($errorMessage != '') {
+			list_schemas('', $errMsgAction . '<br>' . $errorMessage);
+			$misc->printFooter();
+			exit();
+		}
+
+		return $finalMarkName;
+	}
+
+	/**
+	 * Check that a set of tables or sequences in a schema still exists.
+	 * Tables and sequences that are assigned to tables group are protected by the main event trigger. But not the others.
+	 */
+	function checkRelations($schema, $tblSeqsList, $relKind, $errMsgAction) {
+		global $emajdb, $lang, $misc;
+
+		// Check the schema already exists
+		if (! $emajdb->existsSchema($schema)) {
+			$errorMessage = sprintf($lang['emajschemamissing'], htmlspecialchars($schema));
+			list_schemas('', $errMsgAction . '<br>' . $errorMessage);
+			$_reload_browser = true;
+			$misc->printFooter();
+			exit();
+		}
+
+		// Check all relations already exist.
+		$errorMessage = '';
+		$missingTblSeqs = $emajdb->missingTblSeqs($schema, $tblSeqsList, $relKind);
+		if ($missingTblSeqs->fields['nb_tblseqs'] > 0) {
+			if ($missingTblSeqs->fields['nb_tblseqs'] == 1)
+				// One table/sequence doesn't exist anymore
+				if ($relKind == 'table') {
+					$errorMessage = sprintf($lang['emajtablemissing'], htmlspecialchars($schema), htmlspecialchars($missingTblSeqs->fields['tblseqs_list']));
+				} else {
+					$errorMessage = sprintf($lang['emajsequencemissing'], htmlspecialchars($schema), htmlspecialchars($missingTblSeqs->fields['tblseqs_list']));
+				}
+			else
+				// Several tables/sequences do not exist anymore
+				if ($relKind == 'table') {
+					$errorMessage = sprintf($lang['emajtablesmissing'], $missingTblSeqs->fields['nb_tblseqs'], htmlspecialchars($missingTblSeqs->fields['tblseqs_list']));
+				} else {
+					$errorMessage = sprintf($lang['emajsequencesmissing'], $missingTblSeqs->fields['nb_tblseqs'], htmlspecialchars($missingTblSeqs->fields['tblseqs_list']));
+				}
+		}
+		if ($errorMessage != '') {
+			list_schemas('', $errMsgAction . '<br>' . $errorMessage);
+			$misc->printFooter();
+			exit();
+		}
+
+		return;
+	}
+
 /********************************************************************************************************
  * Main functions displaying pages
  *******************************************************************************************************/
@@ -90,7 +229,7 @@
 			$misc->printHeader('database', 'database', 'schemas');
 		};
 
-		$misc->printMsg($msg);
+		$misc->printMsg($msg,$errMsg);
 		$misc->printTitle($lang['strallschemas']);
 
 		// Get the list of schemas
@@ -326,7 +465,6 @@
 			// Display the sequences list
 
 			echo "<a id=\"sequences\">&nbsp;</a>\n";
-
 			$misc->printTitle(sprintf($lang['strsequenceslist'], $_REQUEST['schema']));
 
 			// Get all sequences
@@ -442,8 +580,24 @@
 	function assign_tables() {
 		global $misc, $lang, $emajdb;
 
-		$misc->printHeader('database', 'database', 'schemas');
+		// Process the multi-actions array
+		if (isset($_REQUEST['ma'])) {
+			list($nbTbl, $tablesList, $fullList) = processMultiActions($_REQUEST['ma'], 'table');
+		} else {
+			$nbTbl = 1;
+			$tablesList = $_REQUEST['table'];
+		}
 
+		// Prepare the action part of potential error messages
+		if ($nbTbl == 1)
+			$errMsgAction = sprintf($lang['emajassigntableerr'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($tablesList));
+		else
+			$errMsgAction = sprintf($lang['emajassigntableserr'], $nbTbl, htmlspecialchars($_REQUEST['schema']));
+
+		// Check that the schema and the tables still exist
+		checkRelations($_REQUEST['schema'], $tablesList, 'table', $errMsgAction);
+
+		$misc->printHeader('database', 'database', 'schemas');
 		$misc->printTitle($lang['emajassigntable']);
 
 		// Get created group names
@@ -452,39 +606,18 @@
 		// Get tablespaces the current user can see
 		$knownTsp = $emajdb->getKnownTsp();
 
-		// Build the list of tables to processs and count them
+		// Build the form
+		if ($nbTbl > 1) {
+			echo "<p>" . sprintf($lang['emajconfirmassigntables'], $nbTbl, $_REQUEST['schema']) . "</p>\n{$fullList}";
+		} else {
+			echo "<p>" . sprintf($lang['emajconfirmassigntable'], $_REQUEST['schema'], $tablesList) . "</p>\n";
+		}
+
 		echo "<form action=\"schemas.php\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"assign_tables_ok\" />\n";
-
-		if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) > 1) {
-
-		// multiple assign
-			$nbTbl = count($_REQUEST['ma']);
-			$tablesList = '';
-			$fullList = "<div class=\"longlist\"><ul>\n";
-			foreach($_REQUEST['ma'] as $t) {
-				$a = unserialize(htmlspecialchars_decode($t, ENT_QUOTES));
-				$tablesList .= $a['table'] . ', ';
-				$fullList .= "\t<li>{$a['table']}</li>\n";
-			}
-			$tablesList = substr($tablesList, 0, strlen($tablesList) - 2);
-			$fullList .= "</ul></div>\n";
-			echo "<p>". sprintf($lang['emajconfirmassigntable'], $nbTbl, $_REQUEST['schema']) . "</p>\n{$fullList}";
-		} else {
-
-		// single assign
-			if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) == 1) {
-				$a = unserialize(htmlspecialchars_decode($_REQUEST['ma'][0], ENT_QUOTES));
-				$tableName = sprintf($lang['emajthetable'], $a['appschema'], $a['table']);
-				$tablesList = $a['table'];
-			} else {
-				$tableName = sprintf($lang['emajthetable'], $_REQUEST['schema'], $_REQUEST['table']);
-				$tablesList = $_REQUEST['table'];
-			}
-			echo "<p>{$lang['emajassign']} {$tableName}</p>\n";
-		}
 		echo "<input type=\"hidden\" name=\"schema\" value=\"", htmlspecialchars($_REQUEST['schema']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"tables\" value=\"", htmlspecialchars($tablesList), "\" />\n";
+		echo "<input type=\"hidden\" name=\"nbtables\" value=\"{$nbTbl}\" />\n";
 
 		// Display the input fields depending on the context
 		echo "<div class=\"form-container\">\n";
@@ -550,25 +683,45 @@
 	function assign_tables_ok() {
 		global $lang, $data, $emajdb, $_reload_browser;
 
-	// Process the click on the <cancel> button.
+		// Process the click on the <cancel> button.
 		processCancelButton();
 
-	// process the tables assignment
+		// Prepare the action part of potential error messages
+		if ($_POST['nbtables'] == 1)
+			$errMsgAction = sprintf($lang['emajassigntableerr2'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['tables']), $_POST['group']);
+		else
+			$errMsgAction = sprintf($lang['emajassigntableserr2'], $_POST['nbtables'], htmlspecialchars($_POST['schema']), $_POST['group']);
+
+		// Check that the schema and the tables still exist
+		checkRelations($_REQUEST['schema'], $_POST['tables'], 'table', $errMsgAction);
+
+		// Check that the tables group still exists
+		recheckGroups($_POST['group'], $errMsgAction);
+
+		// Check the mark name
+		$finalMark = checkNewMarkGroups($_POST['group'], $_POST['mark'], $errMsgAction);
+
+		// OK, process the tables assignment
 		// get the list of emaj_schema before the assignment
 		$emajSchemasBefore = $emajdb->getEmajSchemasList();
 
 		if ($_POST['logdattsp'] == "<{$lang['strnone']}>") $_POST['logdattsp'] = '';
 		if ($_POST['logidxtsp'] == "<{$lang['strnone']}>") $_POST['logidxtsp'] = '';
-		$nbTables = $emajdb->assignTables($_POST['schema'],$_POST['tables'],$_POST['group'],
-							$_POST['priority'], $_POST['logdattsp'], $_POST['logidxtsp'], $_POST['mark']);
+		$nbTables = $emajdb->assignTables($_POST['schema'], $_POST['tables'], $_POST['group'],
+							$_POST['priority'], $_POST['logdattsp'], $_POST['logidxtsp'], $finalMark);
+
+		// Check the result and exit
 		if ($nbTables >= 0) {
-			// reload the browser only if new emaj schemas have been created
+			// if new emaj schemas have been created, reload the browser
 			$emajSchemasAfter = $emajdb->getEmajSchemasList();
 			if ($emajdb->getEmajSchemasList() <> $emajSchemasBefore)
 				$_reload_browser = true;
-			list_schemas(sprintf($lang['emajdynassigntablesok'], $nbTables, htmlspecialchars($_POST['group'])));
+			if ($nbTables > 1)
+				list_schemas(sprintf($lang['emajassigntablesok'], $nbTables, htmlspecialchars($_POST['group'])));
+			else
+				list_schemas(sprintf($lang['emajassigntableok'], $nbTables, htmlspecialchars($_POST['group'])));
 		} else {
-			list_schemas($lang['emajmodifygrouperr']);
+			list_schemas('', $errMsgAction);
 		}
 	}
 
@@ -578,54 +731,50 @@
 	function move_tables() {
 		global $misc, $lang, $emajdb;
 
-		$misc->printHeader('database', 'database', 'schemas');
+		// Process the multi-actions array
+		if (isset($_REQUEST['ma'])) {
+			list($nbTbl, $tablesList, $fullList, $groupsList) = processMultiActions($_REQUEST['ma'], 'table', true);
+		} else {
+			$nbTbl = 1;
+			$tablesList = $_REQUEST['table'];
+			$groupsList = $_REQUEST['group'];
+		}
 
+		// Prepare the action part of potential error messages
+		if ($nbTbl == 1)
+			$errMsgAction = sprintf($lang['emajmovetableerr'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($tablesList));
+		else
+			$errMsgAction = sprintf($lang['emajmovetableserr'], $nbTbl, htmlspecialchars($_REQUEST['schema']));
+
+		// Check that the tables group still exists
+		recheckGroups($groupsList, $errMsgAction);
+
+		$misc->printHeader('database', 'database', 'schemas');
 		$misc->printTitle($lang['emajmovetable']);
 
 		// Get created group names
 		$knownGroups = $emajdb->getCreatedGroups();
 
-		// Build the list of tables to processs and count them
-		echo "<form action=\"schemas.php\" method=\"post\">\n";
-		echo "<input type=\"hidden\" name=\"action\" value=\"move_tables_ok\" />\n";
-
-		if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) > 1) {
-
-		// multiple move
-			$nbTbl = count($_REQUEST['ma']);
-			$tablesList = '';
-			$fullList = "<div class=\"longlist\"><ul>\n";
-			foreach($_REQUEST['ma'] as $t) {
-				$a = unserialize(htmlspecialchars_decode($t, ENT_QUOTES));
-				$tablesList .= $a['table'] . ', ';
-				$fullList .= "\t<li>" . sprintf($lang['emajthetblseqingroup'], $a['table'], $a['group']) . "</li>\n";
-			}
-			$tablesList = substr($tablesList, 0, strlen($tablesList) - 2);
-			$fullList .= "</ul></div>\n";
-			echo "<p>". sprintf($lang['emajconfirmmovetable'], $nbTbl, $_REQUEST['schema']) . "</p>\n{$fullList}";
+		// Build the form
+		if ($nbTbl > 1) {
+			echo "<p>" . sprintf($lang['emajconfirmmovetables'], $nbTbl, $_REQUEST['schema']) . "</p>\n{$fullList}";
 		} else {
-
-		// single move
-			if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) == 1) {
-				$a = unserialize(htmlspecialchars_decode($_REQUEST['ma'][0], ENT_QUOTES));
-				$tableName = sprintf($lang['emajthetableingroup'], $a['appschema'], $a['table'], $a['group']);
-				$tablesList = $a['table'];
-			} else {
-				$tableName = sprintf($lang['emajthetableingroup'], $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['group']);
-				$tablesList = $_REQUEST['table'];
-			}
-			echo "<p>{$lang['emajmove']} {$tableName}</p>\n";
+			echo "<p>" . sprintf($lang['emajconfirmmovetable'], $_REQUEST['schema'], $tablesList, $groupsList) . "</p>\n";
 		}
 
+		echo "<form action=\"schemas.php\" method=\"post\">\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"move_tables_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"schema\" value=\"", htmlspecialchars($_REQUEST['schema']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"tables\" value=\"", htmlspecialchars($tablesList), "\" />\n";
+		echo "<input type=\"hidden\" name=\"nbtables\" value=\"{$nbTbl}\" />\n";
+		echo "<input type=\"hidden\" name=\"oldgroups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 
 		// Display the input fields depending on the context
 		echo "<div class=\"form-container\">\n";
 
 		// group name
-		echo "\t<div class=\"form-label required\">{$lang['emajgroup']}</div>\n";
-		echo "\t<div class=\"form-input\"><select name=\"group\">";
+		echo "\t<div class=\"form-label required\">{$lang['emajnewgroup']}</div>\n";
+		echo "\t<div class=\"form-input\"><select name=\"newgroup\">";
 		foreach($knownGroups as $r)
 			echo "\t\t<option>", htmlspecialchars($r['group_name']), "\n";
 		echo "\t</select></div>\n";
@@ -649,15 +798,34 @@
 	function move_tables_ok() {
 		global $lang, $data, $emajdb;
 
-	// Process the click on the <cancel> button.
+		// Process the click on the <cancel> button.
 		processCancelButton();
 
-	// process the tables move
-		$nbTables = $emajdb->moveTables($_POST['schema'],$_POST['tables'],$_POST['group'],$_POST['mark']);
-		if ($nbTables >= 0)
-			list_schemas(sprintf($lang['emajdynmovetablesok'], $nbTables, htmlspecialchars($_POST['group'])));
+		// Prepare the action part of potential error messages
+		if ($_POST['nbtables'] == 1)
+			$errMsgAction = sprintf($lang['emajmovetableerr2'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['tables']), htmlspecialchars($_POST['oldgroups']), htmlspecialchars($_POST['newgroup']));
 		else
-			list_schemas($lang['emajmodifygrouperr']);
+			$errMsgAction = sprintf($lang['emajmovetableserr2'], $_POST['nbtables'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['newgroup']));
+
+		$allGroups = $_POST['oldgroups'] . ', ' . $_POST['newgroup'];
+
+		// Check that the tables group still exists
+		recheckGroups($allGroups, $errMsgAction);
+
+		// Check the mark name
+		$finalMark = checkNewMarkGroups($allGroups, $_POST['mark'], $errMsgAction);
+
+		// OK, process the tables move
+		$nbTables = $emajdb->moveTables($_POST['schema'], $_POST['tables'], $_POST['newgroup'], $finalMark);
+
+		// Check the result and exit
+		if ($nbTables >= 0)
+			if ($nbTables > 1)
+				list_schemas(sprintf($lang['emajmovetablesok'], $nbTables, htmlspecialchars($_POST['newgroup'])));
+			else
+				list_schemas(sprintf($lang['emajmovetableok'], $nbTables, htmlspecialchars($_POST['newgroup'])));
+		else
+			list_schemas('', $errMsgAction);
 	}
 
 	/**
@@ -666,39 +834,43 @@
 	function modify_tables() {
 		global $misc, $lang, $emajdb;
 
-		$misc->printHeader('database', 'database', 'schemas');
+// TODO: support "modify" for several tables
+		// Process the multi-actions array
+//		if (isset($_REQUEST['ma'])) {
+//			list($nbTbl, $tablesList, $fullList, $groupsList) = processMultiActions($_REQUEST['ma'], 'table', true);
+//		} else {
+			$nbTbl = 1;
+			$tablesList = $_REQUEST['table'];
+			$groupsList = $_REQUEST['group'];
+//		}
 
+		// Prepare the action part of potential error messages
+//		if ($nbTbl == 1)
+			$errMsgAction = sprintf($lang['emajmodifytableerr'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($tablesList));
+//		else
+//			$errMsgAction = sprintf($lang['emajmovetableserr'], $nbTbl, htmlspecialchars($_REQUEST['schema']));
+
+		// Check that the tables group still exists
+		recheckGroups($groupsList, $errMsgAction);
+
+		$misc->printHeader('database', 'database', 'schemas');
 		$misc->printTitle($lang['emajmodifytable']);
 
 		// Get tablespaces the current user can see
 		$knownTsp = $emajdb->getKnownTsp();
 
-		// Build the list of tables to processs and count them
+		// Build the form
+//		if ($nbTbl > 1) {
+//			echo "<p>" . sprintf($lang['emajconfirmmodifytables'], $nbTbl, $_REQUEST['schema']) . "</p>\n{$fullList}";
+//		} else {
+			echo "<p>" . sprintf($lang['emajconfirmmodifytable'], $_REQUEST['schema'], $tablesList, $groupsList) . "</p>\n";
+//		}
 		echo "<form action=\"schemas.php\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"modify_tables_ok\" />\n";
-
-		if (isset($_REQUEST['ma'])) {
-// TODO: support "modify" for several tables
-//		// multiple modify
-//			$tablesList = '';
-//			$fullList = "<ul>";
-//			foreach($_REQUEST['ma'] as $t) {
-//				$a = unserialize(htmlspecialchars_decode($t, ENT_QUOTES));
-//				$tablesList .= $a['table'] . ', ';
-//				$fullList .= "<li>" . sprintf($lang['emajthetableingroup'],$a['appschema'],$a['table'],$a['group']) . "</li>\n";
-//			}
-//			$tablesList = substr($tablesList,0,strlen($tablesList)-2);
-//			$fullList .= "</ul>\n";
-//			echo "<p>{$lang['emajconfirmmodifytblseq']}{$fullList}</p>\n";
-		} else {
-
-		// single modify
-			$tablesList = $_REQUEST['table'];
-			$tableName = sprintf($lang['emajthetableingroup'],$_REQUEST['schema'],$_REQUEST['table'],$_REQUEST['group']);
-			echo "<p>{$lang['strupdate']} {$tableName}</p>\n";
-		}
 		echo "<input type=\"hidden\" name=\"schema\" value=\"", htmlspecialchars($_REQUEST['schema']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"tables\" value=\"", htmlspecialchars($tablesList), "\" />\n";
+		echo "<input type=\"hidden\" name=\"nbtables\" value=\"{$nbTbl}\" />\n";
+		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 
 		// Display the input fields depending on the context
 		echo "<div class=\"form-container\">\n";
@@ -764,18 +936,32 @@
 	function modify_tables_ok() {
 		global $lang, $data, $emajdb;
 
-	// Process the click on the <cancel> button.
+		// Process the click on the <cancel> button.
 		processCancelButton();
 
-	// process the tables modification
+		// Prepare the action part of potential error messages
+//		if ($_POST['nbtables'] == 1)
+			$errMsgAction = sprintf($lang['emajmodifytableerr'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['tables']));
+//		else
+//			$errMsgAction = sprintf($lang['emajmodifytableserr'], $_POST['nbtables'], htmlspecialchars($_REQUEST['schema']));
+
+		// Check that the tables group still exists
+		recheckGroups($_POST['groups'], $errMsgAction);
+
+		// Check the mark name
+		$finalMark = checkNewMarkGroups($_POST['groups'], $_POST['mark'], $errMsgAction);
+
+		// OK,process the tables modification
 		if ($_POST['logdattsp'] == "<{$lang['strnone']}>") $_POST['logdattsp'] = '';
 		if ($_POST['logidxtsp'] == "<{$lang['strnone']}>") $_POST['logidxtsp'] = '';
-		$nbTables = $emajdb->modifyTables($_POST['schema'],$_POST['tables'],
-							$_POST['priority'], $_POST['logdattsp'], $_POST['logidxtsp'], $_POST['mark']);
+		$nbTables = $emajdb->modifyTables($_POST['schema'], $_POST['tables'],
+							$_POST['priority'], $_POST['logdattsp'], $_POST['logidxtsp'], $finalMark);
+
+		// Check the result and exit
 		if ($nbTables >= 0)
-			list_schemas(sprintf($lang['emajdynmodifytablesok'], $nbTables));
+			list_schemas(sprintf($lang['emajmodifytablesok'], $nbTables));
 		else
-			list_schemas($lang['emajmodifygrouperr']);
+			list_schemas('', $errMsgAction);
 	}
 
 	/**
@@ -784,44 +970,40 @@
 	function remove_tables() {
 		global $misc, $lang, $emajdb;
 
-		$misc->printHeader('database', 'database', 'schemas');
-
-		$misc->printTitle($lang['emajremovetable']);
-
-		// Build the list of tables to processs and count them
-		echo "<form action=\"schemas.php\" method=\"post\">\n";
-		echo "<input type=\"hidden\" name=\"action\" value=\"remove_tables_ok\" />\n";
-
-		if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) > 1) {
-
-		// multiple removal
-			$nbTbl = count($_REQUEST['ma']);
-			$tablesList = '';
-			$fullList = "<div class=\"longlist\"><ul>\n";
-			foreach($_REQUEST['ma'] as $t) {
-				$a = unserialize(htmlspecialchars_decode($t, ENT_QUOTES));
-				$tablesList .= $a['table'] . ', ';
-				$fullList .= "\t<li>" . sprintf($lang['emajthetblseqingroup'], $a['table'], $a['group']) . "</li>\n";
-			}
-			$tablesList = substr($tablesList, 0, strlen($tablesList) - 2);
-			$fullList .= "</ul></div>\n";
-			echo "<p>". sprintf($lang['emajconfirmremovetable'], $nbTbl, $_REQUEST['schema']) . "</p>\n{$fullList}";
+		// Process the multi-actions array
+		if (isset($_REQUEST['ma'])) {
+			list($nbTbl, $tablesList, $fullList, $groupsList) = processMultiActions($_REQUEST['ma'], 'table', true);
 		} else {
-
-		// single removal
-			if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) == 1) {
-				$a = unserialize(htmlspecialchars_decode($_REQUEST['ma'][0], ENT_QUOTES));
-				$tableName = sprintf($lang['emajthetableingroup'], $a['appschema'], $a['table'], $a['group']);
-				$tablesList = $a['table'];
-			} else {
-				$tableName = sprintf($lang['emajthetableingroup'], $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['group']);
-				$tablesList = $_REQUEST['table'];
-			}
-			echo "<p>{$lang['emajremove']} {$tableName}</p>\n";
+			$nbTbl = 1;
+			$tablesList = $_REQUEST['table'];
+			$groupsList = $_REQUEST['group'];
 		}
 
+		// Prepare the action part of potential error messages
+		if ($nbTbl == 1)
+			$errMsgAction = sprintf($lang['emajremovetableerr'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($tablesList), htmlspecialchars($groupsList));
+		else
+			$errMsgAction = sprintf($lang['emajremovetableserr'], $nbTbl, htmlspecialchars($_REQUEST['schema']));
+
+		// Check that the tables group still exists
+		recheckGroups($groupsList, $errMsgAction);
+
+		$misc->printHeader('database', 'database', 'schemas');
+		$misc->printTitle($lang['emajremovetable']);
+
+		// Build the form
+		if ($nbTbl > 1) {
+			echo "<p>" . sprintf($lang['emajconfirmremovetables'], $nbTbl, $_REQUEST['schema']) . "</p>\n{$fullList}";
+		} else {
+			echo "<p>" . sprintf($lang['emajconfirmremovetable'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($tablesList), htmlspecialchars($groupsList)) . "</p>\n";
+		}
+
+		echo "<form action=\"schemas.php\" method=\"post\">\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"remove_tables_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"schema\" value=\"", htmlspecialchars($_REQUEST['schema']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"tables\" value=\"", htmlspecialchars($tablesList), "\" />\n";
+		echo "<input type=\"hidden\" name=\"nbtables\" value=\"{$nbTbl}\" />\n";
+		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 
 		// Display the input fields depending on the context
 		echo "<div class=\"form-container\">\n";
@@ -844,21 +1026,38 @@
 	function remove_tables_ok() {
 		global $lang, $data, $emajdb, $_reload_browser;
 
-	// Process the click on the <cancel> button.
+		// Process the click on the <cancel> button.
 		processCancelButton();
 
-	// process the tables removal
+		// Prepare the action part of potential error messages
+		if ($_POST['nbtables'] == 1)
+			$errMsgAction = sprintf($lang['emajremovetableerr'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['tables']), htmlspecialchars($_POST['groups']));
+		else
+			$errMsgAction = sprintf($lang['emajremovetableserr'], $_POST['nbtables'], htmlspecialchars($_POST['schema']));
+
+		// Check that the tables group still exists
+		recheckGroups($_POST['groups'], $errMsgAction);
+
+		// Check the mark name
+		$finalMark = checkNewMarkGroups($_POST['groups'], $_POST['mark'], $errMsgAction);
+
+		// OK, process the tables removal
 		// get the list of emaj_schema before the removal
 		$emajSchemasBefore = $emajdb->getEmajSchemasList();
 
-		$nbTables = $emajdb->removeTables($_POST['schema'],$_POST['tables'],$_POST['mark']);
+		$nbTables = $emajdb->removeTables($_POST['schema'], $_POST['tables'], $finalMark);
+
+		// Check the result and exit
 		if ($nbTables >= 0) {
 			// reload the browser only if emaj schemas have been dropped
 			if ($emajdb->getEmajSchemasList() <> $emajSchemasBefore)
 				$_reload_browser = true;
-			list_schemas(sprintf($lang['emajdynremovetablesok'], $nbTables));
+			if ($nbTables > 1)
+				list_schemas(sprintf($lang['emajremovetablesok'], $nbTables));
+			else
+				list_schemas(sprintf($lang['emajremovetableok'], $nbTables));
 		} else {
-			list_schemas($lang['emajmodifygrouperr']);
+			list_schemas('', $errMsgAction);
 		}
 	}
 
@@ -868,47 +1067,41 @@
 	function assign_sequences() {
 		global $misc, $lang, $emajdb;
 
-		$misc->printHeader('database', 'database', 'schemas');
+		// Process the multi-actions array
+		if (isset($_REQUEST['ma'])) {
+			list($nbSeq, $sequencesList, $fullList) = processMultiActions($_REQUEST['ma'], 'sequence');
+		} else {
+			$nbSeq = 1;
+			$sequencesList = $_REQUEST['sequence'];
+		}
 
+		// Prepare the action part of potential error messages
+		if ($nbSeq == 1)
+			$errMsgAction = sprintf($lang['emajassignsequenceerr'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($sequencesList));
+		else
+			$errMsgAction = sprintf($lang['emajassignsequenceserr'], $nbSeq, htmlspecialchars($_REQUEST['schema']));
+
+		// Check that the schema and the sequences still exist
+		checkRelations($_REQUEST['schema'], $sequencesList, 'sequence', $errMsgAction);
+
+		$misc->printHeader('database', 'database', 'schemas');
 		$misc->printTitle($lang['emajassignsequence']);
 
 		// Get created group names
 		$knownGroups = $emajdb->getCreatedGroups();
 
-		// Build the list of sequences to processs and count them
-		echo "<form action=\"schemas.php\" method=\"post\">\n";
-		echo "<input type=\"hidden\" name=\"action\" value=\"assign_sequences_ok\" />\n";
-
-		if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) > 1) {
-
-		// multiple assign
-			$nbSeq = count($_REQUEST['ma']);
-			$sequencesList = '';
-			$fullList = "<div class=\"longlist\"><ul>\n";
-			foreach($_REQUEST['ma'] as $t) {
-				$a = unserialize(htmlspecialchars_decode($t, ENT_QUOTES));
-				$sequencesList .= $a['sequence'] . ', ';
-				$fullList .= "\t<li>{$a['sequence']}</li>\n";
-			}
-			$sequencesList = substr($sequencesList, 0, strlen($sequencesList)-2);
-			$fullList .= "</ul></div>\n";
-			echo "<p>". sprintf($lang['emajconfirmassignsequence'], $nbSeq, $_REQUEST['schema']) . "</p>\n{$fullList}";
+		// Build the form
+		if ($nbSeq > 1) {
+			echo "<p>" . sprintf($lang['emajconfirmassignsequences'], $nbSeq, $_REQUEST['schema']) . "</p>\n{$fullList}";
 		} else {
-
-		// single assign
-			if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) == 1) {
-				$a = unserialize(htmlspecialchars_decode($_REQUEST['ma'][0], ENT_QUOTES));
-				$sequenceName = sprintf($lang['emajthesequence'], $a['appschema'], $a['sequence']);
-				$sequencesList = $a['sequence'];
-			} else {
-				$sequenceName = sprintf($lang['emajthesequence'], $_REQUEST['schema'], $_REQUEST['sequence']);
-				$sequencesList = $_REQUEST['sequence'];
-			}
-			echo "<p>{$lang['emajassign']} {$sequenceName}</p>\n";
+			echo "<p>" . sprintf($lang['emajconfirmassignsequence'], $_REQUEST['schema'], $sequencesList) . "</p>\n";
 		}
 
+		echo "<form action=\"schemas.php\" method=\"post\">\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"assign_sequences_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"schema\" value=\"", htmlspecialchars($_REQUEST['schema']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"sequences\" value=\"", htmlspecialchars($sequencesList), "\" />\n";
+		echo "<input type=\"hidden\" name=\"nbsequences\" value=\"{$nbSeq}\" />\n";
 
 		// Display the input fields depending on the context
 		echo "<div class=\"form-container\">\n";
@@ -939,15 +1132,35 @@
 	function assign_sequences_ok() {
 		global $lang, $data, $emajdb;
 
-	// Process the click on the <cancel> button.
+		// Process the click on the <cancel> button.
 		processCancelButton();
 
-	// process the sequences assignment
-		$nbSequences = $emajdb->assignSequences($_POST['schema'],$_POST['sequences'],$_POST['group'],$_POST['mark']);
-		if ($nbSequences>= 0)
-			list_schemas(sprintf($lang['emajdynassignsequencesok'], $nbSequences, htmlspecialchars($_POST['group'])));
+		// Prepare the action part of potential error messages
+		if ($_POST['nbsequences'] == 1)
+			$errMsgAction = sprintf($lang['emajassignsequenceerr2'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['sequences']), $_POST['group']);
 		else
-			list_schemas($lang['emajmodifygrouperr']);
+			$errMsgAction = sprintf($lang['emajassignsequenceserr2'], $_POST['nbsequences'], htmlspecialchars($_POST['schema']), $_POST['group']);
+
+		// Check that the schema and the sequences still exist
+		checkRelations($_REQUEST['schema'], $_POST['sequences'], 'sequence', $errMsgAction);
+
+		// Check that the tables group still exists
+		recheckGroups($_POST['group'], $errMsgAction);
+
+		// Check the mark name
+		$finalMark = checkNewMarkGroups($_POST['group'], $_POST['mark'], $errMsgAction);
+
+		// OK, process the sequences assignment
+		$nbSequences = $emajdb->assignSequences($_POST['schema'], $_POST['sequences'], $_POST['group'], $finalMark);
+
+		// Check the result and exit
+		if ($nbSequences >= 0)
+			if ($nbSequences > 1)
+				list_schemas(sprintf($lang['emajassignsequencesok'], $nbSequences, htmlspecialchars($_POST['group'])));
+			else
+				list_schemas(sprintf($lang['emajassignsequenceok'], $nbSequences, htmlspecialchars($_POST['group'])));
+		else
+			list_schemas('', $errMsgAction);
 	}
 
 	/**
@@ -956,54 +1169,50 @@
 	function move_sequences() {
 		global $misc, $lang, $emajdb;
 
-		$misc->printHeader('database', 'database', 'schemas');
+		// Process the multi-actions array
+		if (isset($_REQUEST['ma'])) {
+			list($nbSeq, $sequencesList, $fullList, $groupsList) = processMultiActions($_REQUEST['ma'], 'sequence', true);
+		} else {
+			$nbSeq = 1;
+			$sequencesList = $_REQUEST['sequence'];
+			$groupsList = $_REQUEST['group'];
+		}
 
+		// Prepare the action part of potential error messages
+		if ($nbSeq == 1)
+			$errMsgAction = sprintf($lang['emajmovesequenceerr'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($sequencesList));
+		else
+			$errMsgAction = sprintf($lang['emajmovesequenceserr'], $nbSeq, htmlspecialchars($_REQUEST['schema']));
+
+		// Check that the tables group still exists
+		recheckGroups($groupsList, $errMsgAction);
+
+		$misc->printHeader('database', 'database', 'schemas');
 		$misc->printTitle($lang['emajmovesequence']);
 
 		// Get created group names
 		$knownGroups = $emajdb->getCreatedGroups();
 
-		// Build the list of sequences to processs and count them
-		echo "<form action=\"schemas.php\" method=\"post\">\n";
-		echo "<input type=\"hidden\" name=\"action\" value=\"move_sequences_ok\" />\n";
-
-		if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) > 1) {
-
-		// multiple move
-			$nbSeq = count($_REQUEST['ma']);
-			$sequencesList = '';
-			$fullList = "<div class=\"longlist\"><ul>\n";
-			foreach($_REQUEST['ma'] as $t) {
-				$a = unserialize(htmlspecialchars_decode($t, ENT_QUOTES));
-				$sequencesList .= $a['sequence'] . ', ';
-				$fullList .= "\t<li>" . sprintf($lang['emajthetblseqingroup'], $a['sequence'], $a['group']) . "</li>\n";
-			}
-			$sequencesList = substr($sequencesList, 0, strlen($sequencesList)-2);
-			$fullList .= "</ul></div>\n";
-			echo "<p>". sprintf($lang['emajconfirmmovesequence'], $nbSeq, $_REQUEST['schema']) . "</p>\n{$fullList}";
+		// Build the form
+		if ($nbSeq > 1) {
+			echo "<p>" . sprintf($lang['emajconfirmmovesequences'], $nbSeq, $_REQUEST['schema']) . "</p>\n{$fullList}";
 		} else {
-
-		// single move
-			if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) == 1) {
-				$a = unserialize(htmlspecialchars_decode($_REQUEST['ma'][0], ENT_QUOTES));
-				$sequenceName = sprintf($lang['emajthesequenceingroup'], $a['appschema'], $a['sequence'], $a['group']);
-				$sequencesList = $a['sequence'];
-			} else {
-				$sequenceName = sprintf($lang['emajthesequenceingroup'], $_REQUEST['schema'], $_REQUEST['sequence'], $_REQUEST['group']);
-				$sequencesList = $_REQUEST['sequence'];
-			}
-			echo "<p>{$lang['emajmove']} {$sequenceName}</p>\n";
+			echo "<p>" . sprintf($lang['emajconfirmmovesequence'], $_REQUEST['schema'], $sequencesList, $groupsList) . "</p>\n";
 		}
 
+		echo "<form action=\"schemas.php\" method=\"post\">\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"move_sequences_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"schema\" value=\"", htmlspecialchars($_REQUEST['schema']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"sequences\" value=\"", htmlspecialchars($sequencesList), "\" />\n";
+		echo "<input type=\"hidden\" name=\"nbsequences\" value=\"{$nbSeq}\" />\n";
+		echo "<input type=\"hidden\" name=\"oldgroups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 
 		// Display the input fields depending on the context
 		echo "<div class=\"form-container\">\n";
 
 		// group name
-		echo "\t<div class=\"form-label required\">{$lang['emajgroup']}</div>\n";
-		echo "\t<div class=\"form-input\"><select name=\"group\">";
+		echo "\t<div class=\"form-label required\">{$lang['emajnewgroup']}</div>\n";
+		echo "\t<div class=\"form-input\"><select name=\"newgroup\">";
 		foreach($knownGroups as $r)
 			echo "\t\t<option>", htmlspecialchars($r['group_name']), "\n";
 		echo "\t</select></div>\n";
@@ -1027,60 +1236,75 @@
 	function move_sequences_ok() {
 		global $lang, $data, $emajdb;
 
-	// Process the click on the <cancel> button.
+		// Process the click on the <cancel> button.
 		processCancelButton();
 
-	// process the sequences move
-		$nbSequences = $emajdb->moveSequences($_POST['schema'],$_POST['sequences'],$_POST['group'],$_POST['mark']);
-		if ($nbSequences>= 0)
-			list_schemas(sprintf($lang['emajdynmovesequencesok'], $nbSequences, htmlspecialchars($_POST['group'])));
+		// Prepare the action part of potential error messages
+		if ($_POST['nbsequences'] == 1)
+			$errMsgAction = sprintf($lang['emajmovesequenceerr2'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['sequences']), htmlspecialchars($_POST['oldgroups']), htmlspecialchars($_POST['newgroup']));
 		else
-			list_schemas($lang['emajmodifygrouperr']);
+			$errMsgAction = sprintf($lang['emajmovesequenceserr2'], $_POST['nbsequences'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($_POST['newgroup']));
+
+		$allGroups = $_POST['oldgroups'] . ', ' . $_POST['newgroup'];
+
+		// Check that the tables group still exists
+		recheckGroups($allGroups, $errMsgAction);
+
+		// Check the mark name
+		$finalMark = checkNewMarkGroups($allGroups, $_POST['mark'], $errMsgAction);
+
+		// OK, process the sequences move
+		$nbSequences = $emajdb->moveSequences($_POST['schema'], $_POST['sequences'], $_POST['newgroup'], $finalMark);
+
+		// Check the result and exit
+		if ($nbSequences>= 0)
+			if ($nbSequences > 1)
+				list_schemas(sprintf($lang['emajmovesequencesok'], $nbSequences, htmlspecialchars($_POST['newgroup'])));
+			else
+				list_schemas(sprintf($lang['emajmovesequenceok'], $nbSequences, htmlspecialchars($_POST['newgroup'])));
+		else
+			list_schemas('', $errMsgAction);
 	}
+
 	/**
 	 * Prepare remove sequences: ask for confirmation
 	 */
 	function remove_sequences() {
 		global $misc, $lang, $emajdb;
 
-		$misc->printHeader('database', 'database', 'schemas');
-
-		$misc->printTitle($lang['emajremovesequence']);
-
-		// Build the list of sequences to processs and count them
-		echo "<form action=\"schemas.php\" method=\"post\">\n";
-		echo "<input type=\"hidden\" name=\"action\" value=\"remove_sequences_ok\" />\n";
-
-		if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) > 1) {
-
-		// multiple removal
-			$nbSeq = count($_REQUEST['ma']);
-			$sequencesList = '';
-			$fullList = "<div class=\"longlist\"><ul>\n";
-			foreach($_REQUEST['ma'] as $t) {
-				$a = unserialize(htmlspecialchars_decode($t, ENT_QUOTES));
-				$sequencesList .= $a['sequence'] . ', ';
-				$fullList .= "\t<li>" . sprintf($lang['emajthetblseqingroup'], $a['sequence'], $a['group']) . "</li>\n";
-			}
-			$sequencesList = substr($sequencesList, 0, strlen($sequencesList)-2);
-			$fullList .= "</ul></div>\n";
-			echo "<p>". sprintf($lang['emajconfirmremovesequence'], $nbSeq, $_REQUEST['schema']) . "</p>\n{$fullList}";
+		// Process the multi-actions array
+		if (isset($_REQUEST['ma'])) {
+			list($nbSeq, $sequencesList, $fullList, $groupsList) = processMultiActions($_REQUEST['ma'], 'sequence', true);
 		} else {
-
-		// single removal
-			if (isset($_REQUEST['ma']) && count($_REQUEST['ma']) == 1) {
-				$a = unserialize(htmlspecialchars_decode($_REQUEST['ma'][0], ENT_QUOTES));
-				$sequenceName = sprintf($lang['emajthesequenceingroup'], $a['appschema'], $a['sequence'], $a['group']);
-				$sequencesList = $a['sequence'];
-			} else {
-				$sequenceName = sprintf($lang['emajthesequenceingroup'], $_REQUEST['schema'], $_REQUEST['sequence'], $_REQUEST['group']);
-				$sequencesList = $_REQUEST['sequence'];
-			}
-			echo "<p>{$lang['emajremove']} {$sequenceName}</p>\n";
+			$nbSeq = 1;
+			$sequencesList = $_REQUEST['sequence'];
+			$groupsList = $_REQUEST['group'];
 		}
 
+		// Prepare the action part of potential error messages
+		if ($nbSeq == 1)
+			$errMsgAction = sprintf($lang['emajremovesequenceerr'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($sequencesList), htmlspecialchars($groupsList));
+		else
+			$errMsgAction = sprintf($lang['emajremovesequenceserr'], $nbSeq, htmlspecialchars($_REQUEST['schema']));
+
+		// Check that the tables group still exists
+		recheckGroups($groupsList, $errMsgAction);
+
+		$misc->printHeader('database', 'database', 'schemas');
+		$misc->printTitle($lang['emajremovesequence']);
+
+		// Build the form
+		if ($nbSeq > 1) {
+			echo "<p>" . sprintf($lang['emajconfirmremovesequences'], $nbSeq, $_REQUEST['schema']) . "</p>\n{$fullList}";
+		} else {
+			echo "<p>" . sprintf($lang['emajconfirmremovesequence'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($sequencesList), htmlspecialchars($groupsList)) . "</p>\n";
+		}
+		echo "<form action=\"schemas.php\" method=\"post\">\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"remove_sequences_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"schema\" value=\"", htmlspecialchars($_REQUEST['schema']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"sequences\" value=\"", htmlspecialchars($sequencesList), "\" />\n";
+		echo "<input type=\"hidden\" name=\"nbsequences\" value=\"{$nbSeq}\" />\n";
+		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 
 		// Display the input fields depending on the context
 		echo "<div class=\"form-container\">\n";
@@ -1103,15 +1327,32 @@
 	function remove_sequences_ok() {
 		global $lang, $data, $emajdb;
 
-	// Process the click on the <cancel> button.
+		// Process the click on the <cancel> button.
 		processCancelButton();
 
-	// process the sequences removal
-		$nbSequences = $emajdb->removeSequences($_POST['schema'],$_POST['sequences'],$_POST['mark']);
-		if ($nbSequences>= 0)
-			list_schemas(sprintf($lang['emajdynremovesequencesok'], $nbSequences));
+		// Prepare the action part of potential error messages
+		if ($_POST['nbsequences'] == 1)
+			$errMsgAction = sprintf($lang['emajremovesequenceerr'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['sequences']), htmlspecialchars($_POST['groups']));
 		else
-			list_schemas($lang['emajmodifygrouperr']);
+			$errMsgAction = sprintf($lang['emajremovesequenceserr'], $_POST['nbsequences'], htmlspecialchars($_POST['schema']));
+
+		// Check that the tables group still exists
+		recheckGroups($_POST['groups'], $errMsgAction);
+
+		// Check the mark name
+		$finalMark = checkNewMarkGroups($_POST['groups'], $_POST['mark'], $errMsgAction);
+
+		// OK, process the sequences removal
+		$nbSequences = $emajdb->removeSequences($_POST['schema'], $_POST['sequences'], $finalMark);
+
+		// Check the result and exit
+		if ($nbSequences>= 0)
+			if ($nbSequences > 1)
+				list_schemas(sprintf($lang['emajremovesequencesok'], $nbSequences));
+			else
+				list_schemas(sprintf($lang['emajremovesequenceok'], $nbSequences));
+		else
+			list_schemas($errMsgAction);
 	}
 
 	/**

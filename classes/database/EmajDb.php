@@ -435,12 +435,22 @@ class EmajDb {
 		$this->emaj_version = '?';
 		$this->emaj_version_num = 0;
 
-		// Get the 'emaj_version' parameter from the emaj_visible_param view.
-		$sql = "SELECT param_value_text AS version
-				FROM emaj.emaj_visible_param
-				WHERE param_key = 'emaj_version'";
+		// Ask the catalog whether the emaj_get_version() function exists (only introduced in 4.4.0).
+		$sql = "SELECT 1 AS exists
+				FROM pg_catalog.pg_proc JOIN pg_catalog.pg_namespace n ON (pronamespace = n.oid)
+				WHERE nspname = 'emaj' AND proname = 'emaj_get_version'";
+		if ($data->selectField($sql,'exists') == 1) {
+			// The function exists, so call it.
+			$sql = "SELECT emaj.emaj_get_version() AS version";
+		} else {
+			// The function doesn't exist, so read the emaj_param table through the emaj_visible_param view.
+			$sql = "SELECT param_value_text AS version
+					FROM emaj.emaj_visible_param
+					WHERE param_key = 'emaj_version'";
+		}
 		$rs = $data->selectSet($sql);
 		if ($rs->recordCount() == 1){
+			// Set the cached values.
 			$this->emaj_version = $rs->fields['version'];
 			if (substr_count($this->emaj_version, '.') == 2) {
 				list($v1,$v2,$v3) = explode(".",$this->emaj_version);
@@ -539,7 +549,7 @@ class EmajDb {
 						WHEN param_key = 'fixed_dblink_rollback_duration' THEN coalesce(to_char(param_value_interval,'US'), '4000')
 					END AS param_value
 					FROM emaj.{$table}
-					WHERE param_key <> 'emaj_version'";
+					WHERE param_key <> 'emaj_version'";			# The 'emaj_version' key no longer exists since emaj 4.4.0
 
 		return $data->selectSet($sql);
 	}

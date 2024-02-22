@@ -261,6 +261,7 @@
 	$lang['emajlogsession'] = 'Log session';
 	$lang['emajgroupcreatedat'] = 'Created at';
 	$lang['emajgroupcreateddroppedat'] = 'Created/dropped at';
+	$lang['emajgrouplatesttype'] = 'Latest type';
 	$lang['emajgrouplatestdropat'] = 'Latest drop at';
 	$lang['emajgroupstartedat'] = 'Started at';
 	$lang['emajgroupstoppedat'] = 'Stopped at';

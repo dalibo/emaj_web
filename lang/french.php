@@ -261,6 +261,7 @@
 	$lang['emajlogsession'] = 'Session de log';
 	$lang['emajgroupcreatedat'] = 'Créé le';
 	$lang['emajgroupcreateddroppedat'] = 'Créé/supprimé le';
+	$lang['emajgrouplatesttype'] = 'Dernier type';
 	$lang['emajgrouplatestdropat'] = 'Dernière suppression à';
 	$lang['emajgroupstartedat'] = 'Démarré le';
 	$lang['emajgroupstoppedat'] = 'Arrêté le';

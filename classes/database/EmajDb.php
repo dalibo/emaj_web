@@ -717,12 +717,17 @@ class EmajDb {
 	function getDroppedGroups() {
 		global $data;
 
-		$sql = "SELECT grph_group, to_char(max(time_tx_timestamp),'{$this->tsFormat}') AS latest_drop_datetime
-				FROM emaj.emaj_group_hist
-					 JOIN emaj.emaj_time_stamp ON (time_id = upper(grph_time_range) - 1)
-				WHERE NOT EXISTS (SELECT 0 FROM emaj.emaj_group WHERE group_name = grph_group)
-				GROUP BY 1
-				ORDER BY 1";
+		$sql = "WITH selected_group AS (
+					SELECT grph_group, max(upper(grph_time_range)) AS lastest_drop_time_id
+					FROM emaj.emaj_group_hist
+					WHERE NOT EXISTS (SELECT 0 FROM emaj.emaj_group WHERE group_name = grph_group)
+					GROUP BY 1
+				)
+				SELECT h.grph_group, to_char(time_tx_timestamp,'{$this->tsFormat}') AS latest_drop_datetime,
+					   CASE WHEN h.grph_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END AS latest_is_rollbackable
+					FROM selected_group s JOIN emaj.emaj_group_hist h ON (h.grph_group = s.grph_group AND upper(grph_time_range) = lastest_drop_time_id)
+					JOIN emaj.emaj_time_stamp ON (time_id = upper(grph_time_range) - 1)
+					ORDER BY 1";
 
 		return $data->selectSet($sql);
 	}

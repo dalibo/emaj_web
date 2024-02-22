@@ -842,6 +842,15 @@
 					'url'   => "emajgroups.php?action=show_history_group&amp;{$misc->href}&amp;",
 					'vars'  => array('group' => 'grph_group'),
 				),
+				'latestrollbackable' => array(
+					'title' => $lang['emajgrouplatesttype'],
+					'field' => field('latest_is_rollbackable'),
+					'type'	=> 'callback',
+					'params'=> array(
+							'function' => 'renderGroupType',
+							'align' => 'center',
+							),
+				),
 				'latestdropdatetime' => array(
 					'title' => $lang['emajgrouplatestdropat'],
 					'field' => field('latest_drop_datetime'),
@@ -870,6 +879,7 @@
 									'action' => 'create_group',
 									'back' => 'list',
 									'group' => field('grph_group'),
+									'type' => field('latest_is_rollbackable'),
 								))))
 					),
 				);
@@ -2171,8 +2181,13 @@
 		echo "</div>\n";
 
 		echo "<p>{$lang['emajgrouptype']} : \n";
-		echo "\t<input type=\"radio\" name=\"grouptype\" value=\"rollbackable\" checked>{$lang['emajrollbackable']}\n";
-		echo "\t<input type=\"radio\" name=\"grouptype\" value=\"auditonly\">{$lang['emajauditonly']}\n";
+		if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'AUDIT_ONLY') {
+			$auditOnlyChecked = 'checked'; $rollbackableChecked = '';
+		} else {
+			$rollbackableChecked = 'checked'; $auditOnlyChecked = '';
+		}
+		echo "\t<input type=\"radio\" name=\"grouptype\" value=\"rollbackable\" {$rollbackableChecked}>{$lang['emajrollbackable']}\n";
+		echo "\t<input type=\"radio\" name=\"grouptype\" value=\"auditonly\" {$auditOnlyChecked}>{$lang['emajauditonly']}\n";
 		echo "</p>\n";
 
 		echo "<div class=\"form-container\">\n";

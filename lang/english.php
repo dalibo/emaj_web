@@ -305,6 +305,7 @@
 	$lang['emajsetmark'] = 'Set a mark';
 	$lang['emajsetcomment'] = 'Set a comment';
 	$lang['emajdorollbackfor'] = 'Execute a rollback for';
+	$lang['emajforget'] = 'Forget';
 
 	// E-Maj html titles and tabs
 	$lang['emajgroupsmanagement'] = 'E-Maj groups management';
@@ -685,7 +686,8 @@
 	$lang['emajgroupmissing'] = 'The tables group "%s" does not exist anymore!';
 	$lang['emajgroupsmissing'] = '%s tables groups (%s) do not exist anymore!';
 	$lang['emajgroupnotstopped'] = 'The tables group "%s" is not stopped anymore!';
-	$lang['emajduplicategroup'] = 'The tables group "%s" already exists!';
+	$lang['emajgroupalreadyexists'] = 'The tables group "%s" already exists!';
+	$lang['emajgroupstillexists'] = 'The tables group "%s" still exists!';
 	$lang['emajgroupsnotstopped'] = '%s tables group (%s) are not stopped anymore!';
 	$lang['emajgroupnotstarted'] = 'The tables group "%s" is not started anymore!';
 	$lang['emajgroupsnotstarted'] = '%s tables group (%s) are not started anymore!';
@@ -742,6 +744,12 @@
 	$lang['emajconfirmdropgroups'] = 'Are you sure you want to drop the tables groups "%s"?';
 	$lang['emajdropgroupsok'] = 'The tables groups "%s" have been dropped.';
 	$lang['emajdropgroupserr'] = 'Error while dropping tables groups "%s".';
+
+	// Group forget
+	$lang['emajforgetagroup'] = 'E-Maj: Erase a tables group from histories';
+	$lang['emajconfirmforgetgroup'] = 'Are you sure you want to erase the tables group "%s" from histories?';
+	$lang['emajforgetgroupok'] = 'The tables group "%s" has been erased from histories.';
+	$lang['emajforgetgrouperr'] = 'Error while erasing the tables group "%s" from histories.';
 
 	// Export groups configuration
 	$lang['emajexportgroupsconf'] = 'Export a tables groups configuration';

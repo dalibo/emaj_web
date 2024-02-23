@@ -305,6 +305,7 @@
 	$lang['emajsetmark'] = 'Poser une marque';
 	$lang['emajsetcomment'] = 'Commenter';
 	$lang['emajdorollbackfor'] = 'Exécuter un rollback pour';
+	$lang['emajforget'] = 'Oublier';
 
 	// E-Maj html titles and tabs
 	$lang['emajgroupsmanagement'] = 'Gestion des groupes E-Maj';
@@ -683,7 +684,8 @@
 	// Generic error messages for groups and marks checks
 	$lang['emajgroupmissing'] = 'Le groupe de tables "%s" n\'existe plus.';
 	$lang['emajgroupsmissing'] = '%s groupes de tables (%s) n\'existent plus.';
-	$lang['emajduplicategroup'] = 'Le groupe de table "%s" existe déjà.';
+	$lang['emajgroupalreadyexists'] = 'Le groupe de table "%s" existe déjà.';
+	$lang['emajgroupstillexists'] = 'Le groupe de table "%s" existe toujours.';
 	$lang['emajgroupnotstopped'] = 'Le groupe de tables "%s" n\'est plus arrêté.';
 	$lang['emajgroupsnotstopped'] = '%s groupes de tables (%s) ne sont plus arrêtés.';
 	$lang['emajgroupnotstarted'] = 'Le groupe de tables "%s" n\'est plus démarré.';
@@ -741,6 +743,12 @@
 	$lang['emajconfirmdropgroups'] = 'Êtes-vous sûr de vouloir supprimer les groupes de tables "%s" ?';
 	$lang['emajdropgroupsok'] = 'Les groupes de tables "%s" ont été supprimés.';
 	$lang['emajdropgroupserr'] = 'Erreur lors de la suppression des groupes de tables "%s".';
+
+	// Group forget
+	$lang['emajforgetagroup'] = 'E-Maj : Effacer un groupe de tables des historiques';
+	$lang['emajconfirmforgetgroup'] = 'Êtes-vous sûr de vouloir effacer le groupe de tables "%s" des historiques ?';
+	$lang['emajforgetgroupok'] = 'Le groupe de tables "%s" a été effacé des historiques.';
+	$lang['emajforgetgrouperr'] = 'Erreur lors de l\'effacement du groupe de tables "%s" des historiques.';
 
 	// Export groups configuration
 	$lang['emajexportgroupsconf'] = 'Exporter une configuration de groupes de tables';

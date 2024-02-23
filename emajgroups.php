@@ -882,6 +882,18 @@
 									'type' => field('latest_is_rollbackable'),
 								))))
 					),
+					'forget_group' => array(
+						'content' => $lang['emajforget'],
+						'icon' => 'Eraser',
+						'attr' => array (
+							'href' => array (
+								'url' => 'emajgroups.php',
+								'urlvars' => array_merge($urlvars, array (
+									'action' => 'forget_group',
+									'back' => 'list',
+									'group' => field('grph_group'),
+								))))
+					),
 				);
 			} else {
 				$droppedActions = array();
@@ -2216,7 +2228,7 @@
 
 		// If the group is supposed to be empty, check the supplied group name doesn't exist
 		if (!$emajdb->isNewEmptyGroupValid($_POST['group'])) {
-			show_groups('', $errMsgAction . '<br>' . sprintf($lang['emajduplicategroup'], htmlspecialchars($_POST['group'])));
+			show_groups('', $errMsgAction . '<br>' . sprintf($lang['emajgroupalreadyexists'], htmlspecialchars($_POST['group'])));
 			return;
 		}
 
@@ -2426,6 +2438,63 @@
 		checkADOReturnCode($status, $errMsgAction, 'list');
 		show_groups(sprintf($lang['emajdropgroupsok'], htmlspecialchars($_POST['groups'])));
 		$_reload_browser = true;
+	}
+
+	/**
+	 * Prepare forget groups: ask for confirmation
+	 */
+	function forget_group() {
+		global $misc, $lang, $emajdb;
+
+		// Prepare the action part of potential error messages
+		$errMsgAction = sprintf($lang['emajforgetgrouperr'], htmlspecialchars($_REQUEST['group']));
+
+		// Check the group does not exist
+		if ($emajdb->existsGroup($_REQUEST['group'])) {
+			show_groups('', sprintf($lang['emajgroupstillexists'], htmlspecialchars($_REQUEST['group'])));
+			$_reload_browser = true;
+			return;
+		}
+
+		$misc->printHeader('database', 'database','emajgroups');
+
+		$misc->printTitle($lang['emajforgetagroup']);
+
+		echo "<p>", sprintf($lang['emajconfirmforgetgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
+		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+		echo "<p><input type=\"hidden\" name=\"action\" value=\"forget_group_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
+		echo $misc->form;
+		echo "<input type=\"submit\" name=\"forgetgroup\" value=\"{$lang['emajforget']}\" />\n";
+		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+		echo "</form>\n";
+	}
+
+	/**
+	 * Perform forget group
+	 */
+	function forget_group_ok() {
+		global $lang, $emajdb;
+
+		// Process the click on the <cancel> button
+		processCancelButton('list');
+
+		// Prepare the action part of potential error messages
+		$errMsgAction = sprintf($lang['emajforgetgrouperr'], htmlspecialchars($_POST['group']));
+
+		// Check that the group does not exist
+		if ($emajdb->existsGroup($_POST['group'])) {
+			show_groups('', sprintf($lang['emajgroupstillexists'], htmlspecialchars($_POST['group'])));
+			$_reload_browser = true;
+			return;
+		}
+
+		// OK, perform the action
+		$status = $emajdb->forgetGroup($_POST['group']);
+
+		// Check the result and exit
+		checkADOReturnCode($status, $errMsgAction, 'list');
+		show_groups(sprintf($lang['emajforgetgroupok'], htmlspecialchars($_POST['group'])));
 	}
 
 	/**
@@ -5035,6 +5104,12 @@
 			break;
 		case 'export_groups':
 			export_groups();
+			break;
+		case 'forget_group':
+			forget_group();
+			break;
+		case 'forget_group_ok':
+			forget_group_ok();
 			break;
 		case 'gen_sql_dump_changes':
 			gen_sql_dump_changes();

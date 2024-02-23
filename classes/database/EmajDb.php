@@ -2145,6 +2145,19 @@ class EmajDb {
 	}
 
 	/**
+	 * Erases all traces of a dropped group from the tables groups histories.
+	 */
+	function forgetGroup($group) {
+		global $data;
+
+		$data->clean($group);
+
+		$sql = "SELECT emaj.emaj_forget_group('{$group}') AS deleted_traces";
+
+		return $data->execute($sql);
+	}
+
+	/**
 	 * Check that the group can be altered
 	 * If the group is not IDLE, it performs checks on operations that will be performed
 	 * Returns 1 if OK, else 0

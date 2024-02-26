@@ -2227,6 +2227,7 @@
 		$errMsgAction = sprintf($lang['emajcreategrouperr'], htmlspecialchars($_POST['group']));
 
 		// If the group is supposed to be empty, check the supplied group name doesn't exist
+		// Call existsGroup() instead of isNewEmptyGroupValid() when emaj version < 4.0 will not be supported anymore
 		if (!$emajdb->isNewEmptyGroupValid($_POST['group'])) {
 			show_groups('', $errMsgAction . '<br>' . sprintf($lang['emajgroupalreadyexists'], htmlspecialchars($_POST['group'])));
 			return;

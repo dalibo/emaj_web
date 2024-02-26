@@ -2,13 +2,13 @@
 
 /**
  * A class that implements the database access for Emaj_web.
- * It currently covers E-Maj versions starting from 1.3.x
+ * The covered E-Maj versions range is described into libraries/versions.inc.php.
  */
 
 class EmajDb {
 
 	/**
-	 * Cache of static data
+	 * Cache of static data.
 	 */
 	private $emaj_version = '?';
 	private $emaj_version_num = 0;
@@ -21,7 +21,7 @@ class EmajDb {
 	private $asyncRlbkUsable = null;
 
 	/**
-	 * Constant
+	 * Constants.
 	 */
 	// Output format for timestamptz values. This format will be interpreted by the GUI layer for smart displays.
 	private $tsFormat = 'YYYY/MM/DD HH24:MI:SS.US OF';
@@ -29,13 +29,13 @@ class EmajDb {
 	private $intervalFormat = 'DD HH24:MI:SS.US';
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 */
 	function __construct() {
 	}
 
 	/**
-	 * Determines whether Emaj is installed in the current database, by looking for a schema named 'emaj'.
+	 * Determine whether Emaj is installed in the current database, by looking for a schema named 'emaj'.
 	 * @return True if Emaj is installed, false otherwise.
 	 */
 	function isEnabled() {
@@ -59,20 +59,20 @@ class EmajDb {
 	}
 
 	/**
-	 * Determines whether the current user is granted to access emaj schema.
+	 * Determine whether the current user is granted to access emaj schema.
 	 * @return True if enabled Emaj is accessible by the current user, false otherwise.
 	 */
 	function isAccessible() {
 		// Access cache
 		if ($this->accessible !== null) return $this->accessible;
 
-		// otherwise compute
+		// Otherwise compute
 		$this->accessible = $this->enabled&&($this->isEmaj_Adm()||$this->isEmaj_Viewer());
 		return $this->accessible;
 	}
 
 	/**
-	 * Determines whether the current user is granted the 'emaj_adm' role.
+	 * Determine whether the current user is granted the 'emaj_adm' role.
 	 * @return True if Emaj is accessible by the current user as E-maj administrator, false otherwise.
 	 */
 	function isEmaj_Adm() {
@@ -83,11 +83,11 @@ class EmajDb {
 
 		$this->emaj_adm = false;
 		$server_info = $misc->getServerInfo();
-		// if the current role is superuser, he is considered as E-maj administration
+		// If the current role is superuser, he is considered as E-maj administration.
 		if ($data->isSuperUser($server_info['username'])) {
 			$this->emaj_adm = true;
 		} else {
-		// otherwise, is the current role member of emaj_adm role ?
+		// Otherwise, is the current role member of emaj_adm role ?
 			$sql = "SELECT CASE WHEN pg_catalog.pg_has_role('emaj_adm','USAGE') THEN 1 ELSE 0 END AS is_emaj_adm";
 			$this->emaj_adm = $data->selectField($sql,'is_emaj_adm');
 		}
@@ -95,22 +95,22 @@ class EmajDb {
 	}
 
 	/**
-	 * Determines whether the current user is granted the 'emaj_viewer' role.
+	 * Determine whether the current user is granted the 'emaj_viewer' role.
 	 * @return True if Emaj is accessible by the current user as E-maj viewer, false otherwise.
-	 * Note that an 'emaj_adm' role is also considered as 'emaj_viewer'
+	 * Note that an 'emaj_adm' role is also considered as 'emaj_viewer'.
 	 */
 	function isEmaj_Viewer() {
-		// Access cache
+		// Access cache.
 		if ($this->emaj_viewer !== null) return $this->emaj_viewer;
 
 		global $data, $misc;
 
 		$this->emaj_viewer = false;
 		if ($this->emaj_adm) {
-		// emaj_adm role is also considered as E-maj viewer
+		// emaj_adm role is also considered as E-maj viewer.
 			$this->emaj_viewer = true;
 		} else {
-		// otherwise, is the current role member of emaj_viewer role ?
+		// Otherwise, is the current role member of emaj_viewer role ?
 			$sql = "SELECT CASE WHEN pg_catalog.pg_has_role('emaj_viewer','USAGE') THEN 1 ELSE 0 END AS is_emaj_viewer";
 			$this->emaj_viewer = $data->selectField($sql,'is_emaj_viewer');
 		}
@@ -118,7 +118,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Determines whether the E-Maj extension has been installed in the instance.
+	 * Determine whether the E-Maj extension has been installed in the instance.
 	 */
 	function isExtensionAvailable() {
 		global $data;
@@ -132,7 +132,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Determines whether E-Maj has been created as an extension.
+	 * Determine whether E-Maj has been created as an extension.
 	 */
 	function isExtension() {
 		global $data;
@@ -146,7 +146,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Returns the E-Maj extension versions available in the instance for a CREATE EXTENSION.
+	 * Return the E-Maj extension versions available in the instance for a CREATE EXTENSION.
 	 */
 	function getAvailableExtensionVersions() {
 		global $data;
@@ -159,7 +159,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Returns a boolean indicating whether one or several versions of the E-Maj extension are available for an ALTER EXTENSION UPDATE.
+	 * Return a boolean indicating whether one or several versions of the E-Maj extension are available for an ALTER EXTENSION UPDATE.
 	 */
 	function areThereVersionsToUpdate() {
 		global $data;
@@ -173,7 +173,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Returns the number of E-Maj event triggers.
+	 * Return the number of E-Maj event triggers.
 	 */
 	function getNumberEventTriggers() {
 		global $data;
@@ -185,7 +185,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Returns the E-Maj extension versions available as target for an ALTER EXTENSION UPDATE.
+	 * Return the E-Maj extension versions available as target for an ALTER EXTENSION UPDATE.
 	 */
 	function getAvailableExtensionVersionsForUpdate() {
 		global $data;
@@ -198,7 +198,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Creates the emaj extension
+	 * Create the emaj extension.
 	 */
 	function createEmajExtension($version) {
 		global $data, $misc;
@@ -221,7 +221,7 @@ class EmajDb {
 
 		$status = $data->execute($sql);
 		if ($status == 0) {
-			// the extension has been created, so reset all emajdb cached variables
+			// The extension has been created, so reset all emajdb cached variables.
 			$this->emaj_version = '?';
 			$this->emaj_version_num = 0;
 			$this->enabled = null;
@@ -236,7 +236,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Updates the emaj extension
+	 * Update the emaj extension.
 	 */
 	function updateEmajExtension($version) {
 		global $data, $misc;
@@ -252,7 +252,7 @@ class EmajDb {
 
 		$status = $data->execute($sql);
 		if ($status == 0) {
-			// the extension version has changed, so reset all emajdb cached variables
+			// The extension version has changed, so reset all emajdb cached variables.
 			$this->emaj_version = '?';
 			$this->emaj_version_num = 0;
 			$this->enabled = null;
@@ -267,8 +267,8 @@ class EmajDb {
 	}
 
 	/**
-	 * Drops the emaj extension
-	 * The emaj_adm and emaj_viewer roles are not dropped as they can bu used in other databases
+	 * Drop the emaj extension.
+	 * The emaj_adm and emaj_viewer roles are not dropped as they can bu used in other databases.
 	 */
 	function dropEmajExtension() {
 		global $data;
@@ -283,7 +283,7 @@ class EmajDb {
 				END;$$;";
 		$status = $data->execute($sql);
 		if ($status == 0) {
-			// the extension has been dropped, so reset all emajdb cached variables
+			// The extension has been dropped, so reset all emajdb cached variables.
 			$this->emaj_version = '?';
 			$this->emaj_version_num = 0;
 			$this->enabled = null;
@@ -298,7 +298,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Determines whether a dblink connection can be used for rollbacks (not necessarily for this user).
+	 * Determine whether a dblink connection can be used for rollbacks (not necessarily for this user).
 	 */
 	function isDblinkUsable() {
 		// Access cache
@@ -307,8 +307,8 @@ class EmajDb {
 		global $data;
 
 		// It checks that
-		// - dblink is installed into the database by testing the existence of the dblink_connect_u function
-		// - the dblink_user_password E-Maj parameter has been configured
+		// - dblink is installed into the database by testing the existence of the dblink_connect_u function,
+		// - the dblink_user_password E-Maj parameter has been configured.
 		$sql = "SELECT CASE WHEN
                        EXISTS(SELECT 1 FROM pg_catalog.pg_proc WHERE proname = 'dblink_connect_u')
                    AND EXISTS(SELECT 1 FROM emaj.emaj_visible_param WHERE param_key = 'dblink_user_password')
@@ -319,7 +319,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Determines whether the asynchronous rollback can be used for the current user.
+	 * Determine whether the asynchronous rollback can be used for the current user.
 	 * Parameter: $useCache = boolean to be explicitely set to false to force the check
 	 * It checks that:
 	 * - dblink is effectively usable
@@ -328,17 +328,17 @@ class EmajDb {
 	 */
 	function isAsyncRlbkUsable($useCache = true) {
 
-		// Return from the cache if possible
+		// Return from the cache if possible.
 		if ($useCache && $this->asyncRlbkUsable !== null) return $this->asyncRlbkUsable;
 
 		global $misc, $data, $conf;
 
 		$this->asyncRlbkUsable = 0;
 
-		// check if dblink is usable
+		// Check if dblink is usable.
 		if ($this->isDblinkUsable()) {
-			// if the _dblink_open_cnx() function is available for the user,
-			//   open a test dblink connection, analyse the result and close it if effetively opened
+			// If the _dblink_open_cnx() function is available for the user,
+			//   open a test dblink connection, analyse the result and close it if effetively opened.
 			$test_cnx_ok = 0;
 			$sql = "SELECT CASE
 						WHEN pg_catalog.has_function_privilege('emaj._dblink_open_cnx(text)', 'EXECUTE')
@@ -374,17 +374,17 @@ class EmajDb {
 				}
 			}
 			if ($test_cnx_ok) {
-				// check if the emaj_web parameters are set
+				// Check if the emaj_web parameters are set.
 				if (isset($conf['psql_path']) && isset($conf['temp_dir'])) {
 
-					// check the psql exe path supplied in the config file,
+					// Check the psql exe path supplied in the config file,
 					// by executing a simple "psql --version" command
 					$psqlExe = $misc->escapeShellCmd($conf['psql_path']);
 					$version = array();
 					preg_match("/(\d+(?:\.\d+)?)(?:\.\d+)?.*$/", exec($psqlExe . " --version"), $version);
 					if (!empty($version)) {
 
-						// ok, check a file can be written into the temp directory supplied in the config file
+						// OK, check a file can be written into the temp directory supplied in the config file.
 						$sep = (substr(php_uname(), 0, 3) == "Win") ? '\\' : '/';
 						$testFileName = $conf['temp_dir'] . $sep . 'rlbk_report_test';
 						$f = fopen($testFileName,'w');
@@ -404,7 +404,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the emaj version from either the cache or a getVersion() call
+	 * Get the emaj version from either the cache or a getVersion() call.
 	 */
 	function getEmajVersion() {
 		// Access cache
@@ -415,7 +415,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the emaj version in numeric format from either the cache or a getVersion() call
+	 * Get the emaj version in numeric format from either the cache or a getVersion() call.
 	 */
 	function getNumEmajVersion() {
 		// Access cache
@@ -426,12 +426,12 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets emaj version from the emaj_visible_param
+	 * Get emaj version from the emaj_visible_param.
 	 */
 	function getVersion() {
 		global $data;
 
-		// Initialize version values
+		// Initialize version values.
 		$this->emaj_version = '?';
 		$this->emaj_version_num = 0;
 
@@ -467,8 +467,8 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the E-Maj size on disk
-	 * = size of all relations in emaj primary and secondary schemas + size of linked toast tables
+	 * Get the E-Maj size on disk.
+	 * = size of all relations in emaj primary and secondary schemas + size of linked toast tables.
 	 */
 	function getEmajSize() {
 		global $data;
@@ -508,7 +508,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Checks E-Maj consistency
+	 * Check E-Maj consistency.
 	 */
 	function checkEmaj() {
 		global $data;
@@ -525,7 +525,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Get the parameters stored into the emaj_param table
+	 * Get the parameters stored into the emaj_param table.
 	 */
 	function getExtensionParams() {
 		global $data;
@@ -555,7 +555,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Export the parameters configuration
+	 * Export the parameters configuration.
 	 */
 	function exportParamConfig() {
 		global $data;
@@ -565,7 +565,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Check a parameters configuration to import
+	 * Check a parameters configuration to import.
 	 */
 	function checkJsonParamConf($json) {
 		global $data, $lang;
@@ -589,7 +589,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Import the parameters configuration
+	 * Import the parameters configuration.
 	 */
 	function importParamConfig($paramConfig, $replaceCurrent) {
 		global $data;
@@ -604,8 +604,8 @@ class EmajDb {
 	// GROUPS
 
 	/**
-	 * Gets all groups referenced in emaj_group table for this database
-	 * The function is called to feed the browser tree or to list the groups to export (emaj 3.3+)
+	 * Get all groups referenced in emaj_group table for this database.
+	 * The function is called to feed the browser tree or to list the groups to export (emaj 3.3+).
 	 */
 	function getGroups() {
 		global $data;
@@ -624,7 +624,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets number of created groups
+	 * Get number of created groups.
 	 */
 	function getNbGroups() {
 		global $data;
@@ -635,7 +635,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets all idle groups referenced in emaj_group table for this database
+	 * Get all idle groups referenced in emaj_group table for this database.
 	 */
 	function getIdleGroups() {
 		global $data;
@@ -672,7 +672,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets all Logging groups referenced in emaj_group table for this database
+	 * Get all Logging groups referenced in emaj_group table for this database.
 	 */
 	function getLoggingGroups() {
 		global $data;
@@ -712,7 +712,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets all inexistent tables groups that are known as having existed in the past and having been dropped.
+	 * Get all inexistent tables groups that are known as having existed in the past and having been dropped.
 	 */
 	function getDroppedGroups() {
 		global $data;
@@ -733,7 +733,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets all configured but not yet created groups.
+	 * Get all configured but not yet created groups.
 	 * They are referenced in emaj_group_def but not in emaj_group tables.
 	 * Also return counters: number of tables, sequences.
 	 */
@@ -813,7 +813,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets some details about existing groups among a set of configured groups to import
+	 * Get some details about existing groups among a set of configured groups to import.
 	 */
 	function getGroupsToImport($configuredGroupsValues) {
 		global $data;
@@ -836,7 +836,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Verifies whether a schema currently exists
+	 * Verify whether a schema currently exists.
 	 */
 	function existsSchema($schema) {
 		global $data;
@@ -853,7 +853,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Detects tables or sequences that no longer exist for a schema
+	 * Detect tables or sequences that no longer exist for a schema.
 	 */
 	function missingTblSeqs($schema, $tblSeqsList, $relKind) {
 		global $data;
@@ -881,7 +881,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Verifies whether a group currently exists
+	 * Verify whether a group currently exists.
 	 */
 	function existsGroup($group) {
 		global $data;
@@ -898,7 +898,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Detects groups that no longer exist
+	 * Detect groups that no longer exist.
 	 */
 	function missingGroups($groupsList) {
 		global $data;
@@ -914,7 +914,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Detects groups in logging state
+	 * Detect groups in logging state.
 	 */
 	function loggingGroups($groupsList) {
 		global $data;
@@ -931,7 +931,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Detects groups in idle state
+	 * Detect groups in idle state.
 	 */
 	function idleGroups($groupsList) {
 		global $data;
@@ -948,7 +948,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Detects groups that already have a given new mark.
+	 * Detect groups that already have a given new mark.
 	 */
 	function knownMarkGroups($groupsList,$mark) {
 		global $data;
@@ -966,7 +966,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Detects marks that no longer exist for a group
+	 * Detect marks that no longer exist for a group.
 	 */
 	function missingMarksGroup($group, $marksList) {
 		global $data;
@@ -983,7 +983,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Detects groups that no longer have a mark
+	 * Detect groups that no longer have a mark.
 	 */
 	function missingMarkGroups($groupsList, $mark) {
 		global $data;
@@ -1000,7 +1000,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets properties of a single tables group
+	 * Get properties of a single tables group.
 	 */
 	function getGroup($group) {
 		global $data;
@@ -1053,7 +1053,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the isLogging property of one emaj_group (1 if in logging state, 0 if idle)
+	 * Get the isLogging property of one emaj_group (1 if in logging state, 0 if idle).
 	 */
 	function isGroupLogging($group) {
 		global $data;
@@ -1068,7 +1068,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the isRollbackable property of one emaj_group (1 if rollbackable, 0 if audit_only)
+	 * Get the isRollbackable property of one emaj_group (1 if rollbackable, 0 if audit_only).
 	 */
 	function isGroupRollbackable($group) {
 		global $data;
@@ -1083,7 +1083,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the isProtected property of one emaj_group (1 if protected, 0 if unprotected)
+	 * Get the isProtected property of one emaj_group (1 if protected, 0 if unprotected).
 	 */
 	function isGroupProtected($group) {
 		global $data;
@@ -1098,7 +1098,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Export a tables groups configuration
+	 * Export a tables groups configuration.
 	 */
 	function exportGroupsConfig($groups) {
 		global $data;
@@ -1111,7 +1111,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Prepare the a tables groups configuration import
+	 * Prepare the a tables groups configuration import.
 	 */
 	function importGroupsConfPrepare($groupsConfig, $groups) {
 		global $data, $lang;
@@ -1121,8 +1121,8 @@ class EmajDb {
 		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 
 		// The tables groups configuration import prepare step is inserted into a transaction,
-		//   so that it can be properly canceled if errors are detected
-		// The transaction will be commited just later in the importGroupsConfig() function call
+		//   so that it can be properly canceled if errors are detected.
+		// The transaction will be commited just later in the importGroupsConfig() function call.
 		$status = $data->beginTransaction();
 
 		// rpt_msg_type 260 and 261 disappear in emaj 4.0+
@@ -1165,7 +1165,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Import a tables groups configuration
+	 * Import a tables groups configuration.
 	 */
 	function importGroupsConfig($groupsConfig, $groups, $mark) {
 		global $data;
@@ -1190,7 +1190,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets all marks related to a group
+	 * Get all marks related to a group.
 	 */
 	function getMarks($group) {
 		global $data;
@@ -1199,7 +1199,7 @@ class EmajDb {
 
 		if ($this->getNumEmajVersion() >= 40400){	// version 4.4+
 //			The mark_log_session column is the concatetion of 3 fields separeted with #: the position of the mark in its log session,
-//				and the log session start and stop times
+//				and the log session start and stop times.
 			$sql = "WITH mark_1 AS (
 						SELECT mark_time_id, mark_group, mark_name, mark_comment,
 							to_char(m.time_tx_timestamp,'{$this->tsFormat}') AS mark_datetime,
@@ -1274,7 +1274,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets number of marks for a group
+	 * Get number of marks for a group.
 	 */
 	function getNbMarks($group) {
 		global $data;
@@ -1287,7 +1287,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the content of one emaj_group
+	 * Get the content of one emaj_group.
 	 */
 	function getContentGroup($group) {
 		global $data;
@@ -1329,7 +1329,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Return the history of create-drop and log sessions for a tables group
+	 * Return the history of create-drop and log sessions for a tables group.
 	 */
 	function getHistoryGroup($group) {
 
@@ -1375,7 +1375,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Return the list of all existing emaj schemas recorded in the emaj_schema table
+	 * Return the list of all existing emaj schemas recorded in the emaj_schema table.
 	 */
 	function getEmajSchemasList() {
 		global $data;
@@ -1387,7 +1387,7 @@ class EmajDb {
 
 	/**
 	 * Return all non system schemas but emaj from the current database
-	 * plus all nonexistent schemas but listed in emaj_group_def
+	 * plus all nonexistent schemas but listed in emaj_group_def.
 	 */
 	function getSchemas() {
 		global $data;
@@ -1415,7 +1415,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Return all existing non system schemas in the databse
+	 * Return all existing non system schemas in the databse.
 	 */
 	function getAllSchemas() {
 		global $data;
@@ -1473,7 +1473,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Return a boolean indicating whether the table has a PRIMARY KEY
+	 * Return a boolean indicating whether the table has a PRIMARY KEY.
 	 */
 	function hasTablePK($schema, $table) {
 		global $data;
@@ -1495,7 +1495,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Return all sequences of a schema, with their current E-Maj characteristics
+	 * Return all sequences of a schema, with their current E-Maj characteristics.
 	 */
 	function getSequences($schema) {
 		global $data;
@@ -1520,7 +1520,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Returns properties of a single sequence
+	 * Return properties of a single sequence.
 	 */
 	function getSequenceProperties($schema, $sequence) {
 		global $data, $misc;
@@ -1551,7 +1551,7 @@ class EmajDb {
 
 	/**
 	 * Return all tables and sequences of a schema,
-	 * plus all non existent tables but listed in emaj_group_def with this schema
+	 * plus all non existent tables but listed in emaj_group_def with this schema.
 	 */
 	function getTablesSequences($schema) {
 		global $data;
@@ -1608,7 +1608,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets group names already known in the emaj_group and emaj_group_def tables
+	 * Get group names already known in the emaj_group and emaj_group_def tables.
 	 */
 	function getKnownGroups() {
 		global $data;
@@ -1623,7 +1623,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets group names already known in the emaj_group table
+	 * Get group names already known in the emaj_group table.
 	 */
 	function getCreatedgroups() {
 		global $data;
@@ -1635,7 +1635,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets log schema suffix already known in the emaj_group_def table
+	 * Get log schema suffix already known in the emaj_group_def table.
 	 */
 	function getKnownSuffix() {
 		global $data;
@@ -1648,7 +1648,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets existing tablespaces
+	 * Get existing tablespaces.
 	 */
 	function getKnownTsp() {
 		global $data;
@@ -1661,7 +1661,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Insert a table or sequence into the emaj_group_def table
+	 * Insert a table or sequence into the emaj_group_def table.
 	 */
 	function assignTblSeq($schema,$tblseq,$group,$priority,$logSchemaSuffix,$emajNamesPrefix,$logDatTsp,$logIdxTsp) {
 		global $data;
@@ -1675,7 +1675,7 @@ class EmajDb {
 		$data->clean($logDatTsp);
 		$data->clean($logIdxTsp);
 
-		// get the relkind of the tblseq to process
+		// Get the relkind of the tblseq to process.
 		$sql = "SELECT relkind
 				FROM pg_catalog.pg_class, pg_catalog.pg_namespace
 				WHERE pg_namespace.oid = relnamespace AND relname = '{$tblseq}' AND nspname = '{$schema}'";
@@ -1686,7 +1686,7 @@ class EmajDb {
 			$relkind = "?";
 		}
 
-		// Insert the new row into the emaj_group_def table
+		// Insert the new row into the emaj_group_def table.
 		$sql = "INSERT INTO emaj.emaj_group_def (grpdef_schema, grpdef_tblseq, grpdef_group, grpdef_priority,";
 		if ($this->getNumEmajVersion() < 30100){			// version < 3.1.0
 			$sql .= "grpdef_log_schema_suffix, grpdef_emaj_names_prefix,";
@@ -1721,7 +1721,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Update a table or sequence into the emaj_group_def table
+	 * Update a table or sequence into the emaj_group_def table.
 	 */
 	function updateTblSeq($schema,$tblseq,$groupOld,$groupNew,$priority,$logSchemaSuffix,$emajNamesPrefix,$logDatTsp,$logIdxTsp) {
 		global $data;
@@ -1736,7 +1736,7 @@ class EmajDb {
 		$data->clean($logDatTsp);
 		$data->clean($logIdxTsp);
 
-		// get the relkind of the tblseq to process
+		// Get the relkind of the tblseq to process.
 		$sql = "SELECT relkind
 				FROM pg_catalog.pg_class, pg_catalog.pg_namespace
 				WHERE pg_namespace.oid = relnamespace AND relname = '{$tblseq}' AND nspname = '{$schema}'";
@@ -1747,7 +1747,7 @@ class EmajDb {
 			$relkind = "?";
 		}
 
-		// Update the row in the emaj_group_def table
+		// Update the row in the emaj_group_def table.
 		$sql = "UPDATE emaj.emaj_group_def SET
 					grpdef_group = '{$groupNew}'";
 		if ($priority == '')
@@ -1778,7 +1778,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Delete a table or sequence from emaj_group_def table
+	 * Delete a table or sequence from emaj_group_def table.
 	 */
 	function removeTblSeq($schema,$tblseq,$group) {
 		global $data;
@@ -1787,7 +1787,7 @@ class EmajDb {
 		$data->clean($tblseq);
 		$data->clean($group);
 
-		// Begin transaction.  We do this so that we can ensure only one row is deleted
+		// Begin transaction.  We do this so that we can ensure only one row is deleted.
 		$status = $data->beginTransaction();
 		if ($status != 0) {
 			$data->rollbackTransaction();
@@ -1796,19 +1796,19 @@ class EmajDb {
 
 		$sql = "DELETE FROM emaj.emaj_group_def
 				WHERE grpdef_schema = '{$schema}' AND grpdef_tblseq = '{$tblseq}' AND grpdef_group = '{$group}'";
-		// Delete row
+		// Delete row.
 		$status = $data->execute($sql);
 
 		if ($status != 0 || $data->conn->Affected_Rows() != 1) {
 			$data->rollbackTransaction();
 			return -2;
 		}
-		// End transaction
+		// End transaction.
 		return $data->endTransaction();
 	}
 
 	/**
-	 * Dynamically assign tables to a tables group
+	 * Dynamically assign tables to a tables group.
 	 */
 	function assignTables($schema,$tables,$group,$priority,$logDatTsp,$logIdxTsp,$mark) {
 		global $data;
@@ -1821,10 +1821,10 @@ class EmajDb {
 		$data->clean($logIdxTsp);
 		$data->clean($mark);
 
-		// Build the tables array
+		// Build the tables array.
 		$tablesArray = "ARRAY['" . str_replace(", ", "','", $tables) . "']";
 
-		// Build the JSON structure
+		// Build the JSON structure.
 		if ($priority == '') $priority = 'null';
 		if ($logDatTsp == '') $logDatTsp = 'null'; else $logDatTsp = "\"{$logDatTsp}\"";
 		if ($logIdxTsp == '') $logIdxTsp = 'null'; else $logIdxTsp = "\"{$logIdxTsp}\"";
@@ -1836,7 +1836,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Dynamically move tables into another tables groups
+	 * Dynamically move tables into another tables groups.
 	 */
 	function moveTables($schema,$tables,$group,$mark) {
 		global $data;
@@ -1846,7 +1846,7 @@ class EmajDb {
 		$data->clean($group);
 		$data->clean($mark);
 
-		// Build the tables array
+		// Build the tables array.
 		$tablesArray = "ARRAY['" . str_replace(", ", "','", $tables) . "']";
 
 		$sql = "SELECT emaj.emaj_move_tables('{$schema}',{$tablesArray},'{$group}','{$mark}') AS nb_tables";
@@ -1855,7 +1855,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Dynamically modify tables in their tables groups
+	 * Dynamically modify tables in their tables groups.
 	 */
 	function modifyTables($schema,$tables,$priority,$logDatTsp,$logIdxTsp,$mark) {
 		global $data;
@@ -1867,10 +1867,10 @@ class EmajDb {
 		$data->clean($logIdxTsp);
 		$data->clean($mark);
 
-		// Build the tables array
+		// Build the tables array.
 		$tablesArray = "ARRAY['" . str_replace(", ", "','", $tables) . "']";
 
-		// Build the JSON structure
+		// Build the JSON structure.
 		if ($priority == '') $priority = 'null';
 		if ($logDatTsp == '') $logDatTsp = 'null'; else $logDatTsp = "\"{$logDatTsp}\"";
 		if ($logIdxTsp == '') $logIdxTsp = 'null'; else $logIdxTsp = "\"{$logIdxTsp}\"";
@@ -1882,7 +1882,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Dynamically remove tables from their tables groups
+	 * Dynamically remove tables from their tables groups.
 	 */
 	function removeTables($schema,$tables,$mark) {
 		global $data;
@@ -1891,7 +1891,7 @@ class EmajDb {
 		$data->clean($tables);
 		$data->clean($mark);
 
-		// Build the tables array
+		// Build the tables array.
 		$tablesArray = "ARRAY['" . str_replace(", ", "','", $tables) . "']";
 
 		$sql = "SELECT emaj.emaj_remove_tables('{$schema}',{$tablesArray},'{$mark}') AS nb_tables";
@@ -1900,7 +1900,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Dynamically assign sequences to a tables group
+	 * Dynamically assign sequences to a tables group.
 	 */
 	function assignSequences($schema,$sequences,$group,$mark) {
 		global $data;
@@ -1910,7 +1910,7 @@ class EmajDb {
 		$data->clean($group);
 		$data->clean($mark);
 
-		// Build the sequences array
+		// Build the sequences array.
 		$sequencesArray = "ARRAY['" . str_replace(", ", "','", $sequences) . "']";
 
 		$sql = "SELECT emaj.emaj_assign_sequences('{$schema}',{$sequencesArray},'{$group}','{$mark}') AS nb_sequences";
@@ -1919,7 +1919,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Dynamically move sequences into another tables groups
+	 * Dynamically move sequences into another tables groups.
 	 */
 	function moveSequences($schema,$sequences,$group,$mark) {
 		global $data;
@@ -1929,7 +1929,7 @@ class EmajDb {
 		$data->clean($group);
 		$data->clean($mark);
 
-		// Build the sequences array
+		// Build the sequences array.
 		$sequencesArray = "ARRAY['" . str_replace(", ", "','", $sequences) . "']";
 
 		$sql = "SELECT emaj.emaj_move_sequences('{$schema}',{$sequencesArray},'{$group}','{$mark}') AS nb_sequences";
@@ -1938,7 +1938,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Dynamically remove sequences from their tables groups
+	 * Dynamically remove sequences from their tables groups.
 	 */
 	function removeSequences($schema,$sequences,$mark) {
 		global $data;
@@ -1956,7 +1956,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Determines whether or not a group name is valid as a new empty group
+	 * Determine whether or not a group name is valid as a new empty group.
 	 * Returns 1 if the group name is not already known, 0 otherwise.
 	 */
 	function isNewEmptyGroupValid($group) {
@@ -1978,8 +1978,8 @@ class EmajDb {
 	}
 
 	/**
-	 * Check in the emaj_group_def table the configuration of a new group to create
-	 * The function is not called anymore since E-Maj version 3.2+
+	 * Check in the emaj_group_def table the configuration of a new group to create.
+	 * The function is not called anymore since E-Maj version 3.2+.
 	 */
 	function checkConfNewGroup($group) {
 		global $data, $lang;
@@ -2012,8 +2012,8 @@ class EmajDb {
 	}
 
 	/**
-	 * Check in the emaj_group_def table the configuration of one or serveral existing groups to alter
-	 * The function is not called anymore since E-Maj version 3.2+
+	 * Check in the emaj_group_def table the configuration of one or serveral existing groups to alter.
+	 * The function is not called anymore since E-Maj version 3.2+.
 	 */
 	function checkConfExistingGroups($groups) {
 		global $data, $lang;
@@ -2049,7 +2049,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Check that a JSON structure representing tables groups configuration is valid, before importing it
+	 * Check that a JSON structure representing tables groups configuration is valid, before importing it.
 	 */
 	function checkJsonGroupsConf($json) {
 		global $data, $lang;
@@ -2085,7 +2085,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Creates a group, and comment if requested
+	 * Create a group, and comment if requested.
 	 */
 	function createGroup($group,$isRollbackable,$isEmpty,$comment) {
 		global $data;
@@ -2117,7 +2117,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Drops a group
+	 * Drop a group.
 	 */
 	function dropGroup($group) {
 		global $data;
@@ -2130,7 +2130,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Drops several groups at once
+	 * Drop several groups at once.
 	 */
 	function dropGroups($groups) {
 		global $data;
@@ -2145,7 +2145,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Erases all traces of a dropped group from the tables groups histories.
+	 * Erase all traces of a dropped group from the tables groups histories.
 	 */
 	function forgetGroup($group) {
 		global $data;
@@ -2158,27 +2158,27 @@ class EmajDb {
 	}
 
 	/**
-	 * Check that the group can be altered
-	 * If the group is not IDLE, it performs checks on operations that will be performed
-	 * Returns 1 if OK, else 0
+	 * Check that the group can be altered.
+	 * If the group is not IDLE, it performs checks on operations that will be performed.
+	 * Returns 1 if OK, else 0.
 	 */
 	function checkAlterGroup($group) {
 		global $data;
 
 		$data->clean($group);
 
-		// get the group's state
+		// Get the group's state.
 		$sql = "SELECT CASE WHEN group_is_logging THEN 1 ELSE 0 END AS is_logging
 				FROM emaj.emaj_group
 				WHERE group_name = '{$group}'";
 		$isLogging = $data->selectField($sql,'is_logging');
-		// the group is idle, so return immediately
+		// The group is idle, so return immediately.
 		if (! $isLogging) { return 1; }
-		// the group is logging
-		// if the emaj version is prior 2.1.0, exit immediately
+		// The group is logging.
+		// If the emaj version is prior 2.1.0, exit immediately.
 		if ($this->getNumEmajVersion() < 20100){ return 0; }
 
-		// if the emaj version is prior 2.2.0, check no table or sequence would be removed from the group
+		// If the emaj version is prior 2.2.0, check no table or sequence would be removed from the group.
 		if ($this->getNumEmajVersion() < 20200){	// version < 2.2.0
 			$sql = "SELECT count(*) as nb_errors FROM (
 						SELECT rel_schema, rel_tblseq FROM emaj.emaj_relation WHERE rel_group = '{$group}'
@@ -2188,7 +2188,7 @@ class EmajDb {
 			if ($data->selectField($sql,'nb_errors') > 0 ) { return 0; }
 		}
 
-		// if the emaj version is prior 2.3.0, check no table or sequence would be added to the group
+		// If the emaj version is prior 2.3.0, check no table or sequence would be added to the group.
 		if ($this->getNumEmajVersion() < 20300){	// version < 2.3.0
 			$sql = "SELECT count(*) as nb_errors FROM (
 						SELECT grpdef_schema, grpdef_tblseq FROM emaj.emaj_group_def WHERE grpdef_group = '{$group}'
@@ -2201,7 +2201,7 @@ class EmajDb {
 			if ($data->selectField($sql,'nb_errors') > 0 ) { return 0; }
 		}
 
-		// check that no table or sequence would be repaired for the group
+		// Check that no table or sequence would be repaired for the group.
 		$sql = "SELECT count(*) as nb_errors FROM emaj._verify_groups(ARRAY['{$group}'], false)";
 		if ($data->selectField($sql,'nb_errors') > 0 ) { return 0; }
 
@@ -2210,7 +2210,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Alters a group
+	 * Alter a group.
 	 */
 	function alterGroup($group,$mark) {
 		global $data;
@@ -2227,7 +2227,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Alters several groups
+	 * Alter several groups.
 	 */
 	function alterGroups($groups,$mark) {
 		global $data;
@@ -2246,7 +2246,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Sets a comment for a group
+	 * Set a comment for a group.
 	 */
 	function setCommentGroup($group,$comment) {
 		global $data;
@@ -2264,7 +2264,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Computes the number of active mark in a group.
+	 * Compute the number of active mark in a group.
 	 */
 	function nbActiveMarkGroup($group) {
 
@@ -2278,7 +2278,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Starts a group
+	 * Start a group.
 	 */
 	function startGroup($group,$mark,$resetLog) {
 		global $data;
@@ -2296,7 +2296,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Starts several groups
+	 * Start several groups.
 	 */
 	function startGroups($groups,$mark,$resetLog) {
 		global $data;
@@ -2315,7 +2315,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Stops a group
+	 * Stop a group.
 	 */
 	function stopGroup($group,$mark,$forceStop) {
 		global $data;
@@ -2337,7 +2337,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Stops several groups at once
+	 * Stop several groups at once.
 	 */
 	function stopGroups($groups,$mark) {
 		global $data;
@@ -2355,7 +2355,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Resets a group
+	 * Reset a group.
 	 */
 	function resetGroup($group) {
 		global $data;
@@ -2368,7 +2368,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Resets several groups at once
+	 * Reset several groups at once.
 	 */
 	function resetGroups($groups) {
 		global $data;
@@ -2383,7 +2383,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Protects a group
+	 * Protect a group.
 	 */
 	function protectGroup($group) {
 		global $data;
@@ -2396,7 +2396,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Unprotects a group
+	 * Unprotect a group.
 	 */
 	function unprotectGroup($group) {
 		global $data;
@@ -2409,7 +2409,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Sets a mark for a group and comments if requested
+	 * Set a mark for a group and comments if requested.
 	 */
 	function setMarkGroup($group,$mark,$comment) {
 		global $data;
@@ -2430,7 +2430,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Sets a mark for several groups and comments if requested
+	 * Set a mark for several groups and comments if requested.
 	 */
 	function setMarkGroups($groups,$mark,$comment) {
 		global $data;
@@ -2456,7 +2456,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets properties of one mark
+	 * Get properties of one mark.
 	 */
 	function getMark($group,$mark) {
 		global $data;
@@ -2471,7 +2471,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Sets a comment for a mark of a group
+	 * Set a comment for a mark of a group.
 	 */
 	function setCommentMarkGroup($group,$mark,$comment) {
 		global $data;
@@ -2490,7 +2490,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Protects a mark for a group
+	 * Protect a mark for a group.
 	 */
 	function protectMarkGroup($group,$mark) {
 		global $data;
@@ -2504,7 +2504,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Unprotects a mark for a group
+	 * Unprotect a mark for a group.
 	 */
 	function unprotectMarkGroup($group,$mark) {
 		global $data;
@@ -2518,7 +2518,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Deletes a mark for a group
+	 * Delete a mark for a group.
 	 */
 	function deleteMarkGroup($group,$mark) {
 		global $data;
@@ -2532,7 +2532,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Deletes all marks before a mark for a group
+	 * Delete all marks before a mark for a group.
 	 */
 	function deleteBeforeMarkGroup($group,$mark) {
 		global $data;
@@ -2546,7 +2546,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Renames a mark for a group
+	 * Rename a mark for a group.
 	 */
 	function renameMarkGroup($group,$mark,$newMark) {
 		global $data;
@@ -2561,7 +2561,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Returns the list of marks usable to rollback a group.
+	 * Return the list of marks usable to rollback a group.
 	 */
 	function getRollbackMarkGroup($group) {
 
@@ -2590,9 +2590,9 @@ class EmajDb {
 	}
 
 	/**
-	 * Determines whether or not a mark name for a group is ACTIVE
-	 * Returns 1 if the mark name is known and belongs to a group currently in logging state
-	 * Retuns 0 otherwise.
+	 * Determine whether or not a mark name for a group is ACTIVE.
+	 * Returns 1 if the mark name is known and belongs to a group currently in logging state,
+	 * Returns 0 otherwise.
 	 */
 	function isMarkActiveGroup($group,$mark) {
 
@@ -2601,7 +2601,7 @@ class EmajDb {
 		$data->clean($group);
 		$data->clean($mark);
 
-		// check the mark is active
+		// Check the mark is active.
 		if ($this->getNumEmajVersion() >= 40400){	// version 4.4+
 			$sql = "SELECT CASE WHEN EXISTS
 					(SELECT 0 FROM emaj.emaj_mark
@@ -2621,7 +2621,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Determines whether or not a mark name is valid as a mark to rollback to for a group
+	 * Determine whether or not a mark name is valid as a mark to rollback to for a group.
 	 * Returns 1 if:
 	 *   - the mark name is known and in ACTIVE state and
 	 *   - no intermediate protected mark would be covered by the rollback,
@@ -2634,7 +2634,7 @@ class EmajDb {
 		$data->clean($group);
 		$data->clean($mark);
 
-		// check the mark is active (i.e. not deleted)
+		// Check the mark is active (i.e. not deleted).
 		$result = $this->isMarkActiveGroup($group,$mark);
 
 		if ($result == 1) {
@@ -2653,8 +2653,8 @@ class EmajDb {
 	}
 
 	/**
-	 * Returns information about all alter_group operations that have been executed after a mark set for one or several groups
-	 * The function is called when emaj version >= 2.1
+	 * Return information about all alter_group operations that have been executed after a mark set for one or several groups.
+	 * The function is called when emaj version >= 2.1.
 	 */
 	function getAlterAfterMarkGroups($groups,$mark,$emajlang) {
 
@@ -2666,7 +2666,7 @@ class EmajDb {
 		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 		$firstGroup = substr($groups, 0, strpos($groups.',', ','));
 
-		// look at the alter group operations executed after the mark
+		// Look at the alter group operations executed after the mark.
 		if ($this->getNumEmajVersion() >= 40000){	// version >= 4.0.0
 			$sql = "SELECT to_char(time_tx_timestamp,'{$this->tsFormat}') as time_tx_timestamp,
 					CASE
@@ -2755,8 +2755,8 @@ class EmajDb {
 	}
 
 	/**
-	 * Rollbacks a group to a mark
-	 * It returns a set of messages
+	 * Rollback a group to a mark.
+	 * It returns a set of messages.
 	 */
 	function rollbackGroup($group,$mark,$isLogged,$comment) {
 		global $data;
@@ -2783,7 +2783,7 @@ class EmajDb {
 	}
 
 	/**
-	 * rollbacks asynchronously one or several groups to a mark, using a single session
+	 * Rollback asynchronously one or several groups to a mark, using a single session.
 	 */
 	function asyncRollbackGroups($groups,$mark,$isLogged,$psqlExe,$tempDir,$isMulti,$comment) {
 		global $data, $misc;
@@ -2815,7 +2815,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Execute an external psql command in background
+	 * Execute an external psql command in background.
 	 */
 	function execPsqlInBackground($psqlExe,$stmt,$tempDir,$psqlReport) {
 		global $misc;
@@ -2844,7 +2844,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Returns the list of marks usable to rollback a groups array.
+	 * Return the list of marks usable to rollback a groups array.
 	 */
 	function getRollbackMarkGroups($groups) {
 
@@ -2918,7 +2918,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Determines whether or not a mark name is valid as a mark to rollback to for a groups array
+	 * Determine whether or not a mark name is valid as a mark to rollback to for a groups array.
 	 * Returns 1 if:
 	 *   - the mark name is known and belongs to groups in logging state,
 	 *   - no intermediate protected mark for any group would be covered by the rollback,
@@ -2934,7 +2934,7 @@ class EmajDb {
 
 		$nbGroups = substr_count($groupsArray,',') + 1;
 
-		// check the mark is active (i.e. belongs to logging groups)
+		// Check the mark is active (i.e. belongs to logging groups).
 		if ($this->getNumEmajVersion() >= 40400){	// version 4.4+
 			$sql = "SELECT CASE WHEN
 					(SELECT COUNT(*)
@@ -2958,7 +2958,7 @@ class EmajDb {
 		$result = $data->selectField($sql,'result');
 
 		if ($result == 1) {
-			// the mark is active, so now check there is no intermediate protected mark
+			// The mark is active, so now check there is no intermediate protected mark.
 			$sql = "SELECT CASE WHEN
 					(SELECT count(*) FROM emaj.emaj_mark
 					  WHERE mark_group = ANY ({$groupsArray}) AND mark_time_id >
@@ -2973,8 +2973,8 @@ class EmajDb {
 	}
 
 	/**
-	 * Rollbacks a groups array to a mark
-	 * It returns a set of messages
+	 * Rollback a groups array to a mark.
+	 * It returns a set of messages.
 	 */
 	function rollbackGroups($groups,$mark,$isLogged,$comment) {
 		global $data;
@@ -3002,7 +3002,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the global rollback statistics for a group and a mark (i.e. total number of log rows to rollback)
+	 * Get the global rollback statistics for a group and a mark (i.e. total number of log rows to rollback).
 	 */
 	function getGlobalRlbkStatGroup($group,$mark) {
 		global $data;
@@ -3018,7 +3018,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Estimates the rollback duration for one or several groups and a mark
+	 * Estimate the rollback duration for one or several groups and a mark.
 	 */
 	function estimateRollbackGroups($groups, $mark, $rollbackType) {
 		global $data;
@@ -3035,17 +3035,17 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the list of completed rollback operations (the latest 1000, if so many)
+	 * Get the list of completed rollback operations (the latest 1000, if so many).
 	 */
 	function getCompletedRlbk() {
 		global $data;
 		$nb = 1000;
 
-		// first cleanup recently completed rollback operation status
+		// First cleanup recently completed rollback operation status.
 		$sql = "SELECT emaj.emaj_cleanup_rollback_state()";
 		$data->execute($sql);
 
-		// get the latest rollback operations
+		// Get the latest rollback operations.
 		if ($this->getNumEmajVersion() >= 40300){	// version >= 4.3.0
 			$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,', ') as rlbk_groups_list, rlbk_status,
 						to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
@@ -3073,7 +3073,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the list of in progress rollback operations
+	 * Get the list of in progress rollback operations.
 	 */
 	function getInProgressRlbk() {
 		global $data;
@@ -3095,7 +3095,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the list of consolidable rollbacks (masking already consolidated rollbacks,i.e. with no intermediate mark and log)
+	 * Get the list of consolidable rollbacks (masking already consolidated rollbacks,i.e. with no intermediate mark and log).
 	 */
 	function getConsolidableRlbk() {
 		global $data;
@@ -3129,7 +3129,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Sets a comment for a rollback
+	 * Set a comment for a rollback.
 	 */
 	function setCommentRollback($rlbkId,$comment) {
 		global $data;
@@ -3146,7 +3146,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Consolidates a rollback operation
+	 * Consolidate a rollback operation.
 	 */
 	function consolidateRollback($group,$mark) {
 		global $data;
@@ -3160,18 +3160,18 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the properties of a single rollback operation. It returns 1 row.
+	 * Get the properties of a single rollback operation. It returns 1 row.
 	 */
 	function getOneRlbk($rlbkId) {
 		global $data;
 
 		$data->clean($rlbkId);
 
-// first cleanup recently completed rollback operation status
+		// First cleanup recently completed rollback operation status.
 		$sql = "SELECT emaj.emaj_cleanup_rollback_state()";
 		$data->execute($sql);
 
-// get the emaj_rlbk data
+		// Get the emaj_rlbk data.
 		if ($this->getNumEmajVersion() >= 40300){	// version >= 4.3.0
 			$sql = "WITH rlbks AS (
 					SELECT rlbk_id AS id,
@@ -3228,7 +3228,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets a single in progress rollback operation. It returns 0 or 1 row.
+	 * Get a single in progress rollback operation. It returns 0 or 1 row.
 	 */
 	function getOneInProgressRlbk($rlbkId) {
 		global $data;
@@ -3256,7 +3256,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the report messages for a single completed rollback operation.
+	 * Get the report messages for a single completed rollback operation.
 	 */
 	function getRlbkReportMsg($rlbkId) {
 		global $data;
@@ -3274,7 +3274,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets sessions data for a rollback operation.
+	 * Get sessions data for a rollback operation.
 	 */
 	function getRlbkSessions($rlbkId) {
 		global $data;
@@ -3293,7 +3293,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets planning data for a rollback operation.
+	 * Get planning data for a rollback operation.
 	 */
 	function getRlbkSteps($rlbkId) {
 		global $data, $lang;
@@ -3361,7 +3361,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the number of tables and sequences that a tables group owned during a marks interval
+	 * Get the number of tables and sequences that a tables group owned during a marks interval.
 	 */
 	function getNbObjectsGroupInPeriod($group,$firstMark,$lastMark) {
 		global $data;
@@ -3395,7 +3395,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the number of log sessions covering a marks interval for a tables group
+	 * Get the number of log sessions covering a marks interval for a tables group.
 	 */
 	function getNbLogSessionInPeriod($group,$firstMark,$lastMark) {
 		global $data;
@@ -3428,9 +3428,9 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the global log statistics for a group between 2 marks
-	 * It also delivers the sql queries to look at the corresponding log rows
-	 * It creates a temp table to easily compute aggregates in other functions called in the same conversation
+	 * Get the global log statistics for a group between 2 marks.
+	 * It also delivers the sql queries to look at the corresponding log rows.
+	 * It creates a temp table to easily compute aggregates in other functions called in the same conversation.
 	 */
 	function getLogStatGroup($group,$firstMark,$lastMark) {
 		global $data;
@@ -3524,7 +3524,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets some aggregates from the temporary log_stat table created by the just previously called getLogStatGroup() function
+	 * Get some aggregates from the temporary log_stat table created by the just previously called getLogStatGroup() function.
 	 */
 	function getLogStatSummary() {
 		global $data;
@@ -3536,8 +3536,8 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the sequences statistics for a group between 2 marks
-	 * It creates a temp table to easily compute aggregates in other functions called in the same conversation
+	 * Get the sequences statistics for a group between 2 marks.
+	 * It creates a temp table to easily compute aggregates in other functions called in the same conversation.
 	 */
 	function getSeqStatGroup($group,$firstMark,$lastMark) {
 		global $data;
@@ -3565,7 +3565,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets some aggregates from the temporary tmp_stat table created by the just previously called getSeqStatGroup() function
+	 * Get some aggregates from the temporary tmp_stat table created by the just previously called getSeqStatGroup() function.
 	 */
 	function getSeqStatSummary() {
 		global $data;
@@ -3577,9 +3577,9 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the detailed log statistics for a group between 2 marks
-	 * It also delivers the sql queries to look at the corresponding log rows
-	 * It creates a temp table to easily compute aggregates for the same conversation
+	 * Get the detailed log statistics for a group between 2 marks.
+	 * It also delivers the sql queries to look at the corresponding log rows.
+	 * It creates a temp table to easily compute aggregates for the same conversation.
 	 */
 	function getDetailedLogStatGroup($group,$firstMark,$lastMark) {
 		global $data;
@@ -3677,7 +3677,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets some aggregates from the temporary log_stat table created by the just previously called getDetailedLogStatGroup() function
+	 * Get some aggregates from the temporary log_stat table created by the just previously called getDetailedLogStatGroup() function.
 	 */
 	function getDetailedLogStatSummary() {
 		global $data;
@@ -3694,7 +3694,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets distinct roles from the temporary log_stat table created by the just previously called getDetailedLogStatGroup() function
+	 * Get distinct roles from the temporary log_stat table created by the just previously called getDetailedLogStatGroup() function.
 	 */
 	function getDetailedLogStatRoles() {
 		global $data;
@@ -3836,11 +3836,11 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the 'E-Maj type' of a table or sequence
-	 * returns
-     *   'L' when the table or sequence is a Log object, or
-     *   'E' if it is an internal E-maj object, or
-     *   '' in other cases
+	 * Get the 'E-Maj type' of a table or sequence.
+	 * It returns:
+     *   - 'L' when the table or sequence is a Log object,
+     *   - 'E' if it is an internal E-maj object,
+     *   - '' in other cases
 	 */
 	function getEmajTypeTblSeq($schema, $tblseq) {
 		global $data;
@@ -3859,7 +3859,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the application triggers on all application tables known in the database.
+	 * Get the application triggers on all application tables known in the database.
 	 */
 	function getAppTriggers() {
 		global $data;
@@ -3915,7 +3915,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the orphan application triggers in the emaj_relation table, i.e. not currently created.
+	 * Get the orphan application triggers in the emaj_relation table, i.e. not currently created.
 	 */
 	function getOrphanAppTriggers() {
 		global $data;
@@ -3937,7 +3937,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the tables groups that owned or currently owns a given table or sequence.
+	 * Get the tables groups that owned or currently owns a given table or sequence.
 	 * The function is only called when emaj version >= 2.2.0
 	 */
 	function getTableGroupsTblSeq($schema, $tblseq) {
@@ -3980,7 +3980,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Gets the list of existing triggers on a table
+	 * Get the list of existing triggers on a table.
 	 */
 	function getTriggersTable($schema, $table) {
 		global $data;
@@ -4044,7 +4044,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Handle the list of triggers that must not be automatically disabled at rollback time: add or remove one
+	 * Handle the list of triggers that must not be automatically disabled at rollback time: add or remove one.
 	 */
 	function ignoreAppTrigger($action, $schema, $table, $trigger) {
 		global $data;
@@ -4075,6 +4075,5 @@ class EmajDb {
 			return $data->selectField($sql,'nbtriggers');
 		}
 	}
-
 }
 ?>

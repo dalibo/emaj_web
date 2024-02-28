@@ -852,9 +852,17 @@
 	$lang['emajprotectgroupok'] = 'Le groupe de tables "%s" est maintenant protégé contre les rollbacks.';
 	$lang['emajprotectgrouperr'] = 'Erreur lors de la protection du groupe de tables "%s".';
 
+	// Groups protect
+	$lang['emajprotectgroupsok'] = 'Les groupes de tables "%s" sont maintenant protégés contre les rollbacks.';
+	$lang['emajprotectgroupserr'] = 'Erreur lors de la protection des groupes de tables "%s".';
+
 	// Group unprotect
 	$lang['emajunprotectgroupok'] = 'Le groupe de tables "%s" est maintenant déprotégé.';
-	$lang['emajunprotectgrouperr'] = 'Erreur lors de la deprotection du groupe de tables "%s".';
+	$lang['emajunprotectgrouperr'] = 'Erreur lors de la déprotection du groupe de tables "%s".';
+
+	// Groups unprotect
+	$lang['emajunprotectgroupsok'] = 'Les groupes de tables "%s" sont maintenant déprotégés.';
+	$lang['emajunprotectgroupserr'] = 'Erreur lors de la déprotection des groupes de tables "%s".';
 
 	// Set Mark for one group
 	$lang['emajsetamark'] = 'E-Maj : Poser une marque';

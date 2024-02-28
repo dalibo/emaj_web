@@ -2396,6 +2396,20 @@ class EmajDb {
 	}
 
 	/**
+	 * Protect several groups at once.
+	 */
+	function protectGroups($groups) {
+		global $data;
+
+		$data->clean($groups);
+		$groupsList = str_replace(", ", "','", $groups);
+
+		$sql = "SELECT sum(emaj.emaj_protect_group(group_name))  AS nb_group FROM emaj.emaj_group WHERE group_name IN ('{$groupsList}')";
+
+		return $data->selectField($sql, 'nb_group');
+	}
+
+	/**
 	 * Unprotect a group.
 	 */
 	function unprotectGroup($group) {
@@ -2406,6 +2420,20 @@ class EmajDb {
 		$sql = "SELECT emaj.emaj_unprotect_group('{$group}') AS status";
 
 		return $data->execute($sql);
+	}
+
+	/**
+	 * Unprotect several groups at once.
+	 */
+	function unprotectGroups($groups) {
+		global $data;
+
+		$data->clean($groups);
+		$groupsList = str_replace(", ", "','", $groups);
+
+		$sql = "SELECT sum(emaj.emaj_unprotect_group(group_name))  AS nb_group FROM emaj.emaj_group WHERE group_name IN ('{$groupsList}')";
+
+		return $data->selectField($sql, 'nb_group');
 	}
 
 	/**

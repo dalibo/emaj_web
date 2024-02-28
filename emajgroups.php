@@ -572,7 +572,8 @@
 								'action' => 'protect_group',
 								'back' => 'list',
 								'group' => field('group_name'),
-							))))
+							)))),
+					'multiaction' => 'protect_groups',
 					),
 				'unprotect_group' => array(
 					'content' => $lang['emajunprotect'],
@@ -584,7 +585,8 @@
 								'action' => 'unprotect_group',
 								'back' => 'list',
 								'group' => field('group_name'),
-							))))
+							)))),
+					'multiaction' => 'unprotect_groups',
 					),
 				'rollback_group' => array(
 					'content' => $lang['emajrlbk'],
@@ -3710,6 +3712,43 @@
 	}
 
 	/**
+	 * Execute protect groups (there is no confirmation to ask)
+	 */
+	function protect_groups() {
+		global $lang, $emajdb;
+
+		// if no group has been selected, stop
+		if (!isset($_REQUEST['ma'])) {
+			show_groups('',$lang['emajnoselectedgroup']);
+			return;
+		}
+
+		// if only one group is selected, switch to the mono-group function
+		if (count($_REQUEST['ma']) == 1) {
+			$a = unserialize(htmlspecialchars_decode($_REQUEST['ma'][0], ENT_QUOTES));
+			$_REQUEST['group'] = $a['group'];
+			protect_group();
+			return;
+		}
+
+		// Build the groups list
+		$groupsList = groupsArray2list($_REQUEST['ma']);
+
+		// Prepare the action part of potential error messages
+		$errMsgAction = sprintf($lang['emajprotectgroupserr'], htmlspecialchars($groupsList));
+
+		// Check the groups still exist and are in LOGGING state
+		recheckGroups($groupsList, $errMsgAction, 'LOGGING', 'list');
+
+		// OK, perform the action
+		$nbGroup = $emajdb->protectGroups($groupsList);
+		if ($nbGroup >= 0)
+			show_groups(sprintf($lang['emajprotectgroupsok'], htmlspecialchars($groupsList)));
+		else
+			show_groups('', $errMsgAction);
+	}
+
+	/**
 	 * Execute unprotect group (there is no confirmation to ask)
 	 */
 	function unprotect_group() {
@@ -3730,6 +3769,43 @@
 			show_groups(sprintf($lang['emajunprotectgroupok'], htmlspecialchars($_REQUEST['group'])));
 		else
 			show_group(sprintf($lang['emajunprotectgroupok'], htmlspecialchars($_REQUEST['group'])));
+	}
+
+	/**
+	 * Execute unprotect groups (there is no confirmation to ask)
+	 */
+	function unprotect_groups() {
+		global $lang, $emajdb;
+
+		// if no group has been selected, stop
+		if (!isset($_REQUEST['ma'])) {
+			show_groups('',$lang['emajnoselectedgroup']);
+			return;
+		}
+
+		// if only one group is selected, switch to the mono-group function
+		if (count($_REQUEST['ma']) == 1) {
+			$a = unserialize(htmlspecialchars_decode($_REQUEST['ma'][0], ENT_QUOTES));
+			$_REQUEST['group'] = $a['group'];
+			unprotect_group();
+			return;
+		}
+
+		// Build the groups list
+		$groupsList = groupsArray2list($_REQUEST['ma']);
+
+		// Prepare the action part of potential error messages
+		$errMsgAction = sprintf($lang['emajunprotectgroupserr'], htmlspecialchars($groupsList));
+
+		// Check the groups still exist and are in LOGGING state
+		recheckGroups($groupsList, $errMsgAction, 'LOGGING', 'list');
+
+		// OK, perform the action
+		$nbGroup = $emajdb->unprotectGroups($groupsList);
+		if ($nbGroup >= 0)
+			show_groups(sprintf($lang['emajunprotectgroupsok'], htmlspecialchars($groupsList)));
+		else
+			show_groups('', $errMsgAction);
 	}
 
 	/**
@@ -5127,6 +5203,9 @@
 		case 'protect_group':
 			protect_group();
 			break;
+		case 'protect_groups':
+			protect_groups();
+			break;
 		case 'protect_mark_group':
 			protect_mark_group();
 			break;
@@ -5216,6 +5295,9 @@
 			break;
 		case 'unprotect_group':
 			unprotect_group();
+			break;
+		case 'unprotect_groups':
+			unprotect_groups();
 			break;
 		case 'unprotect_mark_group':
 			unprotect_mark_group();

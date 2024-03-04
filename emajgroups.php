@@ -1685,8 +1685,8 @@
 
 			$misc->printTable($stats, $columns, $actions, 'logStats', null, null, array('sorter' => true, 'filter' => true));
 
-			// dynamicaly change the behaviour of the SQL link using JQuery code: open a new window
-			// the link may be either a text button with a SQL content (td of type textbutton) or an icon (td of type iconbutton)
+			// Dynamicaly change the behaviour of the SQL link using JQuery code: open a new window.
+			// The link may be either a text button with a SQL content (td of type textbutton) or an icon (td of type iconbutton)
 			$sql_window_id = htmlentities('emaj_sqledit:'.$_REQUEST['server']);
 			echo "<script>
 			$(\"#logStats\").find(\"td.textbutton a:contains('SQL'), td.iconbutton a\").click(function() {

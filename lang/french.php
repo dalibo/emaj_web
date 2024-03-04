@@ -108,6 +108,7 @@
 	$lang['strautorefresh'] = 'Rafraîchissement auto';
 	$lang['strbacktolist'] = 'Retour à la liste';
 	$lang['strset'] = 'Poser';
+	$lang['stredit'] = 'Éditer';
 
 	// User-supplied SQL editing
 	$lang['strsqledit'] = 'Édition de requête SQL';

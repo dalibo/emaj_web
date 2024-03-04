@@ -1,12 +1,10 @@
 <?php
 
 	/**
-	 * Alternative SQL editing window
-	 *
-	 * $Id: history.php,v 1.3 2008/01/10 19:37:07 xzilla Exp $
+	 * Display the history of executed SQL statements.
 	 */
 
-	// Include application functions
+	// Include application functions.
 	include_once('./libraries/lib.inc.php');
 
 	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
@@ -18,7 +16,7 @@
 
 		$misc->printHtmlHeader($lang['strhistory']);
 		
-		// Bring to the front always
+		// Bring to the front always.
 		echo "<body onload=\"window.focus();\">\n";
 	
 		$misc->printTitle($lang['strsqlhistory']);
@@ -53,6 +51,19 @@
 			);
 
 			$actions = array(
+				'edit' => array(
+					'content' => $lang['stredit'],
+					'icon' => 'Pencil',
+					'attr' => array (
+						'href' => array (
+							'url' => 'history.php',
+							'urlvars' => array (
+								'action' => 'edit_sql',
+								'subject' => 'history',
+								'query' => field('query'),
+								'paginate' => field('paginate'),
+					))),
+				),
 				'run' => array(
 					'content' => $lang['strexecute'],
 					'icon' => 'Start',
@@ -85,6 +96,16 @@
 			);
 
 			$misc->printTable($history, $columns, $actions, 'history-history', $lang['strnohistory']);
+
+			// Dynamicaly change the behaviour of the SQL-Edit link using JQuery code: open a new window.
+			$sql_window_id = htmlentities('sqledit:'.$_REQUEST['server']);
+			echo "<script>
+			$(\"#history-history\").find(\"td.iconbutton:has('img[alt=\\\"{$lang['stredit']}\\\"]') a\").click(function() {
+				window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=550,resizable=yes,scrollbars=yes').focus();
+				return false;
+			});
+			</script>\n";
+
 		}
 		else echo "<p>{$lang['strnohistory']}</p>\n";
 
@@ -114,8 +135,8 @@
 		if ($confirm) {
 			$misc->printHtmlHeader($lang['strhistory']);
 
-        		// Bring to the front always
-	        	echo "<body onload=\"window.focus();\">\n";
+			// Bring to the front always.
+			echo "<body onload=\"window.focus();\">\n";
 			
 			$misc->printTitle($lang['strdelhistory']);
 			echo "<p>{$lang['strconfdelhistory']}</p>\n";
@@ -131,7 +152,20 @@
 		}
 		else
 			unset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$qid]);
-	}       
+	}
+
+	/**
+	 * Call the sqleditor.php page passing the sqlquery to display in $_SESSION.
+	 * We are already in the target frame
+	 */
+	function call_sqledit() {
+		global $misc;
+
+		$_SESSION['sqlquery'] = $_REQUEST['query'];
+		$paginate = '';
+		if ($_REQUEST['paginate'] == 't') $paginate = '&amp;paginate';
+		echo "<meta http-equiv=\"refresh\" content=\"0;url=sqledit.php?subject={$_REQUEST['subject']}&amp;{$misc->href}&amp;action=sql{$paginate}\">";
+	}
 
 	function doClearHistory($confirm) {
 		global $misc, $lang;
@@ -139,8 +173,8 @@
 		if ($confirm) {
 			$misc->printHtmlHeader($lang['strhistory']);
 
-        		// Bring to the front always
-	        	echo "<body onload=\"window.focus();\">\n";
+			// Bring to the front always.
+			echo "<body onload=\"window.focus();\">\n";
 
 			$misc->printTitle($lang['strclearhistory']);
 			echo "<p>{$lang['strconfclearhistory']}</p>\n";
@@ -173,6 +207,9 @@
 	}
 	
 	switch ($action) {
+		case 'edit_sql':
+			call_sqledit();
+			break;
 		case 'confdelhistory':
 			doDelHistory($_REQUEST['queryid'], true);
 			break;
@@ -194,9 +231,9 @@
 			doDefault();
 	}
 
-	// Set the name of the window
+	// Set the name of the window.
 	$misc->setWindowName('history');
-	// Do not print the bottom link
+	// Do not print the bottom link.
 	$misc->printFooter(true, false);
 	
 ?>

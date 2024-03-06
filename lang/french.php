@@ -109,6 +109,7 @@
 	$lang['strbacktolist'] = 'Retour à la liste';
 	$lang['strset'] = 'Poser';
 	$lang['stredit'] = 'Éditer';
+	$lang['strclear'] = 'Effacer';
 
 	// User-supplied SQL editing
 	$lang['strsqledit'] = 'Édition de requête SQL';

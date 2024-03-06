@@ -232,7 +232,7 @@
 
 		// The SQL text area
 		echo "<div class=\"flex-1\">\n";
-		echo "\t<textarea name=\"query\">" . htmlspecialchars($_SESSION['sqlquery']), "</textarea>\n";
+		echo "\t<textarea id=\"query\" name=\"query\">" . htmlspecialchars($_SESSION['sqlquery']), "</textarea>\n";
 		echo "</div>\n";
 
 		echo "<div id=\"last-block\">\n";
@@ -241,6 +241,8 @@
 		echo "  <div class=\"actionslist\">\n";
 		echo "\t<input type=\"submit\" value=\"{$lang['strexecute']}\" />\n";
 		echo "\t<input type=\"reset\" value=\"{$lang['strreset']}\" />\n";
+		echo "\t<input type=\"button\" value=\"{$lang['strclear']}\" onclick=\"javascript: document.getElementById('query').value = '';\"/>\n";
+
 		echo "\t</form>\n";
 		echo "  </div>\n";
 		echo "</div>\n";

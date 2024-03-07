@@ -820,13 +820,13 @@
 					echo "\t<form id=\"exportGroupsConf_form\" action=\"emajgroups.php?action=export_groups&amp;back=list&amp;{$misc->href}\"";
 					echo " method=\"post\" enctype=\"multipart/form-data\">\n";
 					$disabled = ''; if ($nbGroup == 0) $disabled = ' disabled';
-					echo "\t\t<input type=\"submit\" name=\"exportButton\" value=\"${lang['strexport']}\"{$disabled}>\n";
+					echo "\t\t<input type=\"submit\" name=\"exportButton\" value=\"{$lang['strexport']}\"{$disabled}>\n";
 					echo "\t</form>\n";
 
 					// form to import groups configuration
 					echo "\t<form name=\"importGroupsConf\" id=\"importGroupsConf\" method=\"POST\"";
 					echo " action=\"emajgroups.php?action=import_groups&amp;back=list&amp;{$misc->href}\">\n";
-					echo "\t\t<input type=\"submit\" name=\"importButton\" value=\"${lang['strimport']}\">\n";
+					echo "\t\t<input type=\"submit\" name=\"importButton\" value=\"{$lang['strimport']}\">\n";
 					echo "\t</form>\n";
 				}
 				echo "</div>\n";
@@ -2985,10 +2985,10 @@
 		echo "\t<form name=\"importgroups\" id=\"importgroups\" enctype=\"multipart/form-data\" method=\"POST\"";
 		echo " action=\"emajgroups.php?action=import_groups_select&amp;{$misc->href}\">\n";
 		echo "\t\t<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"10000000\">\n";
-		echo "\t\t<p><label for=\"file-upload\" class=\"custom-file-upload\">${lang['emajselectfile']}</label>";
+		echo "\t\t<p><label for=\"file-upload\" class=\"custom-file-upload\">{$lang['emajselectfile']}</label>";
 		echo "<input type=\"file\" id=\"file-upload\" name=\"file_name\"></p>\n";
 		echo "\t\t<p><input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />&nbsp;&nbsp;&nbsp;\n";
-		echo "\t\t<input type=\"submit\" name=\"openfile\" value=\"${lang['stropen']}\" disabled>";
+		echo "\t\t<input type=\"submit\" name=\"openfile\" value=\"{$lang['stropen']}\" disabled>";
 		echo "<span id=\"selected-file\"></span></p>\n";
 		echo "\t\t<script>
 			$(document).ready(

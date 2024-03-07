@@ -320,12 +320,12 @@
 			echo "\t<form name=\"importparameters\" id=\"importparameters\" enctype=\"multipart/form-data\" method=\"POST\"";
 			echo " action=\"emajenvir.php?action=import_parameters_ok&amp;{$misc->href}\">\n";
 			echo "\t\t<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"2097152\">\n";
-			echo "\t\t<label for=\"file-upload\" class=\"custom-file-upload\">${lang['emajselectfile']}</label>";
+			echo "\t\t<label for=\"file-upload\" class=\"custom-file-upload\">{$lang['emajselectfile']}</label>";
 			echo "\t\t<p><input type=\"file\" id=\"file-upload\" name=\"file_name\"></p>\n";
-			echo "\t\t<p><input type=\"checkbox\" name=\"replaceCurrent\" id=\"replaceCurrent\"/ checked>${lang['emajdeletecurrentparam']}";
-			echo " <img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"${lang['emajdeletecurrentparaminfo']}\"/></p>\n";
+			echo "\t\t<p><input type=\"checkbox\" name=\"replaceCurrent\" id=\"replaceCurrent\"/ checked>{$lang['emajdeletecurrentparam']}";
+			echo " <img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajdeletecurrentparaminfo']}\"/></p>\n";
 			echo "\t\t<p><input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /> \n";
-			echo "\t\t<input type=\"submit\" name=\"sendfile\" value=\"${lang['strimport']}\" disabled>";
+			echo "\t\t<input type=\"submit\" name=\"sendfile\" value=\"{$lang['strimport']}\" disabled>";
 			echo "\t\t<span id=\"selected-file\"></span></p>\n";
 			echo "\t\t<script>
 				$(document).ready(

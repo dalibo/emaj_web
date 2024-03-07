@@ -69,7 +69,6 @@
 	$lang['strtrue'] = 'TRUE';
 	$lang['strfalse'] = 'FALSE';
 	$lang['strcolumn'] = 'Colonne';
-	$lang['strcolumns'] = 'Colonnes';
 	$lang['strrows'] = 'ligne(s)';
 	$lang['strrowsaff'] = 'ligne(s) affectée(s).';
 	$lang['strback'] = 'Retour';
@@ -107,7 +106,6 @@
 	$lang['strquantity'] = 'Quantité';
 	$lang['strautorefresh'] = 'Rafraîchissement auto';
 	$lang['strbacktolist'] = 'Retour à la liste';
-	$lang['strset'] = 'Poser';
 	$lang['stredit'] = 'Éditer';
 	$lang['strclear'] = 'Effacer';
 
@@ -217,8 +215,8 @@
 	$lang['strtablespace'] = 'Tablespace';
 
 	// Triggers
-	$lang['strtriggers'] = 'Triggers';
 	$lang['strtrigger'] = 'Trigger';
+	$lang['strtriggers'] = 'Triggers';
 	$lang['strnotriggerontable'] = 'La table n\'a pas de trigger.';
 	$lang['emajapptriggers'] = 'Triggers applicatifs';
 	$lang['emajapptriggershelp'] = 'Liste des triggers de la base de données, hors triggers système et E-Maj.';
@@ -229,7 +227,6 @@
 	$lang['emajisemaj'] = 'E-Maj ?';
 	$lang['emajisautodisable'] = 'Désactivation<br>auto';
 	$lang['emajisautodisablehelp'] = 'Indique si le trigger est désactivé automatiquement lors des rollbacks E-Maj (défaut = ON = Oui)';
-	$lang['emajswitchautodisable'] = 'Basculer désactivation auto';
 	$lang['emajtriggerautook'] = 'Le trigger %s de la table %s.%s sera automatiquement désactivé lors des rollbacks E-Maj.';
 	$lang['emajtriggernoautook'] = 'Le trigger %s de la table %s.%s ne sera PAS automatiquement désactivé lors des rollbacks E-Maj.';
 	$lang['emajtriggerprocerr'] = 'Une erreur est survenue dans le traitement du trigger %s de la table %s.%s.';
@@ -252,7 +249,6 @@
 //
 
 	// Basic strings
-	$lang['emajnotavail'] = 'Désolé, E-Maj n\'est pas disponible ou accessible sur cette base de données. Plus de détails sur l\'onglet %s.';
 	$lang['emajstate'] = 'État';
 	$lang['emajnoselectedgroup'] = 'Aucun groupe de tables n\'a été sélectionné !';
 	$lang['emajtablesgroup'] = 'Groupe de tables';
@@ -260,7 +256,6 @@
 	$lang['emajgroups'] = 'Groupes';
 	$lang['emajnewgroup'] = 'Nouveau groupe';
 	$lang['emajmark'] = 'Marque';
-	$lang['emajlogsession'] = 'Session de log';
 	$lang['emajgroupcreatedat'] = 'Créé le';
 	$lang['emajgroupcreateddroppedat'] = 'Créé/supprimé le';
 	$lang['emajgrouplatesttype'] = 'Dernier type';
@@ -306,7 +301,6 @@
 	$lang['emajvisible'] = 'Visibles';
 	$lang['emajsetmark'] = 'Poser une marque';
 	$lang['emajsetcomment'] = 'Commenter';
-	$lang['emajdorollbackfor'] = 'Exécuter un rollback pour';
 	$lang['emajforget'] = 'Oublier';
 
 	// E-Maj html titles and tabs
@@ -338,8 +332,8 @@
 	$lang['emajasscript'] = 'installée par script';
 	$lang['emajtooold'] = 'Désolé, cette version d\'E-Maj (%s) est trop ancienne. La version minimum supportée par Emaj_web est %s.';
 	$lang['emajversionmorerecent'] = 'Une version plus récente de l\'extension "emaj" existe, compatible avec cette version d\'Emaj_web.';
-	$lang['emajwarningdevel'] = 'Accéder à une extension emaj en version <devel> peut poser des problèmes. Il est conseillé d\'obtenir une version stable d\'emaj depuis pgxn.org.';
 	$lang['emajwebversionmorerecent'] = 'Une version plus récente d\'Emaj_web existe probablement.';
+	$lang['emajwarningdevel'] = 'Accéder à une extension emaj en version <devel> peut poser des problèmes. Il est conseillé d\'obtenir une version stable d\'emaj depuis pgxn.org.';
 	$lang['emajextensionmngt'] = 'Gestion de l\'extension "emaj"';
 	$lang['emajcreateextension'] = 'Créer l\'extension';
 	$lang['emajcreateemajextension'] = 'Créer l\'extension "emaj"';
@@ -403,8 +397,6 @@
 	$lang['emajthetable'] = 'la table "%s.%s"';
 	$lang['emajthesequence'] = 'la séquence "%s.%s"';
 	$lang['emajthetblseqingroup'] = '%s (groupe %s)';
-	$lang['emajthetableingroup'] = 'la table "%s.%s" (groupe %s)';
-	$lang['emajthesequenceingroup'] = 'la séquence "%s.%s" (groupe %s)';
 	$lang['emajenterpriority'] = 'Priorité de traitement';
 	$lang['emajpriorityhelp'] = 'Les tables sont traitées par ordre croissant de priorité, et par ordre alphabétique de nom si aucune priorité n\'est définie.';
 	$lang['emajenterlogdattsp'] = 'Tablespace pour la table de log';
@@ -509,7 +501,6 @@
 	$lang['emajremovetblseq'] = 'E-Maj : Retirer des tables / séquences de groupes de tables';
 	$lang['emajconfirmremove1tblseq'] = 'Êtes-vous sûr de vouloir retirer %s du groupe de tables "%s" ?';
 	$lang['emajmodifygroupok'] = 'Le changement de configuration est enregistré. Il sera effectif après (re)création des groupes de tables concernés ou application des changements de configuration pour ces groupes.';
-	$lang['emajspecifytblseqtoprocess'] = 'Spécifiez au moins une table ou séquence à traiter.';
 
 	// List Groups
 	$lang['emajidlegroups'] = 'Groupes de tables en état "arrêté" ';
@@ -543,8 +534,6 @@
 	$lang['emajduration'] = 'Durée';
 	$lang['emajislogged'] = 'Tracé ?';
 	$lang['emajnbsession'] = 'Sessions';
-	$lang['emajnbproctable'] = 'Tables traitées';
-	$lang['emajnbprocseq'] = 'Séquences traitées';
 	$lang['emajcurrentduration'] = 'Durée actuelle';
 	$lang['emajglobalduration'] = 'Durée globale';
 	$lang['emajplanningduration'] = 'Durée planification';
@@ -679,19 +668,12 @@
 	$lang['emajnohistory'] = 'Il n\'y a aucun historique à afficher pour ce groupe.';
 	$lang['emajgrouphistoryorder'] = 'Les plus récentes créations de groupe, suppressions de groupe et sessions de log sont placées en début de tableau.';
 	$lang['emajnblogsessions'] = 'Sessions de log';
-	$lang['emajgroupcreate'] = 'Création du groupe';
-	$lang['emajgroupdrop'] = 'Suppression du groupe';
-	$lang['emajdeletedlogsessions'] = 'Des sessions de log supprimées';
 
 	// Generic error messages for groups and marks checks
 	$lang['emajgroupmissing'] = 'Le groupe de tables "%s" n\'existe plus.';
 	$lang['emajgroupsmissing'] = '%s groupes de tables (%s) n\'existent plus.';
 	$lang['emajgroupalreadyexists'] = 'Le groupe de table "%s" existe déjà.';
 	$lang['emajgroupstillexists'] = 'Le groupe de table "%s" existe toujours.';
-	$lang['emajgroupnotstopped'] = 'Le groupe de tables "%s" n\'est plus arrêté.';
-	$lang['emajgroupsnotstopped'] = '%s groupes de tables (%s) ne sont plus arrêtés.';
-	$lang['emajgroupnotstarted'] = 'Le groupe de tables "%s" n\'est plus démarré.';
-	$lang['emajgroupsnotstarted'] = '%s groupes de tables (%s) ne sont plus démarrés.';
 	$lang['emajgroupprotected'] = 'Le groupe de table "%s" est protégé.';
 	$lang['emajgroupsprotected'] = '%s groupes de tables (%s) sont protégés.';
 	$lang['emajinvalidmark'] = 'La marque saisie (%s) est invalide.';
@@ -706,7 +688,6 @@
 	// Group creation
 	$lang['emajcreateagroup'] = 'E-Maj : Créer un groupe de tables';
 	$lang['emajconfirmcreategroup'] = 'Êtes-vous sûr de vouloir créer le groupe de tables "%s" ?';
-	$lang['emajinvalidemptygroup'] = 'Erreur, le groupe de table "%s" est déjà créé ou configuré !';
 	$lang['emajcreategroupok'] = 'Le groupe de tables "%s" a été créé.';
 	$lang['emajcreategrouperr'] = 'Erreur lors de la création du groupe de tables "%s".';
 
@@ -787,6 +768,7 @@
 	$lang['emajgroupsconfimporterr'] = 'Erreur à l\'importation de groupes de tables à partir du fichier "%s"';
 
 	// Group alter
+	$lang['emajaltergroups'] = 'E-Maj : Appliquer les changements de configuration';
 	$lang['emajalteraloggingroup'] = 'Le groupe "%s" est actif. Vous pouvez spécifier un nom de marque.';
 	$lang['emajconfirmaltergroup'] = 'Êtes-vous sûr de vouloir appliquer les changements de configuration pour le groupe de tables "%s" ?';
 	$lang['emajcantaltergroup'] = 'La modification du groupe "%s" générerait des actions qui ne peuvent être effectuées sur un groupe actif. Arrêtez le groupe avant de le modifier.';
@@ -794,7 +776,6 @@
 	$lang['emajaltergrouperr'] = 'Erreur lors de l\'application des changements de configuration pour le groupe de tables "%s" !';
 
 	// Groups alter
-	$lang['emajaltergroups'] = 'E-Maj : Appliquer les changements de configuration';
 	$lang['emajalterallloggingroups'] = 'Les groupes "%s" sont actifs. Vous pouvez spécifier un nom de marque.';
 	$lang['emajconfirmaltergroups'] = 'Êtes-vous sûr de vouloir appliquer les changements de configuration pour les groupes de tables "%s" ?';
 	$lang['emajaltergroupsok'] = 'Les changements de configuration des groupes de tables "%s" ont été appliqués.';
@@ -882,16 +863,15 @@
 	// Group rollback
 	$lang['emajrlbkagroup'] = 'E-Maj : Rollbacker un groupe de tables';
 	$lang['emajconfirmrlbkgroup'] = 'Rollback du groupe de tables "%s" à la marque "%s"';
-	$lang['emajselectmarkgroup'] = 'Rollback du groupe de tables "%s" à la marque : ';
 	$lang['emajunknownestimate'] = 'non connue';
 	$lang['emajdurationminutesseconds'] = '%s min %s s';
 	$lang['emajdurationhoursminutes'] = '%s h %s min';
 	$lang['emajdurationovertendays'] = '> 10 jours';
+	$lang['emajselectmarkgroup'] = 'Rollback du groupe de tables "%s" à la marque : ';
 	$lang['emajrlbkthenmonitor'] = 'Rollback et suivi';
 	$lang['emajcantrlbkinvalidmarkgroup'] = 'La marque "%s" n\'est pas valide.';
 	$lang['emajreachaltergroup'] = 'Le rollback du groupe de tables "%s" à la marque "%s" remonterait à un point dans le temps antérieur à des opérations de modification du groupe. Veuillez confirmer le rollback.';
 	$lang['emajautorolledback'] = 'Annulé automatiquement ?';
-	$lang['emajrlbkgroupok'] = 'Le rollback du groupe de tables "%s" à la marque "%s" est effectué.';
 	$lang['emajrlbkgrouperr'] = 'Erreur lors du rollback du groupe de tables "%s".';
 	$lang['emajrlbkgrouperr2'] = 'Erreur lors du rollback du groupe de tables "%s" à la marque "%s".';
 	$lang['emajestimrlbkgrouperr'] = 'Erreur lors de l\'estimation de la durée de rollback du groupe de tables "%s" à la marque "%s".';
@@ -905,10 +885,9 @@
 	$lang['emajnomarkgroups'] = 'Aucune marque commune aux groupes de tables "%s" ne peut être utilisée pour un rollback.';
 	$lang['emajcantrlbkinvalidmarkgroups'] = 'Le rollback des groupes de tables "%s" est impossible. La marque "%s" n\'est pas valide.';
 	$lang['emajreachaltergroups'] = 'Le rollback des groupes de tables "%s" à la marque "%s" remonterait à un point dans le temps antérieur à des opérations de modification de groupes. Veuillez confirmer le rollback.';
-	$lang['emajrlbkgroupsok'] = 'Le rollback des groupes de tables "%s" à la marque "%s" est effectué.';
 	$lang['emajrlbkgroupserr'] = 'Erreur lors du rollback des groupes de tables "%s".';
 	$lang['emajrlbkgroupserr2'] = 'Erreur lors du rollback des groupes de tables "%s" à la marque "%s".';
-	$lang['emajestimrlbkgrouperr'] = 'Erreur lors de l\'estimation de la durée de rollback des groupes de tables "%s" à la marque "%s".';
+	$lang['emajestimrlbkgroupserr'] = 'Erreur lors de l\'estimation de la durée de rollback des groupes de tables "%s" à la marque "%s".';
 	$lang['emajrlbkgroupsreport'] = 'Rapport d\'exécution du rollback des groupes de tables "%s" à la marque "%s"';
 
 	// Elementary alter group actions previously executed, reported at rollback time 
@@ -920,7 +899,6 @@
 	$lang['emajalteredchangetblnamesprefix'] = 'Le préfixe des noms E-Maj pour la table "%s.%s" a été modifié';
 	$lang['emajalteredchangetbllogdatatsp'] = 'Le tablespace pour le log de la table "%s.%s" a été modifié';
 	$lang['emajalteredchangetbllogindextsp'] = 'Le tablespace pour les index de log de la table "%s.%s" a été modifié';
-	$lang['emajalteredassignrel'] = 'La table ou séquence "%s.%s" a été déplacée du groupe de tables "%s" au groupe de tables "%s"';
 	$lang['emajalteredchangerelpriority'] = 'La priorité E-Maj pour la table "%s.%s" a été modifiée';
 	$lang['emajalteredchangeignoredtriggers'] = 'Les triggers à ignorer au rollback de la table "%s.%s" ont été modifiés';
 	$lang['emajalteredmovetbl'] = 'La table "%s.%s" a été déplacée du groupe de tables "%s" vers le groupe de tables "%s"';

@@ -260,6 +260,7 @@
 	$lang['emajgroupcreateddroppedat'] = 'Créé/supprimé le';
 	$lang['emajgrouplatesttype'] = 'Dernier type';
 	$lang['emajgrouplatestdropat'] = 'Dernière suppression à';
+	$lang['emajlogsession'] = 'Session de log';
 	$lang['emajgroupstartedat'] = 'Démarré le';
 	$lang['emajgroupstoppedat'] = 'Arrêté le';
 	$lang['emajmarksetat'] = 'Posée le';
@@ -668,13 +669,20 @@
 	$lang['emajnohistory'] = 'Il n\'y a aucun historique à afficher pour ce groupe.';
 	$lang['emajgrouphistoryorder'] = 'Les plus récentes créations de groupe, suppressions de groupe et sessions de log sont placées en début de tableau.';
 	$lang['emajnblogsessions'] = 'Sessions de log';
+	$lang['emajgroupcreate'] = 'Création du groupe';
+	$lang['emajgroupdrop'] = 'Suppression du groupe';
+	$lang['emajdeletedlogsessions'] = 'Des sessions de log supprimées';
 
 	// Generic error messages for groups and marks checks
 	$lang['emajgroupmissing'] = 'Le groupe de tables "%s" n\'existe plus.';
 	$lang['emajgroupsmissing'] = '%s groupes de tables (%s) n\'existent plus.';
 	$lang['emajgroupalreadyexists'] = 'Le groupe de table "%s" existe déjà.';
 	$lang['emajgroupstillexists'] = 'Le groupe de table "%s" existe toujours.';
-	$lang['emajgroupprotected'] = 'Le groupe de table "%s" est protégé.';
+	$lang['emajgroupnotstopped'] = 'Le groupe de tables "%s" n\'est plus arrêté.';
+	$lang['emajgroupsnotstopped'] = '%s groupes de tables (%s) ne sont plus arrêtés.';
+	$lang['emajgroupnotstarted'] = 'Le groupe de tables "%s" n\'est plus démarré.';
+	$lang['emajgroupsnotstarted'] = '%s groupes de tables (%s) ne sont plus démarrés.';
+$lang['emajgroupprotected'] = 'Le groupe de table "%s" est protégé.';
 	$lang['emajgroupsprotected'] = '%s groupes de tables (%s) sont protégés.';
 	$lang['emajinvalidmark'] = 'La marque saisie (%s) est invalide.';
 	$lang['emajduplicatemarkgroup'] = 'La marque "%s" existe déjà dans le groupe de tables "%s".';

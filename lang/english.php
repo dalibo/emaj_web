@@ -260,6 +260,7 @@
 	$lang['emajgroupcreateddroppedat'] = 'Created/dropped at';
 	$lang['emajgrouplatesttype'] = 'Latest type';
 	$lang['emajgrouplatestdropat'] = 'Latest drop at';
+	$lang['emajlogsession'] = 'Log session';
 	$lang['emajgroupstartedat'] = 'Started at';
 	$lang['emajgroupstoppedat'] = 'Stopped at';
 	$lang['emajmarksetat'] = 'Set at';
@@ -668,12 +669,19 @@
 	$lang['emajnohistory'] = 'There is no history to display for this group.';
 	$lang['emajgrouphistoryorder'] = 'Most recent group creations, group drops and log sessions are placed ahead on the sheet.';
 	$lang['emajnblogsessions'] = 'Log sessions';
+	$lang['emajgroupcreate'] = 'Group creation';
+	$lang['emajgroupdrop'] = 'Group drop';
+	$lang['emajdeletedlogsessions'] = 'Some deleted log sessions';
 
 	// Generic error messages for groups and marks checks
 	$lang['emajgroupmissing'] = 'The tables group "%s" does not exist anymore!';
 	$lang['emajgroupsmissing'] = '%s tables groups (%s) do not exist anymore!';
 	$lang['emajgroupalreadyexists'] = 'The tables group "%s" already exists!';
 	$lang['emajgroupstillexists'] = 'The tables group "%s" still exists!';
+	$lang['emajgroupnotstopped'] = 'The tables group "%s" is not stopped anymore!';
+	$lang['emajgroupsnotstopped'] = '%s tables group (%s) are not stopped anymore!';
+	$lang['emajgroupnotstarted'] = 'The tables group "%s" is not started anymore!';
+	$lang['emajgroupsnotstarted'] = '%s tables group (%s) are not started anymore!';
 	$lang['emajgroupprotected'] = 'The tables group "%s" is protected.';
 	$lang['emajgroupsprotected'] = '%s tables groups (%s) are protected.';
 	$lang['emajinvalidmark'] = 'The supplied mark (%s) is invalid!';

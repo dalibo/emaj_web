@@ -324,7 +324,7 @@
 		echo "\t</datalist>\n";
 
 		// priority level (only for tables)
-		if ($_REQUEST['type'] == 'r+') {
+		if ($nbTbl >= 1) {
 			echo "\t<div class=\"form-label\">{$lang['emajenterpriority']}</div>\n";
 			echo "\t<div class=\"form-input\">";
 			echo "<input type=\"number\" name=\"priority\" class=\"priority\" min=\"0\" max=\"2147483647\" value=\"\" />";

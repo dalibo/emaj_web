@@ -254,7 +254,6 @@
 	$lang['emajtablesgroup'] = 'Groupe de tables';
 	$lang['emajgroup'] = 'Groupe';
 	$lang['emajgroups'] = 'Groupes';
-	$lang['emajnewgroup'] = 'Nouveau groupe';
 	$lang['emajmark'] = 'Marque';
 	$lang['emajgroupcreatedat'] = 'Créé le';
 	$lang['emajgroupcreateddroppedat'] = 'Créé/supprimé le';
@@ -479,7 +478,7 @@
 	$lang['emajremovesequenceerr'] = 'Erreur lors de la sortie de la sequence "%s.%s" du groupe de tables "%s".';
 	$lang['emajremovesequenceserr'] = 'Erreur lors de la sortie des %s sequences du schéma "%s" de leur groupe de tables.';
 
-	// Old Groups' content setup
+	// Old Groups content setup
 	$lang['emajappschemas'] = 'Les schémas applicatifs';
 	$lang['emajunknownobject'] = 'Cet objet est référencé dans la table emaj_group_def mais n\'est pas créé.';
 	$lang['emajunsupportedobject'] = 'Ce type d\'objet n\'est pas supporté par E-Maj (unlogged table, table avec OIDS, table partitionnée,...).';
@@ -490,6 +489,7 @@
 	$lang['emajtblseqyetgroup'] = 'Erreur, "%s.%s" est déjà affecté à un groupe de tables.';
 	$lang['emajtblseqbadtype'] = 'Erreur, le type de "%s.%s" n\'est pas supporté par E-Maj.';
 	$lang['emajassigntblseq'] = 'E-Maj : Affecter des tables / séquences à un groupe de tables';
+	$lang['emajconfirmassigntblseq'] = 'Affecter :';
 	$lang['emajfromgroup'] = 'du groupe "%s"';
 	$lang['emajenterlogschema'] = 'Suffixe du schéma de log';
 	$lang['emajlogschemahelp'] = 'Un schéma de log contient des tables, séquences et fonctions de log. Le schéma de log par défaut est \'emaj\'. Si un suffixe est défini pour la table, ses objets iront dans le schéma \'emaj\' + suffixe.';
@@ -501,7 +501,9 @@
 	$lang['emajtblseqnogroup'] = 'Erreur, "%s.%s" n\'est actuellement affecté à aucun groupe de tables.';
 	$lang['emajremovetblseq'] = 'E-Maj : Retirer des tables / séquences de groupes de tables';
 	$lang['emajconfirmremove1tblseq'] = 'Êtes-vous sûr de vouloir retirer %s du groupe de tables "%s" ?';
+	$lang['emajconfirmremovetblseq'] = 'Êtes-vous sûr de vouloir retirer :';
 	$lang['emajmodifygroupok'] = 'Le changement de configuration est enregistré. Il sera effectif après (re)création des groupes de tables concernés ou application des changements de configuration pour ces groupes.';
+	$lang['emajmodifygrouperr'] = 'Une erreur est survenue lors de l\'enregistrement du changement de configuration des groupes de tables.';
 
 	// List Groups
 	$lang['emajidlegroups'] = 'Groupes de tables en état "arrêté" ';

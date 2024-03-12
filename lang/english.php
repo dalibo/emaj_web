@@ -254,7 +254,6 @@
 	$lang['emajtablesgroup'] = 'Tables group';
 	$lang['emajgroup'] = 'Group';
 	$lang['emajgroups'] = 'Groups';
-	$lang['emajnewgroup'] = 'New group';
 	$lang['emajmark'] = 'Mark';
 	$lang['emajgroupcreatedat'] = 'Created at';
 	$lang['emajgroupcreateddroppedat'] = 'Created/dropped at';
@@ -479,7 +478,7 @@
 	$lang['emajremovesequenceerr'] = 'Error while removing the sequence "%s.%s" from its tables group "%s".';
 	$lang['emajremovesequenceserr'] = 'Error while removing these %s sequences of schema "%s" from their tables group.';
 
-	// Old Groups' content setup
+	// Old Groups content setup
 	$lang['emajappschemas'] = 'Application schemas';
 	$lang['emajunknownobject'] = 'This object is referenced in the emaj_group_def table but is not created.';
 	$lang['emajunsupportedobject'] = 'This object type is not supported by E-Maj (unlogged table, table with OIDS, partition table,...).';
@@ -490,6 +489,7 @@
 	$lang['emajtblseqyetgroup'] = 'Error, "%s.%s" is already assigned to a tables group.';
 	$lang['emajtblseqbadtype'] = 'Error, type of "%s.%s" is not supported by E-Maj.';
 	$lang['emajassigntblseq'] = 'E-Maj: Assign tables / sequences to a tables group';
+	$lang['emajconfirmassigntblseq'] = 'Assign:';
 	$lang['emajfromgroup'] = 'from the group "%s"';
 	$lang['emajenterlogschema'] = 'Log schema suffix';
 	$lang['emajlogschemahelp'] = 'A log schema contains log tables, sequences and functions. The default log schema is \'emaj\'. If a suffix is defined for the table, its objects will be hosted in the schema \'emaj\' + suffix.';
@@ -501,7 +501,9 @@
 	$lang['emajtblseqnogroup'] = 'Error, "%s.%s" is not currently assigned to any tables group.';
 	$lang['emajremovetblseq'] = 'E-Maj: Remove tables / sequences from tables groups';
 	$lang['emajconfirmremove1tblseq'] = 'Are you sure you want to remove %s from the tables group "%s"?';
+	$lang['emajconfirmremovetblseq'] = 'Are you sure you want to remove:';
 	$lang['emajmodifygroupok'] = 'The configuration change is recorded. It will take effect when the concerned tables groups will be (re)created or when the configuration changes will be applied for these groups.';
+	$lang['emajmodifygrouperr'] = 'An error occured while recording the tables groups configuration change.';
 
 	// List Groups
 	$lang['emajidlegroups'] = 'Tables groups in "IDLE" state ';

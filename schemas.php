@@ -448,12 +448,8 @@
 									'appschema' => field('nspname'),
 									'table' => field('relname'),
 									'group' => field('rel_group'),
-									'priority' => field('rel_priority'),
-									'logdattsp' => field('rel_log_dat_tsp'),
-									'logidxtsp' => field('rel_log_idx_tsp'),
 								)))),
-// TODO: support "modify" for several tables
-//						'multiaction' => 'modify_tables',
+						'multiaction' => 'modify_tables',
 					),
 					'remove' => array(
 						'content' => $lang['emajremove'],
@@ -657,7 +653,7 @@
 			echo " disabled>";
 		else {
 			echo ">";
-			echo "\t\t<option>&lt;{$lang['strnone']}&gt;\n";
+			echo "\t\t<option checked value=''>&lt;{$lang['strnone']}&gt;\n";
 			foreach($knownTsp as $r)
 				echo "\t\t<option>", htmlspecialchars($r['spcname']), "\n";
 		}
@@ -671,7 +667,7 @@
 			echo " disabled>";
 		else {
 			echo ">";
-			echo "\t\t<option>&lt;{$lang['strnone']}&gt;\n";
+			echo "\t\t<option checked value=''>&lt;{$lang['strnone']}&gt;\n";
 			foreach($knownTsp as $r)
 				echo "\t\t<option>", htmlspecialchars($r['spcname']), "\n";
 		}
@@ -718,8 +714,6 @@
 		// get the list of emaj_schema before the assignment
 		$emajSchemasBefore = $emajdb->getEmajSchemasList();
 
-		if ($_POST['logdattsp'] == "<{$lang['strnone']}>") $_POST['logdattsp'] = '';
-		if ($_POST['logidxtsp'] == "<{$lang['strnone']}>") $_POST['logidxtsp'] = '';
 		$nbTables = $emajdb->assignTables($_POST['schema'], $_POST['tables'], $_POST['group'],
 							$_POST['priority'], $_POST['logdattsp'], $_POST['logidxtsp'], $finalMark);
 
@@ -847,21 +841,20 @@
 	function modify_tables() {
 		global $misc, $lang, $emajdb;
 
-// TODO: support "modify" for several tables
 		// Process the multi-actions array
-//		if (isset($_REQUEST['ma'])) {
-//			list($nbTbl, $tablesList, $fullList, $groupsList) = processMultiActions($_REQUEST['ma'], 'table', true);
-//		} else {
+		if (isset($_REQUEST['ma'])) {
+			list($nbTbl, $tablesList, $fullList, $groupsList) = processMultiActions($_REQUEST['ma'], 'table', true);
+		} else {
 			$nbTbl = 1;
 			$tablesList = $_REQUEST['table'];
 			$groupsList = $_REQUEST['group'];
-//		}
+		}
 
 		// Prepare the action part of potential error messages
-//		if ($nbTbl == 1)
+		if ($nbTbl == 1)
 			$errMsgAction = sprintf($lang['emajmodifytableerr'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($tablesList));
-//		else
-//			$errMsgAction = sprintf($lang['emajmovetableserr'], $nbTbl, htmlspecialchars($_REQUEST['schema']));
+		else
+			$errMsgAction = sprintf($lang['emajmodifytableserr'], $nbTbl, htmlspecialchars($_REQUEST['schema']));
 
 		// Check that the tables group still exists
 		recheckGroups($groupsList, $errMsgAction);
@@ -869,15 +862,40 @@
 		$misc->printHeader('database', 'database', 'schemas');
 		$misc->printTitle($lang['emajmodifytable']);
 
+		// Get the tables properties
+		$properties = $emajdb->getTablesProperties($_REQUEST['schema'],$tablesList);
+
+		// Prepare the current values to display
+		if ($properties->fields['nb_priority'] == 1)
+			$currentPriority = $properties->fields['min_priority'];
+		else
+			$currentPriority = "<i>" . sprintf($lang['emajdifferentvalues'], $properties->fields['nb_priority']) . "</i>";
+
+		if ($properties->fields['nb_log_dat_tsp'] == 1) {
+			$currentLogDatTsp = $properties->fields['min_log_dat_tsp'];
+			if ($currentLogDatTsp == '')
+				$currentLogDatTsp = "&lt;{$lang['strnone']}&gt;";
+		} else {
+			$currentLogDatTsp = "<i>" . sprintf($lang['emajdifferentvalues'], $properties->fields['nb_log_dat_tsp']) . "</i>";
+		}
+
+		if ($properties->fields['nb_log_idx_tsp'] == 1) {
+			$currentLogIdxTsp = $properties->fields['min_log_idx_tsp'];
+			if ($currentLogIdxTsp == '')
+				$currentLogIdxTsp = "&lt;{$lang['strnone']}&gt;";
+		} else {
+			$currentLogIdxTsp = "<i>" . sprintf($lang['emajdifferentvalues'], $properties->fields['nb_log_idx_tsp']) . "</i>";
+		}
+
 		// Get tablespaces the current user can see
 		$knownTsp = $emajdb->getKnownTsp();
 
 		// Build the form
-//		if ($nbTbl > 1) {
-//			echo "<p>" . sprintf($lang['emajconfirmmodifytables'], $nbTbl, $_REQUEST['schema']) . "</p>\n{$fullList}";
-//		} else {
+		if ($nbTbl == 1) {
 			echo "<p>" . sprintf($lang['emajconfirmmodifytable'], $_REQUEST['schema'], $tablesList, $groupsList) . "</p>\n";
-//		}
+		} else {
+			echo "<p>" . sprintf($lang['emajconfirmmodifytables'], $nbTbl, $_REQUEST['schema']) . "</p>\n{$fullList}";
+		}
 		echo "<form action=\"schemas.php\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"modify_tables_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"schema\" value=\"", htmlspecialchars($_REQUEST['schema']), "\" />\n";
@@ -886,59 +904,66 @@
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 
 		// Display the input fields depending on the context
-		echo "<div class=\"form-container\">\n";
+		echo "<div class=\"form-container-5c\">\n";
+
+		// Header row
+		echo "\t<div></div>\n";
+		echo "\t<div></div>\n";
+		echo "\t<div class=\"form-header\">{$lang['emajcurrentvalue']}</div>\n";
+		echo "\t<div></div>\n";
+		echo "\t<div class=\"form-header\">{$lang['emajnewvalue']}</div>\n";
 
 		// priority level
 		echo "\t<div class=\"form-label\">{$lang['emajenterpriority']}</div>\n";
-		echo "\t<div class=\"form-input\">";
-		echo "<input type=\"number\" name=\"priority\" class=\"priority\" min=\"0\" max=\"2147483647\" value=\"{$_REQUEST['priority']}\" />";
-		echo "</div>\n";
 		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajpriorityhelp']}\"/></div>\n";
+		echo "\t<div id=\"priorityvalue\" class=\"form-value style=\"justify-content: right;\"\">$currentPriority</div>\n";
+		echo "\t<div class=\"form-button\"><button type=\"button\" onclick=\"javascript:toogleInput(this, 'priority');\">&gt;&gt;</button></div>\n";
+		echo "\t<div class=\"form-input\">";
+		echo "<input id=\"priorityinput\" type=\"number\" name=\"priority\" class=\"priority\" min=\"0\" max=\"2147483647\" value=\"\" disabled/>";
+		echo "</div>\n";
 
 		// data log tablespace
 		echo "\t<div class=\"form-label\">{$lang['emajenterlogdattsp']}</div>\n";
-		echo "\t<div class=\"form-input\"><select name=\"logdattsp\"";
+		echo "\t<div class=\"form-comment\"></div>\n";
+		echo "\t<div id=\"logdattspvalue\" class=\"form-value\">$currentLogDatTsp</div>\n";
+		echo "\t<div class=\"form-button\"><button type=\"button\" onclick=\"javascript:toogleInput(this, 'logdattsp');\">&gt;&gt;</button></div>\n";
+		echo "\t<div class=\"form-input\"><select id=\"logdattspinput\" name=\"logdattsp\" disabled";
 		if (empty($knownTsp))
 			echo " disabled>";
 		else {
 			echo ">";
-			echo "\t\t<option>&lt;{$lang['strnone']}&gt;\n";
+			echo "\t\t<option checked value=''>&lt;{$lang['strnone']}&gt;\n";
 			foreach($knownTsp as $r) {
-				echo "\t\t<option";
-				if ($r['spcname'] == $_REQUEST['logdattsp']) {
-					echo " selected";
-				}
-				echo ">", htmlspecialchars($r['spcname']), "\n";
+				echo "\t\t<option>", htmlspecialchars($r['spcname']), "\n";
 			}
 		}
 		echo "\t</select></div>\n";
-		echo "\t<div class=\"form-comment\"></div>\n";
 
 		// index log tablespace
 		echo "\t<div class=\"form-label\">{$lang['emajenterlogidxtsp']}</div>\n";
-		echo "\t<div class=\"form-input\"><select name=\"logidxtsp\"";
+		echo "\t<div class=\"form-comment\"></div>\n";
+		echo "\t<div id=\"logidxtspvalue\" class=\"form-value\">$currentLogIdxTsp</div>\n";
+		echo "\t<div class=\"form-button\"><button type=\"button\" onclick=\"javascript:toogleInput(this, 'logidxtsp');\">&gt;&gt;</button></div>\n";
+		echo "\t<div class=\"form-input\"><select id=\"logidxtspinput\" name=\"logidxtsp\" disabled";
 		if (empty($knownTsp))
 			echo " disabled>";
 		else {
 			echo ">";
-			echo "\t\t<option>&lt;{$lang['strnone']}&gt;\n";
+			echo "\t\t<option checked value=''>&lt;{$lang['strnone']}&gt;\n";
 			foreach($knownTsp as $r) {
-				echo "\t\t<option";
-				if ($r['spcname'] == $_REQUEST['logidxtsp']) echo " selected";
-				echo ">", htmlspecialchars($r['spcname']), "\n";
+				echo "\t\t<option>", htmlspecialchars($r['spcname']), "\n";
 			}
 		}
 		echo "\t</select></div>\n";
-		echo "\t<div class=\"form-comment\"></div>\n";
 
 		// mark
 		echo "\t<div class=\"form-label\">{$lang['emajmarkiflogginggroup']}</div>\n";
-		echo "\t<div class=\"form-input\"><input type=\"text\" name=\"mark\" size=\"22\" value=\"MODIFY_%\" /></div>\n";
 		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+		echo "\t<div class=\"form-input\" style=\"grid-column: span 3;\"><input type=\"text\" name=\"mark\" size=\"22\" value=\"MODIFY_%\" /></div>\n";
 
 		echo"</div>\n";
 		echo $misc->form;
-		echo "<p><input type=\"submit\" name=\"modifytable\" value=\"{$lang['strupdate']}\" id=\"ok\" />\n";
+		echo "<p><input type=\"submit\" id=\"ok\" name=\"modifytable\" value=\"{$lang['strupdate']}\" disabled/>\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";
 		echo "</form>\n";
 	}
@@ -953,10 +978,10 @@
 		processCancelButton();
 
 		// Prepare the action part of potential error messages
-//		if ($_POST['nbtables'] == 1)
+		if ($_POST['nbtables'] == 1)
 			$errMsgAction = sprintf($lang['emajmodifytableerr'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['tables']));
-//		else
-//			$errMsgAction = sprintf($lang['emajmodifytableserr'], $_POST['nbtables'], htmlspecialchars($_REQUEST['schema']));
+		else
+			$errMsgAction = sprintf($lang['emajmodifytableserr'], $_POST['nbtables'], htmlspecialchars($_POST['schema']));
 
 		// Check that the tables group still exists
 		recheckGroups($_POST['groups'], $errMsgAction);
@@ -964,11 +989,12 @@
 		// Check the mark name
 		$finalMark = checkNewMarkGroups($_POST['groups'], $_POST['mark'], $errMsgAction);
 
-		// OK,process the tables modification
-		if ($_POST['logdattsp'] == "<{$lang['strnone']}>") $_POST['logdattsp'] = '';
-		if ($_POST['logidxtsp'] == "<{$lang['strnone']}>") $_POST['logidxtsp'] = '';
+		// OK,process the tables properties changes
 		$nbTables = $emajdb->modifyTables($_POST['schema'], $_POST['tables'],
-							$_POST['priority'], $_POST['logdattsp'], $_POST['logidxtsp'], $finalMark);
+							isset($_POST['priority']) ? $_POST['priority'] : null,
+							isset($_POST['logdattsp']) ? $_POST['logdattsp'] : null,
+							isset($_POST['logidxtsp']) ? $_POST['logidxtsp'] : null,
+							$finalMark);
 
 		// Check the result and exit
 		if ($nbTables >= 0)
@@ -1398,7 +1424,9 @@
 
 	if ($action == 'tree') doTree();
 
-	$misc->printHtmlHeader($lang['strschemas']);
+	$scripts = "<script src=\"js/schemas.js\"></script>";
+
+	$misc->printHtmlHeader($lang['strschemas'], $scripts, 'schemas');
 	$misc->printBody();
 
 	if (isset($_POST['cancel'])) $action = '';

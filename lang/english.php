@@ -302,6 +302,9 @@
 	$lang['emajsetmark'] = 'Set a mark';
 	$lang['emajsetcomment'] = 'Set a comment';
 	$lang['emajforget'] = 'Forget';
+	$lang['emajcurrentvalue'] = 'Current value';
+	$lang['emajnewvalue'] = 'New value';
+	$lang['emajdifferentvalues'] = '(%s different values)';
 
 	// E-Maj html titles and tabs
 	$lang['emajgroupsmanagement'] = 'E-Maj groups management';
@@ -435,8 +438,10 @@
 	// Modify table
 	$lang['emajmodifytable'] = 'E-Maj: Modify tables E-Maj properties';
 	$lang['emajconfirmmodifytable'] = 'Modify the E-Maj properties of the table "%s.%s".';
+	$lang['emajconfirmmodifytables'] = 'Modify the E-Maj properties of these %s tables from schema "%s":';
 	$lang['emajmodifytablesok'] = 'E-Maj properties for %s tables have been modified.';
 	$lang['emajmodifytableerr'] = 'Error while modifying E-Maj properties of the table "%s.%s".';
+	$lang['emajmodifytableserr'] = 'Error while modifying E-Maj properties of these %s tables from schema "%s":';
 
 	// Remove tables
 	$lang['emajremovetable'] = 'E-Maj : Remove tables from their tables group';

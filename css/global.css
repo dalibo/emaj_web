@@ -163,12 +163,12 @@ input[type=number].priority {
 
 select {
 	background: #ffffff;
-	border: 1px solid #cfcfcf;
+	border: 1px solid #5090c1;
 	border-radius: 5px;
 	padding: 3px 5px 3px 5px;
 	min-width: 100px;
 }
-select:disabled {
+select:disabled, input[type=number]:disabled {
 	background: #f0f0f0;
 	border: 1px solid #d0d0d0;
 }
@@ -674,6 +674,17 @@ div.form-container {
 	margin-top: 4px;
 	margin-bottom: 4px;
 }
+div.form-container-5c {
+	display: grid;
+	grid-template-columns: minmax(70px, min-content)  min-content  min-content max-content min-content;
+	grid-gap: 7px;
+	margin-top: 4px;
+	margin-bottom: 4px;
+}
+div.form-header {
+	white-space: nowrap;
+	text-align: center;
+}
 div.form-label {
 	white-space: nowrap;
 	background-color: #e6e6e6;
@@ -684,12 +695,44 @@ div.form-label {
 	align-items: center;
 	justify-content: right;
 }
+div.form-value {
+	white-space: nowrap;
+	border: solid 1px #e6e6e6;
+	border-radius: 5px;
+	padding-right: 10px;
+	padding-left: 10px;
+	display: flex;
+	align-items: center;
+	font-size: 90%;
+}
+div.form-value-disabled {
+	background: #f0f0f0;
+	border: 1px solid #d0d0d0;
+}
+
 div.form-comment {
 	display: flex;
 	align-items: center;
 }
 div.required {
 	text-decoration: underline
+}
+div.form-button {
+	white-space: nowrap;
+	display: flex;
+	align-items: center;
+}
+div.form-button>button {
+	padding: 2px 10px 2px 10px;
+	font-size: 0.87em;
+	color: #ffffff;
+	background-color: #308ac5;
+	border: 1px solid #308ac5;
+}
+div.form-button>button:hover {
+	color: #308ac5;
+	background-color: #ffffff;
+	border: 1px solid #308ac5;
 }
 
 /** Grid div for the parameters list */
@@ -735,11 +778,6 @@ div.form-param-def-value {
 	align-items: center;
 	color: #909090;
 	font-style: italic;
-}
-div.form-param-button {
-	white-space: nowrap;
-	display: flex;
-	align-items: center;
 }
 
 .rlbkEstimates {

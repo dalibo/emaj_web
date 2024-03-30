@@ -1661,6 +1661,36 @@ class EmajDb {
 	}
 
 	/**
+	 * Get existing tablespaces.
+	 */
+	function getTablesProperties($schema,$tables) {
+		global $data;
+
+		$data->clean($schema);
+		$data->clean($tables);
+		$tablesList = "'" . str_replace(", ", "','", $tables) . "'";
+
+		$sql = "SELECT count(DISTINCT priority) AS nb_priority,
+					   count(DISTINCT log_dat_tsp) AS nb_log_dat_tsp,
+					   count(DISTINCT log_idx_tsp) AS nb_log_idx_tsp,
+					   min(priority) AS min_priority,
+					   min(log_dat_tsp) AS min_log_dat_tsp,
+					   min(log_idx_tsp) AS min_log_idx_tsp
+				FROM (
+					SELECT coalesce(rel_priority::TEXT, '') AS priority,
+						   coalesce(rel_log_dat_tsp, '') AS log_dat_tsp,
+						   coalesce(rel_log_idx_tsp, '') AS log_idx_tsp
+					fROM emaj.emaj_relation
+					WHERE rel_schema = '{$schema}'
+					  AND rel_tblseq IN ($tablesList)
+					  AND rel_kind = 'r'
+					  AND upper_inf(rel_time_range)
+				) AS rel";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
 	 * Insert a table or sequence into the emaj_group_def table.
 	 */
 	function assignTblSeq($schema,$tblseq,$group,$priority,$logSchemaSuffix,$emajNamesPrefix,$logDatTsp,$logIdxTsp) {
@@ -1862,19 +1892,30 @@ class EmajDb {
 
 		$data->clean($schema);
 		$data->clean($tables);
-		$data->clean($priority);
-		$data->clean($logDatTsp);
-		$data->clean($logIdxTsp);
 		$data->clean($mark);
 
 		// Build the tables array.
 		$tablesArray = "ARRAY['" . str_replace(", ", "','", $tables) . "']";
 
 		// Build the JSON structure.
-		if ($priority == '') $priority = 'null';
-		if ($logDatTsp == '') $logDatTsp = 'null'; else $logDatTsp = "\"{$logDatTsp}\"";
-		if ($logIdxTsp == '') $logIdxTsp = 'null'; else $logIdxTsp = "\"{$logIdxTsp}\"";
-		$properties = "{\"priority\": {$priority}, \"log_data_tablespace\": {$logDatTsp}, \"log_index_tablespace\": {$logIdxTsp}}";
+		$properties = "{";
+		if (isset($priority)) {
+			$data->clean($priority);
+			if ($priority == '') $priority = 'null';
+			$properties .= "\"priority\": {$priority},";
+		}
+		if (isset($logDatTsp)) {
+			$data->clean($logDatTsp);
+			if ($logDatTsp == '') $logDatTsp = 'null'; else $logDatTsp = "\"{$logDatTsp}\"";
+			$properties .= "\"log_data_tablespace\": {$logDatTsp},";
+		}
+		if (isset($logIdxTsp)) {
+			$data->clean($logIdxTsp);
+			if ($logIdxTsp == '') $logIdxTsp = 'null'; else $logIdxTsp = "\"{$logIdxTsp}\"";
+			$properties .= "\"log_index_tablespace\": {$logIdxTsp},";
+		}
+		$properties .= "}";
+		$properties = str_replace(',}', '}', $properties);
 
 		$sql = "SELECT emaj.emaj_modify_tables('{$schema}',{$tablesArray},'{$properties}'::jsonb,'{$mark}') AS nb_tables";
 

@@ -302,6 +302,9 @@
 	$lang['emajsetmark'] = 'Poser une marque';
 	$lang['emajsetcomment'] = 'Commenter';
 	$lang['emajforget'] = 'Oublier';
+	$lang['emajcurrentvalue'] = 'Valeur courante';
+	$lang['emajnewvalue'] = 'Nouvelle valeur';
+	$lang['emajdifferentvalues'] = '(%s valeurs différentes)';
 
 	// E-Maj html titles and tabs
 	$lang['emajgroupsmanagement'] = 'Gestion des groupes E-Maj';
@@ -434,9 +437,11 @@
 
 	// Modify table
 	$lang['emajmodifytable'] = 'E-Maj : Modifier les propriétés E-Maj de tables';
-	$lang['emajconfirmmodifytable'] = 'Modifier les propriétés de la table "%s.%s".';
+	$lang['emajconfirmmodifytable'] = 'Modifier les propriétés E-Maj de la table "%s.%s".';
+	$lang['emajconfirmmodifytables'] = 'Modifier les propriétés E-Maj de ces %s tables du schéma "%s" :';
 	$lang['emajmodifytablesok'] = 'Les propriétés E-Maj de %s tables ont été modifiées.';
 	$lang['emajmodifytableerr'] = 'Erreur lors de la modification des propiétés E-Maj de la table "%s.%s".';
+	$lang['emajmodifytableserr'] = 'Erreur lors de la modification des propiétés E-Maj des %s tables du schéma "%s".';
 
 	// Remove tables
 	$lang['emajremovetable'] = 'E-Maj : Retirer des tables de leur groupe de tables';

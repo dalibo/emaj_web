@@ -491,11 +491,15 @@
 					'vars'  => array('sequence' => 'seqname'),
 				),
 			);
-			if ($emajAttributesToManage) {
+			if ($emajAttributesToManage && $emajdb->getNumEmajVersion() >= 30200) {			// version >= 3.2.0
 				$columns = array_merge($columns, array(
 					'actions' => array(
 						'title' => $lang['stractions'],
 					),
+				));
+			}
+			if ($emajAttributesToManage) {
+				$columns = array_merge($columns, array(
 					'group' => array(
 						'title' => $lang['emajgroup'],
 						'field' => field('rel_group'),
@@ -519,7 +523,6 @@
 			));
 
 			if ($emajAttributesToManage && $emajdb->getNumEmajVersion() >= 30200) {			// version >= 3.2.0
-
 				$actions = array(
 					'multiactions' => array(
 						'keycols' => array('appschema' => 'nspname', 'sequence' => 'seqname', 'group' => 'rel_group', 'type' => 'relkind'),

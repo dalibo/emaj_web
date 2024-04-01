@@ -395,15 +395,16 @@
 	$lang['emajparamconfigimporterr'] = 'Erreur à l\'importation de paramètres à partir du fichier %s';
 
 	// Dynamic groups content management: common messages
-	$lang['emajlogdattsp'] = 'Tablespace table log';
+	$lang['emajlogdattsp'] = 'Tablespace tables log';
 	$lang['emajlogidxtsp'] = 'Tablespace index log';
+	$lang['emajdefaulttsp'] = '<tablespace par défaut>';
 	$lang['emajthetable'] = 'la table "%s.%s"';
 	$lang['emajthesequence'] = 'la séquence "%s.%s"';
 	$lang['emajthetblseqingroup'] = '%s (groupe %s)';
 	$lang['emajenterpriority'] = 'Priorité de traitement';
 	$lang['emajpriorityhelp'] = 'Les tables sont traitées par ordre croissant de priorité, et par ordre alphabétique de nom si aucune priorité n\'est définie.';
-	$lang['emajenterlogdattsp'] = 'Tablespace pour la table de log';
-	$lang['emajenterlogidxtsp'] = 'Tablespace pour l\'index de la table de log';
+	$lang['emajenterlogdattsp'] = 'Tablespace des tables de log';
+	$lang['emajenterlogidxtsp'] = 'Tablespace des index de table de log';
 	$lang['emajmarkiflogginggroup'] = 'Marque (si groupe démarré)';
 
 	// Dynamic groups content management: generic error messages

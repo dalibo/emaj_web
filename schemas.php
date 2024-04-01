@@ -656,9 +656,9 @@
 			echo " disabled>";
 		else {
 			echo ">";
-			echo "\t\t<option checked value=''>&lt;{$lang['strnone']}&gt;\n";
+			echo "\t\t<option checked value=''>" . htmlspecialchars($lang['emajdefaulttsp']) . "\n";
 			foreach($knownTsp as $r)
-				echo "\t\t<option>", htmlspecialchars($r['spcname']), "\n";
+				echo "\t\t<option>"  . htmlspecialchars($r['spcname']) . "\n";
 		}
 		echo "\t</select></div>\n";
 		echo "\t<div class=\"form-comment\"></div>\n";
@@ -670,9 +670,9 @@
 			echo " disabled>";
 		else {
 			echo ">";
-			echo "\t\t<option checked value=''>&lt;{$lang['strnone']}&gt;\n";
+			echo "\t\t<option checked value=''>" . htmlspecialchars($lang['emajdefaulttsp']) . "\n";
 			foreach($knownTsp as $r)
-				echo "\t\t<option>", htmlspecialchars($r['spcname']), "\n";
+				echo "\t\t<option>" . htmlspecialchars($r['spcname']) . "\n";
 		}
 		echo "\t</select></div>\n";
 		echo "\t<div class=\"form-comment\"></div>\n";
@@ -877,7 +877,7 @@
 		if ($properties->fields['nb_log_dat_tsp'] == 1) {
 			$currentLogDatTsp = $properties->fields['min_log_dat_tsp'];
 			if ($currentLogDatTsp == '')
-				$currentLogDatTsp = "&lt;{$lang['strnone']}&gt;";
+				$currentLogDatTsp = htmlspecialchars($lang['emajdefaulttsp']);
 		} else {
 			$currentLogDatTsp = "<i>" . sprintf($lang['emajdifferentvalues'], $properties->fields['nb_log_dat_tsp']) . "</i>";
 		}
@@ -885,7 +885,7 @@
 		if ($properties->fields['nb_log_idx_tsp'] == 1) {
 			$currentLogIdxTsp = $properties->fields['min_log_idx_tsp'];
 			if ($currentLogIdxTsp == '')
-				$currentLogIdxTsp = "&lt;{$lang['strnone']}&gt;";
+				$currentLogIdxTsp = htmlspecialchars($lang['emajdefaulttsp']);
 		} else {
 			$currentLogIdxTsp = "<i>" . sprintf($lang['emajdifferentvalues'], $properties->fields['nb_log_idx_tsp']) . "</i>";
 		}
@@ -935,7 +935,7 @@
 			echo " disabled>";
 		else {
 			echo ">";
-			echo "\t\t<option checked value=''>&lt;{$lang['strnone']}&gt;\n";
+			echo "\t\t<option checked value=''>" . htmlspecialchars($lang['emajdefaulttsp']) . "\n";
 			foreach($knownTsp as $r) {
 				echo "\t\t<option>", htmlspecialchars($r['spcname']), "\n";
 			}
@@ -952,7 +952,7 @@
 			echo " disabled>";
 		else {
 			echo ">";
-			echo "\t\t<option checked value=''>&lt;{$lang['strnone']}&gt;\n";
+			echo "\t\t<option checked value=''>" . htmlspecialchars($lang['emajdefaulttsp']) . "\n";
 			foreach($knownTsp as $r) {
 				echo "\t\t<option>", htmlspecialchars($r['spcname']), "\n";
 			}

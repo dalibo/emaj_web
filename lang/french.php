@@ -405,7 +405,7 @@
 	$lang['emajpriorityhelp'] = 'Les tables sont traitées par ordre croissant de priorité, et par ordre alphabétique de nom si aucune priorité n\'est définie.';
 	$lang['emajenterlogdattsp'] = 'Tablespace des tables de log';
 	$lang['emajenterlogidxtsp'] = 'Tablespace des index de table de log';
-	$lang['emajmarkiflogginggroup'] = 'Marque (si groupe démarré)';
+	$lang['emajmarkiflogginggroup'] = 'Marque (si un groupe démarré)';
 
 	// Dynamic groups content management: generic error messages
 	$lang['emajschemamissing'] = 'Le schéma "%s" n\'existe plus.';

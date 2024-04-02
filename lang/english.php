@@ -405,7 +405,7 @@
 	$lang['emajpriorityhelp'] = 'Tables are processed in priority ascending order, and in names alphabetic order if no priority is defined.';
 	$lang['emajenterlogdattsp'] = 'Log tables tablespace';
 	$lang['emajenterlogidxtsp'] = 'Log indexes tablespace';
-	$lang['emajmarkiflogginggroup'] = 'Mark (if logging group)';
+	$lang['emajmarkiflogginggroup'] = 'Mark (if a logging group)';
 
 	// Dynamic groups content management: generic error messages
 	$lang['emajschemamissing'] = 'The schema "%s" does not exist anymore.';

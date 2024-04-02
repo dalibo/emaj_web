@@ -500,7 +500,7 @@
 	$lang['emajenterlogschema'] = 'Suffixe du schéma de log';
 	$lang['emajlogschemahelp'] = 'Un schéma de log contient des tables, séquences et fonctions de log. Le schéma de log par défaut est \'emaj\'. Si un suffixe est défini pour la table, ses objets iront dans le schéma \'emaj\' + suffixe.';
 	$lang['emajenternameprefix'] = 'Préfixe des noms d\'objets E-Maj';
-	$lang['emajnameprefixhelp'] = 'Par défaut les noms des objets de log sont préfixés par &lt;schéma&gt;_&lt;table&gt;. Mais on peut définir un autre préfixe pour la table. Il doit être unique dans la base de données.';
+	$lang['emajnameprefixhelp'] = 'Par défaut les noms des objets de log sont préfixés par <schéma>_<table>. Mais on peut définir un autre préfixe pour la table. Il doit être unique dans la base de données.';
 	$lang['emajspecifytblseqtoupdate'] = 'Spécifiez au moins une table ou séquence à modifier';
 	$lang['emajupdatetblseq'] = 'E-Maj : Modifier les propriétés d\'une table / séquence dans un groupe de tables';
 	$lang['emajspecifytblseqtoremove'] = 'Spécifiez au moins une table ou séquence à retirer';

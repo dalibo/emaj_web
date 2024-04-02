@@ -358,7 +358,7 @@
 			echo "\t<div class=\"form-input\">";
 			echo "<input type=\"text\" name=\"nameprefix\" value=\"\"/>";
 			echo "</div>\n";
-			echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajnameprefixhelp']}\"/></div>\n";
+			echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"", htmlspecialchars($lang['emajnameprefixhelp']), "\"/></div>\n";
 		} else {
 			echo "<input type=\"hidden\" name=\"nameprefix\" value=\"\" />\n";
 		}
@@ -533,7 +533,7 @@
 			echo "\t<div class=\"form-input\">";
 			echo "<input type=\"text\" name=\"nameprefix\" value=\"", htmlspecialchars($_REQUEST['emajnamesprefix']), "\"/>";
 			echo "</div>\n";
-			echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajnameprefixhelp']}\"/></div>\n";
+			echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"", htmlspecialchars($lang['emajnameprefixhelp']), "\"/></div>\n";
 		} else {
 			echo "<input type=\"hidden\" name=\"nameprefix\" value=\"\" />\n";
 		}

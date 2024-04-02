@@ -500,7 +500,7 @@
 	$lang['emajenterlogschema'] = 'Log schema suffix';
 	$lang['emajlogschemahelp'] = 'A log schema contains log tables, sequences and functions. The default log schema is \'emaj\'. If a suffix is defined for the table, its objects will be hosted in the schema \'emaj\' + suffix.';
 	$lang['emajenternameprefix'] = 'E-Maj objects name prefix';
-	$lang['emajnameprefixhelp'] = 'By default, log objects names are prefixed by &lt;schema&gt;_&lt;table&gt;. But another prefix can be defined for the table. It must be unique in the database.';
+	$lang['emajnameprefixhelp'] = 'By default, log objects names are prefixed by <schema>_<table>. But another prefix can be defined for the table. It must be unique in the database.';
 	$lang['emajspecifytblseqtoupdate'] = 'Specify at least one table or sequence to update';
 	$lang['emajupdatetblseq'] = 'E-Maj: Update properties of a table / sequence in a tables group';
 	$lang['emajspecifytblseqtoremove'] = 'Specify at least one table or sequence to remove';

@@ -418,6 +418,7 @@
 	$lang['emajassigntable'] = 'E-Maj: Assign tables to a tables group';
 	$lang['emajconfirmassigntable'] = 'Assign the table "%s.%s"';
 	$lang['emajconfirmassigntables'] = 'Assign these %s tables of schema "%s":';
+	$lang['emajtableshavetriggers'] = 'This tables set has %s triggers. They will be automatically disabled at E-Maj rollback time. You will be able to change this behaviour with the "Triggers" tab.';
 	$lang['emajassigntableok'] = '%s table has been assigned to the tables group %s.';
 	$lang['emajassigntablesok'] = '%s tables have been assigned to the tables group %s.';
 	$lang['emajassigntableerr'] = 'Error while assigning the table "%s.%s".';

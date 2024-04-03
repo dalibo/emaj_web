@@ -4006,6 +4006,34 @@ class EmajDb {
 	}
 
 	/**
+	 * Count the number of application triggers held by a tables set of a given schema.
+	 */
+	function getNbAppTriggers($schema, $tables) {
+		global $data;
+
+		$data->clean($schema);
+		$data->clean($tables);
+		$tablesList = "'" . str_replace(", ", "','", $tables) . "'";
+
+		$sql = "SELECT count(*) AS nbtriggers
+				FROM pg_catalog.pg_trigger t
+					JOIN pg_catalog.pg_class ON (pg_class.oid = tgrelid)
+					JOIN pg_catalog.pg_namespace ON (pg_namespace.oid = relnamespace)
+				WHERE nspname = '{$schema}'
+				  AND relname IN ({$tablesList})
+					-- Discard E-Maj triggers
+				  AND tgname NOT IN ('emaj_trunc_trg', 'emaj_log_trg')
+					-- Discard internal triggers for foreign key constraints
+				  AND (tgconstraint = 0 OR NOT EXISTS
+						(SELECT 1
+							FROM pg_catalog.pg_depend d
+								JOIN pg_catalog.pg_constraint c	ON (d.refclassid = c.tableoid AND d.refobjid = c.oid)
+							WHERE d.classid = t.tableoid AND d.objid = t.oid AND d.deptype = 'i' AND c.contype = 'f'))";
+
+		return $data->selectField($sql,'nbtriggers');
+	}
+
+	/**
 	 * Get the tables groups that owned or currently owns a given table or sequence.
 	 * The function is only called when emaj version >= 2.2.0
 	 */

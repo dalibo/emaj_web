@@ -418,6 +418,7 @@
 	$lang['emajassigntable'] = 'E-Maj : Affecter des tables à un groupe de tables';
 	$lang['emajconfirmassigntable'] = 'Affecter la table "%s.%s"';
 	$lang['emajconfirmassigntables'] = 'Affecter ces %s tables du schéma "%s" :';
+	$lang['emajtableshavetriggers'] = 'Cet ensemble de tables porte %s triggers. Ils seront désactivés automatiquement lors d\'un rollback E-Maj. Vous pourrez modifier ce comportement avec l\'onglet "Triggers".';
 	$lang['emajassigntableok'] = '%s table a été affectée au groupe de tables %s.';
 	$lang['emajassigntablesok'] = '%s tables ont été affectées au groupe de tables %s.';
 	$lang['emajassigntableerr'] = 'Erreur lors de l\'affectation de la table "%s.%s".';

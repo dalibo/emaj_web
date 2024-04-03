@@ -606,17 +606,20 @@
 		else
 			$errMsgAction = sprintf($lang['emajassigntableserr'], $nbTbl, htmlspecialchars($_REQUEST['schema']));
 
-		// Check that the schema and the tables still exist
+		// Check that the schema and the tables still exist.
 		checkRelations($_REQUEST['schema'], $tablesList, 'table', $errMsgAction);
 
 		$misc->printHeader('database', 'database', 'schemas');
 		$misc->printTitle($lang['emajassigntable']);
 
-		// Get created group names
+		// Get created group names.
 		$knownGroups = $emajdb->getCreatedGroups();
 
-		// Get tablespaces the current user can see
+		// Get tablespaces the current user can see.
 		$knownTsp = $emajdb->getKnownTsp();
+
+		// Get the number of application triggers held by these tables.
+		$nbAppTriggers = $emajdb->getNbAppTriggers($_REQUEST['schema'], $tablesList);
 
 		// Build the form
 		if ($nbTbl > 1) {
@@ -683,6 +686,11 @@
 		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
 
 		echo"</div>\n";
+
+		if ($nbAppTriggers > 0 ) {
+			echo "<p>" . sprintf($lang['emajtableshavetriggers'], $nbAppTriggers) . "</p>\n";
+		}
+
 		echo $misc->form;
 		echo "<p><input type=\"submit\" name=\"assigntable\" value=\"{$lang['emajassign']}\" id=\"ok\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";

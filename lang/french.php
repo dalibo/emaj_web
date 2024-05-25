@@ -350,7 +350,7 @@
 	$lang['emajupdateextensionok'] = 'L\'extension "emaj" a été mise à jour.';
 	$lang['emajupdateextensionerr'] = 'Erreur lors de la mise à jour de l\'extension "emaj".';
 	$lang['emajdropextension'] = 'Supprimer l\'extension';
-	$lang['emajdropextensiongroupsexist'] = 'Pour supprimer l\'extension "emaj", supprimez les groupes de tables au préalable.';
+	$lang['emajdropextensiongroupsexist'] = 'Des (%s) groupes de tables existent actuellement. Supprimer l\'extension supprimera automatiquement ces groupes.';
 	$lang['emajdropemajextension'] = 'Supprimer l\'extension "emaj"';
 	$lang['emajconfirmdropextension'] = 'Confirmer la suppression de l\'extension "emaj"';
 	$lang['emajdropextensionok'] = 'L\'extension "emaj" a été supprimée.';

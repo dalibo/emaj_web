@@ -350,7 +350,7 @@
 	$lang['emajupdateextensionok'] = 'The "emaj" extension has been updated.';
 	$lang['emajupdateextensionerr'] = 'Error while updating the "emaj" extension.';
 	$lang['emajdropextension'] = 'Drop extension';
-	$lang['emajdropextensiongroupsexist'] = 'To drop the "emaj" extension, first drop the tables groups.';
+	$lang['emajdropextensiongroupsexist'] = 'Some (%s) tables groups currently exist. Dropping the extension will automatically drop these groups.';
 	$lang['emajdropemajextension'] = 'Drop the "emaj" extension';
 	$lang['emajconfirmdropextension'] = 'Confirm the "emaj" extension drop';
 	$lang['emajdropextensionok'] = 'The "emaj" extension has been dropped.';

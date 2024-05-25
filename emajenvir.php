@@ -236,13 +236,20 @@
 	 * Prepare the extension drop: ask for confirmation
 	 */
 	function drop_extension() {
-		global $misc, $lang;
+		global $misc, $lang, $emajdb;
 
 		$misc->printHeader('database', 'database', 'emajenvir');
 
 		$misc->printTitle($lang['emajdropemajextension']);
 
+		$nbGroups = $emajdb->getNbGroups();
+		if ($nbGroups > 0) {
+			$msg = sprintf($lang['emajdropextensiongroupsexist'], $nbGroups);
+			echo "<p><img src=\"{$misc->icon('Warning')}\" alt=\"Warning\" style=\"width: 20px;\"/> " . htmlspecialchars($msg) . "</p>\n";
+		}
+
 		echo "<p>{$lang['emajconfirmdropextension']}</p>\n";
+
 		echo "<form action=\"emajenvir.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"drop_extension_ok\" />\n";
 		echo $misc->form;
@@ -261,8 +268,8 @@
 		if (isset($_POST['cancel'])) {
 			doDefault();
 		} else {
-			// recheck that emaj is always here and that no tables group exist before dropping the extension
-			if ($emajdb->isEnabled() && $emajdb->getNbGroups() == 0) {
+			// recheck that emaj still exists
+			if ($emajdb->isEnabled()) {
 				$status = $emajdb->dropEmajExtension();
 				if ($status == 0) {
 					$_reload_browser = true;
@@ -533,10 +540,11 @@
 			}
 		}
 
-		if ($data->isSuperUser($server_info['username']) && $isExtensionAvailable) {
 		//
 		// Extension management section (for superusers only)
 		//
+
+		if ($data->isSuperUser($server_info['username']) && $isExtensionAvailable) {
 			$navlinks = array();
 			if (! $isEnabled || $isExtension) {
 				echo "<hr/>\n";
@@ -579,23 +587,18 @@
 					}
 
 					// Can we drop it ?
-					if ($emajdb->getNbGroups() > 0) {
-						echo "<p>" . $lang['emajdropextensiongroupsexist'] . "</p>\n";
-					} else {
-						// Add a button to drop the extension
-						$navlinks['dropextension'] = array (
-							'content' => $lang['emajdropextension'],
-							'attr'=> array (
-								'href' => array (
-									'url' => "emajenvir.php",
-									'urlvars' => array(
-										'action' => 'drop_extension'
-									)
+					// Add a button to drop the extension
+					$navlinks['dropextension'] = array (
+						'content' => $lang['emajdropextension'],
+						'attr'=> array (
+							'href' => array (
+								'url' => "emajenvir.php",
+								'urlvars' => array(
+									'action' => 'drop_extension'
 								)
-							),
-						);
-					}
-
+							)
+						),
+					);
 				}
 			}
 			// print the buttons list, if it contains at least 1 button
@@ -603,10 +606,11 @@
 				$misc->printLinksList($navlinks, 'buttonslist');
 		}
 
-		if ($isEnabled) {
 		//
 		// General characteristics of the E-Maj environment
 		//
+
+		if ($isEnabled) {
 			if ($emajdb->isEmaj_Adm()) {
 				echo "<hr/>\n";
 				$misc->printTitle($lang['emajcharacteristics']);
@@ -616,6 +620,7 @@
 		//
 		// E-Maj environment checking
 		//
+
 			echo "<hr/>\n";
 			$misc->printTitle($lang['emajchecking']);
 

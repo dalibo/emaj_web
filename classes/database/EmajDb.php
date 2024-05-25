@@ -220,6 +220,7 @@ class EmajDb {
 		}
 
 		$status = $data->execute($sql);
+
 		if ($status == 0) {
 			// The extension has been created, so reset all emajdb cached variables.
 			$this->emaj_version = '?';
@@ -251,6 +252,7 @@ class EmajDb {
 		$sql = "ALTER EXTENSION emaj UPDATE {$version};";
 
 		$status = $data->execute($sql);
+
 		if ($status == 0) {
 			// The extension version has changed, so reset all emajdb cached variables.
 			$this->emaj_version = '?';
@@ -273,15 +275,22 @@ class EmajDb {
 	function dropEmajExtension() {
 		global $data;
 
-		$sql = "DO LANGUAGE plpgsql $$
-				BEGIN
-					PERFORM emaj.emaj_disable_protection_by_event_triggers();
-					DROP EXTENSION IF EXISTS emaj CASCADE;
-					DROP SCHEMA IF EXISTS emaj CASCADE;
-					DROP FUNCTION IF EXISTS public._emaj_protection_event_trigger_fnct() CASCADE;
-					RETURN;
-				END;$$;";
+		if ($this->getNumEmajVersion() >= 40500) {	// version >= 4.5.0
+			$sql = "SELECT emaj.emaj_drop_extension()";
+		} else {
+			$sql = "DO LANGUAGE plpgsql $$
+					BEGIN
+						PERFORM emaj.emaj_disable_protection_by_event_triggers();
+						PERFORM emaj.emaj_force_drop_group(group_name) FROM emaj.emaj_group;
+						DROP EXTENSION IF EXISTS emaj CASCADE;
+						DROP SCHEMA IF EXISTS emaj CASCADE;
+						DROP FUNCTION IF EXISTS public._emaj_protection_event_trigger_fnct() CASCADE;
+						RETURN;
+					END;$$;";
+		}
+
 		$status = $data->execute($sql);
+
 		if ($status == 0) {
 			// The extension has been dropped, so reset all emajdb cached variables.
 			$this->emaj_version = '?';

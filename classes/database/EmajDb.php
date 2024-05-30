@@ -275,9 +275,15 @@ class EmajDb {
 	function dropEmajExtension() {
 		global $data;
 
-		if ($this->getNumEmajVersion() >= 40500) {	// version >= 4.5.0
+		// Ask the catalog whether the emaj_drop_extension() function exists (only introduced in 4.5.0).
+		$sql = "SELECT 1 AS exists
+				FROM pg_catalog.pg_proc JOIN pg_catalog.pg_namespace n ON (pronamespace = n.oid)
+				WHERE nspname = 'emaj' AND proname = 'emaj_drop_extension'";
+		if ($data->selectField($sql, 'exists') == 1) {
+			// The function exists, so call it.
 			$sql = "SELECT emaj.emaj_drop_extension()";
 		} else {
+			// The function doesn't exist, so drop the extension 'manually'.
 			$sql = "DO LANGUAGE plpgsql $$
 					BEGIN
 						PERFORM emaj.emaj_disable_protection_by_event_triggers();
@@ -448,7 +454,7 @@ class EmajDb {
 		$sql = "SELECT 1 AS exists
 				FROM pg_catalog.pg_proc JOIN pg_catalog.pg_namespace n ON (pronamespace = n.oid)
 				WHERE nspname = 'emaj' AND proname = 'emaj_get_version'";
-		if ($data->selectField($sql,'exists') == 1) {
+		if ($data->selectField($sql, 'exists') == 1) {
 			// The function exists, so call it.
 			$sql = "SELECT emaj.emaj_get_version() AS version";
 		} else {

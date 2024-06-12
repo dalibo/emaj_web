@@ -127,7 +127,7 @@
 					'title' => $lang['stractions'],
 				),
 				'group' => array(
-					'title' => $lang['emajgroup'],
+					'title' => $lang['strgroup'],
 					'field' => field('grpdef_group'),
 				),
 				'priority' => array(
@@ -311,7 +311,7 @@
 		echo "<div class=\"form-container\">\n";
 
 		// group name
-		echo "\t<div class=\"form-label required\">{$lang['emajgroup']}</div>\n";
+		echo "\t<div class=\"form-label required\">{$lang['strgroup']}</div>\n";
 		echo "\t<div class=\"form-input\">";
 		echo "<input type=\"text\" name=\"group\" list=\"groupList\" required pattern=\"\S+.*\" value=\"\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\"/>";
 		echo "</div>\n";
@@ -486,7 +486,7 @@
 		echo "<div class=\"form-container\">\n";
 
 		// group name
-		echo "\t<div class=\"form-label required\">{$lang['emajgroup']}</div>\n";
+		echo "\t<div class=\"form-label required\">{$lang['strgroup']}</div>\n";
 		echo "\t<div class=\"form-input\">";
 		echo "<input type=\"text\" name=\"groupnew\" list=\"groupList\" required pattern=\"\S+.*\" value=\"", htmlspecialchars($_REQUEST['group']), "\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\"/>\n";
 		echo "</div>\n";

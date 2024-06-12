@@ -46,7 +46,7 @@
 		global $misc, $lang;
 		if ($val == 't') {
 			$icon = $misc->icon('EmajIcon');
-			$alt = $lang['emajschema'];
+			$alt = $lang['stremajschema'];
 			return "<img src=\"{$icon}\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 		}
 		return;
@@ -341,7 +341,7 @@
 			if ($emajAttributesToManage) {
 				$columns = array_merge($columns, array(
 					'group' => array(
-						'title' => $lang['emajgroup'],
+						'title' => $lang['strgroup'],
 						'field' => field('rel_group'),
 					),
 					'priority' => array(
@@ -501,7 +501,7 @@
 			if ($emajAttributesToManage) {
 				$columns = array_merge($columns, array(
 					'group' => array(
-						'title' => $lang['emajgroup'],
+						'title' => $lang['strgroup'],
 						'field' => field('rel_group'),
 					),
 				));
@@ -638,7 +638,7 @@
 		echo "<div class=\"form-container\">\n";
 
 		// group name
-		echo "\t<div class=\"form-label required\">{$lang['emajgroup']}</div>\n";
+		echo "\t<div class=\"form-label required\">{$lang['strgroup']}</div>\n";
 		echo "\t<div class=\"form-input\"><select name=\"group\">";
 		foreach($knownGroups as $r)
 			echo "\t\t<option>", htmlspecialchars($r['group_name']), "\n";
@@ -1157,7 +1157,7 @@
 		echo "<div class=\"form-container\">\n";
 
 		// group name
-		echo "\t<div class=\"form-label required\">{$lang['emajgroup']}</div>\n";
+		echo "\t<div class=\"form-label required\">{$lang['strgroup']}</div>\n";
 		echo "\t<div class=\"form-input\"><select name=\"group\">";
 		foreach($knownGroups as $r)
 			echo "\t\t<option>", htmlspecialchars($r['group_name']), "\n";

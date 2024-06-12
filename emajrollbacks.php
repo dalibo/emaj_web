@@ -279,7 +279,7 @@
 		// Display the E-Maj logged rollback operations that may be consolidated (i.e. transformed into unlogged rollback)
 		$columnsConsRlbk = array(
 			'consGroup' => array(
-				'title' => $lang['emajgroup'],
+				'title' => $lang['strgroup'],
 				'field' => field('cons_group'),
 			),
 			'consTargetMark' => array(

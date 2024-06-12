@@ -252,7 +252,6 @@
 	$lang['emajstate'] = 'State';
 	$lang['emajnoselectedgroup'] = 'No tables group has been selected!';
 	$lang['emajtablesgroup'] = 'Tables group';
-	$lang['emajgroup'] = 'Group';
 	$lang['emajgroups'] = 'Groups';
 	$lang['emajmark'] = 'Mark';
 	$lang['emajgroupcreatedat'] = 'Created at';
@@ -283,9 +282,9 @@
 	$lang['emajestimate'] = 'Estimate';
 	$lang['emajreestimate'] = 'Reestimate';
 	$lang['emajestimatedduration'] = 'Estimated duration';
-	$lang['emajproperties'] = 'E-Maj properties';
-	$lang['emajschema'] = 'E-Maj schema';
-	$lang['emajtrigger'] = 'E-Maj trigger';
+	$lang['stremajproperties'] = 'E-Maj properties';
+	$lang['stremajschema'] = 'E-Maj schema';
+	$lang['stremajtrigger'] = 'E-Maj trigger';
 	$lang['emajselectfile'] = 'Select a file';
 	$lang['emajnotjsonfile'] = 'The file %s has not a valid JSON format.';
 	$lang['emajtxid'] = 'Transaction id.';
@@ -315,7 +314,6 @@
 	$lang['emajenvironment'] = 'E-Maj environment';
 	$lang['emajenvir'] = 'E-Maj';
 	$lang['emajchangesstat'] = 'Changes statistics';
-	$lang['emajhistory'] = 'History';
 
 	// Common help messages
 	$lang['emajmarknamehelp'] = 'The mark name must be unique within the group. A % character represents the current time (format hh.mn.ss.ms).';
@@ -675,7 +673,7 @@
 
 	// Group's history
 	$lang['emajgrouphistory'] = 'Tables group "%s" history';
-	$lang['emajnohistory'] = 'There is no history to display for this group.';
+	$lang['stremajnohistory'] = 'There is no history to display for this group.';
 	$lang['emajgrouphistoryorder'] = 'Most recent group creations, group drops and log sessions are placed ahead on the sheet.';
 	$lang['emajnblogsessions'] = 'Log sessions';
 	$lang['emajgroupcreate'] = 'Group creation';

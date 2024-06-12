@@ -1021,7 +1021,7 @@
 							'icon' => 'Content'
 						),
 						'emajhistory' => array (
-							'title' => $lang['emajhistory'],
+							'title' => $lang['strhistory'],
 							'url' => 'emajgroups.php',
 							'urlvars' => array(
 								'subject' => 'emajgroups',

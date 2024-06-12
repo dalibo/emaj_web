@@ -484,7 +484,7 @@
 
 		$columns = array(
 			'group' => array(
-				'title' => $lang['emajgroup'],
+				'title' => $lang['strgroup'],
 				'field' => field('group_name'),
 				'url'   => "emajgroups.php?action=show_group&amp;{$misc->href}&amp;",
 				'vars'  => array('group' => 'group_name'),
@@ -727,7 +727,7 @@
 
 		$configuredColumns = array(
 			'group' => array(
-				'title' => $lang['emajgroup'],
+				'title' => $lang['strgroup'],
 				'field' => field('grpdef_group'),
 			),
 			'actions' => array(
@@ -839,7 +839,7 @@
 
 			$columns = array(
 				'group' => array(
-					'title' => $lang['emajgroup'],
+					'title' => $lang['strgroup'],
 					'field' => field('grph_group'),
 					'url'   => "emajgroups.php?action=show_history_group&amp;{$misc->href}&amp;",
 					'vars'  => array('group' => 'grph_group'),
@@ -2096,7 +2096,7 @@
 		if ($groupHistory->recordCount() < 1) {
 
 			// There is no history to display
-			echo "<p>" . sprintf($lang['emajnohistory'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
+			echo "<p>" . sprintf($lang['stremajnohistory'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
 
 		} else {
 
@@ -2189,7 +2189,7 @@
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 
 		echo "<div class=\"form-container\">\n";
-		echo "\t<div class=\"form-label required\">{$lang['emajgroup']}</div>\n";
+		echo "\t<div class=\"form-label required\">{$lang['strgroup']}</div>\n";
 		echo "\t<div class=\"form-input\"><input type=\"text\" id=\"group\" name=\"group\" size=\"32\" required pattern=\"\S+.*\" value=\"", htmlspecialchars($_REQUEST['group']) , "\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\"></div>\n";
 		echo "\t<div class=\"form-comment\"></div>\n";
 		echo "</div>\n";
@@ -2844,7 +2844,7 @@
 
 		$columns = array(
 			'group' => array(
-				'title' => $lang['emajgroup'],
+				'title' => $lang['strgroup'],
 				'field' => field('group_name'),
 			),
 			'state' => array(
@@ -3059,7 +3059,7 @@
 					// Display the groups list
 					$columns = array(
 						'group' => array(
-							'title' => $lang['emajgroup'],
+							'title' => $lang['strgroup'],
 							'field' => field('grp_name'),
 						),
 						'state' => array(

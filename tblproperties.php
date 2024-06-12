@@ -58,7 +58,7 @@
 		global $misc, $lang;
 		if ($val == 't') {
 			$icon = $misc->icon('EmajIcon');
-			$alt = $lang['emajtrigger'];
+			$alt = $lang['stremajtrigger'];
 			return "<img src=\"{$icon}\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 		}
 		return;
@@ -166,7 +166,7 @@
 		// Display the E-Maj properties, if any
 		if ($emajdb->isEnabled() && $emajdb->isAccessible() && $emajdb->getNumEmajVersion() >= 20200) {
 
-			$misc->printTitle($lang['emajproperties']);
+			$misc->printTitle($lang['stremajproperties']);
 
 			$type = $emajdb->getEmajTypeTblSeq($_REQUEST['schema'], $_REQUEST['table']);
 
@@ -179,7 +179,7 @@
 
 				$columns = array(
 					'group' => array(
-						'title' => $lang['emajgroup'],
+						'title' => $lang['strgroup'],
 						'field' => field('rel_group'),
 						'type'	=> 'callback',
 						'params'=> array('function' => 'renderlinktogroup')

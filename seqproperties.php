@@ -100,7 +100,7 @@
 		// Display the E-Maj properties, if any
 		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
 
-			$misc->printTitle($lang['emajproperties']);
+			$misc->printTitle($lang['stremajproperties']);
 
 			$type = $emajdb->getEmajTypeTblSeq($_REQUEST['schema'], $_REQUEST['sequence']);
 
@@ -113,7 +113,7 @@
 
 				$columns = array(
 					'group' => array(
-						'title' => $lang['emajgroup'],
+						'title' => $lang['strgroup'],
 						'field' => field('rel_group'),
 						'type'	=> 'callback',
 						'params'=> array('function' => 'renderlinktogroup')

@@ -252,7 +252,6 @@
 	$lang['emajstate'] = 'État';
 	$lang['emajnoselectedgroup'] = 'Aucun groupe de tables n\'a été sélectionné !';
 	$lang['emajtablesgroup'] = 'Groupe de tables';
-	$lang['emajgroup'] = 'Groupe';
 	$lang['emajgroups'] = 'Groupes';
 	$lang['emajmark'] = 'Marque';
 	$lang['emajgroupcreatedat'] = 'Créé le';
@@ -283,9 +282,9 @@
 	$lang['emajestimate'] = 'Estimer';
 	$lang['emajreestimate'] = 'Ré-estimer';
 	$lang['emajestimatedduration'] = 'Durée estimée';
-	$lang['emajproperties'] = 'Propriétés E-Maj';
-	$lang['emajschema'] = 'Schéma E-Maj';
-	$lang['emajtrigger'] = 'Trigger E-Maj';
+	$lang['stremajproperties'] = 'Propriétés E-Maj';
+	$lang['stremajschema'] = 'Schéma E-Maj';
+	$lang['stremajtrigger'] = 'Trigger E-Maj';
 	$lang['emajselectfile'] = 'Sélectionner un fichier';
 	$lang['emajnotjsonfile'] = 'Le fichier %s n\'a pas un format JSON valide.';
 	$lang['emajtxid'] = 'Id. transaction';
@@ -315,7 +314,6 @@
 	$lang['emajenvironment'] = 'Environnement E-Maj';
 	$lang['emajenvir'] = 'E-Maj';
 	$lang['emajchangesstat'] = 'Statistiques / Mises à jour';
-	$lang['emajhistory'] = 'Historique';
 
 	// Common help messages
 	$lang['emajmarknamehelp'] = 'Le nom de la marque doit être unique pour le groupe. Un caractère % représente l\'heure courante (format hh.mn.ss.ms).';
@@ -675,7 +673,7 @@
 
 	// Group's history
 	$lang['emajgrouphistory'] = 'Historique du groupe de tables "%s"';
-	$lang['emajnohistory'] = 'Il n\'y a aucun historique à afficher pour ce groupe.';
+	$lang['stremajnohistory'] = 'Il n\'y a aucun historique à afficher pour ce groupe.';
 	$lang['emajgrouphistoryorder'] = 'Les plus récentes créations de groupe, suppressions de groupe et sessions de log sont placées en début de tableau.';
 	$lang['emajnblogsessions'] = 'Sessions de log';
 	$lang['emajgroupcreate'] = 'Création du groupe';

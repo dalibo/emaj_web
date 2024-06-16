@@ -38,13 +38,13 @@ sub loadStrings {
 		if ($str !~ /^lang|tools/) {		# Discard the files from the ./lang and ./tools directories.
 			chomp $str;
 # Add a few virtual string usages to fit the special case of string ids not set as literals.
-			if ($str =~ /^(emajgroups.php:\d+:lang\['emajgroupnot)'\.\$langMsgSuffix\]/) {
+			if ($str =~ /^(emajgroups.php:\d+:lang\['strgroupnot)'\.\$langMsgSuffix\]/) {
 				push(@usedStrings, "$1started']");
 				push(@usedStrings, "$1stopped']");
 				$nbUsedString = $nbUsedString + 2;
 				next;
 			}
-			if ($str =~ /^(emajgroups.php:\d+:lang\['emajgroupsnot)'\.\$langMsgSuffix\]/) {
+			if ($str =~ /^(emajgroups.php:\d+:lang\['strgroupsnot)'\.\$langMsgSuffix\]/) {
 #print "$str => $1started']\n";
 				push(@usedStrings, "$1started']");
 				push(@usedStrings, "$1stopped']");
@@ -52,10 +52,10 @@ sub loadStrings {
 				next;
 			}
 			if ($str =~ /^(emajgroups.php:\d+:lang\[)\$parts\[0\]/) {
-				push(@usedStrings, "$1'emajlogsession']");
-				push(@usedStrings, "$1'emajgroupcreate']");
-				push(@usedStrings, "$1'emajgroupdrop']");
-				push(@usedStrings, "$1'emajdeletedlogsessions']");
+				push(@usedStrings, "$1'strlogsession']");
+				push(@usedStrings, "$1'strgroupcreate']");
+				push(@usedStrings, "$1'strgroupdrop']");
+				push(@usedStrings, "$1'strdeletedlogsessions']");
 				$nbUsedString = $nbUsedString + 4;
 				next;
 			}

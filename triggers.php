@@ -33,7 +33,7 @@
 		$misc->printHeader('database', 'database', 'triggers');
 
 		$misc->printMsg($msg);
-		$misc->printTitle($lang['emajapptriggers'], $lang['emajapptriggershelp']);
+		$misc->printTitle($lang['strapptriggers'], $lang['strapptriggershelp']);
 
 		$urlvars = $misc->getRequestVars();
 
@@ -61,15 +61,15 @@
 				'params'=> array('align' => 'center'),
 			),
 			'tgevent' => array(
-				'title' => $lang['emajtriggeringevent'],
+				'title' => $lang['strtriggeringevent'],
 				'field' => field('tgevent'),
 			),
 			'tgfnct' => array(
-				'title' => $lang['emajcalledfunction'],
+				'title' => $lang['strcalledfunction'],
 				'field' => field('tgfnct'),
 			),
 			'tgenabled' => array(
-				'title' => $lang['emajstate'],
+				'title' => $lang['strstate'],
 				'field' => field('tgstate'),
 			),
 		);
@@ -77,9 +77,9 @@
 			if ($emajdb->getNumEmajVersion() >= 30100) {			// version >= 3.1.0
 				$columns = array_merge($columns, array(
 					'emajisautodisable' => array(
-						'title' => $lang['emajisautodisable'],
+						'title' => $lang['strisautodisable'],
 						'field' => field('tgisautodisable'),
-						'info'  => $lang['emajisautodisablehelp'],
+						'info'  => $lang['strisautodisablehelp'],
 						'params'=> array(
 							'map' => array('t' => 'ON', 'f' => 'OFF'),
 							'align' => 'center'
@@ -147,7 +147,7 @@
 				$orphanTriggers = $emajdb->getOrphanAppTriggers();
 
 				if (!$orphanTriggers->EOF) {
-					print "<p>{$lang['emajorphantriggersexist']}</p>";
+					print "<p>{$lang['strorphantriggersexist']}</p>";
 					$columns = array(
 						'schema' => array(
 							'title' => $lang['strschema'],
@@ -176,7 +176,7 @@
 							'url' => 'triggers.php',
 						),
 						'removetrigger' => array(
-							'content' => $lang['emajremove'],
+							'content' => $lang['strremove'],
 							'icon' => 'Remove',
 							'attr' => array (
 								'href' => array (
@@ -207,9 +207,9 @@
 		$nbTriggers = $emajdb->ignoreAppTrigger('ADD', $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['trigger']);
 
 		if ($nbTriggers > 0) {
-			showTriggers(sprintf($lang['emajtriggernoautook'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+			showTriggers(sprintf($lang['strtriggernoautook'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		} else {
-			showTriggers('',sprintf($lang['emajtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+			showTriggers('',sprintf($lang['strtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		}
 	}
 
@@ -223,9 +223,9 @@
 		$nbTriggers = $emajdb->ignoreAppTrigger('REMOVE', $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['trigger']);
 
 		if ($nbTriggers > 0) {
-			showTriggers(sprintf($lang['emajtriggerautook'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+			showTriggers(sprintf($lang['strtriggerautook'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		} else {
-			showTriggers('',sprintf($lang['emajtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+			showTriggers('',sprintf($lang['strtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		}
 	}
 
@@ -237,7 +237,7 @@
 		global $lang, $data, $emajdb;
 
 		if (!isset($_REQUEST['ma'])) {
-			showTriggers('',$lang['emajnoselectedtriggers']);
+			showTriggers('',$lang['strnoselectedtriggers']);
 			return;
 		}
 
@@ -249,14 +249,14 @@
 				$status = $emajdb->ignoreAppTrigger('ADD', $a['schema'], $a['table'], $a['trigger']);
 				if ($status == 0) {
 					$data->rollbackTransaction();
-					showTriggers(sprintf($lang['emajtriggerprocerr'], htmlspecialchars($a['trigger']), htmlspecialchars($a['schema']), htmlspecialchars($a['table'])));
+					showTriggers(sprintf($lang['strtriggerprocerr'], htmlspecialchars($a['trigger']), htmlspecialchars($a['schema']), htmlspecialchars($a['table'])));
 					return;
 				}
 				$nbTriggers++;
 			}
 		}
 		if ($data->endTransaction() == 0)
-			showTriggers(sprintf($lang['emajtriggersnoautook'], $nbTriggers));
+			showTriggers(sprintf($lang['strtriggersnoautook'], $nbTriggers));
 	}
 
 	/**
@@ -267,7 +267,7 @@
 		global $lang, $data, $emajdb;
 
 		if (!isset($_REQUEST['ma'])) {
-			showTriggers('',$lang['emajnoselectedtriggers']);
+			showTriggers('',$lang['strnoselectedtriggers']);
 			return;
 		}
 
@@ -279,14 +279,14 @@
 				$status = $emajdb->ignoreAppTrigger('REMOVE', $a['schema'], $a['table'], $a['trigger']);
 				if ($status == 0) {
 					$data->rollbackTransaction();
-					showTriggers(sprintf($lang['emajtriggerprocerr'], htmlspecialchars($a['trigger']), htmlspecialchars($a['schema']), htmlspecialchars($a['table'])));
+					showTriggers(sprintf($lang['strtriggerprocerr'], htmlspecialchars($a['trigger']), htmlspecialchars($a['schema']), htmlspecialchars($a['table'])));
 					return;
 				}
 				$nbTriggers++;
 			}
 		}
 		if ($data->endTransaction() == 0)
-			showTriggers(sprintf($lang['emajtriggersautook'], $nbTriggers));
+			showTriggers(sprintf($lang['strtriggersautook'], $nbTriggers));
 	}
 
 	/**
@@ -298,9 +298,9 @@
 		$nbTriggers = $emajdb->ignoreAppTrigger('REMOVE', $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['trigger']);
 
 		if ($nbTriggers > 0) {
-			showTriggers(sprintf($lang['emajtriggersremovedok'], $nbTriggers));
+			showTriggers(sprintf($lang['strtriggersremovedok'], $nbTriggers));
 		} else {
-			showTriggers(sprintf($lang['emajtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+			showTriggers(sprintf($lang['strtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		}
 	}
 
@@ -311,7 +311,7 @@
 		global $lang, $data, $emajdb;
 
 		if (!isset($_REQUEST['ma'])) {
-			showTriggers('',$lang['emajnoselectedtriggers']);
+			showTriggers('',$lang['strnoselectedtriggers']);
 			return;
 		}
 
@@ -323,14 +323,14 @@
 				$status = $emajdb->ignoreAppTrigger('REMOVE', $a['schema'], $a['table'], $a['trigger']);
 				if ($status == 0) {
 					$data->rollbackTransaction();
-					showTriggers(sprintf($lang['emajtriggerprocerr'], htmlspecialchars($a['trigger']), htmlspecialchars($a['schema']), htmlspecialchars($a['table'])));
+					showTriggers(sprintf($lang['strtriggerprocerr'], htmlspecialchars($a['trigger']), htmlspecialchars($a['schema']), htmlspecialchars($a['table'])));
 					return;
 				}
 				$nbTriggers++;
 			}
 		}
 		if($data->endTransaction() == 0)
-		showTriggers(sprintf($lang['emajtriggersremovedok'], $nbTriggers));
+		showTriggers(sprintf($lang['strtriggersremovedok'], $nbTriggers));
 	}
 
 	$misc->printHtmlHeader($lang['strtriggers']);

@@ -87,7 +87,7 @@
 			$relationsList .= $a[$relkind] . ', ';
 			$htmlList .= "\t<li>";
 			if ($withGroup) {
-				$htmlList .= sprintf($lang['emajthetblseqingroup'], $a[$relkind], $a['group']);
+				$htmlList .= sprintf($lang['strthetblseqingroup'], $a[$relkind], $a['group']);
 				if (strpos($groupsList, $a['group'] . ', ') === false) {
 					$groupsList .= $a['group'] . ', ';
 				}
@@ -114,11 +114,11 @@
 			if ($missingGroups->fields['nb_groups'] == 1)
 				// One group doesn't exist anymore
 				list_schemas('', $errMsgAction . '<br>' .
-					sprintf($lang['emajgroupmissing'], htmlspecialchars($missingGroups->fields['groups_list'])));
+					sprintf($lang['strgroupmissing'], htmlspecialchars($missingGroups->fields['groups_list'])));
 			else
 				// Several groups do not exist anymore
 				list_schemas('', $errMsgAction . '<br>' .
-					sprintf($lang['emajgroupsmissing'], $missingGroups->fields['nb_groups'], htmlspecialchars($missingGroups->fields['groups_list'])));
+					sprintf($lang['strgroupsmissing'], $missingGroups->fields['nb_groups'], htmlspecialchars($missingGroups->fields['groups_list'])));
 			$_reload_browser = true;
 			$misc->printFooter();
 			exit();
@@ -135,7 +135,7 @@
 
 		// Check the forbidden values.
 		if ($mark == '' or $mark == 'EMAJ_LAST_MARK') {
-			$errorMessage = sprintf($lang['emajinvalidmark'], htmlspecialchars($mark));
+			$errorMessage = sprintf($lang['strinvalidmark'], htmlspecialchars($mark));
 			list_schemas('', $errMsgAction . '<br>' . $errorMessage);
 			$misc->printFooter();
 			exit();
@@ -149,11 +149,11 @@
 		$errorMessage = '';
 		if ($errorGroups->fields['nb_groups'] == 1) {
 			// The mark already exists for one group
-			$errorMessage = sprintf($lang['emajduplicatemarkgroup'], htmlspecialchars($mark), htmlspecialchars($errorGroups->fields['groups_list']));
+			$errorMessage = sprintf($lang['strduplicatemarkgroup'], htmlspecialchars($mark), htmlspecialchars($errorGroups->fields['groups_list']));
 		}
 		if ($errorGroups->fields['nb_groups'] > 1) {
 			// The mark already exist for several groups
-			$errorMessage = sprintf($lang['emajduplicatemarkgroups'], htmlspecialchars($mark),
+			$errorMessage = sprintf($lang['strduplicatemarkgroups'], htmlspecialchars($mark),
 									$errorGroups->fields['nb_groups'], htmlspecialchars($errorGroups->fields['groups_list']));
 		}
 		if ($errorMessage != '') {
@@ -174,7 +174,7 @@
 
 		// Check the schema already exists
 		if (! $emajdb->existsSchema($schema)) {
-			$errorMessage = sprintf($lang['emajschemamissing'], htmlspecialchars($schema));
+			$errorMessage = sprintf($lang['strschemamissing'], htmlspecialchars($schema));
 			list_schemas('', $errMsgAction . '<br>' . $errorMessage);
 			$_reload_browser = true;
 			$misc->printFooter();
@@ -188,16 +188,16 @@
 			if ($missingTblSeqs->fields['nb_tblseqs'] == 1)
 				// One table/sequence doesn't exist anymore
 				if ($relKind == 'table') {
-					$errorMessage = sprintf($lang['emajtablemissing'], htmlspecialchars($schema), htmlspecialchars($missingTblSeqs->fields['tblseqs_list']));
+					$errorMessage = sprintf($lang['strtablemissing'], htmlspecialchars($schema), htmlspecialchars($missingTblSeqs->fields['tblseqs_list']));
 				} else {
-					$errorMessage = sprintf($lang['emajsequencemissing'], htmlspecialchars($schema), htmlspecialchars($missingTblSeqs->fields['tblseqs_list']));
+					$errorMessage = sprintf($lang['strsequencemissing'], htmlspecialchars($schema), htmlspecialchars($missingTblSeqs->fields['tblseqs_list']));
 				}
 			else
 				// Several tables/sequences do not exist anymore
 				if ($relKind == 'table') {
-					$errorMessage = sprintf($lang['emajtablesmissing'], $missingTblSeqs->fields['nb_tblseqs'], htmlspecialchars($missingTblSeqs->fields['tblseqs_list']));
+					$errorMessage = sprintf($lang['strtablesmissing'], $missingTblSeqs->fields['nb_tblseqs'], htmlspecialchars($missingTblSeqs->fields['tblseqs_list']));
 				} else {
-					$errorMessage = sprintf($lang['emajsequencesmissing'], $missingTblSeqs->fields['nb_tblseqs'], htmlspecialchars($missingTblSeqs->fields['tblseqs_list']));
+					$errorMessage = sprintf($lang['strsequencesmissing'], $missingTblSeqs->fields['nb_tblseqs'], htmlspecialchars($missingTblSeqs->fields['tblseqs_list']));
 				}
 		}
 		if ($errorMessage != '') {
@@ -227,7 +227,7 @@
 		if (isset($_REQUEST['schema']) && $_REQUEST['schema'] != '') {
 			if (! $emajdb->existsSchema($_REQUEST['schema'])) {
 				// If the schema doesn't exist anymore, recall the function with an error message and reload the browser
-				$errorMessage = sprintf($lang['emajschemamissing'], htmlspecialchars($_REQUEST['schema']));
+				$errorMessage = sprintf($lang['strschemamissing'], htmlspecialchars($_REQUEST['schema']));
 				unset($_REQUEST['schema']);
 				list_schemas('', $errorMessage);
 				$_reload_browser = true;
@@ -263,7 +263,7 @@
 		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
 			$columns = array_merge($columns, array(
 				'isemaj' => array(
-					'title' => $lang['emajisemaj'],
+					'title' => $lang['strisemaj'],
 					'field' => field('nspisemaj'),
 					'type'	=> 'callback',
 					'params'=> array('function' => 'renderIsEmaj','align' => 'center'),
@@ -345,16 +345,16 @@
 						'field' => field('rel_group'),
 					),
 					'priority' => array(
-						'title' => $lang['emajpriority'],
+						'title' => $lang['strpriority'],
 						'field' => field('rel_priority'),
 						'params'=> array('align' => 'center'),
 					),
 					'logdattsp' => array(
-						'title' => $lang['emajlogdattsp'],
+						'title' => $lang['strlogdattsp'],
 						'field' => field('rel_log_dat_tsp'),
 					),
 					'logidxtsp' => array(
-						'title' => $lang['emajlogidxtsp'],
+						'title' => $lang['strlogidxtsp'],
 						'field' => field('rel_log_idx_tsp'),
 					),
 				));
@@ -407,7 +407,7 @@
 						'url' => "schemas.php",
 					),
 					'assign' => array(
-						'content' => $lang['emajassign'],
+						'content' => $lang['strassign'],
 						'icon' => 'Assign',
 						'attr' => array (
 							'href' => array (
@@ -422,7 +422,7 @@
 						'multiaction' => 'assign_tables',
 					),
 					'move' => array(
-						'content' => $lang['emajmove'],
+						'content' => $lang['strmove'],
 						'icon' => 'Move',
 						'attr' => array (
 							'href' => array (
@@ -452,7 +452,7 @@
 						'multiaction' => 'modify_tables',
 					),
 					'remove' => array(
-						'content' => $lang['emajremove'],
+						'content' => $lang['strremove'],
 						'icon' => 'Remove',
 						'attr' => array (
 							'href' => array (
@@ -529,7 +529,7 @@
 						'url' => "schemas.php",
 					),
 					'assign' => array(
-						'content' => $lang['emajassign'],
+						'content' => $lang['strassign'],
 						'icon' => 'Assign',
 						'attr' => array (
 							'href' => array (
@@ -544,7 +544,7 @@
 						'multiaction' => 'assign_sequences',
 					),
 					'move' => array(
-						'content' => $lang['emajmove'],
+						'content' => $lang['strmove'],
 						'icon' => 'Move',
 						'attr' => array (
 							'href' => array (
@@ -559,7 +559,7 @@
 						'multiaction' => 'move_sequences',
 					),
 					'remove' => array(
-						'content' => $lang['emajremove'],
+						'content' => $lang['strremove'],
 						'icon' => 'Remove',
 						'attr' => array (
 							'href' => array (
@@ -602,15 +602,15 @@
 
 		// Prepare the action part of potential error messages
 		if ($nbTbl == 1)
-			$errMsgAction = sprintf($lang['emajassigntableerr'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($tablesList));
+			$errMsgAction = sprintf($lang['strassigntableerr'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($tablesList));
 		else
-			$errMsgAction = sprintf($lang['emajassigntableserr'], $nbTbl, htmlspecialchars($_REQUEST['schema']));
+			$errMsgAction = sprintf($lang['strassigntableserr'], $nbTbl, htmlspecialchars($_REQUEST['schema']));
 
 		// Check that the schema and the tables still exist.
 		checkRelations($_REQUEST['schema'], $tablesList, 'table', $errMsgAction);
 
 		$misc->printHeader('database', 'database', 'schemas');
-		$misc->printTitle($lang['emajassigntable']);
+		$misc->printTitle($lang['strassigntable']);
 
 		// Get created group names.
 		$knownGroups = $emajdb->getCreatedGroups();
@@ -623,9 +623,9 @@
 
 		// Build the form
 		if ($nbTbl > 1) {
-			echo "<p>" . sprintf($lang['emajconfirmassigntables'], $nbTbl, $_REQUEST['schema']) . "</p>\n{$fullList}";
+			echo "<p>" . sprintf($lang['strconfirmassigntables'], $nbTbl, $_REQUEST['schema']) . "</p>\n{$fullList}";
 		} else {
-			echo "<p>" . sprintf($lang['emajconfirmassigntable'], $_REQUEST['schema'], $tablesList) . "</p>\n";
+			echo "<p>" . sprintf($lang['strconfirmassigntable'], $_REQUEST['schema'], $tablesList) . "</p>\n";
 		}
 
 		echo "<form action=\"schemas.php\" method=\"post\">\n";
@@ -646,20 +646,20 @@
 		echo "\t<div class=\"form-comment\"></div>\n";
 
 		// priority level
-		echo "\t<div class=\"form-label\">{$lang['emajenterpriority']}</div>\n";
+		echo "\t<div class=\"form-label\">{$lang['strenterpriority']}</div>\n";
 		echo "\t<div class=\"form-input\">";
 		echo "<input type=\"number\" name=\"priority\" class=\"priority\" min=\"0\" max=\"2147483647\" value=\"\" />";
 		echo "</div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajpriorityhelp']}\"/></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strpriorityhelp']}\"/></div>\n";
 
 		// data log tablespace
-		echo "\t<div class=\"form-label\">{$lang['emajenterlogdattsp']}</div>\n";
+		echo "\t<div class=\"form-label\">{$lang['strenterlogdattsp']}</div>\n";
 		echo "\t<div class=\"form-input\"><select name=\"logdattsp\"";
 		if (empty($knownTsp))
 			echo " disabled>";
 		else {
 			echo ">";
-			echo "\t\t<option checked value=''>" . htmlspecialchars($lang['emajdefaulttsp']) . "\n";
+			echo "\t\t<option checked value=''>" . htmlspecialchars($lang['strdefaulttsp']) . "\n";
 			foreach($knownTsp as $r)
 				echo "\t\t<option>"  . htmlspecialchars($r['spcname']) . "\n";
 		}
@@ -667,13 +667,13 @@
 		echo "\t<div class=\"form-comment\"></div>\n";
 
 		// index log tablespace
-		echo "\t<div class=\"form-label\">{$lang['emajenterlogidxtsp']}</div>\n";
+		echo "\t<div class=\"form-label\">{$lang['strenterlogidxtsp']}</div>\n";
 		echo "\t<div class=\"form-input\"><select name=\"logidxtsp\"";
 		if (empty($knownTsp))
 			echo " disabled>";
 		else {
 			echo ">";
-			echo "\t\t<option checked value=''>" . htmlspecialchars($lang['emajdefaulttsp']) . "\n";
+			echo "\t\t<option checked value=''>" . htmlspecialchars($lang['strdefaulttsp']) . "\n";
 			foreach($knownTsp as $r)
 				echo "\t\t<option>" . htmlspecialchars($r['spcname']) . "\n";
 		}
@@ -681,18 +681,18 @@
 		echo "\t<div class=\"form-comment\"></div>\n";
 
 		// mark
-		echo "\t<div class=\"form-label\">{$lang['emajmarkiflogginggroup']}</div>\n";
+		echo "\t<div class=\"form-label\">{$lang['strmarkiflogginggroup']}</div>\n";
 		echo "\t<div class=\"form-input\"><input type=\"text\" name=\"mark\" size=\"22\" value=\"ASSIGN_%\" /></div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strmarknamehelp']}\"/></div>\n";
 
 		echo"</div>\n";
 
 		if ($nbAppTriggers > 0 ) {
-			echo "<p>" . sprintf($lang['emajtableshavetriggers'], $nbAppTriggers) . "</p>\n";
+			echo "<p>" . sprintf($lang['strtableshavetriggers'], $nbAppTriggers) . "</p>\n";
 		}
 
 		echo $misc->form;
-		echo "<p><input type=\"submit\" name=\"assigntable\" value=\"{$lang['emajassign']}\" id=\"ok\" />\n";
+		echo "<p><input type=\"submit\" name=\"assigntable\" value=\"{$lang['strassign']}\" id=\"ok\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";
 		echo "</form>\n";
 	}
@@ -708,9 +708,9 @@
 
 		// Prepare the action part of potential error messages
 		if ($_POST['nbtables'] == 1)
-			$errMsgAction = sprintf($lang['emajassigntableerr2'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['tables']), $_POST['group']);
+			$errMsgAction = sprintf($lang['strassigntableerr2'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['tables']), $_POST['group']);
 		else
-			$errMsgAction = sprintf($lang['emajassigntableserr2'], $_POST['nbtables'], htmlspecialchars($_POST['schema']), $_POST['group']);
+			$errMsgAction = sprintf($lang['strassigntableserr2'], $_POST['nbtables'], htmlspecialchars($_POST['schema']), $_POST['group']);
 
 		// Check that the schema and the tables still exist
 		checkRelations($_REQUEST['schema'], $_POST['tables'], 'table', $errMsgAction);
@@ -735,9 +735,9 @@
 			if ($emajdb->getEmajSchemasList() <> $emajSchemasBefore)
 				$_reload_browser = true;
 			if ($nbTables > 1)
-				list_schemas(sprintf($lang['emajassigntablesok'], $nbTables, htmlspecialchars($_POST['group'])));
+				list_schemas(sprintf($lang['strassigntablesok'], $nbTables, htmlspecialchars($_POST['group'])));
 			else
-				list_schemas(sprintf($lang['emajassigntableok'], $nbTables, htmlspecialchars($_POST['group'])));
+				list_schemas(sprintf($lang['strassigntableok'], $nbTables, htmlspecialchars($_POST['group'])));
 		} else {
 			list_schemas('', $errMsgAction);
 		}
@@ -760,24 +760,24 @@
 
 		// Prepare the action part of potential error messages
 		if ($nbTbl == 1)
-			$errMsgAction = sprintf($lang['emajmovetableerr'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($tablesList));
+			$errMsgAction = sprintf($lang['strmovetableerr'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($tablesList));
 		else
-			$errMsgAction = sprintf($lang['emajmovetableserr'], $nbTbl, htmlspecialchars($_REQUEST['schema']));
+			$errMsgAction = sprintf($lang['strmovetableserr'], $nbTbl, htmlspecialchars($_REQUEST['schema']));
 
 		// Check that the tables group still exists
 		recheckGroups($groupsList, $errMsgAction);
 
 		$misc->printHeader('database', 'database', 'schemas');
-		$misc->printTitle($lang['emajmovetable']);
+		$misc->printTitle($lang['strmovetable']);
 
 		// Get created group names
 		$knownGroups = $emajdb->getCreatedGroups();
 
 		// Build the form
 		if ($nbTbl > 1) {
-			echo "<p>" . sprintf($lang['emajconfirmmovetables'], $nbTbl, $_REQUEST['schema']) . "</p>\n{$fullList}";
+			echo "<p>" . sprintf($lang['strconfirmmovetables'], $nbTbl, $_REQUEST['schema']) . "</p>\n{$fullList}";
 		} else {
-			echo "<p>" . sprintf($lang['emajconfirmmovetable'], $_REQUEST['schema'], $tablesList, $groupsList) . "</p>\n";
+			echo "<p>" . sprintf($lang['strconfirmmovetable'], $_REQUEST['schema'], $tablesList, $groupsList) . "</p>\n";
 		}
 
 		echo "<form action=\"schemas.php\" method=\"post\">\n";
@@ -791,7 +791,7 @@
 		echo "<div class=\"form-container\">\n";
 
 		// group name
-		echo "\t<div class=\"form-label required\">{$lang['emajnewgroup']}</div>\n";
+		echo "\t<div class=\"form-label required\">{$lang['strnewgroup']}</div>\n";
 		echo "\t<div class=\"form-input\"><select name=\"newgroup\">";
 		foreach($knownGroups as $r)
 			echo "\t\t<option>", htmlspecialchars($r['group_name']), "\n";
@@ -799,13 +799,13 @@
 		echo "\t<div class=\"form-comment\"></div>\n";
 
 		// mark
-		echo "\t<div class=\"form-label\">{$lang['emajmarkiflogginggroup']}</div>\n";
+		echo "\t<div class=\"form-label\">{$lang['strmarkiflogginggroup']}</div>\n";
 		echo "\t<div class=\"form-input\"><input type=\"text\" name=\"mark\" size=\"22\" value=\"MOVE_%\" /></div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strmarknamehelp']}\"/></div>\n";
 		echo"</div>\n";
 
 		echo $misc->form;
-		echo "<p><input type=\"submit\" name=\"movetable\" value=\"{$lang['emajmove']}\" id=\"ok\" />\n";
+		echo "<p><input type=\"submit\" name=\"movetable\" value=\"{$lang['strmove']}\" id=\"ok\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";
 		echo "</form>\n";
 	}
@@ -821,9 +821,9 @@
 
 		// Prepare the action part of potential error messages
 		if ($_POST['nbtables'] == 1)
-			$errMsgAction = sprintf($lang['emajmovetableerr2'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['tables']), htmlspecialchars($_POST['oldgroups']), htmlspecialchars($_POST['newgroup']));
+			$errMsgAction = sprintf($lang['strmovetableerr2'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['tables']), htmlspecialchars($_POST['oldgroups']), htmlspecialchars($_POST['newgroup']));
 		else
-			$errMsgAction = sprintf($lang['emajmovetableserr2'], $_POST['nbtables'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['newgroup']));
+			$errMsgAction = sprintf($lang['strmovetableserr2'], $_POST['nbtables'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['newgroup']));
 
 		$allGroups = $_POST['oldgroups'] . ', ' . $_POST['newgroup'];
 
@@ -839,9 +839,9 @@
 		// Check the result and exit
 		if ($nbTables >= 0)
 			if ($nbTables > 1)
-				list_schemas(sprintf($lang['emajmovetablesok'], $nbTables, htmlspecialchars($_POST['newgroup'])));
+				list_schemas(sprintf($lang['strmovetablesok'], $nbTables, htmlspecialchars($_POST['newgroup'])));
 			else
-				list_schemas(sprintf($lang['emajmovetableok'], $nbTables, htmlspecialchars($_POST['newgroup'])));
+				list_schemas(sprintf($lang['strmovetableok'], $nbTables, htmlspecialchars($_POST['newgroup'])));
 		else
 			list_schemas('', $errMsgAction);
 	}
@@ -863,15 +863,15 @@
 
 		// Prepare the action part of potential error messages
 		if ($nbTbl == 1)
-			$errMsgAction = sprintf($lang['emajmodifytableerr'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($tablesList));
+			$errMsgAction = sprintf($lang['strmodifytableerr'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($tablesList));
 		else
-			$errMsgAction = sprintf($lang['emajmodifytableserr'], $nbTbl, htmlspecialchars($_REQUEST['schema']));
+			$errMsgAction = sprintf($lang['strmodifytableserr'], $nbTbl, htmlspecialchars($_REQUEST['schema']));
 
 		// Check that the tables group still exists
 		recheckGroups($groupsList, $errMsgAction);
 
 		$misc->printHeader('database', 'database', 'schemas');
-		$misc->printTitle($lang['emajmodifytable']);
+		$misc->printTitle($lang['strmodifytable']);
 
 		// Get the tables properties
 		$properties = $emajdb->getTablesProperties($_REQUEST['schema'],$tablesList);
@@ -880,22 +880,22 @@
 		if ($properties->fields['nb_priority'] == 1)
 			$currentPriority = $properties->fields['min_priority'];
 		else
-			$currentPriority = "<i>" . sprintf($lang['emajdifferentvalues'], $properties->fields['nb_priority']) . "</i>";
+			$currentPriority = "<i>" . sprintf($lang['strdifferentvalues'], $properties->fields['nb_priority']) . "</i>";
 
 		if ($properties->fields['nb_log_dat_tsp'] == 1) {
 			$currentLogDatTsp = $properties->fields['min_log_dat_tsp'];
 			if ($currentLogDatTsp == '')
-				$currentLogDatTsp = htmlspecialchars($lang['emajdefaulttsp']);
+				$currentLogDatTsp = htmlspecialchars($lang['strdefaulttsp']);
 		} else {
-			$currentLogDatTsp = "<i>" . sprintf($lang['emajdifferentvalues'], $properties->fields['nb_log_dat_tsp']) . "</i>";
+			$currentLogDatTsp = "<i>" . sprintf($lang['strdifferentvalues'], $properties->fields['nb_log_dat_tsp']) . "</i>";
 		}
 
 		if ($properties->fields['nb_log_idx_tsp'] == 1) {
 			$currentLogIdxTsp = $properties->fields['min_log_idx_tsp'];
 			if ($currentLogIdxTsp == '')
-				$currentLogIdxTsp = htmlspecialchars($lang['emajdefaulttsp']);
+				$currentLogIdxTsp = htmlspecialchars($lang['strdefaulttsp']);
 		} else {
-			$currentLogIdxTsp = "<i>" . sprintf($lang['emajdifferentvalues'], $properties->fields['nb_log_idx_tsp']) . "</i>";
+			$currentLogIdxTsp = "<i>" . sprintf($lang['strdifferentvalues'], $properties->fields['nb_log_idx_tsp']) . "</i>";
 		}
 
 		// Get tablespaces the current user can see
@@ -903,9 +903,9 @@
 
 		// Build the form
 		if ($nbTbl == 1) {
-			echo "<p>" . sprintf($lang['emajconfirmmodifytable'], $_REQUEST['schema'], $tablesList, $groupsList) . "</p>\n";
+			echo "<p>" . sprintf($lang['strconfirmmodifytable'], $_REQUEST['schema'], $tablesList, $groupsList) . "</p>\n";
 		} else {
-			echo "<p>" . sprintf($lang['emajconfirmmodifytables'], $nbTbl, $_REQUEST['schema']) . "</p>\n{$fullList}";
+			echo "<p>" . sprintf($lang['strconfirmmodifytables'], $nbTbl, $_REQUEST['schema']) . "</p>\n{$fullList}";
 		}
 		echo "<form action=\"schemas.php\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"modify_tables_ok\" />\n";
@@ -920,13 +920,13 @@
 		// Header row
 		echo "\t<div></div>\n";
 		echo "\t<div></div>\n";
-		echo "\t<div class=\"form-header\">{$lang['emajcurrentvalue']}</div>\n";
+		echo "\t<div class=\"form-header\">{$lang['strcurrentvalue']}</div>\n";
 		echo "\t<div></div>\n";
-		echo "\t<div class=\"form-header\">{$lang['emajnewvalue']}</div>\n";
+		echo "\t<div class=\"form-header\">{$lang['strnewvalue']}</div>\n";
 
 		// priority level
-		echo "\t<div class=\"form-label\">{$lang['emajenterpriority']}</div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajpriorityhelp']}\"/></div>\n";
+		echo "\t<div class=\"form-label\">{$lang['strenterpriority']}</div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strpriorityhelp']}\"/></div>\n";
 		echo "\t<div id=\"priorityvalue\" class=\"form-value style=\"justify-content: right;\"\">$currentPriority</div>\n";
 		echo "\t<div class=\"form-button\"><button type=\"button\" onclick=\"javascript:toogleInput(this, 'priority');\">&gt;&gt;</button></div>\n";
 		echo "\t<div class=\"form-input\">";
@@ -934,7 +934,7 @@
 		echo "</div>\n";
 
 		// data log tablespace
-		echo "\t<div class=\"form-label\">{$lang['emajenterlogdattsp']}</div>\n";
+		echo "\t<div class=\"form-label\">{$lang['strenterlogdattsp']}</div>\n";
 		echo "\t<div class=\"form-comment\"></div>\n";
 		echo "\t<div id=\"logdattspvalue\" class=\"form-value\">$currentLogDatTsp</div>\n";
 		echo "\t<div class=\"form-button\"><button type=\"button\" onclick=\"javascript:toogleInput(this, 'logdattsp');\">&gt;&gt;</button></div>\n";
@@ -943,7 +943,7 @@
 			echo " disabled>";
 		else {
 			echo ">";
-			echo "\t\t<option checked value=''>" . htmlspecialchars($lang['emajdefaulttsp']) . "\n";
+			echo "\t\t<option checked value=''>" . htmlspecialchars($lang['strdefaulttsp']) . "\n";
 			foreach($knownTsp as $r) {
 				echo "\t\t<option>", htmlspecialchars($r['spcname']), "\n";
 			}
@@ -951,7 +951,7 @@
 		echo "\t</select></div>\n";
 
 		// index log tablespace
-		echo "\t<div class=\"form-label\">{$lang['emajenterlogidxtsp']}</div>\n";
+		echo "\t<div class=\"form-label\">{$lang['strenterlogidxtsp']}</div>\n";
 		echo "\t<div class=\"form-comment\"></div>\n";
 		echo "\t<div id=\"logidxtspvalue\" class=\"form-value\">$currentLogIdxTsp</div>\n";
 		echo "\t<div class=\"form-button\"><button type=\"button\" onclick=\"javascript:toogleInput(this, 'logidxtsp');\">&gt;&gt;</button></div>\n";
@@ -960,7 +960,7 @@
 			echo " disabled>";
 		else {
 			echo ">";
-			echo "\t\t<option checked value=''>" . htmlspecialchars($lang['emajdefaulttsp']) . "\n";
+			echo "\t\t<option checked value=''>" . htmlspecialchars($lang['strdefaulttsp']) . "\n";
 			foreach($knownTsp as $r) {
 				echo "\t\t<option>", htmlspecialchars($r['spcname']), "\n";
 			}
@@ -968,8 +968,8 @@
 		echo "\t</select></div>\n";
 
 		// mark
-		echo "\t<div class=\"form-label\">{$lang['emajmarkiflogginggroup']}</div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+		echo "\t<div class=\"form-label\">{$lang['strmarkiflogginggroup']}</div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strmarknamehelp']}\"/></div>\n";
 		echo "\t<div class=\"form-input\" style=\"grid-column: span 3;\"><input type=\"text\" name=\"mark\" size=\"22\" value=\"MODIFY_%\" /></div>\n";
 
 		echo"</div>\n";
@@ -990,9 +990,9 @@
 
 		// Prepare the action part of potential error messages
 		if ($_POST['nbtables'] == 1)
-			$errMsgAction = sprintf($lang['emajmodifytableerr'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['tables']));
+			$errMsgAction = sprintf($lang['strmodifytableerr'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['tables']));
 		else
-			$errMsgAction = sprintf($lang['emajmodifytableserr'], $_POST['nbtables'], htmlspecialchars($_POST['schema']));
+			$errMsgAction = sprintf($lang['strmodifytableserr'], $_POST['nbtables'], htmlspecialchars($_POST['schema']));
 
 		// Check that the tables group still exists
 		recheckGroups($_POST['groups'], $errMsgAction);
@@ -1009,7 +1009,7 @@
 
 		// Check the result and exit
 		if ($nbTables >= 0)
-			list_schemas(sprintf($lang['emajmodifytablesok'], $nbTables));
+			list_schemas(sprintf($lang['strmodifytablesok'], $nbTables));
 		else
 			list_schemas('', $errMsgAction);
 	}
@@ -1031,21 +1031,21 @@
 
 		// Prepare the action part of potential error messages
 		if ($nbTbl == 1)
-			$errMsgAction = sprintf($lang['emajremovetableerr'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($tablesList), htmlspecialchars($groupsList));
+			$errMsgAction = sprintf($lang['strremovetableerr'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($tablesList), htmlspecialchars($groupsList));
 		else
-			$errMsgAction = sprintf($lang['emajremovetableserr'], $nbTbl, htmlspecialchars($_REQUEST['schema']));
+			$errMsgAction = sprintf($lang['strremovetableserr'], $nbTbl, htmlspecialchars($_REQUEST['schema']));
 
 		// Check that the tables group still exists
 		recheckGroups($groupsList, $errMsgAction);
 
 		$misc->printHeader('database', 'database', 'schemas');
-		$misc->printTitle($lang['emajremovetable']);
+		$misc->printTitle($lang['strremovetable']);
 
 		// Build the form
 		if ($nbTbl > 1) {
-			echo "<p>" . sprintf($lang['emajconfirmremovetables'], $nbTbl, $_REQUEST['schema']) . "</p>\n{$fullList}";
+			echo "<p>" . sprintf($lang['strconfirmremovetables'], $nbTbl, $_REQUEST['schema']) . "</p>\n{$fullList}";
 		} else {
-			echo "<p>" . sprintf($lang['emajconfirmremovetable'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($tablesList), htmlspecialchars($groupsList)) . "</p>\n";
+			echo "<p>" . sprintf($lang['strconfirmremovetable'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($tablesList), htmlspecialchars($groupsList)) . "</p>\n";
 		}
 
 		echo "<form action=\"schemas.php\" method=\"post\">\n";
@@ -1059,13 +1059,13 @@
 		echo "<div class=\"form-container\">\n";
 
 		// mark
-		echo "\t<div class=\"form-label\">{$lang['emajmarkiflogginggroup']}</div>\n";
+		echo "\t<div class=\"form-label\">{$lang['strmarkiflogginggroup']}</div>\n";
 		echo "\t<div class=\"form-input\"><input type=\"text\" name=\"mark\" size=\"22\" value=\"REMOVE_%\" /></div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strmarknamehelp']}\"/></div>\n";
 		echo"</div>\n";
 
 		echo $misc->form;
-		echo "<p><input type=\"submit\" name=\"removetable\" value=\"{$lang['emajremove']}\" id=\"ok\" />\n";
+		echo "<p><input type=\"submit\" name=\"removetable\" value=\"{$lang['strremove']}\" id=\"ok\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";
 		echo "</form>\n";
 	}
@@ -1081,9 +1081,9 @@
 
 		// Prepare the action part of potential error messages
 		if ($_POST['nbtables'] == 1)
-			$errMsgAction = sprintf($lang['emajremovetableerr'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['tables']), htmlspecialchars($_POST['groups']));
+			$errMsgAction = sprintf($lang['strremovetableerr'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['tables']), htmlspecialchars($_POST['groups']));
 		else
-			$errMsgAction = sprintf($lang['emajremovetableserr'], $_POST['nbtables'], htmlspecialchars($_POST['schema']));
+			$errMsgAction = sprintf($lang['strremovetableserr'], $_POST['nbtables'], htmlspecialchars($_POST['schema']));
 
 		// Check that the tables group still exists
 		recheckGroups($_POST['groups'], $errMsgAction);
@@ -1103,9 +1103,9 @@
 			if ($emajdb->getEmajSchemasList() <> $emajSchemasBefore)
 				$_reload_browser = true;
 			if ($nbTables > 1)
-				list_schemas(sprintf($lang['emajremovetablesok'], $nbTables));
+				list_schemas(sprintf($lang['strremovetablesok'], $nbTables));
 			else
-				list_schemas(sprintf($lang['emajremovetableok'], $nbTables));
+				list_schemas(sprintf($lang['strremovetableok'], $nbTables));
 		} else {
 			list_schemas('', $errMsgAction);
 		}
@@ -1127,24 +1127,24 @@
 
 		// Prepare the action part of potential error messages
 		if ($nbSeq == 1)
-			$errMsgAction = sprintf($lang['emajassignsequenceerr'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($sequencesList));
+			$errMsgAction = sprintf($lang['strassignsequenceerr'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($sequencesList));
 		else
-			$errMsgAction = sprintf($lang['emajassignsequenceserr'], $nbSeq, htmlspecialchars($_REQUEST['schema']));
+			$errMsgAction = sprintf($lang['strassignsequenceserr'], $nbSeq, htmlspecialchars($_REQUEST['schema']));
 
 		// Check that the schema and the sequences still exist
 		checkRelations($_REQUEST['schema'], $sequencesList, 'sequence', $errMsgAction);
 
 		$misc->printHeader('database', 'database', 'schemas');
-		$misc->printTitle($lang['emajassignsequence']);
+		$misc->printTitle($lang['strassignsequence']);
 
 		// Get created group names
 		$knownGroups = $emajdb->getCreatedGroups();
 
 		// Build the form
 		if ($nbSeq > 1) {
-			echo "<p>" . sprintf($lang['emajconfirmassignsequences'], $nbSeq, $_REQUEST['schema']) . "</p>\n{$fullList}";
+			echo "<p>" . sprintf($lang['strconfirmassignsequences'], $nbSeq, $_REQUEST['schema']) . "</p>\n{$fullList}";
 		} else {
-			echo "<p>" . sprintf($lang['emajconfirmassignsequence'], $_REQUEST['schema'], $sequencesList) . "</p>\n";
+			echo "<p>" . sprintf($lang['strconfirmassignsequence'], $_REQUEST['schema'], $sequencesList) . "</p>\n";
 		}
 
 		echo "<form action=\"schemas.php\" method=\"post\">\n";
@@ -1165,13 +1165,13 @@
 		echo "\t<div class=\"form-comment\"></div>\n";
 
 		// mark
-		echo "\t<div class=\"form-label\">{$lang['emajmarkiflogginggroup']}</div>\n";
+		echo "\t<div class=\"form-label\">{$lang['strmarkiflogginggroup']}</div>\n";
 		echo "\t<div class=\"form-input\"><input type=\"text\" name=\"mark\" size=\"22\" value=\"ASSIGN_%\" /></div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strmarknamehelp']}\"/></div>\n";
 
 		echo"</div>\n";
 		echo $misc->form;
-		echo "<p><input type=\"submit\" name=\"assignsequence\" value=\"{$lang['emajassign']}\" id=\"ok\" />\n";
+		echo "<p><input type=\"submit\" name=\"assignsequence\" value=\"{$lang['strassign']}\" id=\"ok\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";
 		echo "</form>\n";
 	}
@@ -1187,9 +1187,9 @@
 
 		// Prepare the action part of potential error messages
 		if ($_POST['nbsequences'] == 1)
-			$errMsgAction = sprintf($lang['emajassignsequenceerr2'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['sequences']), $_POST['group']);
+			$errMsgAction = sprintf($lang['strassignsequenceerr2'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['sequences']), $_POST['group']);
 		else
-			$errMsgAction = sprintf($lang['emajassignsequenceserr2'], $_POST['nbsequences'], htmlspecialchars($_POST['schema']), $_POST['group']);
+			$errMsgAction = sprintf($lang['strassignsequenceserr2'], $_POST['nbsequences'], htmlspecialchars($_POST['schema']), $_POST['group']);
 
 		// Check that the schema and the sequences still exist
 		checkRelations($_REQUEST['schema'], $_POST['sequences'], 'sequence', $errMsgAction);
@@ -1206,9 +1206,9 @@
 		// Check the result and exit
 		if ($nbSequences >= 0)
 			if ($nbSequences > 1)
-				list_schemas(sprintf($lang['emajassignsequencesok'], $nbSequences, htmlspecialchars($_POST['group'])));
+				list_schemas(sprintf($lang['strassignsequencesok'], $nbSequences, htmlspecialchars($_POST['group'])));
 			else
-				list_schemas(sprintf($lang['emajassignsequenceok'], $nbSequences, htmlspecialchars($_POST['group'])));
+				list_schemas(sprintf($lang['strassignsequenceok'], $nbSequences, htmlspecialchars($_POST['group'])));
 		else
 			list_schemas('', $errMsgAction);
 	}
@@ -1230,24 +1230,24 @@
 
 		// Prepare the action part of potential error messages
 		if ($nbSeq == 1)
-			$errMsgAction = sprintf($lang['emajmovesequenceerr'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($sequencesList));
+			$errMsgAction = sprintf($lang['strmovesequenceerr'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($sequencesList));
 		else
-			$errMsgAction = sprintf($lang['emajmovesequenceserr'], $nbSeq, htmlspecialchars($_REQUEST['schema']));
+			$errMsgAction = sprintf($lang['strmovesequenceserr'], $nbSeq, htmlspecialchars($_REQUEST['schema']));
 
 		// Check that the tables group still exists
 		recheckGroups($groupsList, $errMsgAction);
 
 		$misc->printHeader('database', 'database', 'schemas');
-		$misc->printTitle($lang['emajmovesequence']);
+		$misc->printTitle($lang['strmovesequence']);
 
 		// Get created group names
 		$knownGroups = $emajdb->getCreatedGroups();
 
 		// Build the form
 		if ($nbSeq > 1) {
-			echo "<p>" . sprintf($lang['emajconfirmmovesequences'], $nbSeq, $_REQUEST['schema']) . "</p>\n{$fullList}";
+			echo "<p>" . sprintf($lang['strconfirmmovesequences'], $nbSeq, $_REQUEST['schema']) . "</p>\n{$fullList}";
 		} else {
-			echo "<p>" . sprintf($lang['emajconfirmmovesequence'], $_REQUEST['schema'], $sequencesList, $groupsList) . "</p>\n";
+			echo "<p>" . sprintf($lang['strconfirmmovesequence'], $_REQUEST['schema'], $sequencesList, $groupsList) . "</p>\n";
 		}
 
 		echo "<form action=\"schemas.php\" method=\"post\">\n";
@@ -1261,7 +1261,7 @@
 		echo "<div class=\"form-container\">\n";
 
 		// group name
-		echo "\t<div class=\"form-label required\">{$lang['emajnewgroup']}</div>\n";
+		echo "\t<div class=\"form-label required\">{$lang['strnewgroup']}</div>\n";
 		echo "\t<div class=\"form-input\"><select name=\"newgroup\">";
 		foreach($knownGroups as $r)
 			echo "\t\t<option>", htmlspecialchars($r['group_name']), "\n";
@@ -1269,13 +1269,13 @@
 		echo "\t<div class=\"form-comment\"></div>\n";
 
 		// mark
-		echo "\t<div class=\"form-label\">{$lang['emajmarkiflogginggroup']}</div>\n";
+		echo "\t<div class=\"form-label\">{$lang['strmarkiflogginggroup']}</div>\n";
 		echo "\t<div class=\"form-input\"><input type=\"text\" name=\"mark\" size=\"22\" value=\"MOVE_%\" /></div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strmarknamehelp']}\"/></div>\n";
 		echo"</div>\n";
 
 		echo $misc->form;
-		echo "<p><input type=\"submit\" name=\"movesequence\" value=\"{$lang['emajmove']}\" id=\"ok\" />\n";
+		echo "<p><input type=\"submit\" name=\"movesequence\" value=\"{$lang['strmove']}\" id=\"ok\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";
 		echo "</form>\n";
 	}
@@ -1291,9 +1291,9 @@
 
 		// Prepare the action part of potential error messages
 		if ($_POST['nbsequences'] == 1)
-			$errMsgAction = sprintf($lang['emajmovesequenceerr2'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['sequences']), htmlspecialchars($_POST['oldgroups']), htmlspecialchars($_POST['newgroup']));
+			$errMsgAction = sprintf($lang['strmovesequenceerr2'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['sequences']), htmlspecialchars($_POST['oldgroups']), htmlspecialchars($_POST['newgroup']));
 		else
-			$errMsgAction = sprintf($lang['emajmovesequenceserr2'], $_POST['nbsequences'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($_POST['newgroup']));
+			$errMsgAction = sprintf($lang['strmovesequenceserr2'], $_POST['nbsequences'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($_POST['newgroup']));
 
 		$allGroups = $_POST['oldgroups'] . ', ' . $_POST['newgroup'];
 
@@ -1309,9 +1309,9 @@
 		// Check the result and exit
 		if ($nbSequences>= 0)
 			if ($nbSequences > 1)
-				list_schemas(sprintf($lang['emajmovesequencesok'], $nbSequences, htmlspecialchars($_POST['newgroup'])));
+				list_schemas(sprintf($lang['strmovesequencesok'], $nbSequences, htmlspecialchars($_POST['newgroup'])));
 			else
-				list_schemas(sprintf($lang['emajmovesequenceok'], $nbSequences, htmlspecialchars($_POST['newgroup'])));
+				list_schemas(sprintf($lang['strmovesequenceok'], $nbSequences, htmlspecialchars($_POST['newgroup'])));
 		else
 			list_schemas('', $errMsgAction);
 	}
@@ -1333,21 +1333,21 @@
 
 		// Prepare the action part of potential error messages
 		if ($nbSeq == 1)
-			$errMsgAction = sprintf($lang['emajremovesequenceerr'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($sequencesList), htmlspecialchars($groupsList));
+			$errMsgAction = sprintf($lang['strremovesequenceerr'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($sequencesList), htmlspecialchars($groupsList));
 		else
-			$errMsgAction = sprintf($lang['emajremovesequenceserr'], $nbSeq, htmlspecialchars($_REQUEST['schema']));
+			$errMsgAction = sprintf($lang['strremovesequenceserr'], $nbSeq, htmlspecialchars($_REQUEST['schema']));
 
 		// Check that the tables group still exists
 		recheckGroups($groupsList, $errMsgAction);
 
 		$misc->printHeader('database', 'database', 'schemas');
-		$misc->printTitle($lang['emajremovesequence']);
+		$misc->printTitle($lang['strremovesequence']);
 
 		// Build the form
 		if ($nbSeq > 1) {
-			echo "<p>" . sprintf($lang['emajconfirmremovesequences'], $nbSeq, $_REQUEST['schema']) . "</p>\n{$fullList}";
+			echo "<p>" . sprintf($lang['strconfirmremovesequences'], $nbSeq, $_REQUEST['schema']) . "</p>\n{$fullList}";
 		} else {
-			echo "<p>" . sprintf($lang['emajconfirmremovesequence'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($sequencesList), htmlspecialchars($groupsList)) . "</p>\n";
+			echo "<p>" . sprintf($lang['strconfirmremovesequence'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($sequencesList), htmlspecialchars($groupsList)) . "</p>\n";
 		}
 		echo "<form action=\"schemas.php\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"remove_sequences_ok\" />\n";
@@ -1360,13 +1360,13 @@
 		echo "<div class=\"form-container\">\n";
 
 		// mark
-		echo "\t<div class=\"form-label\">{$lang['emajmarkiflogginggroup']}</div>\n";
+		echo "\t<div class=\"form-label\">{$lang['strmarkiflogginggroup']}</div>\n";
 		echo "\t<div class=\"form-input\"><input type=\"text\" name=\"mark\" size=\"22\" value=\"REMOVE_%\" /></div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strmarknamehelp']}\"/></div>\n";
 		echo"</div>\n";
 
 		echo $misc->form;
-		echo "<p><input type=\"submit\" name=\"removesequence\" value=\"{$lang['emajremove']}\" id=\"ok\" />\n";
+		echo "<p><input type=\"submit\" name=\"removesequence\" value=\"{$lang['strremove']}\" id=\"ok\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";
 		echo "</form>\n";
 	}
@@ -1382,9 +1382,9 @@
 
 		// Prepare the action part of potential error messages
 		if ($_POST['nbsequences'] == 1)
-			$errMsgAction = sprintf($lang['emajremovesequenceerr'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['sequences']), htmlspecialchars($_POST['groups']));
+			$errMsgAction = sprintf($lang['strremovesequenceerr'], htmlspecialchars($_POST['schema']), htmlspecialchars($_POST['sequences']), htmlspecialchars($_POST['groups']));
 		else
-			$errMsgAction = sprintf($lang['emajremovesequenceserr'], $_POST['nbsequences'], htmlspecialchars($_POST['schema']));
+			$errMsgAction = sprintf($lang['strremovesequenceserr'], $_POST['nbsequences'], htmlspecialchars($_POST['schema']));
 
 		// Check that the tables group still exists
 		recheckGroups($_POST['groups'], $errMsgAction);
@@ -1398,9 +1398,9 @@
 		// Check the result and exit
 		if ($nbSequences>= 0)
 			if ($nbSequences > 1)
-				list_schemas(sprintf($lang['emajremovesequencesok'], $nbSequences));
+				list_schemas(sprintf($lang['strremovesequencesok'], $nbSequences));
 			else
-				list_schemas(sprintf($lang['emajremovesequenceok'], $nbSequences));
+				list_schemas(sprintf($lang['strremovesequenceok'], $nbSequences));
 		else
 			list_schemas($errMsgAction);
 	}

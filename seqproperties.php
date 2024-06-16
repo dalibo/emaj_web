@@ -105,9 +105,9 @@
 			$type = $emajdb->getEmajTypeTblSeq($_REQUEST['schema'], $_REQUEST['sequence']);
 
 			if ($type == 'L') {
-				echo "<p>{$lang['emajemajlogsequence']}</p>\n";
+				echo "<p>{$lang['stremajlogsequence']}</p>\n";
 			} elseif ($type == 'E') {
-				echo "<p>{$lang['emajinternalsequence']}</p>\n";
+				echo "<p>{$lang['strinternalsequence']}</p>\n";
 			} else {
 				$groups = $emajdb->getTableGroupsTblSeq($_REQUEST['schema'], $_REQUEST['sequence']);
 
@@ -119,7 +119,7 @@
 						'params'=> array('function' => 'renderlinktogroup')
 					),
 					'starttime' => array(
-						'title' => $lang['emajassigned'],
+						'title' => $lang['strassigned'],
 						'field' => field('start_datetime'),
 						'type' => 'spanned',
 						'params'=> array(
@@ -129,7 +129,7 @@
 							),
 					),
 					'stoptime' => array(
-						'title' => $lang['emajremoved'],
+						'title' => $lang['strremoved'],
 						'field' => field('stop_datetime'),
 						'type' => 'spanned',
 						'params'=> array(
@@ -140,7 +140,7 @@
 					),
 				);
 
-				$misc->printTable($groups, $columns, $actions, 'sequences-groups', $lang['emajseqnogroupownership']);
+				$misc->printTable($groups, $columns, $actions, 'sequences-groups', $lang['strseqnogroupownership']);
 			}
 		}
 	}

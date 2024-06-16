@@ -171,9 +171,9 @@
 			$type = $emajdb->getEmajTypeTblSeq($_REQUEST['schema'], $_REQUEST['table']);
 
 			if ($type == 'L') {
-				echo "<p>{$lang['emajemajlogtable']}</p>\n";
+				echo "<p>{$lang['stremajlogtable']}</p>\n";
 			} elseif ($type == 'E') {
-				echo "<p>{$lang['emajinternaltable']}</p>\n";
+				echo "<p>{$lang['strinternaltable']}</p>\n";
 			} else {
 				$groups = $emajdb->getTableGroupsTblSeq($_REQUEST['schema'], $_REQUEST['table']);
 
@@ -185,7 +185,7 @@
 						'params'=> array('function' => 'renderlinktogroup')
 					),
 					'starttime' => array(
-						'title' => $lang['emajassigned'],
+						'title' => $lang['strassigned'],
 						'field' => field('start_datetime'),
 						'type' => 'spanned',
 						'params'=> array(
@@ -195,7 +195,7 @@
 							),
 					),
 					'stoptime' => array(
-						'title' => $lang['emajremoved'],
+						'title' => $lang['strremoved'],
 						'field' => field('stop_datetime'),
 						'type' => 'spanned',
 						'params'=> array(
@@ -206,7 +206,7 @@
 					),
 				);
 		
-				$misc->printTable($groups, $columns, $actions, 'tblproperties-groups', $lang['emajtblnogroupownership']);
+				$misc->printTable($groups, $columns, $actions, 'tblproperties-groups', $lang['strtblnogroupownership']);
 			}
 
 			echo "<hr/>\n";
@@ -220,7 +220,7 @@
 
 		$columns = array(
 			'tgrank' => array(
-				'title' => $lang['emajexecorder'],
+				'title' => $lang['strexecorder'],
 				'field' => field('tgrank'),
 				'params'=> array('align' => 'center'),
 			),
@@ -234,19 +234,19 @@
 				'params'=> array('align' => 'center'),
 			),
 			'tgevent' => array(
-				'title' => $lang['emajtriggeringevent'],
+				'title' => $lang['strtriggeringevent'],
 				'field' => field('tgevent'),
 			),
 			'tgfnct' => array(
-				'title' => $lang['emajcalledfunction'],
+				'title' => $lang['strcalledfunction'],
 				'field' => field('tgfnct'),
 			),
 			'tgenabled' => array(
-				'title' => $lang['emajstate'],
+				'title' => $lang['strstate'],
 				'field' => field('tgstate'),
 			),
 			'tgisemaj' => array(
-				'title' => $lang['emajisemaj'],
+				'title' => $lang['strisemaj'],
 				'field' => field('tgisemaj'),
 				'type'	=> 'callback',
 				'params'=> array('function' => 'renderIsEmaj', 'align' => 'center'),
@@ -257,9 +257,9 @@
 			if ($emajdb->getNumEmajVersion() >= 30100) {			// version >= 3.1.0
 				$columns = array_merge($columns, array(
 					'emajisautodisable' => array(
-						'title' => $lang['emajisautodisable'],
+						'title' => $lang['strisautodisable'],
 						'field' => field('tgisautodisable'),
-						'info'  => $lang['emajisautodisablehelp'],
+						'info'  => $lang['strisautodisablehelp'],
 						'params'=> array(
 							'map' => array('t' => 'ON', 'f' => 'OFF'),
 							'align' => 'center'
@@ -321,9 +321,9 @@
 		$nbTriggers = $emajdb->ignoreAppTrigger('ADD', $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['trigger']);
 
 		if ($nbTriggers > 0) {
-			showProperties(sprintf($lang['emajtriggernoautook'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+			showProperties(sprintf($lang['strtriggernoautook'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		} else {
-			showProperties('',sprintf($lang['emajtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+			showProperties('',sprintf($lang['strtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		}
 	}
 
@@ -337,9 +337,9 @@
 		$nbTriggers = $emajdb->ignoreAppTrigger('REMOVE', $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['trigger']);
 
 		if ($nbTriggers > 0) {
-			showProperties(sprintf($lang['emajtriggerautook'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+			showProperties(sprintf($lang['strtriggerautook'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		} else {
-			showProperties('',sprintf($lang['emajtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+			showProperties('',sprintf($lang['strtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		}
 	}
 

@@ -66,22 +66,22 @@
 
 		$columnsInProgressRlbk = array(
 			'rlbkId' => array(
-				'title' => $lang['emajrlbkid'],
+				'title' => $lang['strrlbkid'],
 				'field' => field('rlbk_id'),
 				'params'=> array('align' => 'right'),
 				'url'   => "emajrollbacks.php?action=show_rollback&amp;{$misc->href}&amp;",
 				'vars'  => array('rlbkid' => 'rlbk_id'),
 			),
 			'rlbkGroups' => array(
-				'title' => $lang['emajgroups'],
+				'title' => $lang['strgroups'],
 				'field' => field('rlbk_groups_list'),
 			),
 			'rlbkStatus' => array(
-				'title' => $lang['emajstate'],
+				'title' => $lang['strstate'],
 				'field' => field('rlbk_status'),
 			),
 			'rlbkStartDateTime' => array(
-				'title' => $lang['emajrlbkstart'],
+				'title' => $lang['strrlbkstart'],
 				'field' => field('rlbk_start_datetime'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -91,7 +91,7 @@
 				),
 			),
 			'rlbkElapse' => array(
-				'title' => $lang['emajcurrentduration'],
+				'title' => $lang['strcurrentduration'],
 				'field' => field('rlbk_current_elapse'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -100,7 +100,7 @@
 				),
 			),
 			'rlbkRemaining' => array(
-				'title' => $lang['emajestimremaining'],
+				'title' => $lang['strestimremaining'],
 				'field' => field('rlbk_remaining'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -109,21 +109,21 @@
 				),
 			),
 			'rlbkCompletionPct' => array(
-				'title' => $lang['emajpctcompleted'],
+				'title' => $lang['strpctcompleted'],
 				'field' => field('rlbk_completion_pct'),
 				'params'=> array('align' => 'right'),
 			),
 			'rlbkMark' => array(
-				'title' => $lang['emajtargetmark'],
+				'title' => $lang['strtargetmark'],
 				'field' => field('rlbk_mark'),
 			),
 			'isLogged' => array(
-				'title' => $lang['emajislogged'],
+				'title' => $lang['strislogged'],
 				'field' => field('rlbk_is_logged'),
 				'type'	=> 'yesno',
 			),
 			'rlbkNbSession' => array(
-				'title' => $lang['emajnbsession'],
+				'title' => $lang['strnbsession'],
 				'field' => field('rlbk_nb_session'),
 				'params'=> array('align' => 'right'),
 			),
@@ -151,18 +151,18 @@
 
 		$columnsCompletedRlbk = array(
 			'rlbkId' => array(
-				'title' => $lang['emajrlbkid'],
+				'title' => $lang['strrlbkid'],
 				'field' => field('rlbk_id'),
 				'params'=> array('align' => 'right'),
 				'url'   => "emajrollbacks.php?action=show_rollback&amp;{$misc->href}&amp;",
 				'vars'  => array('rlbkid' => 'rlbk_id'),
 			),
 			'rlbkGroups' => array(
-				'title' => $lang['emajgroups'],
+				'title' => $lang['strgroups'],
 				'field' => field('rlbk_groups_list'),
 			),
 			'rlbkStatus' => array(
-				'title' => $lang['emajstate'],
+				'title' => $lang['strstate'],
 				'field' => field('rlbk_status'),
 				'type'	=> 'callback',
 				'params'=> array(
@@ -173,7 +173,7 @@
 				'filter' => false,
 			),
 			'rlbkStartDateTime' => array(
-				'title' => $lang['emajrlbkstart'],
+				'title' => $lang['strrlbkstart'],
 				'field' => field('rlbk_start_datetime'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -184,7 +184,7 @@
 				'sorter_text_extraction' => 'span_text',
 			),
 			'rlbkEndDateTime' => array(
-				'title' => $lang['emajrlbkend'],
+				'title' => $lang['strrlbkend'],
 				'field' => field('rlbk_end_datetime'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -195,7 +195,7 @@
 				'sorter_text_extraction' => 'span_text',
 			),
 			'rlbkDuration' => array(
-				'title' => $lang['emajduration'],
+				'title' => $lang['strduration'],
 				'field' => field('rlbk_duration'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -206,16 +206,16 @@
 				'filter' => false,
 			),
 			'rlbkMark' => array(
-				'title' => $lang['emajtargetmark'],
+				'title' => $lang['strtargetmark'],
 				'field' => field('rlbk_mark'),
 			),
 			'isLogged' => array(
-				'title' => $lang['emajislogged'],
+				'title' => $lang['strislogged'],
 				'field' => field('rlbk_is_logged'),
 				'type'	=> 'yesno',
 			),
 			'rlbkNbSession' => array(
-				'title' => $lang['emajnbsession'],
+				'title' => $lang['strnbsession'],
 				'field' => field('rlbk_nb_session'),
 				'params'=> array('align' => 'right'),
 			),
@@ -245,7 +245,7 @@
 		if ($emajdb->getNumEmajVersion() >= 40300 && $emajdb->isEmaj_Adm()) {	// version >= 4.3
 			$actions = array_merge($actions, array(
 				'comment_rollback' => array(
-					'content' => $lang['emajsetcomment'],
+					'content' => $lang['strsetcomment'],
 					'icon' => 'Bubble',
 					'attr' => array (
 						'href' => array (
@@ -261,18 +261,18 @@
 
 		// Get rollback information from the database
 		$completedRlbks = $emajdb->getCompletedRlbk();
-		$misc->printTitle($lang['emajinprogressrlbk']);
+		$misc->printTitle($lang['strinprogressrlbk']);
 		if ($emajdb->isDblinkUsable()) {
 			$inProgressRlbks = $emajdb->getInProgressRlbk();
-			$misc->printTable($inProgressRlbks, $columnsInProgressRlbk, $actions, 'inProgressRlbk', $lang['emajnorlbk']);
+			$misc->printTable($inProgressRlbks, $columnsInProgressRlbk, $actions, 'inProgressRlbk', $lang['strnorlbk']);
 		} else {
-			echo "<p>{$lang['emajrlbkmonitornotavailable']}</p>\n";
+			echo "<p>{$lang['strrlbkmonitornotavailable']}</p>\n";
 		}
 		echo "<hr/>\n";
 
-		$misc->printTitle($lang['emajcompletedrlbk']);
+		$misc->printTitle($lang['strcompletedrlbk']);
 
-		$misc->printTable($completedRlbks, $columnsCompletedRlbk, $actions, 'completedRlbk', $lang['emajnorlbk'], null, array('sorter' => true, 'filter' => true));
+		$misc->printTable($completedRlbks, $columnsCompletedRlbk, $actions, 'completedRlbk', $lang['strnorlbk'], null, array('sorter' => true, 'filter' => true));
 
 		echo "<hr/>\n";
 
@@ -283,11 +283,11 @@
 				'field' => field('cons_group'),
 			),
 			'consTargetMark' => array(
-				'title' => $lang['emajtargetmark'],
+				'title' => $lang['strtargetmark'],
 				'field' => field('cons_target_rlbk_mark_name'),
 			),
 			'consTargetMarkDateTime' => array(
-				'title' => $lang['emajmarksetat'],
+				'title' => $lang['strmarksetat'],
 				'field' => field('cons_target_rlbk_mark_datetime'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -297,21 +297,21 @@
 				),
 			),
 			'rlbkNbRow' => array(
-				'title' => $lang['emajnbchanges'],
+				'title' => $lang['strnbchanges'],
 				'field' => field('cons_rows'),
 				'params'=> array('align' => 'right'),
 			),
 			'rlbkNbMark' => array(
-				'title' => $lang['emajnbintermediatemark'],
+				'title' => $lang['strnbintermediatemark'],
 				'field' => field('cons_marks'),
 				'params'=> array('align' => 'right'),
 			),
 			'consEndMark' => array(
-				'title' => $lang['emajendrollbackmark'],
+				'title' => $lang['strendrollbackmark'],
 				'field' => field('cons_end_rlbk_mark_name'),
 			),
 			'consEndMarkDateTime' => array(
-				'title' => $lang['emajmarksetat'],
+				'title' => $lang['strmarksetat'],
 				'field' => field('cons_end_rlbk_mark_datetime'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -327,7 +327,7 @@
 		if ($emajdb->isEmaj_Adm()) {
 			$actions = array(
 				'consolidate' => array(
-					'content' => $lang['emajconsolidate'],
+					'content' => $lang['strconsolidate'],
 					'icon' => 'Consolidate',
 					'attr' => array (
 						'href' => array (
@@ -345,9 +345,9 @@
 		// Get rollback information from the database
 		$consolidableRlbks = $emajdb->getConsolidableRlbk();
 
-		$misc->printTitle($lang['emajconsolidablerlbk']);
+		$misc->printTitle($lang['strconsolidablerlbk']);
 		$inProgressRlbks = $emajdb->getInProgressRlbk();
-		$misc->printTable($consolidableRlbks, $columnsConsRlbk, $actions, 'consolidableRlbk', $lang['emajnorlbk']);
+		$misc->printTable($consolidableRlbks, $columnsConsRlbk, $actions, 'consolidableRlbk', $lang['strnorlbk']);
 	}
 
 	/**
@@ -364,7 +364,7 @@
 
 		if (isset($_REQUEST['asyncRlbk']))
 			// An asynchronous rollback has just been spawned, report the rollback id
-			$misc->printMsg(sprintf($lang['emajasyncrlbkstarted'], $_REQUEST['rlbkid']));
+			$misc->printMsg(sprintf($lang['strasyncrlbkstarted'], $_REQUEST['rlbkid']));
 
 		$rlbkInfo = $emajdb->getOneRlbk($_REQUEST['rlbkid']);
 
@@ -389,15 +389,15 @@
 
 		$columnsProperties = array(
 			'rlbkGroups' => array(
-				'title' => $lang['emajgroups'],
+				'title' => $lang['strgroups'],
 				'field' => field('rlbk_groups_list'),
 			),
 			'rlbkMark' => array(
-				'title' => $lang['emajtargetmark'],
+				'title' => $lang['strtargetmark'],
 				'field' => field('rlbk_mark'),
 			),
 			'rlbkMarkDateTime' => array(
-				'title' => $lang['emajmarksetat'],
+				'title' => $lang['strmarksetat'],
 				'field' => field('rlbk_mark_datetime'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -407,22 +407,22 @@
 				),
 			),
 			'isLogged' => array(
-				'title' => $lang['emajislogged'],
+				'title' => $lang['strislogged'],
 				'field' => field('rlbk_is_logged'),
 				'type'	=> 'yesno',
 			),
 			'rlbkNbSession' => array(
-				'title' => $lang['emajnbsession'],
+				'title' => $lang['strnbsession'],
 				'field' => field('rlbk_nb_session'),
 				'params'=> array('align' => 'center'),
 			),
 			'rlbkNbTable' => array(
-				'title' => $lang['emajnbtabletoprocess'],
+				'title' => $lang['strnbtabletoprocess'],
 				'field' => field('rlbk_tbl'),
 				'params'=> array('align' => 'center'),
 			),
 			'rlbkNbSeq' => array(
-				'title' => $lang['emajnbseqtoprocess'],
+				'title' => $lang['strnbseqtoprocess'],
 				'field' => field('rlbk_seq'),
 				'params'=> array('align' => 'center'),
 			),
@@ -430,7 +430,7 @@
 
 		$columnsCompleted = array(
 			'rlbkStatus' => array(
-				'title' => $lang['emajstate'],
+				'title' => $lang['strstate'],
 				'field' => field('rlbk_status'),
 				'type'	=> 'callback',
 				'params'=> array(
@@ -439,7 +439,7 @@
 				),
 			),
 			'rlbkStartDateTime' => array(
-				'title' => $lang['emajrlbkstart'],
+				'title' => $lang['strrlbkstart'],
 				'field' => field('rlbk_start_datetime'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -449,7 +449,7 @@
 				),
 			),
 			'rlbkEndDateTime' => array(
-				'title' => $lang['emajrlbkend'],
+				'title' => $lang['strrlbkend'],
 				'field' => field('rlbk_end_datetime'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -459,7 +459,7 @@
 				),
 			),
 			'rlbkGlobalDuration' => array(
-				'title' => $lang['emajglobalduration'],
+				'title' => $lang['strglobalduration'],
 				'field' => field('rlbk_global_duration'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -468,7 +468,7 @@
 				),
 			),
 			'rlbkPlanningDuration' => array(
-				'title' => $lang['emajplanningduration'],
+				'title' => $lang['strplanningduration'],
 				'field' => field('rlbk_planning_duration'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -477,7 +477,7 @@
 				),
 			),
 			'rlbkLockingDuration' => array(
-				'title' => $lang['emajlockingduration'],
+				'title' => $lang['strlockingduration'],
 				'field' => field('rlbk_locking_duration'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -489,11 +489,11 @@
 
 		$columnsInProgress = array(
 			'rlbkStatus' => array(
-				'title' => $lang['emajstate'],
+				'title' => $lang['strstate'],
 				'field' => field('rlbk_status'),
 			),
 			'rlbkStartDateTime' => array(
-				'title' => $lang['emajrlbkstart'],
+				'title' => $lang['strrlbkstart'],
 				'field' => field('rlbk_start_datetime'),
 				'params'=> array('align' => 'center'),
 				'type' => 'spanned',
@@ -504,7 +504,7 @@
 				),
 			),
 			'rlbkElapse' => array(
-				'title' => $lang['emajcurrentduration'],
+				'title' => $lang['strcurrentduration'],
 				'field' => field('rlbk_current_elapse'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -513,7 +513,7 @@
 				),
 			),
 			'rlbkPlanningDuration' => array(
-				'title' => $lang['emajplanningduration'],
+				'title' => $lang['strplanningduration'],
 				'field' => field('rlbk_planning_duration'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -522,7 +522,7 @@
 				),
 			),
 			'rlbkLockingDuration' => array(
-				'title' => $lang['emajlockingduration'],
+				'title' => $lang['strlockingduration'],
 				'field' => field('rlbk_locking_duration'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -531,7 +531,7 @@
 				),
 			),
 			'rlbkRemaining' => array(
-				'title' => $lang['emajestimremaining'],
+				'title' => $lang['strestimremaining'],
 				'field' => field('rlbk_remaining'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -540,7 +540,7 @@
 				),
 			),
 			'rlbkCompletionPct' => array(
-				'title' => $lang['emajpctcompleted'],
+				'title' => $lang['strpctcompleted'],
 				'field' => field('rlbk_completion_pct'),
 				'params'=> array('align' => 'center'),
 			),
@@ -562,7 +562,7 @@
 
 		$columnsSessions = array(
 			'session' => array(
-				'title' => $lang['emajrlbksession'],
+				'title' => $lang['strrlbksession'],
 				'field' => field('rlbs_session'),
 				'params'=> array('align' => 'center'),
 			),
@@ -587,7 +587,7 @@
 				),
 			),
 			'sessionDuration' => array(
-				'title' => $lang['emajduration'],
+				'title' => $lang['strduration'],
 				'field' => field('rlbs_duration'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -596,7 +596,7 @@
 				),
 			),
 			'sessionTxId' => array(
-				'title' => $lang['emajtxid'],
+				'title' => $lang['strtxid'],
 				'field' => field('rlbs_txid'),
 				'params'=> array('align' => 'right'),
 			),
@@ -613,11 +613,11 @@
 				'field' => field('rlbk_schema_table'),
 			),
 			'step' => array(
-				'title' => $lang['emajrlbkstep'],
+				'title' => $lang['strrlbkstep'],
 				'field' => field('rlbp_action'),
 			),
 			'session' => array(
-				'title' => $lang['emajrlbksession'],
+				'title' => $lang['strrlbksession'],
 				'field' => field('rlbp_session'),
 				'params'=> array('align' => 'center'),
 			),
@@ -632,7 +632,7 @@
 				),
 			),
 			'duration' => array(
-				'title' => $lang['emajduration'],
+				'title' => $lang['strduration'],
 				'field' => field('rlbp_duration'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -645,7 +645,7 @@
 		if ($_SESSION['emaj']['RlbkShowEstimates']) {
 			$columnsSteps = array_merge($columnsSteps, array(
 				'estimatedDuration' => array(
-					'title' => $lang['emajestimatedduration'],
+					'title' => $lang['strestimatedduration'],
 					'field' => field('rlbp_estimated_duration'),
 					'type' => 'spanned',
 					'params'=> array(
@@ -678,12 +678,12 @@
 		if ($_SESSION['emaj']['RlbkShowEstimates']) {
 			$columnsSteps = array_merge($columnsSteps, array(
 				'estimatedQuantity' => array(
-					'title' => $lang['emajestimatedquantity'],
+					'title' => $lang['strestimatedquantity'],
 					'field' => field('rlbp_estimated_quantity'),
 					'params'=> array('class' => 'rlbkEstimates', 'align' => 'right'),
 				),
 				'estimateMethod' => array(
-					'title' => $lang['emajestimationmethod'],
+					'title' => $lang['strestimationmethod'],
 					'field' => field('rlbp_estimate_method'),
 					'params'=> array('class' => 'rlbkEstimates', 'align' => 'center'),
 				),
@@ -741,7 +741,7 @@
 		echo "\t<div class=\"rlbk-nav-3\">\n";
 		echo "\t\t<div class=\"rlbk-nav-title\">\n";
 		echo "\t\t<a href=\"emajrollbacks.php?action=show_rollback&amp;{$misc->href}&amp;rlbkid=" . htmlspecialchars($_REQUEST['rlbkid']) . "\">\n";
-		echo "\t\t\t{$lang['emajrollback']} #" . htmlspecialchars($_REQUEST['rlbkid']) . "</a>\n";
+		echo "\t\t\t{$lang['strrollback']} #" . htmlspecialchars($_REQUEST['rlbkid']) . "</a>\n";
 		echo "\t\t</div>\n";
 		echo "\t\t<div>\n";
 		echo "\t\t\t<a href=\"emajrollbacks.php?action=show_rollbacks&amp;{$misc->href}\">{$lang['strbacktolist']}</a>\n";
@@ -789,7 +789,7 @@
 			// comment_group
 			if ($emajdb->getNumEmajVersion() >= 40300) {	// version >= 4.3
 				$navlinks['comment_rollback'] = array (
-					'content' => $lang['emajsetcomment'],
+					'content' => $lang['strsetcomment'],
 					'attr'=> array (
 						'href' => array (
 							'url' => 'emajrollbacks.php',
@@ -808,7 +808,7 @@
 
 		// print rollback progress data
 		$rlbkInfo->moveFirst();
-		echo "<h4>{$lang['emajrlbkprogress']}</h4>\n";
+		echo "<h4>{$lang['strrlbkprogress']}</h4>\n";
 		if ($isCompleted) {
 
 			// The rollback is completed
@@ -821,7 +821,7 @@
 
 		// final execution report of the rollback operation
 		if ($isCompleted) {
-			$misc->printTitle($lang['emajrlbkexecreport']);
+			$misc->printTitle($lang['strrlbkexecreport']);
 			echo "<div id=\"rlbkReport\" style=\"margin-top:15px;margin-bottom:15px\" >\n";
 			$misc->printTable($rlbkReportMsgs, $columnsReport, $actions, 'rlbkReport', null, null, array('sorter' => true, 'filter' => false));
 			echo "</div>\n";
@@ -829,33 +829,33 @@
 
 		// print planning data
 		if ($rlbkSteps->recordCount() > 0) {
-			$misc->printTitle($lang['emajrlbkplanning'] . "&nbsp;&nbsp;<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['emajrlbkplanninghelp']}\"/>");
+			$misc->printTitle($lang['strrlbkplanning'] . "&nbsp;&nbsp;<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['strrlbkplanninghelp']}\"/>");
 
 			// Button to hide or show estimates columns
 			echo "<div style=\"margin:13px\">\n";
 			echo "\t<form id=\"showHideEstimates\" action=\"emajrollbacks.php?action=toggle_estimates&amp;{$misc->href}\"";
 			echo " method=\"post\" enctype=\"multipart/form-data\">\n";
 			if ($_SESSION['emaj']['RlbkShowEstimates'])
-				$buttonText = $lang['emajhideestimates'];
+				$buttonText = $lang['strhideestimates'];
 			else
-				$buttonText = $lang['emajshowestimates'];
+				$buttonText = $lang['strshowestimates'];
 			echo "<input type=\"hidden\" name=\"rlbkid\" value=\"{$_REQUEST['rlbkid']}\" />\n";
 			echo "\t\t<input type=\"submit\" name=\"showHideEstimates\" value=\"{$buttonText}\">\n";
 			if ($_SESSION['emaj']['RlbkShowEstimates'])
-				echo "&nbsp;&nbsp;<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajrlbkestimmethodhelp']}\"/>\n";
+				echo "&nbsp;&nbsp;<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strrlbkestimmethodhelp']}\"/>\n";
 			echo "\t</form>\n";
 			echo "</div>\n";
 
 			$misc->printTable($rlbkSteps, $columnsSteps, $actions, 'detailRlbkSteps', null, null, array('sorter' => true, 'filter' => true));
 
 		} else {
-			$misc->printTitle($lang['emajrlbkplanning']);
-			echo "<p>{$lang['emajnorlbkstep']}</p>\n";
+			$misc->printTitle($lang['strrlbkplanning']);
+			echo "<p>{$lang['strnorlbkstep']}</p>\n";
 		}
 
 		// print sessions data
 		if ($rlbkSessions->recordCount() > 0) {
-			$misc->printTitle($lang['emajrlbksessions']);
+			$misc->printTitle($lang['strrlbksessions']);
 			$misc->printTable($rlbkSessions, $columnsSessions, $actions, 'detailRlbkSession', null);
 		}
 	}
@@ -868,11 +868,11 @@
 
 		$misc->printHeader('emajrollback', 'database', 'emajrollbacks');
 
-		$misc->printTitle($lang['emajcommentarollback']);
+		$misc->printTitle($lang['strcommentarollback']);
 
 		$rlbk = $emajdb->getOneRlbk($_REQUEST['rlbkid']);
 
-		echo "<p>", sprintf($lang['emajcommentrollback'], htmlspecialchars($_REQUEST['rlbkid'])), "</p>\n";
+		echo "<p>", sprintf($lang['strcommentrollback'], htmlspecialchars($_REQUEST['rlbkid'])), "</p>\n";
 		echo "<form action=\"emajrollbacks.php\" method=\"post\">\n";
 		echo "<div class=\"form-container\">\n";
 		echo "\t<div class=\"form-label required\">{$lang['strcomment']}</div>\n";
@@ -906,15 +906,15 @@
 			$status = $emajdb->setCommentRollback($_POST['rlbkid'],$_POST['comment']);
 			if ($status == 0)
 				if ($_POST['back']=='list') {
-					show_rollbacks(sprintf($lang['emajcommentrollbackok'], htmlspecialchars($_POST['rlbkid'])));
+					show_rollbacks(sprintf($lang['strcommentrollbackok'], htmlspecialchars($_POST['rlbkid'])));
 				} else {
-					show_rollback(sprintf($lang['emajcommentrollbackok'], htmlspecialchars($_POST['rlbkid'])));
+					show_rollback(sprintf($lang['strcommentrollbackok'], htmlspecialchars($_POST['rlbkid'])));
 				}
 			else
 				if ($_POST['back']=='list') {
-					show_rollbacks('',sprintf($lang['emajcommentrollbackerr'], htmlspecialchars($_POST['rlbkid'])));
+					show_rollbacks('',sprintf($lang['strcommentrollbackerr'], htmlspecialchars($_POST['rlbkid'])));
 				} else {
-					show_rollback('',sprintf($lang['emajcommentrollbackerr'], htmlspecialchars($_POST['rlbkid'])));
+					show_rollback('',sprintf($lang['strcommentrollbackerr'], htmlspecialchars($_POST['rlbkid'])));
 				}
 		}
 	}
@@ -927,15 +927,15 @@
 
 		$misc->printHeader('database', 'database', 'emajrollbacks');
 
-		$misc->printTitle($lang['emajconsolidaterlbk']);
+		$misc->printTitle($lang['strconsolidaterlbk']);
 
-		echo "<p>", sprintf($lang['emajconfirmconsolidaterlbk'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])), "</p>\n";
+		echo "<p>", sprintf($lang['strconfirmconsolidaterlbk'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"emajrollbacks.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"consolidate_rollback_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"consolidaterlbk\" value=\"{$lang['emajconsolidate']}\" />\n";
+		echo "<input type=\"submit\" name=\"consolidaterlbk\" value=\"{$lang['strconsolidate']}\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 	}
@@ -954,9 +954,9 @@
 
 		$status = $emajdb->consolidateRollback($_POST['group'],$_POST['mark']);
 		if ($status == 0)
-			show_rollbacks(sprintf($lang['emajconsolidaterlbkok'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group'])));
+			show_rollbacks(sprintf($lang['strconsolidaterlbkok'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group'])));
 		else
-			show_rollbacks('',sprintf($lang['emajconsolidaterlbkerr'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group'])));
+			show_rollbacks('',sprintf($lang['strconsolidaterlbkerr'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group'])));
 	}
 
 	/**
@@ -976,7 +976,7 @@
 
 	$scripts = "<script src=\"js/emajrollbacks.js\"></script>";
 
-	$misc->printHtmlHeader($lang['emajrollbacksmanagement'], $scripts, 'emajrollbacks');
+	$misc->printHtmlHeader($lang['strrollbacksmanagement'], $scripts, 'emajrollbacks');
 	$misc->printBody();
 
 	if (isset($_COOKIE['autorefresh_rlbkid'])) {

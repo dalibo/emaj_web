@@ -92,10 +92,10 @@
 			$alt = $lang['strsequence'];
 		} elseif ($val == '!') {					// object declared in the emaj_group_def table but unknown in the catalog
 			$icon = $misc->icon('ObjectNotFound');
-			$alt = $lang['emajunknownobject'];
+			$alt = $lang['strunknownobject'];
 		} else {									// unsupported type
 			$icon = $misc->icon('ObjectNotFound');
-			$alt = $lang['emajunsupportedobject'];
+			$alt = $lang['strunsupportedobject'];
 		}
 		return "<img src=\"{$icon}\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 	}
@@ -106,18 +106,18 @@
 
 		if ($val == 'ROLLBACKABLE') {
 			$icon = $misc->icon('EmajRollbackable');
-			$alt = $lang['emajrollbackable'];
+			$alt = $lang['strrollbackable'];
 			$img = "<img src=\"{$icon}\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 		} elseif ($val == 'AUDIT_ONLY') {
 			$icon = $misc->icon('EmajAuditOnly');
-			$alt = $lang['emajauditonly'];
+			$alt = $lang['strauditonly'];
 			$img = "<img src=\"{$icon}\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 		} elseif ($val == 'ROLLBACKABLE-PROTECTED') {
 			$icon = $misc->icon('EmajRollbackable');
-			$alt = $lang['emajrollbackable'];
+			$alt = $lang['strrollbackable'];
 			$img = "<img src=\"{$icon}\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 			$icon = $misc->icon('EmajPadlock');
-			$alt = $lang['emajprotected'];
+			$alt = $lang['strprotected'];
 			$img .= "<img src=\"{$icon}\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 		}
 		return $img;
@@ -134,11 +134,11 @@
 		} else {
 			if (preg_match("/{(\d+),(\d+),(\d+),(\d+),(\d+)}/",$val,$cpt)) {
 				$msg = '';
-				if ($cpt[1] > 0) $msg .= sprintf($lang['emajnoschema'], $cpt[1]);
-				if ($cpt[2] > 0) $msg .= sprintf($lang['emajinvalidschema'], $cpt[2]);
-				if ($cpt[3] > 0) $msg .= sprintf($lang['emajnorelation'], $cpt[3]);
-				if ($cpt[4] > 0) $msg .= sprintf($lang['emajinvalidtable'], $cpt[4]);
-				if ($cpt[5] > 0) $msg .= sprintf($lang['emajduplicaterelation'], $cpt[5]);
+				if ($cpt[1] > 0) $msg .= sprintf($lang['strnoschema'], $cpt[1]);
+				if ($cpt[2] > 0) $msg .= sprintf($lang['strinvalidschema'], $cpt[2]);
+				if ($cpt[3] > 0) $msg .= sprintf($lang['strnorelation'], $cpt[3]);
+				if ($cpt[4] > 0) $msg .= sprintf($lang['strinvalidtable'], $cpt[4]);
+				if ($cpt[5] > 0) $msg .= sprintf($lang['strduplicaterelation'], $cpt[5]);
 				$msg = substr($msg,0,-3);
 				return $msg;
 			} else {
@@ -154,10 +154,10 @@
 
 		if ($val == 'IDLE') {
 			$icon = $misc->icon('EmajIdle');
-			$alt = $lang['emajidle'];
+			$alt = $lang['stridle'];
 		} else {
 			$icon = $misc->icon('EmajLogging');
-			$alt = $lang['emajlogging'];
+			$alt = $lang['strlogging'];
 		}
 		return "<img src=\"{$icon}\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 	}
@@ -182,12 +182,12 @@
 		$parts = explode('#', $val);
 		if ($parts[0] == '')
 			$parts[0] = 'Simple';
-		$logSessionInfo = sprintf($lang['emajlogsessionstart'], $parts[1]);
+		$logSessionInfo = sprintf($lang['strlogsessionstart'], $parts[1]);
 		if ($parts[2] == '') {
 			$color = 'Green';
 		} else {
 			$color = 'Grey';
-			$logSessionInfo .= "\n" . sprintf($lang['emajlogsessionstop'], $parts[2]);
+			$logSessionInfo .= "\n" . sprintf($lang['strlogsessionstop'], $parts[2]);
 		}
 		$icon = $color . $parts[0];
 		$div = "<div title=\"$logSessionInfo\"><img src=\"{$misc->icon($icon)}\" alt=\"$icon\" title=\"$logSessionInfo\" class=\"fullsizecellicon\" /></div>";
@@ -201,18 +201,18 @@
 
 		if ($emajdb->getNumEmajVersion() >= 40400) {	// version >= 4.4
 			if ($val == 'PROTECTED') {
-				$img = "<img src=\"{$misc->icon('EmajPadlock')}\" alt=\"protected\" title=\"{$lang['emajprotectedmark']}\"/>";
+				$img = "<img src=\"{$misc->icon('EmajPadlock')}\" alt=\"protected\" title=\"{$lang['strprotectedmark']}\"/>";
 			} else {
 				$img = '';
 			}
 		} else {
 			if ($val == 'ACTIVE') {
-				$img = "<img src=\"{$misc->icon('ActiveMark')}\" alt=\"active_mark\" title=\"{$lang['emajactivemark']}\"/>";
+				$img = "<img src=\"{$misc->icon('ActiveMark')}\" alt=\"active_mark\" title=\"{$lang['stractivemark']}\"/>";
 			} elseif ($val == 'DELETED') {
-				$img = "<img src=\"{$misc->icon('DeletedMark')}\" alt=\"deleted_mark\" title=\"{$lang['emajdeletedmark']}\"/>";
+				$img = "<img src=\"{$misc->icon('DeletedMark')}\" alt=\"deleted_mark\" title=\"{$lang['strdeletedmark']}\"/>";
 			} elseif ($val == 'ACTIVE-PROTECTED') {
-				$img = "<img src=\"{$misc->icon('ActiveMark')}\" alt=\"active_mark\" title=\"{$lang['emajactivemark']}\"/>";
-				$img .= "<img src=\"{$misc->icon('EmajPadlock')}\" alt=\"protected\" title=\"{$lang['emajprotectedmark']}\"/>";
+				$img = "<img src=\"{$misc->icon('ActiveMark')}\" alt=\"active_mark\" title=\"{$lang['stractivemark']}\"/>";
+				$img .= "<img src=\"{$misc->icon('EmajPadlock')}\" alt=\"protected\" title=\"{$lang['strprotectedmark']}\"/>";
 			}
 		}
 		return $img;
@@ -308,11 +308,11 @@
 			if ($missingGroups->fields['nb_groups'] == 1)
 				// One group doesn't exist anymore
 				show_groups('', $errMsgAction . '<br>' .
-					sprintf($lang['emajgroupmissing'], htmlspecialchars($missingGroups->fields['groups_list'])));
+					sprintf($lang['strgroupmissing'], htmlspecialchars($missingGroups->fields['groups_list'])));
 			else
 				// Several groups do not exist anymore
 				show_groups('', $errMsgAction . '<br>' .
-					sprintf($lang['emajgroupsmissing'], $missingGroups->fields['nb_groups'], htmlspecialchars($missingGroups->fields['groups_list'])));
+					sprintf($lang['strgroupsmissing'], $missingGroups->fields['nb_groups'], htmlspecialchars($missingGroups->fields['groups_list'])));
 			$_reload_browser = true;
 			$misc->printFooter();
 			exit();
@@ -331,11 +331,11 @@
 			$errorMessage = '';
 			if ($errorGroups->fields['nb_groups'] == 1) {
 				// One group is not in the expected state anymore
-				$errorMessage = sprintf($lang['emajgroupnot'.$langMsgSuffix], htmlspecialchars($errorGroups->fields['groups_list']));
+				$errorMessage = sprintf($lang['strgroupnot'.$langMsgSuffix], htmlspecialchars($errorGroups->fields['groups_list']));
 			}
 			if ($errorGroups->fields['nb_groups'] > 1) {
 				// Several groups are not in the expected state anymore
-				$errorMessage = sprintf($lang['emajgroupsnot'.$langMsgSuffix], $errorGroups->fields['nb_groups'], htmlspecialchars($errorGroups->fields['groups_list']));
+				$errorMessage = sprintf($lang['strgroupsnot'.$langMsgSuffix], $errorGroups->fields['nb_groups'], htmlspecialchars($errorGroups->fields['groups_list']));
 			}
 			if ($errorMessage != '') {
 				if ($back == 'list') {
@@ -361,11 +361,11 @@
 			if ($missingMarks->fields['nb_marks'] == 1)
 				// One mark doesn't exist anymore
 				show_group('', $errMsgAction . '<br>' .
-					sprintf($lang['emajmarkmissing'], htmlspecialchars($missingMarks->fields['marks_list'])));
+					sprintf($lang['strmarkmissing'], htmlspecialchars($missingMarks->fields['marks_list'])));
 			else
 				// Several marks do not exist anymore
 				show_group('', $errMsgAction . '<br>' .
-					sprintf($lang['emajmarksmissing'], $missingMarks->fields['nb_marks'], htmlspecialchars($missingMarks->fields['marks_list'])));
+					sprintf($lang['strmarksmissing'], $missingMarks->fields['nb_marks'], htmlspecialchars($missingMarks->fields['marks_list'])));
 			$misc->printFooter();
 			exit();
 		}
@@ -383,11 +383,11 @@
 			if ($missingGroups->fields['nb_groups'] == 1)
 				// The mark doesn't exist anymore for one group
 				show_groups('', $errMsgAction . '<br>' .
-					sprintf($lang['emajmissingmarkgroup'], htmlspecialchars($missingGroups->fields['groups_list'])));
+					sprintf($lang['strmissingmarkgroup'], htmlspecialchars($missingGroups->fields['groups_list'])));
 			else
 				// The mark doesn't exist anymore for several groups
 				show_groups('', $errMsgAction . '<br>' .
-					sprintf($lang['emajmissingmarkgroups'], $missingGroups->fields['nb_groups'], htmlspecialchars($missingGroups->fields['groups_list'])));
+					sprintf($lang['strmissingmarkgroups'], $missingGroups->fields['nb_groups'], htmlspecialchars($missingGroups->fields['groups_list'])));
 			$misc->printFooter();
 			exit();
 		}
@@ -403,7 +403,7 @@
 
 		// Check the forbidden values.
 		if ($mark == '' or $mark == 'EMAJ_LAST_MARK') {
-			$errorMessage = sprintf($lang['emajinvalidmark'], htmlspecialchars($mark));
+			$errorMessage = sprintf($lang['strinvalidmark'], htmlspecialchars($mark));
 			if ($back == 'list') {
 				show_groups('', $errMsgAction . '<br>' . $errorMessage);
 			} else {
@@ -422,11 +422,11 @@
 			$errorMessage = '';
 			if ($errorGroups->fields['nb_groups'] == 1) {
 				// The mark already exists for one group
-				$errorMessage = sprintf($lang['emajduplicatemarkgroup'], htmlspecialchars($mark), htmlspecialchars($errorGroups->fields['groups_list']));
+				$errorMessage = sprintf($lang['strduplicatemarkgroup'], htmlspecialchars($mark), htmlspecialchars($errorGroups->fields['groups_list']));
 			}
 			if ($errorGroups->fields['nb_groups'] > 1) {
 				// The mark already exist for several groups
-				$errorMessage = sprintf($lang['emajduplicatemarkgroups'], htmlspecialchars($mark),
+				$errorMessage = sprintf($lang['strduplicatemarkgroups'], htmlspecialchars($mark),
 										$errorGroups->fields['nb_groups'], htmlspecialchars($errorGroups->fields['groups_list']));
 			}
 			if ($errorMessage != '') {
@@ -450,7 +450,7 @@
 		global $lang, $misc;
 
 		if ($AdoRetCode < 0) {
-			$errorMessage = sprintf($lang['emajadoreturncode'], htmlspecialchars($AdoRetCode));
+			$errorMessage = sprintf($lang['stradoreturncode'], htmlspecialchars($AdoRetCode));
 			if ($back == 'list') {
 				show_groups('', $errMsgAction . '<br>' . $errorMessage);
 			} else {
@@ -490,7 +490,7 @@
 				'vars'  => array('group' => 'group_name'),
 			),
 			'creationdatetime' => array(
-				'title' => $lang['emajgroupcreatedat'],
+				'title' => $lang['strgroupcreatedat'],
 				'field' => field('creation_datetime'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -501,12 +501,12 @@
 				'sorter_text_extraction' => 'span_text',
 			),
 			'nbtbl' => array(
-				'title' => $lang['emajnbtbl'],
+				'title' => $lang['strnbtbl'],
 				'field' => field('group_nb_table'),
 				'type'  => 'numeric'
 			),
 			'nbseq' => array(
-				'title' => $lang['emajnbseq'],
+				'title' => $lang['strnbseq'],
 				'field' => field('group_nb_sequence'),
 				'type'  => 'numeric'
 			),
@@ -522,7 +522,7 @@
 				'filter' => false,
 			),
 			'nbmark' => array(
-				'title' => $lang['emajnbmark'],
+				'title' => $lang['strnbmark'],
 				'field' => field('nb_mark'),
 				'type'  => 'numeric'
 			),
@@ -550,7 +550,7 @@
 					'url' => "emajgroups.php?back=list",
 				),
 				'set_mark_group' => array(
-					'content' => $lang['emajsetmark'],
+					'content' => $lang['strsetmark'],
 					'icon' => 'Pin',
 					'attr' => array (
 						'href' => array (
@@ -563,7 +563,7 @@
 					'multiaction' => 'set_mark_groups',
 				),
 				'protect_group' => array(
-					'content' => $lang['emajprotect'],
+					'content' => $lang['strprotect'],
 					'icon' => 'PadLockOn',
 					'attr' => array (
 						'href' => array (
@@ -576,7 +576,7 @@
 					'multiaction' => 'protect_groups',
 					),
 				'unprotect_group' => array(
-					'content' => $lang['emajunprotect'],
+					'content' => $lang['strunprotect'],
 					'icon' => 'PadLockOff',
 					'attr' => array (
 						'href' => array (
@@ -589,7 +589,7 @@
 					'multiaction' => 'unprotect_groups',
 					),
 				'rollback_group' => array(
-					'content' => $lang['emajrlbk'],
+					'content' => $lang['strrlbk'],
 					'icon' => 'Rewind',
 					'attr' => array (
 						'href' => array (
@@ -615,7 +615,7 @@
 					'multiaction' => 'stop_groups',
 				),
 				'comment_group' => array(
-					'content' => $lang['emajsetcomment'],
+					'content' => $lang['strsetcomment'],
 					'icon' => 'Bubble',
 					'attr' => array (
 						'href' => array (
@@ -630,7 +630,7 @@
 			if ($emajdb->getNumEmajVersion() < 30200) {	// version < 3.2
 				$loggingActions = array_merge($loggingActions, array(
 					'alter_group' => array(
-						'content' => $lang['emajApplyConfChanges'],
+						'content' => $lang['strApplyConfChanges'],
 						'attr' => array (
 							'href' => array (
 								'url' => 'emajgroups.php',
@@ -683,7 +683,7 @@
 			if ($emajdb->getNumEmajVersion() < 30200) {				// version < 3.2
 				$idleActions = array_merge($idleActions, array(
 					'alter_group' => array(
-						'content' => $lang['emajApplyConfChanges'],
+						'content' => $lang['strApplyConfChanges'],
 						'attr' => array (
 							'href' => array (
 								'url' => 'emajgroups.php',
@@ -711,7 +711,7 @@
 					'multiaction' => 'drop_groups',
 				),
 				'comment_group' => array(
-					'content' => $lang['emajsetcomment'],
+					'content' => $lang['strsetcomment'],
 					'icon' => 'Bubble',
 					'attr' => array (
 						'href' => array (
@@ -734,12 +734,12 @@
 				'title' => $lang['stractions'],
 			),
 			'nbtbl' => array(
-				'title' => $lang['emajnbtbl'],
+				'title' => $lang['strnbtbl'],
 				'field' => field('group_nb_table'),
 				'type'  => 'numeric'
 			),
 			'nbseq' => array(
-				'title' => $lang['emajnbseq'],
+				'title' => $lang['strnbseq'],
 				'field' => field('group_nb_sequence'),
 				'type'  => 'numeric'
 			),
@@ -747,7 +747,7 @@
 		if ($emajdb->getNumEmajVersion() < 30000) {	// version < 3.0.0
 			$configuredColumns = array_merge($configuredColumns, array(
 				'diagnostic' => array(
-					'title' => $lang['emajdiagnostics'],
+					'title' => $lang['strdiagnostics'],
 					'field' => field('group_diagnostic'),
 					'type'	=> 'callback',
 					'params'=> array(
@@ -775,14 +775,14 @@
 			$configuredActions = array();
 		}
 
-		$misc->printTitle($lang['emajlogginggroups'], $lang['emajlogginggrouphelp']);
+		$misc->printTitle($lang['strlogginggroups'], $lang['strlogginggrouphelp']);
 
-		$misc->printTable($loggingGroups, $columns, $loggingActions, 'loggingGroups', $lang['emajnologginggroup'], 'loggingGroupPre', array('sorter' => true, 'filter' => true));
+		$misc->printTable($loggingGroups, $columns, $loggingActions, 'loggingGroups', $lang['strnologginggroup'], 'loggingGroupPre', array('sorter' => true, 'filter' => true));
 
 		echo "<hr>";
-		$misc->printTitle($lang['emajidlegroups'], $lang['emajidlegrouphelp']);
+		$misc->printTitle($lang['stridlegroups'], $lang['stridlegrouphelp']);
 
-		$misc->printTable($idleGroups, $columns, $idleActions, 'idleGroups', $lang['emajnoidlegroup'], 'idleGroupPre', array('sorter' => true, 'filter' => true));
+		$misc->printTable($idleGroups, $columns, $idleActions, 'idleGroups', $lang['strnoidlegroup'], 'idleGroupPre', array('sorter' => true, 'filter' => true));
 
 		echo "<hr/>\n";
 
@@ -790,16 +790,16 @@
 			// configured but not yet created tables groups section
 			$configuredGroups = $emajdb->getConfiguredGroups();
 
-			$misc->printTitle($lang['emajconfiguredgroups'], $lang['emajconfiguredgrouphelp']);
+			$misc->printTitle($lang['strconfiguredgroups'], $lang['strconfiguredgrouphelp']);
 
-			$misc->printTable($configuredGroups, $configuredColumns, $configuredActions, 'configuredGroups', $lang['emajnoconfiguredgroups'], null, array('sorter' => true, 'filter' => true));
+			$misc->printTable($configuredGroups, $configuredColumns, $configuredActions, 'configuredGroups', $lang['strnoconfiguredgroups'], null, array('sorter' => true, 'filter' => true));
 
 			// for emaj_adm role only, give information about how to create a group
 			if ($emajdb->isEmaj_Adm()) {
-				echo "<p>{$lang['emajnoconfiguredgroup']}</p>\n";
+				echo "<p>{$lang['strnoconfiguredgroup']}</p>\n";
 				echo "<form id=\"createEmptyGroup_form\" action=\"emajgroups.php?action=create_group&amp;back=list&amp;empty=true&amp;{$misc->href}\"";
 				echo " method=\"post\" enctype=\"multipart/form-data\">\n";
-				echo "\t<input type=\"submit\" value=\"{$lang['emajcreateemptygroup']}\" />\n";
+				echo "\t<input type=\"submit\" value=\"{$lang['strcreateemptygroup']}\" />\n";
 				echo "</form>\n";
 			}
 		} else {
@@ -810,7 +810,7 @@
 				// display the "new group" button
 				echo "\t<form id=\"createEmptyGroup_form\" action=\"emajgroups.php?action=create_group&amp;back=list&amp;{$misc->href}\"";
 				echo " method=\"post\" enctype=\"multipart/form-data\">\n";
-				echo "\t\t<input type=\"submit\" value=\"{$lang['emajnewgroup']}\" />\n";
+				echo "\t\t<input type=\"submit\" value=\"{$lang['strnewgroup']}\" />\n";
 				echo "\t</form>\n";
 
 				// display the "export groups configuration" and "import groups configuration" buttons
@@ -845,7 +845,7 @@
 					'vars'  => array('group' => 'grph_group'),
 				),
 				'latestrollbackable' => array(
-					'title' => $lang['emajgrouplatesttype'],
+					'title' => $lang['strgrouplatesttype'],
 					'field' => field('latest_is_rollbackable'),
 					'type'	=> 'callback',
 					'params'=> array(
@@ -854,7 +854,7 @@
 							),
 				),
 				'latestdropdatetime' => array(
-					'title' => $lang['emajgrouplatestdropat'],
+					'title' => $lang['strgrouplatestdropat'],
 					'field' => field('latest_drop_datetime'),
 					'type' => 'spanned',
 					'params'=> array(
@@ -885,7 +885,7 @@
 								))))
 					),
 					'forget_group' => array(
-						'content' => $lang['emajforget'],
+						'content' => $lang['strforget'],
 						'icon' => 'Eraser',
 						'attr' => array (
 							'href' => array (
@@ -902,9 +902,9 @@
 			}
 
 			echo "<hr>";
-			$misc->printTitle($lang['emajdroppedgroupslist']);
+			$misc->printTitle($lang['strdroppedgroupslist']);
 
-			$misc->printTable($droppedGroups, $columns, $droppedActions, 'droppedgroups', $lang['emajnodroppedgroup'], null, array('sorter' => true, 'filter' => true));
+			$misc->printTable($droppedGroups, $columns, $droppedActions, 'droppedgroups', $lang['strnodroppedgroup'], null, array('sorter' => true, 'filter' => true));
 
 		}
 	}
@@ -916,7 +916,7 @@
 		global $misc, $lang, $emajdb, $_reload_browser;
 
 		if (! $emajdb->existsGroup($_REQUEST['group'])) {
-			show_groups('', sprintf($lang['emajgroupmissing'], htmlspecialchars($_REQUEST['group'])));
+			show_groups('', sprintf($lang['strgroupmissing'], htmlspecialchars($_REQUEST['group'])));
 			$_reload_browser = true;
 			return;
 		}
@@ -937,7 +937,7 @@
 
 		$columns = array(
 			'createdat' => array(
-				'title' => $lang['emajgroupcreatedat'],
+				'title' => $lang['strgroupcreatedat'],
 				'field' => field('group_creation_datetime'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -956,17 +956,17 @@
 						),
 			),
 			'nbtbl' => array(
-				'title' => $lang['emajnbtbl'],
+				'title' => $lang['strnbtbl'],
 				'field' => field('group_nb_table'),
 				'type'  => 'numeric'
 			),
 			'nbseq' => array(
-				'title' => $lang['emajnbseq'],
+				'title' => $lang['strnbseq'],
 				'field' => field('group_nb_sequence'),
 				'type'  => 'numeric'
 			),
 			'state' => array(
-				'title' => $lang['emajstate'],
+				'title' => $lang['strstate'],
 				'field' => field('group_state'),
 				'type'	=> 'callback',
 				'params'=> array('function' => 'renderGroupState','align' => 'center')
@@ -976,7 +976,7 @@
 			if ($groupState == 'LOGGING') {
 				$columns = array_merge($columns, array(
 					'startedat' => array(
-						'title' => $lang['emajgroupstartedat'],
+						'title' => $lang['strgroupstartedat'],
 						'field' => field('group_start_datetime'),
 						'type' => 'spanned',
 						'params'=> array(
@@ -990,12 +990,12 @@
 		}
 		$columns = array_merge($columns, array(
 			'nbmark' => array(
-				'title' => $lang['emajnbmark'],
+				'title' => $lang['strnbmark'],
 				'field' => field('nb_mark'),
 				'type'  => 'numeric'
 			),
 			'logsize' => array(
-				'title' => $lang['emajlogsize'],
+				'title' => $lang['strlogsize'],
 				'field' => field('log_size'),
 				'params'=> array('align' => 'center'),
 			),
@@ -1009,7 +1009,7 @@
 		$groupActions = array();
 
 		// print group's characteristics
-		$misc->printTitle(sprintf($lang['emajgroupproperties'], htmlspecialchars($_REQUEST['group'])));
+		$misc->printTitle(sprintf($lang['strgroupproperties'], htmlspecialchars($_REQUEST['group'])));
 		$misc->printTable($group, $columns, $groupActions, 'detailGroup', 'no group, internal error !');
 
 		// display group's comment if exists
@@ -1042,7 +1042,7 @@
 			// set_mark_group
 			if ($groupState == 'LOGGING') {
 				$navlinks['set_mark_group'] = array (
-					'content' => $lang['emajsetmark'],
+					'content' => $lang['strsetmark'],
 					'attr'=> array (
 						'href' => array (
 							'url' => "emajgroups.php",
@@ -1076,7 +1076,7 @@
 			// protect_group
 			if ($groupState == 'LOGGING' && $groupType == "ROLLBACKABLE") {
 				$navlinks['protect_group'] = array (
-					'content' => $lang['emajprotect'],
+					'content' => $lang['strprotect'],
 					'attr'=> array (
 						'href' => array (
 							'url' => "emajgroups.php",
@@ -1093,7 +1093,7 @@
 			// unprotect_group
 			if ($groupState == 'LOGGING' && $groupType == "ROLLBACKABLE-PROTECTED") {
 				$navlinks['unprotect_group'] = array (
-					'content' => $lang['emajunprotect'],
+					'content' => $lang['strunprotect'],
 					'attr'=> array (
 						'href' => array (
 							'url' => "emajgroups.php",
@@ -1126,7 +1126,7 @@
 
 			// comment_group
 			$navlinks['comment_group'] = array (
-				'content' => $lang['emajsetcomment'],
+				'content' => $lang['strsetcomment'],
 				'attr'=> array (
 					'href' => array (
 						'url' => "emajgroups.php",
@@ -1142,7 +1142,7 @@
 			// alter_group
 			if ($hasWaitingChanges && $emajdb->getNumEmajVersion() < 30200) {
 				$navlinks['alter_group'] = array (
-					'content' => $lang['emajApplyConfChanges'],
+					'content' => $lang['strApplyConfChanges'],
 					'attr'=> array (
 						'href' => array (
 							'url' => "emajgroups.php",
@@ -1182,14 +1182,14 @@
 		$marks = $emajdb->getMarks($_REQUEST['group']);
 
 		echo "<hr/>\n";
-		$misc->printTitle(sprintf($lang['emajgroupmarks'], htmlspecialchars($_REQUEST['group'])));
+		$misc->printTitle(sprintf($lang['strgroupmarks'], htmlspecialchars($_REQUEST['group'])));
 
 		$columns = array();
 		if ($emajdb->getNumEmajVersion() >= 40400) {
 			$columns = array_merge($columns, array(
 				'log_session' => array(
 					'title' => '',
-					'info'  => $lang['emajlogsessionshelp'],
+					'info'  => $lang['strlogsessionshelp'],
 					'field' => field('mark_log_session'),
 					'type'	=> 'callback',
 					'params'=> array('function' => 'renderLogSession'),
@@ -1201,18 +1201,18 @@
 
 		$columns = array_merge($columns, array(
 			'mark' => array(
-				'title' => $lang['emajmark'],
+				'title' => $lang['strmark'],
 				'field' => field('mark_name'),
 			),
 			'state' => array(
-				'title' => $lang['emajstate'],
+				'title' => $lang['strstate'],
 				'field' => field('mark_state'),
 				'type'	=> 'callback',
 				'params'=> array('function' => 'renderMarkState', 'align' => 'center'),
 				'filter'=> false,
 			),
 			'datetime' => array(
-				'title' => $lang['emajmarksetat'],
+				'title' => $lang['strmarksetat'],
 				'field' => field('mark_datetime'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -1222,13 +1222,13 @@
 					),
 			),
 			'logrows' => array(
-				'title' => $lang['emajnbchanges'],
+				'title' => $lang['strnbchanges'],
 				'field' => field('mark_logrows'),
 				'type'  => 'numeric'
 			),
 			'cumlogrows' => array(
-				'title' => $lang['emajcumchanges'],
-				'info'  => $lang['emajcumchangeshelp'],
+				'title' => $lang['strcumchanges'],
+				'info'  => $lang['strcumchangeshelp'],
 				'field' => field('mark_cumlogrows'),
 				'type'  => 'numeric'
 			),
@@ -1260,7 +1260,7 @@
 		if ($emajdb->isEmaj_Adm() && $groupType == "ROLLBACKABLE") {
 			$actions = array_merge($actions, array(
 				'rollbackgroup' => array(
-					'content' => $lang['emajrlbk'],
+					'content' => $lang['strrlbk'],
 					'icon' => 'Rewind',
 					'attr' => array (
 						'href' => array (
@@ -1277,7 +1277,7 @@
 		if ($emajdb->isEmaj_Adm() && $groupState == 'LOGGING' && $groupType != "AUDIT_ONLY") {
 			$actions = array_merge($actions, array(
 				'protectmark' => array(
-					'content' => $lang['emajprotect'],
+					'content' => $lang['strprotect'],
 					'icon' => 'PadLockOn',
 					'attr' => array (
 						'href' => array (
@@ -1290,7 +1290,7 @@
 							))))
 				),
 				'unprotectmark' => array(
-					'content' => $lang['emajunprotect'],
+					'content' => $lang['strunprotect'],
 					'icon' => 'PadLockOff',
 					'attr' => array (
 						'href' => array (
@@ -1307,7 +1307,7 @@
 		if ($emajdb->isEmaj_Adm()) {
 			$actions = array_merge($actions, array(
 				'renamemark' => array(
-					'content' => $lang['emajrename'],
+					'content' => $lang['strrename'],
 					'icon' => 'Pencil',
 					'attr' => array (
 						'href' => array (
@@ -1342,7 +1342,7 @@
 		if ($emajdb->isEmaj_Adm()) {
 			$actions = array_merge($actions, array(
 				'deletebeforemark' => array(
-					'content' => $lang['emajfirstmark'],
+					'content' => $lang['strfirstmark'],
 					'icon' => 'First',
 					'attr' => array (
 						'href' => array (
@@ -1359,7 +1359,7 @@
 		if ($emajdb->isEmaj_Adm()) {
 			$actions = array_merge($actions, array(
 				'commentmark' => array(
-					'content' => $lang['emajsetcomment'],
+					'content' => $lang['strsetcomment'],
 					'icon' => 'Bubble',
 					'attr' => array (
 						'href' => array (
@@ -1375,7 +1375,7 @@
 		};
 
 		// display the marks list
-		$misc->printTable($marks, $columns, $actions, 'marks', $lang['emajnomark'], 'markPre', array('sorter' => false, 'filter' => true));
+		$misc->printTable($marks, $columns, $actions, 'marks', $lang['strnomark'], 'markPre', array('sorter' => false, 'filter' => true));
 	}
 
 	/**
@@ -1385,14 +1385,14 @@
 		global $misc, $lang, $emajdb, $_reload_browser;
 
 		if (! $emajdb->existsGroup($_REQUEST['group'])) {
-			show_groups('', sprintf($lang['emajgroupmissing'], htmlspecialchars($_REQUEST['group'])));
+			show_groups('', sprintf($lang['strgroupmissing'], htmlspecialchars($_REQUEST['group'])));
 			$_reload_browser = true;
 			return;
 		}
 
 		$misc->printHeader('emaj', 'emajgroup', 'emajchangesstat');
 
-		$misc->printTitle(sprintf($lang['emajchangesgroup'], htmlspecialchars($_REQUEST['group'])));
+		$misc->printTitle(sprintf($lang['strchangesgroup'], htmlspecialchars($_REQUEST['group'])));
 
 		// display the form
 
@@ -1409,7 +1409,7 @@
 		if ($marks->recordCount() < 1) {
 
 			// No mark recorded for the group => no update logged => no stat to display
-			echo "<p>{$lang['emajnomark']}</p>\n"; 
+			echo "<p>{$lang['strnomark']}</p>\n"; 
 
 		} else {
 
@@ -1419,7 +1419,7 @@
 
 			echo "<div class=\"form-container\">\n";
 			// First mark defining the marks range to analyze
-			echo "\t<div class=\"form-label\">{$lang['emajstartmark']}</div>\n";
+			echo "\t<div class=\"form-label\">{$lang['strstartmark']}</div>\n";
 			echo "\t<div class=\"form-input\">\n";
 			echo "\t\t<select name=\"rangestart\" id=\"rangestart\">\n";
 			foreach($marks as $r)
@@ -1429,10 +1429,10 @@
 			echo "\t<div class=\"form-comment\"></div>\n";
 
 			// Last mark defining the marks range to analyze
-			echo "\t<div class=\"form-label\">{$lang['emajendmark']}</div>\n";
+			echo "\t<div class=\"form-label\">{$lang['strendmark']}</div>\n";
 			echo "\t<div class=\"form-input\">\n";
 			echo "\t\t<select name=\"rangeend\" id=\"rangeend\" >\n";
-			echo "\t\t\t<option value=\"currentsituation\">{$lang['emajcurrentsituation']}</option>\n";
+			echo "\t\t\t<option value=\"currentsituation\">{$lang['strcurrentsituation']}</option>\n";
 			foreach($marks as $r)
 				echo "\t\t\t<option value=\"", htmlspecialchars($r['mark_name']), "\" >", htmlspecialchars($r['mark_name']), " ({$r['mark_datetime']})</option>\n";
 			echo "\t\t</select>\n";
@@ -1443,12 +1443,12 @@
 			// Buttons
 			echo "<div class=\"actionslist\">\n";
 			echo "\t<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
-			echo "\t<input type=\"submit\" name=\"estimatetables\" value=\"{$lang['emajestimatetables']}\" />\n";
+			echo "\t<input type=\"submit\" name=\"estimatetables\" value=\"{$lang['strestimatetables']}\" />\n";
 			if ($emajdb->getNumEmajVersion() >= 40301) {			// version >= 4.3.1
-				echo "\t<input type=\"submit\" name=\"estimatesequences\" value=\"{$lang['emajestimatesequences']}\" />\n";
+				echo "\t<input type=\"submit\" name=\"estimatesequences\" value=\"{$lang['strestimatesequences']}\" />\n";
 			}
-			echo "\t<input type=\"submit\" name=\"detailtables\" value=\"{$lang['emajdetailtables']}\" />\n";
-			echo "\t<img src=\"{$misc->icon('Warning')}\" alt=\"warning\" title=\"{$lang['emajdetailedlogstatwarning']}\" style=\"vertical-align:middle; height:22px;\"/>";
+			echo "\t<input type=\"submit\" name=\"detailtables\" value=\"{$lang['strdetailtables']}\" />\n";
+			echo "\t<img src=\"{$misc->icon('Warning')}\" alt=\"warning\" title=\"{$lang['strdetailedlogstatwarning']}\" style=\"vertical-align:middle; height:22px;\"/>";
 			echo "</div>\n";
 			echo "</form>\n";
 
@@ -1559,25 +1559,25 @@
 		// Title
 		echo "<hr/>\n";
 		if ($_REQUEST['rangeend'] == 'currentsituation')
-			$misc->printTitle(sprintf($lang['emajchangestblsince'], htmlspecialchars($_REQUEST['rangestart'])));
+			$misc->printTitle(sprintf($lang['strchangestblsince'], htmlspecialchars($_REQUEST['rangestart'])));
 		else
-			$misc->printTitle(sprintf($lang['emajchangestblbetween'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($_REQUEST['rangeend'])));
+			$misc->printTitle(sprintf($lang['strchangestblbetween'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($_REQUEST['rangeend'])));
 
 		// Display summary statistics
 		echo "<table class=\"data\"><tr>\n";
 		echo "<th class=\"data\"></th>";
-		echo "<th class=\"data\">{$lang['emajtblingroup']}</th>";
-		echo "<th class=\"data\">{$lang['emajtblwithchanges']}</th>";
-		echo "<th class=\"data\">{$lang['emajnbchanges']}</th>";
+		echo "<th class=\"data\">{$lang['strtblingroup']}</th>";
+		echo "<th class=\"data\">{$lang['strtblwithchanges']}</th>";
+		echo "<th class=\"data\">{$lang['strnbchanges']}</th>";
 		echo "</tr><tr class=\"data1\">\n";
-		echo "<th class=\"data\" style=\"font-size: larger;\">{$lang['emajestimates']}</td>\n";
+		echo "<th class=\"data\" style=\"font-size: larger;\">{$lang['strestimates']}</td>\n";
 		echo "<td class=\"center\">{$groupStat->fields['nb_tbl_in_group']}</td>";
 		echo "<td class=\"center\">{$summary->fields['nb_tables']}</td>";
 		echo "<td class=\"center\">{$summary->fields['sum_rows']}</td>";
 		echo "</tr></table>\n";
 
 		if ($nbLogSession > 1) {
-			echo "<p><img src=\"{$misc->icon('Warning')}\" alt=\"warning\" style=\"vertical-align:middle; height:22px;\"/> {$lang['emajlogsessionwarning']}</p>";
+			echo "<p><img src=\"{$misc->icon('Warning')}\" alt=\"warning\" style=\"vertical-align:middle; height:22px;\"/> {$lang['strlogsessionwarning']}</p>";
 		}
 		echo "<hr/>\n";
 
@@ -1602,11 +1602,11 @@
 			if ($emajdb->getNumEmajVersion() >= 20300) {			// version >= 2.3.0
 				$columns = array_merge($columns, array(
 					'start_mark' => array(
-						'title' => $lang['emajstartmark'],
+						'title' => $lang['strstartmark'],
 						'field' => field('stat_first_mark'),
 					),
 					'start_datetime' => array(
-						'title' => $lang['emajstartdatetime'],
+						'title' => $lang['strstartdatetime'],
 						'field' => field('stat_first_mark_datetime'),
 						'type' => 'spanned',
 						'params'=> array(
@@ -1616,11 +1616,11 @@
 							),
 					),
 					'end_mark' => array(
-						'title' => $lang['emajendmark'],
+						'title' => $lang['strendmark'],
 						'field' => field('stat_last_mark'),
 					),
 					'end_datetime' => array(
-						'title' => $lang['emajenddatetime'],
+						'title' => $lang['strenddatetime'],
 						'field' => field('stat_last_mark_datetime'),
 						'type' => 'spanned',
 						'params'=> array(
@@ -1633,7 +1633,7 @@
 			}
 			$columns = array_merge($columns, array(
 				'nbrow' => array(
-					'title' => $lang['emajstatrows'],
+					'title' => $lang['strstatrows'],
 					'field' => field('stat_rows'),
 					'type'  => 'numeric'
 				),
@@ -1646,7 +1646,7 @@
 				// Request parameters to prepare the SQL statement to edit
 				$actions = array(
 					'gen_sql_dump_changes' => array(
-						'content' => $lang['emajbrowsechanges'],
+						'content' => $lang['strbrowsechanges'],
 						'icon' => 'Eye',
 						'attr' => array (
 							'href' => array (
@@ -1670,7 +1670,7 @@
 				// Direct call to the sql editor
 				$actions = array(
 					'gen_sql_dump_changes' => array(
-						'content' => $lang['emajbrowsechanges'],
+						'content' => $lang['strbrowsechanges'],
 						'icon' => 'Eye',
 						'attr' => array (
 							'href' => array (
@@ -1715,17 +1715,17 @@
 		// Title
 		echo "<hr/>\n";
 		if ($_REQUEST['rangeend'] == 'currentsituation')
-			$misc->printTitle(sprintf($lang['emajchangesseqsince'], htmlspecialchars($_REQUEST['rangestart'])));
+			$misc->printTitle(sprintf($lang['strchangesseqsince'], htmlspecialchars($_REQUEST['rangestart'])));
 		else
-			$misc->printTitle(sprintf($lang['emajchangesseqbetween'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($_REQUEST['rangeend'])));
+			$misc->printTitle(sprintf($lang['strchangesseqbetween'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($_REQUEST['rangeend'])));
 
 		// Display summary statistics
 		echo "<table class=\"data\"><tr>\n";
 		echo "<th class=\"data\"></th>";
-		echo "<th class=\"data\">{$lang['emajseqingroup']}</th>";
-		echo "<th class=\"data\">{$lang['emajseqwithchanges']}</th>";
+		echo "<th class=\"data\">{$lang['strseqingroup']}</th>";
+		echo "<th class=\"data\">{$lang['strseqwithchanges']}</th>";
 		echo "</tr><tr class=\"data1\">\n";
-		echo "<th class=\"data\" style=\"font-size: larger;\">{$lang['emajestimates']}</td>\n";
+		echo "<th class=\"data\" style=\"font-size: larger;\">{$lang['strestimates']}</td>\n";
 		echo "<td class=\"center\">{$groupStat->fields['nb_seq_in_group']}</td>";
 		echo "<td class=\"center\">{$summary->fields['nb_sequences']}</td>";
 		echo "</tr></table>\n";
@@ -1751,11 +1751,11 @@
 					'vars'  => array('schema' => 'stat_schema', 'sequence' => 'stat_sequence'),
 				),
 				'start_mark' => array(
-					'title' => $lang['emajstartmark'],
+					'title' => $lang['strstartmark'],
 					'field' => field('stat_first_mark'),
 				),
 				'start_datetime' => array(
-					'title' => $lang['emajstartdatetime'],
+					'title' => $lang['strstartdatetime'],
 					'field' => field('stat_first_mark_datetime'),
 					'type' => 'spanned',
 					'params'=> array(
@@ -1765,11 +1765,11 @@
 						),
 				),
 				'end_mark' => array(
-					'title' => $lang['emajendmark'],
+					'title' => $lang['strendmark'],
 					'field' => field('stat_last_mark'),
 				),
 				'end_datetime' => array(
-					'title' => $lang['emajenddatetime'],
+					'title' => $lang['strenddatetime'],
 					'field' => field('stat_last_mark_datetime'),
 					'type' => 'spanned',
 					'params'=> array(
@@ -1779,12 +1779,12 @@
 						),
 				),
 				'nbincrement' => array(
-					'title' => $lang['emajstatincrements'],
+					'title' => $lang['strstatincrements'],
 					'field' => field('stat_increments'),
 					'type'  => 'numeric'
 				),
 				'hasstructurechanged' => array(
-					'title' => $lang['emajstatstructurechanged'],
+					'title' => $lang['strstatstructurechanged'],
 					'field' => field('stat_has_structure_changed'),
 					'type'	=> 'callback',
 					'params'=> array('function' => 'renderBooleanIcon','align' => 'center')
@@ -1825,20 +1825,20 @@
 		// Title
 		echo "<hr/>\n";
 		if ($_REQUEST['rangeend'] == 'currentsituation')
-			$misc->printTitle(sprintf($lang['emajchangestblsince'], htmlspecialchars($_REQUEST['rangestart'])));
+			$misc->printTitle(sprintf($lang['strchangestblsince'], htmlspecialchars($_REQUEST['rangestart'])));
 		else
-			$misc->printTitle(sprintf($lang['emajchangestblbetween'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($_REQUEST['rangeend'])));
+			$misc->printTitle(sprintf($lang['strchangestblbetween'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($_REQUEST['rangeend'])));
 
 		// Display summary statistics
 		echo "<table class=\"data\"><tr>\n";
-		echo "<th class=\"data\">{$lang['emajtblingroup']}</th>";
-		echo "<th class=\"data\">{$lang['emajtblwithchanges']}</th>";
-		echo "<th class=\"data\">{$lang['emajnbchanges']}</th>";
-		echo "<th class=\"data\">{$lang['emajnbinsert']}</th>";
-		echo "<th class=\"data\">{$lang['emajnbupdate']}</th>";
-		echo "<th class=\"data\">{$lang['emajnbdelete']}</th>";
-		echo "<th class=\"data\">{$lang['emajnbtruncate']}</th>";
-		echo "<th class=\"data\">{$lang['emajnbrole']}</th>";
+		echo "<th class=\"data\">{$lang['strtblingroup']}</th>";
+		echo "<th class=\"data\">{$lang['strtblwithchanges']}</th>";
+		echo "<th class=\"data\">{$lang['strnbchanges']}</th>";
+		echo "<th class=\"data\">{$lang['strnbinsert']}</th>";
+		echo "<th class=\"data\">{$lang['strnbupdate']}</th>";
+		echo "<th class=\"data\">{$lang['strnbdelete']}</th>";
+		echo "<th class=\"data\">{$lang['strnbtruncate']}</th>";
+		echo "<th class=\"data\">{$lang['strnbrole']}</th>";
 		echo "<th class=\"data\">{$lang['strroles']}</th>";
 		echo "</tr><tr class=\"data1\">\n";
 		echo "<td class=\"center\">{$groupStat->fields['nb_tbl_in_group']}</td>";
@@ -1852,7 +1852,7 @@
 		echo "<td class=\"center\">{$rolesList}</td>";
 		echo "</tr></table>\n";
 		if ($nbLogSession > 1) {
-			echo "<p><img src=\"{$misc->icon('Warning')}\" alt=\"warning\" style=\"vertical-align:middle; height:22px;\"/> {$lang['emajlogsessionwarning']}</p>";
+			echo "<p><img src=\"{$misc->icon('Warning')}\" alt=\"warning\" style=\"vertical-align:middle; height:22px;\"/> {$lang['strlogsessionwarning']}</p>";
 		}
 		echo "<hr/>\n";
 
@@ -1877,11 +1877,11 @@
 			if ($emajdb->getNumEmajVersion() >= 20300) {			// version >= 2.3.0
 				$columns = array_merge($columns, array(
 					'start_mark' => array(
-						'title' => $lang['emajstartmark'],
+						'title' => $lang['strstartmark'],
 						'field' => field('stat_first_mark'),
 					),
 					'start_datetime' => array(
-						'title' => $lang['emajstartdatetime'],
+						'title' => $lang['strstartdatetime'],
 						'field' => field('stat_first_mark_datetime'),
 						'type' => 'spanned',
 						'params'=> array(
@@ -1891,11 +1891,11 @@
 							),
 					),
 					'end_mark' => array(
-						'title' => $lang['emajendmark'],
+						'title' => $lang['strendmark'],
 						'field' => field('stat_last_mark'),
 					),
 					'end_datetime' => array(
-						'title' => $lang['emajenddatetime'],
+						'title' => $lang['strenddatetime'],
 						'field' => field('stat_last_mark_datetime'),
 						'type' => 'spanned',
 						'params'=> array(
@@ -1912,11 +1912,11 @@
 					'field' => field('stat_role'),
 				),
 				'statement' => array(
-					'title' => $lang['emajstatverb'],
+					'title' => $lang['strstatverb'],
 					'field' => field('stat_verb'),
 				),
 				'nbrow' => array(
-					'title' => $lang['emajstatrows'],
+					'title' => $lang['strstatrows'],
 					'field' => field('stat_rows'),
 					'type'  => 'numeric'
 				),
@@ -1929,7 +1929,7 @@
 				// Request parameters to prepare the SQL statement to edit
 				$actions = array(
 					'gen_sql_dump_changes' => array(
-						'content' => $lang['emajbrowsechanges'],
+						'content' => $lang['strbrowsechanges'],
 						'icon' => 'Eye',
 						'attr' => array (
 							'href' => array (
@@ -1954,7 +1954,7 @@
 				// Direct call to the sql editor
 				$actions = array(
 					'gen_sql_dump_changes' => array(
-						'content' => $lang['emajbrowsechanges'],
+						'content' => $lang['strbrowsechanges'],
 						'icon' => 'Eye',
 						'attr' => array (
 							'href' => array (
@@ -1989,21 +1989,21 @@
 		global $misc, $lang, $emajdb, $_reload_browser;
 
 		if (! $emajdb->existsGroup($_REQUEST['group'])) {
-			show_groups('', sprintf($lang['emajgroupmissing'], htmlspecialchars($_REQUEST['group'])));
+			show_groups('', sprintf($lang['strgroupmissing'], htmlspecialchars($_REQUEST['group'])));
 			$_reload_browser = true;
 			return;
 		}
 
 		$misc->printHeader('emaj', 'emajgroup', 'emajcontent');
 
-		$misc->printTitle(sprintf($lang['emajgroupcontent'],htmlspecialchars($_REQUEST['group'])));
+		$misc->printTitle(sprintf($lang['strgroupcontent'],htmlspecialchars($_REQUEST['group'])));
 
 		$groupContent = $emajdb->getContentGroup($_REQUEST['group']);
 
 		if ($groupContent->recordCount() < 1) {
 
 			// The group is empty
-			echo "<p>" . sprintf($lang['emajemptygroup'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
+			echo "<p>" . sprintf($lang['stremptygroup'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
 
 		} else {
 
@@ -2045,24 +2045,24 @@
 			}
 			$columns = array_merge($columns, array(
 				'priority' => array(
-					'title' => $lang['emajpriority'],
+					'title' => $lang['strpriority'],
 					'field' => field('rel_priority'),
 					'params'=> array('align' => 'center'),
 				),
 				'log_dat_tsp' => array(
-					'title' => $lang['emajlogdattsp'],
+					'title' => $lang['strlogdattsp'],
 					'field' => field('rel_log_dat_tsp'),
 				),
 				'log_idx_tsp' => array(
-					'title' => $lang['emajlogidxtsp'],
+					'title' => $lang['strlogidxtsp'],
 					'field' => field('rel_log_idx_tsp'),
 				),
 				'log_table' => array(
-					'title' => $lang['emajlogtable'],
+					'title' => $lang['strlogtable'],
 					'field' => field('full_log_table'),
 				),
 				'logsize' => array(
-					'title' => $lang['emajlogsize'],
+					'title' => $lang['strlogsize'],
 					'field' => field('log_size'),
 					'type' => 'spanned',
 					'params'=> array(
@@ -2089,7 +2089,7 @@
 
 		$misc->printHeader('emaj', 'emajgroup', 'emajhistory');
 
-		$misc->printTitle(sprintf($lang['emajgrouphistory'],htmlspecialchars($_REQUEST['group'])));
+		$misc->printTitle(sprintf($lang['strgrouphistory'],htmlspecialchars($_REQUEST['group'])));
 
 		$groupHistory = $emajdb->getHistoryGroup($_REQUEST['group']);
 
@@ -2100,7 +2100,7 @@
 
 		} else {
 
-			echo "<p>{$lang['emajgrouphistoryorder']}</p>\n";
+			echo "<p>{$lang['strgrouphistoryorder']}</p>\n";
 
 			$columns = array(
 				'graphic' => array(
@@ -2112,7 +2112,7 @@
 					'filter'=> false,
 				),
 				'createdroptime' => array(
-					'title' => $lang['emajgroupcreateddroppedat'],
+					'title' => $lang['strgroupcreateddroppedat'],
 					'field' => field('create_drop_time'),
 					'type' => 'spanned',
 					'params'=> array(
@@ -2123,12 +2123,12 @@
 					'sorter_text_extraction' => 'span_text',
 				),
 				'nb_log_sessions' => array(
-					'title' => $lang['emajnblogsessions'],
+					'title' => $lang['strnblogsessions'],
 					'field' => field('grph_log_sessions'),
 					'type'  => 'numeric'
 				),
 				'starttime' => array(
-					'title' => $lang['emajgroupstartedat'],
+					'title' => $lang['strgroupstartedat'],
 					'field' => field('start_time'),
 					'type' => 'spanned',
 					'params'=> array(
@@ -2139,7 +2139,7 @@
 					'sorter_text_extraction' => 'span_text',
 				),
 				'stoptime' => array(
-					'title' => $lang['emajgroupstoppedat'],
+					'title' => $lang['strgroupstoppedat'],
 					'field' => field('stop_time'),
 					'type' => 'spanned',
 					'params'=> array(
@@ -2150,12 +2150,12 @@
 					'sorter_text_extraction' => 'span_text',
 				),
 				'nb_marks' => array(
-					'title' => $lang['emajnbmark'],
+					'title' => $lang['strnbmark'],
 					'field' => field('lses_marks'),
 					'type'  => 'numeric'
 				),
 				'nb_log_rows' => array(
-					'title' => $lang['emajnbchanges'],
+					'title' => $lang['strnbchanges'],
 					'field' => field('lses_log_rows'),
 					'type'  => 'numeric'
 				),
@@ -2180,7 +2180,7 @@
 
 		$misc->printHeader('database', 'database','emajgroups');
 
-		$misc->printTitle($lang['emajcreateagroup']);
+		$misc->printTitle($lang['strcreateagroup']);
 
 		if (!isset($_REQUEST['group'])) $_REQUEST['group'] = '';
 
@@ -2190,18 +2190,18 @@
 
 		echo "<div class=\"form-container\">\n";
 		echo "\t<div class=\"form-label required\">{$lang['strgroup']}</div>\n";
-		echo "\t<div class=\"form-input\"><input type=\"text\" id=\"group\" name=\"group\" size=\"32\" required pattern=\"\S+.*\" value=\"", htmlspecialchars($_REQUEST['group']) , "\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\"></div>\n";
+		echo "\t<div class=\"form-input\"><input type=\"text\" id=\"group\" name=\"group\" size=\"32\" required pattern=\"\S+.*\" value=\"", htmlspecialchars($_REQUEST['group']) , "\" placeholder='{$lang['strrequiredfield']}' autocomplete=\"off\"></div>\n";
 		echo "\t<div class=\"form-comment\"></div>\n";
 		echo "</div>\n";
 
-		echo "<p>{$lang['emajgrouptype']} : \n";
+		echo "<p>{$lang['strgrouptype']} : \n";
 		if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'AUDIT_ONLY') {
 			$auditOnlyChecked = 'checked'; $rollbackableChecked = '';
 		} else {
 			$rollbackableChecked = 'checked'; $auditOnlyChecked = '';
 		}
-		echo "\t<input type=\"radio\" name=\"grouptype\" value=\"rollbackable\" {$rollbackableChecked}>{$lang['emajrollbackable']}\n";
-		echo "\t<input type=\"radio\" name=\"grouptype\" value=\"auditonly\" {$auditOnlyChecked}>{$lang['emajauditonly']}\n";
+		echo "\t<input type=\"radio\" name=\"grouptype\" value=\"rollbackable\" {$rollbackableChecked}>{$lang['strrollbackable']}\n";
+		echo "\t<input type=\"radio\" name=\"grouptype\" value=\"auditonly\" {$auditOnlyChecked}>{$lang['strauditonly']}\n";
 		echo "</p>\n";
 
 		echo "<div class=\"form-container\">\n";
@@ -2226,12 +2226,12 @@
 		processCancelButton($_POST['back']);
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajcreategrouperr'], htmlspecialchars($_POST['group']));
+		$errMsgAction = sprintf($lang['strcreategrouperr'], htmlspecialchars($_POST['group']));
 
 		// If the group is supposed to be empty, check the supplied group name doesn't exist
 		// Call existsGroup() instead of isNewEmptyGroupValid() when emaj version < 4.0 will not be supported anymore
 		if (!$emajdb->isNewEmptyGroupValid($_POST['group'])) {
-			show_groups('', $errMsgAction . '<br>' . sprintf($lang['emajgroupalreadyexists'], htmlspecialchars($_POST['group'])));
+			show_groups('', $errMsgAction . '<br>' . sprintf($lang['strgroupalreadyexists'], htmlspecialchars($_POST['group'])));
 			return;
 		}
 
@@ -2240,7 +2240,7 @@
 
 		// Check the result and exit
 		checkADOReturnCode($status, $errMsgAction, 'list');
-		show_groups(sprintf($lang['emajcreategroupok'], htmlspecialchars($_POST['group'])));
+		show_groups(sprintf($lang['strcreategroupok'], htmlspecialchars($_POST['group'])));
 		$_reload_browser = true;
 	}
 
@@ -2252,7 +2252,7 @@
 
 		$misc->printHeader('database', 'database','emajgroups');
 
-		$misc->printTitle($lang['emajcreateagroup']);
+		$misc->printTitle($lang['strcreateagroup']);
 
 		$rollbackable = true; $auditonly = true;
 
@@ -2260,13 +2260,13 @@
 		// check the group configuration
 			$checks = $emajdb->checkConfNewGroup($_REQUEST['group']);
 			if ($checks->recordCount() == 0) {
-				echo "<p>" . sprintf($lang['emajgroupconfok'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
+				echo "<p>" . sprintf($lang['strgroupconfok'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
 			} else {
-				echo "<p>" . sprintf($lang['emajgroupconfwithdiag'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
+				echo "<p>" . sprintf($lang['strgroupconfwithdiag'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
 
 				$columns = array(
 					'message' => array(
-						'title' => $lang['emajdiagnostics'],
+						'title' => $lang['strdiagnostics'],
 						'field' => field('chk_message'),
 					),
 				);
@@ -2284,7 +2284,7 @@
 				}
 			}
 		} else {
-			echo "<p>" . sprintf($lang['emajconfirmcreategroup'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
+			echo "<p>" . sprintf($lang['strconfirmcreategroup'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
 		}
 
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
@@ -2292,11 +2292,11 @@
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		if ($auditonly) {
-			echo "<p>{$lang['emajgrouptype']} : \n";
+			echo "<p>{$lang['strgrouptype']} : \n";
 			if ($rollbackable) {$attr = "checked";} else {$attr = "disabled";}
-			echo "\t<input type=\"radio\" name=\"grouptype\" value=\"rollbackable\" {$attr}>{$lang['emajrollbackable']}\n";
+			echo "\t<input type=\"radio\" name=\"grouptype\" value=\"rollbackable\" {$attr}>{$lang['strrollbackable']}\n";
 			if ($rollbackable) {$attr = "";} else {$attr = "checked";}
-			echo "\t<input type=\"radio\" name=\"grouptype\" value=\"auditonly\" {$attr}>{$lang['emajauditonly']}\n";
+			echo "\t<input type=\"radio\" name=\"grouptype\" value=\"auditonly\" {$attr}>{$lang['strauditonly']}\n";
 		}
 		echo "</p><p>";
 		if ($auditonly)
@@ -2324,10 +2324,10 @@
 		$status = $emajdb->createGroup($_POST['group'],$_POST['grouptype']=='rollbackable',false,'');
 
 		if ($status == 0) {
-			show_groups(sprintf($lang['emajcreategroupok'], htmlspecialchars($_POST['group'])));
+			show_groups(sprintf($lang['strcreategroupok'], htmlspecialchars($_POST['group'])));
 			$_reload_browser = true;
 		} else {
-			show_groups('', sprintf($lang['emajcreategrouperr'], htmlspecialchars($_POST['group'])));
+			show_groups('', sprintf($lang['strcreategrouperr'], htmlspecialchars($_POST['group'])));
 		}
 	}
 
@@ -2338,7 +2338,7 @@
 		global $misc, $lang;
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajdropgrouperr'], htmlspecialchars($_REQUEST['group']));
+		$errMsgAction = sprintf($lang['strdropgrouperr'], htmlspecialchars($_REQUEST['group']));
 
 		// Check the group still exists and is in IDLE state
 		recheckGroups($_REQUEST['group'], $errMsgAction, 'IDLE', $_REQUEST['back']);
@@ -2348,9 +2348,9 @@
 		else
 			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
-		$misc->printTitle($lang['emajdropagroup']);
+		$misc->printTitle($lang['strdropagroup']);
 
-		echo "<p>", sprintf($lang['emajconfirmdropgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
+		echo "<p>", sprintf($lang['strconfirmdropgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"drop_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -2371,7 +2371,7 @@
 		processCancelButton($_POST['back']);
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajdropgrouperr'], htmlspecialchars($_REQUEST['group']));
+		$errMsgAction = sprintf($lang['strdropgrouperr'], htmlspecialchars($_REQUEST['group']));
 
 		// Check the group still exists and is in IDLE state
 		recheckGroups($_REQUEST['group'], $errMsgAction, 'IDLE', $_REQUEST['back']);
@@ -2381,7 +2381,7 @@
 
 		// Check the result and exit
 		checkADOReturnCode($status, $errMsgAction, 'list');
-		show_groups(sprintf($lang['emajdropgroupok'], htmlspecialchars($_POST['group'])));
+		show_groups(sprintf($lang['strdropgroupok'], htmlspecialchars($_POST['group'])));
 		$_reload_browser = true;
 	}
 
@@ -2393,13 +2393,13 @@
 
 		// build the groups list
 		if (!isset($_REQUEST['ma'])) {
-			show_groups('',$lang['emajnoselectedgroup']);
+			show_groups('',$lang['strnoselectedgroup']);
 			return;
 		}
 		$groupsList = groupsArray2list($_REQUEST['ma']);
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajdropgroupserr'], htmlspecialchars($groupsList));
+		$errMsgAction = sprintf($lang['strdropgroupserr'], htmlspecialchars($groupsList));
 
 		// Check that all groups exist and are in IDLE state
 		recheckGroups($groupsList, $errMsgAction, 'IDLE', 'list');
@@ -2407,9 +2407,9 @@
 		// Ok, build the form
 		$misc->printHeader('database', 'database','emajgroups');
 
-		$misc->printTitle($lang['emajdropgroups']);
+		$misc->printTitle($lang['strdropgroups']);
 
-		echo "<p>", sprintf($lang['emajconfirmdropgroups'], htmlspecialchars($groupsList)), "</p>\n";
+		echo "<p>", sprintf($lang['strconfirmdropgroups'], htmlspecialchars($groupsList)), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"drop_groups_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
@@ -2429,7 +2429,7 @@
 		processCancelButton('list');
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajdropgroupserr'], htmlspecialchars($_POST['groups']));
+		$errMsgAction = sprintf($lang['strdropgroupserr'], htmlspecialchars($_POST['groups']));
 
 		// Check that all groups exist and are in IDLE state
 		recheckGroups($_POST['groups'], $errMsgAction, 'IDLE', 'list');
@@ -2439,7 +2439,7 @@
 
 		// Check the result and exit
 		checkADOReturnCode($status, $errMsgAction, 'list');
-		show_groups(sprintf($lang['emajdropgroupsok'], htmlspecialchars($_POST['groups'])));
+		show_groups(sprintf($lang['strdropgroupsok'], htmlspecialchars($_POST['groups'])));
 		$_reload_browser = true;
 	}
 
@@ -2450,25 +2450,25 @@
 		global $misc, $lang, $emajdb;
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajforgetgrouperr'], htmlspecialchars($_REQUEST['group']));
+		$errMsgAction = sprintf($lang['strforgetgrouperr'], htmlspecialchars($_REQUEST['group']));
 
 		// Check the group does not exist
 		if ($emajdb->existsGroup($_REQUEST['group'])) {
-			show_groups('', sprintf($lang['emajgroupstillexists'], htmlspecialchars($_REQUEST['group'])));
+			show_groups('', sprintf($lang['strgroupstillexists'], htmlspecialchars($_REQUEST['group'])));
 			$_reload_browser = true;
 			return;
 		}
 
 		$misc->printHeader('database', 'database','emajgroups');
 
-		$misc->printTitle($lang['emajforgetagroup']);
+		$misc->printTitle($lang['strforgetagroup']);
 
-		echo "<p>", sprintf($lang['emajconfirmforgetgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
+		echo "<p>", sprintf($lang['strconfirmforgetgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"forget_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"forgetgroup\" value=\"{$lang['emajforget']}\" />\n";
+		echo "<input type=\"submit\" name=\"forgetgroup\" value=\"{$lang['strforget']}\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 	}
@@ -2483,11 +2483,11 @@
 		processCancelButton('list');
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajforgetgrouperr'], htmlspecialchars($_POST['group']));
+		$errMsgAction = sprintf($lang['strforgetgrouperr'], htmlspecialchars($_POST['group']));
 
 		// Check that the group does not exist
 		if ($emajdb->existsGroup($_POST['group'])) {
-			show_groups('', sprintf($lang['emajgroupstillexists'], htmlspecialchars($_POST['group'])));
+			show_groups('', sprintf($lang['strgroupstillexists'], htmlspecialchars($_POST['group'])));
 			$_reload_browser = true;
 			return;
 		}
@@ -2497,7 +2497,7 @@
 
 		// Check the result and exit
 		checkADOReturnCode($status, $errMsgAction, 'list');
-		show_groups(sprintf($lang['emajforgetgroupok'], htmlspecialchars($_POST['group'])));
+		show_groups(sprintf($lang['strforgetgroupok'], htmlspecialchars($_POST['group'])));
 	}
 
 	/**
@@ -2510,21 +2510,21 @@
 			$misc->printHeader('database', 'database','emajgroups');
 		else
 			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
-		$misc->printTitle($lang['emajaltergroups']);
+		$misc->printTitle($lang['straltergroups']);
 
 		$confOK = true;
 		if ($emajdb->getNumEmajVersion() >= 30000) {			// version >= 3.0.0
 		// check the group configuration
 			$checks = $emajdb->checkConfExistingGroups($_REQUEST['group']);
 			if ($checks->recordCount() == 0) {
-				echo "<p>" . sprintf($lang['emajgroupconfok'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
+				echo "<p>" . sprintf($lang['strgroupconfok'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
 			} else {
 				$confOK = false;
-				echo "<p>" . sprintf($lang['emajgroupconfwithdiag'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
+				echo "<p>" . sprintf($lang['strgroupconfwithdiag'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
 
 				$columns = array(
 					'message' => array(
-						'title' => $lang['emajdiagnostics'],
+						'title' => $lang['strdiagnostics'],
 						'field' => field('chk_message'),
 					),
 				);
@@ -2549,14 +2549,14 @@
 			echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 
 			if ($isGroupLogging) {
-				echo "<p>", sprintf($lang['emajalteraloggingroup'], htmlspecialchars($_REQUEST['group'])), "</p>";
+				echo "<p>", sprintf($lang['stralteraloggingroup'], htmlspecialchars($_REQUEST['group'])), "</p>";
 				echo "<div class=\"form-container\">\n";
-				echo "\t<div class=\"form-label required\">{$lang['emajmark']}</div>\n";
+				echo "\t<div class=\"form-label required\">{$lang['strmark']}</div>\n";
 				echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"ALTER_%\" id=\"mark\"></div>\n";
-				echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+				echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strmarknamehelp']}\"/></div>\n";
 				echo "</div>\n";
 			} else {
-				echo "<p>", sprintf($lang['emajconfirmaltergroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
+				echo "<p>", sprintf($lang['strconfirmaltergroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
 				echo "<input type=\"hidden\" name=\"mark\" value=\"\">";
 			}
 
@@ -2564,7 +2564,7 @@
 			echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 			echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 			echo $misc->form;
-			echo "<input type=\"submit\" name=\"altergroup\" value=\"{$lang['emajApplyConfChanges']}\" />\n";
+			echo "<input type=\"submit\" name=\"altergroup\" value=\"{$lang['strApplyConfChanges']}\" />\n";
 			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 			echo "</form>\n";
 		}
@@ -2589,9 +2589,9 @@
 			$check = $emajdb->checkAlterGroup($_REQUEST['group']);
 			if ($check == 0) {
 				if ($_POST['back'] == 'list') {
-					show_groups('', sprintf($lang['emajcantaltergroup'], htmlspecialchars($_POST['group'])));
+					show_groups('', sprintf($lang['strcantaltergroup'], htmlspecialchars($_POST['group'])));
 				} else {
-					show_group('', sprintf($lang['emajcantaltergroup'], htmlspecialchars($_POST['group'])));
+					show_group('', sprintf($lang['strcantaltergroup'], htmlspecialchars($_POST['group'])));
 				}
 				exit();
 			}
@@ -2601,9 +2601,9 @@
 				$finalMarkName = $emajdb->isNewMarkValidGroups($_POST['group'], htmlspecialchars($_POST['mark']));
 				if (is_null($finalMarkName)) {
 					if ($_POST['back']=='list') {
-						show_groups('', sprintf($lang['emajinvalidmark'], htmlspecialchars($_POST['mark'])));
+						show_groups('', sprintf($lang['strinvalidmark'], htmlspecialchars($_POST['mark'])));
 					} else {
-						show_group('', sprintf($lang['emajinvalidmark'], htmlspecialchars($_POST['mark'])));
+						show_group('', sprintf($lang['strinvalidmark'], htmlspecialchars($_POST['mark'])));
 					}
 					return;
 				}
@@ -2616,15 +2616,15 @@
 			if ($status == 0) {
 				$_reload_browser = true;
 				if ($_POST['back'] == 'list') {
-					show_groups(sprintf($lang['emajaltergroupok'], htmlspecialchars($_POST['group'])));
+					show_groups(sprintf($lang['straltergroupok'], htmlspecialchars($_POST['group'])));
 				} else {
-					show_group(sprintf($lang['emajaltergroupok'], htmlspecialchars($_POST['group'])));
+					show_group(sprintf($lang['straltergroupok'], htmlspecialchars($_POST['group'])));
 				}
 			} else
 				if ($_POST['back'] == 'list') {
-					show_groups('',sprintf($lang['emajaltergrouperr'], htmlspecialchars($_POST['group'])));
+					show_groups('',sprintf($lang['straltergrouperr'], htmlspecialchars($_POST['group'])));
 				} else {
-					show_group('',sprintf($lang['emajaltergrouperr'], htmlspecialchars($_POST['group'])));
+					show_group('',sprintf($lang['straltergrouperr'], htmlspecialchars($_POST['group'])));
 				}
 		}
 	}
@@ -2636,12 +2636,12 @@
 		global $misc, $lang, $emajdb;
 
 		if (!isset($_REQUEST['ma'])) {
-			show_groups('',$lang['emajnoselectedgroup']);
+			show_groups('',$lang['strnoselectedgroup']);
 			return;
 		}
 
 		$misc->printHeader('database', 'database','emajgroups');
-		$misc->printTitle($lang['emajaltergroups']);
+		$misc->printTitle($lang['straltergroups']);
 
 		// build the groups list and the global state of this list 
 		$groupsList = ''; $anyGroupLogging = 0;
@@ -2659,14 +2659,14 @@
 		// check the groups configuration
 			$checks = $emajdb->checkConfExistingGroups($groupsList);
 			if ($checks->recordCount() == 0) {
-				echo "<p>" . sprintf($lang['emajgroupsconfok'], htmlspecialchars($groupsList)) . "</p>\n";
+				echo "<p>" . sprintf($lang['strgroupsconfok'], htmlspecialchars($groupsList)) . "</p>\n";
 			} else {
 				$confOK = false;
-				echo "<p>" . sprintf($lang['emajgroupsconfwithdiag'], htmlspecialchars($groupsList)) . "</p>\n";
+				echo "<p>" . sprintf($lang['strgroupsconfwithdiag'], htmlspecialchars($groupsList)) . "</p>\n";
 
 				$columns = array(
 					'message' => array(
-						'title' => $lang['emajdiagnostics'],
+						'title' => $lang['strdiagnostics'],
 						'field' => field('chk_message'),
 					),
 				);
@@ -2690,14 +2690,14 @@
 			echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 
 			if ($anyGroupLogging) {
-				echo "<p>", sprintf($lang['emajalterallloggingroups'], htmlspecialchars($groupsList)), "</p>";
+				echo "<p>", sprintf($lang['stralterallloggingroups'], htmlspecialchars($groupsList)), "</p>";
 				echo "<div class=\"form-container\">\n";
-				echo "\t<div class=\"form-label required\">{$lang['emajmark']}</div>\n";
+				echo "\t<div class=\"form-label required\">{$lang['strmark']}</div>\n";
 				echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"ALTER_%\" id=\"mark\"></div>\n";
-				echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></div>\n";
+				echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strmarknamemultihelp']}\"/></div>\n";
 				echo "</div>\n";
 			} else {
-				echo "<p>", sprintf($lang['emajconfirmaltergroups'], htmlspecialchars($groupsList)), "</p>\n";
+				echo "<p>", sprintf($lang['strconfirmaltergroups'], htmlspecialchars($groupsList)), "</p>\n";
 				echo "<input type=\"hidden\" name=\"mark\" value=\"\">";
 			}
 
@@ -2705,7 +2705,7 @@
 			echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 			echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 			echo $misc->form;
-			echo "<input type=\"submit\" name=\"altergroups\" value=\"{$lang['emajApplyConfChanges']}\" />\n";
+			echo "<input type=\"submit\" name=\"altergroups\" value=\"{$lang['strApplyConfChanges']}\" />\n";
 			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 			echo "</form>\n";
 		}
@@ -2729,9 +2729,9 @@
 				// exit the loop in case of error
 				if ($check == 0) {
 					if ($_POST['back'] == 'list') {
-						show_groups('', sprintf($lang['emajcantaltergroup'], htmlspecialchars($g)));
+						show_groups('', sprintf($lang['strcantaltergroup'], htmlspecialchars($g)));
 					} else {
-						show_group('', sprintf($lang['emajcantaltergroup'], htmlspecialchars($g)));
+						show_group('', sprintf($lang['strcantaltergroup'], htmlspecialchars($g)));
 					}
 					exit();
 				}
@@ -2740,7 +2740,7 @@
 			if ($_POST['mark'] != '') {
 				$finalMarkName = $emajdb->isNewMarkValidGroups($_POST['groups'],$_POST['mark']);
 				if (is_null($finalMarkName)) {
-					show_groups('', sprintf($lang['emajinvalidmark'], htmlspecialchars($_POST['mark'])));
+					show_groups('', sprintf($lang['strinvalidmark'], htmlspecialchars($_POST['mark'])));
 					return;
 				}
 			} else {
@@ -2752,15 +2752,15 @@
 			if ($status == 0) {
 				$_reload_browser = true;
 				if ($_POST['back'] == 'list') {
-					show_groups(sprintf($lang['emajaltergroupsok'], htmlspecialchars($_POST['groups'])));
+					show_groups(sprintf($lang['straltergroupsok'], htmlspecialchars($_POST['groups'])));
 				} else {
-					show_group(sprintf($lang['emajaltergroupsok'], htmlspecialchars($_POST['groups'])));
+					show_group(sprintf($lang['straltergroupsok'], htmlspecialchars($_POST['groups'])));
 				}
 			}else
 				if ($_POST['back'] == 'list') {
-					show_groups('',sprintf($lang['emajaltergroupserr'], htmlspecialchars($_POST['groups'])));
+					show_groups('',sprintf($lang['straltergroupserr'], htmlspecialchars($_POST['groups'])));
 				} else {
-					show_group('',sprintf($lang['emajaltergroupserr'], htmlspecialchars($_POST['groups'])));
+					show_group('',sprintf($lang['straltergroupserr'], htmlspecialchars($_POST['groups'])));
 				}
 		}
 	}
@@ -2772,7 +2772,7 @@
 		global $misc, $lang, $emajdb;
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajcommentgrouperr'], htmlspecialchars($_REQUEST['group']));
+		$errMsgAction = sprintf($lang['strcommentgrouperr'], htmlspecialchars($_REQUEST['group']));
 
 		// Check the group still exists
 		recheckGroups($_REQUEST['group'], $errMsgAction);
@@ -2782,11 +2782,11 @@
 		else
 			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
-		$misc->printTitle($lang['emajcommentagroup']);
+		$misc->printTitle($lang['strcommentagroup']);
 
 		$group = $emajdb->getGroup($_REQUEST['group']);
 
-		echo "<p>", sprintf($lang['emajcommentgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
+		echo "<p>", sprintf($lang['strcommentgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<div class=\"form-container\">\n";
 		echo "\t<div class=\"form-label required\">{$lang['strcomment']}</div>\n";
@@ -2812,7 +2812,7 @@
 		processCancelButton($_POST['back']);
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajcommentgrouperr'], htmlspecialchars($_POST['group']));
+		$errMsgAction = sprintf($lang['strcommentgrouperr'], htmlspecialchars($_POST['group']));
 
 		// Check the group still exists
 		recheckGroups($_REQUEST['group'], $errMsgAction);
@@ -2823,9 +2823,9 @@
 		// Check the result and exit
 		checkADOReturnCode($status, $errMsgAction, $_POST['back']);
 		if ($_POST['back'] == 'list')
-			show_groups(sprintf($lang['emajcommentgroupok'], htmlspecialchars($_POST['group'])));
+			show_groups(sprintf($lang['strcommentgroupok'], htmlspecialchars($_POST['group'])));
 		else
-			show_group(sprintf($lang['emajcommentgroupok'], htmlspecialchars($_POST['group'])));
+			show_group(sprintf($lang['strcommentgroupok'], htmlspecialchars($_POST['group'])));
 	}
 
 	/**
@@ -2836,9 +2836,9 @@
 
 		$misc->printHeader('database', 'database','emajgroups');
 
-		$misc->printTitle($lang['emajexportgroupsconf']);
+		$misc->printTitle($lang['strexportgroupsconf']);
 
-		echo "<p>{$lang['emajexportgroupsconfselect']}</p>";
+		echo "<p>{$lang['strexportgroupsconfselect']}</p>";
 
 		$groups = $emajdb->getGroups();
 
@@ -2848,7 +2848,7 @@
 				'field' => field('group_name'),
 			),
 			'state' => array(
-				'title' => $lang['emajstate'],
+				'title' => $lang['strstate'],
 				'field' => field('group_state'),
 				'type'	=> 'callback',
 				'params'=> array('function' => 'renderGroupState','align' => 'center'),
@@ -2866,12 +2866,12 @@
 				'filter' => false,
 			),
 			'nbtbl' => array(
-				'title' => $lang['emajnbtbl'],
+				'title' => $lang['strnbtbl'],
 				'field' => field('group_nb_table'),
 				'type'  => 'numeric'
 			),
 			'nbseq' => array(
-				'title' => $lang['emajnbseq'],
+				'title' => $lang['strnbseq'],
 				'field' => field('group_nb_sequence'),
 				'type'  => 'numeric'
 			),
@@ -2931,21 +2931,21 @@
 		$groupsList = groupsArray2list($_REQUEST['ma']);
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajexportgroupserr'], htmlspecialchars($groupsList));
+		$errMsgAction = sprintf($lang['strexportgroupserr'], htmlspecialchars($groupsList));
 
 		// Check that all groups exist
 		$missingGroups = $emajdb->missingGroups($groupsList);
 		if ($missingGroups->fields['nb_groups'] > 0) {
-			$misc->printHtmlHeader($lang['emajgroupsmanagement']);
+			$misc->printHtmlHeader($lang['strgroupsmanagement']);
 			$misc->printBody();
 			if ($missingGroups->fields['nb_groups'] == 1)
 				// One group doesn't exist anymore
 				show_groups('', $errMsgAction . '<br>' .
-					sprintf($lang['emajgroupmissing'], htmlspecialchars($missingGroups->fields['groups_list'])));
+					sprintf($lang['strgroupmissing'], htmlspecialchars($missingGroups->fields['groups_list'])));
 			else
 				// Several groups do not exist anymore
 				show_groups('', $errMsgAction . '<br>' .
-					sprintf($lang['emajgroupsmissing'], $missingGroups->fields['nb_groups'], htmlspecialchars($missingGroups->fields['groups_list'])));
+					sprintf($lang['strgroupsmissing'], $missingGroups->fields['nb_groups'], htmlspecialchars($missingGroups->fields['groups_list'])));
 			$_reload_browser = true;
 			$misc->printFooter();
 			exit();
@@ -2978,14 +2978,14 @@
 
 		$misc->printHeader('database', 'database','emajgroups');
 
-		$misc->printTitle($lang['emajimportgroupsconf']);
+		$misc->printTitle($lang['strimportgroupsconf']);
 
 		// form to import a tables groups configuration
 		echo "<div>\n";
 		echo "\t<form name=\"importgroups\" id=\"importgroups\" enctype=\"multipart/form-data\" method=\"POST\"";
 		echo " action=\"emajgroups.php?action=import_groups_select&amp;{$misc->href}\">\n";
 		echo "\t\t<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"10000000\">\n";
-		echo "\t\t<p><label for=\"file-upload\" class=\"custom-file-upload\">{$lang['emajselectfile']}</label>";
+		echo "\t\t<p><label for=\"file-upload\" class=\"custom-file-upload\">{$lang['strselectfile']}</label>";
 		echo "<input type=\"file\" id=\"file-upload\" name=\"file_name\"></p>\n";
 		echo "\t\t<p><input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />&nbsp;&nbsp;&nbsp;\n";
 		echo "\t\t<input type=\"submit\" name=\"openfile\" value=\"{$lang['stropen']}\" disabled>";
@@ -3033,7 +3033,7 @@
 
 				$misc->printHeader('database', 'database','emajgroups');
 
-				$misc->printTitle($lang['emajimportgroupsconf']);
+				$misc->printTitle($lang['strimportgroupsconf']);
 
 				// check that the json content is valid
 
@@ -3042,7 +3042,7 @@
 				if ($errors->recordCount() == 0) {
 					// No error has been detected in the json structure, so display the tables groups to select
 
-					echo "<p>" . sprintf($lang['emajimportgroupsinfile'], $_FILES['file_name']['name']) . "</p>\n";
+					echo "<p>" . sprintf($lang['strimportgroupsinfile'], $_FILES['file_name']['name']) . "</p>\n";
 
 					// Extract the list of configured tables groups
 					$groupsList='';
@@ -3063,7 +3063,7 @@
 							'field' => field('grp_name'),
 						),
 						'state' => array(
-							'title' => $lang['emajstate'],
+							'title' => $lang['strstate'],
 							'field' => field('group_state'),
 							'type'	=> 'callback',
 							'params'=> array(
@@ -3084,12 +3084,12 @@
 							'filter' => false,
 						),
 						'nbtbl' => array(
-							'title' => $lang['emajnbtbl'],
+							'title' => $lang['strnbtbl'],
 							'field' => field('group_nb_table'),
 							'type'  => 'numeric'
 						),
 						'nbseq' => array(
-							'title' => $lang['emajnbseq'],
+							'title' => $lang['strnbseq'],
 							'field' => field('group_nb_sequence'),
 							'type'  => 'numeric'
 						),
@@ -3127,9 +3127,9 @@
 					// Add an input to specify the mark name to set
 					if ($emajdb->getNumEmajVersion() >= 40000){	// version 4.0+
 						echo "<div class=\"form-container\" style=\"margin-top: 15px; margin-bottom: 15px;\">\n";
-						echo "\t<div class=\"form-label\">{$lang['emajmark']}</div>\n";
+						echo "\t<div class=\"form-label\">{$lang['strmark']}</div>\n";
 						echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"IMPORT_%\" /></div>\n";
-						echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+						echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strmarknamehelp']}\"/></div>\n";
 						echo "</div>\n";
 					} else {
 						echo "<input type=\"hidden\" name=\"mark\" value=\"\">\n";
@@ -3144,7 +3144,7 @@
 				} else {
 				// The json structure contains errors. Display them.
 
-					echo "<p>" . sprintf($lang['emajimportgroupsinfileerr'], $_FILES['file_name']['name']) . "</p>";
+					echo "<p>" . sprintf($lang['strimportgroupsinfileerr'], $_FILES['file_name']['name']) . "</p>";
 
 					$columns = array(
 						'severity' => array(
@@ -3155,7 +3155,7 @@
 							'sorter' => false,
 						),
 						'message' => array(
-							'title' => $lang['emajdiagnostics'],
+							'title' => $lang['strdiagnostics'],
 							'field' => field('rpt_message'),
 						),
 					);
@@ -3172,7 +3172,7 @@
 
 				}
 			} else {
-				show_groups('', sprintf($lang['emajnotjsonfile'], $_FILES['file_name']['name']));
+				show_groups('', sprintf($lang['strnotjsonfile'], $_FILES['file_name']['name']));
 			}
 		} else {
 			switch($_FILES['file_name']['error']){
@@ -3211,18 +3211,18 @@
 			$nbGroup = $emajdb->importGroupsConfig($_POST['json'], $groupsList, $_POST['mark']);
 			if ($nbGroup >= 0) {
 				$_reload_browser = true;
-				show_groups(sprintf($lang['emajgroupsconfimported'], $nbGroup, $_POST['file']));
+				show_groups(sprintf($lang['strgroupsconfimported'], $nbGroup, $_POST['file']));
 			} else {
-				show_groups('', sprintf($lang['emajgroupsconfimporterr'], $_POST['file']));
+				show_groups('', sprintf($lang['strgroupsconfimporterr'], $_POST['file']));
 			}
 		} else {
 			// there are errors to report to the user
 
 			$misc->printHeader('database', 'database','emajgroups');
 
-			$misc->printTitle($lang['emajimportgroupsconf']);
+			$misc->printTitle($lang['strimportgroupsconf']);
 
-			echo "<p>" . sprintf($lang['emajgroupsconfimportpreperr'], htmlspecialchars($groupsList), htmlspecialchars($_POST['file'])) . "</p>\n";
+			echo "<p>" . sprintf($lang['strgroupsconfimportpreperr'], htmlspecialchars($groupsList), htmlspecialchars($_POST['file'])) . "</p>\n";
 
 			$columns = array(
 				'severity' => array(
@@ -3233,7 +3233,7 @@
 					'sorter' => false,
 				),
 				'message' => array(
-					'title' => $lang['emajdiagnostics'],
+					'title' => $lang['strdiagnostics'],
 					'field' => field('rpt_message'),
 				),
 			);
@@ -3257,7 +3257,7 @@
 		global $misc, $lang;
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajstartgrouperr'], htmlspecialchars($_REQUEST['group']));
+		$errMsgAction = sprintf($lang['strstartgrouperr'], htmlspecialchars($_REQUEST['group']));
 
 		// Check the group still exists and is in IDLE state
 		recheckGroups($_REQUEST['group'], $errMsgAction, 'IDLE', $_REQUEST['back']);
@@ -3269,16 +3269,16 @@
 		else
 			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
-		$misc->printTitle($lang['emajstartagroup']);
+		$misc->printTitle($lang['strstartagroup']);
 
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-		echo "<p>", sprintf($lang['emajconfirmstartgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
+		echo "<p>", sprintf($lang['strconfirmstartgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<div class=\"form-container\">\n";
-		echo "\t<div class=\"form-label required\">{$lang['emajinitmark']}</div>\n";
-		echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"mark\" required pattern=\"\S+.*\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\"/></div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+		echo "\t<div class=\"form-label required\">{$lang['strinitmark']}</div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"mark\" required pattern=\"\S+.*\" placeholder='{$lang['strrequiredfield']}' autocomplete=\"off\"/></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strmarknamehelp']}\"/></div>\n";
 		echo "</div>\n";
-		echo "<p><input type=checkbox name=\"resetlog\" checked/>{$lang['emajoldlogsdeletion']}</p>\n";
+		echo "<p><input type=checkbox name=\"resetlog\" checked/>{$lang['stroldlogsdeletion']}</p>\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"start_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
@@ -3310,7 +3310,7 @@
 		processCancelButton($_POST['back']);
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajstartgrouperr2'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark']));
+		$errMsgAction = sprintf($lang['strstartgrouperr2'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark']));
 
 		// Check the group still exists and is in IDLE state
 		recheckGroups($_POST['group'], $errMsgAction, 'IDLE', $_POST['back']);
@@ -3324,9 +3324,9 @@
 		// Check the result and exit
 		checkADOReturnCode($status, $errMsgAction, $_POST['back']);
 		if ($_POST['back']=='list')
-			show_groups(sprintf($lang['emajstartgroupok'], htmlspecialchars($_POST['group']), htmlspecialchars($finalMarkName)));
+			show_groups(sprintf($lang['strstartgroupok'], htmlspecialchars($_POST['group']), htmlspecialchars($finalMarkName)));
 		else
-			show_group(sprintf($lang['emajstartgroupok'], htmlspecialchars($_POST['group']), htmlspecialchars($finalMarkName)));
+			show_group(sprintf($lang['strstartgroupok'], htmlspecialchars($_POST['group']), htmlspecialchars($finalMarkName)));
 	}
 
 	/**
@@ -3337,7 +3337,7 @@
 
 		// if no group has been selected, stop
 		if (!isset($_REQUEST['ma'])) {
-			show_groups('',$lang['emajnoselectedgroup']);
+			show_groups('',$lang['strnoselectedgroup']);
 			return;
 		}
 
@@ -3353,7 +3353,7 @@
 		$groupsList = groupsArray2list($_REQUEST['ma']);
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajstartgroupserr'], htmlspecialchars($groupsList));
+		$errMsgAction = sprintf($lang['strstartgroupserr'], htmlspecialchars($groupsList));
 
 		// Check that all groups exist and are in IDLE state
 		recheckGroups($groupsList, $errMsgAction, 'IDLE', 'list');
@@ -3361,17 +3361,17 @@
 		if (!isset($_POST['mark'])) $_POST['mark'] = '';
 
 		$misc->printHeader('database', 'database','emajgroups');
-		$misc->printTitle($lang['emajstartgroups']);
+		$misc->printTitle($lang['strstartgroups']);
 
 		// Send the form
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-		echo "<p>", sprintf($lang['emajconfirmstartgroups'], htmlspecialchars($groupsList)), "</p>\n";
+		echo "<p>", sprintf($lang['strconfirmstartgroups'], htmlspecialchars($groupsList)), "</p>\n";
 		echo "<div class=\"form-container\">\n";
-		echo "\t<div class=\"form-label required\">{$lang['emajinitmark']}</div>\n";
-		echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"mark\" required pattern=\"\S+.*\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\" /></div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></div>\n";
+		echo "\t<div class=\"form-label required\">{$lang['strinitmark']}</div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"mark\" required pattern=\"\S+.*\" placeholder='{$lang['strrequiredfield']}' autocomplete=\"off\" /></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strmarknamemultihelp']}\"/></div>\n";
 		echo "</div>\n";
-		echo "<p><input type=checkbox name=\"resetlog\" checked/>{$lang['emajoldlogsdeletion']}</p>\n";
+		echo "<p><input type=checkbox name=\"resetlog\" checked/>{$lang['stroldlogsdeletion']}</p>\n";
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"start_groups_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"list\" />\n";
@@ -3403,7 +3403,7 @@
 		processCancelButton('list');
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajstartgroupserr2'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark']));
+		$errMsgAction = sprintf($lang['strstartgroupserr2'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark']));
 
 		// Check that all groups exist and are in IDLE state
 		recheckGroups($_POST['groups'], $errMsgAction, 'IDLE', 'list');
@@ -3416,7 +3416,7 @@
 
 		// Check the result and exit
 		checkADOReturnCode($status, $errMsgAction, 'list');
-		show_groups(sprintf($lang['emajstartgroupsok'], htmlspecialchars($_POST['groups']), htmlspecialchars($finalMarkName)));
+		show_groups(sprintf($lang['strstartgroupsok'], htmlspecialchars($_POST['groups']), htmlspecialchars($finalMarkName)));
 	}
 
 	/**
@@ -3426,7 +3426,7 @@
 		global $misc, $lang;
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajstopgrouperr'], htmlspecialchars($_REQUEST['group']));
+		$errMsgAction = sprintf($lang['strstopgrouperr'], htmlspecialchars($_REQUEST['group']));
 
 		// Check the group still exists and is in LOGGING state
 		recheckGroups($_REQUEST['group'], $errMsgAction, 'LOGGING', $_REQUEST['back']);
@@ -3436,16 +3436,16 @@
 		else
 			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
-		$misc->printTitle($lang['emajstopagroup']);
+		$misc->printTitle($lang['strstopagroup']);
 
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-		echo "<p>", sprintf($lang['emajconfirmstopgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
+		echo "<p>", sprintf($lang['strconfirmstopgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<div class=\"form-container\">\n";
-		echo "\t<div class=\"form-label required\">{$lang['emajstopmark']}</div>\n";
+		echo "\t<div class=\"form-label required\">{$lang['strstopmark']}</div>\n";
 		echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"STOP_%\" /></div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strmarknamehelp']}\"/></div>\n";
 		echo "</div>\n";
-		echo "<p><input type=checkbox name=\"forcestop\" />{$lang['emajforcestop']}</p>\n";
+		echo "<p><input type=checkbox name=\"forcestop\" />{$lang['strforcestop']}</p>\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"stop_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
@@ -3465,7 +3465,7 @@
 		processCancelButton($_POST['back']);
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajstopgrouperr2'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark']));
+		$errMsgAction = sprintf($lang['strstopgrouperr2'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark']));
 
 		// Check the group still exists and is in LOGGING state
 		recheckGroups($_POST['group'], $errMsgAction, 'LOGGING', $_POST['back']);
@@ -3479,9 +3479,9 @@
 		// Check the result and exit
 		checkADOReturnCode($status, $errMsgAction, $_POST['back']);
 		if ($_POST['back']=='list')
-			show_groups(sprintf($lang['emajstopgroupok'], htmlspecialchars($_POST['group'])));
+			show_groups(sprintf($lang['strstopgroupok'], htmlspecialchars($_POST['group'])));
 		else
-			show_group(sprintf($lang['emajstopgroupok'], htmlspecialchars($_POST['group'])));
+			show_group(sprintf($lang['strstopgroupok'], htmlspecialchars($_POST['group'])));
 	}
 
 	/**
@@ -3492,7 +3492,7 @@
 
 		// if no group has been selected, stop
 		if (!isset($_REQUEST['ma'])) {
-			show_groups('',$lang['emajnoselectedgroup']);
+			show_groups('',$lang['strnoselectedgroup']);
 			return;
 		}
 
@@ -3508,22 +3508,22 @@
 		$groupsList = groupsArray2list($_REQUEST['ma']);
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajstopgroupserr'], htmlspecialchars($groupsList));
+		$errMsgAction = sprintf($lang['strstopgroupserr'], htmlspecialchars($groupsList));
 
 		// Check that all groups exist and are in LOGGING state
 		recheckGroups($groupsList, $errMsgAction, 'LOGGING', 'list');
 
 		$misc->printHeader('database', 'database','emajgroups');
 
-		$misc->printTitle($lang['emajstopgroups']);
+		$misc->printTitle($lang['strstopgroups']);
 
 		// Send form
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-		echo "<p>", sprintf($lang['emajconfirmstopgroups'], htmlspecialchars($groupsList)), "</p>\n";
+		echo "<p>", sprintf($lang['strconfirmstopgroups'], htmlspecialchars($groupsList)), "</p>\n";
 		echo "<div class=\"form-container\">\n";
-		echo "\t<div class=\"form-label required\">{$lang['emajstopmark']}</div>\n";
+		echo "\t<div class=\"form-label required\">{$lang['strstopmark']}</div>\n";
 		echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"STOP_%\" /></div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strmarknamemultihelp']}\"/></div>\n";
 		echo "</div>\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"stop_groups_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
@@ -3544,7 +3544,7 @@
 		processCancelButton('list');
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajstopgroupserr2'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark']));
+		$errMsgAction = sprintf($lang['strstopgroupserr2'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark']));
 
 		// Check that all groups exist and are in LOGGING state
 		recheckGroups($_POST['groups'], $errMsgAction, 'LOGGING', 'list');
@@ -3557,7 +3557,7 @@
 
 		// Check the result and exit
 		checkADOReturnCode($status, $errMsgAction, 'list');
-		show_groups(sprintf($lang['emajstopgroupsok'], htmlspecialchars($_POST['groups'])));
+		show_groups(sprintf($lang['strstopgroupsok'], htmlspecialchars($_POST['groups'])));
 	}
 
 	/**
@@ -3567,7 +3567,7 @@
 		global $misc, $lang;
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajresetgrouperr'], htmlspecialchars($_REQUEST['group']));
+		$errMsgAction = sprintf($lang['strresetgrouperr'], htmlspecialchars($_REQUEST['group']));
 
 		// Check the group still exists and is in IDLE state
 		recheckGroups($_REQUEST['group'], $errMsgAction, 'IDLE', $_REQUEST['back']);
@@ -3577,9 +3577,9 @@
 		else
 			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
-		$misc->printTitle($lang['emajresetagroup']);
+		$misc->printTitle($lang['strresetagroup']);
 
-		echo "<p>", sprintf($lang['emajconfirmresetgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
+		echo "<p>", sprintf($lang['strconfirmresetgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"reset_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -3600,7 +3600,7 @@
 		processCancelButton($_POST['back']);
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajresetgrouperr'], htmlspecialchars($_POST['group']));
+		$errMsgAction = sprintf($lang['strresetgrouperr'], htmlspecialchars($_POST['group']));
 
 		// Check the group still exists and is in IDLE state
 		recheckGroups($_POST['group'], $errMsgAction, 'IDLE', $_POST['back']);
@@ -3611,9 +3611,9 @@
 		// Check the result and exit
 		checkADOReturnCode($status, $errMsgAction, $_POST['back']);
 		if ($_POST['back']=='list')
-			show_groups(sprintf($lang['emajresetgroupok'], htmlspecialchars($_POST['group'])));
+			show_groups(sprintf($lang['strresetgroupok'], htmlspecialchars($_POST['group'])));
 		else
-			show_group(sprintf($lang['emajresetgroupok'], htmlspecialchars($_POST['group'])));
+			show_group(sprintf($lang['strresetgroupok'], htmlspecialchars($_POST['group'])));
 	}
 
 	/**
@@ -3624,7 +3624,7 @@
 
 		// if no group has been selected, stop
 		if (!isset($_REQUEST['ma'])) {
-			show_groups('',$lang['emajnoselectedgroup']);
+			show_groups('',$lang['strnoselectedgroup']);
 			return;
 		}
 
@@ -3640,17 +3640,17 @@
 		$groupsList = groupsArray2list($_REQUEST['ma']);
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajresetgroupserr'], htmlspecialchars($groupsList));
+		$errMsgAction = sprintf($lang['strresetgroupserr'], htmlspecialchars($groupsList));
 
 		// Check that all groups exist and are in IDLE state
 		recheckGroups($groupsList, $errMsgAction, 'IDLE', 'list');
 
 		$misc->printHeader('database', 'database','emajgroups');
 
-		$misc->printTitle($lang['emajresetgroups']);
+		$misc->printTitle($lang['strresetgroups']);
 
 		// Send the form
-		echo "<p>", sprintf($lang['emajconfirmresetgroups'], htmlspecialchars($groupsList)), "</p>\n";
+		echo "<p>", sprintf($lang['strconfirmresetgroups'], htmlspecialchars($groupsList)), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"reset_groups_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
@@ -3670,7 +3670,7 @@
 		processCancelButton('list');
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajresetgroupserr'], htmlspecialchars($_POST['groups']));
+		$errMsgAction = sprintf($lang['strresetgroupserr'], htmlspecialchars($_POST['groups']));
 
 		// Check that all groups exist and are in IDLE state
 		recheckGroups($_POST['groups'], $errMsgAction, 'IDLE', 'list');
@@ -3680,7 +3680,7 @@
 
 		// Check the result and exit
 		checkADOReturnCode($status, $errMsgAction, 'list');
-		show_groups(sprintf($lang['emajresetgroupsok'], htmlspecialchars($_POST['groups'])));
+		show_groups(sprintf($lang['strresetgroupsok'], htmlspecialchars($_POST['groups'])));
 	}
 
 	/**
@@ -3690,7 +3690,7 @@
 		global $lang, $emajdb;
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajprotectgrouperr'], htmlspecialchars($_REQUEST['group']));
+		$errMsgAction = sprintf($lang['strprotectgrouperr'], htmlspecialchars($_REQUEST['group']));
 
 		// Check the group still exists and is in LOGGING state
 		recheckGroups($_REQUEST['group'], $errMsgAction, 'LOGGING', $_REQUEST['back']);
@@ -3699,9 +3699,9 @@
 		$status = $emajdb->protectGroup($_REQUEST['group']);
 		if ($status == 0)
 			if ($_REQUEST['back'] == 'list') {
-				show_groups(sprintf($lang['emajprotectgroupok'], htmlspecialchars($_REQUEST['group'])));
+				show_groups(sprintf($lang['strprotectgroupok'], htmlspecialchars($_REQUEST['group'])));
 			} else {
-				show_group(sprintf($lang['emajprotectgroupok'], htmlspecialchars($_REQUEST['group'])));
+				show_group(sprintf($lang['strprotectgroupok'], htmlspecialchars($_REQUEST['group'])));
 			}
 		else
 			if ($_REQUEST['back'] == 'list') {
@@ -3719,7 +3719,7 @@
 
 		// if no group has been selected, stop
 		if (!isset($_REQUEST['ma'])) {
-			show_groups('',$lang['emajnoselectedgroup']);
+			show_groups('',$lang['strnoselectedgroup']);
 			return;
 		}
 
@@ -3735,7 +3735,7 @@
 		$groupsList = groupsArray2list($_REQUEST['ma']);
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajprotectgroupserr'], htmlspecialchars($groupsList));
+		$errMsgAction = sprintf($lang['strprotectgroupserr'], htmlspecialchars($groupsList));
 
 		// Check the groups still exist and are in LOGGING state
 		recheckGroups($groupsList, $errMsgAction, 'LOGGING', 'list');
@@ -3743,7 +3743,7 @@
 		// OK, perform the action
 		$nbGroup = $emajdb->protectGroups($groupsList);
 		if ($nbGroup >= 0)
-			show_groups(sprintf($lang['emajprotectgroupsok'], htmlspecialchars($groupsList)));
+			show_groups(sprintf($lang['strprotectgroupsok'], htmlspecialchars($groupsList)));
 		else
 			show_groups('', $errMsgAction);
 	}
@@ -3755,7 +3755,7 @@
 		global $lang, $emajdb;
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajunprotectgrouperr'], htmlspecialchars($_REQUEST['group']));
+		$errMsgAction = sprintf($lang['strunprotectgrouperr'], htmlspecialchars($_REQUEST['group']));
 
 		// Check the group still exists and is in LOGGING state
 		recheckGroups($_REQUEST['group'], $errMsgAction, 'LOGGING', $_REQUEST['back']);
@@ -3766,9 +3766,9 @@
 		// Check the result and exit
 		checkADOReturnCode($status, $errMsgAction, $_REQUEST['back']);
 		if ($_REQUEST['back'] == 'list')
-			show_groups(sprintf($lang['emajunprotectgroupok'], htmlspecialchars($_REQUEST['group'])));
+			show_groups(sprintf($lang['strunprotectgroupok'], htmlspecialchars($_REQUEST['group'])));
 		else
-			show_group(sprintf($lang['emajunprotectgroupok'], htmlspecialchars($_REQUEST['group'])));
+			show_group(sprintf($lang['strunprotectgroupok'], htmlspecialchars($_REQUEST['group'])));
 	}
 
 	/**
@@ -3779,7 +3779,7 @@
 
 		// if no group has been selected, stop
 		if (!isset($_REQUEST['ma'])) {
-			show_groups('',$lang['emajnoselectedgroup']);
+			show_groups('',$lang['strnoselectedgroup']);
 			return;
 		}
 
@@ -3795,7 +3795,7 @@
 		$groupsList = groupsArray2list($_REQUEST['ma']);
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajunprotectgroupserr'], htmlspecialchars($groupsList));
+		$errMsgAction = sprintf($lang['strunprotectgroupserr'], htmlspecialchars($groupsList));
 
 		// Check the groups still exist and are in LOGGING state
 		recheckGroups($groupsList, $errMsgAction, 'LOGGING', 'list');
@@ -3803,7 +3803,7 @@
 		// OK, perform the action
 		$nbGroup = $emajdb->unprotectGroups($groupsList);
 		if ($nbGroup >= 0)
-			show_groups(sprintf($lang['emajunprotectgroupsok'], htmlspecialchars($groupsList)));
+			show_groups(sprintf($lang['strunprotectgroupsok'], htmlspecialchars($groupsList)));
 		else
 			show_groups('', $errMsgAction);
 	}
@@ -3815,7 +3815,7 @@
 		global $misc, $lang;
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajsetmarkgrouperr'], htmlspecialchars($_REQUEST['group']));
+		$errMsgAction = sprintf($lang['strsetmarkgrouperr'], htmlspecialchars($_REQUEST['group']));
 
 		// Check the group still exists and is in LOGGING state
 		recheckGroups($_REQUEST['group'], $errMsgAction, 'LOGGING', $_REQUEST['back']);
@@ -3827,14 +3827,14 @@
 		else
 			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
-		$misc->printTitle($lang['emajsetamark']);
-		echo "<p>", sprintf($lang['emajconfirmsetmarkgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
+		$misc->printTitle($lang['strsetamark']);
+		echo "<p>", sprintf($lang['strconfirmsetmarkgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 
 		echo "<div class=\"form-container\">\n";
-		echo "\t<div class=\"form-label required\">{$lang['emajmark']}</div>\n";
-		echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"mark\" required pattern=\"\S+.*\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\" /></div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamehelp']}\"/></div>\n";
+		echo "\t<div class=\"form-label required\">{$lang['strmark']}</div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"mark\" required pattern=\"\S+.*\" placeholder='{$lang['strrequiredfield']}' autocomplete=\"off\" /></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strmarknamehelp']}\"/></div>\n";
 		echo "</div>\n";
 
 		echo "<div class=\"form-container\">\n";
@@ -3874,7 +3874,7 @@
 		processCancelButton($_POST['back']);
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajsetmarkgrouperr2'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark']));
+		$errMsgAction = sprintf($lang['strsetmarkgrouperr2'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark']));
 
 		// Check the group still exists and is in LOGGING state
 		recheckGroups($_POST['group'], $errMsgAction, 'LOGGING', $_POST['back']);
@@ -3888,9 +3888,9 @@
 		// Check the result and exit
 		checkADOReturnCode($status, $errMsgAction, $_REQUEST['back']);
 		if ($_POST['back']=='list')
-			show_groups(sprintf($lang['emajsetmarkgroupok'], htmlspecialchars($finalMarkName), htmlspecialchars($_POST['group'])));
+			show_groups(sprintf($lang['strsetmarkgroupok'], htmlspecialchars($finalMarkName), htmlspecialchars($_POST['group'])));
 		else
-			show_group(sprintf($lang['emajsetmarkgroupok'], htmlspecialchars($finalMarkName), htmlspecialchars($_POST['group'])));
+			show_group(sprintf($lang['strsetmarkgroupok'], htmlspecialchars($finalMarkName), htmlspecialchars($_POST['group'])));
 	}
 
 	/**
@@ -3901,7 +3901,7 @@
 
 		// if no group has been selected, stop
 		if (!isset($_REQUEST['ma'])) {
-			show_groups('',$lang['emajnoselectedgroup']);
+			show_groups('',$lang['strnoselectedgroup']);
 			return;
 		}
 
@@ -3917,25 +3917,25 @@
 		$groupsList = groupsArray2list($_REQUEST['ma']);
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajsetmarkgroupserr'], htmlspecialchars($groupsList));
+		$errMsgAction = sprintf($lang['strsetmarkgroupserr'], htmlspecialchars($groupsList));
 
 		// Check that all groups exist and are in LOGGING state
 		recheckGroups($groupsList, $errMsgAction, 'LOGGING', 'list');
 
 		$misc->printHeader('database', 'database','emajgroups');
 
-		$misc->printTitle($lang['emajsetamark']);
+		$misc->printTitle($lang['strsetamark']);
 
 		if (!isset($_POST['mark'])) $_POST['mark'] = '';
 
-		echo "<p>", sprintf($lang['emajconfirmsetmarkgroups'], htmlspecialchars($groupsList)), "</p>\n";
+		echo "<p>", sprintf($lang['strconfirmsetmarkgroups'], htmlspecialchars($groupsList)), "</p>\n";
 		// send form
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 
 		echo "<div class=\"form-container\">\n";
-		echo "\t<div class=\"form-label required\">{$lang['emajmark']}</div>\n";
-		echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"mark\" required pattern=\"\S+.*\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\" /></div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajmarknamemultihelp']}\"/></div>\n";
+		echo "\t<div class=\"form-label required\">{$lang['strmark']}</div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"mark\" required pattern=\"\S+.*\" placeholder='{$lang['strrequiredfield']}' autocomplete=\"off\" /></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strmarknamemultihelp']}\"/></div>\n";
 		echo "</div>\n";
 
 		echo "<div class=\"form-container\">\n";
@@ -3975,7 +3975,7 @@
 		processCancelButton('list');
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajsetmarkgroupserr2'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark']));
+		$errMsgAction = sprintf($lang['strsetmarkgroupserr2'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark']));
 
 		// Check that all groups exist and are in LOGGING state
 		recheckGroups($_POST['groups'], $errMsgAction, 'LOGGING', 'list');
@@ -3988,7 +3988,7 @@
 
 		// Check the result and exit
 		checkADOReturnCode($status, $errMsgAction, 'list');
-		show_groups(sprintf($lang['emajsetmarkgroupsok'], htmlspecialchars($finalMarkName), htmlspecialchars($_POST['groups'])));
+		show_groups(sprintf($lang['strsetmarkgroupsok'], htmlspecialchars($finalMarkName), htmlspecialchars($_POST['groups'])));
 	}
 
 	/**
@@ -3998,7 +3998,7 @@
 		global $misc, $lang, $emajdb, $conf;
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajrlbkgrouperr'], htmlspecialchars($_REQUEST['group']));
+		$errMsgAction = sprintf($lang['strrlbkgrouperr'], htmlspecialchars($_REQUEST['group']));
 
 		// Check the group still exists and is in LOGGING state
 		recheckGroups($_REQUEST['group'], $errMsgAction, 'LOGGING', $_REQUEST['back']);
@@ -4013,7 +4013,7 @@
 		else
 			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
-		$misc->printTitle($lang['emajrlbkagroup']);
+		$misc->printTitle($lang['strrlbkagroup']);
 
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"rollback_group_confirm_alter\" />\n";
@@ -4023,7 +4023,7 @@
 		if ($_REQUEST['back'] == 'list') {
 		// the mark name is not yet defined (we are coming from the 'list groups' page)
 			$marks=$emajdb->getRollbackMarkGroup($_REQUEST['group']);
-			echo sprintf($lang['emajselectmarkgroup'], htmlspecialchars($_REQUEST['group']));
+			echo sprintf($lang['strselectmarkgroup'], htmlspecialchars($_REQUEST['group']));
 			echo "<select name=\"mark\">\n";
 			$optionDisabled = '';
 			foreach($marks as $m) {
@@ -4035,19 +4035,19 @@
 			echo "</select></p>\n";
 		} else {
 		// the mark name is already defined (we are coming from the 'detail group' page)
-			echo "<p>", sprintf($lang['emajconfirmrlbkgroup'], htmlspecialchars($_REQUEST['group']), htmlspecialchars($_REQUEST['mark'])), "</p>\n";
+			echo "<p>", sprintf($lang['strconfirmrlbkgroup'], htmlspecialchars($_REQUEST['group']), htmlspecialchars($_REQUEST['mark'])), "</p>\n";
 			echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
 		}
 		echo $misc->form;
 
 		// rollback type line
-		echo "<p>{$lang['emajrollbacktype']} : \n";
+		echo "<p>{$lang['strrollbacktype']} : \n";
 		$unloggedChecked = 'checked'; $loggedChecked = '';
 		if (isset($_POST['rollbacktype']) && $_POST['rollbacktype'] == 'logged') {
 			$unloggedChecked = ''; $loggedChecked = 'checked';
 		}
-		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"unlogged\" {$unloggedChecked}>{$lang['emajunlogged']}\n";
-		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"logged\" {$loggedChecked}>{$lang['emajlogged']}\n";
+		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"unlogged\" {$unloggedChecked}>{$lang['strunlogged']}\n";
+		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"logged\" {$loggedChecked}>{$lang['strlogged']}\n";
 		echo "</p>\n";
 
 		// comment line
@@ -4061,30 +4061,30 @@
 		}
 
 		// estimated duration line
-		echo "<p>{$lang['emajestimatedduration']}&nbsp;:&nbsp;\n";
+		echo "<p>{$lang['strestimatedduration']}&nbsp;:&nbsp;\n";
 		if (isset($estimatedDuration)) {
 			// the duration estimate is already known, so display it in a pleasant manner
 			if (preg_match('/(\d\d\d\d)\/(\d\d)\/(\d\d) (\d\d):(\d\d):(\d\d)/', $estimatedDuration, $m)) {
 				if ($m[1] + $m[2] > 0 || $m[3] > 10) {			// more than 10 days (should it happen one day ?)
-					$duration = $lang['emajdurationovertendays'];
+					$duration = $lang['strdurationovertendays'];
 				} elseif ($m[3] * 24 + $m[4]> 0) {				// more than 1 hour => display hours and minutes
-					$duration = sprintf($lang['emajdurationhoursminutes'], ($m[3] * 24 + $m[4]), $m[5]);
+					$duration = sprintf($lang['strdurationhoursminutes'], ($m[3] * 24 + $m[4]), $m[5]);
 				} else {										// less than 1 hour => display minutes and seconds
-					$duration = sprintf($lang['emajdurationminutesseconds'], ($m[5] + 0), $m[6]);
+					$duration = sprintf($lang['strdurationminutesseconds'], ($m[5] + 0), $m[6]);
 				}
 			} else {
 				$duration = $estimatedDuration;
 			}
-			echo $duration . "&nbsp;<input type=\"submit\" name=\"estimaterollbackduration\" value=\"{$lang['emajreestimate']}\" /></p>\n";
+			echo $duration . "&nbsp;<input type=\"submit\" name=\"estimaterollbackduration\" value=\"{$lang['strreestimate']}\" /></p>\n";
 		} else {
 			// the duration estimate is unknown, so propose a button to get it
-			echo "{$lang['emajunknownestimate']}&nbsp;<input type=\"submit\" name=\"estimaterollbackduration\" value=\"{$lang['emajestimate']}\" /></p>\n";
+			echo "{$lang['strunknownestimate']}&nbsp;<input type=\"submit\" name=\"estimaterollbackduration\" value=\"{$lang['strestimate']}\" /></p>\n";
 		}
 
 		// main buttons line
-		echo "<p><input type=\"submit\" name=\"rollbackgroup\" value=\"{$lang['emajrlbk']}\" />\n";
+		echo "<p><input type=\"submit\" name=\"rollbackgroup\" value=\"{$lang['strrlbk']}\" />\n";
 		if ($emajdb->isAsyncRlbkUsable($conf) ) {
-			echo "<input type=\"submit\" name=\"async\" value=\"{$lang['emajrlbkthenmonitor']}\" />\n";
+			echo "<input type=\"submit\" name=\"async\" value=\"{$lang['strrlbkthenmonitor']}\" />\n";
 		}
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
 		echo "</p></form>\n";
@@ -4101,9 +4101,9 @@
 
 		// Prepare the action part of potential error messages, depending on the real performed action
 		if (isset($_POST['estimaterollbackduration']))
-			$errMsgAction = sprintf($lang['emajestimrlbkgrouperr'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark']));
+			$errMsgAction = sprintf($lang['strestimrlbkgrouperr'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark']));
 		else
-			$errMsgAction = sprintf($lang['emajrlbkgrouperr2'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark']));
+			$errMsgAction = sprintf($lang['strrlbkgrouperr2'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark']));
 
 		// Check the group still exists and is in LOGGING state
 		recheckGroups($_POST['group'], $errMsgAction, 'LOGGING', $_POST['back']);
@@ -4129,9 +4129,9 @@
 		$group = $emajdb->getGroup($_POST['group']);
 		if ($group->fields['group_type'] != 'ROLLBACKABLE') {
 			if ($_POST['back'] == 'list') {
-				show_groups('', $errMsgAction . '<br>' . sprintf($lang['emajgroupprotected'], htmlspecialchars($_POST['group'])));
+				show_groups('', $errMsgAction . '<br>' . sprintf($lang['strgroupprotected'], htmlspecialchars($_POST['group'])));
 			} else {
-				show_group('', $errMsgAction . '<br>' . sprintf($lang['emajgroupprotected'], htmlspecialchars($_POST['group'])));
+				show_group('', $errMsgAction . '<br>' . sprintf($lang['strgroupprotected'], htmlspecialchars($_POST['group'])));
 			}
 			return;
 		}
@@ -4139,9 +4139,9 @@
 		// Check the mark is always valid for a rollback
 		if (!$emajdb->isRollbackMarkValidGroup($_POST['group'],$_POST['mark'])) {
 			if ($_POST['back'] == 'list') {
-				show_groups('', $errMsgAction . '<br>' . sprintf($lang['emajcantrlbkinvalidmarkgroup'], htmlspecialchars($_POST['mark'])));
+				show_groups('', $errMsgAction . '<br>' . sprintf($lang['strcantrlbkinvalidmarkgroup'], htmlspecialchars($_POST['mark'])));
 			} else {
-				show_group('', $errMsgAction . '<br>' . sprintf($lang['emajcantrlbkinvalidmarkgroup'], htmlspecialchars($_POST['mark'])));
+				show_group('', $errMsgAction . '<br>' . sprintf($lang['strcantrlbkinvalidmarkgroup'], htmlspecialchars($_POST['mark'])));
 			}
 			return;
 		}
@@ -4153,7 +4153,7 @@
 
 			$columns = array(
 				'time' => array(
-					'title' => $lang['emajtimestamp'],
+					'title' => $lang['strtimestamp'],
 					'field' => field('time_tx_timestamp'),
 				),
 				'step' => array(
@@ -4161,7 +4161,7 @@
 					'field' => field('altr_action'),
 				),
 				'autorollback' => array(
-					'title' => $lang['emajautorolledback'],
+					'title' => $lang['strautorolledback'],
 					'field' => field('altr_auto_rolled_back'),
 					'type'	=> 'callback',
 					'params'=> array('function' => 'renderBooleanIcon','align' => 'center')
@@ -4175,9 +4175,9 @@
 			else
 				$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
-			$misc->printTitle($lang['emajrlbkagroup']);
+			$misc->printTitle($lang['strrlbkagroup']);
 
-			echo "<p>" . sprintf($lang['emajreachaltergroup'], htmlspecialchars($_REQUEST['group']), htmlspecialchars($_REQUEST['mark'])) . "</p>\n";
+			echo "<p>" . sprintf($lang['strreachaltergroup'], htmlspecialchars($_REQUEST['group']), htmlspecialchars($_REQUEST['mark'])) . "</p>\n";
 
 			$misc->printTable($alterGroupSteps, $columns, $actions, 'alterGroupStep');
 
@@ -4212,7 +4212,7 @@
 		processCancelButton($_POST['back']);
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajrlbkgrouperr2'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark']));
+		$errMsgAction = sprintf($lang['strrlbkgrouperr2'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark']));
 
 		// Check the group still exists and is in LOGGING state
 		recheckGroups($_POST['group'], $errMsgAction, 'LOGGING', $_POST['back']);
@@ -4224,9 +4224,9 @@
 		$group = $emajdb->getGroup($_POST['group']);
 		if ($group->fields['group_type'] != 'ROLLBACKABLE') {
 			if ($_POST['back']=='list') {
-				show_groups('', $errMsgAction . '<br>' . sprintf($lang['emajgroupprotected'], htmlspecialchars($_POST['group'])));
+				show_groups('', $errMsgAction . '<br>' . sprintf($lang['strgroupprotected'], htmlspecialchars($_POST['group'])));
 			} else {
-				show_group('', $errMsgAction . '<br>' . sprintf($lang['emajgroupprotected'], htmlspecialchars($_POST['group'])));
+				show_group('', $errMsgAction . '<br>' . sprintf($lang['strgroupprotected'], htmlspecialchars($_POST['group'])));
 			}
 			return;
 		}
@@ -4234,9 +4234,9 @@
 		// Check the mark is always valid for a rollback
 		if (!$emajdb->isRollbackMarkValidGroup($_POST['group'],$_POST['mark'])) {
 			if ($_POST['back']=='list') {
-				show_groups('', $errMsgAction . '<br>' . sprintf($lang['emajcantrlbkinvalidmarkgroup'], htmlspecialchars($_POST['mark'])));
+				show_groups('', $errMsgAction . '<br>' . sprintf($lang['strcantrlbkinvalidmarkgroup'], htmlspecialchars($_POST['mark'])));
 			} else {
-				show_group('', $errMsgAction . '<br>' . sprintf($lang['emajcantrlbkinvalidmarkgroup'], htmlspecialchars($_POST['mark'])));
+				show_group('', $errMsgAction . '<br>' . sprintf($lang['strcantrlbkinvalidmarkgroup'], htmlspecialchars($_POST['mark'])));
 			}
 			return;
 		}
@@ -4246,9 +4246,9 @@
 
 			if (!$emajdb->isAsyncRlbkUsable(false)) {
 				if ($_POST['back']=='list') {
-					show_groups('', sprintf($lang['emajbadconfparam'], $conf['psql_path'], $conf['temp_dir']));
+					show_groups('', sprintf($lang['strbadconfparam'], $conf['psql_path'], $conf['temp_dir']));
 				} else {
-					show_group('', sprintf($lang['emajbadconfparam'], $conf['psql_path'], $conf['temp_dir']));
+					show_group('', sprintf($lang['strbadconfparam'], $conf['psql_path'], $conf['temp_dir']));
 				}
 				exit;
 			}
@@ -4277,9 +4277,9 @@
 		else
 			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
-		$misc->printTitle($lang['emajrlbkagroup']);
+		$misc->printTitle($lang['strrlbkagroup']);
 
-		echo "<p>" . sprintf($lang['emajrlbkgroupreport'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark'])) . "</p>\n";
+		echo "<p>" . sprintf($lang['strrlbkgroupreport'], htmlspecialchars($_POST['group']), htmlspecialchars($_POST['mark'])) . "</p>\n";
 
 		// execute the rollback operation and get the execution report
 		if (!ini_get('safe_mode')) set_time_limit(0);		// Prevent timeouts on large rollbacks (non-safe mode only)
@@ -4326,7 +4326,7 @@
 			// usual function entry
 			// if no group has been selected, stop
 			if (!isset($_REQUEST['ma'])) {
-				show_groups('',$lang['emajnoselectedgroup']);
+				show_groups('',$lang['strnoselectedgroup']);
 				return;
 			}
 
@@ -4347,7 +4347,7 @@
 		}
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajrlbkgroupserr'], htmlspecialchars($groupsList));
+		$errMsgAction = sprintf($lang['strrlbkgroupserr'], htmlspecialchars($groupsList));
 
 		// Check the groups still exist and are in LOGGING state
 		recheckGroups($groupsList, $errMsgAction, 'LOGGING', 'list');
@@ -4357,10 +4357,10 @@
 		if ($protectedGroups->fields['nb_groups'] > 0) {
 			if ($protectedGroups->fields['nb_groups'] == 1)
 				show_groups('', $errMsgAction . '<br>' .
-					sprintf($lang['emajgroupprotected'], htmlspecialchars($protectedGroups->fields['groups_list'])));
+					sprintf($lang['strgroupprotected'], htmlspecialchars($protectedGroups->fields['groups_list'])));
 			else
 				show_groups('', $errMsgAction . '<br>' .
-					sprintf($lang['emajgroupsprotected'], $protectedGroups->fields['nb_groups'], htmlspecialchars($protectedGroups->fields['groups_list'])));
+					sprintf($lang['strgroupsprotected'], $protectedGroups->fields['nb_groups'], htmlspecialchars($protectedGroups->fields['groups_list'])));
 			return;
 		}
 
@@ -4368,7 +4368,7 @@
 		$marks=$emajdb->getRollbackMarkGroups($groupsList);
 		// if no mark is usable for all selected groups, stop
 		if ($marks->recordCount()==0) {
-			show_groups('',sprintf($lang['emajnomarkgroups'], htmlspecialchars($groupsList)));
+			show_groups('',sprintf($lang['strnomarkgroups'], htmlspecialchars($groupsList)));
 			return;
 		}
 		// get the youngest timestamp protected mark for all groups
@@ -4376,13 +4376,13 @@
 
 		$misc->printHeader('database', 'database','emajgroups');
 
-		$misc->printTitle($lang['emajrlbkgroups']);
+		$misc->printTitle($lang['strrlbkgroups']);
 
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"rollback_groups_confirm_alter\" />\n";
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
-		echo sprintf($lang['emajselectmarkgroups'], htmlspecialchars($groupsList));
+		echo sprintf($lang['strselectmarkgroups'], htmlspecialchars($groupsList));
 		echo "<select name=\"mark\">\n";
 		$optionDisabled = '';
 		foreach($marks as $m) {
@@ -4395,13 +4395,13 @@
 		echo $misc->form;
 
 		// rollback type line
-		echo "<p>{$lang['emajrollbacktype']} : \n";
+		echo "<p>{$lang['strrollbacktype']} : \n";
 		$unloggedChecked = 'checked'; $loggedChecked = '';
 		if (isset($_POST['rollbacktype']) && $_POST['rollbacktype'] == 'logged') {
 			$unloggedChecked = ''; $loggedChecked = 'checked';
 		}
-		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"unlogged\" {$unloggedChecked}>{$lang['emajunlogged']}\n";
-		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"logged\" {$loggedChecked}>{$lang['emajlogged']}\n";
+		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"unlogged\" {$unloggedChecked}>{$lang['strunlogged']}\n";
+		echo "<input type=\"radio\" name=\"rollbacktype\" value=\"logged\" {$loggedChecked}>{$lang['strlogged']}\n";
 		echo "</p>\n";
 
 		// comment line
@@ -4415,31 +4415,31 @@
 		}
 
 		// estimated duration line
-		echo "<p>{$lang['emajestimatedduration']}&nbsp;:&nbsp;\n";
+		echo "<p>{$lang['strestimatedduration']}&nbsp;:&nbsp;\n";
 		if (isset($estimatedDuration)) {
 			// the duration estimate is already known, so display it in a pleasant manner
 			if (preg_match('/(\d\d\d\d)\/(\d\d)\/(\d\d) (\d\d):(\d\d):(\d\d)/', $estimatedDuration, $m)) {
 				if ($m[1] + $m[2] > 0 || $m[3] > 10) {			// more than 10 days (should it happen one day ?)
-					$duration = $lang['emajdurationovertendays'];
+					$duration = $lang['strdurationovertendays'];
 				} elseif ($m[3] * 24 + $m[4]> 0) {				// more than 1 hour => display hours and minutes
-					$duration = sprintf($lang['emajdurationhoursminutes'], ($m[3] * 24 + $m[4]), $m[5]);
+					$duration = sprintf($lang['strdurationhoursminutes'], ($m[3] * 24 + $m[4]), $m[5]);
 				} else {										// less than 1 hour => display minutes and seconds
-					$duration = sprintf($lang['emajdurationminutesseconds'], ($m[5] + 0), $m[6]);
+					$duration = sprintf($lang['strdurationminutesseconds'], ($m[5] + 0), $m[6]);
 				}
 			} else {
 				$duration = $estimatedDuration;
 			}
-			echo $duration . "&nbsp;<input type=\"submit\" name=\"estimaterollbackduration\" value=\"{$lang['emajreestimate']}\" /></p>\n";
+			echo $duration . "&nbsp;<input type=\"submit\" name=\"estimaterollbackduration\" value=\"{$lang['strreestimate']}\" /></p>\n";
 		} else {
 			// the duration estimate is unknown, so propose a button to get it
-			echo "{$lang['emajunknownestimate']}&nbsp;<input type=\"submit\" name=\"estimaterollbackduration\" value=\"{$lang['emajestimate']}\" /></p>\n";
+			echo "{$lang['strunknownestimate']}&nbsp;<input type=\"submit\" name=\"estimaterollbackduration\" value=\"{$lang['strestimate']}\" /></p>\n";
 		}
 
 		// main buttons line
 		echo "<p>\n";
-		echo "<input type=\"submit\" name=\"rollbackgroups\" value=\"{$lang['emajrlbk']}\" />\n";
+		echo "<input type=\"submit\" name=\"rollbackgroups\" value=\"{$lang['strrlbk']}\" />\n";
 		if ($emajdb->isAsyncRlbkUsable() ) {
-			echo "<input type=\"submit\" name=\"async\" value=\"{$lang['emajrlbkthenmonitor']}\" />\n";
+			echo "<input type=\"submit\" name=\"async\" value=\"{$lang['strrlbkthenmonitor']}\" />\n";
 		}
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
 		echo "</p></form>\n";
@@ -4456,9 +4456,9 @@
 
 		// Prepare the action part of potential error messages, depending on the real performed action
 		if (isset($_POST['estimaterollbackduration']))
-			$errMsgAction = sprintf($lang['emajestimrlbkgroupserr'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark']));
+			$errMsgAction = sprintf($lang['strestimrlbkgroupserr'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark']));
 		else
-			$errMsgAction = sprintf($lang['emajrlbkgroupserr2'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark']));
+			$errMsgAction = sprintf($lang['strrlbkgroupserr2'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark']));
 
 		// Check the groups still exist and are in LOGGING state
 		recheckGroups($_POST['groups'], $errMsgAction, 'LOGGING', 'list');
@@ -4486,16 +4486,16 @@
 		if ($protectedGroups->fields['nb_groups'] > 0) {
 			if ($protectedGroups->fields['nb_groups'] == 1)
 				show_groups('', $errMsgAction . '<br>' .
-					sprintf($lang['emajgroupprotected'], htmlspecialchars($protectedGroups->fields['groups_list'])));
+					sprintf($lang['strgroupprotected'], htmlspecialchars($protectedGroups->fields['groups_list'])));
 			else
 				show_groups('', $errMsgAction . '<br>' .
-					sprintf($lang['emajgroupsprotected'], $protectedGroups->fields['nb_groups'], htmlspecialchars($protectedGroups->fields['groups_list'])));
+					sprintf($lang['strgroupsprotected'], $protectedGroups->fields['nb_groups'], htmlspecialchars($protectedGroups->fields['groups_list'])));
 			return;
 		}
 
 		// Check the mark is always valid
 		if (!$emajdb->isRollbackMarkValidGroups($_POST['groups'],$_POST['mark'])) {
-			show_groups('', sprintf($lang['emajcantrlbkinvalidmarkgroups'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark'])));
+			show_groups('', sprintf($lang['strcantrlbkinvalidmarkgroups'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark'])));
 			return;
 		}
 
@@ -4507,7 +4507,7 @@
 
 			$columns = array(
 				'time' => array(
-					'title' => $lang['emajtimestamp'],
+					'title' => $lang['strtimestamp'],
 					'field' => field('time_tx_timestamp'),
 				),
 				'step' => array(
@@ -4515,7 +4515,7 @@
 					'field' => field('altr_action'),
 				),
 				'autorollback' => array(
-					'title' => $lang['emajautorolledback'],
+					'title' => $lang['strautorolledback'],
 					'field' => field('altr_auto_rolled_back'),
 					'type'	=> 'callback',
 					'params'=> array('function' => 'renderBooleanIcon','align' => 'center')
@@ -4526,9 +4526,9 @@
 
 			$misc->printHeader('database', 'database','emajgroups');
 
-			$misc->printTitle($lang['emajrlbkgroups']);
+			$misc->printTitle($lang['strrlbkgroups']);
 
-			echo "<p>" . sprintf($lang['emajreachaltergroups'], htmlspecialchars($_REQUEST['groups']), htmlspecialchars($_REQUEST['mark'])) . "</p>\n";
+			echo "<p>" . sprintf($lang['strreachaltergroups'], htmlspecialchars($_REQUEST['groups']), htmlspecialchars($_REQUEST['mark'])) . "</p>\n";
 			$misc->printTable($alterGroupSteps, $columns, $actions, 'alterGroupStep');
 
 			echo "<form action=\"emajgroups.php\" method=\"post\">\n";
@@ -4562,7 +4562,7 @@
 		processCancelButton('list');
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajrlbkgroupserr2'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark']));
+		$errMsgAction = sprintf($lang['strrlbkgroupserr2'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark']));
 
 		// Check the groups still exist and are in LOGGING state
 		recheckGroups($_POST['groups'], $errMsgAction, 'LOGGING', 'list');
@@ -4575,16 +4575,16 @@
 		if ($protectedGroups->fields['nb_groups'] > 0) {
 			if ($protectedGroups->fields['nb_groups'] == 1)
 				show_groups('', $errMsgAction . '<br>' .
-					sprintf($lang['emajgroupprotected'], htmlspecialchars($protectedGroups->fields['groups_list'])));
+					sprintf($lang['strgroupprotected'], htmlspecialchars($protectedGroups->fields['groups_list'])));
 			else
 				show_groups('', $errMsgAction . '<br>' .
-					sprintf($lang['emajgroupsprotected'], $protectedGroups->fields['nb_groups'], htmlspecialchars($protectedGroups->fields['groups_list'])));
+					sprintf($lang['strgroupsprotected'], $protectedGroups->fields['nb_groups'], htmlspecialchars($protectedGroups->fields['groups_list'])));
 			return;
 		}
 
 		// Check the mark is always valid
 		if (!$emajdb->isRollbackMarkValidGroups($_POST['groups'], $_POST['mark'])) {
-			show_groups('', sprintf($lang['emajcantrlbkinvalidmarkgroups'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark'])));
+			show_groups('', sprintf($lang['strcantrlbkinvalidmarkgroups'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark'])));
 			return;
 		}
 		// OK
@@ -4613,9 +4613,9 @@
 
 		$misc->printHeader('database', 'database','emajgroups');
 
-		$misc->printTitle($lang['emajrlbkgroups']);
+		$misc->printTitle($lang['strrlbkgroups']);
 
-		echo "<p>" . sprintf($lang['emajrlbkgroupsreport'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark'])) . "</p>\n";
+		echo "<p>" . sprintf($lang['strrlbkgroupsreport'], htmlspecialchars($_POST['groups']), htmlspecialchars($_POST['mark'])) . "</p>\n";
 
 		// execute the rollback operation and get the execution report
 		$rlbkReportMsgs = $emajdb->rollbackGroups($_POST['groups'], $_POST['mark'], $_POST['rollbacktype']=='logged', $_POST['comment']);
@@ -4651,7 +4651,7 @@
 		global $lang, $emajdb;
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajprotectmarkerr'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group']));
+		$errMsgAction = sprintf($lang['strprotectmarkerr'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group']));
 
 		// Check the group still exists and is in LOGGING state
 		recheckGroups($_REQUEST['group'], $errMsgAction, 'LOGGING');
@@ -4664,7 +4664,7 @@
 
 		// Check the result and exit
 		checkADOReturnCode($status, $errMsgAction, 'detail');
-		show_group(sprintf($lang['emajprotectmarkok'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])));
+		show_group(sprintf($lang['strprotectmarkok'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])));
 	}
 
 	/**
@@ -4674,7 +4674,7 @@
 		global $lang, $emajdb;
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajunprotectmarkerr'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group']));
+		$errMsgAction = sprintf($lang['strunprotectmarkerr'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group']));
 
 		// Check the group still exists and is in LOGGING state
 		recheckGroups($_REQUEST['group'], $errMsgAction, 'LOGGING');
@@ -4687,7 +4687,7 @@
 
 		// Check the result and exit
 		checkADOReturnCode($status, $errMsgAction);
-		show_group(sprintf($lang['emajunprotectmarkok'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])));
+		show_group(sprintf($lang['strunprotectmarkok'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])));
 	}
 
 	/**
@@ -4697,7 +4697,7 @@
 		global $misc, $lang, $emajdb;
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajcommentmarkerr'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group']));
+		$errMsgAction = sprintf($lang['strcommentmarkerr'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group']));
 
 		// Check the group still exists
 		recheckGroups($_REQUEST['group'], $errMsgAction);
@@ -4707,11 +4707,11 @@
 
 		$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
-		$misc->printTitle($lang['emajcommentamark']);
+		$misc->printTitle($lang['strcommentamark']);
 
 		$mark = $emajdb->getMark($_REQUEST['group'],$_REQUEST['mark']);
 
-		echo "<p>", sprintf($lang['emajcommentmark'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])), "</p>\n";
+		echo "<p>", sprintf($lang['strcommentmark'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<div class=\"form-container\">\n";
 		echo "\t<div class=\"form-label required\">{$lang['strcomment']}</div>\n";
@@ -4738,7 +4738,7 @@
 		processCancelButton('detail');
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajcommentmarkerr'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group']));
+		$errMsgAction = sprintf($lang['strcommentmarkerr'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group']));
 
 		// Check the group still exists
 		recheckGroups($_POST['group'], $errMsgAction);
@@ -4751,7 +4751,7 @@
 
 		// Check the result and exit
 		checkADOReturnCode($status, $errMsgAction);
-		show_group(sprintf($lang['emajcommentmarkok'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group'])));
+		show_group(sprintf($lang['strcommentmarkok'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group'])));
 	}
 
 	/**
@@ -4764,7 +4764,7 @@
 		if (!isset($_POST['mark'])) $_POST['mark'] = '';
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajrenamemarkerr'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group']));
+		$errMsgAction = sprintf($lang['strrenamemarkerr'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group']));
 
 		// Check the group still exists
 		recheckGroups($_REQUEST['group'], $errMsgAction);
@@ -4774,13 +4774,13 @@
 
 		$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
-		$misc->printTitle($lang['emajrenameamark']);
+		$misc->printTitle($lang['strrenameamark']);
 
-		echo "<p>", sprintf($lang['emajconfirmrenamemark'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])), "</p>\n";
+		echo "<p>", sprintf($lang['strconfirmrenamemark'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<div class=\"form-container\">\n";
-		echo "\t<div class=\"form-label required\">{$lang['emajnewnamemark']}</div>\n";
-		echo "\t<div class=\"form-input\"><input name=\"newmark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"newmark\" required pattern=\"\S+.*\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\"/ ></div>\n";
+		echo "\t<div class=\"form-label required\">{$lang['strnewnamemark']}</div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"newmark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"newmark\" required pattern=\"\S+.*\" placeholder='{$lang['strrequiredfield']}' autocomplete=\"off\"/ ></div>\n";
 		echo "\t<div class=\"form-comment\"></div>\n";
 		echo "</div>\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -4788,7 +4788,7 @@
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"rename_mark_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" value=\"{$lang['emajrename']}\" id=\"ok\" disabled=\"disabled\"/>\n";
+		echo "<input type=\"submit\" value=\"{$lang['strrename']}\" id=\"ok\" disabled=\"disabled\"/>\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate /></p>\n";
 		echo "</form>\n";
 
@@ -4815,7 +4815,7 @@
 		processCancelButton('detail');
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajrenamemarkerr2'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group']), htmlspecialchars($_POST['newmark']));
+		$errMsgAction = sprintf($lang['strrenamemarkerr2'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group']), htmlspecialchars($_POST['newmark']));
 
 		// Check the group still exists
 		recheckGroups($_POST['group'], $errMsgAction);
@@ -4831,7 +4831,7 @@
 
 		// Check the result and exit
 		checkADOReturnCode($status, $errMsgAction);
-		show_group(sprintf($lang['emajrenamemarkok'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group']), htmlspecialchars($finalMarkName)));
+		show_group(sprintf($lang['strrenamemarkok'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group']), htmlspecialchars($finalMarkName)));
 	}
 
 	/**
@@ -4841,7 +4841,7 @@
 		global $misc, $lang;
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajdeletemarkerr'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group']));
+		$errMsgAction = sprintf($lang['strdeletemarkerr'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group']));
 
 		// Check the group still exists
 		recheckGroups($_REQUEST['group'], $errMsgAction);
@@ -4851,9 +4851,9 @@
 
 		$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
-		$misc->printTitle($lang['emajdeleteamark']);
+		$misc->printTitle($lang['strdeleteamark']);
 
-		echo "<p>", sprintf($lang['emajconfirmdeletemark'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])), "</p>\n";
+		echo "<p>", sprintf($lang['strconfirmdeletemark'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"delete_mark_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -4875,7 +4875,7 @@
 		processCancelButton('detail');
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajdeletemarkerr'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group']));
+		$errMsgAction = sprintf($lang['strdeletemarkerr'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group']));
 
 		// Check the group still exists
 		recheckGroups($_POST['group'], $errMsgAction);
@@ -4888,7 +4888,7 @@
 
 		// Check the result and exit
 		checkADOReturnCode($status, $errMsgAction);
-		show_group(sprintf($lang['emajdeletemarkok'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group'])));
+		show_group(sprintf($lang['strdeletemarkok'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group'])));
 	}
 
 	/**
@@ -4918,7 +4918,7 @@
 		$htmlList .= "</ul></div>\n";
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajdeletemarkserr'], htmlspecialchars($marksList), htmlspecialchars($_REQUEST['group']));
+		$errMsgAction = sprintf($lang['strdeletemarkserr'], htmlspecialchars($marksList), htmlspecialchars($_REQUEST['group']));
 
 		// Check the group still exists
 		recheckGroups($_REQUEST['group'], $errMsgAction);
@@ -4928,9 +4928,9 @@
 
 		$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
-		$misc->printTitle($lang['emajdeletemarks']);
+		$misc->printTitle($lang['strdeletemarks']);
 
-		echo "<p>", sprintf($lang['emajconfirmdeletemarks'], $nbMarks, htmlspecialchars($_REQUEST['group'])), "</p>\n{$htmlList}\n";
+		echo "<p>", sprintf($lang['strconfirmdeletemarks'], $nbMarks, htmlspecialchars($_REQUEST['group'])), "</p>\n{$htmlList}\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"delete_marks_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -4951,7 +4951,7 @@
 		processCancelButton('detail');
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajdeletemarkserr'], htmlspecialchars($_POST['marks']), htmlspecialchars($_POST['group']));
+		$errMsgAction = sprintf($lang['strdeletemarkserr'], htmlspecialchars($_POST['marks']), htmlspecialchars($_POST['group']));
 
 		// Check the group still exists
 		recheckGroups($_POST['group'], $errMsgAction);
@@ -4973,9 +4973,9 @@
 			}
 		}
 		if ($data->endTransaction() == 0)
-			show_group(sprintf($lang['emajdeletemarksok'], count($marks), htmlspecialchars($_POST['group'])));
+			show_group(sprintf($lang['strdeletemarksok'], count($marks), htmlspecialchars($_POST['group'])));
 		else
-			show_group('', sprintf($lang['emajdeletemarkserr'], htmlspecialchars($_POST['marks']), htmlspecialchars($_POST['group'])));
+			show_group('', sprintf($lang['strdeletemarkserr'], htmlspecialchars($_POST['marks']), htmlspecialchars($_POST['group'])));
 	}
 
 	/**
@@ -4985,7 +4985,7 @@
 		global $misc, $lang;
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajdelmarkspriorerr'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group']));
+		$errMsgAction = sprintf($lang['strdelmarkspriorerr'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group']));
 
 		// Check the group still exists
 		recheckGroups($_REQUEST['group'], $errMsgAction);
@@ -4995,9 +4995,9 @@
 
 		$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 
-		$misc->printTitle($lang['emajdelmarksprior']);
+		$misc->printTitle($lang['strdelmarksprior']);
 
-		echo "<p>", sprintf($lang['emajconfirmdelmarksprior'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])), "</p>\n";
+		echo "<p>", sprintf($lang['strconfirmdelmarksprior'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"delete_before_mark_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
@@ -5019,7 +5019,7 @@
 		processCancelButton('detail');
 
 		// Prepare the action part of potential error messages
-		$errMsgAction = sprintf($lang['emajdelmarkspriorerr'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group']));
+		$errMsgAction = sprintf($lang['strdelmarkspriorerr'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group']));
 
 		// Check the group still exists
 		recheckGroups($_POST['group'], $errMsgAction);
@@ -5032,7 +5032,7 @@
 
 		// Check the result and exit
 		checkADOReturnCode($status, $errMsgAction);
-		show_group(sprintf($lang['emajdelmarkspriorok'], $status, htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group'])));
+		show_group(sprintf($lang['strdelmarkspriorok'], $status, htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group'])));
 	}
 
 	/**
@@ -5103,7 +5103,7 @@
 		exit;
 	}
 
-	$misc->printHtmlHeader($lang['emajgroupsmanagement']);
+	$misc->printHtmlHeader($lang['strgroupsmanagement']);
 	$misc->printBody();
 
 	switch ($action) {

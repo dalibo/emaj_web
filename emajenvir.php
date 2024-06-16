@@ -80,7 +80,7 @@
 
 		$misc->printHeader('database', 'database', 'emajenvir');
 
-		$misc->printTitle($lang['emajcreateemajextension']);
+		$misc->printTitle($lang['strcreateemajextension']);
 
 		// build the array of usable emaj versions
 		$server_info = $misc->getServerInfo();
@@ -104,18 +104,18 @@
 		echo $misc->form;
 
 		if (count($usableVersions) == 0) {
-			echo "<p>{$lang['emajnocompatibleemajversion']}</p>\n";
+			echo "<p>{$lang['strnocompatibleemajversion']}</p>\n";
 		} elseif (count($usableVersions) == 1) {
 			// a single version is available, so just display the information
 			foreach($usableVersions as $v) {
-				echo "<p>{$lang['emajversion']}{$v}</p>\n";
+				echo "<p>{$lang['strversion']}{$v}</p>\n";
 				echo "<p><input type=\"hidden\" name=\"version\" value=\"". htmlspecialchars($v) . "\" />\n";
 			}
 			echo "<input type=\"submit\" name=\"createextension\" value=\"{$lang['strok']}\" />\n";
 		} else {
 			// several versions are available,
 			// display a select box so that the user can choose the version to install
-			echo "<p>{$lang['emajversion']}<select name=\"version\" id=\"version\">\n";
+			echo "<p>{$lang['strversion']}<select name=\"version\" id=\"version\">\n";
 			foreach($usableVersions as $v) {
 				echo "\t<option value=\"", htmlspecialchars($v), "\" >", htmlspecialchars($v), "</option>\n";
 			}
@@ -141,12 +141,12 @@
 				$status = $emajdb->createEmajExtension($_POST['version']);
 				if ($status == 0) {
 					$_reload_browser = true;
-					doDefault($lang['emajcreateextensionok']);
+					doDefault($lang['strcreateextensionok']);
 				} else {
-					doDefault('', $lang['emajcreateextensionerr']);
+					doDefault('', $lang['strcreateextensionerr']);
 				}
 			} else {
-				doDefault('', $lang['emajcreateextensionerr']);
+				doDefault('', $lang['strcreateextensionerr']);
 			}
 		}
 	}
@@ -159,14 +159,14 @@
 
 		$misc->printHeader('database', 'database', 'emajenvir');
 
-		$misc->printTitle($lang['emajupdateemajextension']);
+		$misc->printTitle($lang['strupdateemajextension']);
 
 		$server_info = $misc->getServerInfo();
 
 		// Count the number of event triggers and report if some event triggers are missing for postgres 9.5+
 		$nbEventTrigger = $emajdb->getNumberEventTriggers();
 		if (version_compare($server_info['pgVersion'], '9.5', '>=') && $nbEventTrigger < 3) {
-			echo "<p>{$lang['emajmissingeventtriggers']}</p>\n";
+			echo "<p>{$lang['strmissingeventtriggers']}</p>\n";
 		}
 
 		// build the array of usable emaj versions
@@ -191,18 +191,18 @@
 		echo $misc->form;
 
 		if (count($usableVersions) == 0) {
-			echo "<p>{$lang['emajnocompatibleemajupdate']}</p>\n";
+			echo "<p>{$lang['strnocompatibleemajupdate']}</p>\n";
 		} elseif (count($usableVersions) == 1) {
 			// a single version is available, so just display the information
 			foreach($usableVersions as $v) {
-				echo "<p>{$lang['emajversion']}{$v}</p>\n";
+				echo "<p>{$lang['strversion']}{$v}</p>\n";
 				echo "<p><input type=\"hidden\" name=\"version\" value=\"". htmlspecialchars($v) . "\" />\n";
 			}
 			echo "<input type=\"submit\" name=\"updateextension\" value=\"{$lang['strok']}\" />\n";
 		} else {
 			// several versions are available
 			// display a select box so that the user can choose the version to install
-			echo "<p>{$lang['emajversion']}<select name=\"version\" id=\"version\">\n";
+			echo "<p>{$lang['strversion']}<select name=\"version\" id=\"version\">\n";
 			foreach($usableVersions as $v)
 				echo "\t<option value=\"", htmlspecialchars($v), "\" >", htmlspecialchars($v), "</option>\n";
 			echo "</select></p>\n";
@@ -225,9 +225,9 @@
 			$status = $emajdb->updateEmajExtension($_POST['version']);
 			if ($status == 0) {
 				$_reload_browser = true;
-				doDefault($lang['emajupdateextensionok']);
+				doDefault($lang['strupdateextensionok']);
 			} else {
-				doDefault('', $lang['emajupdateextensionerr']);
+				doDefault('', $lang['strupdateextensionerr']);
 			}
 		}
 	}
@@ -240,15 +240,15 @@
 
 		$misc->printHeader('database', 'database', 'emajenvir');
 
-		$misc->printTitle($lang['emajdropemajextension']);
+		$misc->printTitle($lang['strdropemajextension']);
 
 		$nbGroups = $emajdb->getNbGroups();
 		if ($nbGroups > 0) {
-			$msg = sprintf($lang['emajdropextensiongroupsexist'], $nbGroups);
+			$msg = sprintf($lang['strdropextensiongroupsexist'], $nbGroups);
 			echo "<p><img src=\"{$misc->icon('Warning')}\" alt=\"Warning\" style=\"width: 20px;\"/> " . htmlspecialchars($msg) . "</p>\n";
 		}
 
-		echo "<p>{$lang['emajconfirmdropextension']}</p>\n";
+		echo "<p>{$lang['strconfirmdropextension']}</p>\n";
 
 		echo "<form action=\"emajenvir.php\" method=\"post\">\n";
 		echo "<p><input type=\"hidden\" name=\"action\" value=\"drop_extension_ok\" />\n";
@@ -273,12 +273,12 @@
 				$status = $emajdb->dropEmajExtension();
 				if ($status == 0) {
 					$_reload_browser = true;
-					doDefault($lang['emajdropextensionok']);
+					doDefault($lang['strdropextensionok']);
 				} else {
-					doDefault('', $lang['emajdropextensionerr']);
+					doDefault('', $lang['strdropextensionerr']);
 				}
 			} else {
-				doDefault('', $lang['emajdropextensionerr']);
+				doDefault('', $lang['strdropextensionerr']);
 			}
 		}
 	}
@@ -320,17 +320,17 @@
 
 		if (($emajdb->isEmaj_Adm()) && $emajdb->getNumEmajVersion() >= 30300) {
 
-			$misc->printTitle($lang['emajimportparamconf']);
+			$misc->printTitle($lang['strimportparamconf']);
 
 			// form to import a parameter configuration
 			echo "<div>\n";
 			echo "\t<form name=\"importparameters\" id=\"importparameters\" enctype=\"multipart/form-data\" method=\"POST\"";
 			echo " action=\"emajenvir.php?action=import_parameters_ok&amp;{$misc->href}\">\n";
 			echo "\t\t<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"2097152\">\n";
-			echo "\t\t<label for=\"file-upload\" class=\"custom-file-upload\">{$lang['emajselectfile']}</label>";
+			echo "\t\t<label for=\"file-upload\" class=\"custom-file-upload\">{$lang['strselectfile']}</label>";
 			echo "\t\t<p><input type=\"file\" id=\"file-upload\" name=\"file_name\"></p>\n";
-			echo "\t\t<p><input type=\"checkbox\" name=\"replaceCurrent\" id=\"replaceCurrent\"/ checked>{$lang['emajdeletecurrentparam']}";
-			echo " <img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajdeletecurrentparaminfo']}\"/></p>\n";
+			echo "\t\t<p><input type=\"checkbox\" name=\"replaceCurrent\" id=\"replaceCurrent\"/ checked>{$lang['strdeletecurrentparam']}";
+			echo " <img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strdeletecurrentparaminfo']}\"/></p>\n";
 			echo "\t\t<p><input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /> \n";
 			echo "\t\t<input type=\"submit\" name=\"sendfile\" value=\"{$lang['strimport']}\" disabled>";
 			echo "\t\t<span id=\"selected-file\"></span></p>\n";
@@ -390,13 +390,13 @@
 						$nbParam = $emajdb->importParamConfig($jsonContent, isSet($_POST['replaceCurrent']));
 						if ($nbParam >= 0) {
 							if (isSet($_POST['replaceCurrent'])) {
-								$m = $lang['emajnewconf'];
+								$m = $lang['strnewconf'];
 							} else {
-								$m = $lang['emajnewmodifiedconf'];
+								$m = $lang['strnewmodifiedconf'];
 							}
-							doDefault(sprintf($lang['emajparamconfimported'], $m, $nbParam, $_FILES['file_name']['name']));
+							doDefault(sprintf($lang['strparamconfimported'], $m, $nbParam, $_FILES['file_name']['name']));
 						} else {
-							doDefault('', sprintf($lang['emajparamconfigimporterr'], $_FILES['file_name']['name']));
+							doDefault('', sprintf($lang['strparamconfigimporterr'], $_FILES['file_name']['name']));
 						}
 					} else {
 
@@ -404,8 +404,8 @@
 
 						$misc->printHeader('database', 'database', 'emajenvir');
 
-						$misc->printTitle($lang['emajimportparamconf']);
-						echo "<p>" . sprintf($lang['emajparamconfigimporterr'], $_FILES['file_name']['name']) . "</p>";
+						$misc->printTitle($lang['strimportparamconf']);
+						echo "<p>" . sprintf($lang['strparamconfigimporterr'], $_FILES['file_name']['name']) . "</p>";
 
 						$columns = array(
 							'severity' => array(
@@ -416,7 +416,7 @@
 								'sorter' => false,
 							),
 							'message' => array(
-								'title' => $lang['emajdiagnostics'],
+								'title' => $lang['strdiagnostics'],
 								'field' => field('rpt_message'),
 							),
 						);
@@ -433,7 +433,7 @@
 
 					}
 				} else {
-					doDefault('', sprintf($lang['emajnotjsonfile'], $_FILES['file_name']['name']));
+					doDefault('', sprintf($lang['strnotjsonfile'], $_FILES['file_name']['name']));
 				}
 			} else {
 				switch($_FILES['file_name']['error']){
@@ -468,12 +468,12 @@
 		//
 		// Version section
 		//
-		$misc->printTitle($lang['emajversions']);
+		$misc->printTitle($lang['strversions']);
 
 		// display the postgres version
 		$server_info = $misc->getServerInfo();
 		preg_match('/PostgreSQL (.*)/',$server_info['platform'], $pgVersion);
-		echo "<p>{$lang['emajpgversion']}{$pgVersion[1]}</p>\n";
+		echo "<p>{$lang['strpgversion']}{$pgVersion[1]}</p>\n";
 
 		// check if E-Maj is installed in the current database
 		$isEnabled = $emajdb->isEnabled();
@@ -483,23 +483,23 @@
 			// emaj is not installed,
 			// check if the extension is available
 			if ($isExtensionAvailable)
-				$msg = $lang['emajextnotcreated'];
+				$msg = $lang['strextnotcreated'];
 			else
-				$msg = $lang['emajextnotavailable'];
+				$msg = $lang['strextnotavailable'];
 
 			if ($data->isSuperUser($server_info['username'])) {
 				// display a message to the superuser and go on
-				echo "<p>{$lang['emajversion']}{$msg}</p>\n";
+				echo "<p>{$lang['strversion']}{$msg}</p>\n";
 			} else {
 				// display a message to the user and stop
-				echo "<p>{$lang['emajversion']}{$msg} {$lang['emajcontactdba']}</p>\n";
+				echo "<p>{$lang['strversion']}{$msg} {$lang['strcontactdba']}</p>\n";
 				return;
 			}
 		} else {
 			// emaj is installed,
 			// check that the user has enought rights to continue
 			if (! $emajdb->isAccessible()) {
-				echo "<p>{$lang['emajnogrant']}</p>\n";
+				echo "<p>{$lang['strnogrant']}</p>\n";
 				return;
 			}
 
@@ -509,15 +509,15 @@
 
 			$isExtension = $emajdb->isExtension();
 			if ($isExtension) {
-				$installationMode = $lang['emajasextension'];
+				$installationMode = $lang['strasextension'];
 			} else {
-				$installationMode = $lang['emajasscript'];
+				$installationMode = $lang['strasscript'];
 			}
-			echo "<p>{$lang['emajversion']}$emajVersion ({$installationMode})</p>\n";
+			echo "<p>{$lang['strversion']}$emajVersion ({$installationMode})</p>\n";
 
 			// check if the emaj version is not too old for this emaj_web
 			if ($numEmajVersion < $oldest_supported_emaj_version_num) {
-				echo "<p>" . sprintf($lang['emajtooold'],$emajVersion,$oldest_supported_emaj_version) . "</p>\n";
+				echo "<p>" . sprintf($lang['strtooold'],$emajVersion,$oldest_supported_emaj_version) . "</p>\n";
 				return;
 			}
 
@@ -525,18 +525,18 @@
 			if ($numEmajVersion <> 999999) {
 				if ($numEmajVersion < $last_known_emaj_version_num) {
 					if ($data->isSuperUser($server_info['username']))
-						echo "<p>{$lang['emajversionmorerecent']}</p>\n";
+						echo "<p>{$lang['strversionmorerecent']}</p>\n";
 					else
-						echo "<p>{$lang['emajversionmorerecent']} {$lang['emajcontactdba']}</p>\n";
+						echo "<p>{$lang['strversionmorerecent']} {$lang['strcontactdba']}</p>\n";
 				}
 				if ($numEmajVersion > $last_known_emaj_version_num) {
-					echo "<p>{$lang['emajwebversionmorerecent']} {$lang['emajcontactdba']}</p>\n";
+					echo "<p>{$lang['strwebversionmorerecent']} {$lang['strcontactdba']}</p>\n";
 				}
 			}
 
 			// if the version is <devel>, raise a warning
 			if ($numEmajVersion == 999999) {
-				echo "<p><img src=\"{$misc->icon('Warning')}\" alt=\"Warning\" style=\"width: 20px;\"/> " . htmlspecialchars($lang['emajwarningdevel']) . "</p>\n";
+				echo "<p><img src=\"{$misc->icon('Warning')}\" alt=\"Warning\" style=\"width: 20px;\"/> " . htmlspecialchars($lang['strwarningdevel']) . "</p>\n";
 			}
 		}
 
@@ -548,14 +548,14 @@
 			$navlinks = array();
 			if (! $isEnabled || $isExtension) {
 				echo "<hr/>\n";
-				$misc->printTitle($lang['emajextensionmngt']);
+				$misc->printTitle($lang['strextensionmngt']);
 			}
 
 			if (! $isEnabled) {
 				// the extension is not yet created
 				// Add a button to create the extension
 				$navlinks['createextension'] = array (
-					'content' => $lang['emajcreateextension'],
+					'content' => $lang['strcreateextension'],
 					'attr'=> array (
 						'href' => array (
 							'url' => "emajenvir.php",
@@ -574,7 +574,7 @@
 					if ($emajdb->areThereVersionsToUpdate()) {
 						// Add a button to update the extension
 						$navlinks['updateextension'] = array (
-							'content' => $lang['emajupdateextension'],
+							'content' => $lang['strupdateextension'],
 							'attr'=> array (
 								'href' => array (
 									'url' => "emajenvir.php",
@@ -589,7 +589,7 @@
 					// Can we drop it ?
 					// Add a button to drop the extension
 					$navlinks['dropextension'] = array (
-						'content' => $lang['emajdropextension'],
+						'content' => $lang['strdropextension'],
 						'attr'=> array (
 							'href' => array (
 								'url' => "emajenvir.php",
@@ -613,8 +613,8 @@
 		if ($isEnabled) {
 			if ($emajdb->isEmaj_Adm()) {
 				echo "<hr/>\n";
-				$misc->printTitle($lang['emajcharacteristics']);
-				echo "<p>".sprintf($lang['emajdiskspace'],$emajdb->getEmajSize())."</p>\n";
+				$misc->printTitle($lang['strcharacteristics']);
+				echo "<p>".sprintf($lang['strdiskspace'],$emajdb->getEmajSize())."</p>\n";
 			}
 
 		//
@@ -622,7 +622,7 @@
 		//
 
 			echo "<hr/>\n";
-			$misc->printTitle($lang['emajchecking']);
+			$misc->printTitle($lang['strchecking']);
 
 			$messages = $emajdb->checkEmaj();
 
@@ -635,7 +635,7 @@
 					'sorter' => false,
 				),
 				'message' => array(
-					'title' => $lang['emajdiagnostics'],
+					'title' => $lang['strdiagnostics'],
 					'field' => field('rpt_message'),
 				),
 			);
@@ -649,7 +649,7 @@
 		//
 
 			echo "<hr/>\n";
-			$misc->printTitle($lang['emajextparams']);
+			$misc->printTitle($lang['strextparams']);
 
 			// Set the default values for all existing parameters
 			if ($emajdb->getNumEmajVersion() >= 30000) {
@@ -673,29 +673,29 @@
 			}
 
 			// Display the parameter values
-			echo "<h4>{$lang['emajpargeneral']}</h4>\n";
+			echo "<h4>{$lang['strpargeneral']}</h4>\n";
 
 			echo "<div class=\"form-container-param\">\n";
-			displayOneParameter('history_retention', $lang['emajparhistret'], $lang['emajparhistretinfo']);
-			displayOneParameter('dblink_user_password', $lang['emajpardblinkcon'], $lang['emajpardblinkconinfo']);
+			displayOneParameter('history_retention', $lang['strparhistret'], $lang['strparhistretinfo']);
+			displayOneParameter('dblink_user_password', $lang['strpardblinkcon'], $lang['strpardblinkconinfo']);
 
 			if ($emajdb->getNumEmajVersion() >= 30000) {
 				# add line feed if several columns added to the log tables
-				displayOneParameter('alter_log_table', $lang['emajparalterlog'], $lang['emajparalterloginfo']);
+				displayOneParameter('alter_log_table', $lang['strparalterlog'], $lang['strparalterloginfo']);
 			}
 			echo "</div>\n";
 
 			echo "<div>\n";
-			echo "<h4>{$lang['emajparcostmodel']}</h4>\n";
+			echo "<h4>{$lang['strparcostmodel']}</h4>\n";
 			echo "</div>\n";
 
 			echo "<div class=\"form-container-param\">\n";
-			displayOneParameter('fixed_step_rollback_duration', $lang['emajparfixedstep'], $lang['emajparfixedstepinfo']);
-			displayOneParameter('fixed_dblink_rollback_duration', $lang['emajparfixeddblink'], $lang['emajparfixeddblinkinfo']);
-			displayOneParameter('fixed_table_rollback_duration', $lang['emajparfixedrlbktbl'], $lang['emajparfixedrlbktblinfo']);
-			displayOneParameter('avg_row_rollback_duration', $lang['emajparavgrowrlbk'], $lang['emajparavgrowrlbkinfo']);
-			displayOneParameter('avg_row_delete_log_duration', $lang['emajparavgrowdel'], $lang['emajparavgrowdelinfo']);
-			displayOneParameter('avg_fkey_check_duration', $lang['emajparavgfkcheck'], $lang['emajparavgfkcheckinfo']);
+			displayOneParameter('fixed_step_rollback_duration', $lang['strparfixedstep'], $lang['strparfixedstepinfo']);
+			displayOneParameter('fixed_dblink_rollback_duration', $lang['strparfixeddblink'], $lang['strparfixeddblinkinfo']);
+			displayOneParameter('fixed_table_rollback_duration', $lang['strparfixedrlbktbl'], $lang['strparfixedrlbktblinfo']);
+			displayOneParameter('avg_row_rollback_duration', $lang['strparavgrowrlbk'], $lang['strparavgrowrlbkinfo']);
+			displayOneParameter('avg_row_delete_log_duration', $lang['strparavgrowdel'], $lang['strparavgrowdelinfo']);
+			displayOneParameter('avg_fkey_check_duration', $lang['strparavgfkcheck'], $lang['strparavgfkcheckinfo']);
 
 			echo "</div>\n";
 
@@ -737,7 +737,7 @@
 	}
 
 // Other actions
-	$misc->printHtmlHeader($lang['emajenvironment']);
+	$misc->printHtmlHeader($lang['strenvironment']);
 	$misc->printBody();
 
 	switch ($action) {

@@ -923,7 +923,7 @@
 
 					$tabs = array (
 						'emajgroups' => array (
-							'title' => $lang['emajgroups'],
+							'title' => $lang['strgroups'],
 							'url' => 'emajgroups.php',
 							'urlvars' => array(
 								'subject' => 'database',
@@ -934,7 +934,7 @@
 							'branch' => true,
 						),
 						'emajconfiguregroups' => array (
-							'title' => $lang['emajgroupsconf'],
+							'title' => $lang['strgroupsconf'],
 							'url' => 'emajgroupsconf.php',
 							'urlvars' => array(
 								'subject' => 'database',
@@ -963,7 +963,7 @@
 							'icon'  => 'Triggers',
 						),
 						'emajrollbacks' => array (
-							'title' => $lang['emajrlbkop'],
+							'title' => $lang['strrlbkop'],
 							'url' => 'emajrollbacks.php',
 							'urlvars' => array(
 								'subject' => 'database',
@@ -973,7 +973,7 @@
 							'icon' => 'EmajRollback',
 						),
 						'emajenvir' => array (
-							'title' => $lang['emajenvir'],
+							'title' => $lang['strenvir'],
 							'url' => 'emajenvir.php',
 							'urlvars' => array(
 								'subject' => 'database'
@@ -999,7 +999,7 @@
 							'icon' => 'Property'
 						),
 						'emajchangesstat' => array (
-							'title' => $lang['emajchangesstat'],
+							'title' => $lang['strchangesstat'],
 							'url' => 'emajgroups.php',
 							'urlvars' => array(
 								'subject' => 'emajgroups',
@@ -1010,7 +1010,7 @@
 							'icon' => 'EmajStat'
 						),
 						'emajcontent' => array (
-							'title' => $lang['emajcontent'],
+							'title' => $lang['strcontent'],
 							'url' => 'emajgroups.php',
 							'urlvars' => array(
 								'subject' => 'emajgroups',
@@ -1047,7 +1047,7 @@
 							'branch'=> true,
 						),
 						'content' => array (
-							'title' => $lang['emajcontent'],
+							'title' => $lang['strcontent'],
 							'url'   => 'display.php',
 							'urlvars' => array(
 								'subject' => 'table',
@@ -1141,7 +1141,7 @@
 
 			// right cell containing the bottom button
 			echo "\t<div class=\"trailicons\">\n";
-			echo "\t\t<a href=\"#bottom\"><img src=\"{$this->icon('Bottom')}\" alt=\"{$lang['emajpagebottom']}\" title=\"{$lang['emajpagebottom']}\"  /></a>\n";
+			echo "\t\t<a href=\"#bottom\"><img src=\"{$this->icon('Bottom')}\" alt=\"{$lang['strpagebottom']}\" title=\"{$lang['strpagebottom']}\"  /></a>\n";
 			echo "\t</div>\n";
 			echo "</div>\n";
 		}
@@ -1218,7 +1218,7 @@
 
 			if (isset($_REQUEST['group']) && !$done) {
 				$trail['emaj'] = array(
-					'title' => $lang['emajtablesgroup'],
+					'title' => $lang['strtablesgroup'],
 					'text'  => $_REQUEST['group'],
 					'url'   => $this->getHREFSubject('emajgroup'),
 					'icon'  => 'EmajGroup'
@@ -1228,7 +1228,7 @@
 
 			if (isset($_REQUEST['rlbkid']) && !$done) {
 				$trail['emajrollback'] = array(
-					'title' => $lang['emajrollback'],
+					'title' => $lang['strrollback'],
 					'text'  => $_REQUEST['rlbkid'],
 					'url'   => $this->getHREFSubject('emajrollback'),
 					'icon'  => 'EmajRollback'
@@ -1529,7 +1529,7 @@
 				if ($has_ma || $filter) {
 					if ($filter) {
 						echo "<th class=\"data sorter-false filter-false filtericon\">";
-						echo "\t<img src=\"{$this->icon('Filter')}\" alt=\"filter\" class=\"action\" onclick=\"javascript:showHideFilterRow('{$place}');\" title=\"{$lang['emajfiltershelp']}\">\n";
+						echo "\t<img src=\"{$this->icon('Filter')}\" alt=\"filter\" class=\"action\" onclick=\"javascript:showHideFilterRow('{$place}');\" title=\"{$lang['strfiltershelp']}\">\n";
 						echo "</th>\n";
 					} else {
 						echo "<th class=\"data sorter-false filter-false\"></th>\n";
@@ -1678,13 +1678,13 @@
 					echo "\t<td>\n";
 					echo "\t\t&nbsp;<a onclick=\"javascript:checkSelect('all','{$place}');countChecked('{$place}');\" class=\"action\">{$lang['strall']}</a>&nbsp;/\n";
 					if ($filter) {
-						echo "\t\t&nbsp;<a onclick=\"javascript:checkSelect('filtered','{$place}');countChecked('{$place}');\" class=\"action\">{$lang['emajvisible']}</a>&nbsp;/\n";
+						echo "\t\t&nbsp;<a onclick=\"javascript:checkSelect('filtered','{$place}');countChecked('{$place}');\" class=\"action\">{$lang['strvisible']}</a>&nbsp;/\n";
 					}
 					echo "\t\t&nbsp;<a onclick=\"javascript:checkSelect('none','{$place}');countChecked('{$place}');\" class=\"action\">{$lang['strnone']}</a>&nbsp;/\n";
 					echo "\t\t&nbsp;<a onclick=\"javascript:checkSelect('invert','{$place}');countChecked('{$place}');\" class=\"action\">{$lang['strinvert']}</a>&nbsp;\n";
 					if ($place == 'defineGroupTblseq') {
 						// This selector is specific to the groups configuration page
-						echo "\t\t/&nbsp;<a onclick=\"javascript:checkSelect('notassigned','{$place}');countChecked('{$place}');\" class=\"action\">{$lang['emajnotassigned']}</a>&nbsp;\n";
+						echo "\t\t/&nbsp;<a onclick=\"javascript:checkSelect('notassigned','{$place}');countChecked('{$place}');\" class=\"action\">{$lang['strnotassigned']}</a>&nbsp;\n";
 					}
 					echo "\t</td><td class=\"multiactionbuttons\">\n";
 					if (isset($ma['checked']) && $ma['checked'])

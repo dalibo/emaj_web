@@ -39,10 +39,10 @@
 			$alt = $lang['strsequence'];
 		} elseif ($val == '!') {					// object declared in the emaj_group_def table but unknown in the catalog
 			$icon = $misc->icon('ObjectNotFound');
-			$alt = $lang['emajunknownobject'];
+			$alt = $lang['strunknownobject'];
 		} else {									// unsupported type
 			$icon = $misc->icon('ObjectNotFound');
-			$alt = $lang['emajunsupportedobject'];
+			$alt = $lang['strunsupportedobject'];
 		}
 		return "<img src=\"{$icon}\" alt=\"{$alt}\" title=\"{$alt}\"/>";
 	}
@@ -52,7 +52,7 @@
 	function renderSchemaOwner($val) {
 		global $misc, $lang;
 		if ($val == '!') {
-			return "<img src=\"".$misc->icon('ObjectNotFound')."\" alt=\"{$lang['emajunknownobject']}\" title=\"{$lang['emajunknownobject']}\" />";
+			return "<img src=\"".$misc->icon('ObjectNotFound')."\" alt=\"{$lang['strunknownobject']}\" title=\"{$lang['strunknownobject']}\" />";
 		}
 		return $val;
 	}
@@ -71,7 +71,7 @@
 		$misc->printMsg($msg,$errMsg);
 
 		// Schemas list
-		$misc->printTitle($lang['emajappschemas']);
+		$misc->printTitle($lang['strappschemas']);
 
 		$schemas = $emajdb->getSchemas();
 
@@ -103,7 +103,7 @@
 		// Tables and sequences for the selected schema, if any
 		if (isset($_REQUEST['appschema']) && $_REQUEST['appschema'] != '') {
 
-			$misc->printTitle(sprintf($lang['emajtblseqofschema'],$_REQUEST['appschema']));
+			$misc->printTitle(sprintf($lang['strtblseqofschema'],$_REQUEST['appschema']));
 			$tblseq = $emajdb->getTablesSequences($_REQUEST['appschema']);
 
 			$columns = array(
@@ -131,29 +131,29 @@
 					'field' => field('grpdef_group'),
 				),
 				'priority' => array(
-					'title' => $lang['emajpriority'],
+					'title' => $lang['strpriority'],
 					'field' => field('grpdef_priority'),
 					'params'=> array('align' => 'center'),
 				));
 			if ($emajdb->getNumEmajVersion() < 30100) {			// version < 3.1.0
 				$columns = array_merge($columns, array(
 					'logschemasuffix' => array(
-						'title' => $lang['emajlogschemasuffix'],
+						'title' => $lang['strlogschemasuffix'],
 						'field' => field('grpdef_log_schema_suffix'),
 					),
 					'emajnamesprefix' => array(
-						'title' => $lang['emajnamesprefix'],
+						'title' => $lang['strnamesprefix'],
 						'field' => field('grpdef_emaj_names_prefix'),
 					),
 				));
 			}
 			$columns = array_merge($columns, array(
 				'logdattsp' => array(
-					'title' => $lang['emajlogdattsp'],
+					'title' => $lang['strlogdattsp'],
 					'field' => field('grpdef_log_dat_tsp'),
 				),
 				'logidxtsp' => array(
-					'title' => $lang['emajlogidxtsp'],
+					'title' => $lang['strlogidxtsp'],
 					'field' => field('grpdef_log_idx_tsp'),
 				),
 				'owner' => array(
@@ -178,7 +178,7 @@
 					'url' => "emajgroupsconf.php?back=define",
 				),
 				'assign' => array(
-					'content' => $lang['emajassign'],
+					'content' => $lang['strassign'],
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroupsconf.php',
@@ -210,7 +210,7 @@
 							)))),
 				),
 				'remove' => array(
-					'content' => $lang['emajremove'],
+					'content' => $lang['strremove'],
 					'attr' => array (
 						'href' => array (
 							'url' => 'emajgroupsconf.php',
@@ -237,7 +237,7 @@
 
 		// Test at least 1 table/sequence is to be processed
 		if (empty($_REQUEST['tblseq']) && empty($_REQUEST['ma'])) {
-			configure_groups($lang['emajspecifytblseqtoassign']);
+			configure_groups($lang['strspecifytblseqtoassign']);
 			exit();
 		}
 		// Test all tables/sequences to process are not yet assigned to a group and have a valid type
@@ -245,11 +245,11 @@
 			foreach($_REQUEST['ma'] as $t) {
 				$a = unserialize(htmlspecialchars_decode($t, ENT_QUOTES));
 				if ($a['group'] != '') {
-					configure_groups('', sprintf($lang['emajtblseqyetgroup'],$a['appschema'],$a['tblseq']), $a['appschema']);
+					configure_groups('', sprintf($lang['strtblseqyetgroup'],$a['appschema'],$a['tblseq']), $a['appschema']);
 					exit();
 				}
 				if ($a['type'] != 'r+' and $a['type'] != 'S+') {
-					configure_groups('', sprintf($lang['emajtblseqbadtype'],$a['appschema'],$a['tblseq']), $a['appschema']);
+					configure_groups('', sprintf($lang['strtblseqbadtype'],$a['appschema'],$a['tblseq']), $a['appschema']);
 					exit();
 				}
 			}
@@ -257,7 +257,7 @@
 
 		$misc->printHeader('database', 'database', 'emajconfiguregroups');
 
-		$misc->printTitle($lang['emajassigntblseq']);
+		$misc->printTitle($lang['strassigntblseq']);
 
 		// Get group names already known in emaj_group_def table
 		$knownGroups = $emajdb->getKnownGroups();
@@ -284,14 +284,14 @@
 				echo "<input type=\"hidden\" name=\"tblseq[]\" value=\"", htmlspecialchars($a['tblseq']), "\" />\n";
 				if ($a['type'] == 'r+') {
 					$nbTbl++;
-					$fullList .= "<li>" . sprintf($lang['emajthetable'],$a['appschema'],$a['tblseq']) . "</li>\n";
+					$fullList .= "<li>" . sprintf($lang['strthetable'],$a['appschema'],$a['tblseq']) . "</li>\n";
 				} else {
 					$nbSeq++;
-					$fullList .= "<li>" . sprintf($lang['emajthesequence'],$a['appschema'],$a['tblseq']) . "</li>\n";
+					$fullList .= "<li>" . sprintf($lang['strthesequence'],$a['appschema'],$a['tblseq']) . "</li>\n";
 				}
 			}
 			$fullList .= "</ul>\n";
-			echo "<p>{$lang['emajconfirmassigntblseq']}{$fullList}</p>\n";
+			echo "<p>{$lang['strconfirmassigntblseq']}{$fullList}</p>\n";
 		} else {
 
 		// single assign
@@ -299,12 +299,12 @@
 			echo "<input type=\"hidden\" name=\"tblseq\" value=\"", htmlspecialchars($_REQUEST['tblseq']), "\" />\n";
 			if ($_REQUEST['type'] == 'r+') {
 				$nbTbl++;
-				$tblseqName = sprintf($lang['emajthetable'],$_REQUEST['appschema'],$_REQUEST['tblseq']);
+				$tblseqName = sprintf($lang['strthetable'],$_REQUEST['appschema'],$_REQUEST['tblseq']);
 			} else {
 				$nbSeq++;
-				$tblseqName = sprintf($lang['emajthesequence'],$_REQUEST['appschema'],$_REQUEST['tblseq']);
+				$tblseqName = sprintf($lang['strthesequence'],$_REQUEST['appschema'],$_REQUEST['tblseq']);
 			}
-			echo "<p>{$lang['emajassign']} {$tblseqName}</p>\n";
+			echo "<p>{$lang['strassign']} {$tblseqName}</p>\n";
 		}
 
 		// Display the input fields depending on the context
@@ -313,7 +313,7 @@
 		// group name
 		echo "\t<div class=\"form-label required\">{$lang['strgroup']}</div>\n";
 		echo "\t<div class=\"form-input\">";
-		echo "<input type=\"text\" name=\"group\" list=\"groupList\" required pattern=\"\S+.*\" value=\"\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\"/>";
+		echo "<input type=\"text\" name=\"group\" list=\"groupList\" required pattern=\"\S+.*\" value=\"\" placeholder='{$lang['strrequiredfield']}' autocomplete=\"off\"/>";
 		echo "</div>\n";
 		echo "\t<div class=\"form-comment\"></div>\n";
 		echo "\t<datalist id=\"groupList\">\n";
@@ -325,22 +325,22 @@
 
 		// priority level (only for tables)
 		if ($nbTbl >= 1) {
-			echo "\t<div class=\"form-label\">{$lang['emajenterpriority']}</div>\n";
+			echo "\t<div class=\"form-label\">{$lang['strenterpriority']}</div>\n";
 			echo "\t<div class=\"form-input\">";
 			echo "<input type=\"number\" name=\"priority\" class=\"priority\" min=\"0\" max=\"2147483647\" value=\"\" />";
 			echo "</div>\n";
-			echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajpriorityhelp']}\"/></div>\n";
+			echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strpriorityhelp']}\"/></div>\n";
 		} else {
 			echo "<input type=\"hidden\" name=\"priority\" value=\"\" />\n";
 		}
 
 		// log schema name suffix
 		if ($emajdb->getNumEmajVersion() < 30100 && $nbTbl >= 1) {			// version < 3.1.0
-			echo "\t<div class=\"form-label\">{$lang['emajenterlogschema']}</div>\n";
+			echo "\t<div class=\"form-label\">{$lang['strenterlogschema']}</div>\n";
 			echo "\t<div class=\"form-input\">";
 			echo "<input type=\"text\" name=\"suffix\" list=\"suffixList\" value=\"\"/ autocomplete=\"off\">";
 			echo "</div>\n";
-			echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajlogschemahelp']}\"/></div>\n";
+			echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strlogschemahelp']}\"/></div>\n";
 			echo "\t<datalist id=\"suffixList\">\n";
 			if ($knownSuffix->recordCount() > 0) {
 				foreach($knownSuffix as $r)
@@ -354,11 +354,11 @@
 		// objects name prefix (only for tables)
 		if ($emajdb->getNumEmajVersion() < 30100 && $nbTbl == 1) {			// version < 3.1.0
 			// the names prefix is accessible only for a single table assignment
-			echo "\t<div class=\"form-label\">{$lang['emajenternameprefix']}</div>\n";
+			echo "\t<div class=\"form-label\">{$lang['strenternameprefix']}</div>\n";
 			echo "\t<div class=\"form-input\">";
 			echo "<input type=\"text\" name=\"nameprefix\" value=\"\"/>";
 			echo "</div>\n";
-			echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"", htmlspecialchars($lang['emajnameprefixhelp']), "\"/></div>\n";
+			echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"", htmlspecialchars($lang['strnameprefixhelp']), "\"/></div>\n";
 		} else {
 			echo "<input type=\"hidden\" name=\"nameprefix\" value=\"\" />\n";
 		}
@@ -366,13 +366,13 @@
 		// log tablespace (only for tables)
 		if ($nbTbl >= 1) {
 			// data log tablespace
-			echo "\t<div class=\"form-label\">{$lang['emajenterlogdattsp']}</div>\n";
+			echo "\t<div class=\"form-label\">{$lang['strenterlogdattsp']}</div>\n";
 			echo "\t<div class=\"form-input\">";
 			echo "<input type=\"text\" name=\"logdattsp\" list=\"tspList\" value=\"\" autocomplete=\"off\"/>";
 			echo "</div>\n";
 			echo "\t<div class=\"form-comment\"></div>\n";
 			// index log tablespace
-			echo "\t<div class=\"form-label\">{$lang['emajenterlogidxtsp']}</div>\n";
+			echo "\t<div class=\"form-label\">{$lang['strenterlogidxtsp']}</div>\n";
 			echo "\t<div class=\"form-input\">";
 			echo "<input type=\"text\" name=\"logidxtsp\"  list=\"tspList\" value=\"\" autocomplete=\"off\"/>";
 			echo "</div>\n";
@@ -390,7 +390,7 @@
 
 		echo"</div>\n";
 		echo $misc->form;
-		echo "<p><input type=\"submit\" name=\"assigntblseq\" value=\"{$lang['emajassign']}\" id=\"ok\" />\n";
+		echo "<p><input type=\"submit\" name=\"assigntblseq\" value=\"{$lang['strassign']}\" id=\"ok\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";
 		echo "</form>\n";
 	}
@@ -414,15 +414,15 @@
 								$_POST['priority'], $_POST['suffix'], $_POST['nameprefix'], $_POST['logdattsp'], $_POST['logidxtsp']);
 					if ($status != 0) {
 						$data->rollbackTransaction();
-						configure_groups('', $lang['emajmodifygrouperr']);
+						configure_groups('', $lang['strmodifygrouperr']);
 						return;
 					}
 				}
 			}
 			if($data->endTransaction() == 0)
-				configure_groups($lang['emajmodifygroupok']);
+				configure_groups($lang['strmodifygroupok']);
 			else
-				configure_groups('', $lang['emajmodifygrouperr']);
+				configure_groups('', $lang['strmodifygrouperr']);
 
 		} else {
 
@@ -430,9 +430,9 @@
 			$status = $emajdb->assignTblSeq($_POST['appschema'],$_POST['tblseq'],$_POST['group'],
 								$_POST['priority'], $_POST['suffix'], $_POST['nameprefix'], $_POST['logdattsp'], $_POST['logidxtsp']);
 			if ($status == 0)
-				configure_groups($lang['emajmodifygroupok']);
+				configure_groups($lang['strmodifygroupok']);
 			else
-				configure_groups('', $lang['emajmodifygrouperr']);
+				configure_groups('', $lang['strmodifygrouperr']);
 		}
 	}
 
@@ -444,18 +444,18 @@
 
 		// Test at least 1 table/sequence is to be processed
 		if (empty($_REQUEST['tblseq'])) {
-			configure_groups($lang['emajspecifytblseqtoupdate']);
+			configure_groups($lang['strspecifytblseqtoupdate']);
 			exit();
 		}
 		// Test the table/sequence is already assign to a group
 		if ($_REQUEST['group'] == '') {
-			configure_groups('', sprintf($lang['emajtblseqnogroup'],$_REQUEST['appschema'],$_REQUEST['tblseq']), $_REQUEST['appschema']);
+			configure_groups('', sprintf($lang['strtblseqnogroup'],$_REQUEST['appschema'],$_REQUEST['tblseq']), $_REQUEST['appschema']);
 			exit();
 		}
 
 		$misc->printHeader('database', 'database', 'emajconfiguregroups');
 
-		$misc->printTitle($lang['emajupdatetblseq']);
+		$misc->printTitle($lang['strupdatetblseq']);
 
 		// Get group names already known in emaj_group_def table
 		$knownGroups = $emajdb->getKnownGroups();
@@ -476,9 +476,9 @@
 		echo "<input type=\"hidden\" name=\"groupold\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 
 		if ($_REQUEST['type'] == 'r+') {
-			$tblseqName = sprintf($lang['emajthetable'],$_REQUEST['appschema'],$_REQUEST['tblseq']);
+			$tblseqName = sprintf($lang['strthetable'],$_REQUEST['appschema'],$_REQUEST['tblseq']);
 		} else {
-			$tblseqName = sprintf($lang['emajthesequence'],$_REQUEST['appschema'],$_REQUEST['tblseq']);
+			$tblseqName = sprintf($lang['strthesequence'],$_REQUEST['appschema'],$_REQUEST['tblseq']);
 		}
 		echo "<p>{$lang['strupdate']} {$tblseqName}</p>\n";
 
@@ -488,7 +488,7 @@
 		// group name
 		echo "\t<div class=\"form-label required\">{$lang['strgroup']}</div>\n";
 		echo "\t<div class=\"form-input\">";
-		echo "<input type=\"text\" name=\"groupnew\" list=\"groupList\" required pattern=\"\S+.*\" value=\"", htmlspecialchars($_REQUEST['group']), "\" placeholder='{$lang['emajrequiredfield']}' autocomplete=\"off\"/>\n";
+		echo "<input type=\"text\" name=\"groupnew\" list=\"groupList\" required pattern=\"\S+.*\" value=\"", htmlspecialchars($_REQUEST['group']), "\" placeholder='{$lang['strrequiredfield']}' autocomplete=\"off\"/>\n";
 		echo "</div>\n";
 		echo "\t<div class=\"form-comment\"></div>\n";
 		echo "\t<datalist id=\"groupList\">\n";
@@ -500,22 +500,22 @@
 
 		// priority level (only for tables)
 		if ($_REQUEST['type'] == 'r+') {
-			echo "\t<div class=\"form-label\">{$lang['emajenterpriority']}</div>\n";
+			echo "\t<div class=\"form-label\">{$lang['strenterpriority']}</div>\n";
 			echo "\t<div class=\"form-input\">";
 			echo "<input type=\"number\" name=\"priority\" class=\"priority\" min=\"0\" max=\"2147483647\" value=\"{$_REQUEST['priority']}\" />";
 			echo "</div>\n";
-			echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajpriorityhelp']}\"/></div>\n";
+			echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strpriorityhelp']}\"/></div>\n";
 		} else {
 			echo "<input type=\"hidden\" name=\"priority\" value=\"\" />\n";
 		}
 
 		// log schema name suffix (only for tables)
 		if ($emajdb->getNumEmajVersion() < 30100 && $_REQUEST['type'] == 'r+') {			// version < 3.1.0
-			echo "\t<div class=\"form-label\">{$lang['emajenterlogschema']}</div>\n";
+			echo "\t<div class=\"form-label\">{$lang['strenterlogschema']}</div>\n";
 			echo "\t<div class=\"form-input\">";
 			echo "<input type=\"text\" name=\"suffix\" list=\"suffixList\" value=\"", htmlspecialchars($_REQUEST['logschemasuffix']), "\"/ autocomplete=\"off\">";
 			echo "</div>\n";
-			echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajlogschemahelp']}\"/></div>\n";
+			echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strlogschemahelp']}\"/></div>\n";
 			echo "\t<datalist id=\"suffixList\">\n";
 			if ($knownSuffix->recordCount() > 0) {
 				foreach($knownSuffix as $r)
@@ -529,11 +529,11 @@
 		// objects name prefix (only for tables)
 		if ($emajdb->getNumEmajVersion() < 30100 && $_REQUEST['type'] == 'r+') {			// version < 3.1.0
 			// the names prefix is accessible only for a table
-			echo "\t<div class=\"form-label\">{$lang['emajenternameprefix']}</div>\n";
+			echo "\t<div class=\"form-label\">{$lang['strenternameprefix']}</div>\n";
 			echo "\t<div class=\"form-input\">";
 			echo "<input type=\"text\" name=\"nameprefix\" value=\"", htmlspecialchars($_REQUEST['emajnamesprefix']), "\"/>";
 			echo "</div>\n";
-			echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"", htmlspecialchars($lang['emajnameprefixhelp']), "\"/></div>\n";
+			echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"", htmlspecialchars($lang['strnameprefixhelp']), "\"/></div>\n";
 		} else {
 			echo "<input type=\"hidden\" name=\"nameprefix\" value=\"\" />\n";
 		}
@@ -541,13 +541,13 @@
 		// log tablespaces (only for tables)
 		if ($_REQUEST['type'] == 'r+') {
 			// data log tablespace
-			echo "\t<div class=\"form-label\">{$lang['emajenterlogdattsp']}</div>\n";
+			echo "\t<div class=\"form-label\">{$lang['strenterlogdattsp']}</div>\n";
 			echo "\t<div class=\"form-input\">";
 			echo "<input type=\"text\" name=\"logdattsp\" list=\"tspList\" value=\"", htmlspecialchars($_REQUEST['logdattsp']), "\" autocomplete=\"off\"/>";
 			echo "</div>\n";
 			echo "\t<div class=\"form-comment\"></div>\n";
 			// index log tablespace
-			echo "\t<div class=\"form-label\">{$lang['emajenterlogidxtsp']}</div>\n";
+			echo "\t<div class=\"form-label\">{$lang['strenterlogidxtsp']}</div>\n";
 			echo "\t<div class=\"form-input\">";
 			echo "<input type=\"text\" name=\"logidxtsp\"  list=\"tspList\" value=\"", htmlspecialchars($_REQUEST['logidxtsp']), "\" autocomplete=\"off\"/>";
 			echo "</div>\n";
@@ -582,9 +582,9 @@
 		$status = $emajdb->updateTblSeq($_POST['appschema'],$_POST['tblseq'],$_POST['groupold'],$_POST['groupnew'],
 							$_POST['priority'], $_POST['suffix'], $_POST['nameprefix'], $_POST['logdattsp'], $_POST['logidxtsp']);
 		if ($status == 0)
-			configure_groups($lang['emajmodifygroupok']);
+			configure_groups($lang['strmodifygroupok']);
 		else
-			configure_groups('', $lang['emajmodifygrouperr']);
+			configure_groups('', $lang['strmodifygrouperr']);
 	}
 
 	/**
@@ -595,7 +595,7 @@
 
 		// Test at least 1 table/sequence is to be processed
 		if (empty($_REQUEST['tblseq']) && empty($_REQUEST['ma'])) {
-			configure_groups($lang['emajspecifytblseqtoremove']);
+			configure_groups($lang['strspecifytblseqtoremove']);
 			exit();
 		}
 		// Test all tables/sequences to process are already assigned to a group
@@ -603,7 +603,7 @@
 			foreach($_REQUEST['ma'] as $t) {
 				$a = unserialize(htmlspecialchars_decode($t, ENT_QUOTES));
 				if ($a['group'] == '') {
-					configure_groups('', sprintf($lang['emajtblseqnogroup'],$a['appschema'],$a['tblseq']), $a['appschema']);
+					configure_groups('', sprintf($lang['strtblseqnogroup'],$a['appschema'],$a['tblseq']), $a['appschema']);
 					exit();
 				}
 			}
@@ -611,7 +611,7 @@
 
 		$misc->printHeader('database', 'database', 'emajconfiguregroups');
 
-		$misc->printTitle($lang['emajremovetblseq']);
+		$misc->printTitle($lang['strremovetblseq']);
 
 		$nbTbl = 0; $nbSeq = 0;
 		echo "<form action=\"emajgroupsconf.php\" method=\"post\">\n";
@@ -627,15 +627,15 @@
 				echo "<input type=\"hidden\" name=\"group[]\" value=\"", htmlspecialchars($a['group']), "\" />\n";
 				if ($a['type'] == 'r+') {
 					$nbTbl++;
-					$fullList .= "<li>" . sprintf($lang['emajthetable'],$a['appschema'],$a['tblseq']); 
+					$fullList .= "<li>" . sprintf($lang['strthetable'],$a['appschema'],$a['tblseq']); 
 				} else {
 					$nbSeq++;
-					$fullList .= "<li>" . sprintf($lang['emajthesequence'],$a['appschema'],$a['tblseq']);
+					$fullList .= "<li>" . sprintf($lang['strthesequence'],$a['appschema'],$a['tblseq']);
 				}
-				$fullList .= " " . sprintf($lang['emajfromgroup'], htmlspecialchars($a['group'])) . "</li>\n";
+				$fullList .= " " . sprintf($lang['strfromgroup'], htmlspecialchars($a['group'])) . "</li>\n";
 			}
 			$fullList .= "</ul>\n";
-			echo "<p>{$lang['emajconfirmremovetblseq']}{$fullList}</p>\n";
+			echo "<p>{$lang['strconfirmremovetblseq']}{$fullList}</p>\n";
 
 		} else {
 
@@ -645,16 +645,16 @@
 			echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 			if ($_REQUEST['type'] == 'r+') {
 				$nbTbl++;
-				$tblseqName = sprintf($lang['emajthetable'],$_REQUEST['appschema'],$_REQUEST['tblseq']);
+				$tblseqName = sprintf($lang['strthetable'],$_REQUEST['appschema'],$_REQUEST['tblseq']);
 			} else {
 				$nbSeq++;
-				$tblseqName = sprintf($lang['emajthesequence'],$_REQUEST['appschema'],$_REQUEST['tblseq']);
+				$tblseqName = sprintf($lang['strthesequence'],$_REQUEST['appschema'],$_REQUEST['tblseq']);
 			}
-			echo "<p>" . sprintf($lang['emajconfirmremove1tblseq'], $tblseqName, htmlspecialchars($_REQUEST['group'])) . "</p>\n";
+			echo "<p>" . sprintf($lang['strconfirmremove1tblseq'], $tblseqName, htmlspecialchars($_REQUEST['group'])) . "</p>\n";
 		}
 
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"removetblseq\" value=\"{$lang['emajremove']}\" />\n";
+		echo "<input type=\"submit\" name=\"removetblseq\" value=\"{$lang['strremove']}\" />\n";
 		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
 		echo "</form>\n";
 	}
@@ -677,24 +677,24 @@
 					$status = $emajdb->removeTblSeq($_POST['appschema'][$i],$_POST['tblseq'][$i],$_POST['group'][$i]);
 					if ($status != 0) {
 						$data->rollbackTransaction();
-						$configure_groups('', $lang['emajmodifygrouperr']);
+						$configure_groups('', $lang['strmodifygrouperr']);
 						return;
 					}
 				}
 			}
 			if($data->endTransaction() == 0)
-				configure_groups($lang['emajmodifygroupok']);
+				configure_groups($lang['strmodifygroupok']);
 			else
-				configure_groups('', $lang['emajmodifygrouperr']);
+				configure_groups('', $lang['strmodifygrouperr']);
 
 		} else {
 		// single removal
 			$status = $emajdb->removeTblSeq($_POST['appschema'],$_POST['tblseq'],$_POST['group']);
 
 			if ($status == 0)
-				configure_groups($lang['emajmodifygroupok']);
+				configure_groups($lang['strmodifygroupok']);
 			else
-				configure_groups('', $lang['emajmodifygrouperr']);
+				configure_groups('', $lang['strmodifygrouperr']);
 		}
 	}
 
@@ -704,7 +704,7 @@
 		header('Location: emajenvir.php?' . $_SERVER["QUERY_STRING"]);
 	}
 
-	$misc->printHtmlHeader($lang['emajgroupsconfiguration']);
+	$misc->printHtmlHeader($lang['strgroupsconfiguration']);
 	$misc->printBody();
 
 	switch ($action) {

@@ -41,7 +41,7 @@
 
 		echo "<div id=\"flex-container\">";
 
-		$misc->printTitle($lang['emajsqlgentitle']);
+		$misc->printTitle($lang['strsqlgentitle']);
 
 		// Check whether the table has a PK
 		$hasPk = $emajdb->hasTablePk($_REQUEST['schema'], $_REQUEST['table']);
@@ -50,15 +50,15 @@
 
 		echo "<div>\n";
 		echo "<p>{$lang['strtable']} = \"<b>" . htmlspecialchars($_REQUEST['schema']) . "." . htmlspecialchars($_REQUEST['table']) . "</b>\"<br>\n";
-		echo "{$lang['emajtablesgroup']} = \"<b>" . htmlspecialchars($_REQUEST['group']) . "</b>\"<br>\n";
-		echo "{$lang['emajsqlgenmarksinterval']} = \"<b>" . htmlspecialchars($_REQUEST['startMark']) . "</b>\" - ";
+		echo "{$lang['strtablesgroup']} = \"<b>" . htmlspecialchars($_REQUEST['group']) . "</b>\"<br>\n";
+		echo "{$lang['strsqlgenmarksinterval']} = \"<b>" . htmlspecialchars($_REQUEST['startMark']) . "</b>\" - ";
 		if ($_REQUEST['endMark'] != '')
 			echo "\"<b>" . htmlspecialchars($_REQUEST['endMark']) . "</b>\"</p>\n";
 		else
-			echo " {$lang['emajcurrentsituation']}</p>\n";
+			echo " {$lang['strcurrentsituation']}</p>\n";
 
 		if (! $hasPk)
-			echo "<p><img src=\"{$misc->icon('Warning')}\" alt=\"Warning\" style=\"width: 20px;\"/> {$lang['emajsqlgennopk']}</p>\n";
+			echo "<p><img src=\"{$misc->icon('Warning')}\" alt=\"Warning\" style=\"width: 20px;\"/> {$lang['strsqlgennopk']}</p>\n";
 
 		echo "<form action=\"sqledit.php\" method=\"post\">\n";
 		echo "\t<p><input type=\"hidden\" name=\"action\" value=\"gen_sql_dump_changes_ok\" />\n";
@@ -74,19 +74,19 @@
 		echo "<div class=\"form-container\">\n";
 
 		// Radio button for the consolidation level
-		echo "\t<div class=\"form-label\">{$lang['emajsqlgenconsolidation']}</div>\n";
+		echo "\t<div class=\"form-label\">{$lang['strsqlgenconsolidation']}</div>\n";
 		echo "\t<div class=\"form-input\">";
 		echo "\t\t<input type=\"radio\" name=\"consolidation\" value=\"NONE\" onclick=\"validationSelect('NONE');\" checked />";
-		echo "<label for=\"NONE\">{$lang['emajsqlgenconsonone']}</label> \n";
+		echo "<label for=\"NONE\">{$lang['strsqlgenconsonone']}</label> \n";
 		echo "\t\t<input type=\"radio\" name=\"consolidation\" value=\"PARTIAL\" onclick=\"validationSelect('PARTIAL');\" />";
-		echo "<label for=\"PARTIAL\">{$lang['emajsqlgenconsopartial']}</label> \n";
+		echo "<label for=\"PARTIAL\">{$lang['strsqlgenconsopartial']}</label> \n";
 		echo "\t\t<input type=\"radio\" name=\"consolidation\" value=\"FULL\" onclick=\"validationSelect('FULL');\" />";
-		echo "<label for=\"FULL\">{$lang['emajsqlgenconsofull']}</label>\n";
+		echo "<label for=\"FULL\">{$lang['strsqlgenconsofull']}</label>\n";
 		echo "\t</div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajsqlgenconsohelp']}\"/></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strsqlgenconsohelp']}\"/></div>\n";
 
 		// Check box for SQL verbs selection
-		echo "\t<div class=\"form-label\">{$lang['emajsqlgenverbs']}</div>\n";
+		echo "\t<div class=\"form-label\">{$lang['strsqlgenverbs']}</div>\n";
 		echo "\t<div class=\"form-input\">";
 		$check = ($_REQUEST['verb'] == '' || $_REQUEST['verb'] == 'INSERT') ? 'checked' : '';
 		echo "\t\t<input type=\"checkbox\" name=\"verbs[]\" value=\"INS\" $check /><label for=\"INS\">INSERT</label> \n";
@@ -99,7 +99,7 @@
 		echo "\t\t<br>\n";
 		echo "\t\t&nbsp;<a id=\"allVerbs\" onclick=\"javascript:allVerbs();\" class=\"action\">{$lang['strall']}</a>\n";
 		echo "\t</div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajsqlgenverbshelp']}\"/></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strsqlgenverbshelp']}\"/></div>\n";
 
 		// Text field for roles selection
 		echo "\t<div class=\"form-label\">{$lang['strroles']}</div>\n";
@@ -107,10 +107,10 @@
 		echo "\t\t<input type=\"text\" name=\"roles\" value=\"" . htmlspecialchars($_REQUEST['role']) . "\"/><br>\n";
 		if ($_REQUEST['knownRoles'] != '') {
 			if (strlen($_REQUEST['knownRoles']) > 100) {
-				echo "<div class=\"tooltip right-aligned-tooltip\" style=\"white-space: normal\">{$lang['emajsqlgenknownroles']} " . htmlspecialchars(substr($_REQUEST['knownRoles'], 0, 100) . $lang['strellipsis']);
+				echo "<div class=\"tooltip right-aligned-tooltip\" style=\"white-space: normal\">{$lang['strsqlgenknownroles']} " . htmlspecialchars(substr($_REQUEST['knownRoles'], 0, 100) . $lang['strellipsis']);
 				echo "<span>" . htmlspecialchars($_REQUEST['knownRoles']) . "</span></div>";
 			} else {
-				echo "{$lang['emajsqlgenknownroles']} " . htmlspecialchars($_REQUEST['knownRoles']);
+				echo "{$lang['strsqlgenknownroles']} " . htmlspecialchars($_REQUEST['knownRoles']);
 			}
 			echo "\t\t<br>\n";
 		}
@@ -119,10 +119,10 @@
 		}
 		echo "\t\t&nbsp;<a id=\"clearRoles\" onclick=\"javascript:setRoles();\" class=\"action\">{$lang['strdelete']}</a>\n";
 		echo "\t</div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajsqlgenroleshelp']}\"/></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strsqlgenroleshelp']}\"/></div>\n";
 
 		// Check box for E-Maj technical columns, with 3 columns per line
-		echo "\t<div class=\"form-label\">{$lang['emajsqlgentechcols']}</div>\n";
+		echo "\t<div class=\"form-label\">{$lang['strsqlgentechcols']}</div>\n";
 		echo "\t<div class=\"form-input\">";
 		$nbCol = 0;
 		foreach($emajCols as $r) {
@@ -136,28 +136,28 @@
 		echo "\t\t&nbsp;<a onclick=\"javascript:emajColsSelect('ALL');\" class=\"action\">{$lang['strall']}</a>&nbsp;\n";
 		echo "\t\t&nbsp;<a onclick=\"javascript:emajColsSelect('MIN');\" class=\"action\">Minimum</a>\n";
 		echo "\t</div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajsqlgentechcolshelp']}\"/></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strsqlgentechcolshelp']}\"/></div>\n";
 
 		// Radio button for the columns order
-		echo "\t<div class=\"form-label\">{$lang['emajsqlgencolsorder']}</div>\n";
+		echo "\t<div class=\"form-label\">{$lang['strsqlgencolsorder']}</div>\n";
 		echo "\t<div class=\"form-input\">";
-		echo "\t\t<input type=\"radio\" name=\"colsOrder\" value=\"LOG_TABLE\" checked /><label for=\"LOG_TABLE\">{$lang['emajsqlgencolsorderlog']}</label>";
-		echo "\t\t<input type=\"radio\" name=\"colsOrder\" value=\"PK\" /><label for=\"PK\">{$lang['emajsqlgencolsorderpk']}</label>";
+		echo "\t\t<input type=\"radio\" name=\"colsOrder\" value=\"LOG_TABLE\" checked /><label for=\"LOG_TABLE\">{$lang['strsqlgencolsorderlog']}</label>";
+		echo "\t\t<input type=\"radio\" name=\"colsOrder\" value=\"PK\" /><label for=\"PK\">{$lang['strsqlgencolsorderpk']}</label>";
 		echo "\t</div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajsqlgencolsorderhelp']}\"/></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strsqlgencolsorderhelp']}\"/></div>\n";
 
 		// Radio button for the rows order
-		echo "\t<div class=\"form-label\">{$lang['emajsqlgenroworder']}</div>\n";
+		echo "\t<div class=\"form-label\">{$lang['strsqlgenroworder']}</div>\n";
 		echo "\t<div class=\"form-input\">";
-		echo "\t\t<input type=\"radio\" name=\"orderBy\" value=\"TIME\" checked /><label for=\"TIME\">{$lang['emajsqlgenrowordertime']}</label>";
+		echo "\t\t<input type=\"radio\" name=\"orderBy\" value=\"TIME\" checked /><label for=\"TIME\">{$lang['strsqlgenrowordertime']}</label>";
 		echo "\t\t<input type=\"radio\" name=\"orderBy\" value=\"PK\" /><label for=\"PK\">{$lang['strpk']}</label>";
 		echo "\t</div>\n";
-		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['emajsqlgenroworderhelp']}\"/></div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strsqlgenroworderhelp']}\"/></div>\n";
 
 		echo "</div>\n";
 
 		echo "<div class=\"actionslist\">\n";
-		echo "\t<input type=\"submit\" value=\"{$lang['emajsqlgenerate']}\" />\n";
+		echo "\t<input type=\"submit\" value=\"{$lang['strsqlgenerate']}\" />\n";
 		echo "\t<input type=\"reset\" value=\"{$lang['strreset']}\" />\n";
 		echo "</div>\n";
 

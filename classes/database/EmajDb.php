@@ -590,11 +590,11 @@ class EmajDb {
 		$sql = "SELECT
 				rpt_severity,
 				CASE rpt_msg_type
-					WHEN 101 THEN '" . $data->clean($lang['emajcheckjsonparamconf101']) . "'
-					WHEN 102 THEN format('" . $data->clean($lang['emajcheckjsonparamconf102']) . "', rpt_int_var_1)
-					WHEN 103 THEN format('" . $data->clean($lang['emajcheckjsonparamconf103']) . "', rpt_text_var_1, rpt_text_var_2)
-					WHEN 104 THEN format('" . $data->clean($lang['emajcheckjsonparamconf104']) . "', rpt_text_var_1)
-					WHEN 105 THEN format('" . $data->clean($lang['emajcheckjsonparamconf105']) . "', rpt_text_var_1)
+					WHEN 101 THEN '" . $data->clean($lang['strcheckjsonparamconf101']) . "'
+					WHEN 102 THEN format('" . $data->clean($lang['strcheckjsonparamconf102']) . "', rpt_int_var_1)
+					WHEN 103 THEN format('" . $data->clean($lang['strcheckjsonparamconf103']) . "', rpt_text_var_1, rpt_text_var_2)
+					WHEN 104 THEN format('" . $data->clean($lang['strcheckjsonparamconf104']) . "', rpt_text_var_1)
+					WHEN 105 THEN format('" . $data->clean($lang['strcheckjsonparamconf105']) . "', rpt_text_var_1)
                     ELSE 'Message not decoded (' || rpt_msg_type || ')'
 				END as rpt_message
 			FROM emaj._check_json_param_conf(E'{$json}'::json)
@@ -1143,29 +1143,29 @@ class EmajDb {
 		// rpt_msg_type 260 and 261 disappear in emaj 4.0+
 		$sql = "SELECT rpt_severity,
 				CASE rpt_msg_type
-					WHEN  1 THEN format('" . $data->clean($lang['emajcheckconfgroups01']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
-					WHEN  2 THEN format('" . $data->clean($lang['emajcheckconfgroups02']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
-					WHEN  3 THEN format('" . $data->clean($lang['emajcheckconfgroups03']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
-					WHEN  4 THEN format('" . $data->clean($lang['emajcheckconfgroups04']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
-					WHEN  5 THEN format('" . $data->clean($lang['emajcheckconfgroups05']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
-					WHEN 10 THEN format('" . $data->clean($lang['emajcheckconfgroups10']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
-					WHEN 11 THEN format('" . $data->clean($lang['emajcheckconfgroups11']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
-					WHEN 12 THEN format('" . $data->clean($lang['emajcheckconfgroups12']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
-					WHEN 13 THEN format('" . $data->clean($lang['emajcheckconfgroups13']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
-					WHEN 15 THEN format('" . $data->clean($lang['emajcheckconfgroups15']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
-					WHEN 16 THEN format('" . $data->clean($lang['emajcheckconfgroups16']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
-					WHEN 20 THEN format('" . $data->clean($lang['emajcheckconfgroups20']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
-					WHEN 21 THEN format('" . $data->clean($lang['emajcheckconfgroups21']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
-					WHEN 22 THEN format('" . $data->clean($lang['emajcheckconfgroups22']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
-					WHEN 30 THEN format('" . $data->clean($lang['emajcheckconfgroups30']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
-					WHEN 31 THEN format('" . $data->clean($lang['emajcheckconfgroups31']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
-					WHEN 32 THEN format('" . $data->clean($lang['emajcheckconfgroups32']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
-					WHEN 33 THEN format('" . $data->clean($lang['emajcheckconfgroups33']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
-					WHEN 250 THEN format('" . $data->clean($lang['emajgroupsconfimport250']) . "', rpt_text_var_1)
-					WHEN 251 THEN format('" . $data->clean($lang['emajgroupsconfimport251']) . "', rpt_text_var_1)
-					WHEN 252 THEN format('" . $data->clean($lang['emajgroupsconfimport252']) . "', rpt_text_var_1)
-					WHEN 260 THEN format('" . $data->clean($lang['emajgroupsconfimport260']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
-					WHEN 261 THEN format('" . $data->clean($lang['emajgroupsconfimport261']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
+					WHEN  1 THEN format('" . $data->clean($lang['strcheckconfgroups01']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
+					WHEN  2 THEN format('" . $data->clean($lang['strcheckconfgroups02']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
+					WHEN  3 THEN format('" . $data->clean($lang['strcheckconfgroups03']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
+					WHEN  4 THEN format('" . $data->clean($lang['strcheckconfgroups04']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
+					WHEN  5 THEN format('" . $data->clean($lang['strcheckconfgroups05']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
+					WHEN 10 THEN format('" . $data->clean($lang['strcheckconfgroups10']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
+					WHEN 11 THEN format('" . $data->clean($lang['strcheckconfgroups11']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
+					WHEN 12 THEN format('" . $data->clean($lang['strcheckconfgroups12']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
+					WHEN 13 THEN format('" . $data->clean($lang['strcheckconfgroups13']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
+					WHEN 15 THEN format('" . $data->clean($lang['strcheckconfgroups15']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
+					WHEN 16 THEN format('" . $data->clean($lang['strcheckconfgroups16']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
+					WHEN 20 THEN format('" . $data->clean($lang['strcheckconfgroups20']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
+					WHEN 21 THEN format('" . $data->clean($lang['strcheckconfgroups21']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
+					WHEN 22 THEN format('" . $data->clean($lang['strcheckconfgroups22']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
+					WHEN 30 THEN format('" . $data->clean($lang['strcheckconfgroups30']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
+					WHEN 31 THEN format('" . $data->clean($lang['strcheckconfgroups31']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
+					WHEN 32 THEN format('" . $data->clean($lang['strcheckconfgroups32']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
+					WHEN 33 THEN format('" . $data->clean($lang['strcheckconfgroups33']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
+					WHEN 250 THEN format('" . $data->clean($lang['strgroupsconfimport250']) . "', rpt_text_var_1)
+					WHEN 251 THEN format('" . $data->clean($lang['strgroupsconfimport251']) . "', rpt_text_var_1)
+					WHEN 252 THEN format('" . $data->clean($lang['strgroupsconfimport252']) . "', rpt_text_var_1)
+					WHEN 260 THEN format('" . $data->clean($lang['strgroupsconfimport260']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
+					WHEN 261 THEN format('" . $data->clean($lang['strgroupsconfimport261']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
                     ELSE 'Message not decoded (' || rpt_msg_type || ')'
 				END as rpt_message
 			FROM emaj._import_groups_conf_prepare (E'{$groupsConfig}'::json, {$groupsArray}, true, NULL)";
@@ -1352,7 +1352,7 @@ class EmajDb {
 
 		$data->clean($group);
 
-		$sql = "SELECT lower(lses_time_range), 'LS' AS event, 'emajlogsession#GreySimple' AS graphic,
+		$sql = "SELECT lower(lses_time_range), 'LS' AS event, 'strlogsession#GreySimple' AS graphic,
 					   NULL AS create_drop_time,NULL AS grph_log_sessions,
 					   to_char(b.time_tx_timestamp,'{$this->tsFormat}') AS start_time,
 					   to_char(e.time_tx_timestamp,'{$this->tsFormat}') AS stop_time,
@@ -1362,7 +1362,7 @@ class EmajDb {
 					     LEFT OUTER JOIN emaj.emaj_time_stamp e ON (e.time_id = upper(lses_time_range) - 1)
 					WHERE lses_group = '{$group}'
 			UNION ALL
-				SELECT lower(grph_time_range), 'C', 'emajgroupcreate#GreyBegin',
+				SELECT lower(grph_time_range), 'C', 'strgroupcreate#GreyBegin',
 					   to_char(time_tx_timestamp,'{$this->tsFormat}'), grph_log_sessions,
 					   NULL, NULL, NULL, NULL
 					FROM emaj.emaj_group_hist
@@ -1370,7 +1370,7 @@ class EmajDb {
 					WHERE grph_group = '{$group}'
 						AND NOT lower_inf(grph_time_range)
 			UNION ALL
-				SELECT upper(grph_time_range) - 1, 'D', 'emajgroupdrop#GreyEnd',
+				SELECT upper(grph_time_range) - 1, 'D', 'strgroupdrop#GreyEnd',
 					   to_char(time_tx_timestamp,'{$this->tsFormat}'), grph_log_sessions,
 					   NULL, NULL, NULL, NULL
 					FROM emaj.emaj_group_hist
@@ -1378,7 +1378,7 @@ class EmajDb {
 					WHERE grph_group = '{$group}'
 						AND NOT upper_inf(grph_time_range)
 			UNION ALL
-				SELECT lower(grph_time_range), 'DLS', 'emajdeletedlogsessions#GreyDotted',
+				SELECT lower(grph_time_range), 'DLS', 'strdeletedlogsessions#GreyDotted',
 					   NULL, NULL, NULL, NULL, NULL, NULL
 					FROM emaj.emaj_group_hist
 					WHERE grph_group = '{$group}'
@@ -2045,22 +2045,22 @@ class EmajDb {
 
 		$sql = "SELECT chk_severity,
 				CASE chk_msg_type
-					WHEN  1 THEN format('" . $data->clean($lang['emajcheckconfgroups01']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN  2 THEN format('" . $data->clean($lang['emajcheckconfgroups02']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN  3 THEN format('" . $data->clean($lang['emajcheckconfgroups03']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN  4 THEN format('" . $data->clean($lang['emajcheckconfgroups04']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
-					WHEN  5 THEN format('" . $data->clean($lang['emajcheckconfgroups05']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 10 THEN format('" . $data->clean($lang['emajcheckconfgroups10']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
-					WHEN 11 THEN format('" . $data->clean($lang['emajcheckconfgroups11']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
-					WHEN 12 THEN format('" . $data->clean($lang['emajcheckconfgroups12']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
-					WHEN 13 THEN format('" . $data->clean($lang['emajcheckconfgroups13']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
-					WHEN 20 THEN format('" . $data->clean($lang['emajcheckconfgroups20']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 21 THEN format('" . $data->clean($lang['emajcheckconfgroups21']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 22 THEN format('" . $data->clean($lang['emajcheckconfgroups22']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 30 THEN format('" . $data->clean($lang['emajcheckconfgroups30']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 31 THEN format('" . $data->clean($lang['emajcheckconfgroups31']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 32 THEN format('" . $data->clean($lang['emajcheckconfgroups32']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 33 THEN format('" . $data->clean($lang['emajcheckconfgroups33']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN  1 THEN format('" . $data->clean($lang['strcheckconfgroups01']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN  2 THEN format('" . $data->clean($lang['strcheckconfgroups02']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN  3 THEN format('" . $data->clean($lang['strcheckconfgroups03']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN  4 THEN format('" . $data->clean($lang['strcheckconfgroups04']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN  5 THEN format('" . $data->clean($lang['strcheckconfgroups05']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 10 THEN format('" . $data->clean($lang['strcheckconfgroups10']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN 11 THEN format('" . $data->clean($lang['strcheckconfgroups11']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN 12 THEN format('" . $data->clean($lang['strcheckconfgroups12']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN 13 THEN format('" . $data->clean($lang['strcheckconfgroups13']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN 20 THEN format('" . $data->clean($lang['strcheckconfgroups20']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 21 THEN format('" . $data->clean($lang['strcheckconfgroups21']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 22 THEN format('" . $data->clean($lang['strcheckconfgroups22']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 30 THEN format('" . $data->clean($lang['strcheckconfgroups30']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 31 THEN format('" . $data->clean($lang['strcheckconfgroups31']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 32 THEN format('" . $data->clean($lang['strcheckconfgroups32']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 33 THEN format('" . $data->clean($lang['strcheckconfgroups33']) . "', chk_group, chk_schema, chk_tblseq)
 				END as chk_message
 			FROM emaj._check_conf_groups ($groupsArray)";
 
@@ -2079,22 +2079,22 @@ class EmajDb {
 
 		$sql = "SELECT chk_severity,
 				CASE chk_msg_type
-					WHEN  1 THEN format('" . $data->clean($lang['emajcheckconfgroups01']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN  2 THEN format('" . $data->clean($lang['emajcheckconfgroups02']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN  3 THEN format('" . $data->clean($lang['emajcheckconfgroups03']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN  4 THEN format('" . $data->clean($lang['emajcheckconfgroups04']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
-					WHEN  5 THEN format('" . $data->clean($lang['emajcheckconfgroups05']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 10 THEN format('" . $data->clean($lang['emajcheckconfgroups10']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
-					WHEN 11 THEN format('" . $data->clean($lang['emajcheckconfgroups11']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
-					WHEN 12 THEN format('" . $data->clean($lang['emajcheckconfgroups12']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
-					WHEN 13 THEN format('" . $data->clean($lang['emajcheckconfgroups13']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
-					WHEN 20 THEN format('" . $data->clean($lang['emajcheckconfgroups20']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 21 THEN format('" . $data->clean($lang['emajcheckconfgroups21']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 22 THEN format('" . $data->clean($lang['emajcheckconfgroups22']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 30 THEN format('" . $data->clean($lang['emajcheckconfgroups30']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 31 THEN format('" . $data->clean($lang['emajcheckconfgroups31']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 32 THEN format('" . $data->clean($lang['emajcheckconfgroups32']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 33 THEN format('" . $data->clean($lang['emajcheckconfgroups33']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN  1 THEN format('" . $data->clean($lang['strcheckconfgroups01']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN  2 THEN format('" . $data->clean($lang['strcheckconfgroups02']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN  3 THEN format('" . $data->clean($lang['strcheckconfgroups03']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN  4 THEN format('" . $data->clean($lang['strcheckconfgroups04']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN  5 THEN format('" . $data->clean($lang['strcheckconfgroups05']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 10 THEN format('" . $data->clean($lang['strcheckconfgroups10']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN 11 THEN format('" . $data->clean($lang['strcheckconfgroups11']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN 12 THEN format('" . $data->clean($lang['strcheckconfgroups12']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN 13 THEN format('" . $data->clean($lang['strcheckconfgroups13']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN 20 THEN format('" . $data->clean($lang['strcheckconfgroups20']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 21 THEN format('" . $data->clean($lang['strcheckconfgroups21']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 22 THEN format('" . $data->clean($lang['strcheckconfgroups22']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 30 THEN format('" . $data->clean($lang['strcheckconfgroups30']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 31 THEN format('" . $data->clean($lang['strcheckconfgroups31']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 32 THEN format('" . $data->clean($lang['strcheckconfgroups32']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 33 THEN format('" . $data->clean($lang['strcheckconfgroups33']) . "', chk_group, chk_schema, chk_tblseq)
 				END as chk_message
 			FROM emaj._check_conf_groups ($groupsArray), emaj.emaj_group
 	        WHERE 	chk_group = group_name
@@ -2116,22 +2116,22 @@ class EmajDb {
 		$sql = "SELECT
 				rpt_severity,
 				CASE rpt_msg_type
-					WHEN 201 THEN '" . $data->clean($lang['emajcheckjsongroupsconf201']) . "'
-					WHEN 202 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf202']) . "', rpt_text_var_1)
-					WHEN 210 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf210']) . "', rpt_int_var_1)
-					WHEN 211 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf211']) . "', rpt_text_var_1, rpt_int_var_1)
-					WHEN 212 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf212']) . "', rpt_text_var_1)
-					WHEN 220 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf220']) . "', rpt_text_var_1, rpt_int_var_1)
-					WHEN 221 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf221']) . "', rpt_text_var_1, rpt_int_var_1)
-					WHEN 222 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf222']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
-					WHEN 223 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf223']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
-					WHEN 224 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf224']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_int_var_1)
-					WHEN 225 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf225']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
-					WHEN 226 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf226']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_int_var_1)
-					WHEN 227 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf227']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
-					WHEN 230 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf230']) . "', rpt_text_var_1, rpt_int_var_1)
-					WHEN 231 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf231']) . "', rpt_text_var_1, rpt_int_var_1)
-					WHEN 232 THEN format('" . $data->clean($lang['emajcheckjsongroupsconf232']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
+					WHEN 201 THEN '" . $data->clean($lang['strcheckjsongroupsconf201']) . "'
+					WHEN 202 THEN format('" . $data->clean($lang['strcheckjsongroupsconf202']) . "', rpt_text_var_1)
+					WHEN 210 THEN format('" . $data->clean($lang['strcheckjsongroupsconf210']) . "', rpt_int_var_1)
+					WHEN 211 THEN format('" . $data->clean($lang['strcheckjsongroupsconf211']) . "', rpt_text_var_1, rpt_int_var_1)
+					WHEN 212 THEN format('" . $data->clean($lang['strcheckjsongroupsconf212']) . "', rpt_text_var_1)
+					WHEN 220 THEN format('" . $data->clean($lang['strcheckjsongroupsconf220']) . "', rpt_text_var_1, rpt_int_var_1)
+					WHEN 221 THEN format('" . $data->clean($lang['strcheckjsongroupsconf221']) . "', rpt_text_var_1, rpt_int_var_1)
+					WHEN 222 THEN format('" . $data->clean($lang['strcheckjsongroupsconf222']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
+					WHEN 223 THEN format('" . $data->clean($lang['strcheckjsongroupsconf223']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
+					WHEN 224 THEN format('" . $data->clean($lang['strcheckjsongroupsconf224']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_int_var_1)
+					WHEN 225 THEN format('" . $data->clean($lang['strcheckjsongroupsconf225']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
+					WHEN 226 THEN format('" . $data->clean($lang['strcheckjsongroupsconf226']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_int_var_1)
+					WHEN 227 THEN format('" . $data->clean($lang['strcheckjsongroupsconf227']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
+					WHEN 230 THEN format('" . $data->clean($lang['strcheckjsongroupsconf230']) . "', rpt_text_var_1, rpt_int_var_1)
+					WHEN 231 THEN format('" . $data->clean($lang['strcheckjsongroupsconf231']) . "', rpt_text_var_1, rpt_int_var_1)
+					WHEN 232 THEN format('" . $data->clean($lang['strcheckjsongroupsconf232']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
                     ELSE 'Message not decoded (' || rpt_msg_type || ')'
 				END as rpt_message
 			FROM emaj._check_json_groups_conf(E'{$json}'::json)
@@ -2755,27 +2755,27 @@ class EmajDb {
 			$sql = "SELECT to_char(time_tx_timestamp,'{$this->tsFormat}') as time_tx_timestamp,
 					CASE
 					WHEN rlchg_change_kind = 'REMOVE_TABLE' THEN
-						format('{$emajlang['emajalteredremovetbl']}', rlchg_schema, rlchg_tblseq, rlchg_group)
+						format('{$emajlang['stralteredremovetbl']}', rlchg_schema, rlchg_tblseq, rlchg_group)
 					WHEN rlchg_change_kind = 'REMOVE_SEQUENCE' THEN
-						format('{$emajlang['emajalteredremoveseq']}', rlchg_schema, rlchg_tblseq, rlchg_group)
+						format('{$emajlang['stralteredremoveseq']}', rlchg_schema, rlchg_tblseq, rlchg_group)
 					WHEN rlchg_change_kind = 'REPAIR_TABLE' THEN
-						format('{$emajlang['emajalteredrepairtbl']}', rlchg_schema, rlchg_tblseq)
+						format('{$emajlang['stralteredrepairtbl']}', rlchg_schema, rlchg_tblseq)
 					WHEN rlchg_change_kind = 'CHANGE_LOG_DATA_TABLESPACE' THEN
-						format('{$emajlang['emajalteredchangetbllogdatatsp']}', rlchg_schema, rlchg_tblseq)
+						format('{$emajlang['stralteredchangetbllogdatatsp']}', rlchg_schema, rlchg_tblseq)
 					WHEN rlchg_change_kind = 'CHANGE_LOG_INDEX_TABLESPACE' THEN
-						format('{$emajlang['emajalteredchangetbllogindextsp']}', rlchg_schema, rlchg_tblseq)
+						format('{$emajlang['stralteredchangetbllogindextsp']}', rlchg_schema, rlchg_tblseq)
 					WHEN rlchg_change_kind = 'CHANGE_PRIORITY' THEN
-						format('{$emajlang['emajalteredchangerelpriority']}', rlchg_schema, rlchg_tblseq)
+						format('{$emajlang['stralteredchangerelpriority']}', rlchg_schema, rlchg_tblseq)
 					WHEN rlchg_change_kind = 'CHANGE_IGNORED_TRIGGERS' THEN
-						format('{$emajlang['emajalteredchangeignoredtriggers']}', rlchg_schema, rlchg_tblseq)
+						format('{$emajlang['stralteredchangeignoredtriggers']}', rlchg_schema, rlchg_tblseq)
 					WHEN rlchg_change_kind = 'MOVE_TABLE' THEN
-						format('{$emajlang['emajalteredmovetbl']}', rlchg_schema, rlchg_tblseq, rlchg_group, rlchg_new_group)
+						format('{$emajlang['stralteredmovetbl']}', rlchg_schema, rlchg_tblseq, rlchg_group, rlchg_new_group)
 					WHEN rlchg_change_kind = 'MOVE_SEQUENCE' THEN
-						format('{$emajlang['emajalteredmoveseq']}', rlchg_schema, rlchg_tblseq, rlchg_group, rlchg_new_group)
+						format('{$emajlang['stralteredmoveseq']}', rlchg_schema, rlchg_tblseq, rlchg_group, rlchg_new_group)
 					WHEN rlchg_change_kind = 'ADD_TABLE' THEN
-						format('{$emajlang['emajalteredaddtbl']}', rlchg_schema, rlchg_tblseq, rlchg_group)
+						format('{$emajlang['stralteredaddtbl']}', rlchg_schema, rlchg_tblseq, rlchg_group)
 					WHEN rlchg_change_kind = 'ADD_SEQUENCE' THEN
-						format('{$emajlang['emajalteredaddseq']}', rlchg_schema, rlchg_tblseq, rlchg_group)
+						format('{$emajlang['stralteredaddseq']}', rlchg_schema, rlchg_tblseq, rlchg_group)
 					END AS altr_action,
 					CASE WHEN rlchg_change_kind IN ('ADD_TABLE', 'ADD_SEQUENCE', 'REMOVE_TABLE', 'REMOVE_SEQUENCE',
 													'REPAIR_TABLE', 'MOVE_TABLE', 'MOVE_SEQUENCE', 'CHANGE_LOG_DATA_TABLESPACE',
@@ -2794,31 +2794,31 @@ class EmajDb {
 			$sql = "SELECT to_char(time_tx_timestamp,'{$this->tsFormat}') as time_tx_timestamp, altr_step,
 					CASE
 					WHEN altr_step = 'REMOVE_TBL' THEN
-						format('{$emajlang['emajalteredremovetbl']}', altr_schema, altr_tblseq, altr_group)
+						format('{$emajlang['stralteredremovetbl']}', altr_schema, altr_tblseq, altr_group)
 					WHEN altr_step = 'REMOVE_SEQ' THEN
-						format('{$emajlang['emajalteredremoveseq']}', altr_schema, altr_tblseq, altr_group)
+						format('{$emajlang['stralteredremoveseq']}', altr_schema, altr_tblseq, altr_group)
 					WHEN altr_step = 'REPAIR_TBL' THEN
-						format('{$emajlang['emajalteredrepairtbl']}', altr_schema, altr_tblseq)
+						format('{$emajlang['stralteredrepairtbl']}', altr_schema, altr_tblseq)
 					WHEN altr_step = 'REPAIR_SEQ' THEN
-						format('{$emajlang['emajalteredrepairseq']}', altr_schema, altr_tblseq)
+						format('{$emajlang['stralteredrepairseq']}', altr_schema, altr_tblseq)
 					WHEN altr_step = 'CHANGE_TBL_LOG_SCHEMA' THEN
-						format('{$emajlang['emajalteredchangetbllogschema']}', altr_schema, altr_tblseq)
+						format('{$emajlang['stralteredchangetbllogschema']}', altr_schema, altr_tblseq)
 					WHEN altr_step = 'CHANGE_TBL_NAMES_PREFIX' THEN
-						format('{$emajlang['emajalteredchangetblnamesprefix']}', altr_schema, altr_tblseq)
+						format('{$emajlang['stralteredchangetblnamesprefix']}', altr_schema, altr_tblseq)
 					WHEN altr_step = 'CHANGE_TBL_LOG_DATA_TSP' THEN
-						format('{$emajlang['emajalteredchangetbllogdatatsp']}', altr_schema, altr_tblseq)
+						format('{$emajlang['stralteredchangetbllogdatatsp']}', altr_schema, altr_tblseq)
 					WHEN altr_step = 'CHANGE_TBL_LOG_INDEX_TSP' THEN
-						format('{$emajlang['emajalteredchangetbllogindextsp']}', altr_schema, altr_tblseq)
+						format('{$emajlang['stralteredchangetbllogindextsp']}', altr_schema, altr_tblseq)
 					WHEN altr_step = 'CHANGE_REL_PRIORITY' THEN
-						format('{$emajlang['emajalteredchangerelpriority']}', altr_schema, altr_tblseq)
+						format('{$emajlang['stralteredchangerelpriority']}', altr_schema, altr_tblseq)
 					WHEN altr_step = 'MOVE_TBL' THEN
-						format('{$emajlang['emajalteredmovetbl']}', altr_schema, altr_tblseq, altr_group, altr_new_group)
+						format('{$emajlang['stralteredmovetbl']}', altr_schema, altr_tblseq, altr_group, altr_new_group)
 					WHEN altr_step = 'MOVE_SEQ' THEN
-						format('{$emajlang['emajalteredmoveseq']}', altr_schema, altr_tblseq, altr_group, altr_new_group)
+						format('{$emajlang['stralteredmoveseq']}', altr_schema, altr_tblseq, altr_group, altr_new_group)
 					WHEN altr_step = 'ADD_TBL' THEN
-						format('{$emajlang['emajalteredaddtbl']}', altr_schema, altr_tblseq, altr_group)
+						format('{$emajlang['stralteredaddtbl']}', altr_schema, altr_tblseq, altr_group)
 					WHEN altr_step = 'ADD_SEQ' THEN
-						format('{$emajlang['emajalteredaddseq']}', altr_schema, altr_tblseq, altr_group)
+						format('{$emajlang['stralteredaddseq']}', altr_schema, altr_tblseq, altr_group)
 					END AS altr_action,
 					CASE WHEN altr_step IN ('ADD_TBL', 'ADD_SEQ', 'REMOVE_TBL', 'REMOVE_SEQ', 'REPAIR_TBL', 'REPAIR_SEQ', 'MOVE_TBL', 'MOVE_SEQ',
 											'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP',
@@ -3392,31 +3392,31 @@ class EmajDb {
 					   END AS rlbk_schema_table,
 					   CASE rlbp_step::TEXT
 						 WHEN 'RLBK_SEQUENCES' THEN
-							'{$lang['emajrlbksequences']}'
+							'{$lang['strrlbksequences']}'
 						 WHEN 'DIS_APP_TRG' THEN
-							format('{$lang['emajrlbkdisapptrg']}', quote_ident(rlbp_object))
+							format('{$lang['strrlbkdisapptrg']}', quote_ident(rlbp_object))
 						 WHEN 'DIS_LOG_TRG' THEN
-							'{$lang['emajrlbkdislogtrg']}'
+							'{$lang['strrlbkdislogtrg']}'
 						 WHEN 'SET_ALWAYS_APP_TRG' THEN
-							format('{$lang['emajrlbksetalwaysapptrg']}', quote_ident(rlbp_object))
+							format('{$lang['strrlbksetalwaysapptrg']}', quote_ident(rlbp_object))
 						 WHEN 'DROP_FK' THEN
-							format('{$lang['emajrlbkdropfk']}',	quote_ident(rlbp_object))
+							format('{$lang['strrlbkdropfk']}',	quote_ident(rlbp_object))
 						 WHEN 'SET_FK_DEF' THEN
-							format('{$lang['emajrlbksetfkdef']}', quote_ident(rlbp_object))
+							format('{$lang['strrlbksetfkdef']}', quote_ident(rlbp_object))
 						 WHEN 'RLBK_TABLE' THEN
-							'{$lang['emajrlbkrlbktable']}'
+							'{$lang['strrlbkrlbktable']}'
 						 WHEN 'DELETE_LOG' THEN
-							'{$lang['emajrlbkdeletelog']}'
+							'{$lang['strrlbkdeletelog']}'
 						 WHEN 'SET_FK_IMM' THEN
-							format('{$lang['emajrlbksetfkimm']}', quote_ident(rlbp_object))
+							format('{$lang['strrlbksetfkimm']}', quote_ident(rlbp_object))
 						 WHEN 'ADD_FK' THEN
-							format('{$lang['emajrlbkaddfk']}', quote_ident(rlbp_object))
+							format('{$lang['strrlbkaddfk']}', quote_ident(rlbp_object))
 						 WHEN 'ENA_APP_TRG' THEN
-							format('{$lang['emajrlbkenaapptrg']}', quote_ident(rlbp_object))
+							format('{$lang['strrlbkenaapptrg']}', quote_ident(rlbp_object))
 						 WHEN 'SET_LOCAL_APP_TRG' THEN
-							format('{$lang['emajrlbksetlocalapptrg']}', quote_ident(rlbp_object))
+							format('{$lang['strrlbksetlocalapptrg']}', quote_ident(rlbp_object))
 						 WHEN 'ENA_LOG_TRG' THEN
-							'{$lang['emajrlbkenalogtrg']}'
+							'{$lang['strrlbkenalogtrg']}'
 						 ELSE rlbp_step || ' (?)'
 					   END AS rlbp_action,
 					   rlbp_batch_number, rlbp_session, rlbp_estimated_quantity,

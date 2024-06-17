@@ -309,7 +309,7 @@
 	$lang['strcheckjsongroupsconf232'] = 'Dans le groupe de tables "%s" et pour la sequence %s.%s, le mot clé "%s" est inconnnu.';
 	$lang['strgroupsconfimport250'] = 'Le groupe de tables "%s" à importer n\'est pas référencé dans la structure JSON.';
 	$lang['strgroupsconfimport251'] = 'Le groupe de tables "%s" existe déjà.';
-	$lang['strgroupsconfimport252'] = 'Changer le type du groupe de tables "%s" n\est pas permis.';
+	$lang['strgroupsconfimport252'] = 'Changer le type du groupe de tables "%s" n\'est pas permis. Vous pouvez supprimer ce groupe de tables avant d\'importer la configuration.';
 	$lang['strgroupsconfimport260'] = 'Dans le groupe de tables "%s" et pour la table %s.%s, le trigger %s n\'existe pas.';
 	$lang['strgroupsconfimport261'] = 'Dans le groupe de tables "%s" et pour la table %s.%s, le trigger %s est un trigger E-Maj.';
 	$lang['strgroupsconfimportpreperr'] = 'L\'importation de la configuration des groupes de tables "%s" depuis le fichier "%s" a échoué pour les raisons suivantes :';

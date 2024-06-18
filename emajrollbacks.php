@@ -98,6 +98,8 @@
 					'intervalformat' => $lang['strintervalformat'],
 					'class' => 'tooltip left-aligned-tooltip',
 				),
+				'sorter_text_extraction' => 'span_text',
+				'filter' => false,
 			),
 			'rlbkRemaining' => array(
 				'title' => $lang['strestimremaining'],
@@ -107,6 +109,8 @@
 					'intervalformat' => $lang['strintervalformat'],
 					'class' => 'tooltip left-aligned-tooltip',
 				),
+				'sorter_text_extraction' => 'span_text',
+				'filter' => false,
 			),
 			'rlbkCompletionPct' => array(
 				'title' => $lang['strpctcompleted'],
@@ -169,7 +173,7 @@
 					'function' => 'renderRlbkStatusInList',
 					'align' => 'center',
 				),
-				'sorter' => false,
+				'sorter_text_extraction' => 'div_title',
 				'filter' => false,
 			),
 			'rlbkStartDateTime' => array(
@@ -264,7 +268,7 @@
 		$misc->printTitle($lang['strinprogressrlbk']);
 		if ($emajdb->isDblinkUsable()) {
 			$inProgressRlbks = $emajdb->getInProgressRlbk();
-			$misc->printTable($inProgressRlbks, $columnsInProgressRlbk, $actions, 'inProgressRlbk', $lang['strnorlbk']);
+			$misc->printTable($inProgressRlbks, $columnsInProgressRlbk, $actions, 'inProgressRlbk', $lang['strnorlbk'], null, array('sorter' => true, 'filter' => true));
 		} else {
 			echo "<p>{$lang['strrlbkmonitornotavailable']}</p>\n";
 		}
@@ -295,6 +299,7 @@
 					'locale' => $lang['applocale'],
 					'class' => 'tooltip left-aligned-tooltip',
 				),
+				'sorter_text_extraction' => 'span_text',
 			),
 			'rlbkNbRow' => array(
 				'title' => $lang['strnbchanges'],
@@ -319,6 +324,7 @@
 					'locale' => $lang['applocale'],
 					'class' => 'tooltip left-aligned-tooltip',
 				),
+				'sorter_text_extraction' => 'span_text',
 			),
 			'actions' => array(
 				'title' => $lang['stractions'],
@@ -347,7 +353,7 @@
 
 		$misc->printTitle($lang['strconsolidablerlbk']);
 		$inProgressRlbks = $emajdb->getInProgressRlbk();
-		$misc->printTable($consolidableRlbks, $columnsConsRlbk, $actions, 'consolidableRlbk', $lang['strnorlbk']);
+		$misc->printTable($consolidableRlbks, $columnsConsRlbk, $actions, 'consolidableRlbk', $lang['strnorlbk'], null, array('sorter' => true, 'filter' => true));
 	}
 
 	/**

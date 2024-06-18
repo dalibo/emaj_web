@@ -1563,7 +1563,7 @@
 							if (isset($column['info']))
 								echo "<img src=\"{$this->icon('Info-inv')}\" alt=\"info\" class=\"info\" title=\"{$column['info']}\">";
 							echo "</th>\n";
-							// when the data column has a 'sorter_text_extraction' attribute set to 'img_alt' or 'span_text',
+							// when the data column has a 'sorter_text_extraction' attribute set to 'img_alt' or 'span_text' or 'div_title',
 							//   add a function to extract either the alt attribute of images or the text content of the span
 							//     to build the text that tablesorter will use to sort
 							if ($sorter && isset($column['sorter_text_extraction'])) {
@@ -1571,6 +1571,8 @@
 									$textExtractionJS .= "\t\t\t\t{$colnum}: function(node) {return $(node).find('img').attr('alt');},\n";
 								} elseif ($column['sorter_text_extraction'] == 'span_text') {
 									$textExtractionJS .= "\t\t\t\t{$colnum}: function(node) {return $(node).find('span').text();},\n";
+								} elseif ($column['sorter_text_extraction'] == 'div_title') {
+									$textExtractionJS .= "\t\t\t\t{$colnum}: function(node) {return $(node).find('div').find('div').attr('title');},\n";
 								}
 							}
 							// When the column is of type 'spanned' with a 'dateformat' parameter, force a simple text sort

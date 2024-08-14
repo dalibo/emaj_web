@@ -811,24 +811,24 @@
 	// Triggers list
 	$lang['strtrigger'] = 'Trigger';
 	$lang['strtriggers'] = 'Triggers';
-	$lang['strnotriggerontable'] = 'The table has no trigger.';
-	$lang['strapptriggers'] = 'Application triggers';
-	$lang['strapptriggershelp'] = 'List of triggers in the database, excluding system and E-Maj triggers.';
-	$lang['strnoapptrigger'] = 'No application trigger in the database.';
-	$lang['strexecorder'] = 'Exec. order';
-	$lang['strtriggeringevent'] = 'Triggering event';
-	$lang['strcalledfunction'] = 'Called function';
-	$lang['strisemaj'] = 'E-Maj?';
-	$lang['strisautodisable'] = 'Auto disable';
-	$lang['strisautodisablehelp'] = 'Indicate whether the trigger is automatically disabled at E-maj rollback time (default = ON = Yes)';
-	$lang['strtriggerautook'] = 'The trigger %s for the table %s.%s will be automatically disabled at E-Maj rollbacks time.';
-	$lang['strtriggernoautook'] = 'The trigger %s for the table %s.%s will NOT be automatically disabled at E-Maj rollbacks time.';
-	$lang['strtriggerprocerr'] = 'An error occured while processing the trigger %s of the table %s.%s.';
-	$lang['strnoselectedtriggers'] = 'No selected trigger.';
-	$lang['strtriggersautook'] = '%s new triggers will be automatically disabled at E-Maj rollbacks time.';
-	$lang['strtriggersnoautook'] = '%s new triggers will NOT be automatically disabled at E-Maj rollbacks time.';
-	$lang['strorphantriggersexist'] = 'The table that contains the identifiers of triggers not to be automatically disabled at E-Maj rollbacks (emaj_ignored_app_trigger) references schemas, tables or triggers that do not exist anymore.';
-	$lang['strtriggersremovedok'] = '%s triggers have been removed.';
+	$lang['strnotriggerontable'] = 'La table n\'a pas de trigger.';
+	$lang['strapptriggers'] = 'Triggers applicatifs';
+	$lang['strapptriggershelp'] = 'Liste des triggers de la base de données, hors triggers système et E-Maj.';
+	$lang['strnoapptrigger'] = 'Aucun trigger applicatif dans la base de données.';
+	$lang['strexecorder'] = 'Ordre Exec';
+	$lang['strtriggeringevent'] = 'Événement déclencheur';
+	$lang['strcalledfunction'] = 'Fonction appelée';
+	$lang['strisemaj'] = 'E-Maj ?';
+	$lang['strisautodisable'] = 'Désactivation<br>auto';
+	$lang['strisautodisablehelp'] = 'Indique si le trigger est désactivé automatiquement lors des rollbacks E-Maj (défaut = ON = Oui)';
+	$lang['strtriggerautook'] = 'Le trigger %s de la table %s.%s sera automatiquement désactivé lors des rollbacks E-Maj.';
+	$lang['strtriggernoautook'] = 'Le trigger %s de la table %s.%s ne sera PAS automatiquement désactivé lors des rollbacks E-Maj.';
+	$lang['strtriggerprocerr'] = 'Une erreur est survenue dans le traitement du trigger %s de la table %s.%s.';
+	$lang['strnoselectedtriggers'] = 'Aucun trigger sélectionné.';
+	$lang['strtriggersautook'] = '%s nouveaux triggers seront automatiquement désactivés lors des rollbacks E-Maj.';
+	$lang['strtriggersnoautook'] = '%s nouveaux triggers ne seront PAS automatiquement désactivés lors des rollbacks E-Maj.';
+	$lang['strorphantriggersexist'] = 'La table qui contient les identifiants de triggers à ne pas désactiver automatiquement lors des rollbacks E-Maj (emaj_ignored_app_trigger) référence des schémas, tables ou triggers qui n\'existent plus.';
+	$lang['strtriggersremovedok'] = '%s triggers ont été retirés.';
 
 // E-Maj Rollbacks
 

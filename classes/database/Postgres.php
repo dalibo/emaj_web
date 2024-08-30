@@ -1277,6 +1277,6 @@ class Postgres extends ADODB_base {
 	function hasDatabaseCollation() { return true; }
 	function hasByteaHexDefault() { return true; } 
 	function hasWithOids() { return false; }
-	
+
 }
 ?>

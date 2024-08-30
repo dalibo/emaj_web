@@ -920,6 +920,7 @@
 					$emajNotAvail = (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
 						&& $emajdb->getNumEmajVersion() >= $oldest_supported_emaj_version_num));
 					$hideGroupConf = $emajNotAvail || !($emajdb->isEmaj_Adm()) || $emajdb->getNumEmajVersion() >= 30200;
+					$hideActivity = $emajNotAvail || !($emajdb->isEmaj_Viewer()) || $emajdb->getNumEmajVersion() < 40500;
 
 					$tabs = array (
 						'emajgroups' => array (
@@ -971,6 +972,15 @@
 							),
 							'hide' => $emajNotAvail,
 							'icon' => 'EmajRollback',
+						),
+						'emajactivity' => array (
+							'title' => $lang['stractivity'],
+							'url' => 'activity.php',
+							'urlvars' => array(
+								'subject' => 'database'
+							),
+							'hide' => $hideActivity,
+							'icon' => 'Activity',
 						),
 						'emajenvir' => array (
 							'title' => $lang['strenvir'],

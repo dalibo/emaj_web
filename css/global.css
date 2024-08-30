@@ -141,6 +141,10 @@ input[type="file"] {
 	opacity: 0;
 	pointer-events: none;
 }
+input[type=number] {
+	width: 5em;
+	text-align: center;
+}
 input[type=number].priority {
 	width: 5em;
 	text-align: right;
@@ -684,6 +688,8 @@ div.form-container-5c {
 div.form-header {
 	white-space: nowrap;
 	text-align: center;
+	text-decoration-line: underline;
+	font-style: italic;
 }
 div.form-label {
 	white-space: nowrap;

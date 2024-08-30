@@ -27,6 +27,7 @@
 	$lang['straction'] = 'Action';
 	$lang['stractions'] = 'Actions';
 	$lang['stractionsonselectedobjects'] = 'Actions sur les objets (%s)';
+	$lang['stractivity'] = 'Activité';
 	$lang['strall'] = 'Tous';
 	$lang['strassign'] = 'Affecter';
 	$lang['strassigned'] = 'Affectée';
@@ -50,6 +51,7 @@
 	$lang['strdefault'] = 'Défaut';
 	$lang['strdelete'] = 'Effacer';
 	$lang['strdifferentvalues'] = '(%s valeurs différentes)';
+	$lang['strdisplay'] = 'Afficher';
 	$lang['strdownload'] = 'Télécharger';
 	$lang['strdrop'] = 'Supprimer';
 	$lang['stredit'] = 'Éditer';
@@ -86,6 +88,7 @@
 	$lang['strlogsession'] = 'Session de log';
 	$lang['strlogsize'] = 'Taille log';
 	$lang['strmark'] = 'Marque';
+	$lang['strmarks'] = 'Marques';
 	$lang['strmessage'] = 'Message';
 	$lang['strmove'] = 'Déplacer';
 	$lang['strname'] = 'Nom';
@@ -126,6 +129,8 @@
 	$lang['strruntime'] = 'Temps d\'exécution total : %s ms';
 	$lang['strselect'] = 'Sélectionner';
 	$lang['strselectfile'] = 'Sélectionner un fichier';
+	$lang['strsequence'] = 'Séquence';
+	$lang['strsequences'] = 'Séquences';
 	$lang['strsetcomment'] = 'Commenter';
 	$lang['strsince'] = 'Depuis';
 	$lang['strsql'] = 'SQL';
@@ -134,6 +139,8 @@
 	$lang['strstartmark'] = 'Marque début';
 	$lang['strstate'] = 'État';
 	$lang['strstop'] = 'Arrêter';
+	$lang['strtable'] = 'Table';
+	$lang['strtables'] = 'Tables';
 	$lang['strtablesgroup'] = 'Groupe de tables';
 	$lang['strtablespace'] = 'Tablespace';
 	$lang['strtrue'] = 'TRUE';
@@ -257,9 +264,6 @@
 	$lang['strlogginggrouphelp'] = 'Quand un groupe de tables est dans l\'état \'démarré\', les insertions, modifications et suppression de lignes sur ses tables sont enregistrées.';
  	$lang['stridlegrouphelp'] = 'Quand un groupe de tables est dans l\'état \'arrêté\', les insertions, modifications et suppressions de lignes sur ses tables ne sont PAS enregistrées.';
 	$lang['strconfiguredgrouphelp'] = 'La configuration d\'un groupe définit les tables et séquences qui vont le constituer. Une fois \'configuré\', le groupe doit être \'créé\', afin de préparer tous les objets nécessaires à son utilisation (tables de log, fonctions,...).';
-	$lang['strnbtbl'] = 'Tables';
-	$lang['strnbseq'] = 'Séquences';
-	$lang['strnbmark'] = 'Marques';
 	$lang['strApplyConfChanges'] = 'Appliquer changements conf';
 	$lang['strnoidlegroup'] = 'Il n\'y a actuellement aucun groupe de tables en état "arrêté".';
 	$lang['strnologginggroup'] = 'Il n\'y a actuellement aucun groupe de tables en état "démarré".';
@@ -685,8 +689,6 @@
 	$lang['strnoschemas'] = 'Aucun schéma trouvé.';
 
 	// Tables
-	$lang['strtable'] = 'Table';
-	$lang['strtables'] = 'Tables';
 	$lang['strtableslist'] = 'Tables du schéma "%s"';
 	$lang['strnotables'] = 'Aucune table trouvée.';
 	$lang['strestimatedrowcount'] = 'Nb lignes estimé';
@@ -697,8 +699,6 @@
 	$lang['strtblnogroupownership'] = 'La table ne fait actuellement partie d\'aucun groupe de tables.';
 
 	// Sequences
-	$lang['strsequence'] = 'Séquence';
-	$lang['strsequences'] = 'Séquences';
 	$lang['strsequenceslist'] = 'Séquences du schéma "%s"';
 	$lang['strnosequences'] = 'Aucune séquence trouvée.';
 	$lang['strseqproperties'] = 'Propriétés de la séquence "%s.%s"';
@@ -896,6 +896,36 @@
 	$lang['strcommentrollback'] = 'Entrer, modifier ou supprimer un commentaire pour le rollback %s';
 	$lang['strcommentrollbackok'] = 'Le commentaire a été enregistré pour le rollback %s.';
 	$lang['strcommentrollbackerr'] = 'Erreur lors de l\'enregistrement du commentaire pour le rollback %s !';
+
+// Activity
+
+	$lang['strchangesactivity'] = 'Activité de mises à jour E-Maj';
+
+	// Form
+	$lang['strincluderegexp'] = 'Regexp d\'inclusion';
+	$lang['strincluderegexphelp'] = 'Expression rationelle permettant de sélectionner les groupes, tables ou séquences à filtrer. Une chaîne vide équivaut à .* et inclut tous les objets. Pour les tables et séquences, le filtrage porte sur les noms préfixés par leur schéma. Voir la documentation PostgreSQL pour les syntaxes possibles.';
+	$lang['strexcluderegexp'] = 'Regexp d\'exclusion';
+	$lang['strexcluderegexphelp'] = 'Expression rationelle permettant d\'exclure les groupes, tables ou séquences à filtrer. Une chaîne vide équivaut à aucune exclusion. Pour les tables et séquences, le filtrage porte sur les noms préfixés par leur schéma. Voir la documentation PostgreSQL pour les syntaxes possibles.';
+	$lang['strmaxrows'] = 'Nb lignes maximum';
+	$lang['strmaxrowshelp'] = 'Définit le nombre maximum de lignes à afficher dans chacun des tableaux des groupes, tables et séquences, ces lignes étant triées par ordre décroissant de mises à jour, soit depuis la dernière marque, soit depuis l\'affichage précédent. La valeur 0 supprime le tableau correspondant.';
+	$lang['strmainsortcriteria'] = 'Critère de tri principal : Mises à jour depuis';
+	$lang['strlatestmark'] = 'Dernière marque';
+	$lang['strpreviousdisplay'] = 'Affichage précédent';
+
+	// Display
+	$lang['strerrortrapped'] = 'Une erreur a été interceptée lors de la consultation des séquences.';
+	$lang['strglobalactivitytitle'] = 'Activité E-Maj globale';
+	$lang['strglobalactivity'] = 'Depuis %s sec, nb MàJ = %s (%s MàJ / sec)';
+	$lang['strlogginggroupstitle'] = 'Groupes démarrés (%s/%s)';
+	$lang['strnogroupselected'] = 'Aucun groupe de tables n\'est sélectionné.';
+	$lang['strtablesinlogginggroups'] = 'Tables des groupes démarrés (%s/%s)';
+	$lang['strnotableselected'] = 'Aucune table n\'est sélectionnée.';
+	$lang['strsequencesinlogginggroups'] = 'Séquences des groupes démarrés (%s/%s)';
+	$lang['strnosequenceselected'] = 'Aucune séquence n\'est sélectionnée.';
+	$lang['strchangessincemark'] = 'MàJ depuis la marque';
+	$lang['strcpssincemark'] = 'MàJ / sec depuis la marque';
+	$lang['strchanges'] = 'MàJ';
+	$lang['strcps'] = 'MàJ / sec';
 
 // E-Maj environment
 

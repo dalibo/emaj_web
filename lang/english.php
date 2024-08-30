@@ -27,6 +27,7 @@
 	$lang['straction'] = 'Action';
 	$lang['stractions'] = 'Actions';
 	$lang['stractionsonselectedobjects'] = 'Actions on objects (%s)';
+	$lang['stractivity'] = 'Activity';
 	$lang['strall'] = 'All';
 	$lang['strassign'] = 'Assign';
 	$lang['strassigned'] = 'Assigned';
@@ -50,6 +51,7 @@
 	$lang['strdefault'] = 'Default';
 	$lang['strdelete'] = 'Delete';
 	$lang['strdifferentvalues'] = '(%s different values)';
+	$lang['strdisplay'] = 'Display';
 	$lang['strdownload'] = 'Download';
 	$lang['strdrop'] = 'Drop';
 	$lang['stredit'] = 'Edit';
@@ -86,6 +88,7 @@
 	$lang['strlogsession'] = 'Log session';
 	$lang['strlogsize'] = 'Log size';
 	$lang['strmark'] = 'Mark';
+	$lang['strmarks'] = 'Marks';
 	$lang['strmessage'] = 'Message';
 	$lang['strmove'] = 'Move';
 	$lang['strname'] = 'Name';
@@ -126,6 +129,8 @@
 	$lang['strruntime'] = 'Total runtime: %s ms';
 	$lang['strselect'] = 'Select';
 	$lang['strselectfile'] = 'Select a file';
+	$lang['strsequence'] = 'Sequence';
+	$lang['strsequences'] = 'Sequences';
 	$lang['strsetcomment'] = 'Set a comment';
 	$lang['strsince'] = 'Since';
 	$lang['strsql'] = 'SQL';
@@ -134,6 +139,8 @@
 	$lang['strstartmark'] = 'Start mark';
 	$lang['strstate'] = 'State';
 	$lang['strstop'] = 'Stop';
+	$lang['strtable'] = 'Table';
+	$lang['strtables'] = 'Tables';
 	$lang['strtablesgroup'] = 'Tables group';
 	$lang['strtablespace'] = 'Tablespace';
 	$lang['strtrue'] = 'TRUE';
@@ -257,9 +264,6 @@
 	$lang['strlogginggrouphelp'] = 'When a tables group is in \'logging\' state, the row insertions, updates and deletions on its tables are recorded.';
  	$lang['stridlegrouphelp'] = 'When a tables group is in \'idle\' state, the row insertions, updates and deletions on its tables are NOT recorded.';
 	$lang['strconfiguredgrouphelp'] = 'The group configuration defines the tables and sequences that will compose it. Once \'configured\', the group must be \'created\' in order to prepare all abjects that will be needed for its use (log tables, functions,...).';
-	$lang['strnbtbl'] = 'Tables';
-	$lang['strnbseq'] = 'Sequences';
-	$lang['strnbmark'] = 'Marks';
 	$lang['strApplyConfChanges'] = 'Apply conf changes';
 	$lang['strnoidlegroup'] = 'No tables group is currently in idle state.';
 	$lang['strnologginggroup'] = 'No tables group is currently in logging state.';
@@ -685,8 +689,6 @@
 	$lang['strnoschemas'] = 'No schemas found.';
 
 	// Tables
-	$lang['strtable'] = 'Table';
-	$lang['strtables'] = 'Tables';
 	$lang['strtableslist'] = 'Schema "%s" tables';
 	$lang['strnotables'] = 'No tables found.';
 	$lang['strestimatedrowcount'] = 'Estimated row count';
@@ -697,8 +699,6 @@
 	$lang['strtblnogroupownership'] = 'The table does not currently belong to any tables group.';
 
 	// Sequences
-	$lang['strsequence'] = 'Sequence';
-	$lang['strsequences'] = 'Sequences';
 	$lang['strsequenceslist'] = 'Schema "%s" sequences';
 	$lang['strnosequences'] = 'No sequences found.';
 	$lang['strseqproperties'] = 'Sequence "%s.%s" properties';
@@ -896,6 +896,36 @@
 	$lang['strcommentrollback'] = 'Enter, modify or erase the comment for the rollback %s';
 	$lang['strcommentrollbackok'] = 'The comment for the rollback %s has been recorded.';
 	$lang['strcommentrollbackerr'] = 'Error during comment recording for the rollback %s!';
+
+// Activity
+
+	$lang['strchangesactivity'] = 'E-Maj changes activity';
+
+	// Form
+	$lang['strincluderegexp'] = 'Include regexp';
+	$lang['strincluderegexphelp'] = 'Regular expression allowing to select groups, tables or sequences to filter. An empty string equals .* and includes all objects. For tables and sequences, names are schema qualified. See the PostgreSQL documentation for availables syntaxes.';
+	$lang['strexcluderegexp'] = 'Exclude regexp';
+	$lang['strexcluderegexphelp'] = 'Regular expression allowing to exclude groups, tables or sequences to filter. An empty string means no exclusion. For tables and sequences, names are schema qualified. See the PostgreSQL documentation for availables syntaxes.';
+	$lang['strmaxrows'] = 'Maximum #rows';
+	$lang['strmaxrowshelp'] = 'Defines the maximum number of rows to display for groups, tables and sequences lists, these rows being sorted by changes either since the latest mark or since the previous display, in descending order. Value 0 deletes the corresponding list.';
+	$lang['strmainsortcriteria'] = 'Main sort criteria: changes since';
+	$lang['strlatestmark'] = 'Latest mark';
+	$lang['strpreviousdisplay'] = 'Previous display';
+
+	// Display
+	$lang['strerrortrapped'] = 'An error has been trapped while reading sequences.';
+	$lang['strglobalactivitytitle'] = 'Global E-Maj activity';
+	$lang['strglobalactivity'] = 'Since %s sec, #changes = %s (%s c/s)';
+	$lang['strlogginggroupstitle'] = 'Logging groups (%s/%s)';
+	$lang['strnogroupselected'] = 'No tables group selected.';
+	$lang['strtablesinlogginggroups'] = 'Tables in logging groups (%s/%s)';
+	$lang['strnotableselected'] = 'No table selected.';
+	$lang['strsequencesinlogginggroups'] = 'Sequences in logging groups (%s/%s)';
+	$lang['strnosequenceselected'] = 'No sequence selected.';
+	$lang['strchangessincemark'] = 'Changes since mark';
+	$lang['strcpssincemark'] = 'Changes / sec since mark';
+	$lang['strchanges'] = 'Changes';
+	$lang['strcps'] = 'Changes / sec';
 
 // E-Maj environment
 

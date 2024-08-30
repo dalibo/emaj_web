@@ -501,12 +501,12 @@
 				'sorter_text_extraction' => 'span_text',
 			),
 			'nbtbl' => array(
-				'title' => $lang['strnbtbl'],
+				'title' => $lang['strtables'],
 				'field' => field('group_nb_table'),
 				'type'  => 'numeric'
 			),
 			'nbseq' => array(
-				'title' => $lang['strnbseq'],
+				'title' => $lang['strsequences'],
 				'field' => field('group_nb_sequence'),
 				'type'  => 'numeric'
 			),
@@ -522,7 +522,7 @@
 				'filter' => false,
 			),
 			'nbmark' => array(
-				'title' => $lang['strnbmark'],
+				'title' => $lang['strmarks'],
 				'field' => field('nb_mark'),
 				'type'  => 'numeric'
 			),
@@ -734,12 +734,12 @@
 				'title' => $lang['stractions'],
 			),
 			'nbtbl' => array(
-				'title' => $lang['strnbtbl'],
+				'title' => $lang['strtables'],
 				'field' => field('group_nb_table'),
 				'type'  => 'numeric'
 			),
 			'nbseq' => array(
-				'title' => $lang['strnbseq'],
+				'title' => $lang['strsequences'],
 				'field' => field('group_nb_sequence'),
 				'type'  => 'numeric'
 			),
@@ -956,12 +956,12 @@
 						),
 			),
 			'nbtbl' => array(
-				'title' => $lang['strnbtbl'],
+				'title' => $lang['strtables'],
 				'field' => field('group_nb_table'),
 				'type'  => 'numeric'
 			),
 			'nbseq' => array(
-				'title' => $lang['strnbseq'],
+				'title' => $lang['strsequences'],
 				'field' => field('group_nb_sequence'),
 				'type'  => 'numeric'
 			),
@@ -990,7 +990,7 @@
 		}
 		$columns = array_merge($columns, array(
 			'nbmark' => array(
-				'title' => $lang['strnbmark'],
+				'title' => $lang['strmarks'],
 				'field' => field('nb_mark'),
 				'type'  => 'numeric'
 			),
@@ -2150,7 +2150,7 @@
 					'sorter_text_extraction' => 'span_text',
 				),
 				'nb_marks' => array(
-					'title' => $lang['strnbmark'],
+					'title' => $lang['strmarks'],
 					'field' => field('lses_marks'),
 					'type'  => 'numeric'
 				),
@@ -2866,12 +2866,12 @@
 				'filter' => false,
 			),
 			'nbtbl' => array(
-				'title' => $lang['strnbtbl'],
+				'title' => $lang['strtables'],
 				'field' => field('group_nb_table'),
 				'type'  => 'numeric'
 			),
 			'nbseq' => array(
-				'title' => $lang['strnbseq'],
+				'title' => $lang['strsequences'],
 				'field' => field('group_nb_sequence'),
 				'type'  => 'numeric'
 			),
@@ -3084,12 +3084,12 @@
 							'filter' => false,
 						),
 						'nbtbl' => array(
-							'title' => $lang['strnbtbl'],
+							'title' => $lang['strtables'],
 							'field' => field('group_nb_table'),
 							'type'  => 'numeric'
 						),
 						'nbseq' => array(
-							'title' => $lang['strnbseq'],
+							'title' => $lang['strsequences'],
 							'field' => field('group_nb_sequence'),
 							'type'  => 'numeric'
 						),

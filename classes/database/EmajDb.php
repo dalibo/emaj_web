@@ -4187,5 +4187,139 @@ class EmajDb {
 			return $data->selectField($sql,'nbtriggers');
 		}
 	}
+
+	/**
+	 * Get the current timestamp and sequences last_values for the E-Maj Activity reporting.
+	 */
+	function emajStatGetSeqLastVal($groupsIncludeFilter, $groupsExcludeFilter,
+							$tablesIncludeFilter, $tablesExcludeFilter,
+							$sequencesIncludeFilter, $sequencesExcludeFilter) {
+		global $data;
+
+		$data->clean($groupsIncludeFilter);
+		$data->clean($groupsExcludeFilter);
+		$data->clean($tablesIncludeFilter);
+		$data->clean($tablesExcludeFilter);
+		$data->clean($sequencesIncludeFilter);
+		$data->clean($sequencesExcludeFilter);
+
+		$sql = "SELECT p_key, p_value
+					FROM emaj._get_sequences_last_value(
+						'$groupsIncludeFilter', '$groupsExcludeFilter',
+						'$tablesIncludeFilter', '$tablesExcludeFilter',
+						'$sequencesIncludeFilter', '$sequencesExcludeFilter')";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Get the current timestamp and sequences last_values for the E-Maj Activity reporting.
+	 */
+	function emajStatGetGlobalCounters() {
+		global $data;
+
+		$sql = "SELECT count(*) AS nb_groups,
+					count(*) FILTER (WHERE group_is_logging) AS nb_logging_groups,
+					coalesce(sum(group_nb_table), 0) AS nb_tables,
+					coalesce(sum(group_nb_table) FILTER (WHERE group_is_logging), 0) AS nb_logged_tables,
+					coalesce(sum(group_nb_sequence), 0) AS nb_sequences,
+					coalesce(sum(group_nb_sequence) FILTER (WHERE group_is_logging), 0) AS nb_logged_sequences
+				FROM emaj.emaj_group";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Get the tables groups in logging state for the E-Maj Activity reporting.
+	 */
+	function emajStatGetGroups($groupsIncludeFilter, $groupsExcludeFilter) {
+		global $data;
+
+		$data->clean($groupsIncludeFilter);
+		$data->clean($groupsExcludeFilter);
+
+		$sql = "SELECT mark_group AS group,
+					mark_name AS latest_mark,
+					to_char(time_tx_timestamp, 'YYYY/MM/DD HH24:MI:SS') AS latest_mark_ts,
+					extract(EPOCH FROM time_tx_timestamp) AS latest_mark_epoch,
+					NULL AS changes_since_previous, NULL AS cps_since_previous,
+					NULL AS changes_since_mark, NULL AS cps_since_mark
+				FROM emaj.emaj_mark
+					JOIN emaj.emaj_time_stamp ON (time_id = mark_time_id)
+				WHERE mark_log_rows_before_next IS NULL				-- to filter the latest mark of each logging group
+				  AND mark_group ~ '$groupsIncludeFilter'
+				  AND ('$groupsExcludeFilter' = '' OR mark_group !~ '$groupsExcludeFilter')";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Get the logged tables for the E-Maj Activity reporting.
+	 */
+	function emajStatGetTables($groupsIncludeFilter, $groupsExcludeFilter, $tablesIncludeFilter, $tablesExcludeFilter) {
+		global $data;
+
+		$data->clean($groupsIncludeFilter);
+		$data->clean($groupsExcludeFilter);
+		$data->clean($tablesIncludeFilter);
+		$data->clean($tablesExcludeFilter);
+
+		$sql = "WITH filtered_group AS (
+					SELECT mark_group, mark_time_id
+						FROM emaj.emaj_mark
+							JOIN emaj.emaj_time_stamp ON (time_id = mark_time_id)
+						WHERE mark_log_rows_before_next IS NULL     -- to filter the latest mark of each logging group
+						  AND mark_group ~ '$groupsIncludeFilter'
+						  AND ('$groupsExcludeFilter' = '' OR mark_group !~ '$groupsExcludeFilter')
+				)
+					SELECT rel_schema, rel_tblseq, rel_group, tbl_log_seq_last_val AS seq_at_mark,
+						NULL AS seq_current, NULL AS seq_previous,
+						NULL AS changes_since_previous, NULL AS cps_since_previous,
+						NULL AS changes_since_mark, NULL AS cps_since_mark
+						FROM emaj.emaj_relation
+							JOIN filtered_group ON (mark_group = rel_group)
+							JOIN emaj.emaj_table ON (tbl_schema = rel_schema AND tbl_name = rel_tblseq AND tbl_time_id = mark_time_id)
+						WHERE upper_inf(rel_time_range)
+						  AND rel_kind = 'r'
+						  AND (rel_schema || '.' || rel_tblseq) ~ '$tablesIncludeFilter'
+						  AND ('$tablesExcludeFilter' = '' OR (rel_schema || '.' || rel_tblseq) !~ '$tablesExcludeFilter')";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Get the logged sequences for the E-Maj Activity reporting.
+	 */
+	function emajStatGetsequences($groupsIncludeFilter, $groupsExcludeFilter, $sequencesIncludeFilter, $sequencesExcludeFilter) {
+		global $data;
+
+		$data->clean($groupsIncludeFilter);
+		$data->clean($groupsExcludeFilter);
+		$data->clean($sequencesIncludeFilter);
+		$data->clean($sequencesExcludeFilter);
+
+		$sql = "WITH filtered_group AS (
+					SELECT mark_group, mark_time_id
+						FROM emaj.emaj_mark
+							JOIN emaj.emaj_time_stamp ON (time_id = mark_time_id)
+						WHERE mark_log_rows_before_next IS NULL     -- to filter the latest mark of each logging group
+						  AND mark_group ~ '$groupsIncludeFilter'
+						  AND ('$groupsExcludeFilter' = '' OR mark_group !~ '$groupsExcludeFilter')
+				)
+					SELECT rel_schema, rel_tblseq, rel_group, sequ_last_val AS seq_at_mark, sequ_increment,
+						NULL AS seq_current, NULL AS seq_previous,
+						NULL AS changes_since_previous, NULL AS cps_since_previous,
+						NULL AS changes_since_mark, NULL AS cps_since_mark
+						FROM emaj.emaj_relation
+							JOIN filtered_group ON (mark_group = rel_group)
+							JOIN emaj.emaj_sequence ON (sequ_schema = rel_schema AND sequ_name = rel_tblseq AND sequ_time_id = mark_time_id)
+						WHERE upper_inf(rel_time_range)
+						  AND rel_kind = 'S'
+						  AND (rel_schema || '.' || rel_tblseq) ~ '$sequencesIncludeFilter'
+						  AND ('$sequencesExcludeFilter' = '' OR (rel_schema || '.' || rel_tblseq) !~ '$sequencesExcludeFilter')";
+
+		return $data->selectSet($sql);
+	}
+
 }
 ?>

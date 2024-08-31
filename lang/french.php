@@ -908,14 +908,14 @@
 	$lang['strexcluderegexphelp'] = 'Expression rationelle permettant d\'exclure les groupes, tables ou séquences à filtrer. Une chaîne vide équivaut à aucune exclusion. Pour les tables et séquences, le filtrage porte sur les noms préfixés par leur schéma. Voir la documentation PostgreSQL pour les syntaxes possibles.';
 	$lang['strmaxrows'] = 'Nb lignes maximum';
 	$lang['strmaxrowshelp'] = 'Définit le nombre maximum de lignes à afficher dans chacun des tableaux des groupes, tables et séquences, ces lignes étant triées par ordre décroissant de mises à jour, soit depuis la dernière marque, soit depuis l\'affichage précédent. La valeur 0 supprime le tableau correspondant.';
-	$lang['strmainsortcriteria'] = 'Critère de tri principal : Mises à jour depuis';
+	$lang['strmainsortcriteria'] = 'Critère de tri principal : Nb mises à jour depuis';
 	$lang['strlatestmark'] = 'Dernière marque';
 	$lang['strpreviousdisplay'] = 'Affichage précédent';
 
 	// Display
 	$lang['strerrortrapped'] = 'Une erreur a été interceptée lors de la consultation des séquences.';
-	$lang['strglobalactivitytitle'] = 'Activité E-Maj globale';
-	$lang['strglobalactivity'] = 'Depuis %s sec, nb MàJ = %s (%s MàJ / sec)';
+	$lang['strglobalactivity'] = 'Activité globale';
+	$lang['strglobalactivitydetails'] = 'Depuis %s sec, nb MàJ = %s (%s MàJ / sec)';
 	$lang['strlogginggroupstitle'] = 'Groupes démarrés (%s/%s)';
 	$lang['strnogroupselected'] = 'Aucun groupe de tables n\'est sélectionné.';
 	$lang['strtablesinlogginggroups'] = 'Tables des groupes démarrés (%s/%s)';

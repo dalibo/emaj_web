@@ -908,14 +908,14 @@
 	$lang['strexcluderegexphelp'] = 'Regular expression allowing to exclude groups, tables or sequences to filter. An empty string means no exclusion. For tables and sequences, names are schema qualified. See the PostgreSQL documentation for availables syntaxes.';
 	$lang['strmaxrows'] = 'Maximum #rows';
 	$lang['strmaxrowshelp'] = 'Defines the maximum number of rows to display for groups, tables and sequences lists, these rows being sorted by changes either since the latest mark or since the previous display, in descending order. Value 0 deletes the corresponding list.';
-	$lang['strmainsortcriteria'] = 'Main sort criteria: changes since';
+	$lang['strmainsortcriteria'] = 'Main sort criteria: #changes since';
 	$lang['strlatestmark'] = 'Latest mark';
 	$lang['strpreviousdisplay'] = 'Previous display';
 
 	// Display
 	$lang['strerrortrapped'] = 'An error has been trapped while reading sequences.';
-	$lang['strglobalactivitytitle'] = 'Global E-Maj activity';
-	$lang['strglobalactivity'] = 'Since %s sec, #changes = %s (%s c/s)';
+	$lang['strglobalactivity'] = 'Global activity';
+	$lang['strglobalactivitydetails'] = 'Since %s sec, #changes = %s (%s c/s)';
 	$lang['strlogginggroupstitle'] = 'Logging groups (%s/%s)';
 	$lang['strnogroupselected'] = 'No tables group selected.';
 	$lang['strtablesinlogginggroups'] = 'Tables in logging groups (%s/%s)';

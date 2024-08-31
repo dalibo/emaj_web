@@ -123,9 +123,9 @@
 
 			// Display the global data line
 
-			$misc->printTitle($lang['strglobalactivitytitle']);
+			$misc->printTitle($lang['strglobalactivity']);
 
-			echo "<p>$currentTime - " . sprintf($lang['strglobalactivity'], $lastRefreshIntervalStr, $globalChanges, $globalCps) . "</p>";
+			echo "<p>$currentTime - " . sprintf($lang['strglobalactivitydetails'], $lastRefreshIntervalStr, $globalChanges, $globalCps) . "</p>";
 	
 			// Display the tables groups
 

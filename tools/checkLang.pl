@@ -196,7 +196,6 @@ sub checkOneLanguageFile {
 		if (! defined($otherStrings{$stringId})) {
 			$otherStrings{$stringId} = $lineNumber;
 			$otherStringsUsage{$stringId} = 0;
-			$nbOtherString++;
 		} else {
 			print "*** In the $fileName file, the string '$stringId' in line $lineNumber is already defined in line $otherStrings{$stringId}\n";
 			$nbDuplicateOtherString++;

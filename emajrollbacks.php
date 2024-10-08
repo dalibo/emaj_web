@@ -622,21 +622,22 @@
 				'estimatedDuration' => array(
 					'upper_title' => $lang['strestimates'],
 					'upper_title_colspan' => 4,
+					'upper_title_info' => $lang['strrlbkestimmethodhelp'],
 					'title' => $lang['strduration'],
 					'field' => field('rlbp_estimated_duration'),
 					'type' => 'spanned',
 					'params'=> array(
 						'intervalformat' => $lang['strintervalformat'],
-						'class' => 'tooltip left-aligned-tooltip rlbkEstimates',
+						'class' => 'tooltip left-aligned-tooltip',
 					),
 				),
 				'estimatedQuantity' => array(
 					'title' => $lang['strquantity'],
 					'field' => field('rlbp_estimated_quantity'),
-					'params'=> array('class' => 'rlbkEstimates', 'align' => 'right'),
+					'params'=> array('align' => 'right'),
 				),
 				'estimateQuality' => array(
-					'title' => 'Q',
+					'title' => $lang['strabbrquality'],
 					'field' => field('rlbp_estimate_quality'),
 					'type'	=> 'callback',
 					'params'=> array(
@@ -648,7 +649,7 @@
 				'estimateMethod' => array(
 					'title' => $lang['strmethod'],
 					'field' => field('rlbp_estimate_method'),
-					'params'=> array('class' => 'rlbkEstimates', 'align' => 'center'),
+					'params'=> array('align' => 'center'),
 				),
 			));
 		}
@@ -836,21 +837,6 @@
 		if ($rlbkSteps->recordCount() > 0) {
 			$misc->printTitle($lang['strrlbkplanning'] . "&nbsp;&nbsp;<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['strrlbkplanninghelp']}\"/>");
 
-			// Button to hide or show estimates columns
-			echo "<div style=\"margin:13px\">\n";
-			echo "\t<form id=\"showHideEstimates\" action=\"emajrollbacks.php?action=toggle_estimates&amp;{$misc->href}\"";
-			echo " method=\"post\" enctype=\"multipart/form-data\">\n";
-			if ($_SESSION['emaj']['RlbkShowEstimates'])
-				$buttonText = $lang['strhideestimates'];
-			else
-				$buttonText = $lang['strshowestimates'];
-			echo "<input type=\"hidden\" name=\"rlbkid\" value=\"{$_REQUEST['rlbkid']}\" />\n";
-			echo "\t\t<input type=\"submit\" name=\"showHideEstimates\" value=\"{$buttonText}\">\n";
-			if ($_SESSION['emaj']['RlbkShowEstimates'])
-				echo "&nbsp;&nbsp;<img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strrlbkestimmethodhelp']}\"/>\n";
-			echo "\t</form>\n";
-			echo "</div>\n";
-
 			$misc->printTable($rlbkSteps, $columnsSteps, $actions, 'detailRlbkSteps', null, null, array('sorter' => true, 'filter' => true));
 
 		} else {
@@ -964,15 +950,6 @@
 			show_rollbacks('',sprintf($lang['strconsolidaterlbkerr'], htmlspecialchars($_POST['mark']), htmlspecialchars($_POST['group'])));
 	}
 
-	/**
-	 * Toggle the show_estimates and hide_estimates switch
-	 */
-	function toggle_estimates() {
-
-		$_SESSION['emaj']['RlbkShowEstimates'] = (! $_SESSION['emaj']['RlbkShowEstimates']);
-		show_rollback();
-	}
-
 	// redirect to the emajenvir.php page if the emaj extension is not installed or accessible or is too old
 	if (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
 		&& $emajdb->getNumEmajVersion() >= $oldest_supported_emaj_version_num)) {
@@ -1009,9 +986,6 @@
 			break;
 		case 'show_rollback':
 			show_rollback();
-			break;
-		case 'toggle_estimates':
-			toggle_estimates();
 			break;
 		default:
 			if (isset($_REQUEST['rlbkid']))

@@ -873,11 +873,10 @@
 	$lang['strrlbkexecreport'] = 'Rapport d\'exécution';
 	$lang['strrlbkplanning'] = 'Planification';
 	$lang['strrlbkplanninghelp'] = 'Les principales étapes élémentaires d\'exécution du Rollback E-Maj. Ne sont pas inclus : la planification et la pose des verrous sur les tables en début d\'opération et, pour les versions emaj < 4.2, le traitement des séquences en fin d\'opération.';
-	$lang['strrlbkestimmethodhelp'] = 'En phase de planification, la durée de chaque étape est estimée, en utilisant en priorité des statistiques d\'exécutions similaires passées, avec le même ordre de grandeur de quantités à traiter (STAT+), ou des ordres de grandeur différentes (STAT), ou, à défaut, les paramètres de l\'extension (PARAM). La colonne Q évalue la qualité des estimations de durée.';
+	$lang['strrlbkestimmethodhelp'] = 'En phase de planification, la durée de chaque étape est estimée, en utilisant en priorité des statistiques d\'exécutions similaires passées, avec le même ordre de grandeur de quantités à traiter (STAT+), ou des ordres de grandeur différentes (STAT), ou, à défaut, les paramètres de l\'extension (PARAM). La colonne Q évalue la qualité des estimations de durée des étapes de plus de 10ms.';
 	$lang['strnorlbkstep'] = 'Pas d\'étape élémentaire pour ce rollback.';
-	$lang['strhideestimates'] = 'Cacher estimations';
-	$lang['strshowestimates'] = 'Voir estimations';
 	$lang['strrlbkstep'] = 'Étape';
+	$lang['strabbrquality'] = 'Q';
 	$lang['strmethod'] = 'Méthode';
 	$lang['strrlbksequences'] = 'Effectuer le rollback des séquences';
 	$lang['strrlbkdisapptrg'] = 'Désactiver le trigger %s';

@@ -786,11 +786,6 @@ div.form-param-def-value {
 	font-style: italic;
 }
 
-.rlbkEstimates {
-	font-size: 0.9em;
-	font-style: italic;
-}
-
 /** Specific div for the long objects lists (tables, sequences, marks, ...) **/
 div.longlist {
 	overflow: auto;

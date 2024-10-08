@@ -1583,7 +1583,11 @@
 							$colspanClause = '';
 							$colToBypass = 0;
 						}
-						echo "<th class=\"data sorter-false filter-false\" $colspanClause>{$column['upper_title']}</th>\n";
+						echo "<th class=\"data sorter-false filter-false\" $colspanClause>{$column['upper_title']}\n";
+						// additional info if requested
+						if (isset($column['upper_title_info']))
+							echo "<img src=\"{$this->icon('Info-inv')}\" alt=\"info\" class=\"info\" title=\"{$column['upper_title_info']}\">";
+						echo "</th>\n";
 						$colnum = $colnum + 1 + $colToBypass;
 					} else {
 						// Regular column

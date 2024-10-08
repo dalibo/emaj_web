@@ -148,23 +148,28 @@
 						'field' => field('latest_mark_ts'),
 					),
 					'changes_since_mark' => array(
-						'title' => $lang['strchangessincemark'],
+						'upper_title' => $lang['strsincelatestmark'],
+						'upper_title_colspan' => 2,
+						'title' => $lang['strchanges'],
 						'field' => field('changes_since_mark'),
+						'type'  => 'numeric',
 					),
 					'cps_since_mark' => array(
-						'title' => $lang['strcpssincemark'],
+						'title' => $lang['strchangespersecond'],
 						'field' => field('cps_since_mark'),
+						'type'  => 'numeric',
 					),
 					'changes_since_previous' => array(
+						'upper_title' => $lang['strsincepreviousdisplay'],
+						'upper_title_colspan' => 2,
 						'title' => $lang['strchanges'],
 						'field' => field('changes_since_previous'),
+						'type'  => 'numeric',
 					),
 					'cps_since_previous' => array(
-						'title' => $lang['strcps'],
+						'title' => $lang['strchangespersecond'],
 						'field' => field('cps_since_previous'),
-					),
-					'actions' => array(
-						'title' => $lang['stractions'],
+						'type'  => 'numeric',
 					),
 				);
 		
@@ -193,23 +198,28 @@
 						'field' => field('rel_group'),
 					),
 					'changes_since_mark' => array(
-						'title' => $lang['strchangessincemark'],
+						'upper_title' => $lang['strsincelatestmark'],
+						'upper_title_colspan' => 2,
+						'title' => $lang['strchanges'],
 						'field' => field('changes_since_mark'),
+						'type'  => 'numeric',
 					),
 					'cps_since_mark' => array(
-						'title' => $lang['strcpssincemark'],
+						'title' => $lang['strchangespersecond'],
 						'field' => field('cps_since_mark'),
+						'type'  => 'numeric',
 					),
 					'changes_since_previous' => array(
+						'upper_title' => $lang['strsincepreviousdisplay'],
+						'upper_title_colspan' => 2,
 						'title' => $lang['strchanges'],
 						'field' => field('changes_since_previous'),
+						'type'  => 'numeric',
 					),
 					'cps_since_previous' => array(
-						'title' => $lang['strcps'],
+						'title' => $lang['strchangespersecond'],
 						'field' => field('cps_since_previous'),
-					),
-					'actions' => array(
-						'title' => $lang['stractions'],
+						'type'  => 'numeric',
 					),
 				);
 		
@@ -238,23 +248,28 @@
 						'field' => field('rel_group'),
 					),
 					'changes_since_mark' => array(
-						'title' => $lang['strchangessincemark'],
+						'upper_title' => $lang['strsincelatestmark'],
+						'upper_title_colspan' => 2,
+						'title' => $lang['strchanges'],
 						'field' => field('changes_since_mark'),
+						'type'  => 'numeric',
 					),
 					'cps_since_mark' => array(
-						'title' => $lang['strcpssincemark'],
+						'title' => $lang['strchangespersecond'],
 						'field' => field('cps_since_mark'),
+						'type'  => 'numeric',
 					),
 					'changes_since_previous' => array(
+						'upper_title' => $lang['strsincepreviousdisplay'],
+						'upper_title_colspan' => 2,
 						'title' => $lang['strchanges'],
 						'field' => field('changes_since_previous'),
+						'type'  => 'numeric',
 					),
 					'cps_since_previous' => array(
-						'title' => $lang['strcps'],
+						'title' => $lang['strchangespersecond'],
 						'field' => field('cps_since_previous'),
-					),
-					'actions' => array(
-						'title' => $lang['stractions'],
+						'type'  => 'numeric',
 					),
 				);
 		

@@ -350,11 +350,13 @@
 						'params'=> array('align' => 'center'),
 					),
 					'logdattsp' => array(
-						'title' => $lang['strlogdattsp'],
+						'upper_title' => $lang['strtablespace'],
+						'upper_title_colspan' => 2,
+						'title' => $lang['strlogtables'],
 						'field' => field('rel_log_dat_tsp'),
 					),
 					'logidxtsp' => array(
-						'title' => $lang['strlogidxtsp'],
+						'title' => $lang['strlogindexes'],
 						'field' => field('rel_log_idx_tsp'),
 					),
 				));

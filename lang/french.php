@@ -28,6 +28,7 @@
 	$lang['stractions'] = 'Actions';
 	$lang['stractionsonselectedobjects'] = 'Actions sur les objets (%s)';
 	$lang['stractivity'] = 'Activité';
+	$lang['stractual'] = 'Réel';
 	$lang['strall'] = 'Tous';
 	$lang['strassign'] = 'Affecter';
 	$lang['strassigned'] = 'Affectée';
@@ -38,6 +39,7 @@
 	$lang['strbegin'] = 'Début';
 	$lang['strbrowse'] = 'Parcourir';
 	$lang['strcancel'] = 'Annuler';
+	$lang['strchanges'] = 'Mises à jour';
 	$lang['strclear'] = 'Effacer';
 	$lang['strcollapse'] = 'Réduire';
 	$lang['strcolumn'] = 'Colonne';
@@ -47,7 +49,9 @@
 	$lang['strconstraints'] = 'Contraintes';
 	$lang['strcontent'] = 'Contenu';
 	$lang['strcreate'] = 'Créer';
+	$lang['strcumulated'] = 'Cumul';
 	$lang['strcurrentvalue'] = 'Valeur courante';
+	$lang['strdatetime'] = 'Date-Heure';
 	$lang['strdefault'] = 'Défaut';
 	$lang['strdelete'] = 'Effacer';
 	$lang['strdifferentvalues'] = '(%s valeurs différentes)';
@@ -61,7 +65,6 @@
 	$lang['stremajtrigger'] = 'Trigger E-Maj';
 	$lang['strencoding'] = 'Codage';
 	$lang['strend'] = 'Fin';
-	$lang['strenddatetime'] = 'Date-Heure fin';
 	$lang['strendmark'] = 'Marque fin';
 	$lang['strestimate'] = 'Estimer';
 	$lang['strestimatedduration'] = 'Durée estimée';
@@ -85,8 +88,10 @@
 	$lang['strlevel'] = 'Niveau';
 	$lang['strlogged'] = 'tracé';
 	$lang['strlogging'] = 'Démarré';
+	$lang['strlogindexes'] = 'Index log';
 	$lang['strlogsession'] = 'Session de log';
 	$lang['strlogsize'] = 'Taille log';
+	$lang['strlogtables'] = 'Tables log';
 	$lang['strmark'] = 'Marque';
 	$lang['strmarks'] = 'Marques';
 	$lang['strmessage'] = 'Message';
@@ -98,6 +103,7 @@
 	$lang['strnone'] = 'Aucun';
 	$lang['strnotassigned'] = 'Non affectés';
 	$lang['strnotnull'] = 'NOT NULL';
+	$lang['strnumber'] = 'Nombre';
 	$lang['strok'] = 'OK';
 	$lang['stropen'] = 'Ouvrir';
 	$lang['strowner'] = 'Propriétaire';
@@ -135,7 +141,6 @@
 	$lang['strsince'] = 'Depuis';
 	$lang['strsql'] = 'SQL';
 	$lang['strstart'] = 'Démarrer';
-	$lang['strstartdatetime'] = 'Date-Heure début';
 	$lang['strstartmark'] = 'Marque début';
 	$lang['strstate'] = 'État';
 	$lang['strstop'] = 'Arrêter';
@@ -357,8 +362,6 @@
 	$lang['strlogsessionstart'] = 'Session de log démarrée à : %s';
 	$lang['strlogsessionstop'] = ' et arrêtée à : %s';
 	$lang['strtimestamp'] = 'Date-Heure';
-	$lang['strnbchanges'] = 'Mises à jour';
-	$lang['strcumchanges'] = 'Cumul mises<br>à jour';
 	$lang['strcumchangeshelp'] = 'Le cumul du nombre de mises à jour représente le nombre de mises à jour à annuler en cas de rollback E-Maj à la marque correspondante.';
 	$lang['strfirstmark'] = 'Première marque';
 	$lang['strnomark'] = 'Le groupe de tables n\'a pas de marque';
@@ -640,7 +643,7 @@
 	$lang['strgroupcontent'] = 'Contenu actuel du groupe de tables "%s"';
 	$lang['stremptygroup'] = 'Le groupe de tables "%s" est actuellement vide.';
 	$lang['strpriority'] = 'Priorité';
-	$lang['strlogtable'] = 'Table de log';
+	$lang['strcurrentlogtable'] = 'Table de log courante';
 
 	// Group's history
 	$lang['strgrouphistory'] = 'Historique du groupe de tables "%s"';
@@ -853,7 +856,7 @@
 	$lang['strnorlbk'] = 'Aucun rollback.';
 	$lang['strconsolidablerlbk'] = 'Rollbacks E-Maj tracés consolidables';
 	$lang['strtargetmark'] = 'Marque cible';
-	$lang['strendrollbackmark'] = 'Marque fin de rollback';
+	$lang['strendrollbackmark'] = 'Marque de fin de rollback';
 	$lang['strnbintermediatemark'] = 'Marques intermédiaires';
 	$lang['strconsolidate'] = 'Consolider';
 
@@ -875,8 +878,7 @@
 	$lang['strhideestimates'] = 'Cacher estimations';
 	$lang['strshowestimates'] = 'Voir estimations';
 	$lang['strrlbkstep'] = 'Étape';
-	$lang['strestimatedquantity'] = 'Quantité estimée';
-	$lang['strestimationmethod'] = 'Méthode estimation';
+	$lang['strmethod'] = 'Méthode';
 	$lang['strrlbksequences'] = 'Effectuer le rollback des séquences';
 	$lang['strrlbkdisapptrg'] = 'Désactiver le trigger %s';
 	$lang['strrlbkdislogtrg'] = 'Désactiver le trigger de log';
@@ -922,10 +924,9 @@
 	$lang['strnotableselected'] = 'Aucune table n\'est sélectionnée.';
 	$lang['strsequencesinlogginggroups'] = 'Séquences des groupes démarrés (%s/%s)';
 	$lang['strnosequenceselected'] = 'Aucune séquence n\'est sélectionnée.';
-	$lang['strchangessincemark'] = 'MàJ depuis la marque';
-	$lang['strcpssincemark'] = 'MàJ / sec depuis la marque';
-	$lang['strchanges'] = 'MàJ';
-	$lang['strcps'] = 'MàJ / sec';
+	$lang['strsincelatestmark'] = 'Depuis la dernière marque';
+	$lang['strsincepreviousdisplay'] = 'Depuis l\'affichage précédent';
+	$lang['strchangespersecond'] = 'MàJ / sec';
 
 // E-Maj environment
 

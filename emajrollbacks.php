@@ -287,7 +287,9 @@
 				'field' => field('cons_group'),
 			),
 			'consTargetMark' => array(
-				'title' => $lang['strtargetmark'],
+				'upper_title' => $lang['strtargetmark'],
+				'upper_title_colspan' => 2,
+				'title' => $lang['strname'],
 				'field' => field('cons_target_rlbk_mark_name'),
 			),
 			'consTargetMarkDateTime' => array(
@@ -302,7 +304,7 @@
 				'sorter_text_extraction' => 'span_text',
 			),
 			'rlbkNbRow' => array(
-				'title' => $lang['strnbchanges'],
+				'title' => $lang['strchanges'],
 				'field' => field('cons_rows'),
 				'params'=> array('align' => 'right'),
 			),
@@ -312,7 +314,9 @@
 				'params'=> array('align' => 'right'),
 			),
 			'consEndMark' => array(
-				'title' => $lang['strendrollbackmark'],
+				'upper_title' => $lang['strendrollbackmark'],
+				'upper_title_colspan' => 2,
+				'title' => $lang['strname'],
 				'field' => field('cons_end_rlbk_mark_name'),
 			),
 			'consEndMarkDateTime' => array(
@@ -566,6 +570,89 @@
 			),
 		);
 
+		$columnsSteps = array(
+			'rank' => array(
+				'title' => '#',
+				'field' => field('rlbp_rank'),
+				'params'=> array('align' => 'right'),
+			),
+			'schema_table' => array(
+				'title' => $lang['strtable'],
+				'field' => field('rlbk_schema_table'),
+			),
+			'step' => array(
+				'title' => $lang['strrlbkstep'],
+				'field' => field('rlbp_action'),
+			),
+			'session' => array(
+				'title' => $lang['strrlbksession'],
+				'field' => field('rlbp_session'),
+				'params'=> array('align' => 'center'),
+			),
+			'startDateTime' => array(
+				'title' => $lang['strbegin'],
+				'field' => field('rlbp_start_datetime'),
+				'type' => 'spanned',
+				'params'=> array(
+					'dateformat' => $lang['strprecisetimeformat'],
+					'locale' => $lang['applocale'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
+			),
+			'duration' => array(
+				'upper_title' => $lang['stractual'],
+				'upper_title_colspan' => 2,
+				'title' => $lang['strduration'],
+				'field' => field('rlbp_duration'),
+				'type' => 'spanned',
+				'params'=> array(
+					'intervalformat' => $lang['strintervalformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
+			),
+			'quantity' => array(
+				'title' => $lang['strquantity'],
+				'field' => field('rlbp_quantity'),
+				'params'=> array('align' => 'right'),
+			),
+		);
+
+		if ($_SESSION['emaj']['RlbkShowEstimates']) {
+			$columnsSteps = array_merge($columnsSteps, array(
+				'estimatedDuration' => array(
+					'upper_title' => $lang['strestimates'],
+					'upper_title_colspan' => 4,
+					'title' => $lang['strduration'],
+					'field' => field('rlbp_estimated_duration'),
+					'type' => 'spanned',
+					'params'=> array(
+						'intervalformat' => $lang['strintervalformat'],
+						'class' => 'tooltip left-aligned-tooltip rlbkEstimates',
+					),
+				),
+				'estimatedQuantity' => array(
+					'title' => $lang['strquantity'],
+					'field' => field('rlbp_estimated_quantity'),
+					'params'=> array('class' => 'rlbkEstimates', 'align' => 'right'),
+				),
+				'estimateQuality' => array(
+					'title' => 'Q',
+					'field' => field('rlbp_estimate_quality'),
+					'type'	=> 'callback',
+					'params'=> array(
+						'function' => 'renderEstimateQuality',
+					),
+					'sorter_text_extraction' => 'span_text',
+					'filter' => false,
+				),
+				'estimateMethod' => array(
+					'title' => $lang['strmethod'],
+					'field' => field('rlbp_estimate_method'),
+					'params'=> array('class' => 'rlbkEstimates', 'align' => 'center'),
+				),
+			));
+		}
+
 		$columnsSessions = array(
 			'session' => array(
 				'title' => $lang['strrlbksession'],
@@ -607,94 +694,6 @@
 				'params'=> array('align' => 'right'),
 			),
 		);
-
-		$columnsSteps = array(
-			'rank' => array(
-				'title' => '#',
-				'field' => field('rlbp_rank'),
-				'params'=> array('align' => 'right'),
-			),
-			'schema_table' => array(
-				'title' => $lang['strtable'],
-				'field' => field('rlbk_schema_table'),
-			),
-			'step' => array(
-				'title' => $lang['strrlbkstep'],
-				'field' => field('rlbp_action'),
-			),
-			'session' => array(
-				'title' => $lang['strrlbksession'],
-				'field' => field('rlbp_session'),
-				'params'=> array('align' => 'center'),
-			),
-			'startDateTime' => array(
-				'title' => $lang['strbegin'],
-				'field' => field('rlbp_start_datetime'),
-				'type' => 'spanned',
-				'params'=> array(
-					'dateformat' => $lang['strprecisetimeformat'],
-					'locale' => $lang['applocale'],
-					'class' => 'tooltip left-aligned-tooltip',
-				),
-			),
-			'duration' => array(
-				'title' => $lang['strduration'],
-				'field' => field('rlbp_duration'),
-				'type' => 'spanned',
-				'params'=> array(
-					'intervalformat' => $lang['strintervalformat'],
-					'class' => 'tooltip left-aligned-tooltip',
-				),
-			),
-		);
-
-		if ($_SESSION['emaj']['RlbkShowEstimates']) {
-			$columnsSteps = array_merge($columnsSteps, array(
-				'estimatedDuration' => array(
-					'title' => $lang['strestimatedduration'],
-					'field' => field('rlbp_estimated_duration'),
-					'type' => 'spanned',
-					'params'=> array(
-						'intervalformat' => $lang['strintervalformat'],
-						'class' => 'tooltip left-aligned-tooltip rlbkEstimates',
-					),
-				),
-				'estimateQuality' => array(
-					'title' => 'Q',
-					'field' => field('rlbp_estimate_quality'),
-					'type'	=> 'callback',
-					'params'=> array(
-						'function' => 'renderEstimateQuality',
-					),
-					'sorter_text_extraction' => 'span_text',
-					'filter' => false,
-				),
-			));
-		}
-
-		$columnsSteps = array_merge($columnsSteps, array(
-			'quantity' => array(
-				'title' => $lang['strquantity'],
-				'field' => field('rlbp_quantity'),
-				'params'=> array('align' => 'right'),
-				),
-			),
-		);
-
-		if ($_SESSION['emaj']['RlbkShowEstimates']) {
-			$columnsSteps = array_merge($columnsSteps, array(
-				'estimatedQuantity' => array(
-					'title' => $lang['strestimatedquantity'],
-					'field' => field('rlbp_estimated_quantity'),
-					'params'=> array('class' => 'rlbkEstimates', 'align' => 'right'),
-				),
-				'estimateMethod' => array(
-					'title' => $lang['strestimationmethod'],
-					'field' => field('rlbp_estimate_method'),
-					'params'=> array('class' => 'rlbkEstimates', 'align' => 'center'),
-				),
-			));
-		}
 
 		$urlvars = $misc->getRequestVars();
 

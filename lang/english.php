@@ -28,6 +28,7 @@
 	$lang['stractions'] = 'Actions';
 	$lang['stractionsonselectedobjects'] = 'Actions on objects (%s)';
 	$lang['stractivity'] = 'Activity';
+	$lang['stractual'] = 'Actual';
 	$lang['strall'] = 'All';
 	$lang['strassign'] = 'Assign';
 	$lang['strassigned'] = 'Assigned';
@@ -38,6 +39,7 @@
 	$lang['strbegin'] = 'Begin';
 	$lang['strbrowse'] = 'Browse';
 	$lang['strcancel'] = 'Cancel';
+	$lang['strchanges'] = 'Row changes';
 	$lang['strclear'] = 'Clear';
 	$lang['strcollapse'] = 'Collapse';
 	$lang['strcolumn'] = 'Column';
@@ -47,7 +49,9 @@
 	$lang['strconstraints'] = 'Constraints';
 	$lang['strcontent'] = 'Content';
 	$lang['strcreate'] = 'Create';
+	$lang['strcumulated'] = 'Cumulated';
 	$lang['strcurrentvalue'] = 'Current value';
+	$lang['strdatetime'] = 'Date-time';
 	$lang['strdefault'] = 'Default';
 	$lang['strdelete'] = 'Delete';
 	$lang['strdifferentvalues'] = '(%s different values)';
@@ -61,7 +65,6 @@
 	$lang['stremajtrigger'] = 'E-Maj trigger';
 	$lang['strencoding'] = 'Encoding';
 	$lang['strend'] = 'End';
-	$lang['strenddatetime'] = 'End date-time';
 	$lang['strendmark'] = 'End mark';
 	$lang['strestimate'] = 'Estimate';
 	$lang['strestimatedduration'] = 'Estimated duration';
@@ -85,8 +88,10 @@
 	$lang['strlevel'] = 'Level';
 	$lang['strlogged'] = 'logged';
 	$lang['strlogging'] = 'Logging';
+	$lang['strlogindexes'] = 'Log indexes';
 	$lang['strlogsession'] = 'Log session';
 	$lang['strlogsize'] = 'Log size';
+	$lang['strlogtables'] = 'Log tables';
 	$lang['strmark'] = 'Mark';
 	$lang['strmarks'] = 'Marks';
 	$lang['strmessage'] = 'Message';
@@ -98,6 +103,7 @@
 	$lang['strnone'] = 'None';
 	$lang['strnotassigned'] = 'Not assigned';
 	$lang['strnotnull'] = 'Not Null';
+	$lang['strnumber'] = 'Number';
 	$lang['strok'] = 'OK';
 	$lang['stropen'] = 'Open';
 	$lang['strowner'] = 'Owner';
@@ -135,7 +141,6 @@
 	$lang['strsince'] = 'Since';
 	$lang['strsql'] = 'SQL';
 	$lang['strstart'] = 'Start';
-	$lang['strstartdatetime'] = 'Start date-time';
 	$lang['strstartmark'] = 'Start mark';
 	$lang['strstate'] = 'State';
 	$lang['strstop'] = 'Stop';
@@ -357,8 +362,6 @@
 	$lang['strlogsessionstart'] = 'Log session started at: %s';
 	$lang['strlogsessionstop'] = ' and stopped at: %s';
 	$lang['strtimestamp'] = 'Date/Time';
-	$lang['strnbchanges'] = 'Row changes';
-	$lang['strcumchanges'] = 'Cumulated<br>changes';
 	$lang['strcumchangeshelp'] = 'The cummulative number of row changes represents the number of row changes to cancel in case of E-Maj rollback to the corresponding mark.';
 	$lang['strfirstmark'] = 'First mark';
 	$lang['strnomark'] = 'The tables group has no mark';
@@ -640,7 +643,7 @@
 	$lang['strgroupcontent'] = 'Current content of the tables group "%s"';
 	$lang['stremptygroup'] = 'The tables group "%s" is currently empty.';
 	$lang['strpriority'] = 'Priority';
-	$lang['strlogtable'] = 'Log table';
+	$lang['strcurrentlogtable'] = 'Current log table';
 
 	// Group's history
 	$lang['strgrouphistory'] = 'Tables group "%s" history';
@@ -875,8 +878,7 @@
 	$lang['strhideestimates'] = 'Hide estimates';
 	$lang['strshowestimates'] = 'Show estimates';
 	$lang['strrlbkstep'] = 'Step';
-	$lang['strestimatedquantity'] = 'Estimated quantity';
-	$lang['strestimationmethod'] = 'Estimation method';
+	$lang['strmethod'] = 'Method';
 	$lang['strrlbksequences'] = 'Rollback sequences';
 	$lang['strrlbkdisapptrg'] = 'Disable the trigger %s';
 	$lang['strrlbkdislogtrg'] = 'Disable the log trigger';
@@ -922,10 +924,9 @@
 	$lang['strnotableselected'] = 'No table selected.';
 	$lang['strsequencesinlogginggroups'] = 'Sequences in logging groups (%s/%s)';
 	$lang['strnosequenceselected'] = 'No sequence selected.';
-	$lang['strchangessincemark'] = 'Changes since mark';
-	$lang['strcpssincemark'] = 'Changes / sec since mark';
-	$lang['strchanges'] = 'Changes';
-	$lang['strcps'] = 'Changes / sec';
+	$lang['strsincelatestmark'] = 'Since latest mark';
+	$lang['strsincepreviousdisplay'] = 'Since previous display';
+	$lang['strchangespersecond'] = 'Changes / sec';
 
 // E-Maj environment
 

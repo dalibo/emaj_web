@@ -1471,6 +1471,8 @@
 		 *				'sorter' => boolean to overhide the table level sorter option,
 		 *				'filter' => boolean to overhide the table level filter option,
 		 *				'sorter_text_extraction' => alternate element used to sort ('img_alt', 'span_text' or 'div_title'),
+		 *				'upper_title' => upper part of column header when it is split into 2 rows,
+		 *				'upper_title_colspan' => number of contigous columns for the upper_title,
 		 *			), ...
 		 *		);
 		 * @param $actions   	Actions that can be performed on each object:
@@ -1539,11 +1541,23 @@
 				echo "<thead>\n";
 				echo "<tr>\n";
 
+				//
 				// Display column headings
+				//
 				$colnum = 0; $textExtractionJS = ''; $headersJS = '';
+
+				// Determine whether the header is on 2 rows
+				$upperTitle = false;
+				foreach ($columns as $column_id => $column) {
+					if (isset($column['upper_title'])) {
+						$upperTitle = true;
+					}
+				}
+
 				if ($has_ma || $filter) {
 					if ($filter) {
-						echo "<th class=\"data sorter-false filter-false filtericon\">";
+						$rowspanClause = ($upperTitle) ? "rowspan=2" : '';
+						echo "<th class=\"data sorter-false filter-false filtericon\" $rowspanClause>";
 						echo "\t<img src=\"{$this->icon('Filter')}\" alt=\"filter\" class=\"action\" onclick=\"javascript:showHideFilterRow('{$place}');\" title=\"{$lang['strfiltershelp']}\">\n";
 						echo "</th>\n";
 					} else {
@@ -1551,59 +1565,58 @@
 					}
 					$colnum++;
 				}
+
+				// First title row
+				$firstDataColnum = $colnum;
+				$colToBypass = 0;
 				foreach ($columns as $column_id => $column) {
-					switch ($column_id) {
-						case 'actions':
-							if (sizeof($actions) > 0) echo "<th class=\"data sorter-false filter-false\" colspan=\"", count($actions), "\">{$column['title']}</th>\n";
-							// actions columns have neither sorter nor filter capabilities
-							for ($i = 0; $i < count($actions); ++$i) {
-								$colnum++;
-							}
-							break;
-						default:
-							// build classes
-							$thClass = 'data';
-							//   add a 'sorter_false' class to the data column header if a 'sorter' attribute is set to false
-							if ((isset($column['sorter']) && !$column['sorter']) || ($filter && ! $sorter)) {
-								$thClass .=	' sorter-false';
-							}
-							//   add a 'filter_false' class to the data column header if a 'filter' attribute is set to false
-							if ($filter && (isset($column['filter']) && !$column['filter'])) {
-								$thClass .= ' filter-false';
-							}
-							// column title
-							echo "<th class=\"{$thClass}\">";
-							echo $column['title'];
-							// additional info if requested
-							if (isset($column['info']))
-								echo "<img src=\"{$this->icon('Info-inv')}\" alt=\"info\" class=\"info\" title=\"{$column['info']}\">";
-							echo "</th>\n";
-							// when the data column has a 'sorter_text_extraction' attribute set to 'img_alt' or 'span_text' or 'div_title',
-							//   add a function to extract either the alt attribute of images or the text content of the span
-							//     to build the text that tablesorter will use to sort
-							if ($sorter && isset($column['sorter_text_extraction'])) {
-								if ($column['sorter_text_extraction'] == 'img_alt') {
-									$textExtractionJS .= "\t\t\t\t{$colnum}: function(node) {return $(node).find('img').attr('alt');},\n";
-								} elseif ($column['sorter_text_extraction'] == 'span_text') {
-									$textExtractionJS .= "\t\t\t\t{$colnum}: function(node) {return $(node).find('span').text();},\n";
-								} elseif ($column['sorter_text_extraction'] == 'div_title') {
-									$textExtractionJS .= "\t\t\t\t{$colnum}: function(node) {return $(node).find('div').find('div').attr('title');},\n";
-								}
-							}
-							// When the column is of type 'spanned' with a 'dateformat' parameter, force a simple text sort
-							if ($sorter && strpos($thClass, 'sorter-false') === false &&
-								isset($column['type']) && $column['type'] == 'spanned' && isset($column['params']['dateformat'])) {
-								$headersJS .= "\t\t\t\t{$colnum}: {sorter: 'text'},\n";
-							}
-							$colnum++;
-							break;
+					if ($colToBypass > 0) {
+						// Subsequent column of an upper title
+						$colToBypass--;
+						$colnum++;
+					} elseif (isset($column['upper_title'])) {
+						// First column of an upper title
+						if (isset($column['upper_title_colspan'])) {
+							$colspanClause = "colspan={$column['upper_title_colspan']}";
+							$colToBypass = $column['upper_title_colspan'] - 1;
+						} else {
+							$colspanClause = '';
+							$colToBypass = 0;
+						}
+						echo "<th class=\"data sorter-false filter-false\" $colspanClause>{$column['upper_title']}</th>\n";
+						$colnum = $colnum + 1 + $colToBypass;
+					} else {
+						// Regular column
+						$colspan = ($column_id == 'actions') ? count($actions) : 1;
+						$rowspan = ($upperTitle) ? 2 : 1;
+						$this->printColumnHeader($column_id, $column, $filter, $sorter, $colspan, $rowspan, $colnum, $headersJS, $textExtractionJS);
+						$colnum = $colnum + (($column_id == 'actions') ? count($actions) : 1);
+					}
+				}
+
+				// Second title row, if any
+				$colnum = $firstDataColnum;
+				if ($upperTitle) {
+					echo "</tr><tr>\n";
+					$colTitleToDisplay = 0;
+					foreach ($columns as $column_id => $column) {
+						if (isset($column['upper_title'])) {
+							$colTitleToDisplay = (isset($column['upper_title_colspan'])) ? $column['upper_title_colspan'] : 1;
+						}
+						if ($colTitleToDisplay > 0) {
+							$this->printColumnHeader($column_id, $column, $filter, $sorter, 1, 1, $colnum, $headersJS, $textExtractionJS);
+							$colTitleToDisplay--;
+						}
+						$colnum = $colnum + (($column_id == 'actions') ? count($actions) : 1);
 					}
 				}
 				echo "</tr>\n";
 				echo "</thead>\n";
 				echo "<tbody>\n";
 
+				//
 				// Display table rows
+				//
 				$i = 0;
 				while (!$tabledata->EOF) {
 					$id = ($i % 2) + 1;
@@ -1766,6 +1779,63 @@
 					echo "<p>{$nodata}</p>\n";
 				}
 				return false;
+			}
+		}
+
+		/** Print a column header for a data table, with the filtering
+		 *  and sorting capabilities. It also process actions columns.
+		 */
+		function printColumnHeader($column_id, $column, $filter, $sorter, $colspan, $rowspan, $colnum, &$headersJS, &$textExtractionJS) {
+			global $lang;
+
+			// prepare the rowspan and colspan clause, if needed
+			$colspanClause = ($colspan > 1) ? "colspan=$colspan" : "";
+			$rowspanClause = ($rowspan > 1) ? "rowspan=$rowspan" : "";
+
+			if ($column_id == 'actions') {
+			// Actions columns
+				if ($colspan > 0)
+					echo "<th class=\"data sorter-false filter-false\" $colspanClause $rowspanClause>{$column['title']}</th>\n";
+
+			} else {
+			// Other columns
+				// prepare the class clause
+				$thClass = 'data';
+				//   add a 'sorter_false' class to the data column header if a 'sorter' attribute is set to false
+				if ((isset($column['sorter']) && !$column['sorter']) || ($filter && ! $sorter)) {
+					$thClass .=	' sorter-false';
+				}
+				//   add a 'filter_false' class to the data column header if a 'filter' attribute is set to false
+				if ($filter && (isset($column['filter']) && !$column['filter'])) {
+					$thClass .= ' filter-false';
+				}
+
+				// column title
+				echo "<th class=\"{$thClass}\" $rowspanClause $colspanClause>";
+				echo $column['title'];
+
+				// additional info if requested
+				if (isset($column['info']))
+					echo "<img src=\"{$this->icon('Info-inv')}\" alt=\"info\" class=\"info\" title=\"{$column['info']}\">";
+				echo "</th>\n";
+
+				// when the data column has a 'sorter_text_extraction' attribute set to 'img_alt' or 'span_text' or 'div_title',
+				//   add a function to extract either the alt attribute of images or the text content of the span
+				//     to build the text that tablesorter will use to sort
+				if ($sorter && isset($column['sorter_text_extraction'])) {
+					if ($column['sorter_text_extraction'] == 'img_alt') {
+						$textExtractionJS .= "\t\t\t\t{$colnum}: function(node) {return $(node).find('img').attr('alt');},\n";
+					} elseif ($column['sorter_text_extraction'] == 'span_text') {
+						$textExtractionJS .= "\t\t\t\t{$colnum}: function(node) {return $(node).find('span').text();},\n";
+					} elseif ($column['sorter_text_extraction'] == 'div_title') {
+						$textExtractionJS .= "\t\t\t\t{$colnum}: function(node) {return $(node).find('div').find('div').attr('title');},\n";
+					}
+				}
+				// When the column is of type 'spanned' with a 'dateformat' parameter, force a simple text sort
+				if ($sorter && strpos($thClass, 'sorter-false') === false &&
+					isset($column['type']) && $column['type'] == 'spanned' && isset($column['params']['dateformat'])) {
+					$headersJS .= "\t\t\t\t{$colnum}: {sorter: 'text'},\n";
+				}
 			}
 		}
 

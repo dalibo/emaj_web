@@ -1222,12 +1222,14 @@
 					),
 			),
 			'logrows' => array(
-				'title' => $lang['strnbchanges'],
+				'upper_title' => $lang['strchanges'],
+				'upper_title_colspan' => 2,
+				'title' => $lang['strnumber'],
 				'field' => field('mark_logrows'),
 				'type'  => 'numeric'
 			),
 			'cumlogrows' => array(
-				'title' => $lang['strcumchanges'],
+				'title' => $lang['strcumulated'],
 				'info'  => $lang['strcumchangeshelp'],
 				'field' => field('mark_cumlogrows'),
 				'type'  => 'numeric'
@@ -1568,7 +1570,7 @@
 		echo "<th class=\"data\"></th>";
 		echo "<th class=\"data\">{$lang['strtblingroup']}</th>";
 		echo "<th class=\"data\">{$lang['strtblwithchanges']}</th>";
-		echo "<th class=\"data\">{$lang['strnbchanges']}</th>";
+		echo "<th class=\"data\">{$lang['strchanges']}</th>";
 		echo "</tr><tr class=\"data1\">\n";
 		echo "<th class=\"data\" style=\"font-size: larger;\">{$lang['strestimates']}</td>\n";
 		echo "<td class=\"center\">{$groupStat->fields['nb_tbl_in_group']}</td>";
@@ -1602,11 +1604,13 @@
 			if ($emajdb->getNumEmajVersion() >= 20300) {			// version >= 2.3.0
 				$columns = array_merge($columns, array(
 					'start_mark' => array(
-						'title' => $lang['strstartmark'],
+						'upper_title' => $lang['strbegin'],
+						'upper_title_colspan' => 2,
+						'title' => $lang['strmark'],
 						'field' => field('stat_first_mark'),
 					),
 					'start_datetime' => array(
-						'title' => $lang['strstartdatetime'],
+						'title' => $lang['strdatetime'],
 						'field' => field('stat_first_mark_datetime'),
 						'type' => 'spanned',
 						'params'=> array(
@@ -1616,11 +1620,13 @@
 							),
 					),
 					'end_mark' => array(
-						'title' => $lang['strendmark'],
+						'upper_title' => $lang['strend'],
+						'upper_title_colspan' => 2,
+						'title' => $lang['strmark'],
 						'field' => field('stat_last_mark'),
 					),
 					'end_datetime' => array(
-						'title' => $lang['strenddatetime'],
+						'title' => $lang['strdatetime'],
 						'field' => field('stat_last_mark_datetime'),
 						'type' => 'spanned',
 						'params'=> array(
@@ -1751,11 +1757,13 @@
 					'vars'  => array('schema' => 'stat_schema', 'sequence' => 'stat_sequence'),
 				),
 				'start_mark' => array(
-					'title' => $lang['strstartmark'],
+					'upper_title' => $lang['strbegin'],
+					'upper_title_colspan' => 2,
+					'title' => $lang['strmark'],
 					'field' => field('stat_first_mark'),
 				),
 				'start_datetime' => array(
-					'title' => $lang['strstartdatetime'],
+					'title' => $lang['strdatetime'],
 					'field' => field('stat_first_mark_datetime'),
 					'type' => 'spanned',
 					'params'=> array(
@@ -1765,11 +1773,13 @@
 						),
 				),
 				'end_mark' => array(
-					'title' => $lang['strendmark'],
+					'upper_title' => $lang['strend'],
+					'upper_title_colspan' => 2,
+					'title' => $lang['strmark'],
 					'field' => field('stat_last_mark'),
 				),
 				'end_datetime' => array(
-					'title' => $lang['strenddatetime'],
+					'title' => $lang['strdatetime'],
 					'field' => field('stat_last_mark_datetime'),
 					'type' => 'spanned',
 					'params'=> array(
@@ -1833,7 +1843,7 @@
 		echo "<table class=\"data\"><tr>\n";
 		echo "<th class=\"data\">{$lang['strtblingroup']}</th>";
 		echo "<th class=\"data\">{$lang['strtblwithchanges']}</th>";
-		echo "<th class=\"data\">{$lang['strnbchanges']}</th>";
+		echo "<th class=\"data\">{$lang['strchanges']}</th>";
 		echo "<th class=\"data\">{$lang['strnbinsert']}</th>";
 		echo "<th class=\"data\">{$lang['strnbupdate']}</th>";
 		echo "<th class=\"data\">{$lang['strnbdelete']}</th>";
@@ -1877,11 +1887,13 @@
 			if ($emajdb->getNumEmajVersion() >= 20300) {			// version >= 2.3.0
 				$columns = array_merge($columns, array(
 					'start_mark' => array(
-						'title' => $lang['strstartmark'],
+						'upper_title' => $lang['strbegin'],
+						'upper_title_colspan' => 2,
+						'title' => $lang['strmark'],
 						'field' => field('stat_first_mark'),
 					),
 					'start_datetime' => array(
-						'title' => $lang['strstartdatetime'],
+						'title' => $lang['strdatetime'],
 						'field' => field('stat_first_mark_datetime'),
 						'type' => 'spanned',
 						'params'=> array(
@@ -1891,11 +1903,13 @@
 							),
 					),
 					'end_mark' => array(
-						'title' => $lang['strendmark'],
+						'upper_title' => $lang['strend'],
+						'upper_title_colspan' => 2,
+						'title' => $lang['strmark'],
 						'field' => field('stat_last_mark'),
 					),
 					'end_datetime' => array(
-						'title' => $lang['strenddatetime'],
+						'title' => $lang['strdatetime'],
 						'field' => field('stat_last_mark_datetime'),
 						'type' => 'spanned',
 						'params'=> array(
@@ -2050,15 +2064,17 @@
 					'params'=> array('align' => 'center'),
 				),
 				'log_dat_tsp' => array(
-					'title' => $lang['strlogdattsp'],
+					'upper_title' => $lang['strtablespace'],
+					'upper_title_colspan' => 2,
+					'title' => $lang['strlogtables'],
 					'field' => field('rel_log_dat_tsp'),
 				),
 				'log_idx_tsp' => array(
-					'title' => $lang['strlogidxtsp'],
+					'title' => $lang['strlogindexes'],
 					'field' => field('rel_log_idx_tsp'),
 				),
 				'log_table' => array(
-					'title' => $lang['strlogtable'],
+					'title' => $lang['strcurrentlogtable'],
 					'field' => field('full_log_table'),
 				),
 				'logsize' => array(
@@ -2155,7 +2171,7 @@
 					'type'  => 'numeric'
 				),
 				'nb_log_rows' => array(
-					'title' => $lang['strnbchanges'],
+					'title' => $lang['strchanges'],
 					'field' => field('lses_log_rows'),
 					'type'  => 'numeric'
 				),

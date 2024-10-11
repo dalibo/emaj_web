@@ -645,6 +645,7 @@
 					),
 					'sorter_text_extraction' => 'span_text',
 					'filter' => false,
+					'class' => 'nopadding',
 				),
 				'estimateMethod' => array(
 					'title' => $lang['strmethod'],

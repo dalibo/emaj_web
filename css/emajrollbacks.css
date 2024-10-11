@@ -25,8 +25,3 @@ div.rlbk-nav-title {
 	font-weight: bold;
 	margin-bottom: 8px;
 }
-
-/* The 11th column of the steps table (Estimate quality indicator) */
-div#detailRlbkSteps td:nth-child(11) {
-	padding: 0px;
-}

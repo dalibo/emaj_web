@@ -366,10 +366,6 @@
 	function show_rollback() {
 		global $lang, $misc, $emajdb, $conf;
 
-		if (!isset($_SESSION['emaj']['RlbkShowEstimates'])) {
-			$_SESSION['emaj']['RlbkShowEstimates'] = true;
-		}
-
 		$misc->printHeader('emajrollback', 'database', 'emajrollbacks');
 
 		if (isset($_REQUEST['asyncRlbk']))
@@ -615,45 +611,40 @@
 				'field' => field('rlbp_quantity'),
 				'params'=> array('align' => 'right'),
 			),
+			'estimatedDuration' => array(
+				'upper_title' => $lang['strestimates'],
+				'upper_title_colspan' => 4,
+				'upper_title_info' => $lang['strrlbkestimmethodhelp'],
+				'title' => $lang['strduration'],
+				'field' => field('rlbp_estimated_duration'),
+				'type' => 'spanned',
+				'params'=> array(
+					'intervalformat' => $lang['strintervalformat'],
+					'class' => 'tooltip left-aligned-tooltip',
+				),
+			),
+			'estimatedQuantity' => array(
+				'title' => $lang['strquantity'],
+				'field' => field('rlbp_estimated_quantity'),
+				'params'=> array('align' => 'right'),
+			),
+			'estimateQuality' => array(
+				'title' => $lang['strabbrquality'],
+				'field' => field('rlbp_estimate_quality'),
+				'type'	=> 'callback',
+				'params'=> array(
+					'function' => 'renderEstimateQuality',
+				),
+				'sorter_text_extraction' => 'span_text',
+				'filter' => false,
+				'class' => 'nopadding',
+			),
+			'estimateMethod' => array(
+				'title' => $lang['strmethod'],
+				'field' => field('rlbp_estimate_method'),
+				'params'=> array('align' => 'center'),
+			),
 		);
-
-		if ($_SESSION['emaj']['RlbkShowEstimates']) {
-			$columnsSteps = array_merge($columnsSteps, array(
-				'estimatedDuration' => array(
-					'upper_title' => $lang['strestimates'],
-					'upper_title_colspan' => 4,
-					'upper_title_info' => $lang['strrlbkestimmethodhelp'],
-					'title' => $lang['strduration'],
-					'field' => field('rlbp_estimated_duration'),
-					'type' => 'spanned',
-					'params'=> array(
-						'intervalformat' => $lang['strintervalformat'],
-						'class' => 'tooltip left-aligned-tooltip',
-					),
-				),
-				'estimatedQuantity' => array(
-					'title' => $lang['strquantity'],
-					'field' => field('rlbp_estimated_quantity'),
-					'params'=> array('align' => 'right'),
-				),
-				'estimateQuality' => array(
-					'title' => $lang['strabbrquality'],
-					'field' => field('rlbp_estimate_quality'),
-					'type'	=> 'callback',
-					'params'=> array(
-						'function' => 'renderEstimateQuality',
-					),
-					'sorter_text_extraction' => 'span_text',
-					'filter' => false,
-					'class' => 'nopadding',
-				),
-				'estimateMethod' => array(
-					'title' => $lang['strmethod'],
-					'field' => field('rlbp_estimate_method'),
-					'params'=> array('align' => 'center'),
-				),
-			));
-		}
 
 		$columnsSessions = array(
 			'session' => array(
@@ -702,11 +693,7 @@
 		$actions = array();
 
 		// Get the auto-refresh configuration parameter (10 seconds if not found in the config.inc.php file)
-		if (isset($conf['auto_refresh'])) {
-			$autoRefreshTimeout = $conf['auto_refresh'];
-		} else {
-			$autoRefreshTimeout = 10;
-		}
+		$autoRefreshTimeout = (isset($conf['auto_refresh'])) ? $conf['auto_refresh'] : 10;
 
 		// Manage the autorefresh_rlbkid cookie if it exists
 		if ($autoRefreshTimeout > 0) {

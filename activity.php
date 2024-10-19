@@ -8,52 +8,51 @@
 	include_once('./libraries/lib.inc.php');
 
 	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-	if (!isset($msg)) $msg = '';
 
 	/**
 	 * Show the changes activity.
 	 */
-	function doDefault($msg = '', $errMsg = '') {
-		global $misc, $lang, $data, $emajdb;
+	function doDefault($isAutoRefresh = false) {
+		global $misc, $lang, $data, $emajdb, $conf, $rq;
 
 		$misc->printHeader('database', 'database', 'emajactivity');
 
-		$misc->printMsg($msg,$errMsg);
-
 		$misc->printTitle($lang['strchangesactivity']);
+
+		$activityToBeDisplayed = isset($_REQUEST['groups-include']) || isset($_SESSION['emajStat'][$_REQUEST['server']][$_REQUEST['database']]['previousRequest']);
 
 		// Prepare the input values displayed in the form.
 		$previousRequest = (isset($_SESSION['emajStat'][$_REQUEST['server']][$_REQUEST['database']]['previousRequest'])) ?
 							$_SESSION['emajStat'][$_REQUEST['server']][$_REQUEST['database']]['previousRequest'] : '';
 
-		$groupsInclude = (isset($_REQUEST['groups-include'])) ? $_REQUEST['groups-include'] : 
-							((isset($previousRequest['groups-include'])) ? $previousRequest['groups-include'] : '');
-		$tablesInclude = (isset($_REQUEST['tables-include'])) ? $_REQUEST['tables-include'] :
-							((isset($previousRequest['tables-include'])) ? $previousRequest['tables-include'] : '');
-		$sequencesInclude = (isset($_REQUEST['sequences-include'])) ? $_REQUEST['sequences-include'] :
-							((isset($previousRequest['sequences-include'])) ? $previousRequest['sequences-include'] : '');
-		$groupsExclude = (isset($_REQUEST['groups-exclude'])) ? $_REQUEST['groups-exclude'] :
-							((isset($previousRequest['groups-exclude'])) ? $previousRequest['groups-exclude'] : '');
-		$tablesExclude = (isset($_REQUEST['tables-exclude'])) ? $_REQUEST['tables-exclude'] :
-							((isset($previousRequest['tables-exclude'])) ? $previousRequest['tables-exclude'] : '');
-		$sequencesExclude = (isset($_REQUEST['sequences-exclude'])) ? $_REQUEST['sequences-exclude'] :
-								((isset($previousRequest['sequences-exclude'])) ? $previousRequest['sequences-exclude'] : '');
-		$maxGroups = (isset($_REQUEST['max-groups'])) ? $_REQUEST['max-groups'] :
-						((isset($previousRequest['max-groups'])) ? $previousRequest['max-groups'] : 5);
-		$maxTables = (isset($_REQUEST['max-tables'])) ? $_REQUEST['max-tables'] : 
-						((isset($previousRequest['max-tables'])) ? $previousRequest['max-tables'] : 20);
-		$maxSequences = (isset($_REQUEST['max-sequences'])) ? $_REQUEST['max-sequences'] :
-							((isset($previousRequest['max-sequences'])) ? $previousRequest['max-sequences'] : 20);
-		$sort = (isset($_REQUEST['sort'])) ? $_REQUEST['sort'] :
-					((isset($previousRequest['sort'])) ? $previousRequest['sort'] : 'previous-mark');
+		$rq['groups-include'] = (isset($_REQUEST['groups-include'])) ? $_REQUEST['groups-include'] :
+									((isset($previousRequest['groups-include'])) ? $previousRequest['groups-include'] : '');
+		$rq['tables-include'] = (isset($_REQUEST['tables-include'])) ? $_REQUEST['tables-include'] :
+									((isset($previousRequest['tables-include'])) ? $previousRequest['tables-include'] : '');
+		$rq['sequences-include'] = (isset($_REQUEST['sequences-include'])) ? $_REQUEST['sequences-include'] :
+									((isset($previousRequest['sequences-include'])) ? $previousRequest['sequences-include'] : '');
+		$rq['groups-exclude'] = (isset($_REQUEST['groups-exclude'])) ? $_REQUEST['groups-exclude'] :
+									((isset($previousRequest['groups-exclude'])) ? $previousRequest['groups-exclude'] : '');
+		$rq['tables-exclude'] = (isset($_REQUEST['tables-exclude'])) ? $_REQUEST['tables-exclude'] :
+									((isset($previousRequest['tables-exclude'])) ? $previousRequest['tables-exclude'] : '');
+		$rq['sequences-exclude'] = (isset($_REQUEST['sequences-exclude'])) ? $_REQUEST['sequences-exclude'] :
+									((isset($previousRequest['sequences-exclude'])) ? $previousRequest['sequences-exclude'] : '');
+		$rq['max-groups'] = (isset($_REQUEST['max-groups'])) ? $_REQUEST['max-groups'] :
+								((isset($previousRequest['max-groups'])) ? $previousRequest['max-groups'] : 5);
+		$rq['max-tables'] = (isset($_REQUEST['max-tables'])) ? $_REQUEST['max-tables'] :
+								((isset($previousRequest['max-tables'])) ? $previousRequest['max-tables'] : 20);
+		$rq['max-sequences'] = (isset($_REQUEST['max-sequences'])) ? $_REQUEST['max-sequences'] :
+								((isset($previousRequest['max-sequences'])) ? $previousRequest['max-sequences'] : 20);
+		$rq['sort'] = (isset($_REQUEST['sort'])) ? $_REQUEST['sort'] :
+						((isset($previousRequest['sort'])) ? $previousRequest['sort'] : 'previous-mark');
 
 		// Form
-		echo "<form id=\"statistics_form\" action=\"activity.php?action=refresh-activity&amp;{$misc->href}\"";
+		echo "<form id=\"activity_form\" action=\"activity.php?action=refresh-activity&amp;{$misc->href}\"";
 		echo "  method=\"post\" enctype=\"multipart/form-data\">\n";
-		echo "<div class=\"form-container-5c\">\n";
+		echo "<div id=\"activity_form\" class=\"form-container-5c\">\n";
 
 		// Header row
-		echo "\t<div></div>\n";
+		echo "\t<div class=\"form-header\"><button id=\"resetButton\" class=\"filterreset\" onclick=\"javascript:resetForm();\" />{$lang['strreset']}</button></div>\n";
 		echo "\t<div></div>\n";
 		echo "\t<div class=\"form-header\">{$lang['strgroups']}</div>\n";
 		echo "\t<div class=\"form-header\">{$lang['strtables']}</div>\n";
@@ -62,78 +61,128 @@
 		// Include regexp
 		echo "\t<div class=\"form-label\">{$lang['strincluderegexp']}</div>\n";
 		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strincluderegexphelp']}\"/></div>\n";
-		echo "\t<div class=\"form-input\"><input name=\"groups-include\" size=\"20\" value=\"$groupsInclude\"></div>\n";
-		echo "\t<div class=\"form-input\"><input name=\"tables-include\" size=\"25\" value=\"$tablesInclude\"></div>\n";
-		echo "\t<div class=\"form-input\"><input name=\"sequences-include\" size=\"25\" value=\"$sequencesInclude\"></div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"groups-include\" size=\"20\" value=\"{$rq['groups-include']}\"></div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"tables-include\" size=\"25\" value=\"{$rq['tables-include']}\"></div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"sequences-include\" size=\"25\" value=\"{$rq['sequences-include']}\"></div>\n";
 
 		// Exclude regexp
 		echo "\t<div class=\"form-label\">{$lang['strexcluderegexp']}</div>\n";
 		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strexcluderegexphelp']}\"/></div>\n";
-		echo "\t<div class=\"form-input\"><input name=\"groups-exclude\" size=\"20\" value=\"$groupsExclude\"></div>\n";
-		echo "\t<div class=\"form-input\"><input name=\"tables-exclude\" size=\"25\" value=\"$tablesExclude\"></div>\n";
-		echo "\t<div class=\"form-input\"><input name=\"sequences-exclude\" size=\"25\" value=\"$sequencesExclude\"></div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"groups-exclude\" size=\"20\" value=\"{$rq['groups-exclude']}\"></div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"tables-exclude\" size=\"25\" value=\"{$rq['tables-exclude']}\"></div>\n";
+		echo "\t<div class=\"form-input\"><input name=\"sequences-exclude\" size=\"25\" value=\"{$rq['sequences-exclude']}\"></div>\n";
 
 		// Size limits
 		echo "\t<div class=\"form-label\">{$lang['strmaxrows']}</div>\n";
 		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strmaxrowshelp']}\"/></div>\n";
-		echo "\t<div class=\"form-input\"><input type=\"number\" name=\"max-groups\" min=\"0\" value=\"$maxGroups\"></div>\n";
-		echo "\t<div class=\"form-input\"><input type=\"number\" name=\"max-tables\" min=\"0\" value=\"$maxTables\"></div>\n";
-		echo "\t<div class=\"form-input\"><input type=\"number\" name=\"max-sequences\" min=\"0\" value=\"$maxSequences\"></div>\n";
+		echo "\t<div class=\"form-input\"><input type=\"number\" name=\"max-groups\" min=\"0\" value=\"{$rq['max-groups']}\"></div>\n";
+		echo "\t<div class=\"form-input\"><input type=\"number\" name=\"max-tables\" min=\"0\" value=\"{$rq['max-tables']}\"></div>\n";
+		echo "\t<div class=\"form-input\"><input type=\"number\" name=\"max-sequences\" min=\"0\" value=\"{$rq['max-sequences']}\"></div>\n";
+
+		// Sort criteria
+		echo "\t<div class=\"form-label\">{$lang['strmainsortcriteria']}</div>\n";
+		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strmainsortcriteriahelp']}\"/></div>\n";
+		if ($rq['sort'] == 'latest-mark') {
+			$latestMarkChecked = 'checked'; $previousDisplayChecked = '';
+		} else {
+			$latestMarkChecked = ''; $previousDisplayChecked = 'checked';
+		}
+		echo "\t<div class=\"sort-criteria-radio-buttons\">{$lang['strchangessince']}\n";
+		echo "\t\t<input type=\"radio\" name=\"sort\" value=\"latest-mark\" {$latestMarkChecked}>{$lang['strlatestmark']}\n";
+		echo "\t\t<input type=\"radio\" name=\"sort\" value=\"previous-display\" {$previousDisplayChecked}>{$lang['strpreviousdisplay']}";
+		echo "\t</div>\n";
 
 		echo"</div>\n";
 		echo $misc->form;
 
 		// Buttons line
-		if ($sort == 'latest-mark') {
-			$latestMarkChecked = 'checked'; $previousDisplayChecked = '';
-		} else {
-			$latestMarkChecked = ''; $previousDisplayChecked = 'checked';
-		}
-		echo "<p>{$lang['strmainsortcriteria']}\n";
-		echo "<input type=\"radio\" name=\"sort\" value=\"latest-mark\" {$latestMarkChecked}>{$lang['strlatestmark']}\n";
-		echo "<input type=\"radio\" name=\"sort\" value=\"previous-display\" {$previousDisplayChecked}>{$lang['strpreviousdisplay']}&nbsp;&nbsp;&nbsp;&nbsp;\n";
+		$buttonValue = ($activityToBeDisplayed) ? $lang['strrefresh'] : $lang['strdisplay'];
+		echo "<div class=\"actionslist\">\n";
+		echo "\t<input type=\"submit\" name=\"refresh\" id=\"refreshBt\" value=\"$buttonValue\" />\n";
 
-		$buttonValue = (isset($_REQUEST['groups-include'])) ? $lang['strrefresh'] : $lang['strdisplay'];
-		echo "<input type=\"submit\" name=\"refresh\" id=\"refreshBt\" value=\"$buttonValue\" />\n";
-		echo "<input type=\"button\" name=\"reset\" value=\"{$lang['strreset']}\" onclick=\"javascript:resetForm();\" />\n";
-		echo "</p></form>\n";
+		// The autorefresh toogle button, if relevant
+		// The timer comes from the config.inc.php file (10 seconds if not found)
+		$autoRefreshTimeout = (isset($conf['auto_refresh'])) ? $conf['auto_refresh'] : 10;
+		if ($autoRefreshTimeout > 0) {
+			$refreshUrl = "activity.php?action=auto-refresh-activity&amp;{$misc->href}";
+			$checked = ($isAutoRefresh) ? 'checked' : '';
+			echo "\t<span class=\"autorefresh-label\">{$lang['strautorefresh']}</span>\n";
+			echo "\t<label class=\"switch\">\n";
+			echo "\t\t<input type=\"checkbox\" name=\"autorefresh\" {$checked} onchange=\"toggleAutoRefresh(this, '" . htmlspecialchars_decode($refreshUrl) . "')\">\n";
+			echo "\t\t<span class=\"slider\"></span>";
+			echo "\t</label>";
+		}
+
+		echo "</div></form>\n";
+
+		// Javascript function calls when auto-refresh is on
+		if ($autoRefreshTimeout > 0 && $isAutoRefresh) {
+			echo "\t\t<script>";
+			echo "\t\t\tschedulePageReload({$autoRefreshTimeout}, '" . htmlspecialchars_decode($refreshUrl) . "');\n";
+			echo "\t\t\tdisableInput(true);\n";
+			echo "\t\t</script>\n";
+		}
 
 		// Display the activity if parameters are known
-		if (isset($_REQUEST['groups-include'])) {
-			displayActivity();
+		if ($activityToBeDisplayed) {
+			displayActivity($isAutoRefresh);
 		}
 	}
 
 	/**
 	 * Display the changes statistics.
 	 */
-	function displayActivity() {
-		global $misc, $lang, $emajdb;
+	function displayActivity($isAutoRefresh) {
+		global $misc, $lang, $emajdb, $rq;
 		include_once('classes/ArrayRecordSet.php');
 
 		// Get the E-Maj statistics
 		list($errorTrapped,
 			 $currentTime, $lastRefreshIntervalStr, $globalChanges, $globalCps,
-			 $globalCounters, $loggingGroups, $loggedTables, $loggedSequences) = getEmajStat();
+			 $globalCounters, $loggingGroups, $loggedTables, $loggedSequences) = getEmajStat($isAutoRefresh);
 
 		// If an error has been trapped at db side, just warn and stop the display
 		if ($errorTrapped) {
 			echo "<p>{$lang['strerrortrapped']}</p>";
 		} else {
 
+			// Displayed tables have no actions.
+			$actions = array();
+
 			// Display the global data line
+			$misc->printSubtitle($lang['strglobalactivity']);
 
-			$misc->printTitle($lang['strglobalactivity']);
+			$columns = array(
+				'datetime' => array(
+					'title' => $lang['strdatetime'],
+					'field' => $currentTime,
+				),
+				'since' => array(
+					'title' => $lang['strsinceinsec'],
+					'field' => $lastRefreshIntervalStr,
+					'type'  => 'numeric',
+				),
+				'changes_since_previous' => array(
+					'title' => $lang['strchanges'],
+					'field' => $globalChanges,
+					'type'  => 'numeric',
+				),
+				'cps_since_previous' => array(
+					'title' => $lang['strchangespersecond'],
+					'field' => $globalCps,
+					'type'  => 'numeric',
+				),
+			);
 
-			echo "<p>$currentTime - " . sprintf($lang['strglobalactivitydetails'], $lastRefreshIntervalStr, $globalChanges, $globalCps) . "</p>";
-	
+			$globalData = new ArrayRecordSet(array(''));	// Empty array because all fields to display are literals
+			$misc->printTable($globalData, $columns, $actions, 'activity-global');
+
 			// Display the tables groups
+			if ($rq['max-groups'] > 0) {
+				$misc->printSubtitle(sprintf($lang['strlogginggroupstitle'], $globalCounters['nb_logging_groups'], $globalCounters['nb_groups']));
 
-			if ($_REQUEST['max-groups'] > 0) {
-				$misc->printTitle(sprintf($lang['strlogginggroupstitle'], $globalCounters['nb_logging_groups'], $globalCounters['nb_groups']));
+				$loggingGroupsArs = new ArrayRecordSet(array_slice($loggingGroups, 0, $rq['max-groups']));
 
-				$loggingGroupsArs = new ArrayRecordSet(array_slice($loggingGroups, 0, $_REQUEST['max-groups']));
-		
 				$columns = array(
 					'group' => array(
 						'title' => $lang['strgroup'],
@@ -172,18 +221,16 @@
 						'type'  => 'numeric',
 					),
 				);
-		
-				$actions = array();
-		
+
 				$misc->printTable($loggingGroupsArs, $columns, $actions, 'activity-groups', $lang['strnogroupselected']);
 			}
-	
-			// Display the logged tables
-			if ($_REQUEST['max-tables'] > 0) {
-				$misc->printTitle(sprintf($lang['strtablesinlogginggroups'], $globalCounters['nb_logged_tables'], $globalCounters['nb_tables']));
 
-				$loggedTablesArs = new ArrayRecordSet(array_slice($loggedTables, 0, $_REQUEST['max-tables']));
-		
+			// Display the logged tables
+			if ($rq['max-tables'] > 0) {
+				$misc->printSubtitle(sprintf($lang['strtablesinlogginggroups'], $globalCounters['nb_logged_tables'], $globalCounters['nb_tables']));
+
+				$loggedTablesArs = new ArrayRecordSet(array_slice($loggedTables, 0, $rq['max-tables']));
+
 				$columns = array(
 					'schema' => array(
 						'title' => $lang['strschema'],
@@ -222,17 +269,15 @@
 						'type'  => 'numeric',
 					),
 				);
-		
-				$actions = array();
-		
+
 				$misc->printTable($loggedTablesArs, $columns, $actions, 'activity-tables', $lang['strnotableselected']);
 			}
-	
-			// Display the logged sequences
-			if ($_REQUEST['max-sequences'] > 0) {
-				$misc->printTitle(sprintf($lang['strsequencesinlogginggroups'], $globalCounters['nb_logged_sequences'], $globalCounters['nb_sequences']));
 
-				$loggedSequencesArs = new ArrayRecordSet(array_slice($loggedSequences, 0, $_REQUEST['max-sequences']));
+			// Display the logged sequences
+			if ($rq['max-sequences'] > 0) {
+				$misc->printSubtitle(sprintf($lang['strsequencesinlogginggroups'], $globalCounters['nb_logged_sequences'], $globalCounters['nb_sequences']));
+
+				$loggedSequencesArs = new ArrayRecordSet(array_slice($loggedSequences, 0, $rq['max-sequences']));
 		
 				$columns = array(
 					'schema' => array(
@@ -273,8 +318,6 @@
 					),
 				);
 		
-				$actions = array();
-		
 				$misc->printTable($loggedSequencesArs, $columns, $actions, 'activity-sequencesables', $lang['strnosequenceselected']);
 			}
 		}
@@ -283,8 +326,8 @@
 	/**
 	 * Compute the changes statistics.
 	 */
-	function getEmajStat() {
-		global $emajdb;
+	function getEmajStat($isAutoRefresh) {
+		global $emajdb, $rq;
 
 		// Get the emajStat related session variables
 		if (isset($_SESSION['emajStat'][$_REQUEST['server']][$_REQUEST['database']])) {
@@ -296,12 +339,13 @@
 			$loggedTables = $_SESSION['emajStat'][$_REQUEST['server']][$_REQUEST['database']]['loggedTables'];
 			$loggedSequences = $_SESSION['emajStat'][$_REQUEST['server']][$_REQUEST['database']]['loggedSequences'];
 			$previousRequest = $_SESSION['emajStat'][$_REQUEST['server']][$_REQUEST['database']]['previousRequest'];
-			$areRegExpFiltersModified = $_REQUEST['groups-include'] != $previousRequest['groups-include']
-									 || $_REQUEST['groups-exclude'] != $previousRequest['groups-exclude']
-									 || $_REQUEST['tables-include'] != $previousRequest['tables-include']
-									 || $_REQUEST['tables-exclude'] != $previousRequest['tables-exclude']
-									 || $_REQUEST['sequences-include'] != $previousRequest['sequences-include']
-									 || $_REQUEST['sequences-exclude'] != $previousRequest['sequences-exclude'];
+			$areRegExpFiltersModified = ! $isAutoRefresh &&
+										($rq['groups-include'] != $previousRequest['groups-include']
+										 || $rq['groups-exclude'] != $previousRequest['groups-exclude']
+										 || $rq['tables-include'] != $previousRequest['tables-include']
+										 || $rq['tables-exclude'] != $previousRequest['tables-exclude']
+										 || $rq['sequences-include'] != $previousRequest['sequences-include']
+										 || $rq['sequences-exclude'] != $previousRequest['sequences-exclude']);
 		} else {
 			$previousEpoch = 0;
 			$previousEmajTimeStampTimeIdSeq = 0;
@@ -311,9 +355,9 @@
 
 		// Get the timestamp and the sequences last_value
 #$begin = hrtime(true);
-		$seqRs = $emajdb->emajStatGetSeqLastVal($_REQUEST['groups-include'], $_REQUEST['groups-exclude'],
-											$_REQUEST['tables-include'], $_REQUEST['tables-exclude'],
-											$_REQUEST['sequences-include'], $_REQUEST['sequences-exclude'],);
+		$seqRs = $emajdb->emajStatGetSeqLastVal($rq['groups-include'], $rq['groups-exclude'],
+												$rq['tables-include'], $rq['tables-exclude'],
+												$rq['sequences-include'], $rq['sequences-exclude']);
 #$end = hrtime(true);
 #echo "<p>Response time = " . ($end - $begin)/1e+9 . " s</p>";
 		// Extract the technical data (timestamp and emaj sequences last_value
@@ -357,21 +401,21 @@
 		//   rebuild the groups, tables and sequences arrays.
 		if ($currentEmajTimeStampTimeIdSeq != $previousEmajTimeStampTimeIdSeq || $areRegExpFiltersModified) {
 			// Get tables groups from the database
-			$rs = $emajdb->emajStatGetGroups($_REQUEST['groups-include'], $_REQUEST['groups-exclude']);
+			$rs = $emajdb->emajStatGetGroups($rq['groups-include'], $rq['groups-exclude']);
 			$loggingGroups = array();
 			while (!$rs->EOF) {
 				array_push($loggingGroups, $rs->fields);
 				$rs->moveNext();
 			}
 			// Get tables from the database
-			$rs = $emajdb->emajStatGetTables($_REQUEST['groups-include'], $_REQUEST['groups-exclude'], $_REQUEST['tables-include'], $_REQUEST['tables-exclude']);
+			$rs = $emajdb->emajStatGetTables($rq['groups-include'], $rq['groups-exclude'], $rq['tables-include'], $rq['tables-exclude']);
 			$loggedTables = array();
 			while (!$rs->EOF) {
 				array_push($loggedTables, $rs->fields);
 				$rs->moveNext();
 			}
 			// Get sequences from the database
-			$rs = $emajdb->emajStatGetSequences($_REQUEST['groups-include'], $_REQUEST['groups-exclude'], $_REQUEST['sequences-include'], $_REQUEST['sequences-exclude']);
+			$rs = $emajdb->emajStatGetSequences($rq['groups-include'], $rq['groups-exclude'], $rq['sequences-include'], $rq['sequences-exclude']);
 			$loggedSequences = array();
 			while (!$rs->EOF) {
 				array_push($loggedSequences, $rs->fields);
@@ -485,7 +529,7 @@
 			}
 			return ($a['changes_since_previous'] < $b['changes_since_previous']) ? 1 : -1;
 		}
-		if (isset($_POST['sort']) && $_POST['sort'] == 'latest-mark') {
+		if (isset($rq['sort']) && $rq['sort'] == 'latest-mark') {
 			usort($loggingGroups, "cmpGroupsMark");
 			usort($loggedTables, "cmpRelationsMark");
 			usort($loggedSequences, "cmpRelationsMark");
@@ -502,7 +546,7 @@
 		$_SESSION['emajStat'][$_REQUEST['server']][$_REQUEST['database']]['loggingGroups'] = $loggingGroups;
 		$_SESSION['emajStat'][$_REQUEST['server']][$_REQUEST['database']]['loggedTables'] = $loggedTables;
 		$_SESSION['emajStat'][$_REQUEST['server']][$_REQUEST['database']]['loggedSequences'] = $loggedSequences;
-		$_SESSION['emajStat'][$_REQUEST['server']][$_REQUEST['database']]['previousRequest'] = $_REQUEST;
+		$_SESSION['emajStat'][$_REQUEST['server']][$_REQUEST['database']]['previousRequest'] = $rq;
 
 		// And return 1 flag, 4 single values and 4 arrays to display
 		return array(false,
@@ -517,6 +561,9 @@
 	switch ($action) {
 		case 'refresh-activity':
 			doDefault();
+			break;
+		case 'auto-refresh-activity':
+			doDefault(true);
 			break;
 		default:
 			doDefault();

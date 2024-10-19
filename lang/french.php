@@ -139,6 +139,7 @@
 	$lang['strsequences'] = 'Séquences';
 	$lang['strsetcomment'] = 'Commenter';
 	$lang['strsince'] = 'Depuis';
+	$lang['strsinceinsec'] = 'Depuis (sec)';
 	$lang['strsql'] = 'SQL';
 	$lang['strstart'] = 'Démarrer';
 	$lang['strstartmark'] = 'Marque début';
@@ -904,19 +905,20 @@
 
 	// Form
 	$lang['strincluderegexp'] = 'Regexp d\'inclusion';
-	$lang['strincluderegexphelp'] = 'Expression rationelle permettant de sélectionner les groupes, tables ou séquences à filtrer. Une chaîne vide équivaut à .* et inclut tous les objets. Pour les tables et séquences, le filtrage porte sur les noms préfixés par leur schéma. Voir la documentation PostgreSQL pour les syntaxes possibles.';
+	$lang['strincluderegexphelp'] = 'Expression rationelle permettant de sélectionner les groupes, tables ou séquences à filtrer. Une chaîne vide équivaut à .* et inclut tous les objets. Pour les tables et séquences, le filtrage porte sur les noms préfixés par leur schéma. Voir la documentation PostgreSQL pour les syntaxes d\'expressions régulières possibles.';
 	$lang['strexcluderegexp'] = 'Regexp d\'exclusion';
-	$lang['strexcluderegexphelp'] = 'Expression rationelle permettant d\'exclure les groupes, tables ou séquences à filtrer. Une chaîne vide équivaut à aucune exclusion. Pour les tables et séquences, le filtrage porte sur les noms préfixés par leur schéma. Voir la documentation PostgreSQL pour les syntaxes possibles.';
+	$lang['strexcluderegexphelp'] = 'Expression rationelle permettant d\'exclure les groupes, tables ou séquences à filtrer. Une chaîne vide équivaut à aucune exclusion. Pour les tables et séquences, le filtrage porte sur les noms préfixés par leur schéma. Voir la documentation PostgreSQL pour les syntaxes d\'expressions régulières possibles.';
 	$lang['strmaxrows'] = 'Nb lignes maximum';
 	$lang['strmaxrowshelp'] = 'Définit le nombre maximum de lignes à afficher dans chacun des tableaux des groupes, tables et séquences, ces lignes étant triées par ordre décroissant de mises à jour, soit depuis la dernière marque, soit depuis l\'affichage précédent. La valeur 0 supprime le tableau correspondant.';
-	$lang['strmainsortcriteria'] = 'Critère de tri principal : Nb mises à jour depuis';
+	$lang['strmainsortcriteria'] = 'Critère de tri principal';
+	$lang['strmainsortcriteriahelp'] = 'Définit le critère de tri principal des groupes, tables et séquences affichées. En cas d\'égalité du nombre de mises à jour, les lignes sont triées sur le nom des groupes, tables et séquences, les noms de tables et séquences étant préfixées par leur nom de schéma.';
+	$lang['strchangessince'] = 'Nb mises à jour depuis';
 	$lang['strlatestmark'] = 'Dernière marque';
 	$lang['strpreviousdisplay'] = 'Affichage précédent';
 
 	// Display
 	$lang['strerrortrapped'] = 'Une erreur a été interceptée lors de la consultation des séquences.';
 	$lang['strglobalactivity'] = 'Activité globale';
-	$lang['strglobalactivitydetails'] = 'Depuis %s sec, nb MàJ = %s (%s MàJ / sec)';
 	$lang['strlogginggroupstitle'] = 'Groupes démarrés (%s/%s)';
 	$lang['strnogroupselected'] = 'Aucun groupe de tables n\'est sélectionné.';
 	$lang['strtablesinlogginggroups'] = 'Tables des groupes démarrés (%s/%s)';

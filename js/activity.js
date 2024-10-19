@@ -16,3 +16,40 @@ function resetForm() {
 	$('input[name="max-sequences"]').val('20');
 	$('input:radio[name="sort"][value="latest-mark"]').prop('checked', true);
 }
+
+//
+/// Functions used for auto-refresh
+//
+let autorefreshTimeout;
+
+// Function to start and stop the page automatic refresh
+function toggleAutoRefresh(input, url) {
+	if (input.checked) {
+		window.location.replace(url);
+		disableInput(true);
+	} else {
+		clearTimeout(autorefreshTimeout);
+		disableInput(false);
+	}
+}
+
+// Disable or enable input elements of the form.
+function disableInput(disable) {
+	$('input[name="groups-include"]').prop('disabled', disable);
+	$('input[name="tables-include"]').prop('disabled', disable);
+	$('input[name="sequences-include"]').prop('disabled', disable);
+	$('input[name="groups-exclude"]').prop('disabled', disable);
+	$('input[name="tables-exclude"]').prop('disabled', disable);
+	$('input[name="sequences-exclude"]').prop('disabled', disable);
+	$('input[name="max-groups"]').prop('disabled', disable);
+	$('input[name="max-tables"]').prop('disabled', disable);
+	$('input[name="max-sequences"]').prop('disabled', disable);
+	$('input:radio[name="sort"]').prop('disabled', disable);
+	$('input[name="refresh"]').prop('disabled', disable);
+	$('#resetButton').prop('disabled', disable);
+}
+
+// Function to schedule the page reload
+function schedulePageReload(timer, url) {
+	autorefreshTimeout = setTimeout(function() {window.location.replace(url);}, timer * 1000);
+}

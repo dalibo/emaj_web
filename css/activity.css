@@ -1,0 +1,18 @@
+/* activity.css
+ *
+ * Specific css source for the activity.php page
+ */
+
+/* Groupped cells for the main sort criteria radio button in the form grid div */
+div.sort-criteria-radio-buttons {
+	grid-column-start: 3;
+	grid-column-end: 6;
+	grid-row-start: 5;
+	grid-row-end: 5;
+}
+
+/*  */
+span.autorefresh-label {
+	margin-left:20px;
+	margin-right:8px;
+}

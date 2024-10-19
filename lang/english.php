@@ -139,6 +139,7 @@
 	$lang['strsequences'] = 'Sequences';
 	$lang['strsetcomment'] = 'Set a comment';
 	$lang['strsince'] = 'Since';
+	$lang['strsinceinsec'] = 'Since (sec)';
 	$lang['strsql'] = 'SQL';
 	$lang['strstart'] = 'Start';
 	$lang['strstartmark'] = 'Start mark';
@@ -904,19 +905,20 @@
 
 	// Form
 	$lang['strincluderegexp'] = 'Include regexp';
-	$lang['strincluderegexphelp'] = 'Regular expression allowing to select groups, tables or sequences to filter. An empty string equals .* and includes all objects. For tables and sequences, names are schema qualified. See the PostgreSQL documentation for availables syntaxes.';
+	$lang['strincluderegexphelp'] = 'Regular expression allowing to select groups, tables or sequences to filter. An empty string equals .* and includes all objects. For tables and sequences, names are schema qualified. See the PostgreSQL documentation for available regexp syntaxes.';
 	$lang['strexcluderegexp'] = 'Exclude regexp';
-	$lang['strexcluderegexphelp'] = 'Regular expression allowing to exclude groups, tables or sequences to filter. An empty string means no exclusion. For tables and sequences, names are schema qualified. See the PostgreSQL documentation for availables syntaxes.';
+	$lang['strexcluderegexphelp'] = 'Regular expression allowing to exclude groups, tables or sequences to filter. An empty string means no exclusion. For tables and sequences, names are schema qualified. See the PostgreSQL documentation for available regexp syntaxes.';
 	$lang['strmaxrows'] = 'Maximum #rows';
 	$lang['strmaxrowshelp'] = 'Defines the maximum number of rows to display for groups, tables and sequences lists, these rows being sorted by changes either since the latest mark or since the previous display, in descending order. Value 0 deletes the corresponding list.';
-	$lang['strmainsortcriteria'] = 'Main sort criteria: #changes since';
+	$lang['strmainsortcriteria'] = 'Main sort criteria';
+	$lang['strmainsortcriteriahelp'] = 'Defines the main sort criteria for the displayed groups, tables and sequences. When changes numbers are equal, rows are sorted by groups, tables and sequences names, groups and sequences names being schema qualified. ';
+	$lang['strchangessince'] = '#changes since';
 	$lang['strlatestmark'] = 'Latest mark';
 	$lang['strpreviousdisplay'] = 'Previous display';
 
 	// Display
 	$lang['strerrortrapped'] = 'An error has been trapped while reading sequences.';
 	$lang['strglobalactivity'] = 'Global activity';
-	$lang['strglobalactivitydetails'] = 'Since %s sec, #changes = %s (%s c/s)';
 	$lang['strlogginggroupstitle'] = 'Logging groups (%s/%s)';
 	$lang['strnogroupselected'] = 'No tables group selected.';
 	$lang['strtablesinlogginggroups'] = 'Tables in logging groups (%s/%s)';

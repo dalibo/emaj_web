@@ -438,6 +438,14 @@
 		}
 
 		/**
+		 * Print out a subtitle
+		 */
+		function printSubtitle($title) {
+
+			echo "<h3>{$title}</h3>\n";
+		}
+
+		/**
 		* Print out a standart message and/or and error message
 		* @param $msg			A (non error) message to print, if supplied
 		*        $errMsg		An error message to print, if supplied

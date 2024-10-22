@@ -25,3 +25,15 @@ div.rlbk-nav-title {
 	font-weight: bold;
 	margin-bottom: 8px;
 }
+
+/* Auto-Refresh block, help icon and label */
+div.rlbk-nav-arbutton {
+	display: flex;
+	justify-content: center;
+}
+img.autorefresh-help {
+	margin-left: 8px;
+}
+div.autorefresh-label {
+	margin-top: 5px;
+}

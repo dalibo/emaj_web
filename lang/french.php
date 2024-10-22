@@ -170,6 +170,7 @@
 	$lang['strmarknamehelp'] = 'Le nom de la marque doit être unique pour le groupe. Un caractère % représente l\'heure courante (format hh.mn.ss.ms).';
 	$lang['strmarknamemultihelp'] = 'Le nom de la marque doit être unique pour les groupes concernés. Un caractère % représente l\'heure courante (format hh.mn.ss.ms).';
 	$lang['strfiltershelp'] = 'Afficher/cacher les filtres. Les filtres sur le contenu des colonnes peuvent contenir des chaînes de caractères (abc), des nombres (123), des conditions d\'inégalité (>= 1000), des expressions rationnelles (/^ABC\d\d/), des conditions multiples avec les opérateurs \'and\', \'or\' ou \'!\'.';
+	$lang['strautorefreshhelp'] = 'Le délai de rafraichissement automatique (actuellement %s sec) est paramétrable dans le fichier de configuration d\'Emaj_web.';
 
 	// Error handling
 	$lang['strnotloaded'] = 'Vous n\'avez pas compilé correctement le support de la base de données dans votre installation de PHP.';
@@ -914,7 +915,6 @@
 	$lang['strchangessince'] = 'Nb mises à jour depuis';
 	$lang['strlatestmark'] = 'Dernière marque';
 	$lang['strpreviousdisplay'] = 'Affichage précédent';
-	$lang['strautorefreshhelp'] = 'Le délai de rafraichissement automatique (actuellement %s sec) est paramétrable dans le fichier de configuration d\'Emaj_web.';
 
 	// Display
 	$lang['strerrortrapped'] = 'Une erreur a été interceptée lors de la consultation des séquences.';

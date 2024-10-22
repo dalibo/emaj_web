@@ -170,6 +170,7 @@
 	$lang['strmarknamehelp'] = 'The mark name must be unique within the group. A % character represents the current time (format hh.mn.ss.ms).';
 	$lang['strmarknamemultihelp'] = 'The mark name must be unique within the concerned groups. A % character represents the current time (format hh.mn.ss.ms).';
 	$lang['strfiltershelp'] = 'Display/hide filters. Filters on the columns content may contain character strings (abc), numbers (123), inequality conditions (>= 1000), regular expressions (/^ABC\d\d/), multiple conditions with \'and\', \'or\', \'!\' operators.';
+	$lang['strautorefreshhelp'] = 'The automatic refresh delay (currently %s sec) can be customized in the Emaj_web configuration file.';
 
 	// Error handling
 	$lang['strnotloaded'] = 'Your PHP installation does not support PostgreSQL. You need to recompile PHP using the --with-pgsql configure option.';
@@ -914,7 +915,6 @@
 	$lang['strchangessince'] = '#changes since';
 	$lang['strlatestmark'] = 'Latest mark';
 	$lang['strpreviousdisplay'] = 'Previous display';
-	$lang['strautorefreshhelp'] = 'The automatic refresh delay (currently %s sec) can be customized in the Emaj_web configuration file.';
 
 	// Display
 	$lang['strerrortrapped'] = 'An error has been trapped while reading sequences.';

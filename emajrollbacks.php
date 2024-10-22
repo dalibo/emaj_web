@@ -744,15 +744,17 @@
 
 		// ... in column 4, the autorefresh toogle button, if relevant
 		echo "\t<div class=\"rlbk-nav-24\">\n";
-		echo "\t\t<div class=\"rlbk-nav-arbutton\">\n";
 		if ($autoRefreshTimeout > 0 && !$isCompleted) {
+			echo "\t\t<div class=\"rlbk-nav-arbutton\">\n";
 			echo "\t\t<label class=\"switch\">\n";
 			echo "\t\t\t<input type=\"checkbox\" name=\"autorefresh\" {$checked} onchange=\"toggleAutoRefresh(this, {$_REQUEST['rlbkid']}, '" . htmlspecialchars_decode($refreshUrl) . "')\">\n";
 			echo "\t\t\t<span class=\"slider\"></span>";
 			echo "\t\t</label>";
-			echo "\t\t\t<br>{$lang['strautorefresh']}\n";
+			$helpMsg = sprintf($lang['strautorefreshhelp'], $autoRefreshTimeout);
+			echo "\t<img src=\"{$misc->icon('Info')}\" alt=\"info\" class=\"autorefresh-help\" title=\"$helpMsg\"/>";
+			echo "\t\t</div>\n";
+			echo "\t\t\t<div class=\"autorefresh-label\">{$lang['strautorefresh']}</div>\n";
 		}
-		echo "\t\t</div>\n";
 		echo "\t</div>\n";
 
 		// ... in column 5, the next rollback link, if any

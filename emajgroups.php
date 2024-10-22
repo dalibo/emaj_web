@@ -1559,11 +1559,10 @@
 		}
 
 		// Title
-		echo "<hr/>\n";
 		if ($_REQUEST['rangeend'] == 'currentsituation')
-			$misc->printTitle(sprintf($lang['strchangestblsince'], htmlspecialchars($_REQUEST['rangestart'])));
+			$misc->printSubtitle(sprintf($lang['strchangestblsince'], htmlspecialchars($_REQUEST['rangestart'])));
 		else
-			$misc->printTitle(sprintf($lang['strchangestblbetween'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($_REQUEST['rangeend'])));
+			$misc->printSubtitle(sprintf($lang['strchangestblbetween'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($_REQUEST['rangeend'])));
 
 		// Display summary statistics
 		echo "<table class=\"data\"><tr>\n";
@@ -1719,11 +1718,10 @@
 		$summary = $emajdb->getSeqStatSummary();
 
 		// Title
-		echo "<hr/>\n";
 		if ($_REQUEST['rangeend'] == 'currentsituation')
-			$misc->printTitle(sprintf($lang['strchangesseqsince'], htmlspecialchars($_REQUEST['rangestart'])));
+			$misc->printSubtitle(sprintf($lang['strchangesseqsince'], htmlspecialchars($_REQUEST['rangestart'])));
 		else
-			$misc->printTitle(sprintf($lang['strchangesseqbetween'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($_REQUEST['rangeend'])));
+			$misc->printSubtitle(sprintf($lang['strchangesseqbetween'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($_REQUEST['rangeend'])));
 
 		// Display summary statistics
 		echo "<table class=\"data\"><tr>\n";
@@ -1833,11 +1831,10 @@
 		}
 
 		// Title
-		echo "<hr/>\n";
 		if ($_REQUEST['rangeend'] == 'currentsituation')
-			$misc->printTitle(sprintf($lang['strchangestblsince'], htmlspecialchars($_REQUEST['rangestart'])));
+			$misc->printSubtitle(sprintf($lang['strchangestblsince'], htmlspecialchars($_REQUEST['rangestart'])));
 		else
-			$misc->printTitle(sprintf($lang['strchangestblbetween'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($_REQUEST['rangeend'])));
+			$misc->printSubtitle(sprintf($lang['strchangestblbetween'], htmlspecialchars($_REQUEST['rangestart']), htmlspecialchars($_REQUEST['rangeend'])));
 
 		// Display summary statistics
 		echo "<table class=\"data\"><tr>\n";

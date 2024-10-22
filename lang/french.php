@@ -139,7 +139,6 @@
 	$lang['strsequences'] = 'Séquences';
 	$lang['strsetcomment'] = 'Commenter';
 	$lang['strsince'] = 'Depuis';
-	$lang['strsinceinsec'] = 'Depuis (sec)';
 	$lang['strsql'] = 'SQL';
 	$lang['strstart'] = 'Démarrer';
 	$lang['strstartmark'] = 'Marque début';
@@ -915,6 +914,7 @@
 	$lang['strchangessince'] = 'Nb mises à jour depuis';
 	$lang['strlatestmark'] = 'Dernière marque';
 	$lang['strpreviousdisplay'] = 'Affichage précédent';
+	$lang['strautorefreshhelp'] = 'Le délai de rafraichissement automatique (actuellement %s sec) est paramétrable dans le fichier de configuration d\'Emaj_web.';
 
 	// Display
 	$lang['strerrortrapped'] = 'Une erreur a été interceptée lors de la consultation des séquences.';

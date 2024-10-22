@@ -9,6 +9,11 @@
 
 	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 
+	// If the Erase Parameters button (that is only available for test) has been hit, forget session data and behave as an initial page display with the form only
+	if (isset($_REQUEST['erase_parameters'])) {
+		unset($_SESSION['emajStat'][$_REQUEST['server']][$_REQUEST['database']], $_REQUEST['groups-include']);
+	}
+
 	/**
 	 * Show the changes activity.
 	 */
@@ -19,7 +24,8 @@
 
 		$misc->printTitle($lang['strchangesactivity']);
 
-		$activityToBeDisplayed = isset($_REQUEST['groups-include']) || isset($_SESSION['emajStat'][$_REQUEST['server']][$_REQUEST['database']]['previousRequest']);
+		$activityToBeDisplayed = isset($_REQUEST['groups-include'])
+							  || isset($_SESSION['emajStat'][$_REQUEST['server']][$_REQUEST['database']]['previousRequest']);
 
 		// Prepare the input values displayed in the form.
 		$previousRequest = (isset($_SESSION['emajStat'][$_REQUEST['server']][$_REQUEST['database']]['previousRequest'])) ?
@@ -100,22 +106,32 @@
 		echo "<div class=\"actionslist\">\n";
 		echo "\t<input type=\"submit\" name=\"refresh\" id=\"refreshBt\" value=\"$buttonValue\" />\n";
 
-		// The autorefresh toogle button, if relevant
+		// The autorefresh toogle button, if relevant (timer > 0)
 		// The timer comes from the config.inc.php file (10 seconds if not found)
 		$autoRefreshTimeout = (isset($conf['auto_refresh'])) ? $conf['auto_refresh'] : 10;
 		if ($autoRefreshTimeout > 0) {
 			$refreshUrl = "activity.php?action=auto-refresh-activity&amp;{$misc->href}";
 			$checked = ($isAutoRefresh) ? 'checked' : '';
-			echo "\t<span class=\"autorefresh-label\">{$lang['strautorefresh']}</span>\n";
+			$disabledClass = ($activityToBeDisplayed) ? '' : 'autorefresh-disable';
+			$disabledAttr = ($activityToBeDisplayed) ? '' : 'disabled';
+			echo "\t<span class=\"autorefresh-label {$disabledClass}\">{$lang['strautorefresh']}</span>\n";
 			echo "\t<label class=\"switch\">\n";
-			echo "\t\t<input type=\"checkbox\" name=\"autorefresh\" {$checked} onchange=\"toggleAutoRefresh(this, '" . htmlspecialchars_decode($refreshUrl) . "')\">\n";
+			echo "\t\t<input type=\"checkbox\" name=\"autorefresh\" {$checked} {$disabledAttr} onchange=\"toggleAutoRefresh(this, '" . htmlspecialchars_decode($refreshUrl) . "')\">\n";
 			echo "\t\t<span class=\"slider\"></span>";
 			echo "\t</label>";
+			$helpMsg = sprintf($lang['strautorefreshhelp'], $autoRefreshTimeout);
+			echo "\t<img src=\"{$misc->icon('Info')}\" alt=\"info\" class=\"autorefresh-help\" title=\"$helpMsg\"/>";
 		}
+		// This button is for test only. It behave like the submit but erase the emajStat array from $_SESSION
+		// as if the page is called for the fist time in the PHP session. Remove the comment if you need it.
+#		echo "\t<input type=\"submit\" name=\"erase_parameters\" value=\"Erase parameters\" />\n";
 
 		echo "</div></form>\n";
 
-		// Javascript function calls when auto-refresh is on
+		// Add onchange event on each form input
+		echo "\t\t<script>setOnchangeEvent();</script>\n";
+
+		// Schedule the page reload when auto-refresh is on
 		if ($autoRefreshTimeout > 0 && $isAutoRefresh) {
 			echo "\t\t<script>";
 			echo "\t\t\tschedulePageReload({$autoRefreshTimeout}, '" . htmlspecialchars_decode($refreshUrl) . "');\n";
@@ -158,7 +174,7 @@
 					'field' => $currentTime,
 				),
 				'since' => array(
-					'title' => $lang['strsinceinsec'],
+					'title' => $lang['strsince'],
 					'field' => $lastRefreshIntervalStr,
 					'type'  => 'numeric',
 				),
@@ -427,7 +443,7 @@
 		$currentTime = date("Y-m-d H:i:s");
 		if ($previousEpoch > 0) {
 			$lastRefreshInterval = $currentEpoch - $previousEpoch;
-			$lastRefreshIntervalStr = sprintf('%.3f', $lastRefreshInterval);
+			$lastRefreshIntervalStr = sprintf('%.3f s', $lastRefreshInterval);
 			$globalChanges = $currentEmajGlobalSeq - $previousEmajGlobalSeq;
 			$globalCps = sprintf('%.3f', $globalChanges / $lastRefreshInterval);
 		} else {

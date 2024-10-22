@@ -3,7 +3,7 @@
  * Specific css source for the activity.php page
  */
 
-/* Groupped cells for the main sort criteria radio button in the form grid div */
+/* Grouped cells for the main sort criteria radio button in the form grid div */
 div.sort-criteria-radio-buttons {
 	grid-column-start: 3;
 	grid-column-end: 6;
@@ -11,8 +11,14 @@ div.sort-criteria-radio-buttons {
 	grid-row-end: 5;
 }
 
-/*  */
+/* Auto-Refresh label and help icon */
 span.autorefresh-label {
-	margin-left:20px;
-	margin-right:8px;
+	margin-left: 20px;
+	margin-right: 8px;
+}
+span.autorefresh-disable {
+	opacity: 50%;
+}
+img.autorefresh-help {
+	margin-left: 8px;
 }

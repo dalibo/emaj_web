@@ -139,7 +139,6 @@
 	$lang['strsequences'] = 'Sequences';
 	$lang['strsetcomment'] = 'Set a comment';
 	$lang['strsince'] = 'Since';
-	$lang['strsinceinsec'] = 'Since (sec)';
 	$lang['strsql'] = 'SQL';
 	$lang['strstart'] = 'Start';
 	$lang['strstartmark'] = 'Start mark';
@@ -915,6 +914,7 @@
 	$lang['strchangessince'] = '#changes since';
 	$lang['strlatestmark'] = 'Latest mark';
 	$lang['strpreviousdisplay'] = 'Previous display';
+	$lang['strautorefreshhelp'] = 'The automatic refresh delay (currently %s sec) can be customized in the Emaj_web configuration file.';
 
 	// Display
 	$lang['strerrortrapped'] = 'An error has been trapped while reading sequences.';

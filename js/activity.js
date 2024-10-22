@@ -33,7 +33,7 @@ function toggleAutoRefresh(input, url) {
 	}
 }
 
-// Disable or enable input elements of the form.
+// Disable or enable input elements of the form. It is called by the toggleAutoRefresh() function.
 function disableInput(disable) {
 	$('input[name="groups-include"]').prop('disabled', disable);
 	$('input[name="tables-include"]').prop('disabled', disable);
@@ -52,4 +52,17 @@ function disableInput(disable) {
 // Function to schedule the page reload
 function schedulePageReload(timer, url) {
 	autorefreshTimeout = setTimeout(function() {window.location.replace(url);}, timer * 1000);
+}
+
+// Function to setup the onchange event on the form inputs. It is called just after the form is displayed.
+function setOnchangeEvent() {
+	$('#resetButton').on( "click", function() { disableAutoRefresh(); } );
+	$('.form-input').on( "input", function() { disableAutoRefresh(); } );
+	$('input[type=radio][name="sort"]').on("change", function() { disableAutoRefresh(); });
+}
+
+// Function do disable the autorefresh slider.
+function disableAutoRefresh() {
+	$('input[type=checkbox][name="autorefresh"]').prop('disabled', true);
+	$('span.autorefresh-label').addClass("autorefresh-disable");
 }

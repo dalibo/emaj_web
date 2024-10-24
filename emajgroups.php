@@ -808,8 +808,7 @@
 			if ($emajdb->isEmaj_Adm()) {
 				echo "<div class=\"actionslist\">\n";
 				// display the "new group" button
-				echo "\t<form id=\"createEmptyGroup_form\" action=\"emajgroups.php?action=create_group&amp;back=list&amp;{$misc->href}\"";
-				echo " method=\"post\" enctype=\"multipart/form-data\">\n";
+				echo "\t<form id=\"createEmptyGroup_form\" method=\"post\" action=\"emajgroups.php?action=create_group&amp;back=list&amp;{$misc->href}\">\n";
 				echo "\t\t<input type=\"submit\" value=\"{$lang['strnewgroup']}\" />\n";
 				echo "\t</form>\n";
 
@@ -817,14 +816,13 @@
 				if ($emajdb->getNumEmajVersion() >= 30300) {			// version >= 3.3.0
 					// form to export groups configuration
 					// the export button is disabled when no group exists
-					echo "\t<form id=\"exportGroupsConf_form\" action=\"emajgroups.php?action=export_groups&amp;back=list&amp;{$misc->href}\"";
-					echo " method=\"post\" enctype=\"multipart/form-data\">\n";
-					$disabled = ''; if ($nbGroup == 0) $disabled = ' disabled';
-					echo "\t\t<input type=\"submit\" name=\"exportButton\" value=\"{$lang['strexport']}\"{$disabled}>\n";
+					echo "\t<form id=\"exportGroupsConf_form\" method=\"post\" action=\"emajgroups.php?action=export_groups&amp;back=list&amp;{$misc->href}\">\n";
+					$disabled = ($nbGroup == 0) ? 'disabled' : '';
+					echo "\t\t<input type=\"submit\" name=\"exportButton\" value=\"{$lang['strexport']}\" {$disabled}>\n";
 					echo "\t</form>\n";
 
 					// form to import groups configuration
-					echo "\t<form name=\"importGroupsConf\" id=\"importGroupsConf\" method=\"POST\"";
+					echo "\t<form name=\"importGroupsConf\" id=\"importGroupsConf\" method=\"post\"";
 					echo " action=\"emajgroups.php?action=import_groups&amp;back=list&amp;{$misc->href}\">\n";
 					echo "\t\t<input type=\"submit\" name=\"importButton\" value=\"{$lang['strimport']}\">\n";
 					echo "\t</form>\n";
@@ -2200,6 +2198,7 @@
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo "<input type=\"hidden\" name=\"action\" value=\"create_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
+		echo $misc->form;
 
 		echo "<div class=\"form-container\">\n";
 		echo "\t<div class=\"form-label required\">{$lang['strgroup']}</div>\n";
@@ -2223,10 +2222,10 @@
 		echo "\t<div class=\"form-comment\"></div>\n";
 		echo "</div>\n";
 
-		echo "<p><input type=\"submit\" name=\"creategroup\" value=\"{$lang['strcreate']}\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";
-		echo $misc->form;
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">\n";
+		echo "\t<input type=\"submit\" name=\"creategroup\" value=\"{$lang['strcreate']}\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/>\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -2365,13 +2364,14 @@
 
 		echo "<p>", sprintf($lang['strconfirmdropgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"drop_group_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"drop_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"dropgroup\" value=\"{$lang['strdrop']}\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"dropgroup\" value=\"{$lang['strdrop']}\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -2424,12 +2424,13 @@
 
 		echo "<p>", sprintf($lang['strconfirmdropgroups'], htmlspecialchars($groupsList)), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"drop_groups_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"drop_groups_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"dropgroups\" value=\"{$lang['strdrop']}\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"dropgroups\" value=\"{$lang['strdrop']}\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -2478,12 +2479,13 @@
 
 		echo "<p>", sprintf($lang['strconfirmforgetgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"forget_group_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"forget_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"forgetgroup\" value=\"{$lang['strforget']}\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"forgetgroup\" value=\"{$lang['strforget']}\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -2806,13 +2808,14 @@
 		echo "\t<div class=\"form-input\"><input name=\"comment\" size=\"80\" value=\"", htmlspecialchars($group->fields['group_comment']), "\" /></div>\n";
 		echo "\t<div class=\"form-comment\"></div>\n";
 		echo "</div>\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"comment_group_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"comment_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"commentgroup\" value=\"{$lang['strok']}\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"commentgroup\" value=\"{$lang['strok']}\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -2926,12 +2929,11 @@
 
 		$misc->printTable($groups, $columns, $actions, 'groups', '', null, array('sorter' => true, 'filter' => true));
 
-		echo "<p></p>";
-
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strback']}\" /></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strback']}\" />\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -2995,14 +2997,18 @@
 
 		// form to import a tables groups configuration
 		echo "<div>\n";
-		echo "\t<form name=\"importgroups\" id=\"importgroups\" enctype=\"multipart/form-data\" method=\"POST\"";
+		echo "\t<form name=\"importgroups\" id=\"importgroups\" enctype=\"multipart/form-data\" method=\"post\"";
 		echo " action=\"emajgroups.php?action=import_groups_select&amp;{$misc->href}\">\n";
 		echo "\t\t<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"10000000\">\n";
-		echo "\t\t<p><label for=\"file-upload\" class=\"custom-file-upload\">{$lang['strselectfile']}</label>";
-		echo "<input type=\"file\" id=\"file-upload\" name=\"file_name\"></p>\n";
-		echo "\t\t<p><input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />&nbsp;&nbsp;&nbsp;\n";
+		echo "\t\t<div class=\"actionslist\">";
+		echo "\t\t<label for=\"file-upload\" class=\"custom-file-upload\">{$lang['strselectfile']}</label>";
+		echo "\t\t<input type=\"file\" id=\"file-upload\" name=\"file_name\">\n";
+		echo "\t\t</div>\n";
+		echo "\t\t<div class=\"actionslist\">";
+		echo "\t\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />&nbsp;&nbsp;&nbsp;\n";
 		echo "\t\t<input type=\"submit\" name=\"openfile\" value=\"{$lang['stropen']}\" disabled>";
-		echo "<span id=\"selected-file\"></span></p>\n";
+		echo "\t\t<span id=\"selected-file\"></span>\n";
+		echo "\t\t</div>\n";
 		echo "\t\t<script>
 			$(document).ready(
 				function(){
@@ -3149,10 +3155,11 @@
 					}
 					echo "</form>\n";
 
-					echo "<p><form action=\"emajgroups.php\" method=\"post\">\n";
+					echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 					echo $misc->form;
-					echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
-					echo "</form></p>\n";
+					echo "<div class=\"actionslist\">";
+					echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+					echo "</div></form>\n";
 
 				} else {
 				// The json structure contains errors. Display them.
@@ -3178,10 +3185,11 @@
 					$misc->printTable($errors, $columns, $actions, 'checks', null, null, array('sorter' => true, 'filter' => false));
 
 					echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-					echo "<p><input type=\"hidden\" name=\"action\" value=\"import_groups_ok\" />\n";
+					echo "<input type=\"hidden\" name=\"action\" value=\"import_groups_ok\" />\n";
 					echo $misc->form;
-					echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strok']}\" /></p>\n";
-					echo "</form>\n";
+					echo "<div class=\"actionslist\">";
+					echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strok']}\" />\n";
+					echo "</div></form>\n";
 
 				}
 			} else {
@@ -3285,7 +3293,7 @@
 		$misc->printTitle($lang['strstartagroup']);
 
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-		echo "<p>", sprintf($lang['strconfirmstartgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
+		echo "<p>" . sprintf($lang['strconfirmstartgroup'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
 		echo "<div class=\"form-container\">\n";
 		echo "\t<div class=\"form-label required\">{$lang['strinitmark']}</div>\n";
 		echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"", htmlspecialchars($_POST['mark']), "\" id=\"mark\" required pattern=\"\S+.*\" placeholder='{$lang['strrequiredfield']}' autocomplete=\"off\"/></div>\n";
@@ -3293,12 +3301,13 @@
 		echo "</div>\n";
 		echo "<p><input type=checkbox name=\"resetlog\" checked/>{$lang['stroldlogsdeletion']}</p>\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"start_group_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"start_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" value=\"{$lang['strstart']}\" id=\"ok\" disabled=\"disabled\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate /></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" value=\"{$lang['strstart']}\" id=\"ok\" disabled=\"disabled\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate />\n";
+		echo "</div></form>\n";
 
 		echo "<script>\n";
 		echo "  $(document).ready(function () {\n";
@@ -3386,12 +3395,13 @@
 		echo "</div>\n";
 		echo "<p><input type=checkbox name=\"resetlog\" checked/>{$lang['stroldlogsdeletion']}</p>\n";
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"start_groups_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"start_groups_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"list\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" value=\"{$lang['strstart']}\" id=\"ok\" disabled=\"disabled\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate /></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" value=\"{$lang['strstart']}\" id=\"ok\" disabled=\"disabled\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate />\n";
+		echo "</div></form>\n";
 
 		echo "<script>\n";
 		echo "  $(document).ready(function () {\n";
@@ -3459,13 +3469,14 @@
 		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strmarknamehelp']}\"/></div>\n";
 		echo "</div>\n";
 		echo "<p><input type=checkbox name=\"forcestop\" />{$lang['strforcestop']}</p>\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"stop_group_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"stop_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"stopgroup\" value=\"{$lang['strstop']}\"/>\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"stopgroup\" value=\"{$lang['strstop']}\"/>\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -3538,13 +3549,14 @@
 		echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"STOP_%\" /></div>\n";
 		echo "\t<div class=\"form-comment\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strmarknamemultihelp']}\"/></div>\n";
 		echo "</div>\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"stop_groups_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"stop_groups_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"stopgroups\" value=\"{$lang['strstop']}\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"stopgroups\" value=\"{$lang['strstop']}\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -3594,13 +3606,14 @@
 
 		echo "<p>", sprintf($lang['strconfirmresetgroup'], htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"reset_group_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"reset_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"resetgroup\" value=\"{$lang['strreset']}\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"resetgroup\" value=\"{$lang['strreset']}\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -3665,12 +3678,13 @@
 		// Send the form
 		echo "<p>", sprintf($lang['strconfirmresetgroups'], htmlspecialchars($groupsList)), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"reset_groups_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"reset_groups_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"resetgroups\" value=\"{$lang['strreset']}\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"resetgroups\" value=\"{$lang['strreset']}\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -3857,12 +3871,13 @@
 		echo "</div>\n";
 
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"set_mark_group_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"set_mark_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" value=\"{$lang['strok']}\" id=\"ok\" disabled=\"disabled\"/>\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate /></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" value=\"{$lang['strok']}\" id=\"ok\" disabled=\"disabled\"/>\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate />\n";
+		echo "</div></form>\n";
 
 		echo "<script>\n";
 		echo "  $(document).ready(function () {\n";
@@ -3958,12 +3973,13 @@
 		echo "</div>\n";
 
 		echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"set_mark_groups_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"set_mark_groups_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" value=\"{$lang['strok']}\" id=\"ok\" disabled=\"disabled\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate /></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" value=\"{$lang['strok']}\" id=\"ok\" disabled=\"disabled\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate />\n";
+		echo "</div></form>\n";
 
 		echo "<script>\n";
 		echo "  $(document).ready(function () {\n";
@@ -4095,12 +4111,13 @@
 		}
 
 		// main buttons line
-		echo "<p><input type=\"submit\" name=\"rollbackgroup\" value=\"{$lang['strrlbk']}\" />\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"rollbackgroup\" value=\"{$lang['strrlbk']}\" />\n";
 		if ($emajdb->isAsyncRlbkUsable($conf) ) {
-			echo "<input type=\"submit\" name=\"async\" value=\"{$lang['strrlbkthenmonitor']}\" />\n";
+			echo "\t<input type=\"submit\" name=\"async\" value=\"{$lang['strrlbkthenmonitor']}\" />\n";
 		}
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
-		echo "</p></form>\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -4195,7 +4212,7 @@
 			$misc->printTable($alterGroupSteps, $columns, $actions, 'alterGroupStep');
 
 			echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-			echo "<p><input type=\"hidden\" name=\"action\" value=\"rollback_group_ok\" />\n";
+			echo "<input type=\"hidden\" name=\"action\" value=\"rollback_group_ok\" />\n";
 			echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 			echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
 			echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
@@ -4205,9 +4222,10 @@
 			}
 			echo "<input type=\"hidden\" name=\"comment\" value=\"", htmlspecialchars($_REQUEST['comment']), "\" />\n";
 			echo $misc->form;
-			echo "<input type=\"submit\" name=\"rollbackgroup\" value=\"{$lang['strconfirm']}\" />\n";
-			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-			echo "</form>\n";
+			echo "<div class=\"actionslist\">";
+			echo "\t<input type=\"submit\" name=\"rollbackgroup\" value=\"{$lang['strconfirm']}\" />\n";
+			echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+			echo "</div></form>\n";
 
 		} else {
 			// otherwise, directly execute the rollback
@@ -4318,15 +4336,16 @@
 
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
 		if ($_POST['back']=='list') {
-			echo "<p><input type=\"hidden\" name=\"action\" value=\"show_groups\" />\n";
+			echo "<input type=\"hidden\" name=\"action\" value=\"show_groups\" />\n";
 		} else {
-			echo "<p><input type=\"hidden\" name=\"action\" value=\"show_group\" />\n";
+			echo "<input type=\"hidden\" name=\"action\" value=\"show_group\" />\n";
 		}
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"rollbackgroup\" value=\"{$lang['strok']}\" />\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"rollbackgroup\" value=\"{$lang['strok']}\" />\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -4449,13 +4468,13 @@
 		}
 
 		// main buttons line
-		echo "<p>\n";
-		echo "<input type=\"submit\" name=\"rollbackgroups\" value=\"{$lang['strrlbk']}\" />\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"rollbackgroups\" value=\"{$lang['strrlbk']}\" />\n";
 		if ($emajdb->isAsyncRlbkUsable() ) {
-			echo "<input type=\"submit\" name=\"async\" value=\"{$lang['strrlbkthenmonitor']}\" />\n";
+			echo "\t<input type=\"submit\" name=\"async\" value=\"{$lang['strrlbkthenmonitor']}\" />\n";
 		}
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
-		echo "</p></form>\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -4545,7 +4564,7 @@
 			$misc->printTable($alterGroupSteps, $columns, $actions, 'alterGroupStep');
 
 			echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-			echo "<p><input type=\"hidden\" name=\"action\" value=\"rollback_groups_ok\" />\n";
+			echo "<input type=\"hidden\" name=\"action\" value=\"rollback_groups_ok\" />\n";
 			echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($_REQUEST['groups']), "\" />\n";
 			echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
 			echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
@@ -4555,9 +4574,10 @@
 			}
 			echo "<input type=\"hidden\" name=\"comment\" value=\"", htmlspecialchars($_REQUEST['comment']), "\" />\n";
 			echo $misc->form;
-			echo "<input type=\"submit\" name=\"rollbackgroups\" value=\"{$lang['strconfirm']}\" />\n";
-			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-			echo "</form>\n";
+			echo "<div class=\"actionslist\">";
+			echo "\t<input type=\"submit\" name=\"rollbackgroups\" value=\"{$lang['strconfirm']}\" />\n";
+			echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+			echo "</div></form>\n";
 
 		} else {
 			// otherwise, directly execute the rollback
@@ -4651,10 +4671,11 @@
 		$misc->printTable($rlbkReportMsgs, $columns, $actions, 'rlbkGroupsReport', null, null, array('sorter' => true, 'filter' => false));
 
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"show_groups\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"show_groups\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"rollbackgroup\" value=\"{$lang['strok']}\" />\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"rollbackgroup\" value=\"{$lang['strok']}\" />\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -4731,14 +4752,15 @@
 		echo "\t<div class=\"form-input\"><input name=\"comment\" size=\"80\" value=\"", htmlspecialchars($mark->fields['mark_comment']), "\" /></div>\n";
 		echo "\t<div class=\"form-comment\"></div>\n";
 		echo "</div>\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"comment_mark_group_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"comment_mark_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"commentmarkgroup\" value=\"{$lang['strok']}\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"commentmarkgroup\" value=\"{$lang['strok']}\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -4798,12 +4820,13 @@
 		echo "</div>\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"rename_mark_group_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"rename_mark_group_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" value=\"{$lang['strrename']}\" id=\"ok\" disabled=\"disabled\"/>\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate /></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" value=\"{$lang['strrename']}\" id=\"ok\" disabled=\"disabled\"/>\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate />\n";
+		echo "</div></form>\n";
 
 		echo "<script>\n";
 		echo "  $(document).ready(function () {\n";
@@ -4868,14 +4891,15 @@
 
 		echo "<p>", sprintf($lang['strconfirmdeletemark'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"delete_mark_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"delete_mark_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"deletemark\" value=\"{$lang['strdelete']}\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"deletemark\" value=\"{$lang['strdelete']}\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -4945,13 +4969,14 @@
 
 		echo "<p>", sprintf($lang['strconfirmdeletemarks'], $nbMarks, htmlspecialchars($_REQUEST['group'])), "</p>\n{$htmlList}\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"delete_marks_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"delete_marks_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"marks\" value=\"", htmlspecialchars($marksList), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"deletemarks\" value=\"{$lang['strdelete']}\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"deletemarks\" value=\"{$lang['strdelete']}\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -5012,14 +5037,15 @@
 
 		echo "<p>", sprintf($lang['strconfirmdelmarksprior'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])), "</p>\n";
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"delete_before_mark_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"delete_before_mark_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"deletebeforemark\" value=\"{$lang['strdelete']}\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"deletebeforemark\" value=\"{$lang['strdelete']}\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+		echo "</div></form>\n";
 	}
 
 	/**

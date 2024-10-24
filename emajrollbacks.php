@@ -860,13 +860,14 @@
 		echo "\t<div class=\"form-input\"><input name=\"comment\" size=\"80\" value=\"", htmlspecialchars($rlbk->fields['rlbk_comment']), "\" /></div>\n";
 		echo "\t<div class=\"form-comment\"></div>\n";
 		echo "</div>\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"comment_rollback_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"comment_rollback_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"rlbkid\" value=\"", htmlspecialchars($_REQUEST['rlbkid']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"commentrollback\" value=\"{$lang['strok']}\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"commentrollback\" value=\"{$lang['strok']}\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -910,15 +911,16 @@
 
 		$misc->printTitle($lang['strconsolidaterlbk']);
 
-		echo "<p>", sprintf($lang['strconfirmconsolidaterlbk'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])), "</p>\n";
+		echo "<p>" . sprintf($lang['strconfirmconsolidaterlbk'], htmlspecialchars($_REQUEST['mark']), htmlspecialchars($_REQUEST['group'])) . "</p>\n";
 		echo "<form action=\"emajrollbacks.php\" method=\"post\">\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"consolidate_rollback_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"consolidate_rollback_ok\" />\n";
 		echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "<input type=\"hidden\" name=\"mark\" value=\"", htmlspecialchars($_REQUEST['mark']), "\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"consolidaterlbk\" value=\"{$lang['strconsolidate']}\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"consolidaterlbk\" value=\"{$lang['strconsolidate']}\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+		echo "</div></form>\n";
 	}
 
 	/**

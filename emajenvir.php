@@ -100,29 +100,36 @@
 		}
 
 		echo "<form action=\"emajenvir.php\" method=\"post\">\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"create_extension_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"create_extension_ok\" />\n";
 		echo $misc->form;
 
 		if (count($usableVersions) == 0) {
+			// no emaj version is compatible with the PG version
 			echo "<p>{$lang['strnocompatibleemajversion']}</p>\n";
-		} elseif (count($usableVersions) == 1) {
-			// a single version is available, so just display the information
-			foreach($usableVersions as $v) {
-				echo "<p>{$lang['strversion']}{$v}</p>\n";
-				echo "<p><input type=\"hidden\" name=\"version\" value=\"". htmlspecialchars($v) . "\" />\n";
-			}
-			echo "<input type=\"submit\" name=\"createextension\" value=\"{$lang['strok']}\" />\n";
+			echo "<div class=\"actionslist\">";
+			echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+			echo "</div>";
 		} else {
-			// several versions are available,
-			// display a select box so that the user can choose the version to install
-			echo "<p>{$lang['strversion']}<select name=\"version\" id=\"version\">\n";
-			foreach($usableVersions as $v) {
-				echo "\t<option value=\"", htmlspecialchars($v), "\" >", htmlspecialchars($v), "</option>\n";
+			if (count($usableVersions) == 1) {
+				// a single version is compatible with the PG version, so just display the information
+				foreach($usableVersions as $v) {
+					echo "<p>{$lang['strversion']}{$v}</p>\n";
+					echo "<input type=\"hidden\" name=\"version\" value=\"". htmlspecialchars($v) . "\" />\n";
+				}
+			} else {
+				// several versions are compatible with the PG version,
+				// so display a select box so that the user can choose the version to install
+				echo "<p>{$lang['strversion']}<select name=\"version\" id=\"version\">\n";
+				foreach($usableVersions as $v) {
+					echo "\t<option value=\"", htmlspecialchars($v), "\" >", htmlspecialchars($v), "</option>\n";
+				}
+				echo "</select></p>\n";
 			}
-			echo "</select></p>\n";
-			echo "<input type=\"submit\" name=\"createextension\" value=\"{$lang['strok']}\" />\n";
+			echo "<div class=\"actionslist\">";
+			echo "\t<input type=\"submit\" name=\"createextension\" value=\"{$lang['strok']}\" />\n";
+			echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+			echo "</div>";
 		}
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 	}
 
@@ -187,28 +194,35 @@
 		}
 
 		echo "<form action=\"emajenvir.php\" method=\"post\">\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"update_extension_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"update_extension_ok\" />\n";
 		echo $misc->form;
 
 		if (count($usableVersions) == 0) {
+			// no emaj version is compatible with the PG version
 			echo "<p>{$lang['strnocompatibleemajupdate']}</p>\n";
-		} elseif (count($usableVersions) == 1) {
-			// a single version is available, so just display the information
-			foreach($usableVersions as $v) {
-				echo "<p>{$lang['strversion']}{$v}</p>\n";
-				echo "<p><input type=\"hidden\" name=\"version\" value=\"". htmlspecialchars($v) . "\" />\n";
-			}
-			echo "<input type=\"submit\" name=\"updateextension\" value=\"{$lang['strok']}\" />\n";
+			echo "<div class=\"actionslist\">";
+			echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+			echo "</div>";
 		} else {
-			// several versions are available
-			// display a select box so that the user can choose the version to install
-			echo "<p>{$lang['strversion']}<select name=\"version\" id=\"version\">\n";
-			foreach($usableVersions as $v)
-				echo "\t<option value=\"", htmlspecialchars($v), "\" >", htmlspecialchars($v), "</option>\n";
-			echo "</select></p>\n";
-			echo "<input type=\"submit\" name=\"updateextension\" value=\"{$lang['strok']}\" />\n";
+			if (count($usableVersions) == 1) {
+				// a single version is compatible with the PG version, so just display the information
+				foreach($usableVersions as $v) {
+					echo "<p>{$lang['strversion']}{$v}</p>\n";
+					echo "<input type=\"hidden\" name=\"version\" value=\"". htmlspecialchars($v) . "\" />\n";
+				}
+			} else {
+				// several versions are compatible with the PG version,
+				// so display a select box so that the user can choose the version to install
+				echo "<p>{$lang['strversion']}<select name=\"version\" id=\"version\">\n";
+				foreach($usableVersions as $v)
+					echo "\t<option value=\"", htmlspecialchars($v), "\" >", htmlspecialchars($v), "</option>\n";
+				echo "</select></p>\n";
+			}
+			echo "<div class=\"actionslist\">";
+			echo "\t<input type=\"submit\" name=\"updateextension\" value=\"{$lang['strok']}\" />\n";
+			echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+			echo "</div>";
 		}
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
 		echo "</form>\n";
 	}
 
@@ -251,11 +265,12 @@
 		echo "<p>{$lang['strconfirmdropextension']}</p>\n";
 
 		echo "<form action=\"emajenvir.php\" method=\"post\">\n";
-		echo "<p><input type=\"hidden\" name=\"action\" value=\"drop_extension_ok\" />\n";
+		echo "<input type=\"hidden\" name=\"action\" value=\"drop_extension_ok\" />\n";
 		echo $misc->form;
-		echo "<input type=\"submit\" name=\"dropextension\" value=\"{$lang['strok']}\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"dropextension\" value=\"{$lang['strok']}\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" />\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -331,9 +346,11 @@
 			echo "\t\t<p><input type=\"file\" id=\"file-upload\" name=\"file_name\"></p>\n";
 			echo "\t\t<p><input type=\"checkbox\" name=\"replaceCurrent\" id=\"replaceCurrent\"/ checked>{$lang['strdeletecurrentparam']}";
 			echo " <img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strdeletecurrentparaminfo']}\"/></p>\n";
-			echo "\t\t<p><input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /> \n";
-			echo "\t\t<input type=\"submit\" name=\"sendfile\" value=\"{$lang['strimport']}\" disabled>";
-			echo "\t\t<span id=\"selected-file\"></span></p>\n";
+			echo "\t\t<div class=\"actionslist\">";
+			echo "\t\t\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /> \n";
+			echo "\t\t\t<input type=\"submit\" name=\"sendfile\" value=\"{$lang['strimport']}\" disabled>";
+			echo "\t\t<span id=\"selected-file\"></span>";
+			echo "\t\t</div>\n";
 			echo "\t\t<script>
 				$(document).ready(
 					function(){
@@ -426,10 +443,11 @@
 						$misc->printTable($errors, $columns, $actions, 'paramsconfchecks', null, null, array('sorter' => true, 'filter' => false));
 
 						echo "<form action=\"emajenvir.php\" method=\"post\">\n";
-						echo "<p><input type=\"hidden\" name=\"action\" value=\"import_parameters_ok\" />\n";
+						echo "<input type=\"hidden\" name=\"action\" value=\"import_parameters_ok\" />\n";
 						echo $misc->form;
-						echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strok']}\" /></p>\n";
-						echo "</form>\n";
+						echo "<div class=\"actionslist\">";
+						echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strok']}\" />\n";
+						echo "</div></form>\n";
 
 					}
 				} else {

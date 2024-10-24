@@ -694,9 +694,10 @@
 		}
 
 		echo $misc->form;
-		echo "<p><input type=\"submit\" name=\"assigntable\" value=\"{$lang['strassign']}\" id=\"ok\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"assigntable\" value=\"{$lang['strassign']}\" id=\"ok\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/>\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -807,9 +808,10 @@
 		echo"</div>\n";
 
 		echo $misc->form;
-		echo "<p><input type=\"submit\" name=\"movetable\" value=\"{$lang['strmove']}\" id=\"ok\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"movetable\" value=\"{$lang['strmove']}\" id=\"ok\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/>\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -976,9 +978,10 @@
 
 		echo"</div>\n";
 		echo $misc->form;
-		echo "<p><input type=\"submit\" id=\"ok\" name=\"modifytable\" value=\"{$lang['strupdate']}\" disabled/>\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" id=\"ok\" name=\"modifytable\" value=\"{$lang['strupdate']}\" disabled/>\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/>\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -1067,9 +1070,10 @@
 		echo"</div>\n";
 
 		echo $misc->form;
-		echo "<p><input type=\"submit\" name=\"removetable\" value=\"{$lang['strremove']}\" id=\"ok\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"removetable\" value=\"{$lang['strremove']}\" id=\"ok\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/>\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -1173,9 +1177,10 @@
 
 		echo"</div>\n";
 		echo $misc->form;
-		echo "<p><input type=\"submit\" name=\"assignsequence\" value=\"{$lang['strassign']}\" id=\"ok\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"assignsequence\" value=\"{$lang['strassign']}\" id=\"ok\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/>\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -1277,9 +1282,10 @@
 		echo"</div>\n";
 
 		echo $misc->form;
-		echo "<p><input type=\"submit\" name=\"movesequence\" value=\"{$lang['strmove']}\" id=\"ok\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"movesequence\" value=\"{$lang['strmove']}\" id=\"ok\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/>\n";
+		echo "</div></form>\n";
 	}
 
 	/**
@@ -1368,9 +1374,10 @@
 		echo"</div>\n";
 
 		echo $misc->form;
-		echo "<p><input type=\"submit\" name=\"removesequence\" value=\"{$lang['strremove']}\" id=\"ok\" />\n";
-		echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/></p>\n";
-		echo "</form>\n";
+		echo "<div class=\"actionslist\">";
+		echo "\t<input type=\"submit\" name=\"removesequence\" value=\"{$lang['strremove']}\" id=\"ok\" />\n";
+		echo "\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" formnovalidate/>\n";
+		echo "</div></form>\n";
 	}
 
 	/**

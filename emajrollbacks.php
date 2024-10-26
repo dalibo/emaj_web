@@ -9,6 +9,7 @@
 
 	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 	if (!isset($msg)) $msg = '';
+	$isAutoRefresh = (isset($_REQUEST['autorefresh']) && $_REQUEST['autorefresh'] == 1) ? 1 : 0;
 
 	// Callback function to dynamicaly add an icon to each rollback execution report
 	function renderRlbkExecSeverity($val) {
@@ -363,7 +364,7 @@
 	/**
 	 * Display the details of a rollback operation
 	 */
-	function show_rollback() {
+	function show_rollback($isAutoRefresh) {
 		global $lang, $misc, $emajdb, $conf;
 
 		$misc->printHeader('emajrollback', 'database', 'emajrollbacks');
@@ -383,10 +384,11 @@
 			$comment = $rlbkInfo->fields['rlbk_comment'];
 		};
 
-		if (! $isCompleted) {
-			$rlbkInProgressInfo = $emajdb->getOneInProgressRlbk($_REQUEST['rlbkid']);
-		} else {
+		if ($isCompleted) {
+			$isAutoRefresh = 0;
 			$rlbkReportMsgs = $emajdb->getRlbkReportMsg($_REQUEST['rlbkid']);
+		} else {
+			$rlbkInProgressInfo = $emajdb->getOneInProgressRlbk($_REQUEST['rlbkid']);
 		}
 
 		$rlbkSessions = $emajdb->getRlbkSessions($_REQUEST['rlbkid']);
@@ -692,30 +694,6 @@
 
 		$actions = array();
 
-		// Get the auto-refresh configuration parameter (10 seconds if not found in the config.inc.php file)
-		$autoRefreshTimeout = (isset($conf['auto_refresh'])) ? $conf['auto_refresh'] : 10;
-
-		// Manage the autorefresh_rlbkid cookie if it exists
-		if ($autoRefreshTimeout > 0) {
-			if ($isCompleted) {
-				// Delete the autorefresh_rlbkid cookie if it exists
-				if (isset($_COOKIE['autorefresh_rlbkid'])) {
-					echo "<script>deleteARCookie();</script>\n";
-				}
-			} else {
-				$refreshUrl = "emajrollbacks.php?action=show_rollback&amp;{$misc->href}&amp;rlbkid=" . htmlspecialchars($_REQUEST['rlbkid']);
-				$checked = '';
-				if (isset($_COOKIE['autorefresh_rlbkid'])) {
-					if ($_COOKIE['autorefresh_rlbkid'] == $_REQUEST['rlbkid']) {
-						$checked = 'checked';
-						echo "<script>schedulePageReload({$autoRefreshTimeout}, '" . htmlspecialchars_decode($refreshUrl) . "');</script>\n";
-					} else {
-						echo "<script>deleteARCookie();</script>\n";
-					}
-				}
-			}
-		}
-
 		// Display the navigation links
 		// ... in column 1, the prior rollback link, if any
 		echo "<div class=\"rlbk-nav\">\n";
@@ -744,10 +722,14 @@
 
 		// ... in column 4, the autorefresh toogle button, if relevant
 		echo "\t<div class=\"rlbk-nav-24\">\n";
+		// Get the auto-refresh configuration parameter (10 seconds if not found in the config.inc.php file)
+		$autoRefreshTimeout = (isset($conf['auto_refresh'])) ? $conf['auto_refresh'] : 10;
 		if ($autoRefreshTimeout > 0 && !$isCompleted) {
+			$refreshUrl = "emajrollbacks.php?action=show_rollback&amp;{$misc->href}&amp;autorefresh=1&amp;rlbkid=" . htmlspecialchars($_REQUEST['rlbkid']);
+			$checked = ($isAutoRefresh) ? 'checked' : '';
 			echo "\t\t<div class=\"rlbk-nav-arbutton\">\n";
 			echo "\t\t<label class=\"switch\">\n";
-			echo "\t\t\t<input type=\"checkbox\" name=\"autorefresh\" {$checked} onchange=\"toggleAutoRefresh(this, {$_REQUEST['rlbkid']}, '" . htmlspecialchars_decode($refreshUrl) . "')\">\n";
+			echo "\t\t\t<input type=\"checkbox\" name=\"autorefresh\" {$checked} onchange=\"toggleAutoRefresh(this, '" . htmlspecialchars_decode($refreshUrl) . "')\">\n";
 			echo "\t\t\t<span class=\"slider\"></span>";
 			echo "\t\t</label>";
 			$helpMsg = sprintf($lang['strautorefreshhelp'], $autoRefreshTimeout);
@@ -767,6 +749,13 @@
 		}
 		echo "\t</div>\n";
 		echo "</div>\n";
+
+		// Schedule the page reload when auto-refresh is on
+		if ($autoRefreshTimeout > 0 && $isAutoRefresh) {
+			echo "\t\t<script>";
+			echo "\t\t\tschedulePageReload({$autoRefreshTimeout}, '" . htmlspecialchars_decode($refreshUrl) . "');\n";
+			echo "\t\t</script>\n";
+		}
 
 		// print rollback properties
 		$misc->printTitle($lang['strproperties']);
@@ -953,13 +942,6 @@
 	$misc->printHtmlHeader($lang['strrollbacksmanagement'], $scripts, 'emajrollbacks');
 	$misc->printBody();
 
-	if (isset($_COOKIE['autorefresh_rlbkid'])) {
-		// Delete the autorefresh cookie if it is not relevant for the requested action
-		if ($action != 'show_rollback') {
-			echo "<script>deleteARCookie();</script>\n";
-		}
-	}
-
 	switch ($action) {
 		case 'comment_rollback':
 			comment_rollback();
@@ -977,11 +959,11 @@
 			show_rollbacks();
 			break;
 		case 'show_rollback':
-			show_rollback();
+			show_rollback($isAutoRefresh);
 			break;
 		default:
 			if (isset($_REQUEST['rlbkid']))
-				show_rollback();
+				show_rollback($isAutoRefresh);
 			else
 				show_rollbacks();
 	}

@@ -5,15 +5,12 @@ let autorefreshTimeout;
 
 //
 // Function to start and stop the page automatic refresh
-// At autorefresh start time, it sets a cookie containing the rlbk_id of the displayed rollback
 //
-function toggleAutoRefresh(input, rlbkid, url) {
+function toggleAutoRefresh(input, url) {
 	if (input.checked) {
-		document.cookie = "autorefresh_rlbkid=" + rlbkid + "; SameSite=Strict";
 		window.location.replace(url);
 	} else {
 		clearTimeout(autorefreshTimeout);
-		deleteARCookie();
 	}
 }
 
@@ -22,11 +19,4 @@ function toggleAutoRefresh(input, rlbkid, url) {
 //
 function schedulePageReload(timer, url) {
 	autorefreshTimeout = setTimeout(function() {window.location.replace(url);}, timer * 1000);
-}
-
-//
-// Function do delete the autorefresh_rlbkid cookie
-//
-function deleteARCookie() {
-	document.cookie = "autorefresh_rlbkid=; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=Strict";
 }

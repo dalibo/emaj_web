@@ -169,10 +169,6 @@
 			$misc->printSubtitle($lang['strglobalactivity']);
 
 			$columns = array(
-				'datetime' => array(
-					'title' => $lang['strdatetime'],
-					'field' => $currentTime,
-				),
 				'since' => array(
 					'title' => $lang['strsince'],
 					'field' => $lastRefreshIntervalStr,

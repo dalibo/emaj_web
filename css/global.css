@@ -351,6 +351,10 @@ header {
 .crumb .icon {
 	margin-right: 5px;
 }
+.datetime {
+	padding-right: 10px;
+	font-size: 0.95em;
+}
 .trailicons img {
 	padding: 1px 5px 1px 5px;
 }

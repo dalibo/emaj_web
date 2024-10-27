@@ -1,7 +1,20 @@
 //
-// Various js functions to let multiactions tables and table filters work
+// global.js
+//
+// Various javascript functions of general interest. In particular, they handle:
+// - current date and time display
+// - multiactions tables and table filters
+//
 // It mainly uses JQuery
 //
+
+// Function that displays the current date and time
+
+function showDateTime() {
+	currentDate = new Date();
+	datetimeString = currentDate.toLocaleDateString() + ' - ' + currentDate.toLocaleTimeString();
+	$("#datetime").text(datetimeString);
+}
 
 //
 // Functions used to handle the multi-actions tables

@@ -1157,11 +1157,17 @@
 			}
 			echo "\t</div>\n";
 
+			// cell containing the current date and time
+			echo "\t<div id=\"datetime\" class=\"datetime\"></div>\n";
+
 			// right cell containing the bottom button
 			echo "\t<div class=\"trailicons\">\n";
 			echo "\t\t<a href=\"#bottom\"><img src=\"{$this->icon('Bottom')}\" alt=\"{$lang['strpagebottom']}\" title=\"{$lang['strpagebottom']}\"  /></a>\n";
 			echo "\t</div>\n";
 			echo "</div>\n";
+
+			// fill the current date and time div by calling the proper js function
+			echo "<script>showDateTime();</script>\n";
 		}
 
 		/**

@@ -862,7 +862,7 @@
 	/**
 	 * Perform comment rollback
 	 */
-	function comment_rollback_ok() {
+	function comment_rollback_ok($isAutoRefresh) {
 		global $lang, $emajdb;
 
 		// process the click on the <cancel> button
@@ -870,7 +870,7 @@
 			if ($_POST['back'] == 'list') {
 				show_rollbacks();
 			} else {
-				show_rollback();
+				show_rollback($isAutoRefresh);
 			}
 		} else {
 
@@ -947,7 +947,7 @@
 			comment_rollback();
 			break;
 		case 'comment_rollback_ok':
-			comment_rollback_ok();
+			comment_rollback_ok($isAutoRefresh);
 			break;
 		case 'consolidate_rollback':
 			consolidate_rollback();

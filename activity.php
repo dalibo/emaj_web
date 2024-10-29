@@ -133,9 +133,8 @@
 
 		// Schedule the page reload when auto-refresh is on
 		if ($autoRefreshTimeout > 0 && $isAutoRefresh) {
-			echo "\t\t<script>";
+			echo "\t\t<script>\n";
 			echo "\t\t\tschedulePageReload({$autoRefreshTimeout}, '" . htmlspecialchars_decode($refreshUrl) . "');\n";
-			echo "\t\t\tdisableInput(true);\n";
 			echo "\t\t</script>\n";
 		}
 

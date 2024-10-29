@@ -752,7 +752,7 @@
 
 		// Schedule the page reload when auto-refresh is on
 		if ($autoRefreshTimeout > 0 && $isAutoRefresh) {
-			echo "\t\t<script>";
+			echo "\t\t<script>\n";
 			echo "\t\t\tschedulePageReload({$autoRefreshTimeout}, '" . htmlspecialchars_decode($refreshUrl) . "');\n";
 			echo "\t\t</script>\n";
 		}
@@ -937,7 +937,7 @@
 		header('Location: emajenvir.php?' . $_SERVER["QUERY_STRING"]);
 	}
 
-	$scripts = "<script src=\"js/emajrollbacks.js\"></script>";
+	$scripts = "";
 
 	$misc->printHtmlHeader($lang['strrollbacksmanagement'], $scripts, 'emajrollbacks');
 	$misc->printBody();

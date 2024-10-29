@@ -4,11 +4,14 @@
 // Various javascript functions of general interest. In particular, they handle:
 // - current date and time display
 // - multiactions tables and table filters
+// - page auto-refresh
 //
 // It mainly uses JQuery
 //
 
+//
 // Function that displays the current date and time
+//
 
 function showDateTime() {
 	currentDate = new Date();
@@ -111,4 +114,22 @@ function showHideFilterRow(form_id) {
 		else
 		// hide the filter row
 			$('#' + form_id + ' .tablesorter-filter-row').addClass('hideme');
+}
+
+//
+// JS functions to handle auto-refresh.
+// (used at least by the activity.php and emajrollbacks.php pages)
+//
+let autorefreshTimeout;
+
+function toggleAutoRefresh(input, url) {
+	if (input.checked) {
+		window.location.replace(url);
+	} else {
+		clearTimeout(autorefreshTimeout);
+	}
+}
+
+function schedulePageReload(timer, url) {
+	autorefreshTimeout = setTimeout(function() {window.location.replace(url);}, timer * 1000);
 }

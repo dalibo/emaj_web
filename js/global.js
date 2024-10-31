@@ -123,13 +123,23 @@ function showHideFilterRow(form_id) {
 let autorefreshTimeout;
 
 function toggleAutoRefresh(input, url) {
+	// Clear the piece of sessionStorage holding the scroll position, if it exists
+	sessionStorage.removeItem("autorefresh-scroll");
+
 	if (input.checked) {
+		// If setting to ON, reload the page immediately
 		window.location.replace(url);
 	} else {
+		// If setting to OFF, just clear the timer
 		clearTimeout(autorefreshTimeout);
 	}
 }
 
 function schedulePageReload(timer, url) {
-	autorefreshTimeout = setTimeout(function() {window.location.replace(url);}, timer * 1000);
+	autorefreshTimeout = setTimeout(function() {
+			// Store the scroll position in sessionStorage
+			sessionStorage.setItem("autorefresh-scroll", $(document).scrollTop() );
+			// Reload the page
+			window.location.replace(url);
+		}, timer * 1000);
 }

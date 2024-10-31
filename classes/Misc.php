@@ -2281,5 +2281,27 @@
 			
 			echo "</td></tr></table>\n";
 		}
+
+		/*
+		 * Schedule the page reload when auto-refresh is set.
+		 * It also stores the page scroll position at page reload time.
+		 * It needs the js/global.js file.
+		 * @param $url = the url to load.
+		 *        $timeout = the timer.
+		 */
+		function schedulePageReload($url, $timeout) {
+
+			echo "<script>\n";
+			// when the document will be ready, scroll to the position saved in sessionStorage, if it exists.
+			echo "\t$(document).ready(function() {\n";
+			echo "\t\tvar storedScrollposition = sessionStorage.getItem('autorefresh-scroll');\n";
+			echo "\t\tif (storedScrollposition) {\n";
+			echo "\t\t\t$(document).scrollTop(storedScrollposition);\n";
+			echo "\t\t}\n";
+			echo "\t});\n";
+			// And immediately schedule the page reload.
+			echo "\tschedulePageReload({$timeout}, '" . htmlspecialchars_decode($url) . "');\n";
+			echo "</script>\n";
+		}
 	}
 ?>

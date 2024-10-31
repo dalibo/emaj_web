@@ -131,11 +131,9 @@
 		// Add onchange event on each form input
 		echo "\t\t<script>setOnchangeEvent();</script>\n";
 
-		// Schedule the page reload when auto-refresh is on
+		// Schedule the page reload when auto-refresh is on.
 		if ($autoRefreshTimeout > 0 && $isAutoRefresh) {
-			echo "\t\t<script>\n";
-			echo "\t\t\tschedulePageReload({$autoRefreshTimeout}, '" . htmlspecialchars_decode($refreshUrl) . "');\n";
-			echo "\t\t</script>\n";
+			$misc->schedulePageReload($refreshUrl, $autoRefreshTimeout);
 		}
 
 		// Display the activity if parameters are known

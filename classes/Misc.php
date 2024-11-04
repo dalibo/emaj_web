@@ -701,15 +701,20 @@
 
 			// language change management
 			// if the language has just been changed, set the flag that will force the browser reload at the end of the page processing on client side 
-			if (isset($_GET['language']))
+			if (isset($_POST['language']))
 				$_reload_browser = true;
 
+			$noArrayParam = 1;
+			foreach ($_REQUEST as $key => $val) {
+				if (is_array($val))
+					$noArrayParam = 0;
+			}
 			// language selection
 			echo "\t<div class=\"language\">\n";
-			if ($_SERVER["REQUEST_METHOD"] == 'GET' || $_SERVER["REQUEST_METHOD"] == 'POST')
-				echo "\t\t<form method=\"get\">\n";
+			if (($_SERVER["REQUEST_METHOD"] == 'GET' || $_SERVER["REQUEST_METHOD"] == 'POST') && $noArrayParam)
+				echo "\t\t<form method=\"post\">\n";
 			else
-				echo "\t\t<form method=\"get\" action=\"intro.php\">\n";
+				echo "\t\t<form method=\"post\" action=\"intro.php\">\n";
 			echo "\t\t\t<select name=\"language\" onchange=\"this.form.submit()\">\n";
 			$language = isset($_SESSION['webdbLanguage']) ? $_SESSION['webdbLanguage'] : 'english';
 			foreach ($appLangFiles as $k => $v) {
@@ -719,33 +724,15 @@
 			}
 			echo "\t\t\t</select>\n";
 			echo "\t\t\t<noscript><input type=\"submit\" value=\"Set Language\"></noscript>\n";
-			if ($_SERVER["REQUEST_METHOD"] == 'GET') {
-				foreach ($_GET as $key => $val) {
-					if ($key == 'language') continue;
-					if ($key == 'ma') continue;
-					if (is_array($val)) {
-						$cleanVal = array_map("htmlspecialchars", $val);
-					} else {
-						$cleanVal = htmlspecialchars($val);
-					}
-					echo "\t\t\t<input type=\"hidden\" name=\"{$key}\" value=\"", $cleanVal, "\" />\n";
-				}
-			} elseif ($_SERVER["REQUEST_METHOD"] == 'POST') {
-				foreach ($_POST as $key => $val) {
-					if ($key == 'language') continue;
-					if ($key == 'action') continue;
-					if ($key == 'ma') continue;
-					if (is_array($val)) {
-						$cleanVal = array_map("htmlspecialchars", $val);
-					} else {
-						$cleanVal = htmlspecialchars($val);
-					}
-					echo "\t\t\t<input type=\"hidden\" name=\"{$key}\" value=\"", $cleanVal, "\" />\n";
-				}
+			// replicate parameters
+			foreach ($_REQUEST as $key => $val) {
+				if ($key == 'language') continue;
+				if (is_array($val)) continue;
+				$cleanVal = htmlspecialchars($val);
+				echo "\t\t\t<input type=\"hidden\" name=\"{$key}\" value=\"", $cleanVal, "\" />\n";
 			}
 			echo "\t\t</form>\n";
 			echo "\t</div>\n";
-
 			echo "</div>\n";
 		}
 

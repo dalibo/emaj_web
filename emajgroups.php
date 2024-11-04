@@ -4290,7 +4290,7 @@
 			$rlbkId = $emajdb->asyncRollbackGroups($_POST['group'], $_POST['mark'], $_POST['rollbacktype']=='logged', $psqlExe,$conf['temp_dir'].$sep, false, $_POST['comment']);
 
 			// automatic form to go to the emajrollbacks.php page
-			echo "<form id=\"auto\" action=\"emajrollbacks.php\" method=\"get\">\n";
+			echo "<form id=\"auto\" action=\"emajrollbacks.php\" method=\"post\">\n";
 			echo "<input type=\"hidden\" name=\"action\" value=\"show_rollback\" />\n";
 			echo "<input type=\"hidden\" name=\"asyncRlbk\" value=\"true\" />\n";
 			echo "<input type=\"hidden\" name=\"rlbkid\" value=\"", htmlspecialchars($rlbkId), "\" />\n";
@@ -4630,7 +4630,7 @@
 			$rlbkId = $emajdb->asyncRollbackGroups($_POST['groups'], $_POST['mark'], $_POST['rollbacktype']=='logged', $psqlExe, $conf['temp_dir'].$sep, true, $_POST['comment']);
 
 			// automatic form to go to the emajrollbacks.php page
-			echo "<form id=\"auto\" action=\"emajrollbacks.php\" method=\"get\">\n";
+			echo "<form id=\"auto\" action=\"emajrollbacks.php\" method=\"post\">\n";
 			echo "<input type=\"hidden\" name=\"action\" value=\"show_rollback\" />\n";
 			echo "<input type=\"hidden\" name=\"asyncRlbk\" value=\"true\" />\n";
 			echo "<input type=\"hidden\" name=\"rlbkid\" value=\"", htmlspecialchars($rlbkId), "\" />\n";

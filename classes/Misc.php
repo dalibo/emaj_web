@@ -1005,7 +1005,7 @@
 						),
 						'emajchangesstat' => array (
 							'title' => $lang['strchangesstat'],
-							'url' => 'emajgroups.php',
+							'url' => 'groupstat.php',
 							'urlvars' => array(
 								'subject' => 'emajgroups',
 								'action' => 'changes_stat_group',
@@ -1016,7 +1016,7 @@
 						),
 						'emajcontent' => array (
 							'title' => $lang['strcontent'],
-							'url' => 'emajgroups.php',
+							'url' => 'groupcontent.php',
 							'urlvars' => array(
 								'subject' => 'emajgroups',
 								'action' => 'show_content_group',
@@ -1027,7 +1027,7 @@
 						),
 						'emajhistory' => array (
 							'title' => $lang['strhistory'],
-							'url' => 'emajgroups.php',
+							'url' => 'grouphistory.php',
 							'urlvars' => array(
 								'subject' => 'emajgroups',
 								'action' => 'show_history_group',

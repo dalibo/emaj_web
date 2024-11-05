@@ -51,7 +51,7 @@ sub loadStrings {
 				$nbUsedString = $nbUsedString + 2;
 				next;
 			}
-			if ($str =~ /^(emajgroups.php:\d+:lang\[)\$parts\[0\]/) {
+			if ($str =~ /^(grouphistory.php:\d+:lang\[)\$parts\[0\]/) {
 				push(@usedStrings, "$1'strlogsession']");
 				push(@usedStrings, "$1'strgroupcreate']");
 				push(@usedStrings, "$1'strgroupdrop']");

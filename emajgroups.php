@@ -740,12 +740,12 @@
 			$configuredActions = array();
 		}
 
-		$misc->printTitle($lang['strlogginggroups'], $lang['strlogginggrouphelp']);
+		$misc->printTitle($lang['strlogginggroups'], $misc->buildTitleRecordsCounter($loggingGroups), $lang['strlogginggrouphelp']);
 
 		$misc->printTable($loggingGroups, $columns, $loggingActions, 'loggingGroups', $lang['strnologginggroup'], 'loggingGroupPre', array('sorter' => true, 'filter' => true));
 
 		echo "<hr>";
-		$misc->printTitle($lang['stridlegroups'], $lang['stridlegrouphelp']);
+		$misc->printTitle($lang['stridlegroups'], $misc->buildTitleRecordsCounter($idleGroups), $lang['stridlegrouphelp']);
 
 		$misc->printTable($idleGroups, $columns, $idleActions, 'idleGroups', $lang['strnoidlegroup'], 'idleGroupPre', array('sorter' => true, 'filter' => true));
 
@@ -755,7 +755,7 @@
 			// configured but not yet created tables groups section
 			$configuredGroups = $emajdb->getConfiguredGroups();
 
-			$misc->printTitle($lang['strconfiguredgroups'], $lang['strconfiguredgrouphelp']);
+			$misc->printTitle($lang['strconfiguredgroups'], null, $lang['strconfiguredgrouphelp']);
 
 			$misc->printTable($configuredGroups, $configuredColumns, $configuredActions, 'configuredGroups', $lang['strnoconfiguredgroups'], null, array('sorter' => true, 'filter' => true));
 
@@ -865,7 +865,7 @@
 			}
 
 			echo "<hr>";
-			$misc->printTitle($lang['strdroppedgroupslist']);
+			$misc->printTitle($lang['strdroppedgroupslist'], $misc->buildTitleRecordsCounter($droppedGroups));
 
 			$misc->printTable($droppedGroups, $columns, $droppedActions, 'droppedgroups', $lang['strnodroppedgroup'], null, array('sorter' => true, 'filter' => true));
 

@@ -426,23 +426,44 @@
 
 		/**
 		 * Print out the page or section heading and the help
-		 * @param $title Title, already escaped
-		 * @param $help (optional) The text for the help
+		 * @param $mainTitle Main title, already escaped
+         *        $secondaryTitle (optional) Additional text in smaller size
+		 *        $help (optional) Text for a help icon
 		 */
-		function printTitle($title, $help = null) {
+		function printTitle($mainTitle, $secondaryTitle = null, $help = null) {
 
-			if (! $help)
-				echo "<h2>{$title}</h2>\n";
-			else
-				echo "<h2>{$title}<img src=\"{$this->icon('Info-inv')}\" alt=\"info\" title=\"{$help}\"/></h2>\n";
+			echo "<h2>{$mainTitle}";
+			if ($secondaryTitle)
+				echo "<span class=\"sec-title\">$secondaryTitle</span>";
+			if ($help)
+				echo "<img src=\"{$this->icon('Info-inv')}\" alt=\"info\" title=\"{$help}\"/>";
+			echo "</h2>\n";
 		}
 
 		/**
-		 * Print out a subtitle
+		 * Print out a subtitle in a h3 tag
+		 * @param $mainTitle Main title, already escaped
+         *        $secondaryTitle (optional) Additional text in smaller size
 		 */
-		function printSubtitle($title) {
+		function printSubtitle($mainTitle, $secondaryTitle = null) {
 
-			echo "<h3>{$title}</h3>\n";
+			echo "<h3>{$mainTitle}";
+			if ($secondaryTitle)
+				echo "<span class=\"sec-title\">$secondaryTitle</span>";
+			echo "</h3>\n";
+		}
+
+		/**
+		 * Build the record counter of a data collection that will be printed in title
+         * An empty string is produced for empty collections
+		 * @param $collection Data records collection
+		 */
+		function buildTitleRecordsCounter($collection) {
+
+			if ($collection->recordCount() == 0)
+				return '';
+			else
+				return "(x {$collection->recordCount()})";
 		}
 
 		/**

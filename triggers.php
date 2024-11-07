@@ -33,12 +33,11 @@
 		$misc->printHeader('database', 'database', 'triggers');
 
 		$misc->printMsg($msg);
-		$misc->printTitle($lang['strapptriggers'], $lang['strapptriggershelp']);
-
-		$urlvars = $misc->getRequestVars();
 
 		// Get triggers
 		$triggers = $emajdb->getAppTriggers();
+
+		$urlvars = $misc->getRequestVars();
 
 		$columns = array(
 			'schema' => array(
@@ -138,6 +137,8 @@
 				}
 			}
 		}
+
+		$misc->printTitle($lang['strapptriggers'], $misc->buildTitleRecordsCounter($triggers), $lang['strapptriggershelp']);
 
 		$misc->printTable($triggers, $columns, $actions, 'triggers-triggers', $lang['strnoapptrigger'], 'appTriggerPre', array('sorter' => true, 'filter' => true));
 

@@ -54,10 +54,16 @@ h4 {
 	color: #308ac5;
 }
 
+h2 span.sec-title, h3 span.sec-title {
+	margin-left: 12px;
+	font-size: 0.7em;
+	font-style: italic;
+}
+
 h2 img, h3 img {
 	vertical-align: bottom;
 	padding-bottom: 2px;
-	margin-left: 10px;
+	margin-left: 12px;
 }
 h4 img {
 	vertical-align: bottom;

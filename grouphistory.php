@@ -34,7 +34,7 @@
 
 		$misc->printHeader('emaj', 'emajgroup', 'emajhistory');
 
-		$misc->printTitle(sprintf($lang['strgrouphistory'],htmlspecialchars($_REQUEST['group'])));
+		$misc->printTitle(sprintf($lang['strgrouphistory'], htmlspecialchars($_REQUEST['group'])));
 
 		$groupHistory = $emajdb->getHistoryGroup($_REQUEST['group']);
 

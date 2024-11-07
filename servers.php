@@ -32,14 +32,14 @@
 		$misc->printMsg($msg);
 		$group = isset($_GET['group']) ? $_GET['group'] : false;
 
-		$groups = $misc->getServersGroups(true,$group);
+		$groups = $misc->getServersGroups(true, $group);
 
 		if ($groups->recordCount()>0) {
 
 			if (($group !== false) and (isset($conf['srv_groups'][$group])))
-				$misc->printTitle(sprintf($lang['strgroupgroups'],htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')));
+				$misc->printTitle(sprintf($lang['strgroupgroups'], htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')), $misc->buildTitleRecordsCounter($groups));
 			else
-				$misc->printTitle($lang['strserversgroups']);
+				$misc->printTitle($lang['strserversgroups'], $misc->buildTitleRecordsCounter($groups));
 
 			$columns = array(
 				'group' => array(
@@ -102,10 +102,10 @@
 		);
 
 		if (($group !== false) and isset($conf['srv_groups'][$group])) {
-			$misc->printTitle(sprintf($lang['strgroupservers'],htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')));
+			$misc->printTitle(sprintf($lang['strgroupservers'],htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')), $misc->buildTitleRecordsCounter($servers));
 			$actions['logout']['attr']['href']['urlvars']['group'] = $group;
 		} else
-			$misc->printTitle($lang['strconfiguredservers']);
+			$misc->printTitle($lang['strconfiguredservers'], $misc->buildTitleRecordsCounter($servers));
 
 		$misc->printTable($servers, $columns, $actions, 'servers', $lang['strnoobjects'], 'svPre', array('sorter' => true, 'filter' => true));
 	}

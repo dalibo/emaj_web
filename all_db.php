@@ -19,9 +19,10 @@
 
 		$misc->printHeader('server', 'server', 'databases');
 		$misc->printMsg($msg);
-		$misc->printTitle($lang['strdatabaseslist']);
 
 		$databases = $data->getDatabases();
+
+		$misc->printTitle($lang['strdatabaseslist'], $misc->buildTitleRecordsCounter($databases));
 
 		$columns = array(
 			'database' => array(

@@ -872,11 +872,13 @@
 	$lang['strrlbksessions'] = 'Sessions';
 	$lang['strrlbksession'] = 'Session';
 	$lang['strrlbkexecreport'] = 'Rapport d\'exécution';
-	$lang['strrlbkplanning'] = 'Planification';
-	$lang['strrlbkplanninghelp'] = 'Les principales étapes élémentaires d\'exécution du Rollback E-Maj. Ne sont pas inclus : la planification et la pose des verrous sur les tables en début d\'opération et, pour les versions emaj < 4.2, le traitement des séquences en fin d\'opération.';
+	$lang['strrlbkelemsteps'] = 'Etapes élémentaires';
+	$lang['strrlbkelemstepshelp'] = 'Les principales étapes élémentaires d\'exécution du Rollback E-Maj. Ne sont pas inclus : la planification et la pose des verrous sur les tables en début d\'opération et, pour les versions emaj < 4.2, le traitement des séquences en fin d\'opération.';
 	$lang['strrlbkestimmethodhelp'] = 'En phase de planification, la durée de chaque étape est estimée, en utilisant en priorité des statistiques d\'exécutions similaires passées, avec le même ordre de grandeur de quantités à traiter (STAT+), ou des ordres de grandeur différentes (STAT), ou, à défaut, les paramètres de l\'extension (PARAM). La colonne Q évalue la qualité des estimations de durée des étapes de plus de 10ms.';
 	$lang['strnorlbkstep'] = 'Pas d\'étape élémentaire pour ce rollback.';
 	$lang['strrlbkstep'] = 'Étape';
+	$lang['strrlbkstarttime'] = 'Démarrage';
+	$lang['strrlbkendtime'] = 'Fin';
 	$lang['strabbrquality'] = 'Q';
 	$lang['strmethod'] = 'Méthode';
 	$lang['strrlbksequences'] = 'Effectuer le rollback des séquences';
@@ -919,11 +921,11 @@
 	// Display
 	$lang['strerrortrapped'] = 'Une erreur a été interceptée lors de la consultation des séquences.';
 	$lang['strglobalactivity'] = 'Activité globale';
-	$lang['strlogginggroupstitle'] = 'Groupes démarrés (%s/%s)';
+	$lang['strlogginggroupstitle'] = 'Groupes démarrés';
 	$lang['strnogroupselected'] = 'Aucun groupe de tables n\'est sélectionné.';
-	$lang['strtablesinlogginggroups'] = 'Tables des groupes démarrés (%s/%s)';
+	$lang['strtablesinlogginggroups'] = 'Tables des groupes démarrés';
 	$lang['strnotableselected'] = 'Aucune table n\'est sélectionnée.';
-	$lang['strsequencesinlogginggroups'] = 'Séquences des groupes démarrés (%s/%s)';
+	$lang['strsequencesinlogginggroups'] = 'Séquences des groupes démarrés';
 	$lang['strnosequenceselected'] = 'Aucune séquence n\'est sélectionnée.';
 	$lang['strsincelatestmark'] = 'Depuis la dernière marque';
 	$lang['strsincepreviousdisplay'] = 'Depuis l\'affichage précédent';

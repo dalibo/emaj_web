@@ -188,7 +188,7 @@
 
 			// Display the tables groups
 			if ($rq['max-groups'] > 0) {
-				$misc->printSubtitle(sprintf($lang['strlogginggroupstitle'], $globalCounters['nb_logging_groups'], $globalCounters['nb_groups']));
+				$misc->printSubtitle($lang['strlogginggroupstitle'], "(x {$globalCounters['nb_logging_groups']}/{$globalCounters['nb_groups']})");
 
 				$loggingGroupsArs = new ArrayRecordSet(array_slice($loggingGroups, 0, $rq['max-groups']));
 
@@ -236,7 +236,7 @@
 
 			// Display the logged tables
 			if ($rq['max-tables'] > 0) {
-				$misc->printSubtitle(sprintf($lang['strtablesinlogginggroups'], $globalCounters['nb_logged_tables'], $globalCounters['nb_tables']));
+				$misc->printSubtitle($lang['strtablesinlogginggroups'], "(x {$globalCounters['nb_logged_tables']}/{$globalCounters['nb_tables']})");
 
 				$loggedTablesArs = new ArrayRecordSet(array_slice($loggedTables, 0, $rq['max-tables']));
 
@@ -284,7 +284,7 @@
 
 			// Display the logged sequences
 			if ($rq['max-sequences'] > 0) {
-				$misc->printSubtitle(sprintf($lang['strsequencesinlogginggroups'], $globalCounters['nb_logged_sequences'], $globalCounters['nb_sequences']));
+				$misc->printSubtitle($lang['strsequencesinlogginggroups'], "(x {$globalCounters['nb_logged_sequences']}/{$globalCounters['nb_sequences']})");
 
 				$loggedSequencesArs = new ArrayRecordSet(array_slice($loggedSequences, 0, $rq['max-sequences']));
 		

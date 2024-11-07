@@ -872,11 +872,13 @@
 	$lang['strrlbksessions'] = 'Sessions';
 	$lang['strrlbksession'] = 'Session';
 	$lang['strrlbkexecreport'] = 'Execution report';
-	$lang['strrlbkplanning'] = 'Planning';
-	$lang['strrlbkplanninghelp'] = 'The main elementary steps of the E-Maj Rollback execution. Are not included: the planning and the locks set on tables at the beginning of the operation, and, for emaj version < 4.2, the sequences processing at the end of the operation.';
+	$lang['strrlbkelemsteps'] = 'Elementary steps';
+	$lang['strrlbkelemstepshelp'] = 'The main elementary steps of the E-Maj Rollback execution. Are not included: the planning and the locks set on tables at the beginning of the operation, and, for emaj version < 4.2, the sequences processing at the end of the operation.';
 	$lang['strrlbkestimmethodhelp'] = 'At planning time, the duration of each step is estimated, using statistics of similar steps in the past, with the same order of magnitude of quantity to process (STAT+), or other orders of magnitude (STAT), or, by default, the extension parameters (PARAM). The Q column evaluates the duration estimates quality for steps longer than 10ms.';
 	$lang['strnorlbkstep'] = 'No elementary step for this rollback.';
 	$lang['strrlbkstep'] = 'Step';
+	$lang['strrlbkstarttime'] = 'Start time';
+	$lang['strrlbkendtime'] = 'End time';
 	$lang['strabbrquality'] = 'Q';
 	$lang['strmethod'] = 'Method';
 	$lang['strrlbksequences'] = 'Rollback sequences';
@@ -919,11 +921,11 @@
 	// Display
 	$lang['strerrortrapped'] = 'An error has been trapped while reading sequences.';
 	$lang['strglobalactivity'] = 'Global activity';
-	$lang['strlogginggroupstitle'] = 'Logging groups (%s/%s)';
+	$lang['strlogginggroupstitle'] = 'Logging groups';
 	$lang['strnogroupselected'] = 'No tables group selected.';
-	$lang['strtablesinlogginggroups'] = 'Tables in logging groups (%s/%s)';
+	$lang['strtablesinlogginggroups'] = 'Tables in logging groups';
 	$lang['strnotableselected'] = 'No table selected.';
-	$lang['strsequencesinlogginggroups'] = 'Sequences in logging groups (%s/%s)';
+	$lang['strsequencesinlogginggroups'] = 'Sequences in logging groups';
 	$lang['strnosequenceselected'] = 'No sequence selected.';
 	$lang['strsincelatestmark'] = 'Since latest mark';
 	$lang['strsincepreviousdisplay'] = 'Since previous display';

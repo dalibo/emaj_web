@@ -242,15 +242,15 @@
 			$misc->printHeader('database', 'database', 'schemas');
 		};
 
-		$misc->printMsg($msg,$errMsg);
-		$misc->printTitle($lang['strallschemas']);
-
-		// Get the list of schemas
+		// Get the schemas list
 		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
 			$schemas = $emajdb->getAllSchemas();
 		} else {
 			$schemas = $data->getSchemas();
 		}
+
+		$misc->printMsg($msg,$errMsg);
+		$misc->printTitle($lang['strallschemas'], $misc->buildTitleRecordsCounter($schemas));
 
 		$columns = array(
 			'schema' => array(
@@ -305,7 +305,7 @@
 					}
 				}
 			}
-			// emaj attribute and actions to manage ?
+			// E-Maj attributes and actions to manage ?
 			$emajAttributesToManage = ($emajdb->isEnabled() && $emajdb->isAccessible() && ! $isEmajSchema);
 
 			// get the number of created groups (needed to display or hide some actions)
@@ -319,13 +319,13 @@
 			// Display the tables list
 			echo "<a id=\"tables\">&nbsp;</a>\n";
 
-			$misc->printTitle(sprintf($lang['strtableslist'], $_REQUEST['schema']));
-
 			if ($emajAttributesToManage) {
 				$tables = $emajdb->getTables($_REQUEST['schema']);
 			} else {
 				$tables = $data->getTables();
 			}
+
+			$misc->printTitle(sprintf($lang['strtableslist'], $_REQUEST['schema']), $misc->buildTitleRecordsCounter($tables));
 
 			$columns = array(
 				'table' => array(
@@ -475,15 +475,15 @@
 
 			// Display the sequences list
 
-			echo "<a id=\"sequences\">&nbsp;</a>\n";
-			$misc->printTitle(sprintf($lang['strsequenceslist'], $_REQUEST['schema']));
-
 			// Get all sequences
 			if ($emajAttributesToManage) {
 				$sequences = $emajdb->getSequences($_REQUEST['schema']);
 			} else {
 				$sequences = $data->getSequences();
 			}
+
+			echo "<a id=\"sequences\">&nbsp;</a>\n";
+			$misc->printTitle(sprintf($lang['strsequenceslist'], $_REQUEST['schema']), $misc->buildTitleRecordsCounter($sequences));
 
 			$columns = array(
 				'sequence' => array(

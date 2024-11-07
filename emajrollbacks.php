@@ -65,6 +65,16 @@
 
 		$misc->printHeader('database', 'database', 'emajrollbacks');
 
+		// Get E-Maj rollbacks information from the database
+		if ($emajdb->isDblinkUsable())
+			$inProgressRlbks = $emajdb->getInProgressRlbk();
+
+		$completedRlbks = $emajdb->getCompletedRlbk();
+
+		$consolidableRlbks = $emajdb->getConsolidableRlbk();
+
+		// Display in progress rollbacks
+
 		$columnsInProgressRlbk = array(
 			'rlbkId' => array(
 				'title' => $lang['strrlbkid'],
@@ -153,6 +163,36 @@
 				),
 			));
 		};
+
+		$actions = array();
+		if ($emajdb->getNumEmajVersion() >= 40300 && $emajdb->isEmaj_Adm()) {	// version >= 4.3
+			$actions = array_merge($actions, array(
+				'comment_rollback' => array(
+					'content' => $lang['strsetcomment'],
+					'icon' => 'Bubble',
+					'attr' => array (
+						'href' => array (
+							'url' => 'emajrollbacks.php',
+							'urlvars' => array (
+								'action' => 'comment_rollback',
+								'rlbkid' => field('rlbk_id'),
+								'back' => 'list',
+							)))
+				))
+			);
+		};
+
+		if ($emajdb->isDblinkUsable()) {
+			$misc->printTitle($lang['strinprogressrlbk'], $misc->buildTitleRecordsCounter($inProgressRlbks));
+			$misc->printTable($inProgressRlbks, $columnsInProgressRlbk, $actions, 'inProgressRlbk', $lang['strnorlbk'], null, array('sorter' => true, 'filter' => true));
+
+		} else {
+			$misc->printTitle($lang['strinprogressrlbk']);
+			echo "<p>{$lang['strrlbkmonitornotavailable']}</p>\n";
+		}
+		echo "<hr/>\n";
+
+		// Display completed rollbacks
 
 		$columnsCompletedRlbk = array(
 			'rlbkId' => array(
@@ -246,42 +286,15 @@
 			));
 		};
 
-		$actions = array();
-		if ($emajdb->getNumEmajVersion() >= 40300 && $emajdb->isEmaj_Adm()) {	// version >= 4.3
-			$actions = array_merge($actions, array(
-				'comment_rollback' => array(
-					'content' => $lang['strsetcomment'],
-					'icon' => 'Bubble',
-					'attr' => array (
-						'href' => array (
-							'url' => 'emajrollbacks.php',
-							'urlvars' => array (
-								'action' => 'comment_rollback',
-								'rlbkid' => field('rlbk_id'),
-								'back' => 'list',
-							)))
-				))
-			);
-		};
+		$misc->printTitle($lang['strcompletedrlbk'], $misc->buildTitleRecordsCounter($completedRlbks));
 
-		// Get rollback information from the database
-		$completedRlbks = $emajdb->getCompletedRlbk();
-		$misc->printTitle($lang['strinprogressrlbk']);
-		if ($emajdb->isDblinkUsable()) {
-			$inProgressRlbks = $emajdb->getInProgressRlbk();
-			$misc->printTable($inProgressRlbks, $columnsInProgressRlbk, $actions, 'inProgressRlbk', $lang['strnorlbk'], null, array('sorter' => true, 'filter' => true));
-		} else {
-			echo "<p>{$lang['strrlbkmonitornotavailable']}</p>\n";
-		}
-		echo "<hr/>\n";
-
-		$misc->printTitle($lang['strcompletedrlbk']);
-
+		// The actions are the same as in progress rollbacks
 		$misc->printTable($completedRlbks, $columnsCompletedRlbk, $actions, 'completedRlbk', $lang['strnorlbk'], null, array('sorter' => true, 'filter' => true));
 
 		echo "<hr/>\n";
 
 		// Display the E-Maj logged rollback operations that may be consolidated (i.e. transformed into unlogged rollback)
+
 		$columnsConsRlbk = array(
 			'consGroup' => array(
 				'title' => $lang['strgroup'],
@@ -353,11 +366,9 @@
 		} else {
 			$actions = array();
 		}
-		// Get rollback information from the database
-		$consolidableRlbks = $emajdb->getConsolidableRlbk();
 
-		$misc->printTitle($lang['strconsolidablerlbk']);
-		$inProgressRlbks = $emajdb->getInProgressRlbk();
+		$misc->printTitle($lang['strconsolidablerlbk'], $misc->buildTitleRecordsCounter($consolidableRlbks));
+
 		$misc->printTable($consolidableRlbks, $columnsConsRlbk, $actions, 'consolidableRlbk', $lang['strnorlbk'], null, array('sorter' => true, 'filter' => true));
 	}
 
@@ -588,7 +599,7 @@
 				'params'=> array('align' => 'center'),
 			),
 			'startDateTime' => array(
-				'title' => $lang['strbegin'],
+				'title' => $lang['strrlbkstarttime'],
 				'field' => field('rlbp_start_datetime'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -655,7 +666,7 @@
 				'params'=> array('align' => 'center'),
 			),
 			'sessionStartDateTime' => array(
-				'title' => $lang['strbegin'],
+				'title' => $lang['strrlbkstarttime'],
 				'field' => field('rlbs_start_datetime'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -665,7 +676,7 @@
 				),
 			),
 			'sessionEndDateTime' => array(
-				'title' => $lang['strend'],
+				'title' => $lang['strrlbkendtime'],
 				'field' => field('rlbs_end_datetime'),
 				'type' => 'spanned',
 				'params'=> array(
@@ -755,7 +766,7 @@
 			$misc->schedulePageReload($refreshUrl, $autoRefreshTimeout);
 		}
 
-		// print rollback properties
+		// Print rollback properties
 		$misc->printTitle($lang['strproperties']);
 		$misc->printTable($rlbkInfo, $columnsProperties, $actions, 'detailRlbkProperties', 'No rollback, internal error !');
 
@@ -789,7 +800,8 @@
 		}
 		$misc->printLinksList($navlinks, 'buttonslist');
 
-		// print rollback progress data
+		// Print rollback progress data
+
 		$rlbkInfo->moveFirst();
 		echo "<h4>{$lang['strrlbkprogress']}</h4>\n";
 		if ($isCompleted) {
@@ -810,20 +822,18 @@
 			echo "</div>\n";
 		}
 
-		// print planning data
-		if ($rlbkSteps->recordCount() > 0) {
-			$misc->printTitle($lang['strrlbkplanning'] . "&nbsp;&nbsp;<img src=\"{$misc->icon('Info-inv')}\" alt=\"info\" title=\"{$lang['strrlbkplanninghelp']}\"/>");
+		// Print planning data
 
-			$misc->printTable($rlbkSteps, $columnsSteps, $actions, 'detailRlbkSteps', null, null, array('sorter' => true, 'filter' => true));
+		$misc->printTitle($lang['strrlbkelemsteps'], $misc->buildTitleRecordsCounter($rlbkSteps), $lang['strrlbkelemstepshelp']);
 
-		} else {
-			$misc->printTitle($lang['strrlbkplanning']);
-			echo "<p>{$lang['strnorlbkstep']}</p>\n";
-		}
+		$misc->printTable($rlbkSteps, $columnsSteps, $actions, 'detailRlbkSteps', $lang['strnorlbkstep'], null, array('sorter' => true, 'filter' => true));
 
-		// print sessions data
+		// Print sessions data
+
 		if ($rlbkSessions->recordCount() > 0) {
-			$misc->printTitle($lang['strrlbksessions']);
+
+			$misc->printTitle($lang['strrlbksessions'], $misc->buildTitleRecordsCounter($rlbkSessions));
+
 			$misc->printTable($rlbkSessions, $columnsSessions, $actions, 'detailRlbkSession', null);
 		}
 	}

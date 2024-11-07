@@ -116,22 +116,21 @@
 		$nodes = array();
 		$group_id = isset($_GET['group']) ? $_GET['group'] : false;
 
-		/* root with srv_groups */
-		if (isset($conf['srv_groups']) and count($conf['srv_groups']) > 0
-			and $group_id === false)
-		{
+		if (isset($conf['srv_groups']) and count($conf['srv_groups']) > 0 and $group_id === false) {
+			/* root with servers groups */
 			$nodes = $misc->getServersGroups(true);
+
+		} elseif (isset($conf['srv_groups']) and $group_id !== false) {
+			/* group subtree */
+				if ($group_id !== 'all')
+					$nodes = $misc->getServersGroups(false, $group_id);
+				$nodes = array_merge($nodes, $misc->getServers(false, $group_id));
+				include_once('./classes/ArrayRecordSet.php');
+				$nodes = new ArrayRecordSet($nodes);
 		}
-		/* group subtree */
-		else if (isset($conf['srv_groups']) and $group_id !== false) {
-			if ($group_id !== 'all')
-				$nodes = $misc->getServersGroups(false, $group_id);
-			$nodes = array_merge($nodes, $misc->getServers(false, $group_id));
-			include_once('./classes/ArrayRecordSet.php');
-			$nodes = new ArrayRecordSet($nodes);
-		}
-		/* no srv_group */
+
 		else {
+			/* no servers group */
 			$nodes = $misc->getServers(true, false);
 		}
 		
@@ -158,8 +157,10 @@
 
 
 	if ($action == 'tree') {
-		if (isset($_GET['group'])) doTree($_GET['group']);
-		else doTree(false);
+		if (isset($_GET['group']))
+			doTree($_GET['group']);
+		else
+			doTree(false);
 	}
 
 	$misc->printHtmlHeader($lang['strservers']);

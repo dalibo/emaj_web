@@ -20,18 +20,11 @@
 		// popup whenever the server or database is changed.
 		// This ensures that the correct page encoding is used.
 		$onchange = "onchange=\"location.href='sqledit.php?action=" . 
-				urlencode($action) . "&amp;server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + ";
-		
-		// The exact URL to reload to is different between SQL and Find mode, however.
-		if ($action == 'find') {
-			$onchange .= "'&amp;term=' + encodeURI(term.value) + '&amp;filter=' + encodeURI(filter.value) + '&amp;'\"";
-		} else {
-			$onchange .= "'&amp;query=' + encodeURI(query.value) + '&amp;search_path=' + encodeURI(search_path.value) + (paginate.checked ? '&amp;paginate=on' : '')  + '&amp;'\"";
-		}
+				urlencode($action) . "&amp;server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + '&amp;query=' + encodeURI(query.value) + '&amp;search_path=' + encodeURI(search_path.value) + (paginate.checked ? '&amp;paginate=on' : '')  + '&amp;'\"";
 		
 		$misc->printConnection($onchange);
 	}
-	
+
 	/**
 	 * Ask for the options in the sql generation for changes dumps
 	 */

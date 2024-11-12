@@ -154,6 +154,7 @@
 	$lang['strunlogged'] = 'unlogged';
 	$lang['strunprotect'] = 'Unprotect';
 	$lang['strupdate'] = 'Update';
+	$lang['struser'] = 'User';
 	$lang['strvisible'] = 'Visible';
 	$lang['stryes'] = 'Yes';
 
@@ -223,11 +224,14 @@
 	$lang['strpassword'] = 'Password';
 	$lang['strtrycred'] = 'Use these credentials for all servers';
 	$lang['strloginfailed'] = 'Login failed';
-	$lang['strtopbar'] = 'Connection: %s:%s - role "%s"';
 	$lang['strlogout'] = 'Logout';
 	$lang['strlogoutmsg'] = 'Logged out of %s';
 	$lang['strlogindisallowed'] = 'Login disallowed for security reasons.';
 	$lang['strconfdropcred'] = 'For security reason, disconnecting will destroy your shared login information. Are you sure you want to disconnect ?';
+	$lang['strusersuperuser'] = 'The user has SUPERUSER rights.';
+	$lang['struseremajadm'] = 'The user has emaj_adm and emaj_viewer rights.';
+	$lang['struseremajviewer'] = 'The user has emaj_viewer rights.';
+	$lang['strusernoright'] = 'The user has no E-Maj rights.';
 
 	// User-supplied SQL editing
 	$lang['strsqledit'] = 'SQL statement editing';

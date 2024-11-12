@@ -154,6 +154,7 @@
 	$lang['strunlogged'] = 'non tracé';
 	$lang['strunprotect'] = 'Déprotéger';
 	$lang['strupdate'] = 'Modifier';
+	$lang['struser'] = 'Utilisateur';
 	$lang['strvisible'] = 'Visibles';
 	$lang['stryes'] = 'Oui';
 
@@ -219,15 +220,18 @@
 	// Connection and disconnection
 	$lang['strlogin'] = 'Connexion';
 	$lang['strlogintitle'] = 'Se connecter à %s';
-	$lang['strusername'] = 'Utilisateur';
+	$lang['strusername'] = 'Nom utilisateur';
 	$lang['strpassword'] = 'Mot de passe';
 	$lang['strtrycred'] = 'Utilisez ces identifiants pour tous les serveurs';
 	$lang['strloginfailed'] = 'Échec de la connexion';
-	$lang['strtopbar'] = 'Connexion : %s:%s - rôle « %s »';
-	$lang['strlogout'] = 'Déconnexion';
+	$lang['strlogout'] = 'Se déconnecter';
 	$lang['strlogoutmsg'] = 'Déconnecté de %s';
 	$lang['strlogindisallowed'] = 'Connexion désactivée pour raison de sécurité';
 	$lang['strconfdropcred'] = 'Par mesure de sécurité, la déconnexion supprimera le partage de vos identifiants pour tous les serveurs. Êtes-vous certain de vouloir vous déconnecter ?';
+	$lang['strusersuperuser'] = 'L\'utilisateur a les droits de SUPERUSER.';
+	$lang['struseremajadm'] = 'L\'utilisateur a les droits emaj_adm et emaj_viewer.';
+	$lang['struseremajviewer'] = 'L\'utilisateur a les droits emaj_viewer.';
+	$lang['strusernoright'] = 'L\'utilisateur n\'a aucun droit E-Maj.';
 
 	// User-supplied SQL editing
 	$lang['strsqledit'] = 'Édition de requête SQL';

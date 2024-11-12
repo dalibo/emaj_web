@@ -15,8 +15,9 @@
 
 function showDateTime() {
 	currentDate = new Date();
-	datetimeString = currentDate.toLocaleDateString() + ' - ' + currentDate.toLocaleTimeString();
-	$("#datetime").text(datetimeString);
+//	datetimeString = currentDate.toLocaleDateString() + ' - ' + currentDate.toLocaleTimeString();
+	$("#currentdate").text(currentDate.toLocaleDateString());
+	$("#currenttime").text(currentDate.toLocaleTimeString());
 }
 
 //

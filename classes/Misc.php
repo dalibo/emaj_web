@@ -612,14 +612,29 @@
 				$tabs = $_SESSION['lastTabsBar'];
 			}
 
+			$server_info = $this->getServerInfo();
+
 			echo "<header>\n";
 
-			$this->printTopbar();
+			// First header line
+			echo "<div class=\"topbar\">\n";
 
-			if ($trail != '') {
-				$this->printTrail($trail);
-			}
+			$this->printDateTime();
+			$this->printConnInfo($server_info);
+			$this->printLanguageInput();
 
+			echo "</div>\n";
+
+			// second header line
+			echo "<div class=\"trail\">\n";
+
+			$this->printTrail($trail);
+			$this->printSqlLinks($server_info);
+			$this->printBottomButton();
+
+			echo "</div>\n";
+
+			// third header line
 			$this->printTabs($tabs, $activetab);
 
 			echo "</header>\n";
@@ -627,134 +642,6 @@
 
 			// keep in memory the last displayed tabs bar id
 			$_SESSION['lastTabsBar'] = $tabs;
-		}
-
-		/**
-		 * Prints the top bar
-		 */
-		function printTopbar() {
-			global $lang, $conf, $appName, $appVersion, $appLangFiles, $_reload_browser;
-
-			$server_info = $this->getServerInfo();
-			$reqvars = $this->getRequestVars('table');
-
-			echo "<div class=\"topbar\">\n\t<div class=\"conninfo\">";
-
-			if ($server_info && isset($server_info['platform']) && isset($server_info['username'])) {
-				/* top left informations when connected */
-				echo sprintf($lang['strtopbar'],
-					'<span class="host">'.htmlspecialchars((empty($server_info['host'])) ? 'localhost':$server_info['host']).'</span>',
-					'<span class="port">'.htmlspecialchars($server_info['port']).'</span>',
-					'<span class="username">'.htmlspecialchars($server_info['username']).'</span>');
-				echo "</div>\n";
-
-				/* top right links when connected */
-
-				$toplinks = array (
-					'sql' => array (
-						'attr' => array (
-							'href' => array (
-								'url' => 'sqledit.php',
-								'urlvars' => array_merge($reqvars, array (
-									'action' => 'sql'
-								))
-							),
-							'target' => "sqledit",
-							'id' => 'toplink_sql',
-						),
-						'content' => $lang['strsql']
-					),
-					'history' => array (
-						'attr'=> array (
-							'href' => array (
-								'url' => 'history.php',
-								'urlvars' => array_merge($reqvars, array (
-									'action' => 'pophistory'
-								))
-							),
-							'id' => 'toplink_history',
-						),
-						'content' => $lang['strhistory']
-					),
-					'logout' => array(
-						'attr' => array (
-							'href' => array (
-								'url' => 'servers.php',
-								'urlvars' => array (
-									'action' => 'logout',
-									'logoutServer' => "{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}"
-								)
-							),
-							'id' => 'toplink_logout',
-						),
-						'content' => $lang['strlogout']
-					)
-				);
-
-				echo "\t<div class=\"connlinks\">\n";
-				$this->printLinksList($toplinks, 'toplink');
-
-				$sql_window_id = htmlentities('sqledit:'.$_REQUEST['server']);
-				$history_window_id = htmlentities('history:'.$_REQUEST['server']);
-
-				echo "\t\t<script>\n";
-				echo "\t\t\t$('#toplink_sql').click(function() {\n";
-				echo "\t\t\t	window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();\n";
-				echo "\t\t\t	return false;\n";
-				echo "\t\t\t});\n";
-				echo "\t\t\t$('#toplink_history').click(function() {\n";
-				echo "\t\t\t	window.open($(this).attr('href'),'{$history_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();\n";
-				echo "\t\t\t	return false;\n";
-				echo "\t\t\t});\n";
-
-				if (isset($_SESSION['sharedUsername'])) {
-					echo "\t\t\t$('#toplink_logout').click(function() {\n";
-					echo "\t\t\t	return confirm('{$lang['strconfdropcred']}');\n";
-					echo "\t\t\t});";
-				}
-
-				echo "\n\t\t</script>\n";
-			}
-			else {
-				echo "\t\t<span class=\"appname\">{$appName}</span> <span class=\"version\">{$appVersion}</span>\n";
-			}
-			echo "\t</div>\n";
-
-			// language change management
-			// if the language has just been changed, set the flag that will force the browser reload at the end of the page processing on client side 
-			if (isset($_POST['language']))
-				$_reload_browser = true;
-
-			$noArrayParam = 1;
-			foreach ($_REQUEST as $key => $val) {
-				if (is_array($val))
-					$noArrayParam = 0;
-			}
-			// language selection
-			echo "\t<div class=\"language\">\n";
-			if (($_SERVER["REQUEST_METHOD"] == 'GET' || $_SERVER["REQUEST_METHOD"] == 'POST') && $noArrayParam)
-				echo "\t\t<form method=\"post\">\n";
-			else
-				echo "\t\t<form method=\"post\" action=\"intro.php\">\n";
-			echo "\t\t\t<select name=\"language\" onchange=\"this.form.submit()\">\n";
-			$language = isset($_SESSION['webdbLanguage']) ? $_SESSION['webdbLanguage'] : 'english';
-			foreach ($appLangFiles as $k => $v) {
-				echo "\t\t\t\t<option value=\"{$k}\"",
-					($k == $language) ? ' selected="selected"' : '',
-					">{$v}</option>\n";
-			}
-			echo "\t\t\t</select>\n";
-			echo "\t\t\t<noscript><input type=\"submit\" value=\"Set Language\"></noscript>\n";
-			// replicate parameters
-			foreach ($_REQUEST as $key => $val) {
-				if ($key == 'language') continue;
-				if (is_array($val)) continue;
-				$cleanVal = htmlspecialchars($val);
-				echo "\t\t\t<input type=\"hidden\" name=\"{$key}\" value=\"", $cleanVal, "\" />\n";
-			}
-			echo "\t\t</form>\n";
-			echo "\t</div>\n";
-			echo "</div>\n";
 		}
 
 		/**
@@ -790,59 +677,321 @@
 		}
 
 		/**
-		 * Display a link
-		 * @param $link An associative array of link parameters to print
-		 *     link = array(
-		 *       'attr' => array( // list of A tag attribute
-		 *          'attrname' => attribute value
-		 *          ...
-		 *       ),
-		 *       'content' => The link text
-		 *       'icon' => (optional) if supplied, the icon replaces the 'content' text
-		 *       'fields' => (optionnal) the data from which content and attr's values are obtained
-		 *     );
-		 *   the special attribute 'href' might be a string or an array. If href is an array it
-		 *   will be generated by getActionUrl. See getActionUrl comment for array format.
+		 * Prints the current date and time in the page header
 		 */
-		function printLink($link) {
+		function printDateTime() {
 
-			if (! isset($link['fields']))
-				$link['fields'] = $_REQUEST;
+			echo "\t<div class=\"datetime\"><span id=\"currentdate\"></span> - <span id=\"currenttime\"></span></div>\n";
 
-			$tag = "<a ";
-			foreach ($link['attr'] as $attr => $value) {
-				if ($attr == 'href' and is_array($value)) {
-					$tag.= 'href="'. htmlentities($this->getActionUrl($value, $link['fields'])).'" ';
-				} else {
-					$tag.= htmlentities($attr).'="'. value($value, $link['fields'], 'html') .'" ';
-				}
-			}
-			$content = value($link['content'], $link['fields'], 'html');
-
-			if (! isset($link['icon'])) {
-				$tag.= ">". $content ."</a>";
-			} else {
-				$iconFile = $this->icon($link['icon']);
-				$tag.= "><img src=\"{$iconFile}\" alt=\"{$content}\" title=\"{$content}\" /></a>";
-			}
-			echo $tag;
+			// let the client fill the current date and time div by calling a js function
+			echo "<script>showDateTime();</script>\n";
 		}
 
 		/**
-		 * Display a list of links
-		 * @param $links An associative array of links to print. See printLink function for
-		 *               the links array format.
-		 * @param $class An optional class or list of classes seprated by a space
-		 *   WARNING: This field is NOT escaped! No user should be able to inject something here, use with care.
+		 * Prints the user info and the disconnect button in the page header
 		 */
-		function printLinksList($links, $class='') {
-			echo "\t\t<ul class=\"{$class}\">\n";
-			foreach ($links as $link) {
-				echo "\t\t\t<li>";
-				$this->printLink($link);
-				echo "</li>\n";
+		function printConnInfo($server_info) {
+			global $data, $emajdb, $lang;
+
+			echo "\t<div class=\"conninfo\">\n";
+
+			if ($server_info && isset($server_info['platform']) && isset($server_info['username'])) {
+
+				// print current user info
+				echo "\t\t{$lang['struser']}&nbsp;<span class=\"username\">" . htmlspecialchars($server_info['username']) . "</span>\n";
+
+				// print the tooltip to show E-Maj rights
+				if ($data->isSuperUser($server_info['username']))
+					$help = $lang['strusersuperuser'];
+				elseif ($emajdb->isEmaj_Adm())
+					$help = $lang['struseremajadm'];
+				elseif ($emajdb->isEmaj_Viewer())
+					$help = $lang['struseremajviewer'];
+				else
+					$help = $lang['strusernoright'];
+
+				echo "<img src=\"{$this->icon('Info-inv')}\" class=\"help-icon\" alt=\"info\" title=\"{$help}\"/>";
+
+				// disconnection button
+				$logoutHref = htmlentities("servers.php?action=logout&logoutServer=" .
+											urlencode("{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}"));
+				echo "\t\t<a href=\"$logoutHref\"><img src=\"{$this->icon('Logout-light')}\" class=\"button\" alt=\"{$lang['strlogout']}\" title=\"{$lang['strlogout']}\"  /></a>\n";
 			}
-			echo "\t\t</ul>\n";
+
+			echo "\t</div>\n";
+		}
+
+		/**
+		 * Prints the language input in the page header
+		 */
+		function printLanguageInput() {
+			global $appLangFiles, $_reload_browser;
+
+			echo "\t<div class=\"language\">\n";
+
+			// if the language has just been changed, set the flag that will force the browser reload at the end of the page processing on client side
+			if (isset($_POST['language']))
+				$_reload_browser = true;
+
+			$noArrayParam = 1;
+			foreach ($_REQUEST as $key => $val) {
+				if (is_array($val))
+					$noArrayParam = 0;
+			}
+
+			// language selection form
+			if (($_SERVER["REQUEST_METHOD"] == 'GET' || $_SERVER["REQUEST_METHOD"] == 'POST') && $noArrayParam)
+				echo "\t\t<form method=\"post\">\n";
+			else
+				echo "\t\t<form method=\"post\" action=\"intro.php\">\n";
+
+			echo "\t\t\t<select name=\"language\" onchange=\"this.form.submit()\">\n";
+			$language = isset($_SESSION['webdbLanguage']) ? $_SESSION['webdbLanguage'] : 'english';
+			foreach ($appLangFiles as $k => $v) {
+				echo "\t\t\t\t<option value=\"{$k}\"",
+					($k == $language) ? ' selected="selected"' : '',
+					">{$v}</option>\n";
+			}
+			echo "\t\t\t</select>\n";
+			echo "\t\t\t<noscript><input type=\"submit\" value=\"Set Language\"></noscript>\n";
+			// replicate parameters
+			foreach ($_REQUEST as $key => $val) {
+				if ($key == 'language') continue;
+				if (is_array($val)) continue;
+				$cleanVal = htmlspecialchars($val);
+				echo "\t\t\t<input type=\"hidden\" name=\"{$key}\" value=\"", $cleanVal, "\" />\n";
+			}
+			echo "\t\t</form>\n";
+
+			echo "\t</div>\n";
+		}
+
+		/**
+		 * Displays a bread crumb trail in the page header.
+		 */
+		function printTrail($trail = array()) {
+			global $lang;
+
+			echo "\t<div class=\"crumb\">\n";
+
+			if ($trail != '') {
+
+				if (is_string($trail)) {
+					$trail = $this->getTrail($trail);
+				}
+
+				$firstElement = 1;
+				foreach ($trail as $crumb) {
+					if (!$firstElement)
+						echo "\t\t &gt; ";
+
+					$firstElement = 0;
+
+					$crumblink = "<a";
+					if (isset($crumb['url']))
+						$crumblink .= " href=\"{$crumb['url']}\"";
+					if (isset($crumb['title']))
+						$crumblink .= " title=\"{$crumb['title']}\"";
+					$crumblink .= ">";
+
+					if (isset($crumb['title']))
+						$iconalt = $crumb['title'];
+					else
+						$iconalt = 'Database Root';
+
+					if (isset($crumb['icon']) && $icon = $this->icon($crumb['icon']))
+						$crumblink .= "<span class=\"icon\"><img src=\"{$icon}\" alt=\"{$iconalt}\" /></span>";
+
+					$crumblink .= "<span class=\"label\">" . htmlspecialchars($crumb['text']) . "</span></a>\n";
+
+					echo $crumblink;
+				}
+			}
+
+			echo "\t</div>\n";
+		}
+
+		/**
+		 * Prints the SQL links in the page header
+		 * Links are only available when connected
+		 */
+		function printSqlLinks($server_info) {
+			global $lang;
+
+			echo "\t<div class=\"connlinks\">\n";
+
+			if ($server_info && isset($server_info['platform']) && isset($server_info['username'])) {
+
+				$reqvars = $this->getRequestVars('table');
+
+				$toplinks = array (
+					'sql' => array (
+						'attr' => array (
+							'href' => array (
+								'url' => 'sqledit.php',
+								'urlvars' => array_merge($reqvars, array (
+									'action' => 'sql'
+								))
+							),
+							'target' => "sqledit",
+							'id' => 'toplink_sql',
+						),
+						'content' => $lang['strsql']
+					),
+					'history' => array (
+						'attr'=> array (
+							'href' => array (
+								'url' => 'history.php',
+								'urlvars' => array_merge($reqvars, array (
+									'action' => 'pophistory'
+								))
+							),
+							'id' => 'toplink_history',
+						),
+						'content' => $lang['strhistory']
+					),
+				);
+
+				$this->printLinksList($toplinks, 'toplink');
+
+				$sql_window_id = htmlentities('sqledit:'.$_REQUEST['server']);
+				$history_window_id = htmlentities('history:'.$_REQUEST['server']);
+
+				echo "\t\t<script>\n";
+				echo "\t\t\t$('#toplink_sql').click(function() {\n";
+				echo "\t\t\t	window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();\n";
+				echo "\t\t\t	return false;\n";
+				echo "\t\t\t});\n";
+				echo "\t\t\t$('#toplink_history').click(function() {\n";
+				echo "\t\t\t	window.open($(this).attr('href'),'{$history_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();\n";
+				echo "\t\t\t	return false;\n";
+				echo "\t\t\t});\n";
+
+				if (isset($_SESSION['sharedUsername'])) {
+					echo "\t\t\t$('#toplink_logout').click(function() {\n";
+					echo "\t\t\t	return confirm('{$lang['strconfdropcred']}');\n";
+					echo "\t\t\t});";
+				}
+
+				echo "\n\t\t</script>\n";
+			}
+
+			echo "\t</div>\n";
+		}
+
+		/**
+		 * Displays the button to go to the page bottom in the page header.
+		 */
+		function printBottomButton() {
+			global $lang;
+
+			// right cell containing the bottom button
+			echo "\t<div class=\"trailicons\">\n";
+			echo "\t\t<a href=\"#bottom\"><img src=\"{$this->icon('Bottom')}\" alt=\"{$lang['strpagebottom']}\" title=\"{$lang['strpagebottom']}\"  /></a>\n";
+			echo "\t</div>\n";
+		}
+
+		/**
+		 * Create a bread crumb trail of the object hierarchy.
+		 * @param $object The type of object at the end of the trail.
+		 */
+		function getTrail($subject = null) {
+			global $lang, $conf, $data, $appName;
+
+			$trail = array();
+			$vars = '';
+			$done = false;
+
+			$trail['root'] = array(
+				'text'  => $appName,
+				'url'   => 'redirect.php?subject=root',
+				'icon'  => 'EmajIcon'
+			);
+
+			if ($subject == 'root') $done = true;
+
+			if (!$done) {
+				$server_info = $this->getServerInfo();
+				$trail['server'] = array(
+					'title' => $lang['strserver'] . ' (' . $server_info['host'] . ':' . $server_info['port'] . ')',
+					'text'  => $server_info['desc'],
+					'url'   => $this->getHREFSubject('server'),
+					'icon'  => 'Server'
+				);
+			}
+			if ($subject == 'server') $done = true;
+
+			if (isset($_REQUEST['database']) && !$done) {
+				$trail['database'] = array(
+					'title' => $lang['strdatabase'],
+					'text'  => $_REQUEST['database'],
+					'url'   => $this->getHREFSubject('database'),
+					'icon'  => 'Database'
+				);
+			}
+			if ($subject == 'database') $done = true;
+
+			if (isset($_REQUEST['schema']) && !$done) {
+				$trail['schema'] = array(
+					'title' => $lang['strschema'],
+					'text'  => $_REQUEST['schema'],
+					'url'   => $this->getHREFSubject('schema'),
+					'icon'  => 'Schema'
+				);
+			}
+			if ($subject == 'schema') $done = true;
+
+			if (isset($_REQUEST['table']) && !$done) {
+				$trail['table'] = array(
+					'title' => $lang['strtable'],
+					'text'  => $_REQUEST['table'],
+					'url'   => $this->getHREFSubject('table'),
+					'icon'  => 'Table'
+				);
+			}
+			if ($subject == 'table') $done = true;
+
+			if (isset($_REQUEST['sequence']) && !$done) {
+				$trail['sequence'] = array(
+					'title' => $lang['strsequence'],
+					'text'  => $_REQUEST['sequence'],
+					'url'   => $this->getHREFSubject('sequence'),
+					'icon'  => 'Sequence'
+				);
+			}
+			if ($subject == 'sequence') $done = true;
+
+			if (isset($_REQUEST['group']) && !$done) {
+				$trail['emaj'] = array(
+					'title' => $lang['strtablesgroup'],
+					'text'  => $_REQUEST['group'],
+					'url'   => $this->getHREFSubject('emajgroup'),
+					'icon'  => 'EmajGroup'
+				);
+			}
+			if ($subject == 'group') $done = true;
+
+			if (isset($_REQUEST['rlbkid']) && !$done) {
+				$trail['emajrollback'] = array(
+					'title' => $lang['strrollback'],
+					'text'  => $_REQUEST['rlbkid'],
+					'url'   => $this->getHREFSubject('emajrollback'),
+					'icon'  => 'EmajRollback'
+				);
+			}
+			if ($subject == 'rollback') $done = true;
+
+			if (!$done && !is_null($subject)) {
+				if (isset($_REQUEST[$subject])) {
+					$trail[$subject] = array(
+						'title' => $lang['str'.$subject],
+						'text'  => $_REQUEST[$subject],
+						'icon'  => null,
+					);
+				}
+			}
+
+			return $trail;
 		}
 
 		/**
@@ -1122,163 +1271,59 @@
 		}
 
 		/**
-		 * Display a bread crumb trail.
-		 * ... and the button to go to the page bottom
+		 * Display a link
+		 * @param $link An associative array of link parameters to print
+		 *     link = array(
+		 *       'attr' => array( // list of A tag attribute
+		 *          'attrname' => attribute value
+		 *          ...
+		 *       ),
+		 *       'content' => The link text
+		 *       'icon' => (optional) if supplied, the icon replaces the 'content' text
+		 *       'fields' => (optionnal) the data from which content and attr's values are obtained
+		 *     );
+		 *   the special attribute 'href' might be a string or an array. If href is an array it
+		 *   will be generated by getActionUrl. See getActionUrl comment for array format.
 		 */
-		function printTrail($trail = array()) {
-			global $lang;
+		function printLink($link) {
 
-			if (is_string($trail)) {
-				$trail = $this->getTrail($trail);
+			if (! isset($link['fields']))
+				$link['fields'] = $_REQUEST;
+
+			$tag = "<a ";
+			foreach ($link['attr'] as $attr => $value) {
+				if ($attr == 'href' and is_array($value)) {
+					$tag.= 'href="'. htmlentities($this->getActionUrl($value, $link['fields'])).'" ';
+				} else {
+					$tag.= htmlentities($attr).'="'. value($value, $link['fields'], 'html') .'" ';
+				}
 			}
-			echo "<div class=\"trail\">\n";
-			echo "\t<div class=\"crumb\">\n\t\t";
+			$content = value($link['content'], $link['fields'], 'html');
 
-			$firstElement = 1;
-			foreach ($trail as $crumb) {
-				if (!$firstElement)
-					echo "\t\t &gt; ";
-
-				$firstElement = 0;
-
-				$crumblink = "<a";
-
-				if (isset($crumb['url']))
-					$crumblink .= " href=\"{$crumb['url']}\"";
-
-				if (isset($crumb['title']))
-					$crumblink .= " title=\"{$crumb['title']}\"";
-
-				$crumblink .= ">";
-
-				if (isset($crumb['title']))
-					$iconalt = $crumb['title'];
-				else
-					$iconalt = 'Database Root';
-
-				if (isset($crumb['icon']) && $icon = $this->icon($crumb['icon']))
-					$crumblink .= "<span class=\"icon\"><img src=\"{$icon}\" alt=\"{$iconalt}\" /></span>";
-
-				$crumblink .= "<span class=\"label\">" . htmlspecialchars($crumb['text']) . "</span></a>\n";
-
-				echo $crumblink;
+			if (! isset($link['icon'])) {
+				$tag.= ">". $content ."</a>";
+			} else {
+				$iconFile = $this->icon($link['icon']);
+				$tag.= "><img src=\"{$iconFile}\" alt=\"{$content}\" title=\"{$content}\" /></a>";
 			}
-			echo "\t</div>\n";
-
-			// cell containing the current date and time
-			echo "\t<div id=\"datetime\" class=\"datetime\"></div>\n";
-
-			// right cell containing the bottom button
-			echo "\t<div class=\"trailicons\">\n";
-			echo "\t\t<a href=\"#bottom\"><img src=\"{$this->icon('Bottom')}\" alt=\"{$lang['strpagebottom']}\" title=\"{$lang['strpagebottom']}\"  /></a>\n";
-			echo "\t</div>\n";
-			echo "</div>\n";
-
-			// fill the current date and time div by calling the proper js function
-			echo "<script>showDateTime();</script>\n";
+			echo $tag;
 		}
 
 		/**
-		 * Create a bread crumb trail of the object hierarchy.
-		 * @param $object The type of object at the end of the trail.
+		 * Display a list of links
+		 * @param $links An associative array of links to print. See printLink function for
+		 *               the links array format.
+		 * @param $class An optional class or list of classes seprated by a space
+		 *   WARNING: This field is NOT escaped! No user should be able to inject something here, use with care.
 		 */
-		function getTrail($subject = null) {
-			global $lang, $conf, $data, $appName;
-
-			$trail = array();
-			$vars = '';
-			$done = false;
-
-			$trail['root'] = array(
-				'text'  => $appName,
-				'url'   => 'redirect.php?subject=root',
-				'icon'  => 'EmajIcon'
-			);
-
-			if ($subject == 'root') $done = true;
-
-			if (!$done) {
-				$server_info = $this->getServerInfo();
-				$trail['server'] = array(
-					'title' => $lang['strserver'],
-					'text'  => $server_info['desc'],
-					'url'   => $this->getHREFSubject('server'),
-					'icon'  => 'Server'
-				);
+		function printLinksList($links, $class='') {
+			echo "\t\t<ul class=\"{$class}\">\n";
+			foreach ($links as $link) {
+				echo "\t\t\t<li>";
+				$this->printLink($link);
+				echo "</li>\n";
 			}
-			if ($subject == 'server') $done = true;
-
-			if (isset($_REQUEST['database']) && !$done) {
-				$trail['database'] = array(
-					'title' => $lang['strdatabase'],
-					'text'  => $_REQUEST['database'],
-					'url'   => $this->getHREFSubject('database'),
-					'icon'  => 'Database'
-				);
-			}
-			if ($subject == 'database') $done = true;
-
-			if (isset($_REQUEST['schema']) && !$done) {
-				$trail['schema'] = array(
-					'title' => $lang['strschema'],
-					'text'  => $_REQUEST['schema'],
-					'url'   => $this->getHREFSubject('schema'),
-					'icon'  => 'Schema'
-				);
-			}
-			if ($subject == 'schema') $done = true;
-
-			if (isset($_REQUEST['table']) && !$done) {
-				$trail['table'] = array(
-					'title' => $lang['strtable'],
-					'text'  => $_REQUEST['table'],
-					'url'   => $this->getHREFSubject('table'),
-					'icon'  => 'Table'
-				);
-			}
-			if ($subject == 'table') $done = true;
-
-			if (isset($_REQUEST['sequence']) && !$done) {
-				$trail['sequence'] = array(
-					'title' => $lang['strsequence'],
-					'text'  => $_REQUEST['sequence'],
-					'url'   => $this->getHREFSubject('sequence'),
-					'icon'  => 'Sequence'
-				);
-			}
-			if ($subject == 'sequence') $done = true;
-
-			if (isset($_REQUEST['group']) && !$done) {
-				$trail['emaj'] = array(
-					'title' => $lang['strtablesgroup'],
-					'text'  => $_REQUEST['group'],
-					'url'   => $this->getHREFSubject('emajgroup'),
-					'icon'  => 'EmajGroup'
-				);
-			}
-			if ($subject == 'group') $done = true;
-
-			if (isset($_REQUEST['rlbkid']) && !$done) {
-				$trail['emajrollback'] = array(
-					'title' => $lang['strrollback'],
-					'text'  => $_REQUEST['rlbkid'],
-					'url'   => $this->getHREFSubject('emajrollback'),
-					'icon'  => 'EmajRollback'
-				);
-			}
-			if ($subject == 'rollback') $done = true;
-
-			if (!$done && !is_null($subject)) {
-				if (isset($_REQUEST[$subject])) {
-					$trail[$subject] = array(
-						'title' => $lang['str'.$subject],
-						'text'  => $_REQUEST[$subject],
-						'icon'  => null,
-					);
-				}
-			}
-
-			return $trail;
+			echo "\t\t</ul>\n";
 		}
 
 		/**

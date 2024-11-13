@@ -12,14 +12,16 @@
 
 	// Functions to modify dynamicaly actions list for each application trigger to display
 	function appTriggerPre(&$rowdata, $actions) {
-		// disable the noAutoDisableTrigger or the autoDisableTriggerbutton depending on the current state
-		if ($rowdata->fields('tgisautodisable') == 't') {
-			$actions['autoDisableTrigger']['disable'] = true;
-		} elseif ($rowdata->fields('tgisautodisable') == 'f') {
-			$actions['noAutoDisableTrigger']['disable'] = true;
-		} else {
-			$actions['autoDisableTrigger']['disable'] = true;
-			$actions['noAutoDisableTrigger']['disable'] = true;
+		if (isset($actions['autoDisableTrigger'])) { 	// unset when user has not emaj_adm rights
+			// disable the noAutoDisableTrigger or the autoDisableTriggerbutton depending on the current state
+			if ($rowdata->fields('tgisautodisable') == 't') {
+				$actions['autoDisableTrigger']['disable'] = true;
+			} elseif ($rowdata->fields('tgisautodisable') == 'f') {
+				$actions['noAutoDisableTrigger']['disable'] = true;
+			} else {
+				$actions['autoDisableTrigger']['disable'] = true;
+				$actions['noAutoDisableTrigger']['disable'] = true;
+			}
 		}
 		return $actions;
 	}

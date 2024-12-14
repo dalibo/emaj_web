@@ -353,7 +353,7 @@ class EmajDb {
 		// Check if dblink is usable.
 		if ($this->isDblinkUsable()) {
 			// If the _dblink_open_cnx() function is available for the user,
-			//   open a test dblink connection, analyse the result and close it if effetively opened.
+			//   open a test dblink connection, analyse the result and close it if effectively opened.
 			$test_cnx_ok = 0;
 			$sql = "SELECT CASE
 						WHEN pg_catalog.has_function_privilege('emaj._dblink_open_cnx(text)', 'EXECUTE')
@@ -3386,10 +3386,8 @@ class EmajDb {
 
 		$sql = "SELECT row_number() over (ORDER BY rlbp_start_datetime, rlbp_batch_number, rlbp_step, rlbp_table, rlbp_object)
 						 AS rlbp_rank,
-					   CASE
-						 WHEN rlbp_schema = '' AND rlbp_table = '' THEN ''
-						 ELSE rlbp_schema || '.' || rlbp_table
-					   END AS rlbk_schema_table,
+					   coalesce(rlbp_schema, '') AS rlbp_schema,
+					   coalesce(rlbp_table, '') AS rlbp_table,
 					   CASE rlbp_step::TEXT
 						 WHEN 'RLBK_SEQUENCES' THEN
 							'{$lang['strrlbksequences']}'

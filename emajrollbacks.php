@@ -299,6 +299,8 @@
 			'consGroup' => array(
 				'title' => $lang['strgroup'],
 				'field' => field('cons_group'),
+				'url'   => "emajgroups.php?action=show_group&amp;{$misc->href}&amp;",
+				'vars'  => array('group' => 'cons_group'),
 			),
 			'consTargetMark' => array(
 				'upper_title' => $lang['strtargetmark'],
@@ -585,9 +587,17 @@
 				'field' => field('rlbp_rank'),
 				'params'=> array('align' => 'right'),
 			),
-			'schema_table' => array(
+			'schema' => array(
+				'title' => $lang['strschema'],
+				'field' => field('rlbp_schema'),
+				'url'   => "schemas.php?action=list_schemas&amp;{$misc->href}&amp;",
+				'vars'  => array('schema' => 'rlbp_schema'),
+			),
+			'table' => array(
 				'title' => $lang['strtable'],
-				'field' => field('rlbk_schema_table'),
+				'field' => field('rlbp_table'),
+				'url'	=> "redirect.php?subject=table&amp;{$misc->href}&amp;",
+				'vars'  => array('schema' => 'rlbp_schema', 'table' => 'rlbp_table'),
 			),
 			'step' => array(
 				'title' => $lang['strrlbkstep'],

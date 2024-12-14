@@ -196,6 +196,8 @@
 					'group' => array(
 						'title' => $lang['strgroup'],
 						'field' => field('group'),
+						'url'   => "emajgroups.php?action=show_group&amp;{$misc->href}&amp;",
+						'vars'  => array('group' => 'group'),
 					),
 					'latest_mark' => array(
 						'title' => $lang['strlatestmark'],
@@ -244,14 +246,20 @@
 					'schema' => array(
 						'title' => $lang['strschema'],
 						'field' => field('rel_schema'),
+						'url'   => "schemas.php?action=list_schemas&amp;{$misc->href}&amp;",
+						'vars'  => array('schema' => 'rel_schema'),
 					),
 					'table' => array(
 						'title' => $lang['strtable'],
 						'field' => field('rel_tblseq'),
+						'url'	=> "redirect.php?subject=table&amp;{$misc->href}&amp;",
+						'vars'  => array('schema' => 'rel_schema', 'table' => 'rel_tblseq'),
 					),
 					'group' => array(
 						'title' => $lang['strgroup'],
 						'field' => field('rel_group'),
+						'url'   => "emajgroups.php?action=show_group&amp;{$misc->href}&amp;",
+						'vars'  => array('group' => 'rel_group'),
 					),
 					'changes_since_mark' => array(
 						'upper_title' => $lang['strsincelatestmark'],
@@ -292,14 +300,20 @@
 					'schema' => array(
 						'title' => $lang['strschema'],
 						'field' => field('rel_schema'),
+						'url'   => "schemas.php?action=list_schemas&amp;{$misc->href}&amp;",
+						'vars'  => array('schema' => 'rel_schema'),
 					),
 					'sequence' => array(
 						'title' => $lang['strsequence'],
 						'field' => field('rel_tblseq'),
+						'url'	=> "redirect.php?subject=sequence&amp;{$misc->href}&amp;",
+						'vars'  => array('schema' => 'rel_schema', 'sequence' => 'rel_tblseq'),
 					),
 					'group' => array(
 						'title' => $lang['strgroup'],
 						'field' => field('rel_group'),
+						'url'   => "emajgroups.php?action=show_group&amp;{$misc->href}&amp;",
+						'vars'  => array('group' => 'rel_group'),
 					),
 					'changes_since_mark' => array(
 						'upper_title' => $lang['strsincelatestmark'],

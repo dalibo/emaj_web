@@ -45,6 +45,8 @@
 			'schema' => array(
 				'title' => $lang['strschema'],
 				'field' => field('nspname'),
+				'url'   => "schemas.php?action=list_schemas&amp;{$misc->href}&amp;",
+				'vars'  => array('schema' => 'nspname'),
 			),
 			'table' => array(
 				'title' => $lang['strtable'],

@@ -949,7 +949,7 @@
 	$lang['strasextension'] = 'installée comme extension';
 	$lang['strasscript'] = 'installée par script';
 	$lang['strtooold'] = 'Désolé, cette version d\'E-Maj (%s) est trop ancienne. La version minimum supportée par Emaj_web est %s.';
-	$lang['strversionmorerecent'] = 'Une version plus récente de l\'extension "emaj" existe, compatible avec cette version d\'Emaj_web.';
+	$lang['strversionmorerecent'] = 'Il existe une version plus récente de l\'extension "emaj" compatible avec cette version d\'Emaj_web.';
 	$lang['strwebversionmorerecent'] = 'Une version plus récente d\'Emaj_web existe probablement.';
 	$lang['strwarningdevel'] = 'Accéder à une extension emaj en version <devel> peut poser des problèmes. Il est conseillé d\'obtenir une version stable d\'emaj depuis pgxn.org.';
 

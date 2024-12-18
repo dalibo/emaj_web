@@ -2149,22 +2149,18 @@ class EmajDb {
 		$data->clean($group);
 		$data->clean($comment);
 
+		$boolIsRollbackable = ($isRollbackable) ? 'true' : 'false';
+
 		if ($isEmpty && $this->getNumEmajVersion() < 40000) {
-			if ($isRollbackable){
-				$sql = "SELECT emaj.emaj_create_group('{$group}',true,true) AS nbtblseq";
-			}else{
-				$sql = "SELECT emaj.emaj_create_group('{$group}',false,true) AS nbtblseq";
-			}
+			$sql = "SELECT emaj.emaj_create_group('{$group}',{$boolIsRollbackable},true) AS nbtblseq";
+		} elseif ($this->getNumEmajVersion() < 40600) {
+			$sql = "SELECT emaj.emaj_create_group('{$group}',{$boolIsRollbackable}) AS nbtblseq";
 		} else {
-			if ($isRollbackable){
-				$sql = "SELECT emaj.emaj_create_group('{$group}',true) AS nbtblseq";
-			}else{
-				$sql = "SELECT emaj.emaj_create_group('{$group}',false) AS nbtblseq";
-			}
+			$sql = "SELECT emaj.emaj_create_group('{$group}',{$boolIsRollbackable},'{$comment}') AS nbtblseq";
 		}
 		$rt = $data->execute($sql);
 
-		if ($comment <> '') {
+		if ($this->getNumEmajVersion() < 40600 && $comment <> '') {
 			$sql = "SELECT emaj.emaj_comment_group('{$group}','{$comment}')";
 			$data->execute($sql);
 		}
@@ -2502,10 +2498,14 @@ class EmajDb {
 		$data->clean($mark);
 		$data->clean($comment);
 
-		$sql = "SELECT emaj.emaj_set_mark_group('{$group}','{$mark}') AS nbtblseq";
+		if ($this->getNumEmajVersion() < 40600) {
+			$sql = "SELECT emaj.emaj_set_mark_group('{$group}','{$mark}') AS nbtblseq";
+		} else {
+			$sql = "SELECT emaj.emaj_set_mark_group('{$group}','{$mark}','{$comment}') AS nbtblseq";
+		}
 		$rt = $data->execute($sql);
 
-		if ($comment <> '') {
+		if ($this->getNumEmajVersion() < 40600 && $comment <> '') {
 			$sql = "SELECT emaj.emaj_comment_mark_group('{$group}','{$mark}','{$comment}')";
 			$data->execute($sql);
 		}

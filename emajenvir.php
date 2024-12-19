@@ -86,7 +86,7 @@
 		$server_info = $misc->getServerInfo();
 		$availableVersions = $emajdb->getAvailableExtensionVersions();
 
-		$pgMajorVersion = preg_replace('/\.\d+$/', '', $server_info['pgVersion']);
+		$pgMajorVersion = $server_info['pgMajorVersion'];
 		$usableVersions = array();
 		foreach($availableVersions as $v) {
 			if (!isset($xrefEmajPg[$v['version']]) ||
@@ -179,7 +179,7 @@
 		// build the array of usable emaj versions
 		$availableVersions = $emajdb->getAvailableExtensionVersionsForUpdate();
 
-		$pgMajorVersion = preg_replace('/\.\d+$/', '', $server_info['pgVersion']);
+		$pgMajorVersion = $server_info['pgMajorVersion'];
 		$usableVersions = array();
 		foreach($availableVersions as $v) {
 			// filter unknown emaj versions (i.e. devel) or emaj version compatible with the current PG version
@@ -490,8 +490,7 @@
 
 		// display the postgres version
 		$server_info = $misc->getServerInfo();
-		preg_match('/PostgreSQL (.*)/',$server_info['platform'], $pgVersion);
-		echo "<p>{$lang['strpgversion']}{$pgVersion[1]}</p>\n";
+		echo "<p>{$lang['strpgversion']}{$server_info['pgVersion']}</p>\n";
 
 		// check if E-Maj is installed in the current database
 		$isEnabled = $emajdb->isEnabled();

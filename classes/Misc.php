@@ -517,8 +517,13 @@
 				printf($lang['strpostgresqlversionnotsupported'], $postgresqlMinVer);
 				exit;
 			}
+
+			// Compute and store postgres platform and versions
+			preg_match('/PostgreSQL (.*?)(\s|$)/', $platform, $pgVersion);
+			preg_match('/(.*?)(devel|beta\d+|rc\d+|\.)/', $pgVersion[1], $pgMajorVersion);
 			$this->setServerInfo('platform', $platform, $server_id);
-			$this->setServerInfo('pgVersion', $_connection->conn->ServerInfo()['version'], $server_id);
+			$this->setServerInfo('pgVersion', $pgVersion[1], $server_id);
+			$this->setServerInfo('pgMajorVersion', $pgMajorVersion[1], $server_id);
 
 			// Create a database wrapper class for easy manipulation of the
 			// connection.

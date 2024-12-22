@@ -312,7 +312,11 @@
 						$locale = (isset($params['locale'])) ? $params['locale'] : null;
 						$str2 = $str;
 						$dateTimeObj = new DateTime($str);
-						$str1 = IntlDateFormatter::formatObject($dateTimeObj, $params['dateformat'], $locale);
+						if (class_exists('IntlDateFormatter')) {
+							$str1 = IntlDateFormatter::formatObject($dateTimeObj, $params['dateformat'], $locale);
+						} else {
+							$str1 = $str;
+						}
 					} elseif (isset($params['intervalformat'])) {
 						// the data is an interval
 						$str1 = $str; $str2 = '';

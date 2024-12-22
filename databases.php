@@ -59,7 +59,7 @@
 
 		if (!$data->hasServerAdminFuncs()) unset($columns['dbsize']);
 
-		$misc->printTable($databases, $columns, $actions, 'all_db-databases', $lang['strnodatabases'],null, array('sorter' => true, 'filter' => true));
+		$misc->printTable($databases, $columns, $actions, 'databases-databases', $lang['strnodatabases'],null, array('sorter' => true, 'filter' => true));
 
 	}
 

@@ -1083,7 +1083,7 @@
 					$tabs = array (
 						'databases' => array (
 							'title' => $lang['strdatabases'],
-							'url'   => 'all_db.php',
+							'url'   => 'databases.php',
 							'urlvars' => array('subject' => 'server'),
 							'icon'  => 'Databases',
 						)
@@ -2168,7 +2168,7 @@
 					);
 					if (isset($srvs[$server_id]['username'])) {
 						$srvs[$server_id]['icon'] = 'Server';
-						$srvs[$server_id]['branch'] = url('all_db.php',
+						$srvs[$server_id]['branch'] = url('databases.php',
 							array(
 								'action' => 'tree',
 								'subject' => 'server',

@@ -175,6 +175,7 @@
 
 	// Error handling
 	$lang['strnotloaded'] = 'Vous n\'avez pas compilé correctement le support de la base de données dans votre installation de PHP.';
+	$lang['strmissingIntlDateFormatter'] = 'Le module PHP "IntlDateFormatter" est absent de la configuration du serveur web, gênant l\'affichage des dates et heures.';
 	$lang['strpostgresqlversionnotsupported'] = 'Cette version de PostgreSQL n\'est pas supportée. La version minimum supportée est la %s.';
 	$lang['strbadschema'] = 'Schéma spécifié invalide.';
 	$lang['strsqlerror'] = 'Erreur SQL :';
@@ -952,6 +953,7 @@
 	$lang['strversionmorerecent'] = 'Il existe une version plus récente de l\'extension "emaj" compatible avec cette version d\'Emaj_web.';
 	$lang['strwebversionmorerecent'] = 'Une version plus récente d\'Emaj_web existe probablement.';
 	$lang['strwarningdevel'] = 'Accéder à une extension emaj en version <devel> peut poser des problèmes. Il est conseillé d\'obtenir une version stable d\'emaj depuis pgxn.org.';
+	$lang['stremajwebversion'] = 'Version Emaj_web : ';
 
 	// Extension management
 	$lang['strextensionmngt'] = 'Gestion de l\'extension "emaj"';

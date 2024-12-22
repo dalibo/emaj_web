@@ -175,6 +175,7 @@
 
 	// Error handling
 	$lang['strnotloaded'] = 'Your PHP installation does not support PostgreSQL. You need to recompile PHP using the --with-pgsql configure option.';
+	$lang['strmissingIntlDateFormatter'] = 'The "IntlDateFormatter" PHP module is missing in the web server configuration, disturbing the date and time display.';
 	$lang['strpostgresqlversionnotsupported'] = 'This PostgreSQL version is not supported. The minimum supported version is %s.';
 	$lang['strbadschema'] = 'Invalid schema specified.';
 	$lang['strsqlerror'] = 'SQL error:';
@@ -952,6 +953,7 @@
 	$lang['strversionmorerecent'] = 'A more recent "emaj" extension version exists, compatible with this Emaj_web version.';
 	$lang['strwebversionmorerecent'] = 'A more recent Emaj_web version probably exists.';
 	$lang['strwarningdevel'] = 'Accessing an emaj extension in <devel> version may generate trouble. It is advisable to get a stable emaj version from pgxn.org.';
+	$lang['stremajwebversion'] = 'Emaj_web version: ';
 
 	// Extension management
 	$lang['strextensionmngt'] = '"emaj" extension management';

@@ -13,11 +13,18 @@
 
 	$misc->printHeader('root', 'root', 'intro');
 
+	// Display the main message
 	echo "<div class=\"intro-welcome\">";
 	echo "  <h1>" . sprintf($lang['strintro'],$appName,$appVersion) . "</h1>";
 	echo "  <img src=\"{$misc->icon('E-Maj_H')}\" alt=\"E-Maj_logo\">";
 	echo "</div>";
 
+	// Check the PHP configuration
+	if (!class_exists('IntlDateFormatter')) {
+		echo "<p><img src=\"{$misc->icon('Warning')}\" alt=\"Warning\" style=\"width: 20px;\"/> " . htmlspecialchars($lang['strmissingIntlDateFormatter']) . "</p>\n";
+	}
+
+	// Display the links list
 	$misc->printTitle($lang['strlink']);
 
 	echo "<ul class=\"intro-link\">";

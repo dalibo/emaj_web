@@ -477,6 +477,7 @@
 	function doDefault($msg = '', $errMsg = '') {
 		global $misc, $lang, $data, $emajdb;
 		global $oldest_supported_emaj_version_num, $oldest_supported_emaj_version, $last_known_emaj_version_num;
+		global $appVersion;
 		global $paramValue, $defValParam;
 
 		$misc->printHeader('database', 'database', 'emajenvir');
@@ -555,6 +556,11 @@
 			if ($numEmajVersion == 999999) {
 				echo "<p><img src=\"{$misc->icon('Warning')}\" alt=\"Warning\" style=\"width: 20px;\"/> " . htmlspecialchars($lang['strwarningdevel']) . "</p>\n";
 			}
+		}
+		// display the Emaj_web version
+		echo "<p>{$lang['stremajwebversion']}$appVersion</p>";
+		if (!class_exists('IntlDateFormatter')) {
+			echo "<p><img src=\"{$misc->icon('Warning')}\" alt=\"Warning\" style=\"width: 20px;\"/> " . htmlspecialchars($lang['strmissingIntlDateFormatter']) . "</p>\n";
 		}
 
 		//

@@ -34,7 +34,7 @@
 
 		$groups = $misc->getServersGroups(true, $group);
 
-		if ($groups->recordCount()>0) {
+		if ($groups->recordCount() > 0) {
 
 			if (($group !== false) and (isset($conf['srv_groups'][$group])))
 				$misc->printTitle(sprintf($lang['strgroupgroups'], htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8')), $misc->buildTitleRecordsCounter($groups));
@@ -75,6 +75,15 @@
 			'port' => array(
 				'title' => $lang['strport'],
 				'field' => field('port'),
+			),
+			'comment' => array(
+				'title' => $lang['strcomment'],
+				'field' => field('comment'),
+				'type' => 'spanned',
+				'params'=> array(
+						'cliplen' => 25,
+						'class' => 'tooltip right-aligned-tooltip',
+						),
 			),
 			'username' => array(
 				'title' => $lang['strusername'],

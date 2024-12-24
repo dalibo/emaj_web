@@ -28,6 +28,9 @@
 	// For a PostgreSQL 8.1+ server, you can set this to 'postgres'.
 	$conf['servers'][0]['defaultdb'] = 'template1';
 
+	// You may set a comment for the server. It will be displayed in the servers sheet.
+	$conf['servers'][0]['comment'] = '';
+
 	// Example for a second server
 	//$conf['servers'][1]['desc'] = 'Test Server';
 	//$conf['servers'][1]['host'] = '127.0.0.1';

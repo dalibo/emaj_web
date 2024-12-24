@@ -2147,17 +2147,16 @@
 						$conf['srv_groups'][$group]['servers'])), 1);
 				else
 					$group = '';
-			
+
 			foreach($conf['servers'] as $idx => $info) {
 				$server_id = $info['host'].':'.$info['port'].':'.$info['sslmode'];
-				if (($group === false) 
-					or (isset($group[$idx]))
-					or ($group === 'all')
-				) {
+				if (($group === false) or (isset($group[$idx]))	or ($group === 'all')) {
 					$server_id = $info['host'].':'.$info['port'].':'.$info['sslmode'];
-					
-					if (isset($logins[$server_id])) $srvs[$server_id] = $logins[$server_id];
-					else $srvs[$server_id] = $info;
+
+					if (isset($logins[$server_id]))
+						$srvs[$server_id] = $logins[$server_id];
+					else
+						$srvs[$server_id] = $info;
 
 					$srvs[$server_id]['id'] = $server_id;
 					$srvs[$server_id]['action'] = url('redirect.php',
@@ -2173,10 +2172,8 @@
 								'action' => 'tree',
 								'subject' => 'server',
 								'server' => field('id')
-							)
-						);
-					}
-					else {
+							));
+					} else {
 						$srvs[$server_id]['icon'] = 'DisconnectedServer';
 						$srvs[$server_id]['branch'] = false;
 					}

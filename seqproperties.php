@@ -32,68 +32,76 @@
 		$misc->printTitle(sprintf($lang['strseqproperties'], $_REQUEST['schema'], $_REQUEST['sequence']));
 		$misc->printMsg($msg);
 
-		// Fetch the sequence information
-		$sequence = $emajdb->getSequenceProperties($_REQUEST['schema'], $_REQUEST['sequence']);
+		// Verify that the user has enough privileges to read the sequence
+		$privilegeOk = $emajdb->hasSelectPrivilegeOnSequence($_REQUEST['schema'], $_REQUEST['sequence']);
 
-		// Show comment if any
-		if ($sequence->fields['seqcomment'] !== null)
-			echo "<p>{$lang['strcommentlabel']}<span class=\"comment\">{$misc->printVal($sequence->fields['seqcomment'])}</span></p>\n";
-		$sequence->moveFirst();
+		if (! $privilegeOk) {
+			echo $lang['strnograntonsequence'];
+		} else {
 
-		$columns = array(
-			'lastvalue' => array(
-				'title' => $lang['strlastvalue'],
-				'field' => field('last_value'),
-				'type'  => 'numeric',
-				'params'=> array('class' => 'bold'),
-			),
-			'iscalled' => array(
-				'title' => $lang['striscalled'],
-				'field' => field('is_called'),
-				'type'  => 'bool',
-				'params'=> array('true' => $lang['stryes'], 'false' => $lang['strno'], 'class' => 'bold'),
-			),
-			'startvalue' => array(
-				'title' => $lang['strstartvalue'],
-				'field' => field('start_value'),
-				'type'  => 'numeric',
-			),
-			'minvalue' => array(
-				'title' => $lang['strminvalue'],
-				'field' => field('min_value'),
-				'type'  => 'numeric',
-			),
-			'maxvalue' => array(
-				'title' => $lang['strmaxvalue'],
-				'field' => field('max_value'),
-				'type'  => 'numeric',
-			),
-			'increment' => array(
-				'title' => $lang['strincrement'],
-				'field' => field('increment_by'),
-				'type'  => 'numeric',
-			),
-			'cancycle' => array(
-				'title' => $lang['strcancycle'],
-				'field' => field('cycle'),
-				'type'  => 'bool',
-				'params'=> array('true' => $lang['stryes'], 'false' => $lang['strno']),
-			),
-			'cachesize' => array(
-				'title' => $lang['strcachesize'],
-				'field' => field('cache_size'),
-				'type'  => 'numeric',
-			),
-			'logcount' => array(
-				'title' => $lang['strlogcount'],
-				'field' => field('log_cnt'),
-				'type'  => 'numeric',
-			),
-		);
+			// Fetch the sequence information
+			$sequence = $emajdb->getSequenceProperties($_REQUEST['schema'], $_REQUEST['sequence']);
 
-		$actions = array();
+			// Show comment if any
+			if ($sequence->fields['seqcomment'] !== null)
+				echo "<p>{$lang['strcommentlabel']}<span class=\"comment\">{$misc->printVal($sequence->fields['seqcomment'])}</span></p>\n";
+			$sequence->moveFirst();
 
-		$misc->printTable($sequence, $columns, $actions, 'seqproperties-columns', $lang['strnodata']);
+			$columns = array(
+				'lastvalue' => array(
+					'title' => $lang['strlastvalue'],
+					'field' => field('last_value'),
+					'type'  => 'numeric',
+					'params'=> array('class' => 'bold'),
+				),
+				'iscalled' => array(
+					'title' => $lang['striscalled'],
+					'field' => field('is_called'),
+					'type'  => 'bool',
+					'params'=> array('true' => $lang['stryes'], 'false' => $lang['strno'], 'class' => 'bold'),
+				),
+				'startvalue' => array(
+					'title' => $lang['strstartvalue'],
+					'field' => field('start_value'),
+					'type'  => 'numeric',
+				),
+				'minvalue' => array(
+					'title' => $lang['strminvalue'],
+					'field' => field('min_value'),
+					'type'  => 'numeric',
+				),
+				'maxvalue' => array(
+					'title' => $lang['strmaxvalue'],
+					'field' => field('max_value'),
+					'type'  => 'numeric',
+				),
+				'increment' => array(
+					'title' => $lang['strincrement'],
+					'field' => field('increment_by'),
+					'type'  => 'numeric',
+				),
+				'cancycle' => array(
+					'title' => $lang['strcancycle'],
+					'field' => field('cycle'),
+					'type'  => 'bool',
+					'params'=> array('true' => $lang['stryes'], 'false' => $lang['strno']),
+				),
+				'cachesize' => array(
+					'title' => $lang['strcachesize'],
+					'field' => field('cache_size'),
+					'type'  => 'numeric',
+				),
+				'logcount' => array(
+					'title' => $lang['strlogcount'],
+					'field' => field('log_cnt'),
+					'type'  => 'numeric',
+				),
+			);
+
+			$actions = array();
+
+			$misc->printTable($sequence, $columns, $actions, 'seqproperties-columns', $lang['strnodata']);
+		}
 
 		echo "<hr/>\n";
 

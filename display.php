@@ -185,7 +185,7 @@
 	 * Displays requested data
 	 */
 	function doBrowse($msg = '') {
-		global $data, $conf, $misc, $lang;
+		global $data, $conf, $misc, $lang, $emajdb;;
 
 		$save_history = false;
 		// If current page is not set, default to first page
@@ -222,10 +222,17 @@
 				$_SESSION['sqlquery'] = $_REQUEST['query'];
 				$misc->printTitle($lang['strselect']);
 				$type = 'SELECT';
-			}
-			else {
+			} else {
 				$misc->printTitle(sprintf($lang['strtblcontent'], $_REQUEST['schema'], $_REQUEST['table']));
 				$type = 'TABLE';
+
+				// Verify that the user has enough privileges to read the table
+				$privilegeOk = $emajdb->hasSelectPrivilegeOntable($_REQUEST['schema'], $_REQUEST['table']);
+
+				if (! $privilegeOk) {
+					echo $lang['strnograntontable'];
+					exit();
+				}
 			}
 		} else {
 			$misc->printTitle($lang['strqueryresults']);

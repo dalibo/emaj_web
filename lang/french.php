@@ -703,6 +703,7 @@
 	$lang['strestimatedrowcount'] = 'Nb lignes estimé';
 	$lang['strtblproperties'] = 'Propriétés de la table "%s.%s"';
 	$lang['strtblcontent'] = 'Contenu de la table "%s.%s"';
+	$lang['strnograntontable'] = 'Vous n\'avez pas les droits nécessaires pour voir le contenu de la table.';
 	$lang['stremajlogtable'] = 'La table est une table de log E-Maj.';
 	$lang['strinternaltable'] = 'La table est une table interne E-Maj.';
 	$lang['strtblnogroupownership'] = 'La table ne fait actuellement partie d\'aucun groupe de tables.';
@@ -710,6 +711,7 @@
 	// Sequences
 	$lang['strsequenceslist'] = 'Séquences du schéma "%s"';
 	$lang['strnosequences'] = 'Aucune séquence trouvée.';
+	$lang['strnograntonsequence'] = 'Vous n\'avez pas les droits nécessaires pour voir les propriétés de la séquence.';
 	$lang['strseqproperties'] = 'Propriétés de la séquence "%s.%s"';
 	$lang['strlastvalue'] = 'Dernière valeur';
 	$lang['strincrement'] = 'Incrément';

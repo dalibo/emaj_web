@@ -1488,6 +1488,31 @@ class EmajDb {
 	}
 
 	/**
+	 * Return a boolean indicating whether the user has SELECT privilege on a table.
+	 */
+	function hasSelectPrivilegeOnTable($schema, $table) {
+		global $data;
+
+		$data->clean($schema);
+		$data->fieldClean($schema);
+		$data->clean($table);
+		$data->fieldClean($table);
+
+		// Check first the user has the USAGE privileges on the schema
+		$sql = "SELECT has_schema_privilege('$schema', 'usage') has_usage_privilege";
+
+		if ($data->selectField($sql,'has_usage_privilege') != 't') {
+			return 0;
+		}
+
+		// Check now that the user has the SELECT privileges on the table itself
+		$sql = "SELECT CASE WHEN has_table_privilege('\"$schema\".\"$table\"', 'select') THEN 1
+						    ELSE 0 END AS has_select_privilege";
+
+		return $data->selectField($sql,'has_select_privilege');
+	}
+
+	/**
 	 * Return a boolean indicating whether the table has a PRIMARY KEY.
 	 */
 	function hasTablePK($schema, $table) {
@@ -1532,6 +1557,31 @@ class EmajDb {
 				ORDER BY relname";
 
 		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Return a boolean indicating whether the user has SELECT privilege on a sequence.
+	 */
+	function hasSelectPrivilegeOnSequence($schema, $sequence) {
+		global $data;
+
+		$data->clean($schema);
+		$data->fieldClean($schema);
+		$data->clean($sequence);
+		$data->fieldClean($sequence);
+
+		// Check first the user has the USAGE privileges on the schema
+		$sql = "SELECT has_schema_privilege('$schema', 'usage') has_usage_privilege";
+
+		if ($data->selectField($sql,'has_usage_privilege') != 't') {
+			return 0;
+		}
+
+		// Check now that the user has the SELECT privileges on the sequence itself
+		$sql = "SELECT CASE WHEN has_sequence_privilege('\"$schema\".\"$sequence\"', 'select') THEN 1
+						    ELSE 0 END AS has_select_privilege";
+
+		return $data->selectField($sql,'has_select_privilege');
 	}
 
 	/**

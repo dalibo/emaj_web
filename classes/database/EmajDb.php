@@ -1590,8 +1590,13 @@ class EmajDb {
 	function getSequenceProperties($schema, $sequence) {
 		global $data, $misc;
 
+		$iSchema = $schema;
+		$iSequence = $sequence;
+
 		$data->clean($schema);
 		$data->clean($sequence);
+		$data->fieldClean($iSchema);
+		$data->fieldClean($iSequence);
 
 		$server_info = $misc->getServerInfo();
 
@@ -1599,16 +1604,16 @@ class EmajDb {
 			$sql = "SELECT last_value, is_called, start_value, min_value, max_value, increment_by, is_cycled AS cycle,
 							cache_value AS cache_size, log_cnt,
 							pg_catalog.obj_description(s.tableoid, 'pg_class') AS seqcomment
-					FROM \"{$sequence}\" AS s, pg_catalog.pg_class c, pg_catalog.pg_namespace n
+					FROM \"$iSchema\".\"$iSequence\" AS s, pg_catalog.pg_class c, pg_catalog.pg_namespace n
 					WHERE c.relnamespace = n.oid
-						AND c.relname = '{$sequence}' AND n.nspname='{$schema}' AND c.relkind = 'S'";
+						AND c.relname = '$sequence' AND n.nspname='$schema' AND c.relkind = 'S'";
 		} else {
 			$sql = "SELECT s.last_value, is_called, start_value, min_value, max_value, increment_by, cycle, cache_size, log_cnt,
 							pg_catalog.obj_description(s.tableoid, 'pg_class') AS seqcomment
-					FROM \"{$sequence}\" AS s, pg_catalog.pg_sequences, pg_catalog.pg_class c, pg_catalog.pg_namespace n
+					FROM \"$iSchema\".\"$iSequence\" AS s, pg_catalog.pg_sequences, pg_catalog.pg_class c, pg_catalog.pg_namespace n
 					WHERE c.relnamespace = n.oid
-						AND schemaname = '{$schema}' AND sequencename = '{$sequence}'
-						AND c.relname = '{$sequence}' AND n.nspname='{$schema}' AND c.relkind = 'S'";
+						AND schemaname = '$schema' AND sequencename = '$sequence'
+						AND c.relname = '$sequence' AND n.nspname='$schema' AND c.relkind = 'S'";
 		}
 
 		return $data->selectSet( $sql );

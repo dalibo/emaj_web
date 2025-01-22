@@ -830,8 +830,16 @@ class EmajDb {
 	/**
 	 * Get some details about existing groups among a set of configured groups to import.
 	 */
-	function getGroupsToImport($configuredGroupsValues) {
+	function getGroupsToImport($configuredGroupsArray) {
 		global $data;
+
+		$data->arrayClean($configuredGroupsArray);
+
+		$values = '';
+		foreach($configuredGroupsArray as $group){
+			$values .= "('$group'), ";
+		}
+		$values = substr($values, 0, strlen($values) - 2);
 
 		$sql = "SELECT grp_name, group_comment, group_nb_table, group_nb_sequence,
 					   CASE WHEN group_is_logging THEN 'LOGGING'
@@ -843,7 +851,7 @@ class EmajDb {
 						    ELSE NULL END as group_type,
 					   CASE WHEN length(group_comment) > 100 THEN substr(group_comment,1,97) || '...' ELSE group_comment END
 					  	 as abbr_comment
-					FROM (VALUES $configuredGroupsValues) AS t(grp_name)
+					FROM (VALUES $values) AS t(grp_name)
 						LEFT OUTER JOIN emaj.emaj_group ON (group_name = grp_name)
 					ORDER BY group_name";
 
@@ -1168,7 +1176,7 @@ class EmajDb {
 					WHEN 261 THEN format('" . $data->clean($lang['strgroupsconfimport261']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
                     ELSE 'Message not decoded (' || rpt_msg_type || ')'
 				END as rpt_message
-			FROM emaj._import_groups_conf_prepare (E'{$groupsConfig}'::json, {$groupsArray}, true, NULL)";
+			FROM emaj._import_groups_conf_prepare('{$groupsConfig}'::json, {$groupsArray}, true, NULL)";
 
 		$errors = $data->selectSet($sql);
 
@@ -1192,9 +1200,9 @@ class EmajDb {
 		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 
 		if ($this->getNumEmajVersion() >= 40000){	// version 4.0+
-			$sql = "SELECT emaj._import_groups_conf_exec(E'{$groupsConfig}'::json, {$groupsArray}, '{$mark}') AS nb_groups";
+			$sql = "SELECT emaj._import_groups_conf_exec('{$groupsConfig}'::json, {$groupsArray}, '{$mark}') AS nb_groups";
 		} else {
-			$sql = "SELECT emaj._import_groups_conf_exec(E'{$groupsConfig}'::json, {$groupsArray}, ) AS nb_groups";
+			$sql = "SELECT emaj._import_groups_conf_exec('{$groupsConfig}'::json, {$groupsArray}, ) AS nb_groups";
 		}
 		$nbGroups = $data->selectField($sql,'nb_groups');
 
@@ -2189,7 +2197,7 @@ class EmajDb {
 					WHEN 232 THEN format('" . $data->clean($lang['strcheckjsongroupsconf232']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
                     ELSE 'Message not decoded (' || rpt_msg_type || ')'
 				END as rpt_message
-			FROM emaj._check_json_groups_conf(E'{$json}'::json)
+			FROM emaj._check_json_groups_conf('{$json}'::json)
 			ORDER BY rpt_msg_type, rpt_text_var_1, rpt_text_var_2, rpt_text_var_3";
 
 		return $data->selectSet($sql);

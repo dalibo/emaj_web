@@ -2228,16 +2228,15 @@
 					echo "<p>" . sprintf($lang['strimportgroupsinfile'], $_FILES['file_name']['name']) . "</p>\n";
 
 					// Extract the list of configured tables groups
-					$groupsList='';
+					$groupsArray = array();
 					foreach($jsonStructure["tables_groups"] as $jsonGroup){
 						if (isSet($jsonGroup["group"])) {
-							$groupsList .= "('" . htmlspecialchars_decode($jsonGroup["group"], ENT_QUOTES) . "'), ";
+							$groupsArray[] = $jsonGroup["group"];
 						}
 					}
-					$groupsList=substr($groupsList,0,strlen($groupsList)-2);
 
 					// Get data about existing groups
-					$groups = $emajdb->getGroupsToImport($groupsList);
+					$groups = $emajdb->getGroupsToImport($groupsArray);
 
 					// Display the groups list
 					$columns = array(

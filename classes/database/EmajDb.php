@@ -1039,7 +1039,7 @@ class EmajDb {
 							WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
 							ELSE 'ROLLBACKABLE-PROTECTED' END as group_type,
 						coalesce(group_comment, '') as group_comment,
-						pg_size_pretty((SELECT sum(pg_total_relation_size('\"' || rel_log_schema || '\".\"' || rel_log_table || '\"'))
+						pg_size_pretty((SELECT sum(pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table)))
 							FROM emaj.emaj_relation
 							WHERE rel_group = group_name AND rel_kind = 'r')::bigint) as log_size,
 						1 as has_waiting_changes,
@@ -1058,7 +1058,7 @@ class EmajDb {
 						WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
 						ELSE 'ROLLBACKABLE-PROTECTED' END as group_type,
 					coalesce(group_comment, '') as group_comment,
-					pg_size_pretty((SELECT sum(pg_total_relation_size('\"' || rel_log_schema || '\".\"' || rel_log_table || '\"'))
+					pg_size_pretty((SELECT sum(pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table)))
 						FROM emaj.emaj_relation
 						WHERE rel_group = group_name AND rel_kind = 'r')::bigint) as log_size, ";
 			if ($this->getNumEmajVersion() >= 30000 && $this->getNumEmajVersion() < 40000){	// version 3.x

@@ -93,7 +93,7 @@
 	// Max chars of each field to display by default in browse mode
 	$conf['max_chars'] = 50;
 
-	// Configuration for automatic page refresh (for the detailled rollback page)
+	// Configuration for automatic page refresh (for the detailled rollback and activity pages)
 	// Time in seconds. If set to 0, automatic page refresh will be disabled
 	$conf['auto_refresh'] = 10;
 

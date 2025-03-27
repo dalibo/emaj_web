@@ -701,7 +701,7 @@
 	$lang['strtableslist'] = 'Schema "%s" tables';
 	$lang['strnotables'] = 'No tables found.';
 	$lang['strestimatedrowcount'] = 'Estimated row count';
-	$lang['strtblproperties'] = 'Table "%s.%s" properties';
+	$lang['strtblstructure'] = 'Table "%s.%s" structure';
 	$lang['strtblcontent'] = 'Table "%s.%s" content';
 	$lang['strnograntontable'] = 'You have not the necessary privileges to look at the table\'s content.';
 	$lang['stremajlogtable'] = 'The table is an E-Maj log table.';

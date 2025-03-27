@@ -701,7 +701,7 @@
 	$lang['strtableslist'] = 'Tables du schéma "%s"';
 	$lang['strnotables'] = 'Aucune table trouvée.';
 	$lang['strestimatedrowcount'] = 'Nb lignes estimé';
-	$lang['strtblproperties'] = 'Propriétés de la table "%s.%s"';
+	$lang['strtblstructure'] = 'Structure de la table "%s.%s"';
 	$lang['strtblcontent'] = 'Contenu de la table "%s.%s"';
 	$lang['strnograntontable'] = 'Vous n\'avez pas les droits nécessaires pour voir le contenu de la table.';
 	$lang['stremajlogtable'] = 'La table est une table de log E-Maj.';

@@ -102,7 +102,8 @@
 
 		$misc->printHeader('table', 'table', 'properties');
 		$misc->printMsg($msg);
-		$misc->printTitle(sprintf($lang['strtblproperties'], $_REQUEST['schema'], $_REQUEST['table']));
+
+		$misc->printTitle(sprintf($lang['strtblstructure'], $_REQUEST['schema'], $_REQUEST['table']));
 
 		// Get table
 		$tdata = $data->getTable($_REQUEST['table']);
@@ -144,8 +145,9 @@
 				'type'  => 'callback',
 				'params'=> array(
 					'function' => 'cstrRender',
-					'keys' => $ck->getArray()
-				)
+					'keys' => $ck->getArray(),
+					'align' => 'center',
+				),
 			),
 			'comment' => array(
 				'title' => $lang['strcomment'],
@@ -205,7 +207,7 @@
 							),
 					),
 				);
-		
+
 				$misc->printTable($groups, $columns, $actions, 'tblproperties-groups', $lang['strtblnogroupownership']);
 			}
 

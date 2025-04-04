@@ -63,12 +63,13 @@
 	$lang['stremajproperties'] = 'Propriétés E-Maj';
 	$lang['stremajschema'] = 'Schéma E-Maj';
 	$lang['stremajtrigger'] = 'Trigger E-Maj';
-	$lang['strencoding'] = 'Codage';
+	$lang['strencoding'] = 'Encodage';
 	$lang['strend'] = 'Fin';
 	$lang['strendmark'] = 'Marque fin';
 	$lang['strestimate'] = 'Estimer';
 	$lang['strestimatedduration'] = 'Durée estimée';
 	$lang['strestimates'] = 'Estimations';
+	$lang['strevent'] = 'Événement';
 	$lang['strexecute'] = 'Exécuter';
 	$lang['strexpand'] = 'Étendre';
 	$lang['strexport'] = 'Exporter';
@@ -705,8 +706,8 @@
 	$lang['strtblcontent'] = 'Contenu de la table "%s.%s"';
 	$lang['strnograntontable'] = 'Vous n\'avez pas les droits nécessaires pour voir le contenu de la table.';
 	$lang['stremajlogtable'] = 'La table est une table de log E-Maj.';
-	$lang['strinternaltable'] = 'La table est une table interne E-Maj.';
-	$lang['strtblnogroupownership'] = 'La table ne fait actuellement partie d\'aucun groupe de tables.';
+	$lang['stremajinternaltable'] = 'La table est une table interne E-Maj.';
+	$lang['strtblnogroupownership'] = 'La table ne fait partie d\'aucun groupe de tables actuellement.';
 
 	// Sequences
 	$lang['strsequenceslist'] = 'Séquences du schéma "%s"';
@@ -723,7 +724,7 @@
 	$lang['strcancycle'] = 'Peut boucler?';
 	$lang['striscalled'] = 'Incrémentera la dernière valeur avant de retourner la prochaine valeur (is_called) ?';
 	$lang['stremajlogsequence'] = 'La séquence est une séquence de log E-Maj.';
-	$lang['strinternalsequence'] = 'La séquence est une séquence interne E-Maj.';
+	$lang['stremajinternalsequence'] = 'La séquence est une séquence interne E-Maj.';
 	$lang['strseqnogroupownership'] = 'La séquence ne fait actuellement partie d\'aucun groupe de tables.';
 
 	// Dynamic groups content management: common messages
@@ -816,6 +817,25 @@
 	$lang['strremovesequencesok'] = '%s séquences ont été retirées de leur groupe de tables.';
 	$lang['strremovesequenceerr'] = 'Erreur lors de la sortie de la sequence "%s.%s" du groupe de tables "%s".';
 	$lang['strremovesequenceserr'] = 'Erreur lors de la sortie des %s sequences du schéma "%s" de leur groupe de tables.';
+
+	// Tables and sequences Emaj history
+	$lang['stremajhistorytable'] = 'Historique E-Maj pour la table "%s.%s"';
+	$lang['stremajhistorysequence'] = 'Historique E-Maj pour la sequence "%s.%s"';
+	$lang['strnoemajhistory'] = 'Aucun historique E-Maj à afficher.';
+	$lang['strdescendingeventsorder'] = 'Les événements les plus récents sont en haut de tableau.';
+	$lang['streventcreategroup'] = 'Création du groupe de tables "%s"';
+	$lang['streventdropgroup'] = 'Suppression du groupe de tables "%s"';
+	$lang['streventassigntable'] = 'Assignation de la table au groupe "%s"';
+	$lang['streventassignsequence'] = 'Assignation de la séquence au groupe "%s"';
+	$lang['streventmovetable'] = 'Déplacement de la table du groupe "%s" vers le groupe "%s"';
+	$lang['streventmovesequence'] = 'Déplacement de la séquence du groupe "%s" vers le groupe "%s"';
+	$lang['streventremovetable'] = 'Sortie de la table du groupe "%s"';
+	$lang['streventremovesequence'] = 'Sortie de la séquence du groupe "%s"';
+	$lang['streventchangepriority'] = 'Changement de priorité E-Maj (de %s à %s)';
+	$lang['streventchangedatatsp'] = 'Changement de tablespace pour les tables de log (de "%s" à "%s")';
+	$lang['streventchangeidxtsp'] = 'Changement de tablespace pour les index de log (de "%s" à "%s")';
+	$lang['streventchangeignoredtriggers'] = 'Changement de la liste des triggers ignorés par les rollbacks (de [%s] à [%s])';
+	$lang['streventrepairtable'] =	'Réparation E-Maj de la table';
 
 // Triggers
 

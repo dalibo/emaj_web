@@ -115,7 +115,7 @@
 			if ($type == 'L') {
 				echo "<p>{$lang['stremajlogsequence']}</p>\n";
 			} elseif ($type == 'E') {
-				echo "<p>{$lang['strinternalsequence']}</p>\n";
+				echo "<p>{$lang['stremajinternalsequence']}</p>\n";
 			} else {
 				$groups = $emajdb->getTableGroupsTblSeq($_REQUEST['schema'], $_REQUEST['sequence']);
 

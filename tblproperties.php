@@ -175,7 +175,7 @@
 			if ($type == 'L') {
 				echo "<p>{$lang['stremajlogtable']}</p>\n";
 			} elseif ($type == 'E') {
-				echo "<p>{$lang['strinternaltable']}</p>\n";
+				echo "<p>{$lang['stremajinternaltable']}</p>\n";
 			} else {
 				$groups = $emajdb->getTableGroupsTblSeq($_REQUEST['schema'], $_REQUEST['table']);
 

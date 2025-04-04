@@ -69,6 +69,7 @@
 	$lang['strestimate'] = 'Estimate';
 	$lang['strestimatedduration'] = 'Estimated duration';
 	$lang['strestimates'] = 'Estimates';
+	$lang['strevent'] = 'Event';
 	$lang['strexecute'] = 'Execute';
 	$lang['strexpand'] = 'Expand';
 	$lang['strexport'] = 'Export';
@@ -705,7 +706,7 @@
 	$lang['strtblcontent'] = 'Table "%s.%s" content';
 	$lang['strnograntontable'] = 'You have not the necessary privileges to look at the table\'s content.';
 	$lang['stremajlogtable'] = 'The table is an E-Maj log table.';
-	$lang['strinternaltable'] = 'The table is an internal E-Maj table.';
+	$lang['stremajinternaltable'] = 'The table is an internal E-Maj table.';
 	$lang['strtblnogroupownership'] = 'The table does not currently belong to any tables group.';
 
 	// Sequences
@@ -723,7 +724,7 @@
 	$lang['strcancycle'] = 'Can cycle?';
 	$lang['striscalled'] = 'Will increment last value before returning next value (is_called)?';
 	$lang['stremajlogsequence'] = 'The sequence is an E-Maj log sequence.';
-	$lang['strinternalsequence'] = 'The sequence is an internal E-Maj sequence.';
+	$lang['stremajinternalsequence'] = 'The sequence is an internal E-Maj sequence.';
 	$lang['strseqnogroupownership'] = 'The sequence does not currently belong to any tables group.';
 
 	// Dynamic groups content management: common messages
@@ -816,6 +817,25 @@
 	$lang['strremovesequencesok'] = '%s sequences have been removed from their tables group.';
 	$lang['strremovesequenceerr'] = 'Error while removing the sequence "%s.%s" from its tables group "%s".';
 	$lang['strremovesequenceserr'] = 'Error while removing these %s sequences of schema "%s" from their tables group.';
+
+	// Tables and sequences Emaj history
+	$lang['stremajhistorytable'] = 'E-Maj history for table "%s.%s"';
+	$lang['stremajhistorysequence'] = 'E-Maj history for sequence "%s.%s"';
+	$lang['strnoemajhistory'] = 'No E-Maj history to display.';
+	$lang['strdescendingeventsorder'] = 'Most recent events are at the top.';
+	$lang['streventcreategroup'] = 'Tables group "%s" creation';
+	$lang['streventdropgroup'] = 'Tables group "%s" drop';
+	$lang['streventassigntable'] = 'Table assignment to group "%s"';
+	$lang['streventassignsequence'] = 'Sequence assignment to group "%s"';
+	$lang['streventmovetable'] = 'Table move from group "%s" to group "%s"';
+	$lang['streventmovesequence'] = 'Sequence move from group "%s" to group "%s"';
+	$lang['streventremovetable'] = 'Table removal from group "%s"';
+	$lang['streventremovesequence'] = 'Sequence removal from group "%s"';
+	$lang['streventchangepriority'] = 'E-Maj priority change (from %s to %s)';
+	$lang['streventchangedatatsp'] = 'Log tables tablespace change (from "%s" to "%s")';
+	$lang['streventchangeidxtsp'] = 'Log indexes tablespace change (from "%s" to "%s")';
+	$lang['streventchangeignoredtriggers'] = 'Ignored triggers list change (from [%s] to [%s])';
+	$lang['streventrepairtable'] =	'Table E-Maj repair';
 
 // Triggers
 

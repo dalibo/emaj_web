@@ -1219,6 +1219,8 @@
 					break;
 
 				case 'table':
+					$historyNotAvail = (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
+						&& $emajdb->getNumEmajVersion() >= 40400));
 					$tabs = array (
 						'properties' => array (
 							'title' => $lang['strproperties'],
@@ -1240,10 +1242,23 @@
 							'icon'  => 'Table',
 							'branch'=> true,
 						),
+						'history' => array (
+							'title' => $lang['strhistory'],
+							'url'   => 'tblhistory.php',
+							'urlvars' => array(
+								'subject' => 'table',
+								'table' => field('table')
+							),
+							'icon'  => 'History',
+							'hide' => $historyNotAvail,
+							'branch'=> true,
+						),
 					);
 					break;
 
 				case 'sequence':
+					$historyNotAvail = (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
+						&& $emajdb->getNumEmajVersion() >= 40400));
 					$tabs = array (
 						'properties' => array (
 							'title' => $lang['strproperties'],
@@ -1253,6 +1268,17 @@
 								'subject' => 'sequence',
 								'sequence' => field('sequence')),
 							'icon'  => 'Property',
+							'branch'=> true,
+						),
+						'history' => array (
+							'title' => $lang['strhistory'],
+							'url'   => 'seqhistory.php',
+							'urlvars' => array(
+								'subject' => 'sequence',
+								'sequence' => field('sequence')
+							),
+							'icon'  => 'History',
+							'hide' => $historyNotAvail,
 							'branch'=> true,
 						),
 					);

@@ -4153,6 +4153,61 @@ class EmajDb {
 	}
 
 	/**
+	 * Get the history of E-Maj events for a given table or sequence.
+	 * The function is only called when emaj version >= 4.4.0
+	 */
+	function getTblSeqEmajHist($schema, $tblseq) {
+		global $data, $lang;
+
+		$data->clean($schema);
+		$data->clean($tblseq);
+
+		$sql = "WITH group_hist AS (
+					SELECT DISTINCT grph_group, grph_time_range
+						FROM emaj.emaj_group_hist
+							JOIN emaj.emaj_relation_change ON (grph_group = rlchg_group AND grph_time_range @> rlchg_time_id)
+						WHERE rlchg_schema = '$schema' AND rlchg_tblseq = '$tblseq'
+				), event AS (
+					SELECT rlchg_time_id, 2 AS rank, rlchg_change_kind::TEXT AS change_kind, rlchg_group, rlchg_new_group,
+						rlchg_priority, rlchg_new_priority, rlchg_log_data_tsp, rlchg_new_log_data_tsp,
+						rlchg_log_index_tsp, rlchg_new_log_index_tsp, rlchg_ignored_triggers,  rlchg_new_ignored_triggers
+						FROM emaj.emaj_relation_change
+						WHERE rlchg_schema = '$schema' AND rlchg_tblseq = '$tblseq'
+					UNION ALL
+					SELECT lower(grph_time_range), 1, 'CREATE_GROUP', grph_group, NULL,
+						NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+						FROM group_hist
+					UNION ALL
+					SELECT upper(grph_time_range) - 1, 3, 'DROP_GROUP', grph_group, NULL,
+						NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+						FROM group_hist
+						WHERE NOT upper_inf(grph_time_range)
+				)
+				SELECT time_tx_timestamp AS ev_ts,
+					CASE change_kind
+						WHEN 'CREATE_GROUP' THEN format('" . $data->clean($lang['streventcreategroup']) . "', rlchg_group)
+						WHEN 'DROP_GROUP' THEN format('" . $data->clean($lang['streventdropgroup']) . "', rlchg_group)
+						WHEN 'ADD_TABLE' THEN format('" . $data->clean($lang['streventassigntable']) . "', rlchg_group)
+						WHEN 'ADD_SEQUENCE' THEN format('" . $data->clean($lang['streventassignsequence']) . "', rlchg_group)
+						WHEN 'MOVE_TABLE' THEN format('" . $data->clean($lang['streventmovetable']) . "', rlchg_group, rlchg_new_group)
+						WHEN 'MOVE_SEQUENCE' THEN format('" . $data->clean($lang['streventmovesequence']) . "', rlchg_group, rlchg_new_group)
+						WHEN 'REMOVE_TABLE' THEN format('" . $data->clean($lang['streventremovetable']) . "', rlchg_group)
+						WHEN 'REMOVE_SEQUENCE' THEN format('" . $data->clean($lang['streventremovesequence']) . "', rlchg_group)
+						WHEN 'CHANGE_PRIORITY' THEN format('" . $data->clean($lang['streventchangepriority']) . "', coalesce(rlchg_priority::TEXT, 'NULL'), coalesce(rlchg_new_priority::TEXT, 'NULL'))
+						WHEN 'CHANGE_LOG_DATA_TABLESPACE' THEN format('" . $data->clean($lang['streventchangedatatsp']) . "', coalesce(rlchg_log_data_tsp, 'NULL'), coalesce(rlchg_new_log_data_tsp, 'NULL'))
+						WHEN 'CHANGE_LOG_INDEX_TABLESPACE' THEN format('" . $data->clean($lang['streventchangeidxtsp']) . "', coalesce(rlchg_log_index_tsp, 'NULL'), coalesce(rlchg_new_log_index_tsp, 'NULL'))
+						WHEN 'CHANGE_IGNORED_TRIGGERS' THEN format('" . $data->clean($lang['streventchangeignoredtriggers']) . "', coalesce(array_to_string(rlchg_ignored_triggers, ','), 'NULL'), coalesce(array_to_string(rlchg_new_ignored_triggers, ','), 'NULL'))
+						WHEN 'REPAIR_TABLE' THEN '" . $data->clean($lang['streventrepairtable']) . "'
+						ELSE 'Unknown event (' || change_kind || ') !!!'
+					END AS ev_text
+					FROM event
+						JOIN emaj.emaj_time_stamp ON (time_id = rlchg_time_id)
+				ORDER BY time_tx_timestamp DESC, rank DESC";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
 	 * Get the list of existing triggers on a table.
 	 */
 	function getTriggersTable($schema, $table) {

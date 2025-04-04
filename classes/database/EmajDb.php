@@ -1502,9 +1502,7 @@ class EmajDb {
 		global $data;
 
 		$data->clean($schema);
-		$data->fieldClean($schema);
 		$data->clean($table);
-		$data->fieldClean($table);
 
 		// Check first the user has the USAGE privileges on the schema
 		$sql = "SELECT has_schema_privilege('$schema', 'usage') has_usage_privilege";
@@ -1514,7 +1512,8 @@ class EmajDb {
 		}
 
 		// Check now that the user has the SELECT privileges on the table itself
-		$sql = "SELECT CASE WHEN has_table_privilege('\"$schema\".\"$table\"', 'select') THEN 1
+		$fullTableName = '"' . str_replace('"', '""', $schema) . '"."' . str_replace('"', '""', $table) . '"';
+		$sql = "SELECT CASE WHEN has_table_privilege('$fullTableName', 'select') THEN 1
 						    ELSE 0 END AS has_select_privilege";
 
 		return $data->selectField($sql,'has_select_privilege');
@@ -1574,9 +1573,7 @@ class EmajDb {
 		global $data;
 
 		$data->clean($schema);
-		$data->fieldClean($schema);
 		$data->clean($sequence);
-		$data->fieldClean($sequence);
 
 		// Check first the user has the USAGE privileges on the schema
 		$sql = "SELECT has_schema_privilege('$schema', 'usage') has_usage_privilege";
@@ -1586,7 +1583,8 @@ class EmajDb {
 		}
 
 		// Check now that the user has the SELECT privileges on the sequence itself
-		$sql = "SELECT CASE WHEN has_sequence_privilege('\"$schema\".\"$sequence\"', 'select') THEN 1
+		$fullSequenceName = '"' . str_replace('"', '""', $schema) . '"."' . str_replace('"', '""', $sequence) . '"';
+		$sql = "SELECT CASE WHEN has_sequence_privilege('$fullSequenceName', 'select') THEN 1
 						    ELSE 0 END AS has_select_privilege";
 
 		return $data->selectField($sql,'has_select_privilege');

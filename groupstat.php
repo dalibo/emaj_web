@@ -245,44 +245,39 @@
 					'field' => field('stat_table'),
 					'url'	=> "redirect.php?subject=table&amp;{$misc->href}&amp;",
 					'vars'  => array('schema' => 'stat_schema', 'table' => 'stat_table'),
-				));
-			if ($emajdb->getNumEmajVersion() >= 20300) {			// version >= 2.3.0
-				$columns = array_merge($columns, array(
-					'start_mark' => array(
-						'upper_title' => $lang['strbegin'],
-						'upper_title_colspan' => 2,
-						'title' => $lang['strmark'],
-						'field' => field('stat_first_mark'),
-					),
-					'start_datetime' => array(
-						'title' => $lang['strdatetime'],
-						'field' => field('stat_first_mark_datetime'),
-						'type' => 'spanned',
-						'params'=> array(
-							'dateformat' => $lang['strrecenttimestampformat'],
-							'locale' => $lang['applocale'],
-							'class' => 'tooltip left-aligned-tooltip',
-							),
-					),
-					'end_mark' => array(
-						'upper_title' => $lang['strend'],
-						'upper_title_colspan' => 2,
-						'title' => $lang['strmark'],
-						'field' => field('stat_last_mark'),
-					),
-					'end_datetime' => array(
-						'title' => $lang['strdatetime'],
-						'field' => field('stat_last_mark_datetime'),
-						'type' => 'spanned',
-						'params'=> array(
-							'dateformat' => $lang['strrecenttimestampformat'],
-							'locale' => $lang['applocale'],
-							'class' => 'tooltip left-aligned-tooltip',
-							),
-					),
-				));
-			}
-			$columns = array_merge($columns, array(
+				),
+				'start_mark' => array(
+					'upper_title' => $lang['strbegin'],
+					'upper_title_colspan' => 2,
+					'title' => $lang['strmark'],
+					'field' => field('stat_first_mark'),
+				),
+				'start_datetime' => array(
+					'title' => $lang['strdatetime'],
+					'field' => field('stat_first_mark_datetime'),
+					'type' => 'spanned',
+					'params'=> array(
+						'dateformat' => $lang['strrecenttimestampformat'],
+						'locale' => $lang['applocale'],
+						'class' => 'tooltip left-aligned-tooltip',
+						),
+				),
+				'end_mark' => array(
+					'upper_title' => $lang['strend'],
+					'upper_title_colspan' => 2,
+					'title' => $lang['strmark'],
+					'field' => field('stat_last_mark'),
+				),
+				'end_datetime' => array(
+					'title' => $lang['strdatetime'],
+					'field' => field('stat_last_mark_datetime'),
+					'type' => 'spanned',
+					'params'=> array(
+						'dateformat' => $lang['strrecenttimestampformat'],
+						'locale' => $lang['applocale'],
+						'class' => 'tooltip left-aligned-tooltip',
+						),
+				),
 				'nbrow' => array(
 					'title' => $lang['strstatrows'],
 					'field' => field('stat_rows'),
@@ -291,7 +286,7 @@
 				'actions' => array(
 					'title' => $lang['stractions'],
 				),
-			));
+			);
 
 			if ($emajdb->getNumEmajVersion() >= 40300) {			// version >= 4.3.0
 				// Request parameters to prepare the SQL statement to edit
@@ -526,44 +521,39 @@
 					'field' => field('stat_table'),
 					'url'	=> "redirect.php?subject=table&amp;{$misc->href}&amp;",
 					'vars'  => array('schema' => 'stat_schema', 'table' => 'stat_table'),
-				));
-			if ($emajdb->getNumEmajVersion() >= 20300) {			// version >= 2.3.0
-				$columns = array_merge($columns, array(
-					'start_mark' => array(
-						'upper_title' => $lang['strbegin'],
-						'upper_title_colspan' => 2,
-						'title' => $lang['strmark'],
-						'field' => field('stat_first_mark'),
-					),
-					'start_datetime' => array(
-						'title' => $lang['strdatetime'],
-						'field' => field('stat_first_mark_datetime'),
-						'type' => 'spanned',
-						'params'=> array(
-							'dateformat' => $lang['strrecenttimestampformat'],
-							'locale' => $lang['applocale'],
-							'class' => 'tooltip left-aligned-tooltip',
-							),
-					),
-					'end_mark' => array(
-						'upper_title' => $lang['strend'],
-						'upper_title_colspan' => 2,
-						'title' => $lang['strmark'],
-						'field' => field('stat_last_mark'),
-					),
-					'end_datetime' => array(
-						'title' => $lang['strdatetime'],
-						'field' => field('stat_last_mark_datetime'),
-						'type' => 'spanned',
-						'params'=> array(
-							'dateformat' => $lang['strrecenttimestampformat'],
-							'locale' => $lang['applocale'],
-							'class' => 'tooltip left-aligned-tooltip',
-							),
-					),
-				));
-			}
-			$columns = array_merge($columns, array(
+				),
+				'start_mark' => array(
+					'upper_title' => $lang['strbegin'],
+					'upper_title_colspan' => 2,
+					'title' => $lang['strmark'],
+					'field' => field('stat_first_mark'),
+				),
+				'start_datetime' => array(
+					'title' => $lang['strdatetime'],
+					'field' => field('stat_first_mark_datetime'),
+					'type' => 'spanned',
+					'params'=> array(
+						'dateformat' => $lang['strrecenttimestampformat'],
+						'locale' => $lang['applocale'],
+						'class' => 'tooltip left-aligned-tooltip',
+						),
+				),
+				'end_mark' => array(
+					'upper_title' => $lang['strend'],
+					'upper_title_colspan' => 2,
+					'title' => $lang['strmark'],
+					'field' => field('stat_last_mark'),
+				),
+				'end_datetime' => array(
+					'title' => $lang['strdatetime'],
+					'field' => field('stat_last_mark_datetime'),
+					'type' => 'spanned',
+					'params'=> array(
+						'dateformat' => $lang['strrecenttimestampformat'],
+						'locale' => $lang['applocale'],
+						'class' => 'tooltip left-aligned-tooltip',
+						),
+				),
 				'role' => array(
 					'title' => $lang['strrole'],
 					'field' => field('stat_role'),
@@ -580,7 +570,7 @@
 				'actions' => array(
 					'title' => $lang['stractions'],
 				),
-			));
+			);
 
 			if ($emajdb->getNumEmajVersion() >= 40300) {			// version >= 4.3.0
 				// Request parameters to prepare the SQL statement to edit

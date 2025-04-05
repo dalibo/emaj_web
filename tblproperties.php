@@ -166,7 +166,7 @@
 		echo "<hr/>\n";
 
 		// Display the E-Maj properties, if any
-		if ($emajdb->isEnabled() && $emajdb->isAccessible() && $emajdb->getNumEmajVersion() >= 20200) {
+		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
 
 			$misc->printTitle($lang['stremajproperties']);
 

@@ -33,11 +33,9 @@
 		if (isset($loggingActions['unprotect_group']) && (!$isGroupRollbackable || !$isGroupProtected)) {
 			$loggingActions['unprotect_group']['disable'] = true;
 		}
-		if ($emajdb->getNumEmajVersion() >= 30000) {
 		// disable the alter_group button when there is no configuration change to apply
-			if (isset($loggingActions['alter_group']) && (!$rowdata->fields['has_waiting_changes'])) {
-				$loggingActions['alter_group']['disable'] = true;
-			}
+		if (isset($loggingActions['alter_group']) && (!$rowdata->fields['has_waiting_changes'])) {
+			$loggingActions['alter_group']['disable'] = true;
 		}
 		return $loggingActions;
 	}
@@ -46,11 +44,9 @@
 	function idleGroupPre(&$rowdata, $idleActions) {
 		global $emajdb;
 
-		if ($emajdb->getNumEmajVersion() >= 30000) {
 		// disable the alter_group button when there is no configuration change to apply
-			if (isset($idleActions['alter_group']) && (!$rowdata->fields['has_waiting_changes'])) {
-				$idleActions['alter_group']['disable'] = true;
-			}
+		if (isset($idleActions['alter_group']) && (!$rowdata->fields['has_waiting_changes'])) {
+			$idleActions['alter_group']['disable'] = true;
 		}
 		return $idleActions;
 	}
@@ -709,18 +705,6 @@
 				'type'  => 'numeric'
 			),
 		);
-		if ($emajdb->getNumEmajVersion() < 30000) {	// version < 3.0.0
-			$configuredColumns = array_merge($configuredColumns, array(
-				'diagnostic' => array(
-					'title' => $lang['strdiagnostics'],
-					'field' => field('group_diagnostic'),
-					'type'	=> 'callback',
-					'params'=> array(
-							'function' => 'renderDiagnosticNewGroup',
-							)
-				),
-			));
-		}
 
 		if ($emajdb->isEmaj_Adm()) {
 			$configuredActions = array(
@@ -1432,35 +1416,31 @@
 
 		$rollbackable = true; $auditonly = true;
 
-		if ($emajdb->getNumEmajVersion() >= 30000) {			// version >= 3.0.0
 		// check the group configuration
-			$checks = $emajdb->checkConfNewGroup($_REQUEST['group']);
-			if ($checks->recordCount() == 0) {
-				echo "<p>" . sprintf($lang['strgroupconfok'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
-			} else {
-				echo "<p>" . sprintf($lang['strgroupconfwithdiag'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
-
-				$columns = array(
-					'message' => array(
-						'title' => $lang['strdiagnostics'],
-						'field' => field('chk_message'),
-					),
-				);
-
-				$actions = array ();
-
-				$misc->printTable($checks, $columns, $actions, 'checks', null, null, array('sorter' => true, 'filter' => false));
-
-				// determine whether the tables group can be audit_only
-				$rollbackable = false;
-				$checks->moveFirst();
-				while (!$checks->EOF) {
-					if ($checks->fields['chk_severity'] == 1) $auditonly = false;
-					$checks->moveNext();
-				}
-			}
+		$checks = $emajdb->checkConfNewGroup($_REQUEST['group']);
+		if ($checks->recordCount() == 0) {
+			echo "<p>" . sprintf($lang['strgroupconfok'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
 		} else {
-			echo "<p>" . sprintf($lang['strconfirmcreategroup'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
+			echo "<p>" . sprintf($lang['strgroupconfwithdiag'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
+
+			$columns = array(
+				'message' => array(
+					'title' => $lang['strdiagnostics'],
+					'field' => field('chk_message'),
+				),
+			);
+
+			$actions = array ();
+
+			$misc->printTable($checks, $columns, $actions, 'checks', null, null, array('sorter' => true, 'filter' => false));
+
+			// determine whether the tables group can be audit_only
+			$rollbackable = false;
+			$checks->moveFirst();
+			while (!$checks->EOF) {
+				if ($checks->fields['chk_severity'] == 1) $auditonly = false;
+				$checks->moveNext();
+			}
 		}
 
 		echo "<form action=\"emajgroups.php\" method=\"post\">\n";
@@ -1691,35 +1671,33 @@
 			$misc->printHeader('emaj', 'emajgroup','emajgroupproperties');
 		$misc->printTitle($lang['straltergroups']);
 
-		$confOK = true;
-		if ($emajdb->getNumEmajVersion() >= 30000) {			// version >= 3.0.0
 		// check the group configuration
-			$checks = $emajdb->checkConfExistingGroups($_REQUEST['group']);
-			if ($checks->recordCount() == 0) {
-				echo "<p>" . sprintf($lang['strgroupconfok'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
-			} else {
-				$confOK = false;
-				echo "<p>" . sprintf($lang['strgroupconfwithdiag'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
+		$confOK = true;
+		$checks = $emajdb->checkConfExistingGroups($_REQUEST['group']);
+		if ($checks->recordCount() == 0) {
+			echo "<p>" . sprintf($lang['strgroupconfok'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
+		} else {
+			$confOK = false;
+			echo "<p>" . sprintf($lang['strgroupconfwithdiag'], htmlspecialchars($_REQUEST['group'])) . "</p>\n";
 
-				$columns = array(
-					'message' => array(
-						'title' => $lang['strdiagnostics'],
-						'field' => field('chk_message'),
-					),
-				);
+			$columns = array(
+				'message' => array(
+					'title' => $lang['strdiagnostics'],
+					'field' => field('chk_message'),
+				),
+			);
 
-				$actions = array ();
+			$actions = array ();
 
-				$misc->printTable($checks, $columns, $actions, 'checks', null, null, array('sorter' => true, 'filter' => false));
+			$misc->printTable($checks, $columns, $actions, 'checks', null, null, array('sorter' => true, 'filter' => false));
 
-				echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-				echo "<p><input type=\"hidden\" name=\"action\" value=\"alter_group_ok\" />\n";
-				echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
-				echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
-				echo $misc->form;
-				echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-				echo "</form>\n";
-			}
+			echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+			echo "<p><input type=\"hidden\" name=\"action\" value=\"alter_group_ok\" />\n";
+			echo "<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
+			echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
+			echo $misc->form;
+			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+			echo "</form>\n";
 		}
 
 		if ($confOK) {
@@ -1833,35 +1811,33 @@
 		}
 		$groupsList = substr($groupsList,0,strlen($groupsList)-2);
 
-		$confOK = true;
-		if ($emajdb->getNumEmajVersion() >= 30000) {			// version >= 3.0.0
 		// check the groups configuration
-			$checks = $emajdb->checkConfExistingGroups($groupsList);
-			if ($checks->recordCount() == 0) {
-				echo "<p>" . sprintf($lang['strgroupsconfok'], htmlspecialchars($groupsList)) . "</p>\n";
-			} else {
-				$confOK = false;
-				echo "<p>" . sprintf($lang['strgroupsconfwithdiag'], htmlspecialchars($groupsList)) . "</p>\n";
+		$confOK = true;
+		$checks = $emajdb->checkConfExistingGroups($groupsList);
+		if ($checks->recordCount() == 0) {
+			echo "<p>" . sprintf($lang['strgroupsconfok'], htmlspecialchars($groupsList)) . "</p>\n";
+		} else {
+			$confOK = false;
+			echo "<p>" . sprintf($lang['strgroupsconfwithdiag'], htmlspecialchars($groupsList)) . "</p>\n";
 
-				$columns = array(
-					'message' => array(
-						'title' => $lang['strdiagnostics'],
-						'field' => field('chk_message'),
-					),
-				);
+			$columns = array(
+				'message' => array(
+					'title' => $lang['strdiagnostics'],
+					'field' => field('chk_message'),
+				),
+			);
 
-				$actions = array ();
+			$actions = array ();
 
-				$misc->printTable($checks, $columns, $actions, 'checks', null, null, array('sorter' => true, 'filter' => false));
+			$misc->printTable($checks, $columns, $actions, 'checks', null, null, array('sorter' => true, 'filter' => false));
 
-				echo "<form action=\"emajgroups.php\" method=\"post\">\n";
-				echo "<p><input type=\"hidden\" name=\"action\" value=\"alter_groups_ok\" />\n";
-				echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
-				echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
-				echo $misc->form;
-				echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
-				echo "</form>\n";
-			}
+			echo "<form action=\"emajgroups.php\" method=\"post\">\n";
+			echo "<p><input type=\"hidden\" name=\"action\" value=\"alter_groups_ok\" />\n";
+			echo "<input type=\"hidden\" name=\"groups\" value=\"", htmlspecialchars($groupsList), "\" />\n";
+			echo "<input type=\"hidden\" name=\"back\" value=\"", htmlspecialchars($_REQUEST['back']), "\" />\n";
+			echo $misc->form;
+			echo "<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /></p>\n";
+			echo "</form>\n";
 		}
 
 		if ($confOK) {

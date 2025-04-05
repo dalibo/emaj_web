@@ -79,9 +79,7 @@
 					'field' => field('rel_tblseq'),
 					'url'	=> "redirect.php?{$misc->href}&amp;",
 					'vars'  => array('subject' => 'rel_type' , 'schema' => 'rel_schema', 'table' => 'rel_tblseq', 'sequence' => 'rel_tblseq'),
-				));
-			if ($emajdb->getNumEmajVersion() >= 20200) {			// version >= 2.2.0
-				$columns = array_merge($columns, array(
+				),
 				'starttime' => array(
 					'title' => $lang['strsince'],
 					'field' => field('start_time'),
@@ -93,9 +91,7 @@
 					),
 					'sorter_text_extraction' => 'span_text',
 					'filter'=> false,
-				)));
-			}
-			$columns = array_merge($columns, array(
+				),
 				'priority' => array(
 					'title' => $lang['strpriority'],
 					'field' => field('rel_priority'),
@@ -126,7 +122,7 @@
 					'sorter_text_extraction' => 'span_text',
 					'filter'=> false,
 				),
-			));
+			);
 
 			$actions = array ();
 

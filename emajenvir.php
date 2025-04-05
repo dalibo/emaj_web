@@ -675,9 +675,7 @@
 			$misc->printTitle($lang['strextparams']);
 
 			// Set the default values for all existing parameters
-			if ($emajdb->getNumEmajVersion() >= 30000) {
-				$defValParam['alter_log_table'] = '';
-			}
+			$defValParam['alter_log_table'] = '';
 			$defValParam['avg_fkey_check_duration'] = '20 µs';
 			$defValParam['avg_row_delete_log_duration'] = '10 µs';
 			$defValParam['avg_row_rollback_duration'] = '100 µs';
@@ -702,10 +700,8 @@
 			displayOneParameter('history_retention', $lang['strparhistret'], $lang['strparhistretinfo']);
 			displayOneParameter('dblink_user_password', $lang['strpardblinkcon'], $lang['strpardblinkconinfo']);
 
-			if ($emajdb->getNumEmajVersion() >= 30000) {
-				# add line feed if several columns added to the log tables
-				displayOneParameter('alter_log_table', $lang['strparalterlog'], $lang['strparalterloginfo']);
-			}
+			# add line feed if several columns added to the log tables
+			displayOneParameter('alter_log_table', $lang['strparalterlog'], $lang['strparalterloginfo']);
 			echo "</div>\n";
 
 			echo "<div>\n";

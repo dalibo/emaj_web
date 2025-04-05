@@ -294,7 +294,6 @@
 
 	// Group creation
 	$lang['strcreateagroup'] = 'E-Maj: Create a tables group';
-	$lang['strconfirmcreategroup'] = 'Are you sure you want to create the tables group "%s"?';
 	$lang['strcreategroupok'] = 'The tables group "%s" has been created.';
 	$lang['strcreategrouperr'] = 'Error while creating the tables group "%s".';
 

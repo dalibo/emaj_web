@@ -28,8 +28,8 @@
 		return "<img src=\"{$misc->icon($icon)}\" alt=\"$alt\" class=\"cellicon\"/>";
 	}
 
+	// Display the value of a single parameter in the parameter section of the main page.
 	function displayOneParameter($param, $label, $info) {
-	// This function displays the value of a sinigle parameter in the parameter section of the main page.
 		global $lang, $misc, $emajdb, $paramValue, $defValParam;
 
 		echo "\t<div class=\"form-param-label\">{$label}</div>\n";
@@ -72,21 +72,20 @@
 	}
 
 	/**
-	 * Prepare the extension creation: ask for the version and the confirmation
+	 * Prepare the extension creation: ask for the version and confirmation
 	 */
 	function create_extension() {
-		global $misc, $lang, $emajdb;
-		global $xrefEmajPg;
+		global $misc, $lang, $emajdb, $xrefEmajPg;
 
 		$misc->printHeader('database', 'database', 'emajenvir');
 
 		$misc->printTitle($lang['strcreateemajextension']);
 
-		// build the array of usable emaj versions
+		// Build the usable emaj versions array
 		$server_info = $misc->getServerInfo();
+		$pgMajorVersion = $server_info['pgMajorVersion'];
 		$availableVersions = $emajdb->getAvailableExtensionVersions();
 
-		$pgMajorVersion = $server_info['pgMajorVersion'];
 		$usableVersions = array();
 		foreach($availableVersions as $v) {
 			if (!isset($xrefEmajPg[$v['version']]) ||
@@ -176,17 +175,17 @@
 			echo "<p>{$lang['strmissingeventtriggers']}</p>\n";
 		}
 
-		// build the array of usable emaj versions
+		// Build the usable emaj versions array
 		$availableVersions = $emajdb->getAvailableExtensionVersionsForUpdate();
-
 		$pgMajorVersion = $server_info['pgMajorVersion'];
+
 		$usableVersions = array();
 		foreach($availableVersions as $v) {
 			// filter unknown emaj versions (i.e. devel) or emaj version compatible with the current PG version
 			if (!isset($xrefEmajPg[$v['target']]) ||
 				(version_compare($pgMajorVersion, $xrefEmajPg[$v['version']]['minPostgresVersion'], '>=') &&
 				 version_compare($pgMajorVersion, $xrefEmajPg[$v['version']]['maxPostgresVersion'], '<='))) {
-				// block version update > = 4.2 if some event triggers are missing
+				// block the update if the target version >= 4.2 and some event triggers are missing
 				if ($v['target'] < '4.2.0' || $nbEventTrigger >= 3) {
 					$usableVersions[] = $v['target'];
 				}

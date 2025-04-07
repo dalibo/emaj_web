@@ -118,7 +118,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Determine whether the E-Maj extension has been installed in the instance.
+	 * Determine whether the emaj extension has been installed in the instance.
 	 */
 	function isExtensionAvailable() {
 		global $data;
@@ -146,20 +146,21 @@ class EmajDb {
 	}
 
 	/**
-	 * Return the E-Maj extension versions available in the instance for a CREATE EXTENSION.
+	 * Return the emaj extension versions available in the instance for a CREATE EXTENSION and compatible with this Emaj_web version.
 	 */
 	function getAvailableExtensionVersions() {
-		global $data;
+		global $data, $oldest_supported_emaj_version;
 
 		$sql = "SELECT version FROM pg_catalog.pg_available_extension_versions
 				  WHERE name = 'emaj' AND NOT installed
+					AND (version = 'devel' OR version >= '$oldest_supported_emaj_version')
 				  ORDER BY version DESC";
 
 		return $data->selectSet($sql);
 	}
 
 	/**
-	 * Return a boolean indicating whether one or several versions of the E-Maj extension are available for an ALTER EXTENSION UPDATE.
+	 * Return a boolean indicating whether one or several versions of the emaj extension are available for an ALTER EXTENSION UPDATE.
 	 */
 	function areThereVersionsToUpdate() {
 		global $data;
@@ -167,6 +168,7 @@ class EmajDb {
 		$sql = "SELECT CASE WHEN EXISTS (
 				  SELECT target FROM pg_catalog.pg_extension_update_paths('emaj')
 					WHERE source = '{$this->emaj_version}' AND path IS NOT NULL
+					  AND (target = 'devel' OR target >= '$oldest_supported_emaj_version')
 				) THEN 1 ELSE 0 END AS versions_exist";
 
 		return $data->selectField($sql,'versions_exist');
@@ -185,13 +187,14 @@ class EmajDb {
 	}
 
 	/**
-	 * Return the E-Maj extension versions available as target for an ALTER EXTENSION UPDATE.
+	 * Return the emaj extension versions available as target for an ALTER EXTENSION UPDATE and compatible with this Emaj_web version.
 	 */
 	function getAvailableExtensionVersionsForUpdate() {
-		global $data;
+		global $data, $oldest_supported_emaj_version;
 
 		$sql = "SELECT target FROM pg_catalog.pg_extension_update_paths('emaj')
 				  WHERE source = '{$this->emaj_version}' AND path IS NOT NULL
+					AND (target = 'devel' OR target >= '$oldest_supported_emaj_version')
 				  ORDER BY 1 DESC";
 
 		return $data->selectSet($sql);

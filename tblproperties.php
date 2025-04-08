@@ -40,18 +40,6 @@
 		return $str;
 	}
 
-	// Callback function to add a link to the tables group's description when the group name is suffixed by "###LINK###"
-	function renderlinktogroup($val) {
-		global $misc;
-
-		if (preg_match("/(.*)###LINK###$/", $val, $matches)) {
-			$val = $matches[1];
-			return "<a href=\"emajgroups.php?action=show_group&amp;" . $misc->href . "&amp;group=". urlencode($val) . "\">" . $val . "</a>";
-		} else {
-			return $val;
-		}
-	}
-
 	// Callback function to modify the isemaj column content
 	// It replaces the database value by an icon
 	function renderIsEmaj($val) {
@@ -103,72 +91,21 @@
 		$misc->printHeader('table', 'table', 'properties');
 		$misc->printMsg($msg);
 
-		$misc->printTitle(sprintf($lang['strtblstructure'], $_REQUEST['schema'], $_REQUEST['table']));
+		$misc->printTitle(sprintf($lang['strnamedtable'], $_REQUEST['schema'], $_REQUEST['table']));
 
-		// Get table
+		// Get table information
 		$tdata = $data->getTable($_REQUEST['table']);
-		// Get columns
+		// Get columns description
 		$attrs = $data->getTableAttributes($_REQUEST['table']);
 		// Get constraints keys
 		$ck = $data->getConstraintsWithFields($_REQUEST['table']);
 		// Get triggers
 		$triggers = $emajdb->getTriggersTable($_REQUEST['schema'], $_REQUEST['table']);
 
-		// Show comment, if any
-		if ($tdata->fields['relcomment'] !== null)
-			echo "<p>{$lang['strcommentlabel']}<span class=\"comment\">{$misc->printVal($tdata->fields['relcomment'])}</span></p>\n";
-
-		// Display the table structure
-		$columns = array(
-			'column' => array(
-				'title' => $lang['strcolumn'],
-				'field' => field('attname'),
-				'vars'  => array('column' => 'attname'),
-			),
-			'type' => array(
-				'title' => $lang['strtype'],
-				'field' => field('+type'),
-			),
-			'notnull' => array(
-				'title' => $lang['strnotnull'],
-				'field' => field('attnotnull'),
-				'type'  => 'bool',
-				'params'=> array('true' => 'NOT NULL', 'false' => ''),
-			),
-			'default' => array(
-				'title' => $lang['strdefault'],
-				'field' => field('adsrc'),
-			),
-			'keyprop' => array(
-				'title' => $lang['strconstraints'],
-				'field' => field('attname'),
-				'type'  => 'callback',
-				'params'=> array(
-					'function' => 'cstrRender',
-					'keys' => $ck->getArray(),
-					'align' => 'center',
-				),
-			),
-			'comment' => array(
-				'title' => $lang['strcomment'],
-				'field' => field('comment'),
-				'type' => 'spanned',
-				'params'=> array(
-						'cliplen' => 32,
-						'class' => 'tooltip right-aligned-tooltip',
-						),
-			),
-		);
-
-		$actions = array();
-
-		$misc->printTable($attrs, $columns, $actions, 'tblproperties-columns', null, 'attPre');
-		echo "<hr/>\n";
-
 		// Display the E-Maj properties, if any
 		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
 
-			$misc->printTitle($lang['stremajproperties']);
+			$misc->printSubtitle($lang['stremajproperties']);
 
 			$type = $emajdb->getEmajTypeTblSeq($_REQUEST['schema'], $_REQUEST['table']);
 
@@ -177,18 +114,18 @@
 			} elseif ($type == 'E') {
 				echo "<p>{$lang['stremajinternaltable']}</p>\n";
 			} else {
-				$groups = $emajdb->getTableGroupsTblSeq($_REQUEST['schema'], $_REQUEST['table']);
+				$prop = $emajdb->getRelationEmajProperties($_REQUEST['schema'], $_REQUEST['table']);
 
 				$columns = array(
 					'group' => array(
 						'title' => $lang['strgroup'],
 						'field' => field('rel_group'),
-						'type'	=> 'callback',
-						'params'=> array('function' => 'renderlinktogroup')
+						'url'   => "emajgroups.php?action=show_group&amp;{$misc->href}&amp;",
+						'vars'  => array('group' => 'rel_group')
 					),
 					'starttime' => array(
-						'title' => $lang['strassigned'],
-						'field' => field('start_datetime'),
+						'title' => $lang['strsince'],
+						'field' => field('assign_ts'),
 						'type' => 'spanned',
 						'params'=> array(
 							'dateformat' => $lang['stroldtimestampformat'],
@@ -196,121 +133,189 @@
 							'class' => 'tooltip left-aligned-tooltip',
 							),
 					),
-					'stoptime' => array(
-						'title' => $lang['strremoved'],
-						'field' => field('stop_datetime'),
-						'type' => 'spanned',
-						'params'=> array(
-							'dateformat' => $lang['stroldtimestampformat'],
-							'locale' => $lang['applocale'],
-							'class' => 'tooltip left-aligned-tooltip',
-							),
+					'priority' => array(
+						'title' => $lang['strpriority'],
+						'field' => field('rel_priority'),
+						'params'=> array('align' => 'center'),
+					),
+					'logdattsp' => array(
+						'upper_title' => $lang['strtablespace'],
+						'upper_title_colspan' => 2,
+						'title' => $lang['strlogtables'],
+						'field' => field('rel_log_dat_tsp'),
+					),
+					'logidxtsp' => array(
+						'title' => $lang['strlogindexes'],
+						'field' => field('rel_log_idx_tsp'),
 					),
 				);
 
-				$misc->printTable($groups, $columns, $actions, 'tblproperties-groups', $lang['strtblnogroupownership']);
+				$misc->printTable($prop, $columns, $actions, 'tblproperties-emaj', $lang['strtblnogroupownership']);
 			}
 
 			echo "<hr/>\n";
 		}
 
-		// Display the table triggers
+		// Display the table structure
+		$misc->printSubtitle($lang['strtblstructure']);
 
-		$misc->printTitle($lang['strtriggers']);
+		// Verify that the user has enough privileges to read the table
+		$privilegeOk = $emajdb->hasSelectPrivilegeOnTable($_REQUEST['schema'], $_REQUEST['table']);
 
-		$urlvars = $misc->getRequestVars();
+		if (! $privilegeOk) {
+			echo $lang['strnograntontable'];
+		} else {
 
-		$columns = array(
-			'tgrank' => array(
-				'title' => $lang['strexecorder'],
-				'field' => field('tgrank'),
-				'params'=> array('align' => 'center'),
-			),
-			'tgname' => array(
-				'title' => $lang['strtrigger'],
-				'field' => field('tgname'),
-			),
-			'tglevel' => array(
-				'title' => $lang['strlevel'],
-				'field' => field('tglevel'),
-				'params'=> array('align' => 'center'),
-			),
-			'tgevent' => array(
-				'title' => $lang['strtriggeringevent'],
-				'field' => field('tgevent'),
-			),
-			'tgfnct' => array(
-				'title' => $lang['strcalledfunction'],
-				'field' => field('tgfnct'),
-			),
-			'tgenabled' => array(
-				'title' => $lang['strstate'],
-				'field' => field('tgstate'),
-			),
-			'tgisemaj' => array(
-				'title' => $lang['strisemaj'],
-				'field' => field('tgisemaj'),
-				'type'	=> 'callback',
-				'params'=> array('function' => 'renderIsEmaj', 'align' => 'center'),
-				'sorter_text_extraction' => 'img_alt',
-			),
-		);
-		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
-			if ($emajdb->getNumEmajVersion() >= 30100) {			// version >= 3.1.0
-				$columns = array_merge($columns, array(
-					'emajisautodisable' => array(
-						'title' => $lang['strisautodisable'],
-						'field' => field('tgisautodisable'),
-						'info'  => $lang['strisautodisablehelp'],
-						'params'=> array(
-							'map' => array('t' => 'ON', 'f' => 'OFF'),
-							'align' => 'center'
-						),
+			// Show comment, if any
+			if ($tdata->fields['relcomment'] !== null)
+				echo "<p>{$lang['strcommentlabel']}<span class=\"comment\">{$misc->printVal($tdata->fields['relcomment'])}</span></p>\n";
+
+			// Display the table structure
+			$columns = array(
+				'column' => array(
+					'title' => $lang['strcolumn'],
+					'field' => field('attname'),
+					'vars'  => array('column' => 'attname'),
+				),
+				'type' => array(
+					'title' => $lang['strtype'],
+					'field' => field('+type'),
+				),
+				'notnull' => array(
+					'title' => $lang['strnotnull'],
+					'field' => field('attnotnull'),
+					'type'  => 'bool',
+					'params'=> array('true' => 'NOT NULL', 'false' => ''),
+				),
+				'default' => array(
+					'title' => $lang['strdefault'],
+					'field' => field('adsrc'),
+				),
+				'keyprop' => array(
+					'title' => $lang['strconstraints'],
+					'field' => field('attname'),
+					'type'  => 'callback',
+					'params'=> array(
+						'function' => 'cstrRender',
+						'keys' => $ck->getArray(),
+						'align' => 'center',
 					),
-					'actions' => array(
-						'title' => $lang['stractions'],
-					),
-				));
-			}
-		}
+				),
+				'comment' => array(
+					'title' => $lang['strcomment'],
+					'field' => field('comment'),
+					'type' => 'spanned',
+					'params'=> array(
+							'cliplen' => 32,
+							'class' => 'tooltip right-aligned-tooltip',
+							),
+				),
+			);
 
-		$actions = array();
-		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
-			if ($emajdb->getNumEmajVersion() >= 30100) {			// version >= 3.1.0
-				if ($emajdb->isEmaj_Adm()) {
-					$actions = array_merge($actions, array(
-						'noAutoDisableTrigger' => array(
-							'content' => 'Manuel',
-							'icon' => 'Off',
-							'attr' => array (
-								'href' => array (
-									'url' => 'tblproperties.php',
-									'urlvars' => array_merge($urlvars, array (
-										'action' => 'no_auto_disable_trigger',
-										'schema' => $_REQUEST['schema'],
-										'table' => $_REQUEST['table'],
-										'trigger' => field('tgname'),
-									)))),
+			$actions = array();
+
+			$misc->printTable($attrs, $columns, $actions, 'tblproperties-columns', null, 'attPre');
+
+			echo "<hr/>\n";
+
+			// Display the table triggers
+
+			$misc->printSubtitle($lang['strtriggers']);
+
+			$urlvars = $misc->getRequestVars();
+
+			$columns = array(
+				'tgrank' => array(
+					'title' => $lang['strexecorder'],
+					'field' => field('tgrank'),
+					'params'=> array('align' => 'center'),
+				),
+				'tgname' => array(
+					'title' => $lang['strtrigger'],
+					'field' => field('tgname'),
+				),
+				'tglevel' => array(
+					'title' => $lang['strlevel'],
+					'field' => field('tglevel'),
+					'params'=> array('align' => 'center'),
+				),
+				'tgevent' => array(
+					'title' => $lang['strtriggeringevent'],
+					'field' => field('tgevent'),
+				),
+				'tgfnct' => array(
+					'title' => $lang['strcalledfunction'],
+					'field' => field('tgfnct'),
+				),
+				'tgenabled' => array(
+					'title' => $lang['strstate'],
+					'field' => field('tgstate'),
+				),
+				'tgisemaj' => array(
+					'title' => $lang['strisemaj'],
+					'field' => field('tgisemaj'),
+					'type'	=> 'callback',
+					'params'=> array('function' => 'renderIsEmaj', 'align' => 'center'),
+					'sorter_text_extraction' => 'img_alt',
+				),
+			);
+			if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
+				if ($emajdb->getNumEmajVersion() >= 30100) {			// version >= 3.1.0
+					$columns = array_merge($columns, array(
+						'emajisautodisable' => array(
+							'title' => $lang['strisautodisable'],
+							'field' => field('tgisautodisable'),
+							'info'  => $lang['strisautodisablehelp'],
+							'params'=> array(
+								'map' => array('t' => 'ON', 'f' => 'OFF'),
+								'align' => 'center'
+							),
 						),
-						'autoDisableTrigger' => array(
-							'content' => 'Auto',
-							'icon' => 'On',
-							'attr' => array (
-								'href' => array (
-									'url' => 'tblproperties.php',
-									'urlvars' => array_merge($urlvars, array (
-										'action' => 'auto_disable_trigger',
-										'schema' => $_REQUEST['schema'],
-										'table' => $_REQUEST['table'],
-										'trigger' => field('tgname'),
-									)))),
+						'actions' => array(
+							'title' => $lang['stractions'],
 						),
 					));
 				}
 			}
-		}
 
-		$misc->printTable($triggers, $columns, $actions, 'tblproperties-triggers', $lang['strnotriggerontable'], 'triggerPre', array('sorter' => true, 'filter' => false));
+			$actions = array();
+			if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
+				if ($emajdb->getNumEmajVersion() >= 30100) {			// version >= 3.1.0
+					if ($emajdb->isEmaj_Adm()) {
+						$actions = array_merge($actions, array(
+							'noAutoDisableTrigger' => array(
+								'content' => 'Manuel',
+								'icon' => 'Off',
+								'attr' => array (
+									'href' => array (
+										'url' => 'tblproperties.php',
+										'urlvars' => array_merge($urlvars, array (
+											'action' => 'no_auto_disable_trigger',
+											'schema' => $_REQUEST['schema'],
+											'table' => $_REQUEST['table'],
+											'trigger' => field('tgname'),
+										)))),
+							),
+							'autoDisableTrigger' => array(
+								'content' => 'Auto',
+								'icon' => 'On',
+								'attr' => array (
+									'href' => array (
+										'url' => 'tblproperties.php',
+										'urlvars' => array_merge($urlvars, array (
+											'action' => 'auto_disable_trigger',
+											'schema' => $_REQUEST['schema'],
+											'table' => $_REQUEST['table'],
+											'trigger' => field('tgname'),
+										)))),
+							),
+						));
+					}
+				}
+			}
+
+			$misc->printTable($triggers, $columns, $actions, 'tblproperties-triggers', $lang['strnotriggerontable'], 'triggerPre', array('sorter' => true, 'filter' => false));
+		}
 	}
 
 	/**

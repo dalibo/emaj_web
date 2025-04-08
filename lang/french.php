@@ -31,7 +31,6 @@
 	$lang['stractual'] = 'Réel';
 	$lang['strall'] = 'Tous';
 	$lang['strassign'] = 'Affecter';
-	$lang['strassigned'] = 'Affectée';
 	$lang['strauditonly'] = 'Audit-seul';
 	$lang['strautorefresh'] = 'Rafraîchissement auto';
 	$lang['strback'] = 'Retour';
@@ -98,6 +97,8 @@
 	$lang['strmessage'] = 'Message';
 	$lang['strmove'] = 'Déplacer';
 	$lang['strname'] = 'Nom';
+	$lang['strnamedsequence'] = 'Séquence "%s.%s"';
+	$lang['strnamedtable'] = 'Table "%s.%s"';
 	$lang['strnewvalue'] = 'Nouvelle valeur';
 	$lang['strnext'] = 'Suivant';
 	$lang['strno'] = 'Non';
@@ -121,7 +122,6 @@
 	$lang['strreestimate'] = 'Ré-estimer';
 	$lang['strrefresh'] = 'Rafraîchir';
 	$lang['strremove'] = 'Retirer';
-	$lang['strremoved'] = 'Retirée';
 	$lang['strrename'] = 'Renommer';
 	$lang['strrequiredfield'] = 'Champ requis';
 	$lang['strreset'] = 'Réinitialiser';
@@ -701,7 +701,7 @@
 	$lang['strtableslist'] = 'Tables du schéma "%s"';
 	$lang['strnotables'] = 'Aucune table trouvée.';
 	$lang['strestimatedrowcount'] = 'Nb lignes estimé';
-	$lang['strtblstructure'] = 'Structure de la table "%s.%s"';
+	$lang['strtblstructure'] = 'Structure de la table';
 	$lang['strtblcontent'] = 'Contenu de la table "%s.%s"';
 	$lang['strnograntontable'] = 'Vous n\'avez pas les droits nécessaires pour voir le contenu de la table.';
 	$lang['stremajlogtable'] = 'La table est une table de log E-Maj.';
@@ -712,7 +712,7 @@
 	$lang['strsequenceslist'] = 'Séquences du schéma "%s"';
 	$lang['strnosequences'] = 'Aucune séquence trouvée.';
 	$lang['strnograntonsequence'] = 'Vous n\'avez pas les droits nécessaires pour voir les propriétés de la séquence.';
-	$lang['strseqproperties'] = 'Propriétés de la séquence "%s.%s"';
+	$lang['strseqproperties'] = 'Propriétés de la séquence';
 	$lang['strlastvalue'] = 'Dernière valeur';
 	$lang['strincrement'] = 'Incrément';
 	$lang['strstartvalue'] = 'Valeur de départ';
@@ -724,7 +724,7 @@
 	$lang['striscalled'] = 'Incrémentera la dernière valeur avant de retourner la prochaine valeur (is_called) ?';
 	$lang['stremajlogsequence'] = 'La séquence est une séquence de log E-Maj.';
 	$lang['stremajinternalsequence'] = 'La séquence est une séquence interne E-Maj.';
-	$lang['strseqnogroupownership'] = 'La séquence ne fait actuellement partie d\'aucun groupe de tables.';
+	$lang['strseqnogroupownership'] = 'La séquence ne fait partie d\'aucun groupe de tables actuellement.';
 
 	// Dynamic groups content management: common messages
 	$lang['strlogdattsp'] = 'Tablespace tables log';

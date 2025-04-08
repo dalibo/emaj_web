@@ -31,7 +31,6 @@
 	$lang['stractual'] = 'Actual';
 	$lang['strall'] = 'All';
 	$lang['strassign'] = 'Assign';
-	$lang['strassigned'] = 'Assigned';
 	$lang['strauditonly'] = 'AUDIT-ONLY';
 	$lang['strautorefresh'] = 'Auto refresh';
 	$lang['strback'] = 'Back';
@@ -98,6 +97,8 @@
 	$lang['strmessage'] = 'Message';
 	$lang['strmove'] = 'Move';
 	$lang['strname'] = 'Name';
+	$lang['strnamedsequence'] = 'Sequence "%s.%s"';
+	$lang['strnamedtable'] = 'Table "%s.%s"';
 	$lang['strnewvalue'] = 'New value';
 	$lang['strnext'] = 'Next >';
 	$lang['strno'] = 'No';
@@ -121,7 +122,6 @@
 	$lang['strreestimate'] = 'Reestimate';
 	$lang['strrefresh'] = 'Refresh';
 	$lang['strremove'] = 'Remove';
-	$lang['strremoved'] = 'Removed';
 	$lang['strrename'] = 'Rename';
 	$lang['strrequiredfield'] = 'Required field';
 	$lang['strreset'] = 'Reset';
@@ -701,7 +701,7 @@
 	$lang['strtableslist'] = 'Schema "%s" tables';
 	$lang['strnotables'] = 'No tables found.';
 	$lang['strestimatedrowcount'] = 'Estimated row count';
-	$lang['strtblstructure'] = 'Table "%s.%s" structure';
+	$lang['strtblstructure'] = 'Table structure';
 	$lang['strtblcontent'] = 'Table "%s.%s" content';
 	$lang['strnograntontable'] = 'You have not the necessary privileges to look at the table\'s content.';
 	$lang['stremajlogtable'] = 'The table is an E-Maj log table.';
@@ -712,7 +712,7 @@
 	$lang['strsequenceslist'] = 'Schema "%s" sequences';
 	$lang['strnosequences'] = 'No sequences found.';
 	$lang['strnograntonsequence'] = 'You have not the necessary privileges to look at the sequence\'s properties.';
-	$lang['strseqproperties'] = 'Sequence "%s.%s" properties';
+	$lang['strseqproperties'] = 'Sequence properties';
 	$lang['strlastvalue'] = 'Last value';
 	$lang['strincrement'] = 'Increment';
 	$lang['strstartvalue'] = 'Start value';

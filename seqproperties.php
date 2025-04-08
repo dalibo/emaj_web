@@ -10,18 +10,6 @@
 	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 	if (!isset($msg)) $msg = '';
 
-	// Callback function to dynamicaly add a link to the tables group's description when the group name is suffixed by "###LINK###"
-	function renderlinktogroup($val) {
-		global $misc;
-
-		if (preg_match("/(.*)###LINK###$/", $val, $matches)) {
-			$val = $matches[1];
-			return "<a href=\"emajgroups.php?action=show_group&amp;" . $misc->href . "&amp;group=". urlencode($val) . "\">" . $val . "</a>";
-		} else {
-			return $val;
-		}
-	}
-
 	/**
 	 * Display the properties of a sequence
 	 */
@@ -29,8 +17,52 @@
 		global $data, $misc, $lang, $emajdb;
 
 		$misc->printHeader('sequence', 'sequence', 'properties');
-		$misc->printTitle(sprintf($lang['strseqproperties'], $_REQUEST['schema'], $_REQUEST['sequence']));
+		$misc->printTitle(sprintf($lang['strnamedsequence'], $_REQUEST['schema'], $_REQUEST['sequence']));
 		$misc->printMsg($msg);
+
+		// Display the E-Maj properties, if any
+		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
+
+			$misc->printSubtitle($lang['stremajproperties']);
+
+			$type = $emajdb->getEmajTypeTblSeq($_REQUEST['schema'], $_REQUEST['sequence']);
+
+			if ($type == 'L') {
+				echo "<p>{$lang['stremajlogsequence']}</p>\n";
+			} elseif ($type == 'E') {
+				echo "<p>{$lang['stremajinternalsequence']}</p>\n";
+			} else {
+
+				$prop = $emajdb->getRelationEmajProperties($_REQUEST['schema'], $_REQUEST['sequence']);
+
+				$columns = array(
+					'group' => array(
+						'title' => $lang['strgroup'],
+						'field' => field('rel_group'),
+						'url'   => "emajgroups.php?action=show_group&amp;{$misc->href}&amp;",
+						'vars'  => array('group' => 'rel_group')
+					),
+					'starttime' => array(
+						'title' => $lang['strsince'],
+						'field' => field('assign_ts'),
+						'type' => 'spanned',
+						'params'=> array(
+							'dateformat' => $lang['stroldtimestampformat'],
+							'locale' => $lang['applocale'],
+							'class' => 'tooltip left-aligned-tooltip',
+							),
+					),
+				);
+
+				$misc->printTable($prop, $columns, $actions, 'seqproperties-emaj', $lang['strseqnogroupownership']);
+			}
+
+			echo "<hr/>\n";
+		}
+
+		// Display the sequence properties
+
+		$misc->printSubtitle($lang['strseqproperties']);
 
 		// Verify that the user has enough privileges to read the sequence
 		$privilegeOk = $emajdb->hasSelectPrivilegeOnSequence($_REQUEST['schema'], $_REQUEST['sequence']);
@@ -101,55 +133,6 @@
 			$actions = array();
 
 			$misc->printTable($sequence, $columns, $actions, 'seqproperties-columns', $lang['strnodata']);
-		}
-
-		echo "<hr/>\n";
-
-		// Display the E-Maj properties, if any
-		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
-
-			$misc->printTitle($lang['stremajproperties']);
-
-			$type = $emajdb->getEmajTypeTblSeq($_REQUEST['schema'], $_REQUEST['sequence']);
-
-			if ($type == 'L') {
-				echo "<p>{$lang['stremajlogsequence']}</p>\n";
-			} elseif ($type == 'E') {
-				echo "<p>{$lang['stremajinternalsequence']}</p>\n";
-			} else {
-				$groups = $emajdb->getTableGroupsTblSeq($_REQUEST['schema'], $_REQUEST['sequence']);
-
-				$columns = array(
-					'group' => array(
-						'title' => $lang['strgroup'],
-						'field' => field('rel_group'),
-						'type'	=> 'callback',
-						'params'=> array('function' => 'renderlinktogroup')
-					),
-					'starttime' => array(
-						'title' => $lang['strassigned'],
-						'field' => field('start_datetime'),
-						'type' => 'spanned',
-						'params'=> array(
-							'dateformat' => $lang['stroldtimestampformat'],
-							'locale' => $lang['applocale'],
-							'class' => 'tooltip left-aligned-tooltip',
-							),
-					),
-					'stoptime' => array(
-						'title' => $lang['strremoved'],
-						'field' => field('stop_datetime'),
-						'type' => 'spanned',
-						'params'=> array(
-							'dateformat' => $lang['stroldtimestampformat'],
-							'locale' => $lang['applocale'],
-							'class' => 'tooltip left-aligned-tooltip',
-							),
-					),
-				);
-
-				$misc->printTable($groups, $columns, $actions, 'sequences-groups', $lang['strseqnogroupownership']);
-			}
 		}
 	}
 

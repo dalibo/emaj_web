@@ -1399,7 +1399,7 @@ class EmajDb {
 		}
 
 		$sql = "SELECT nspname, c.relname,
-					c.relkind::TEXT || case when (relkind = 'r' and ${goodTypeConditions}) then '+' else '-' end as relkind,
+					c.relkind::TEXT || case when (relkind = 'r' and $goodTypeConditions) then '+' else '-' end as relkind,
 					pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
 					pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment, spcname AS tablespace,
 					coalesce(rel_group, '') AS rel_group, coalesce(rel_priority::text, '') AS rel_priority,
@@ -1408,8 +1408,49 @@ class EmajDb {
 						LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
 						LEFT JOIN emaj.emaj_relation ON rel_schema = nspname AND rel_tblseq = c.relname AND upper_inf(rel_time_range)
 						LEFT JOIN pg_catalog.pg_tablespace pt ON pt.oid = c.reltablespace
-					WHERE c.relkind IN ('r','p') AND nspname='{$schema}'
+					WHERE c.relkind IN ('r','p') AND nspname = '$schema'
 				ORDER BY relname";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Return all sequences of a schema, with their current E-Maj characteristics.
+	 */
+	function getSequences($schema) {
+		global $data;
+
+		$data->clean($schema);
+
+		$sql = "SELECT nspname, c.relname AS seqname, c.relkind,
+					pg_catalog.pg_get_userbyid(c.relowner) AS seqowner,
+					pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment,
+					coalesce(rel_group, '') AS rel_group
+					FROM pg_catalog.pg_class c
+						LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+						LEFT JOIN emaj.emaj_relation ON rel_schema = nspname AND rel_tblseq = c.relname AND upper_inf(rel_time_range)
+						LEFT JOIN pg_catalog.pg_tablespace pt ON pt.oid = c.reltablespace
+					WHERE c.relkind = 'S' AND nspname = '$schema'
+				ORDER BY relname";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Return the current Emaj properties for a single table or sequence.
+	 */
+	function getRelationEmajProperties($schema, $tblseq) {
+		global $data;
+
+		$data->clean($schema);
+		$data->clean($tblseq);
+
+		$sql = "SELECT coalesce(rel_group, '') AS rel_group, to_char(time_tx_timestamp,'{$this->tsFormat}') AS assign_ts,
+					   coalesce(rel_priority::text, '') AS rel_priority,
+					   coalesce(rel_log_dat_tsp, '') AS rel_log_dat_tsp, coalesce(rel_log_idx_tsp, '') AS rel_log_idx_tsp
+					FROM emaj.emaj_relation
+						LEFT OUTER JOIN emaj.emaj_time_stamp ON time_id = lower(rel_time_range)
+					WHERE rel_schema = '$schema' AND rel_tblseq = '$tblseq' AND upper_inf(rel_time_range)";
 
 		return $data->selectSet($sql);
 	}
@@ -1458,28 +1499,6 @@ class EmajDb {
 					) THEN 1 ELSE 0 END AS has_pk";
 
 		return $data->selectField($sql,'has_pk');
-	}
-
-	/**
-	 * Return all sequences of a schema, with their current E-Maj characteristics.
-	 */
-	function getSequences($schema) {
-		global $data;
-
-		$data->clean($schema);
-
-		$sql = "SELECT nspname, c.relname AS seqname, c.relkind,
-					pg_catalog.pg_get_userbyid(c.relowner) AS seqowner,
-					pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment,
-					coalesce(rel_group, '') AS rel_group
-					FROM pg_catalog.pg_class c
-						LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
-						LEFT JOIN emaj.emaj_relation ON rel_schema = nspname AND rel_tblseq = c.relname AND upper_inf(rel_time_range)
-						LEFT JOIN pg_catalog.pg_tablespace pt ON pt.oid = c.reltablespace
-					WHERE c.relkind = 'S' AND nspname='{$schema}'
-				ORDER BY relname";
-
-		return $data->selectSet($sql);
 	}
 
 	/**
@@ -3878,49 +3897,6 @@ class EmajDb {
 							WHERE d.classid = t.tableoid AND d.objid = t.oid AND d.deptype = 'i' AND c.contype = 'f'))";
 
 		return $data->selectField($sql,'nbtriggers');
-	}
-
-	/**
-	 * Get the tables groups that owned or currently owns a given table or sequence.
-	 * The function is only called when emaj version >= 2.2.0
-	 */
-	function getTableGroupsTblSeq($schema, $tblseq) {
-		global $data;
-
-		$data->clean($schema);
-		$data->clean($tblseq);
-
-		if ($this->getNumEmajVersion() >= 30100) {
-			// The rel_group is suffixed with a ###LINK### when a link to the group definition has to be added at page display
-			$sql = "	SELECT rel_group || CASE WHEN upper_inf(rel_time_range) THEN '###LINK###' ELSE '' END AS rel_group,
-							   to_char(start.time_tx_timestamp,'{$this->tsFormat}') AS start_datetime,
-							   coalesce(to_char(stop.time_tx_timestamp,'{$this->tsFormat}'),'') AS stop_datetime
-						FROM emaj.emaj_relation
-							LEFT OUTER JOIN emaj.emaj_time_stamp start ON (lower(rel_time_range) = start.time_id)
-							LEFT OUTER JOIN emaj.emaj_time_stamp stop ON (upper(rel_time_range) = stop.time_id)
-						WHERE rel_schema = '{$schema}' AND rel_tblseq = '{$tblseq}'
-					UNION ALL
-						SELECT relh_group,
-							   to_char(start.time_tx_timestamp,'{$this->tsFormat}') AS start_datetime,
-							   coalesce(to_char(stop.time_tx_timestamp,'{$this->tsFormat}'),'') AS stop_datetime
-						FROM emaj.emaj_rel_hist
-							LEFT OUTER JOIN emaj.emaj_time_stamp start ON (lower(relh_time_range) = start.time_id)
-							LEFT OUTER JOIN emaj.emaj_time_stamp stop ON (upper(relh_time_range) = stop.time_id)
-						WHERE relh_schema = '{$schema}' AND relh_tblseq = '{$tblseq}'
-					ORDER BY start_datetime DESC";
-		} else {
-			// The rel_group is suffixed with a ###LINK### when a link to the group definition has to be added at page display
-			$sql = "SELECT rel_group || CASE WHEN upper_inf(rel_time_range) THEN '###LINK###' ELSE '' END AS rel_group,
-							to_char(start.time_tx_timestamp,'{$this->tsFormat}') AS start_datetime,
-							coalesce(to_char(stop.time_tx_timestamp,'{$this->tsFormat}'),'') AS stop_datetime
-					FROM emaj.emaj_relation
-						LEFT OUTER JOIN emaj.emaj_time_stamp start ON (lower(rel_time_range) = start.time_id)
-						LEFT OUTER JOIN emaj.emaj_time_stamp stop ON (upper(rel_time_range) = stop.time_id)
-					WHERE rel_schema = '{$schema}' AND rel_tblseq = '{$tblseq}'
-					ORDER BY rel_time_range DESC";
-		}
-
-		return $data->selectSet($sql);
 	}
 
 	/**

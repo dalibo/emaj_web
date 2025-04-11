@@ -6,6 +6,8 @@
 
 	// Include application functions
 	include_once('./libraries/lib.inc.php');
+	include_once('./libraries/tblseqcommon.inc.php');
+	include_once('./libraries/seqactions.inc.php');
 
 	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 	if (!isset($msg)) $msg = '';
@@ -13,12 +15,13 @@
 	/**
 	 * Display the properties of a sequence
 	 */
-	function doProperties($msg = '') {
+	function doDefault($msg = '', $errMsg = '') {
 		global $data, $misc, $lang, $emajdb;
 
 		$misc->printHeader('sequence', 'sequence', 'properties');
+
+		$misc->printMsg($msg, $errMsg);
 		$misc->printTitle(sprintf($lang['strnamedsequence'], $_REQUEST['schema'], $_REQUEST['sequence']));
-		$misc->printMsg($msg);
 
 		// Display the E-Maj properties, if any
 		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
@@ -34,6 +37,8 @@
 			} else {
 
 				$prop = $emajdb->getRelationEmajProperties($_REQUEST['schema'], $_REQUEST['sequence']);
+
+				$isAssigned = ($prop->recordCount() == 1);
 
 				$columns = array(
 					'group' => array(
@@ -55,6 +60,72 @@
 				);
 
 				$misc->printTable($prop, $columns, $actions, 'seqproperties-emaj', $lang['strseqnogroupownership']);
+				// Display the buttons corresponding to the available functions for the sequence.
+
+				if ($emajdb->isEmaj_Adm() && $emajdb->getNumEmajVersion() >= 30200) {			// version >= 3.2.0
+
+					// Get the number of created groups (needed to display or hide some actions)
+					if ($emajdb->isAccessible())
+						$nbGroups = $emajdb->getNbGroups();
+					else
+						$nbGroups = 0;
+
+					$navlinks = array();
+
+					if (! $isAssigned && $nbGroups > 0) {
+						// Not yet assigned to a tables group
+						$navlinks['assign_sequence'] = array (
+							'content' => $lang['strassign'],
+							'attr'=> array (
+								'href' => array (
+									'url' => "seqproperties.php",
+									'urlvars' => array(
+										'action' => 'assign_sequences',
+										'schema' => $_REQUEST['schema'],
+										'sequence' => $_REQUEST['sequence'],
+									)
+								)
+							),
+						);
+					} else {
+						// Already assigned to a tables group
+						$prop->moveFirst();
+						$group = $prop->fields['rel_group'];
+
+						if ($nbGroups > 2) {
+							$navlinks['move_sequence'] = array (
+								'content' => $lang['strmove'],
+								'attr'=> array (
+									'href' => array (
+										'url' => "seqproperties.php",
+										'urlvars' => array(
+											'action' => 'move_sequences',
+											'schema' => $_REQUEST['schema'],
+											'sequence' => $_REQUEST['sequence'],
+											'group' => $group,
+										)
+									)
+								),
+							);
+						}
+						$navlinks['remove_sequence'] = array (
+							'content' => $lang['strremove'],
+							'attr'=> array (
+								'href' => array (
+									'url' => "seqproperties.php",
+									'urlvars' => array(
+										'action' => 'remove_sequences',
+										'schema' => $_REQUEST['schema'],
+										'sequence' => $_REQUEST['sequence'],
+										'group' => $group,
+									)
+								)
+							),
+						);
+					}
+
+					$misc->printLinksList($navlinks, 'buttonslist');
+				}
 			}
 
 			echo "<hr/>\n";
@@ -141,11 +212,26 @@
 	$misc->printBody();
 
 	switch($action) {
-		case 'properties':
-			doProperties();
+		case 'assign_sequences';
+			assign_sequences();
+			break;
+		case 'assign_sequences_ok':
+			assign_sequences_ok();
+			break;
+		case 'move_sequences';
+			move_sequences();
+			break;
+		case 'move_sequences_ok':
+			move_sequences_ok();
+			break;
+		case 'remove_sequences';
+			remove_sequences();
+			break;
+		case 'remove_sequences_ok':
+			remove_sequences_ok();
 			break;
 		default:
-			doProperties();
+			doDefault();
 			break;
 	}
 

@@ -12,7 +12,7 @@
 	/**
 	 * Show the table E-Maj history.
 	 */
-	function showHistory() {
+	function doDefault() {
 		global $data, $conf, $misc, $lang, $emajdb;
 
 		$misc->printHeader('table', 'table', 'history');
@@ -26,6 +26,8 @@
 			echo "<p>{$lang['stremajlogtable']}</p>\n";
 		} elseif ($type == 'E') {
 			echo "<p>{$lang['stremajinternaltable']}</p>\n";
+		} elseif ($type == 'U') {
+			echo "<p>{$lang['strnotassignabletable']}</p>\n";
 		} else {
 			$events = $emajdb->getTblSeqEmajHist($_REQUEST['schema'], $_REQUEST['table']);
 
@@ -68,7 +70,7 @@
 
 	switch ($action) {
 		default:
-			showHistory();
+			doDefault();
 			break;
 	}
 

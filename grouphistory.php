@@ -29,7 +29,7 @@
 	/**
 	 * Displays the history of the tables group, ie. group creation, drop, start and stop events
 	 */
-	function show_history_group() {
+	function doDefault() {
 		global $misc, $lang, $emajdb;
 
 		$misc->printHeader('emaj', 'emajgroup', 'emajhistory');
@@ -125,10 +125,10 @@
 
 	switch ($action) {
 		case 'show_history_group':
-			show_history_group();
+			doDefault();
 			break;
 		default:
-			show_history_group();
+			doDefault();
 	}
 
 	$misc->printFooter();

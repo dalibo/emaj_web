@@ -12,7 +12,7 @@
 	/**
 	 * Show the sequence E-Maj history.
 	 */
-	function showHistory() {
+	function doDefault() {
 		global $data, $conf, $misc, $lang, $emajdb;
 
 		$misc->printHeader('sequence', 'sequence', 'history');
@@ -68,7 +68,7 @@
 
 	switch ($action) {
 		default:
-			showHistory();
+			doDefault();
 			break;
 	}
 

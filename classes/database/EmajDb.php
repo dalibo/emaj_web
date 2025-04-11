@@ -163,7 +163,7 @@ class EmajDb {
 	 * Return a boolean indicating whether one or several versions of the emaj extension are available for an ALTER EXTENSION UPDATE.
 	 */
 	function areThereVersionsToUpdate() {
-		global $data;
+		global $data, $oldest_supported_emaj_version;
 
 		$sql = "SELECT CASE WHEN EXISTS (
 				  SELECT target FROM pg_catalog.pg_extension_update_paths('emaj')
@@ -3775,6 +3775,7 @@ class EmajDb {
 	 * It returns:
      *   - 'L' when the table or sequence is a Log object,
      *   - 'E' if it is an internal E-maj object,
+	 *   - 'U' if a table is not eligible to be assigned to a tables group (partitionned, temporary, unlogged or wih OIDS table)
      *   - '' in other cases
 	 */
 	function getEmajTypeTblSeq($schema, $tblseq) {
@@ -3783,11 +3784,23 @@ class EmajDb {
 		$data->clean($schema);
 		$data->clean($tblseq);
 
+		if ($data->hasWithOids()) {
+			$withOidsCondition = "OR relhasoids";
+		} else {
+			$withOidsCondition = "";
+		}
+
 		$sql = "SELECT CASE WHEN EXISTS (
 									SELECT 1 FROM emaj.emaj_relation
 										WHERE rel_log_schema = '{$schema}' AND (rel_log_table = '{$tblseq}' OR rel_log_sequence = '{$tblseq}')
 									) THEN 'L'
 							WHEN '{$schema}' = 'emaj' THEN 'E'
+							WHEN EXISTS (
+									SELECT 1 FROM pg_catalog.pg_class
+												LEFT JOIN pg_catalog.pg_namespace ON pg_namespace.oid = relnamespace
+										WHERE nspname = '$schema' AND relname = '$tblseq'
+										AND (relkind = 'p' OR (relkind = 'r' AND (relpersistence <> 'p' $withOidsCondition)))
+									) THEN 'U'
 							ELSE '' END AS emaj_type";
 
 		return $data->selectField($sql,'emaj_type');

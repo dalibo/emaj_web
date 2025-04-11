@@ -706,6 +706,7 @@
 	$lang['strnograntontable'] = 'Vous n\'avez pas les droits nécessaires pour voir le contenu de la table.';
 	$lang['stremajlogtable'] = 'La table est une table de log E-Maj.';
 	$lang['stremajinternaltable'] = 'La table est une table interne E-Maj.';
+	$lang['strnotassignabletable'] = 'De par ses caractéristiques, la table ne peut être assignée à un groupe de tables E-Maj';
 	$lang['strtblnogroupownership'] = 'La table ne fait partie d\'aucun groupe de tables actuellement.';
 
 	// Sequences

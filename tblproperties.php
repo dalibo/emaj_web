@@ -6,6 +6,8 @@
 
 	// Include application functions
 	include_once('./libraries/lib.inc.php');
+	include_once('./libraries/tblseqcommon.inc.php');
+	include_once('./libraries/tblactions.inc.php');
 
 	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 
@@ -85,12 +87,12 @@
 	/**
 	 * Show the table's properties: E-Maj group owning the table, if any, list of columns in the table, list of triggers
 	 */
-	function showProperties($msg = '') {
+	function doDefault($msg = '', $errMsg = '') {
 		global $data, $conf, $misc, $lang, $emajdb;
 
 		$misc->printHeader('table', 'table', 'properties');
-		$misc->printMsg($msg);
 
+		$misc->printMsg($msg, $errMsg);
 		$misc->printTitle(sprintf($lang['strnamedtable'], $_REQUEST['schema'], $_REQUEST['table']));
 
 		// Get table information
@@ -113,8 +115,12 @@
 				echo "<p>{$lang['stremajlogtable']}</p>\n";
 			} elseif ($type == 'E') {
 				echo "<p>{$lang['stremajinternaltable']}</p>\n";
+			} elseif ($type == 'U') {
+				echo "<p>{$lang['strnotassignabletable']}</p>\n";
 			} else {
 				$prop = $emajdb->getRelationEmajProperties($_REQUEST['schema'], $_REQUEST['table']);
+
+				$isAssigned = ($prop->recordCount() == 1);
 
 				$columns = array(
 					'group' => array(
@@ -151,6 +157,87 @@
 				);
 
 				$misc->printTable($prop, $columns, $actions, 'tblproperties-emaj', $lang['strtblnogroupownership']);
+
+				// Display the buttons corresponding to the available functions for the table.
+
+				if ($emajdb->isEmaj_Adm() && $emajdb->getNumEmajVersion() >= 30200) {			// version >= 3.2.0
+
+					// Get the number of created groups (needed to display or hide some actions)
+					if ($emajdb->isAccessible())
+						$nbGroups = $emajdb->getNbGroups();
+					else
+						$nbGroups = 0;
+
+					$navlinks = array();
+
+					if (! $isAssigned && $nbGroups > 0) {
+						// Not yet assigned to a tables group
+						$navlinks['assign_table'] = array (
+							'content' => $lang['strassign'],
+							'attr'=> array (
+								'href' => array (
+									'url' => "tblproperties.php",
+									'urlvars' => array(
+										'action' => 'assign_tables',
+										'schema' => $_REQUEST['schema'],
+										'table' => $_REQUEST['table'],
+									)
+								)
+							),
+						);
+					} else {
+						// Already assigned to a tables group
+						$prop->moveFirst();
+						$group = $prop->fields['rel_group'];
+
+						$navlinks['modify_table'] = array (
+							'content' => $lang['strupdate'],
+							'attr'=> array (
+								'href' => array (
+									'url' => "tblproperties.php",
+									'urlvars' => array(
+										'action' => 'modify_tables',
+										'schema' => $_REQUEST['schema'],
+										'table' => $_REQUEST['table'],
+										'group' => $group,
+									)
+								)
+							),
+						);
+						if ($nbGroups > 2) {
+							$navlinks['move_table'] = array (
+								'content' => $lang['strmove'],
+								'attr'=> array (
+									'href' => array (
+										'url' => "tblproperties.php",
+										'urlvars' => array(
+											'action' => 'move_tables',
+											'schema' => $_REQUEST['schema'],
+											'table' => $_REQUEST['table'],
+											'group' => $group,
+										)
+									)
+								),
+							);
+						}
+						$navlinks['remove_table'] = array (
+							'content' => $lang['strremove'],
+							'attr'=> array (
+								'href' => array (
+									'url' => "tblproperties.php",
+									'urlvars' => array(
+										'action' => 'remove_tables',
+										'schema' => $_REQUEST['schema'],
+										'table' => $_REQUEST['table'],
+										'group' => $group,
+									)
+								)
+							),
+						);
+					}
+
+					$misc->printLinksList($navlinks, 'buttonslist');
+				}
 			}
 
 			echo "<hr/>\n";
@@ -328,9 +415,9 @@
 		$nbTriggers = $emajdb->ignoreAppTrigger('ADD', $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['trigger']);
 
 		if ($nbTriggers > 0) {
-			showProperties(sprintf($lang['strtriggernoautook'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+			doDefault(sprintf($lang['strtriggernoautook'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		} else {
-			showProperties('',sprintf($lang['strtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+			doDefault('',sprintf($lang['strtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		}
 	}
 
@@ -344,9 +431,9 @@
 		$nbTriggers = $emajdb->ignoreAppTrigger('REMOVE', $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['trigger']);
 
 		if ($nbTriggers > 0) {
-			showProperties(sprintf($lang['strtriggerautook'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+			doDefault(sprintf($lang['strtriggerautook'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		} else {
-			showProperties('',sprintf($lang['strtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
+			doDefault('',sprintf($lang['strtriggerprocerr'], htmlspecialchars($_REQUEST['trigger']), $_REQUEST['schema'], $_REQUEST['table']));
 		}
 	}
 
@@ -383,18 +470,44 @@
 
 	if ($action == 'tree') doTree();
 
-	$misc->printHtmlHeader($lang['strtables'] . ' - ' . $_REQUEST['table']);
+	$scripts = "<script src=\"js/schemas.js\"></script>";
+
+	$misc->printHtmlHeader($lang['strtables'] . ' - ' . $_REQUEST['table'], $scripts);
 	$misc->printBody();
 
 	switch ($action) {
+		case 'assign_tables';
+			assign_tables();
+			break;
+		case 'assign_tables_ok':
+			assign_tables_ok();
+			break;
 		case 'auto_disable_trigger':
 			autoDisableTrigger();
+			break;
+		case 'move_tables';
+			move_tables();
+			break;
+		case 'move_tables_ok':
+			move_tables_ok();
+			break;
+		case 'modify_tables';
+			modify_tables();
+			break;
+		case 'modify_tables_ok':
+			modify_tables_ok();
 			break;
 		case 'no_auto_disable_trigger':
 			noAutoDisableTrigger();
 			break;
+		case 'remove_tables';
+			remove_tables();
+			break;
+		case 'remove_tables_ok':
+			remove_tables_ok();
+			break;
 		default:
-			showProperties();
+			doDefault();
 			break;
 	}
 

@@ -280,11 +280,6 @@
 	$lang['strnoidlegroup'] = 'No tables group is currently in idle state.';
 	$lang['strnologginggroup'] = 'No tables group is currently in logging state.';
 	$lang['strnoconfiguredgroups'] = 'No tables group is currently configured but not created.';
-	$lang['strnoschema'] = 'Schema not found (x%s) / ';
-	$lang['strinvalidschema'] = 'Invalid schema (x%s) / ';
-	$lang['strnorelation'] = 'Table or sequence not found (x%s) / ';
-	$lang['strinvalidtable'] = 'Invalid table type (x%s) / ';
-	$lang['strduplicaterelation'] = 'Table or sequence already assigned to another group (x%s) / ';
 	$lang['strnoconfiguredgroup'] = 'To create a (another) tables group, go first to the groups configuration tab.<br>Alternatively, you can create an empty group, then add tables and sequences into it, and apply the configuration change.';
 	$lang['strcreateemptygroup'] = 'Create an empty group';
 	$lang['strnewgroup'] = 'New group';

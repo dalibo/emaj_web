@@ -299,7 +299,7 @@
 			'consGroup' => array(
 				'title' => $lang['strgroup'],
 				'field' => field('cons_group'),
-				'url'   => "emajgroups.php?action=show_group&amp;{$misc->href}&amp;",
+				'url'   => "groupproperties.php&amp;{$misc->href}&amp;",
 				'vars'  => array('group' => 'cons_group'),
 			),
 			'consTargetMark' => array(

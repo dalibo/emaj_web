@@ -1173,7 +1173,7 @@
 					$tabs = array (
 						'emajgroupproperties' => array (
 							'title' => $lang['strproperties'],
-							'url' => 'emajgroups.php',
+							'url' => 'groupproperties.php',
 							'urlvars' => array(
 								'subject' => 'emajgroups',
 								'action' => 'show_group',

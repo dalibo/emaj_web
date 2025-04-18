@@ -191,7 +191,7 @@
 					'group' => array(
 						'title' => $lang['strgroup'],
 						'field' => field('rel_group'),
-						'url'   => "emajgroups.php?action=show_group&amp;{$misc->href}&amp;",
+						'url'   => "groupproperties.php&amp;{$misc->href}&amp;",
 						'vars'  => array('group' => 'rel_group')
 					),
 					'priority' => array(
@@ -355,7 +355,7 @@
 					'group' => array(
 						'title' => $lang['strgroup'],
 						'field' => field('rel_group'),
-						'url'   => "emajgroups.php?action=show_group&amp;{$misc->href}&amp;",
+						'url'   => "groupproperties.php&amp;{$misc->href}&amp;",
 						'vars'  => array('group' => 'rel_group')
 					),
 				));

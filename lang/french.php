@@ -280,11 +280,6 @@
 	$lang['strnoidlegroup'] = 'Il n\'y a actuellement aucun groupe de tables en état "arrêté".';
 	$lang['strnologginggroup'] = 'Il n\'y a actuellement aucun groupe de tables en état "démarré".';
 	$lang['strnoconfiguredgroups'] = 'Il n\'y a actuellement aucun groupe de tables configuré mais non créé.';
-	$lang['strnoschema'] = 'Schéma inexistant (x%s) / ';
-	$lang['strinvalidschema'] = 'Schéma invalide (x%s) / ';
-	$lang['strnorelation'] = 'Table ou séquence inexistante (x%s) / ';
-	$lang['strinvalidtable'] = 'Type de table invalide (x%s) / ';
-	$lang['strduplicaterelation'] = 'Table ou séquence déjà affectée à un groupe (x%s) / ';
 	$lang['strnoconfiguredgroup'] = 'Pour créer un (autre) groupe de tables, allez d\'abord dans l\'onglet de configuration des groupes.<br>Vous pouvez aussi créer un groupe vide puis y ajouter des tables et séquences puis appliquer le changement de configuration.';
 	$lang['strcreateemptygroup'] = 'Créer un groupe vide';
 	$lang['strnewgroup'] = 'Nouveau groupe';

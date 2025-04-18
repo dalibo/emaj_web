@@ -38,13 +38,13 @@ sub loadStrings {
 		if ($str !~ /^lang|tools/) {		# Discard the files from the ./lang and ./tools directories.
 			chomp $str;
 # Add a few virtual string usages to fit the special case of string ids not set as literals.
-			if ($str =~ /^(emajgroups.php:\d+:lang\['strgroupnot)'\.\$langMsgSuffix\]/) {
+			if ($str =~ /^(libraries\/groupcommon.inc.php:\d+:lang\['strgroupnot)'\.\$langMsgSuffix\]/) {
 				push(@usedStrings, "$1started']");
 				push(@usedStrings, "$1stopped']");
 				$nbUsedString = $nbUsedString + 2;
 				next;
 			}
-			if ($str =~ /^(emajgroups.php:\d+:lang\['strgroupsnot)'\.\$langMsgSuffix\]/) {
+			if ($str =~ /^(libraries\/groupcommon.inc.php:\d+:lang\['strgroupsnot)'\.\$langMsgSuffix\]/) {
 #print "$str => $1started']\n";
 				push(@usedStrings, "$1started']");
 				push(@usedStrings, "$1stopped']");

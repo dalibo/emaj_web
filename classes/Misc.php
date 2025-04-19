@@ -98,7 +98,7 @@
 					break;
 				case 'emajgroup':
 					$vars = array (
-						'url' => 'emajgroups.php',
+						'url' => 'groupproperties.php',
 						'params' => array (
 							'server' => $_REQUEST['server'],
 							'subject' => 'emajgroup',

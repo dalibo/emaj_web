@@ -120,6 +120,9 @@
 	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
 	if (!isset($msg)) $msg = '';
 
+	// Check that emaj and the group still exist.
+	$misc->onErrorRedirect('emajgroup');
+
 	$misc->printHtmlHeader($lang['strgroupsmanagement']);
 	$misc->printBody();
 

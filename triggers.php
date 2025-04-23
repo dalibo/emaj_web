@@ -338,6 +338,10 @@
 		showTriggers(sprintf($lang['strtriggersremovedok'], $nbTriggers));
 	}
 
+/********************************************************************************************************
+ * Main piece of code
+ *******************************************************************************************************/
+
 	$misc->printHtmlHeader($lang['strtriggers']);
 	$misc->printBody();
 

@@ -63,6 +63,13 @@
 
 	}
 
+/********************************************************************************************************
+ * Main piece of code
+ *******************************************************************************************************/
+
+	// Check that emaj and the sequence still exist.
+	$misc->onErrorRedirect('sequence');
+
 	$misc->printHtmlHeader($lang['strsequences'] . ' - ' . $_REQUEST['sequence']);
 	$misc->printBody();
 

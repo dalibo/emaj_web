@@ -187,6 +187,7 @@
 	$lang['strinvalidserverparam'] = 'Tentative de connexion avec un serveur invalide, il est possible que quelqu\'un essai de pirater votre système.'; 
 	$lang['strnoserversupplied'] = 'Aucun serveur fournis !';
 	$lang['strconnectionfail'] = 'Connexion au serveur échouée.';
+	$lang['stremajnowmissing'] = 'L\'extension emaj n\'est plus installée dans la base de données, ou n\'est plus accessible par l\'utilisateur.';
 	$lang['strimporterror-uploadedfile'] = 'Erreur d\'importation : le fichier n\'a pas pû être récupéré sur le serveur.';
 	$lang['strimportfiletoobig'] = 'Erreur d\'importation : le fichier à charger est trop gros.';
 	$lang['strnotjsonfile'] = 'Le fichier %s n\'a pas un format JSON valide.';

@@ -207,6 +207,13 @@
 		}
 	}
 
+/********************************************************************************************************
+ * Main piece of code
+ *******************************************************************************************************/
+
+	// Check that emaj and the sequence still exist.
+	$misc->onErrorRedirect('sequence');
+
 	// Print header
 	$misc->printHtmlHeader($lang['strsequences']);
 	$misc->printBody();

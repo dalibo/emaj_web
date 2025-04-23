@@ -633,11 +633,8 @@
 	/* shortcuts: these functions exit the script */
 	if ($action == 'tree') doTree();
 
-	// redirect to the emajenvir.php page if the emaj extension is not installed or accessible or is too old
-	if (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
-		&& $emajdb->getNumEmajVersion() >= $oldest_supported_emaj_version_num)) {
-		header('Location: emajenvir.php?' . $_SERVER["QUERY_STRING"]);
-	}
+	// Check that emaj and the group still exist.
+	$misc->onErrorRedirect('emajgroup');
 
 	$misc->printHtmlHeader($lang['strgroupsmanagement']);
 	$misc->printBody();

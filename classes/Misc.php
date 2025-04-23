@@ -546,6 +546,67 @@
 		}
 
 		/**
+		 * Performs initial checks on the existence of emaj extension, table, séquence or tables group,
+		 * If some expected objects are missing, redirect the user to another predefined page.
+		 * @param $check indicator of the kind of check to perform ('', 'emajgroup', 'table', 'sequence')
+		 */
+		function onErrorRedirect($check = '') {
+			global $emajdb, $lang;
+
+			$url = '';
+			$href = $this->href;
+			// Check the emaj extension.
+			// Redirect to the emajenvir.php page if the emaj extension is not installed or is not accessible by the user
+			if (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible())) {
+				$url = "emajenvir.php";
+				$errMsg = $lang['stremajnowmissing'];
+			} else {
+				switch ($check) {
+					case 'emajgroup':
+						// Check the emaj group.
+						// Redirect to the emajgroups.php page if the group does not exist anymore.
+						if (! $emajdb->existsGroup($_REQUEST['group'])) {
+							$url = "emajgroups.php";
+							$errMsg = sprintf($lang['strgroupmissing'], htmlspecialchars($_REQUEST['group']));
+						}
+						break;
+					case 'sequence':
+						// Check the sequence.
+						// Redirect to the emajschemas.php page if the schema or the sequence does not exist anymore.
+						if (! $emajdb->existsSchema($_REQUEST['schema'])) {
+							$url = "schemas.php";
+							$errMsg = sprintf($lang['strschemamissing'], htmlspecialchars($_REQUEST['schema']));
+							$href = $this->getHREF('schema');
+						} else {
+							if ($emajdb->missingTblSeqs($_REQUEST['schema'], $_REQUEST['sequence'], 'sequence')->fields['nb_tblseqs'] != 0) {
+								$url = "schemas.php";
+								$errMsg = sprintf($lang['strsequencemissing'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($_REQUEST['sequence']));
+							}
+						}
+						break;
+					case 'table':
+						// Check the table.
+						// Redirect to the emajschemas.php page if the schema or the sequence does not exist anymore.
+						if (! $emajdb->existsSchema($_REQUEST['schema'])) {
+							$url = "schemas.php";
+							$errMsg = sprintf($lang['strschemamissing'], htmlspecialchars($_REQUEST['schema']));
+							$href = $this->getHREF('schema');
+						} else {
+							if ($emajdb->missingTblSeqs($_REQUEST['schema'], $_REQUEST['table'], 'table')->fields['nb_tblseqs'] != 0) {
+								$url = "schemas.php";
+								$errMsg = sprintf($lang['strtablemissing'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($_REQUEST['table']));
+							}
+						}
+						break;
+				}
+			}
+			if ($url != '') {
+				header("Location: $url?" . html_entity_decode($href) . "&errmsg=" . urlencode($errMsg));
+				exit();
+			}
+		}
+
+		/**
 		 * Prints the html page header.
 		 * @param $title The title of the page
 		 * @param $script script tag
@@ -614,7 +675,7 @@
 		 *        $activetab = name of ... the active tab in the tabs bar (may be an empty string)
 		 */
 		function printHeader($trail, $tabs, $activetab) {
-			global $lang;
+			global $lang, $_reload_browser;
 
 			// if no tabs bar is supplied, try to use the last displayed one
 			if ($tabs == '' && isset($_SESSION['lastTabsBar'])) {
@@ -648,6 +709,12 @@
 
 			echo "</header>\n";
 			echo "<section>\n";
+
+			// Display the error message justifying a redirection, if any.
+			if (isset($_REQUEST['errmsg'])) {
+				$this->printMsg('', $_REQUEST['errmsg']);
+				$_reload_browser = true;
+			}
 
 			// keep in memory the last displayed tabs bar id
 			$_SESSION['lastTabsBar'] = $tabs;

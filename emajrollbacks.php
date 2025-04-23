@@ -955,9 +955,16 @@
 		header('Location: emajenvir.php?' . $_SERVER["QUERY_STRING"]);
 	}
 
-	$scripts = "";
+/********************************************************************************************************
+ * Main piece of code
+ *******************************************************************************************************/
 
+	// Check that emaj still exists
+	$misc->onErrorRedirect();
+
+	$scripts = "";
 	$misc->printHtmlHeader($lang['strrollbacksmanagement'], $scripts, 'emajrollbacks');
+
 	$misc->printBody();
 
 	switch ($action) {

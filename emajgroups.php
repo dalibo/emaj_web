@@ -567,17 +567,14 @@
 	/* shortcuts: these functions exit the script */
 	if ($action == 'tree') doTree();
 
-	// redirect to the emajenvir.php page if the emaj extension is not installed or accessible or is too old
-	if (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
-		&& $emajdb->getNumEmajVersion() >= $oldest_supported_emaj_version_num)) {
-		header('Location: emajenvir.php?' . $_SERVER["QUERY_STRING"]);
-	}
-
-// The export_groups_ok action only builds and downloads the configuration file, but do not resend the main page
+	// The export_groups_ok action only builds and downloads the configuration file, but do not resend the main page
 	if ($action == 'export_groups_ok') {
 		export_groups_ok();
 		exit;
 	}
+
+	// Check that emaj still exists
+	$misc->onErrorRedirect();
 
 	$misc->printHtmlHeader($lang['strgroupsmanagement']);
 	$misc->printBody();

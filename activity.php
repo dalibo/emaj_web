@@ -577,12 +577,12 @@
 					 $globalCounters, $loggingGroups, $loggedTables, $loggedSequences);
 	}
 
-	// redirect to the emajenvir.php page if the emaj extension is not installed or accessible or is too old
-	if (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
-			&& $emajdb->getNumEmajVersion() >= $oldest_supported_emaj_version_num)) {
-		unset($_SESSION['emajStat'][$_REQUEST['server']][$_REQUEST['database']], $_REQUEST['groups-include']);
-		header('Location: emajenvir.php?' . $_SERVER["QUERY_STRING"]);
-	}
+/********************************************************************************************************
+ * Main piece of code
+ *******************************************************************************************************/
+
+	// Check that emaj still exists
+	$misc->onErrorRedirect();
 
 	$scripts = "<script src=\"js/activity.js\"></script>";
 	$misc->printHtmlHeader($lang['strchangesactivity'], $scripts, 'activity');

@@ -468,11 +468,18 @@
 		exit;
 	}
 
+/********************************************************************************************************
+ * Main piece of code
+ *******************************************************************************************************/
+
+	// Check that emaj and the table still exist.
+	$misc->onErrorRedirect('table');
+
 	if ($action == 'tree') doTree();
 
 	$scripts = "<script src=\"js/schemas.js\"></script>";
-
 	$misc->printHtmlHeader($lang['strtables'] . ' - ' . $_REQUEST['table'], $scripts);
+
 	$misc->printBody();
 
 	switch ($action) {

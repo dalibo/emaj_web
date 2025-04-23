@@ -160,7 +160,7 @@
 	$lang['stryes'] = 'Yes';
 
 	// Sizes
-	$lang['strnoaccess'] = 'No Access'; 
+	$lang['strnoaccess'] = 'No Access';
 	$lang['strsize'] = 'Size';
 	$lang['strbytes'] = 'bytes';
 	$lang['strkb'] = 'kB';
@@ -183,8 +183,7 @@
 	$lang['strinstatement'] = 'In statement:';
 	$lang['strnodata'] = 'No rows found.';
 	$lang['strnoobjects'] = 'No objects found.';
-	$lang['strcannotdumponwindows'] = 'Dumping of complex table and schema names on Windows is not supported.';
-	$lang['strinvalidserverparam'] = 'Attempt to connect with invalid server parameter, possibly someone is trying to hack your system.'; 
+	$lang['strinvalidserverparam'] = 'Attempt to connect with invalid server parameter. Possibly someone is trying to hack your system.';
 	$lang['strnoserversupplied'] = 'No server supplied!';
 	$lang['strconnectionfail'] = 'Can not connect to server.';
 	$lang['stremajnowmissing'] = 'The emaj extension is not installed in the database anymore or is not accessible by the user anymore.';
@@ -534,7 +533,7 @@
 	$lang['strestimrlbkgroupserr'] = 'Error while estimating the rollback duration for the tables groups "%s" to the mark "%s".';
 	$lang['strrlbkgroupsreport'] = 'Rollback execution report for the tables groups "%s" to the mark "%s"';
 
-	// Elementary alter group actions previously executed, reported at rollback time 
+	// Elementary alter group actions previously executed, reported at rollback time
 	$lang['stralteredremovetbl'] = 'The table "%s.%s" has been removed from the tables group "%s"';
 	$lang['stralteredremoveseq'] = 'The sequence "%s.%s" has been removed from the tables group "%s"';
 	$lang['stralteredrepairtbl'] = 'E-Maj objects for the table "%s.%s" have been repaired';

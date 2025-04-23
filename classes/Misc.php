@@ -2118,29 +2118,6 @@
 		}
 
 		/**
-		 * Function to escape command line parameters
-		 * @param $str The string to escape
-		 * @return The escaped string
-		 */
-		function escapeShellArg($str) {
-			global $data, $lang;
-
-			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-				// Due to annoying PHP bugs, shell arguments cannot be escaped
-				// (command simply fails), so we cannot allow complex objects
-				// to be dumped.
-				if (preg_match('/^[_.[:alnum:]]+$/', $str))
-					return $str;
-				else {
-					echo $lang['strcannotdumponwindows'];
-					exit;
-				}
-			}
-			else
-				return escapeshellarg($str);
-		}
-
-		/**
 		 * Function to escape command line programs
 		 * @param $str The string to escape
 		 * @return The escaped string

@@ -160,7 +160,7 @@
 	$lang['stryes'] = 'Oui';
 
 	// Sizes
-	$lang['strnoaccess'] = 'No Access'; 
+	$lang['strnoaccess'] = 'No Access';
 	$lang['strsize'] = 'Size';
 	$lang['strbytes'] = 'bytes';
 	$lang['strkb'] = 'kB';
@@ -183,10 +183,9 @@
 	$lang['strinstatement'] = 'Dans l\'instruction :';
 	$lang['strnodata'] = 'Pas de résultats.';
 	$lang['strnoobjects'] = 'Aucun objet trouvé.';
-	$lang['strcannotdumponwindows'] = 'La sauvegarde de table complexe et des noms de schémas n\'est pas supporté sur Windows.';
-	$lang['strinvalidserverparam'] = 'Tentative de connexion avec un serveur invalide, il est possible que quelqu\'un essai de pirater votre système.'; 
-	$lang['strnoserversupplied'] = 'Aucun serveur fournis !';
-	$lang['strconnectionfail'] = 'Connexion au serveur échouée.';
+	$lang['strinvalidserverparam'] = 'Tentative de connexion avec un identifiant de serveur invalide. Il est possible que quelqu\'un tente de pirater votre système.';
+	$lang['strnoserversupplied'] = 'Erreur interne : Aucun identifiant de serveur disponible !';
+	$lang['strconnectionfail'] = 'La connexion au serveur a échoué.';
 	$lang['stremajnowmissing'] = 'L\'extension emaj n\'est plus installée dans la base de données, ou n\'est plus accessible par l\'utilisateur.';
 	$lang['strimporterror-uploadedfile'] = 'Erreur d\'importation : le fichier n\'a pas pû être récupéré sur le serveur.';
 	$lang['strimportfiletoobig'] = 'Erreur d\'importation : le fichier à charger est trop gros.';
@@ -534,7 +533,7 @@
 	$lang['strestimrlbkgroupserr'] = 'Erreur lors de l\'estimation de la durée de rollback des groupes de tables "%s" à la marque "%s".';
 	$lang['strrlbkgroupsreport'] = 'Rapport d\'exécution du rollback des groupes de tables "%s" à la marque "%s"';
 
-	// Elementary alter group actions previously executed, reported at rollback time 
+	// Elementary alter group actions previously executed, reported at rollback time
 	$lang['stralteredremovetbl'] = 'La table "%s.%s" a été supprimée du groupe de tables "%s"';
 	$lang['stralteredremoveseq'] = 'La séquence "%s.%s" a été supprimée du groupe de tables "%s"';
 	$lang['stralteredrepairtbl'] = 'Les objets E-Maj pour la table "%s.%s" ont été reparés';

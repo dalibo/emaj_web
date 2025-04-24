@@ -43,7 +43,7 @@ function Error_Handler($dbms, $fn, $errno, $errmsg, $p1=false, $p2=false)
 		$_reload_browser = true;
 		unset($_SESSION['sharedUsername']);
 		unset($_SESSION['sharedPassword']);
-		unset($_SESSION['webdbLogin'][$_REQUEST['server']]);
+		unset($_SESSION['emajwebLogin'][$_REQUEST['server']]);
 		$msg = $lang['strloginfailed'];
 		include('./login.php');
 		exit;

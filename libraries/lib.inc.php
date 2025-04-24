@@ -90,18 +90,18 @@
 	// 1. Check for the language from a request var
 	if (isset($_REQUEST['language']) && isset($appLangFiles[$_REQUEST['language']])) {
 		/* save the selected language in cookie for a year */
-		setcookie('webdbLanguage', $_REQUEST['language'], time()+31536000);
+		setcookie('emajwebLanguage', $_REQUEST['language'], time()+31536000);
 		$_language = $_REQUEST['language'];
 	}
 
 	// 2. Check for language session var
-	if (!isset($_language) && isset($_SESSION['webdbLanguage']) && isset($appLangFiles[$_SESSION['webdbLanguage']])) {
-		$_language = $_SESSION['webdbLanguage'];
+	if (!isset($_language) && isset($_SESSION['emajwebLanguage']) && isset($appLangFiles[$_SESSION['emajwebLanguage']])) {
+		$_language = $_SESSION['emajwebLanguage'];
 	}
 
 	// 3. Check for language in cookie var
-	if (!isset($_language) && isset($_COOKIE['webdbLanguage']) && isset($appLangFiles[$_COOKIE['webdbLanguage']])) {
-		$_language  = $_COOKIE['webdbLanguage'];
+	if (!isset($_language) && isset($_COOKIE['emajwebLanguage']) && isset($appLangFiles[$_COOKIE['emajwebLanguage']])) {
+		$_language  = $_COOKIE['emajwebLanguage'];
 	}
 
 	// 4. Check for acceptable languages in HTTP_ACCEPT_LANGUAGE var
@@ -139,7 +139,7 @@
 	// Import the language file
 	if (isset($_language)) {
 		include("./lang/{$_language}.php");
-		$_SESSION['webdbLanguage'] = $_language;
+		$_SESSION['emajwebLanguage'] = $_language;
 	}
 
 	// Set the locale if it exists in the language file

@@ -497,7 +497,7 @@
 				$username = strtolower($server_info['username']);
 
 				if ($server_info['password'] == '' || in_array($username, $bad_usernames)) {
-					unset($_SESSION['webdbLogin'][$_REQUEST['server']]);
+					unset($_SESSION['emajwebLogin'][$_REQUEST['server']]);
 					$msg = $lang['strlogindisallowed'];
 					include('./login.php');
 					exit;
@@ -822,7 +822,7 @@
 				echo "\t\t<form method=\"post\" action=\"intro.php\">\n";
 
 			echo "\t\t\t<select name=\"language\" onchange=\"this.form.submit()\">\n";
-			$language = isset($_SESSION['webdbLanguage']) ? $_SESSION['webdbLanguage'] : 'english';
+			$language = isset($_SESSION['emajwebLanguage']) ? $_SESSION['emajwebLanguage'] : 'english';
 			foreach ($appLangFiles as $k => $v) {
 				echo "\t\t\t\t<option value=\"{$k}\"",
 					($k == $language) ? ' selected="selected"' : '',
@@ -1079,7 +1079,7 @@
 			global $misc, $conf, $data, $lang;
 
 			if (is_string($tabs)) {
-				$_SESSION['webdbLastTab'][$tabs] = $activetab;
+				$_SESSION['emajwebLastTab'][$tabs] = $activetab;
 				$tabs = $this->getNavTabs($tabs);
 			}
 
@@ -1364,8 +1364,8 @@
 
 			$tabs = $this->getNavTabs($section);
 
-			if (isset($_SESSION['webdbLastTab'][$section]) && isset($tabs[$_SESSION['webdbLastTab'][$section]]))
-				$tab = $tabs[$_SESSION['webdbLastTab'][$section]];
+			if (isset($_SESSION['emajwebLastTab'][$section]) && isset($tabs[$_SESSION['emajwebLastTab'][$section]]))
+				$tab = $tabs[$_SESSION['emajwebLastTab'][$section]];
 			else
 				$tab = reset($tabs);
 
@@ -2208,7 +2208,7 @@
 		function getServers($recordset = false, $group = false) {
 			global $conf;
 
-			$logins = isset($_SESSION['webdbLogin']) && is_array($_SESSION['webdbLogin']) ? $_SESSION['webdbLogin'] : array();
+			$logins = isset($_SESSION['emajwebLogin']) && is_array($_SESSION['emajwebLogin']) ? $_SESSION['emajwebLogin'] : array();
 			$srvs = array();
 
 			if (($group !== false) and ($group !== 'all'))
@@ -2276,8 +2276,8 @@
 				$server_id = $_REQUEST['server'];
 
 			// Check for the server in the logged-in list
-			if (isset($_SESSION['webdbLogin'][$server_id]))
-				return $_SESSION['webdbLogin'][$server_id];
+			if (isset($_SESSION['emajwebLogin'][$server_id]))
+				return $_SESSION['emajwebLogin'][$server_id];
 
 			// Otherwise, look for it in the conf file
 			foreach($conf['servers'] as $idx => $info) {
@@ -2318,14 +2318,14 @@
 
 			if ($key === null) {
 				if ($value === null)
-					unset($_SESSION['webdbLogin'][$server_id]);
+					unset($_SESSION['emajwebLogin'][$server_id]);
 				else
-					$_SESSION['webdbLogin'][$server_id] = $value;
+					$_SESSION['emajwebLogin'][$server_id] = $value;
 			} else {
 				if ($value === null)
-					unset($_SESSION['webdbLogin'][$server_id][$key]);
+					unset($_SESSION['emajwebLogin'][$server_id][$key]);
 				else
-					$_SESSION['webdbLogin'][$server_id][$key] = $value;
+					$_SESSION['emajwebLogin'][$server_id][$key] = $value;
 			}
 		}
 		

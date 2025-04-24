@@ -168,50 +168,67 @@
 					else
 						$nbGroups = 0;
 
-					$navlinks = array();
+					if ($nbGroups > 0) {
 
-					if (! $isAssigned && $nbGroups > 0) {
-						// Not yet assigned to a tables group
-						$navlinks['assign_table'] = array (
-							'content' => $lang['strassign'],
-							'attr'=> array (
-								'href' => array (
-									'url' => "tblproperties.php",
-									'urlvars' => array(
-										'action' => 'assign_tables',
-										'schema' => $_REQUEST['schema'],
-										'table' => $_REQUEST['table'],
-									)
-								)
-							),
-						);
-					} else {
-						// Already assigned to a tables group
-						$prop->moveFirst();
-						$group = $prop->fields['rel_group'];
+						$navlinks = array();
 
-						$navlinks['modify_table'] = array (
-							'content' => $lang['strupdate'],
-							'attr'=> array (
-								'href' => array (
-									'url' => "tblproperties.php",
-									'urlvars' => array(
-										'action' => 'modify_tables',
-										'schema' => $_REQUEST['schema'],
-										'table' => $_REQUEST['table'],
-										'group' => $group,
-									)
-								)
-							),
-						);
-						if ($nbGroups > 2) {
-							$navlinks['move_table'] = array (
-								'content' => $lang['strmove'],
+						if (! $isAssigned) {
+							// Not yet assigned to a tables group
+							$navlinks['assign_table'] = array (
+								'content' => $lang['strassign'],
 								'attr'=> array (
 									'href' => array (
 										'url' => "tblproperties.php",
 										'urlvars' => array(
-											'action' => 'move_tables',
+											'action' => 'assign_tables',
+											'schema' => $_REQUEST['schema'],
+											'table' => $_REQUEST['table'],
+										)
+									)
+								),
+							);
+						} else {
+							// Already assigned to a tables group
+							$prop->moveFirst();
+							$group = $prop->fields['rel_group'];
+
+							$navlinks['modify_table'] = array (
+								'content' => $lang['strupdate'],
+								'attr'=> array (
+									'href' => array (
+										'url' => "tblproperties.php",
+										'urlvars' => array(
+											'action' => 'modify_tables',
+											'schema' => $_REQUEST['schema'],
+											'table' => $_REQUEST['table'],
+											'group' => $group,
+										)
+									)
+								),
+							);
+							if ($nbGroups > 1) {
+								$navlinks['move_table'] = array (
+									'content' => $lang['strmove'],
+									'attr'=> array (
+										'href' => array (
+											'url' => "tblproperties.php",
+											'urlvars' => array(
+												'action' => 'move_tables',
+												'schema' => $_REQUEST['schema'],
+												'table' => $_REQUEST['table'],
+												'group' => $group,
+											)
+										)
+									),
+								);
+							}
+							$navlinks['remove_table'] = array (
+								'content' => $lang['strremove'],
+								'attr'=> array (
+									'href' => array (
+										'url' => "tblproperties.php",
+										'urlvars' => array(
+											'action' => 'remove_tables',
 											'schema' => $_REQUEST['schema'],
 											'table' => $_REQUEST['table'],
 											'group' => $group,
@@ -220,23 +237,9 @@
 								),
 							);
 						}
-						$navlinks['remove_table'] = array (
-							'content' => $lang['strremove'],
-							'attr'=> array (
-								'href' => array (
-									'url' => "tblproperties.php",
-									'urlvars' => array(
-										'action' => 'remove_tables',
-										'schema' => $_REQUEST['schema'],
-										'table' => $_REQUEST['table'],
-										'group' => $group,
-									)
-								)
-							),
-						);
-					}
 
-					$misc->printLinksList($navlinks, 'buttonslist');
+						$misc->printLinksList($navlinks, 'buttonslist');
+					}
 				}
 			}
 

@@ -70,36 +70,53 @@
 					else
 						$nbGroups = 0;
 
-					$navlinks = array();
+					if ($nbGroups > 0) {
 
-					if (! $isAssigned && $nbGroups > 0) {
-						// Not yet assigned to a tables group
-						$navlinks['assign_sequence'] = array (
-							'content' => $lang['strassign'],
-							'attr'=> array (
-								'href' => array (
-									'url' => "seqproperties.php",
-									'urlvars' => array(
-										'action' => 'assign_sequences',
-										'schema' => $_REQUEST['schema'],
-										'sequence' => $_REQUEST['sequence'],
-									)
-								)
-							),
-						);
-					} else {
-						// Already assigned to a tables group
-						$prop->moveFirst();
-						$group = $prop->fields['rel_group'];
+						$navlinks = array();
 
-						if ($nbGroups > 2) {
-							$navlinks['move_sequence'] = array (
-								'content' => $lang['strmove'],
+						if (! $isAssigned) {
+							// Not yet assigned to a tables group
+							$navlinks['assign_sequence'] = array (
+								'content' => $lang['strassign'],
 								'attr'=> array (
 									'href' => array (
 										'url' => "seqproperties.php",
 										'urlvars' => array(
-											'action' => 'move_sequences',
+											'action' => 'assign_sequences',
+											'schema' => $_REQUEST['schema'],
+											'sequence' => $_REQUEST['sequence'],
+										)
+									)
+								),
+							);
+						} else {
+							// Already assigned to a tables group
+							$prop->moveFirst();
+							$group = $prop->fields['rel_group'];
+
+							if ($nbGroups > 1) {
+								$navlinks['move_sequence'] = array (
+									'content' => $lang['strmove'],
+									'attr'=> array (
+										'href' => array (
+											'url' => "seqproperties.php",
+											'urlvars' => array(
+												'action' => 'move_sequences',
+												'schema' => $_REQUEST['schema'],
+												'sequence' => $_REQUEST['sequence'],
+												'group' => $group,
+											)
+										)
+									),
+								);
+							}
+							$navlinks['remove_sequence'] = array (
+								'content' => $lang['strremove'],
+								'attr'=> array (
+									'href' => array (
+										'url' => "seqproperties.php",
+										'urlvars' => array(
+											'action' => 'remove_sequences',
 											'schema' => $_REQUEST['schema'],
 											'sequence' => $_REQUEST['sequence'],
 											'group' => $group,
@@ -108,20 +125,6 @@
 								),
 							);
 						}
-						$navlinks['remove_sequence'] = array (
-							'content' => $lang['strremove'],
-							'attr'=> array (
-								'href' => array (
-									'url' => "seqproperties.php",
-									'urlvars' => array(
-										'action' => 'remove_sequences',
-										'schema' => $_REQUEST['schema'],
-										'sequence' => $_REQUEST['sequence'],
-										'group' => $group,
-									)
-								)
-							),
-						);
 					}
 
 					$misc->printLinksList($navlinks, 'buttonslist');

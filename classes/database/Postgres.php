@@ -1168,22 +1168,19 @@ class Postgres extends ADODB_base {
 		$status = $this->beginTransaction();
 		if ($status != 0) return -1;
 
-		// If backend supports read only queries, then specify read only mode
-		// to avoid side effects from repeating queries that do writes.
-		if ($this->hasReadOnlyQueries()) {
-			$status = $this->execute("SET TRANSACTION READ ONLY");
-			if ($status != 0) {
-				$this->rollbackTransaction();
-				return -5;
-					}
-				}
+		// Specify read only mode to avoid side effects from repeating queries that do writes.
+		$status = $this->execute("SET TRANSACTION READ ONLY");
+		if ($status != 0) {
+			$this->rollbackTransaction();
+			return -5;
+		}
 
 		// Count the number of rows
 		$total = $this->browseQueryCount($query, $count);
 		if ($total < 0) {
 			$this->rollbackTransaction();
 			return -2;
-    			}
+		}
 
 		// Calculate max pages
 		$max_pages = ceil($total / $page_size);
@@ -1270,12 +1267,6 @@ class Postgres extends ADODB_base {
 
 	// Capabilities
 
-	function hasAlterSequenceStart() { return true; }
-	function hasReadOnlyQueries() { return true; }
-	function hasServerAdminFuncs() { return true; }
-	function hasTablespaces() { return true; }
-	function hasDatabaseCollation() { return true; }
-	function hasByteaHexDefault() { return true; } 
 	function hasWithOids() { return false; }
 
 }

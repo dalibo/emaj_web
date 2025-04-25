@@ -7,14 +7,6 @@
 	// Include application functions
 	include_once('./libraries/lib.inc.php');
 
-	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-	if (!isset($msg)) $msg = '';
-	$scripts = '';
-
-	function _highlight($string, $term) {
-		return str_replace($term, "<b>{$term}</b>", $string);
-	}	
-
 	function doTree() {
 		global $misc, $data, $lang;
 
@@ -44,10 +36,14 @@
 		exit;
 	}
 
+/********************************************************************************************************
+ * Main piece of code
+ *******************************************************************************************************/
+
 	/* shortcuts: these functions exit the script */
 	if ($action == 'tree') doTree();
 
-	$misc->printHtmlHeader($lang['strdatabase'], $scripts);
+	$misc->printHtmlHeader($lang['strdatabase']);
 	$misc->printBody();
 
 	switch ($action) {

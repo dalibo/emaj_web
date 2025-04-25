@@ -9,7 +9,7 @@
 	include_once('./libraries/groupactions.inc.php');
 
 /********************************************************************************************************
- * Functions called by groupactions.inc.php functions, but whose content is different between 
+ * Functions called by groupactions.inc.php functions, but whose content is different between
  * emajgroups.php and groupproperties.php.
  *******************************************************************************************************/
 
@@ -561,11 +561,9 @@
  * Main piece of code
  *******************************************************************************************************/
 
-	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-	if (!isset($msg)) $msg = '';
-
 	/* shortcuts: these functions exit the script */
-	if ($action == 'tree') doTree();
+	if ($action == 'tree')
+		doTree();
 
 	// The export_groups_ok action only builds and downloads the configuration file, but do not resend the main page
 	if ($action == 'export_groups_ok') {

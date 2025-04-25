@@ -7,21 +7,19 @@
 	// Include application functions
 	include_once('./libraries/lib.inc.php');
 
-	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-	if (!isset($msg)) $msg = '';
 
 	/**
 	 * Private function to display server and list of databases
 	 */
 	function _printConnection() {
 		global $data, $action, $misc;
-		
+
 		// The javascript action on the select box reloads the
 		// popup whenever the server or database is changed.
 		// This ensures that the correct page encoding is used.
-		$onchange = "onchange=\"location.href='sqledit.php?action=" . 
+		$onchange = "onchange=\"location.href='sqledit.php?action=" .
 				urlencode($action) . "&amp;server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + '&amp;query=' + encodeURI(query.value) + '&amp;search_path=' + encodeURI(search_path.value) + (paginate.checked ? '&amp;paginate=on' : '')  + '&amp;'\"";
-		
+
 		$misc->printConnection($onchange);
 	}
 
@@ -204,8 +202,8 @@
 	 */
 	function sql_editor() {
 		global $data, $misc;
-		global $lang; 
-		
+		global $lang;
+
 		if (!isset($_SESSION['sqlquery'])) $_SESSION['sqlquery'] = '';
 
 		echo "<div id=\"flex-container\">";
@@ -246,6 +244,10 @@
 		echo "</div>\n";
 	}
 
+/********************************************************************************************************
+ * Main piece of code
+ *******************************************************************************************************/
+
 	$scripts = "<script src=\"js/sqledit.js\"></script>";
 	$misc->printHtmlHeader($lang['strsql'], $scripts, 'sqledit');
 
@@ -270,5 +272,5 @@
 
 	// Do not print the bottom link
 	$misc->printFooter(true, false);
-	
+
 ?>

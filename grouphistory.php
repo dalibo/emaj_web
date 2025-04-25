@@ -7,7 +7,7 @@
 	include_once('./libraries/lib.inc.php');
 
 /********************************************************************************************************
- * Callback functions 
+ * Callback functions
  *******************************************************************************************************/
 
 	// Callback function to dynamicaly add an icon to each group history row
@@ -116,9 +116,6 @@
 /********************************************************************************************************
  * Main piece of code
  *******************************************************************************************************/
-
-	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-	if (!isset($msg)) $msg = '';
 
 	// Check that emaj and the group still exist.
 	$misc->onErrorRedirect('emajgroup');

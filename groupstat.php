@@ -7,7 +7,7 @@
 	include_once('./libraries/lib.inc.php');
 
 /********************************************************************************************************
- * Callback functions 
+ * Callback functions
  *******************************************************************************************************/
 
 	// Callback function to dynamicaly translate a boolean column into an icon
@@ -29,7 +29,7 @@
 	/**
 	 * Show changes statistics between 2 marks or since a mark for tables or sequences
 	 */
-	function changes_stat_group() {
+	function doDefault() {
 		global $misc, $lang, $emajdb, $_reload_browser;
 
 		if (! $emajdb->existsGroup($_REQUEST['group'])) {
@@ -57,7 +57,7 @@
 		if ($marks->recordCount() < 1) {
 
 			// No mark recorded for the group => no update logged => no stat to display
-			echo "<p>{$lang['strnomark']}</p>\n"; 
+			echo "<p>{$lang['strnomark']}</p>\n";
 
 		} else {
 
@@ -106,7 +106,7 @@
 			// JQuery to remove the last mark as it cannot be selected as end mark
 			echo "  $(\"#rangeend option:last-child\").remove();\n";
 
-			// JQuery to set the selected start mark by default 
+			// JQuery to set the selected start mark by default
 			// (the previous requested start mark or the first mark if no stat are already displayed)
 			if (isset($_REQUEST['rangestart'])) {
 				echo "  $(\"#rangestart option[value='{$_REQUEST['rangestart']}']\").attr(\"selected\", true);\n";
@@ -114,7 +114,7 @@
 				echo "  $(\"#rangestart option:first-child\").attr(\"selected\", true);\n";
 			}
 
-			// JQuery to set the selected end mark by default 
+			// JQuery to set the selected end mark by default
 			// (the previous requested end mark or the current state if no stat are already displayed)
 			if (isset($_REQUEST['rangeend'])) {
 				echo "  $(\"#rangeend option[value='{$_REQUEST['rangeend']}']\").attr(\"selected\", true);\n";
@@ -184,8 +184,7 @@
 	}
 
 	/**
-	 * This function is called by the changes_stat_group() function.
-	 * It generates the page section corresponding to the tables estimates statistics output
+	 * This function generates the page section corresponding to the tables estimates statistics output
 	 */
 	function disp_tables_estimates_stat_section($groupStat) {
 		global $misc, $lang, $emajdb;
@@ -344,8 +343,7 @@
 	}
 
 	/**
-	 * This function is called by the changes_stat_group() function.
-	 * It generates the page section corresponding to the sequences estimates statistics output
+	 * This function generates the page section corresponding to the sequences estimates statistics output.
 	 */
 	function disp_sequences_estimates_stat_section($groupStat) {
 		global $misc, $lang, $emajdb;
@@ -446,8 +444,7 @@
 	}
 
 	/**
-	 * This function is called by the changes_stat_group() function.
-	 * It generates the page section corresponding to the detailed tables statistics output
+	 * This function generates the page section corresponding to the detailed tables statistics output.
 	 */
 	function disp_tables_details_stat_section($groupStat) {
 		global $misc, $lang, $emajdb;
@@ -650,7 +647,7 @@
 		echo "<meta http-equiv=\"refresh\" content=\"0;url=sqledit.php?subject=table&amp;{$misc->href}&amp;action=gen_sql_dump_changes" .
 			 "&amp;group=" . urlencode($_REQUEST['group']) .
 			 "&amp;schema=" . urlencode($_REQUEST['schema']) . "&amp;table=" . urlencode($_REQUEST['table']) .
-			 "&amp;startMark=" . urlencode($_REQUEST['startMark']) . "&amp;startTs=" . urlencode($_REQUEST['startTs']) . 
+			 "&amp;startMark=" . urlencode($_REQUEST['startMark']) . "&amp;startTs=" . urlencode($_REQUEST['startTs']) .
 			 "&amp;endMark=" . urlencode($_REQUEST['endMark']) . "&amp;endTs=" . urlencode($_REQUEST['endTs']) .
 			 "&amp;verb=" . urlencode($_REQUEST['verb']) . "&amp;role=" . urlencode($_REQUEST['role']) .
 			 "&amp;knownRoles=" . urlencode($_REQUEST['knownRoles']) . "\">";
@@ -659,9 +656,6 @@
 /********************************************************************************************************
  * Main piece of code
  *******************************************************************************************************/
-
-	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-	if (!isset($msg)) $msg = '';
 
 	// Check that emaj and the group still exist.
 	$misc->onErrorRedirect('emajgroup');
@@ -674,13 +668,13 @@
 			call_sqledit();
 			break;
 		case 'changes_stat_group':
-			changes_stat_group();
+			doDefault();
 			break;
 		case 'gen_sql_dump_changes':
 			gen_sql_dump_changes();
 			break;
 		default:
-			changes_stat_group();
+			doDefault();
 	}
 
 	$misc->printFooter();

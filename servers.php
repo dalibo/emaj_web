@@ -7,10 +7,7 @@
 	// Include application functions
 	$_no_db_connection = true;
 	include_once('./libraries/lib.inc.php');
-	
-	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-	if (!isset($msg)) $msg = '';
-	
+
 	function doLogout() {
 		global $misc, $lang, $_reload_browser;
 
@@ -27,7 +24,7 @@
 	function doDefault($msg = '') {
 		global $conf, $misc;
 		global $lang;
-		
+
 		$misc->printHeader('root', 'root', 'servers');
 		$misc->printMsg($msg);
 		$group = isset($_GET['group']) ? $_GET['group'] : false;
@@ -55,12 +52,12 @@
 		}
 
 		$servers = $misc->getServers(true, $group);
-		
+
 		function svPre(&$rowdata, $actions) {
 			$actions['logout']['disable'] = empty($rowdata->fields['username']);
 			return $actions;
 		}
-		
+
 		$columns = array(
 			'server' => array(
 				'title' => $lang['strserver'],
@@ -118,7 +115,7 @@
 
 		$misc->printTable($servers, $columns, $actions, 'servers', $lang['strnoobjects'], 'svPre', array('sorter' => true, 'filter' => true));
 	}
-	
+
 	function doTree() {
 		global $misc, $conf;
 
@@ -136,34 +133,36 @@
 				$nodes = array_merge($nodes, $misc->getServers(false, $group_id));
 				include_once('./classes/ArrayRecordSet.php');
 				$nodes = new ArrayRecordSet($nodes);
-		}
 
-		else {
+		} else {
 			/* no servers group */
 			$nodes = $misc->getServers(true, false);
 		}
-		
+
 		$reqvars = $misc->getRequestVars('server');
-		
+
 		$attrs = array(
 			'text'   => field('desc'),
-			
+
 			// Show different icons for logged in/out
 			'icon'   => field('icon'),
-			
+
 			'toolTip'=> field('id'),
-			
+
 			'action' => field('action'),
 
 			// Only create a branch url if the user has
 			// logged into the server.
 			'branch' => field('branch'),
 		);
-		
+
 		$misc->printTree($nodes, $attrs, 'servers');
 		exit;
 	}
 
+/********************************************************************************************************
+ * Main piece of code
+ *******************************************************************************************************/
 
 	if ($action == 'tree') {
 		if (isset($_GET['group']))

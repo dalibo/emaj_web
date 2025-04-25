@@ -7,8 +7,6 @@
 	// Include application functions
 	include_once('./libraries/lib.inc.php');
 
-	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-
 	/**
 	 * Show the table E-Maj history.
 	 */
@@ -32,12 +30,12 @@
 			$events = $emajdb->getTblSeqEmajHist($_REQUEST['schema'], $_REQUEST['table']);
 
 			if ($events->recordCount() < 1) {
-	
+
 				// There is no history to display
 				echo "<p>{$lang['strnoemajhistory']}</p>\n";
-	
+
 			} else {
-	
+
 				echo "<p>{$lang['strdescendingeventsorder']}</p>\n";
 
 				$columns = array(
@@ -56,13 +54,12 @@
 						'field' => field('ev_text'),
 					),
 				);
-	
+
 				$misc->printTable($events, $columns, $actions, 'tbl_emaj_history', null, null, array('sorter' => false, 'filter' => true));
 			}
 		}
 
 		echo "<hr/>\n";
-
 	}
 
 /********************************************************************************************************

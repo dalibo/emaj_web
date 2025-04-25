@@ -7,34 +7,32 @@
 	// Include application functions.
 	include_once('./libraries/lib.inc.php');
 
-	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-
 	function doDefault() {
 		global $misc, $lang;
 
 		$onchange = "onchange=\"location.href='history.php?server=' + encodeURI(server.options[server.selectedIndex].value) + '&amp;database=' + encodeURI(database.options[database.selectedIndex].value) + '&amp;'\"";
 
 		$misc->printHtmlHeader($lang['strhistory']);
-		
+
 		// Bring to the front always.
 		echo "<body onload=\"window.focus();\">\n";
-	
+
 		$misc->printTitle($lang['strsqlhistory']);
 
 		echo "<form action=\"history.php\" method=\"post\">\n";
 		$misc->printConnection($onchange);
 		echo "</form><br />";
-	
+
 		if (!isset($_REQUEST['database'])) {
 			echo "<p>{$lang['strnodatabaseselected']}</p>\n";
 			return;
 		}
-			
+
 		if (isset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])) {
 			include_once('classes/ArrayRecordSet.php');
-						   
+
 			$history = new ArrayRecordSet($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']]);
-			
+
 			$columns = array(
 				'query' => array(
 					'title' => $lang['strsql'],
@@ -115,7 +113,7 @@
 		echo "    <input type=\"submit\" name=\"refresh\" value=\"{$lang['strrefresh']}\" />";
 		echo "  </form>\n";
 
-		if (isset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']]) 
+		if (isset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])
 				&& count($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])) {
 			echo "  <form id=\"download_form\" action=\"history.php?action=download&amp;{$dbInUrl}\" method=\"post\">\n";
 			echo "    <input type=\"submit\" name=\"download\" value=\"{$lang['strdownload']}\" />";
@@ -137,7 +135,7 @@
 
 			// Bring to the front always.
 			echo "<body onload=\"window.focus();\">\n";
-			
+
 			$misc->printTitle($lang['strdelhistory']);
 			echo "<p>{$lang['strconfdelhistory']}</p>\n";
 
@@ -149,8 +147,8 @@
 			echo "<input type=\"submit\" name=\"yes\" value=\"{$lang['stryes']}\" />\n";
 			echo "<input type=\"submit\" name=\"no\" value=\"{$lang['strno']}\" />\n";
 			echo "</form>\n";
-		}
-		else
+
+		} else
 			unset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$qid]);
 	}
 
@@ -167,6 +165,9 @@
 		echo "<meta http-equiv=\"refresh\" content=\"0;url=sqledit.php?subject={$_REQUEST['subject']}&amp;{$misc->href}&amp;action=sql{$paginate}\">";
 	}
 
+	/**
+	 * Clear the SQL history. Ask for confirmation or just clear if already confirmed.
+	 */
 	function doClearHistory($confirm) {
 		global $misc, $lang;
 
@@ -205,7 +206,11 @@
 
 		exit;
 	}
-	
+
+/********************************************************************************************************
+ * Main piece of code
+ *******************************************************************************************************/
+
 	switch ($action) {
 		case 'edit_sql':
 			call_sqledit();
@@ -231,9 +236,10 @@
 			doDefault();
 	}
 
-	// Set the name of the window.
+	// Set the window's name.
 	$misc->setWindowName('history');
+
 	// Do not print the bottom link.
 	$misc->printFooter(true, false);
-	
+
 ?>

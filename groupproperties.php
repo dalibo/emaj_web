@@ -9,7 +9,7 @@
 	include_once('./libraries/groupactions.inc.php');
 
 /********************************************************************************************************
- * Functions called by groupactions.inc.php functions, but whose content is different between 
+ * Functions called by groupactions.inc.php functions, but whose content is different between
  * emajgroups.php and groupproperties.php.
  *******************************************************************************************************/
 
@@ -597,41 +597,9 @@
 		$misc->printTable($marks, $columns, $actions, 'marks', $lang['strnomark'], 'markPre', array('sorter' => false, 'filter' => true));
 	}
 
-	function doTree() {
-		global $misc, $emajdb;
-
-		$groups = $emajdb->getGroups();
-
-		$reqvars = $misc->getRequestVars('database');
-
-		$attrs = array(
-			'text' => field('group_name'),
-			'icon' => 'EmajGroup',
-			'toolTip' => field('group_comment'),
-			'action' => url	(
-				'redirect.php',
-				$reqvars,
-				array(
-					'subject' => 'emajgroup',
-					'action'  => 'show_group',
-					'group'  => field('group_name')
-					)
-				),
-		);
-
-		$misc->printTree($groups, $attrs, 'emajgroups');
-		exit;
-	}
-
 /********************************************************************************************************
  * Main piece of code
  *******************************************************************************************************/
-
-	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-	if (!isset($msg)) $msg = '';
-
-	/* shortcuts: these functions exit the script */
-	if ($action == 'tree') doTree();
 
 	// Check that emaj and the group still exist.
 	$misc->onErrorRedirect('emajgroup');

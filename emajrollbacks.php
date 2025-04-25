@@ -7,10 +7,6 @@
 	// Include application functions
 	include_once('./libraries/lib.inc.php');
 
-	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-	if (!isset($msg)) $msg = '';
-	$isAutoRefresh = (isset($_REQUEST['autorefresh']) && $_REQUEST['autorefresh'] == 1) ? 1 : 0;
-
 	// Callback function to dynamicaly add an icon to each rollback execution report
 	function renderRlbkExecSeverity($val) {
 		global $misc;
@@ -962,8 +958,9 @@
 	// Check that emaj still exists
 	$misc->onErrorRedirect();
 
-	$scripts = "";
-	$misc->printHtmlHeader($lang['strrollbacksmanagement'], $scripts, 'emajrollbacks');
+	$isAutoRefresh = (isset($_REQUEST['autorefresh']) && $_REQUEST['autorefresh'] == 1) ? 1 : 0;
+
+	$misc->printHtmlHeader($lang['strrollbacksmanagement'], '', 'emajrollbacks');
 
 	$misc->printBody();
 

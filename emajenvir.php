@@ -7,9 +7,6 @@
 	// Include application functions
 	include_once('./libraries/lib.inc.php');
 
-	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-	if (!isset($msg)) $msg = '';
-
 	// Callback function to dynamicaly transform a message severity level into an icon
 	function renderMsgSeverity($val) {
 		global $misc;
@@ -355,7 +352,7 @@
 					function(){
 						$('input:file').change(
 							function(){
-								if ($(this).val()) { $('input:submit').attr('disabled',false); } 
+								if ($(this).val()) { $('input:submit').attr('disabled',false); }
 							}
 							);
 						$('#file-upload').bind('change',
@@ -438,7 +435,7 @@
 						);
 
 						$actions = array ();
-	
+
 						$misc->printTable($errors, $columns, $actions, 'paramsconfchecks', null, null, array('sorter' => true, 'filter' => false));
 
 						echo "<form action=\"emajenvir.php\" method=\"post\">\n";
@@ -747,6 +744,10 @@
 			}
 		}
 	}
+
+/********************************************************************************************************
+ * Main piece of code
+ *******************************************************************************************************/
 
 // The export_parameters action only builds and downloads the configuration file, but do not resend the main page
 	if ($action == 'export_parameters') {

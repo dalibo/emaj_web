@@ -4,7 +4,7 @@
 	 * Function library read in upon startup
 	 */
 
-	// Application name
+	// Initialize the application name
 	$appName = 'Emaj_web';
 
 	include_once('./libraries/versions.inc.php');
@@ -13,7 +13,7 @@
 
 	// Set error reporting level to max
 	error_reporting(E_ALL);
- 
+
 	// Check the version of PHP
 	if (version_compare(phpversion(), $phpMinVer, '<'))
 		exit(sprintf('Version of PHP not supported. Please upgrade to version %s or later.', $phpMinVer));
@@ -22,14 +22,14 @@
 	if (file_exists('conf/config.inc.php')) {
 		$conf = array();
 		include('./conf/config.inc.php');
-	}
-	else {
+	} else {
 		echo 'Configuration error: Copy conf/config.inc.php-dist to conf/config.inc.php and edit appropriately.';
 		exit;
 	}
 
 	// Always include english.php, since it's the master language file
-	if (!isset($conf['default_lang'])) $conf['default_lang'] = 'english';
+	if (!isset($conf['default_lang']))
+		$conf['default_lang'] = 'english';
 	$lang = array();
 	require_once('./lang/english.php');
 
@@ -194,4 +194,8 @@
 			}
 		}
 	}
+
+	// Initialize the requested action
+	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
+
 ?>

@@ -1,7 +1,7 @@
 <?php
 
 	/*
-	 * Intro screen
+	 * Introduction screen
 	 */
 
 	// Include application functions (no db conn)

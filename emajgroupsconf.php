@@ -7,9 +7,6 @@
 	// Include application functions
 	include_once('./libraries/lib.inc.php');
 
-	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-	if (!isset($msg)) $msg = '';
-
 	// Function to dynamicaly modify actions list for tables
 	function tblseqPre(&$rowdata, $actions) {
 		// disable 'assign' if the table already belongs to a group
@@ -627,7 +624,7 @@
 				echo "<input type=\"hidden\" name=\"group[]\" value=\"", htmlspecialchars($a['group']), "\" />\n";
 				if ($a['type'] == 'r+') {
 					$nbTbl++;
-					$fullList .= "<li>" . sprintf($lang['strthetable'],$a['appschema'],$a['tblseq']); 
+					$fullList .= "<li>" . sprintf($lang['strthetable'],$a['appschema'],$a['tblseq']);
 				} else {
 					$nbSeq++;
 					$fullList .= "<li>" . sprintf($lang['strthesequence'],$a['appschema'],$a['tblseq']);
@@ -713,19 +710,19 @@
 			configure_groups();
 			break;
 		case 'assign_tblseq';
-			assign_tblseq();	
+			assign_tblseq();
 			break;
 		case 'assign_tblseq_ok':
 			assign_tblseq_ok();
 			break;
 		case 'update_tblseq';
-			update_tblseq();	
+			update_tblseq();
 			break;
 		case 'update_tblseq_ok':
 			update_tblseq_ok();
 			break;
 		case 'remove_tblseq';
-			remove_tblseq();	
+			remove_tblseq();
 			break;
 		case 'remove_tblseq_ok':
 			remove_tblseq_ok();

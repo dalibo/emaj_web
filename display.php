@@ -16,14 +16,11 @@
 
 	global $conf, $lang;
 
-	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-
-	
-	/* build & return the FK information data structure 
+	/* build & return the FK information data structure
 	 * used when deciding if a field should have a FK link or not*/
 	function &getFKInfo() {
 		global $data, $misc, $lang;
-		 
+
 		// Get the foreign key(s) information from the current table
 		$fkey_information = array('byconstr' => array(), 'byfield' => array());
 
@@ -61,7 +58,7 @@
 		return $fkey_information;
 	}
 
-	/* Print table header cells 
+	/* Print table header cells
 	 * @param $args - associative array for sort link parameters
 	 * */
 	function printTableHeaderCells(&$rs, $args) {
@@ -74,8 +71,7 @@
 
 			if ($args === false) {
 				echo "<th class=\"data\">", $misc->printVal($finfo->name), "</th>\n";
-			}
-			else {
+			} else {
 				$args['page'] = $_REQUEST['page'];
 				$args['sortkey'] = $j + 1;
 				// Sort direction opposite to current direction, unless it's currently ''
@@ -100,13 +96,14 @@
 	function printTableRowCells(&$rs, &$fkey_information) {
 		global $data, $misc, $conf;
 		$j = 0;
-		
+
 		if (!isset($_REQUEST['strings'])) $_REQUEST['strings'] = 'collapsed';
 
 		foreach ($rs->fields as $k => $v) {
 			$finfo = $rs->fetchField($j++);
 
-			if ($v !== null && $v == '') echo "<td>&nbsp;</td>";
+			if ($v !== null && $v == '')
+				echo "<td>&nbsp;</td>";
 			else {
 				echo "<td style=\"white-space:nowrap;\">";
 
@@ -153,7 +150,7 @@
 
 		$max_pages = 1;
 		// Retrieve page from query.  $max_pages is returned by reference.
-		$rs = $data->browseQuery('SELECT', $_REQUEST['table'], $_REQUEST['query'],  
+		$rs = $data->browseQuery('SELECT', $_REQUEST['table'], $_REQUEST['query'],
 			null, null, 1, 1, $max_pages);
 
 		echo "<a href=\"\" class=\"fk_delete\"><img alt=\"{$lang['strdelete']}\" src=\"". $misc->icon('Delete') ."\" /></a>\n";
@@ -164,7 +161,7 @@
 			 * we should show OID if show_oids is true
 			 * so we give true to withOid in functions bellow
 			 * as 3rd paramter */
-		
+
 			echo "<table><tr>";
 				printTableHeaderCells($rs, false);
 			echo "</tr>";
@@ -172,19 +169,17 @@
 				printTableRowCells($rs, $fkinfo);
 			echo "</tr>\n";
 			echo "</table>\n";
-		}
-		else
+		} else
 			echo $lang['strnodata'];
 
 		echo "</div>";
-
 		exit;
 	}
 
-	/** 
+	/**
 	 * Displays requested data
 	 */
-	function doBrowse($msg = '') {
+	function doDefault($msg = '') {
 		global $data, $conf, $misc, $lang, $emajdb;;
 
 		$save_history = false;
@@ -193,7 +188,7 @@
 			$_REQUEST['page'] = 1;
 		if (!isset($_REQUEST['nohistory']))
 			$save_history = true;
-		
+
 		if (isset($_REQUEST['subject'])) {
 			$subject = $_REQUEST['subject'];
 			if (isset($_REQUEST[$subject])) $object = $_REQUEST[$subject];
@@ -216,7 +211,7 @@
 			$query = $data->getSelectSQL($_REQUEST['table'], array(), $_REQUEST['fkey'], $ops);
 			$_REQUEST['query'] = $query;
 		}
-		
+
 		if (isset($object)) {
 			if (isset($_REQUEST['query'])) {
 				$_SESSION['sqlquery'] = $_REQUEST['query'];
@@ -247,16 +242,16 @@
 
 		// If 'sortdir' is not set, default to ''
 		if (!isset($_REQUEST['sortdir'])) $_REQUEST['sortdir'] = '';
-	
-		// If 'strings' is not set, default to collapsed 
+
+		// If 'strings' is not set, default to collapsed
 		if (!isset($_REQUEST['strings'])) $_REQUEST['strings'] = 'collapsed';
-	
+
 		// Fetch unique row identifier, if this is a table browse request.
 		if (isset($object))
 			$key = $data->getRowIdentifier($object);
 		else
 			$key = array();
-		
+
 		// Set the schema search path
 		if (isset($_REQUEST['search_path'])) {
 			if ($data->setSearchPath(array_map('trim',explode(',',$_REQUEST['search_path']))) != 0) {
@@ -265,8 +260,8 @@
 		}
 
 		// Retrieve page from query.  $max_pages is returned by reference.
-		$rs = $data->browseQuery($type, 
-			isset($object) ? $object : null, 
+		$rs = $data->browseQuery($type,
+			isset($object) ? $object : null,
 			isset($_SESSION['sqlquery']) ? $_SESSION['sqlquery'] : null,
 			$_REQUEST['sortkey'], $_REQUEST['sortdir'], $_REQUEST['page'],
 			$conf['max_rows'], $max_pages);
@@ -377,16 +372,14 @@
 				}
 			}
 
-			$buttons = array(
-			);
-			$actions = array(
-			);
+			$buttons = array();
+			$actions = array();
 
 			printTableHeaderCells($rs, $_gets);
 
 			echo "</tr>\n";
 
-			$i = 0;		
+			$i = 0;
 			reset($rs->fields);
 			while (!$rs->EOF) {
 				$id = (($i % 2) == 0 ? '1' : '2');
@@ -406,10 +399,14 @@
 
 			// regenerate the navigation links at the page bottom
 			$misc->printLinksList($navlinks, 'buttonslist');
-		}
 
-		else echo "<p>{$lang['strnodata']}</p>\n";
+		} else
+			echo "<p>{$lang['strnodata']}</p>\n";
 	}
+
+/********************************************************************************************************
+ * Main piece of code
+ *******************************************************************************************************/
 
 	/* shortcuts: this function exit the script for ajax purpose */
 	if ($action == 'dobrowsefk') {
@@ -432,14 +429,14 @@
 	// If a table is specified, then set the title differently
 	if (isset($_REQUEST['subject']) && isset($_REQUEST[$_REQUEST['subject']]))
 		$misc->printHtmlHeader($lang['strtables'], $scripts);
-	else	
+	else
 		$misc->printHtmlHeader($lang['strqueryresults']);
 
 	$misc->printBody();
 
 	switch ($action) {
 		default:
-			doBrowse();
+			doDefault();
 			break;
 	}
 

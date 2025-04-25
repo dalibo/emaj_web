@@ -9,8 +9,6 @@
 	include_once('./libraries/tblseqcommon.inc.php');
 	include_once('./libraries/tblactions.inc.php');
 
-	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-
 	// Callback function to adjust the icons and links for constraints on table columns
 	function cstrRender($s, $p) {
 		global $misc, $data;
@@ -440,45 +438,12 @@
 		}
 	}
 
-	function doTree() {
-		global $misc, $data;
-
-		$columns = $data->getTableAttributes($_REQUEST['table']);
-		$reqvars = $misc->getRequestVars('column');
-
-		$attrs = array (
-			'text'   => field('attname'),
-			'icon'   => 'Column',
-			'iconAction' => url('display.php',
-								$reqvars,
-								array(
-									'table'		=> $_REQUEST['table'],
-									'column'	=> field('attname'),
-									'query'		=> replace(
-														'SELECT "%column%", count(*) AS "count" FROM "%table%" GROUP BY "%column%" ORDER BY "%column%"',
-														array (
-															'%column%' => field('attname'),
-															'%table%' => $_REQUEST['table']
-														)
-													)
-								)
-							),
-			'toolTip'=> field('comment')
-		);
-
-		$misc->printTree($columns, $attrs, 'tblcolumns');
-
-		exit;
-	}
-
 /********************************************************************************************************
  * Main piece of code
  *******************************************************************************************************/
 
 	// Check that emaj and the table still exist.
 	$misc->onErrorRedirect('table');
-
-	if ($action == 'tree') doTree();
 
 	$scripts = "<script src=\"js/schemas.js\"></script>";
 	$misc->printHtmlHeader($lang['strtables'] . ' - ' . $_REQUEST['table'], $scripts);

@@ -9,9 +9,6 @@
 	include_once('./libraries/tblseqcommon.inc.php');
 	include_once('./libraries/seqactions.inc.php');
 
-	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-	if (!isset($msg)) $msg = '';
-
 	/**
 	 * Display the properties of a sequence
 	 */

@@ -7,7 +7,7 @@
 	include_once('./libraries/lib.inc.php');
 
 /********************************************************************************************************
- * Callback functions 
+ * Callback functions
  *******************************************************************************************************/
 
 	// Callback function to dynamicaly modify the Table/Sequence columns content
@@ -37,7 +37,7 @@
 	/**
 	 * Displays the list of tables and sequences owned by a group
 	 */
-	function show_content_group() {
+	function doDefault() {
 		global $misc, $lang, $emajdb, $_reload_browser;
 
 		if (! $emajdb->existsGroup($_REQUEST['group'])) {
@@ -135,9 +135,6 @@
  * Main piece of code
  *******************************************************************************************************/
 
-	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-	if (!isset($msg)) $msg = '';
-
 	// Check that emaj and the group still exist.
 	$misc->onErrorRedirect('emajgroup');
 
@@ -146,10 +143,10 @@
 
 	switch ($action) {
 		case 'show_content_group':
-			show_content_group();
+			doDefault();
 			break;
 		default:
-			show_content_group();
+			doDefault();
 	}
 
 	$misc->printFooter();

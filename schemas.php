@@ -464,57 +464,63 @@
 		exit;
 	}
 
-	if ($action == 'tree') doTree();
+/********************************************************************************************************
+ * Main piece of code
+ *******************************************************************************************************/
+
+	if ($action == 'tree')
+		doTree();
 
 	$scripts = "<script src=\"js/schemas.js\"></script>";
 
 	$misc->printHtmlHeader($lang['strschemas'], $scripts);
 	$misc->printBody();
 
-	if (isset($_POST['cancel'])) $action = '';
+	if (isset($_POST['cancel']))
+		$action = '';
 
 	switch ($action) {
 		case 'list_schemas':
 			doDefault();
 			break;
 		case 'assign_tables';
-			assign_tables();	
+			assign_tables();
 			break;
 		case 'assign_tables_ok':
 			assign_tables_ok();
 			break;
 		case 'move_tables';
-			move_tables();	
+			move_tables();
 			break;
 		case 'move_tables_ok':
 			move_tables_ok();
 			break;
 		case 'modify_tables';
-			modify_tables();	
+			modify_tables();
 			break;
 		case 'modify_tables_ok':
 			modify_tables_ok();
 			break;
 		case 'remove_tables';
-			remove_tables();	
+			remove_tables();
 			break;
 		case 'remove_tables_ok':
 			remove_tables_ok();
 			break;
 		case 'assign_sequences';
-			assign_sequences();	
+			assign_sequences();
 			break;
 		case 'assign_sequences_ok':
 			assign_sequences_ok();
 			break;
 		case 'move_sequences';
-			move_sequences();	
+			move_sequences();
 			break;
 		case 'move_sequences_ok':
 			move_sequences_ok();
 			break;
 		case 'remove_sequences';
-			remove_sequences();	
+			remove_sequences();
 			break;
 		case 'remove_sequences_ok':
 			remove_sequences_ok();

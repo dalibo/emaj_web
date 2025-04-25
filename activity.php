@@ -7,12 +7,9 @@
 	// Include application functions.
 	include_once('./libraries/lib.inc.php');
 
-	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-
-	// If the Erase Parameters button (that is only available for test) has been hit, forget session data and behave as an initial page display with the form only
-	if (isset($_REQUEST['erase_parameters'])) {
-		unset($_SESSION['emajStat'][$_REQUEST['server']][$_REQUEST['database']], $_REQUEST['groups-include']);
-	}
+/********************************************************************************************************
+ * Main functions displaying pages
+ *******************************************************************************************************/
 
 	/**
 	 * Show the changes activity.
@@ -581,8 +578,14 @@
  * Main piece of code
  *******************************************************************************************************/
 
-	// Check that emaj still exists
+	// Check that emaj still exists.
 	$misc->onErrorRedirect();
+
+	// If the Erase Parameters button (that is only available for test prupose) has been hit, forget session data
+	//   and behave as an initial page display with the form only.
+	if (isset($_REQUEST['erase_parameters'])) {
+		unset($_SESSION['emajStat'][$_REQUEST['server']][$_REQUEST['database']], $_REQUEST['groups-include']);
+	}
 
 	$scripts = "<script src=\"js/activity.js\"></script>";
 	$misc->printHtmlHeader($lang['strchangesactivity'], $scripts, 'activity');

@@ -7,18 +7,14 @@
 	// Include application functions
 	include_once('./libraries/lib.inc.php');
 
-	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : '';
-	if (!isset($msg)) $msg = '';
-
 	/**
 	 * Show default list of databases in the server
 	 */
-	function doDefault($msg = '') {
+	function doDefault() {
 		global $data, $conf, $misc;
 		global $lang;
 
 		$misc->printHeader('server', 'server', 'databases');
-		$misc->printMsg($msg);
 
 		$databases = $data->getDatabases();
 
@@ -57,7 +53,8 @@
 
 		$actions = array();
 
-		if (!$data->hasServerAdminFuncs()) unset($columns['dbsize']);
+		if (!$data->hasServerAdminFuncs())
+			unset($columns['dbsize']);
 
 		$misc->printTable($databases, $columns, $actions, 'databases-databases', $lang['strnodatabases'],null, array('sorter' => true, 'filter' => true));
 
@@ -90,6 +87,10 @@
 		$misc->printTree($databases, $attrs, 'databases');
 		exit;
 	}
+
+/********************************************************************************************************
+ * Main piece of code
+ *******************************************************************************************************/
 
 	if ($action == 'tree') doTree();
 

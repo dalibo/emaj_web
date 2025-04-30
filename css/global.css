@@ -5,6 +5,10 @@
 
 /** general formating **/
 
+html {
+	scroll-behavior: smooth;
+}
+
 body {
 	background-color: #ffffff;
 	margin:	4px;
@@ -705,14 +709,14 @@ pre.error {
 /** Grid div for forms */
 div.form-container {
 	display: grid;
-	grid-template-columns: minmax(70px, min-content) max-content min-content;
+	grid-template-columns: min-content max-content min-content;
 	grid-gap: 7px;
 	margin-top: 4px;
 	margin-bottom: 4px;
 }
 div.form-container-5c {
 	display: grid;
-	grid-template-columns: minmax(70px, min-content) min-content min-content max-content min-content;
+	grid-template-columns: min-content min-content min-content max-content min-content;
 	grid-gap: 7px;
 	margin-top: 4px;
 	margin-bottom: 4px;
@@ -776,7 +780,7 @@ div.form-button>button:hover {
 /** Grid div for the parameters list */
 div.form-container-param {
 	display: grid;
-	grid-template-columns: minmax(70px, min-content) min-content min-content min-content;
+	grid-template-columns: min-content min-content min-content min-content;
 	grid-gap: 7px;
 	padding: 10px;
 	box-shadow: -1px 2px 5px rgba(0,0,0,.25);

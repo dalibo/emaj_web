@@ -1826,7 +1826,7 @@
 								foreach ($alt_actions as $action) {
 									$classMulti = (isset($action['multiaction'])) ? ' multi_' . $action['multiaction'] : '';
 									if (isset($action['disable']) && $action['disable'] === true) {
-										echo "<td class=\"emptybutton{$classMulti}\"></td>\n";
+										echo "<td class=\"opbutton{$id} emptybutton{$classMulti}\"><div></div></td>\n";
 									} else {
 										$classObjType = (isset($action['icon'])) ? 'iconbutton' : 'textbutton';
 										echo "<td class=\"opbutton{$id} {$classObjType}{$classMulti}\">";

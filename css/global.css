@@ -550,8 +550,8 @@ td.iconbutton a img {
 	height: 22px;
 	margin-top: 1px;
 }
-td.iconbutton a {
-	padding: 5px 2px 1px 2px;
+td.emptybutton div {
+	width: 22px;
 }
 td.textbutton a {
 	padding: 2px 6px;
@@ -559,9 +559,6 @@ td.textbutton a {
 }
 td.textbutton a:hover {
 	color: #cc0000;
-}
-td.emptybutton {
-	width: 24px;
 }
 
 table.multiactions {

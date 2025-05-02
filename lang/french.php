@@ -218,6 +218,7 @@
 	$lang['strallservers'] = 'Tous les serveurs';
 	$lang['strgroupgroups'] = 'Groupes du groupe "%s"';
 	$lang['strserversgroups'] = 'Groupes de serveurs';
+	$lang['strconnecteduser'] = 'Utilisateur connecté';
 
 	// Connection and disconnection
 	$lang['strlogin'] = 'Connexion';
@@ -286,6 +287,8 @@
 	$lang['strdroppedgroupslist'] = 'Anciens groupes de tables supprimés';
 	$lang['strnodroppedgroup'] = 'Aucun ancien groupe de tables supprimé.';
 	$lang['strnoselectedgroup'] = 'Aucun groupe de tables n\'a été sélectionné !';
+	$lang['strgrouplatestdropat'] = 'Dernière suppression le';
+	$lang['strgrouplatesttype'] = 'Dernier type';
 
 	// Group creation
 	$lang['strcreateagroup'] = 'E-Maj : Créer un groupe de tables';
@@ -368,8 +371,6 @@
 	$lang['strnomark'] = 'Le groupe de tables n\'a pas de marque';
 	$lang['strgroupcreatedat'] = 'Créé le';
 	$lang['strgroupcreateddroppedat'] = 'Créé/supprimé le';
-	$lang['strgrouplatesttype'] = 'Dernier type';
-	$lang['strgrouplatestdropat'] = 'Dernière suppression à';
 	$lang['strgroupstartedat'] = 'Démarré le';
 	$lang['strgroupstoppedat'] = 'Arrêté le';
 	$lang['strmarksetat'] = 'Posée le';

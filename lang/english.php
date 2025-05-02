@@ -218,11 +218,12 @@
 	$lang['strallservers'] = 'All servers';
 	$lang['strgroupgroups'] = 'Groups in group "%s"';
 	$lang['strserversgroups'] = 'Servers groups';
+	$lang['strconnecteduser'] = 'Connected user';
 
 	// Connection and disconnection
 	$lang['strlogin'] = 'Login';
 	$lang['strlogintitle'] = 'Login to %s';
-	$lang['strusername'] = 'Username';
+	$lang['strusername'] = 'User name';
 	$lang['strpassword'] = 'Password';
 	$lang['strtrycred'] = 'Use these credentials for all servers';
 	$lang['strloginfailed'] = 'Login failed';
@@ -286,6 +287,8 @@
 	$lang['strdroppedgroupslist'] = 'Old dropped tables groups';
 	$lang['strnodroppedgroup'] = 'No old dropped tables groups.';
 	$lang['strnoselectedgroup'] = 'No tables group has been selected!';
+	$lang['strgrouplatestdropat'] = 'Latest drop at';
+	$lang['strgrouplatesttype'] = 'Latest type';
 
 	// Group creation
 	$lang['strcreateagroup'] = 'E-Maj: Create a tables group';
@@ -368,8 +371,6 @@
 	$lang['strnomark'] = 'The tables group has no mark';
 	$lang['strgroupcreatedat'] = 'Created at';
 	$lang['strgroupcreateddroppedat'] = 'Created/dropped at';
-	$lang['strgrouplatesttype'] = 'Latest type';
-	$lang['strgrouplatestdropat'] = 'Latest drop at';
 	$lang['strgroupstartedat'] = 'Started at';
 	$lang['strgroupstoppedat'] = 'Stopped at';
 	$lang['strmarksetat'] = 'Set at';

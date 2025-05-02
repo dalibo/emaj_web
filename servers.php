@@ -83,7 +83,7 @@
 						),
 			),
 			'username' => array(
-				'title' => $lang['strusername'],
+				'title' => $lang['strconnecteduser'],
 				'field' => field('username'),
 			),
 			'actions' => array(

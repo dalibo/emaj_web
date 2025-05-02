@@ -125,6 +125,9 @@
 				'url'   => "groupproperties.php?&amp;{$misc->href}&amp;",
 				'vars'  => array('group' => 'group_name'),
 			),
+			'actions' => array(
+				'title' => $lang['stractions'],
+			),
 			'creationdatetime' => array(
 				'title' => $lang['strgroupcreatedat'],
 				'field' => field('creation_datetime'),
@@ -161,9 +164,6 @@
 				'title' => $lang['strmarks'],
 				'field' => field('nb_mark'),
 				'type'  => 'numeric'
-			),
-			'actions' => array(
-				'title' => $lang['stractions'],
 			),
 			'comment' => array(
 				'title' => $lang['strcomment'],
@@ -466,14 +466,8 @@
 					'url'   => "grouphistory.php?action=show_history_group&amp;{$misc->href}&amp;",
 					'vars'  => array('group' => 'grph_group'),
 				),
-				'latestrollbackable' => array(
-					'title' => $lang['strgrouplatesttype'],
-					'field' => field('latest_is_rollbackable'),
-					'type'	=> 'callback',
-					'params'=> array(
-							'function' => 'renderGroupType',
-							'align' => 'center',
-							),
+				'actions' => array(
+					'title' => $lang['stractions'],
 				),
 				'latestdropdatetime' => array(
 					'title' => $lang['strgrouplatestdropat'],
@@ -486,8 +480,14 @@
 						),
 					'sorter_text_extraction' => 'span_text',
 				),
-				'actions' => array(
-					'title' => $lang['stractions'],
+				'latestrollbackable' => array(
+					'title' => $lang['strgrouplatesttype'],
+					'field' => field('latest_is_rollbackable'),
+					'type'	=> 'callback',
+					'params'=> array(
+							'function' => 'renderGroupType',
+							'align' => 'center',
+							),
 				),
 			);
 

@@ -232,9 +232,6 @@
 				'field' => field('log_size'),
 				'params'=> array('align' => 'center'),
 			),
-			'actions' => array(
-				'title' => $lang['stractions'],
-			),
 		));
 
 		$urlvars = $misc->getRequestVars();
@@ -428,12 +425,8 @@
 				'title' => $lang['strmark'],
 				'field' => field('mark_name'),
 			),
-			'state' => array(
-				'title' => $lang['strstate'],
-				'field' => field('mark_state'),
-				'type'	=> 'callback',
-				'params'=> array('function' => 'renderMarkState', 'align' => 'center'),
-				'filter'=> false,
+			'actions' => array(
+				'title' => $lang['stractions'],
 			),
 			'datetime' => array(
 				'title' => $lang['strmarksetat'],
@@ -444,6 +437,13 @@
 					'locale' => $lang['applocale'],
 					'class' => 'tooltip left-aligned-tooltip',
 					),
+			),
+			'state' => array(
+				'title' => $lang['strstate'],
+				'field' => field('mark_state'),
+				'type'	=> 'callback',
+				'params'=> array('function' => 'renderMarkState', 'align' => 'center'),
+				'filter'=> false,
 			),
 			'logrows' => array(
 				'upper_title' => $lang['strchanges'],
@@ -457,9 +457,6 @@
 				'info'  => $lang['strcumchangeshelp'],
 				'field' => field('mark_cumlogrows'),
 				'type'  => 'numeric'
-			),
-			'actions' => array(
-				'title' => $lang['stractions'],
 			),
 			'comment' => array(
 				'title' => $lang['strcomment'],

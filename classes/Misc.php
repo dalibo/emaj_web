@@ -1986,8 +1986,13 @@
 				echo $column['title'];
 
 				// additional info if requested
-				if (isset($column['info']))
-					echo "<img src=\"{$this->icon('Info-inv')}\" alt=\"info\" class=\"info\" title=\"{$column['info']}\">";
+				if (isset($column['info'])) {
+					if ($column['title'] != '')
+						echo "<img src=\"{$this->icon('Info-inv')}\" alt=\"info\" class=\"info\" title=\"{$column['info']}\">";
+					else
+						// If the title is empty, do not set the info class to get a centered icon in the cell
+						echo "<img src=\"{$this->icon('Info-inv')}\" alt=\"info\" title=\"{$column['info']}\">";
+				}
 				echo "</th>\n";
 
 				// when the data column has a 'sorter_text_extraction' attribute set to 'img_alt' or 'span_text' or 'div_title',

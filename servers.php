@@ -179,7 +179,7 @@
 			doLogout();
 			break;
 		default:
-			doDefault($msg);
+			doDefault();
 			break;
 	}
 

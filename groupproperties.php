@@ -439,7 +439,9 @@
 					),
 			),
 			'state' => array(
-				'title' => $lang['strstate'],
+				'title' => ($emajdb->getNumEmajVersion() >= 40400) ?
+								"<img src=\"{$misc->icon('EmajPadlock')}\"/ title=\"{$lang['strprotectedmarkindicator']}\"> ?" :
+								$lang['strstate'],
 				'field' => field('mark_state'),
 				'type'	=> 'callback',
 				'params'=> array('function' => 'renderMarkState', 'align' => 'center'),

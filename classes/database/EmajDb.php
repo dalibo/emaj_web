@@ -3944,22 +3944,41 @@ class EmajDb {
 							JOIN emaj.emaj_relation_change ON (grph_group = rlchg_group AND grph_time_range @> rlchg_time_id)
 						WHERE rlchg_schema = '$schema' AND rlchg_tblseq = '$tblseq'
 				), event AS (
-					SELECT rlchg_time_id, 2 AS rank, rlchg_change_kind::TEXT AS change_kind, rlchg_group, rlchg_new_group,
+					SELECT
+						CASE		-- Icon color (every event prior a relation REMOVE or MOVE is grey)
+							WHEN rlchg_change_kind::TEXT LIKE 'REMOVE_%' OR
+								EXISTS (SELECT 1 FROM emaj.emaj_relation_change c2
+											WHERE c2.rlchg_schema = '$schema' AND c2.rlchg_tblseq = '$tblseq'
+											  AND c2.rlchg_change_kind::TEXT LIKE '%MOVE_%'
+											  AND c2.rlchg_time_id > c1.rlchg_time_id)
+								THEN 'Grey'
+							ELSE 'Green'
+						END
+						||
+						CASE		-- Icon shape
+							WHEN rlchg_change_kind::TEXT LIKE 'ADD_%' THEN 'Begin'
+							WHEN rlchg_change_kind::TEXT LIKE 'MOVE_%' THEN 'Cross'
+							WHEN rlchg_change_kind::TEXT LIKE 'REMOVE_%' THEN 'End'
+							WHEN rlchg_change_kind::TEXT LIKE 'CHANGE_%' OR rlchg_change_kind = 'REPAIR_TABLE' THEN 'Simple'
+							ELSE ''
+						END 
+						AS ev_graphic,
+						rlchg_time_id, 2 AS rank, rlchg_change_kind::TEXT AS change_kind, rlchg_group, rlchg_new_group,
 						rlchg_priority, rlchg_new_priority, rlchg_log_data_tsp, rlchg_new_log_data_tsp,
 						rlchg_log_index_tsp, rlchg_new_log_index_tsp, rlchg_ignored_triggers,  rlchg_new_ignored_triggers
-						FROM emaj.emaj_relation_change
+						FROM emaj.emaj_relation_change c1
 						WHERE rlchg_schema = '$schema' AND rlchg_tblseq = '$tblseq'
 					UNION ALL
-					SELECT lower(grph_time_range), 1, 'CREATE_GROUP', grph_group, NULL,
+					SELECT '', lower(grph_time_range), 1, 'CREATE_GROUP', grph_group, NULL,
 						NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
 						FROM group_hist
 					UNION ALL
-					SELECT upper(grph_time_range) - 1, 3, 'DROP_GROUP', grph_group, NULL,
+					SELECT '', upper(grph_time_range) - 1, 3, 'DROP_GROUP', grph_group, NULL,
 						NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
 						FROM group_hist
 						WHERE NOT upper_inf(grph_time_range)
 				)
-				SELECT time_tx_timestamp AS ev_ts,
+				SELECT ev_graphic, time_tx_timestamp AS ev_ts,
 					CASE change_kind
 						WHEN 'CREATE_GROUP' THEN format('" . $data->clean($lang['streventcreategroup']) . "', rlchg_group)
 						WHEN 'DROP_GROUP' THEN format('" . $data->clean($lang['streventdropgroup']) . "', rlchg_group)
@@ -3969,10 +3988,18 @@ class EmajDb {
 						WHEN 'MOVE_SEQUENCE' THEN format('" . $data->clean($lang['streventmovesequence']) . "', rlchg_group, rlchg_new_group)
 						WHEN 'REMOVE_TABLE' THEN format('" . $data->clean($lang['streventremovetable']) . "', rlchg_group)
 						WHEN 'REMOVE_SEQUENCE' THEN format('" . $data->clean($lang['streventremovesequence']) . "', rlchg_group)
-						WHEN 'CHANGE_PRIORITY' THEN format('" . $data->clean($lang['streventchangepriority']) . "', coalesce(rlchg_priority::TEXT, 'NULL'), coalesce(rlchg_new_priority::TEXT, 'NULL'))
-						WHEN 'CHANGE_LOG_DATA_TABLESPACE' THEN format('" . $data->clean($lang['streventchangedatatsp']) . "', coalesce(rlchg_log_data_tsp, 'NULL'), coalesce(rlchg_new_log_data_tsp, 'NULL'))
-						WHEN 'CHANGE_LOG_INDEX_TABLESPACE' THEN format('" . $data->clean($lang['streventchangeidxtsp']) . "', coalesce(rlchg_log_index_tsp, 'NULL'), coalesce(rlchg_new_log_index_tsp, 'NULL'))
-						WHEN 'CHANGE_IGNORED_TRIGGERS' THEN format('" . $data->clean($lang['streventchangeignoredtriggers']) . "', coalesce(array_to_string(rlchg_ignored_triggers, ','), 'NULL'), coalesce(array_to_string(rlchg_new_ignored_triggers, ','), 'NULL'))
+						WHEN 'CHANGE_PRIORITY' THEN format('" . $data->clean($lang['streventchangepriority']) . "',
+															coalesce(rlchg_priority::TEXT, 'NULL'),
+															coalesce(rlchg_new_priority::TEXT, 'NULL'))
+						WHEN 'CHANGE_LOG_DATA_TABLESPACE' THEN format('" . $data->clean($lang['streventchangedatatsp']) . "',
+																	coalesce(rlchg_log_data_tsp, 'NULL'),
+																	coalesce(rlchg_new_log_data_tsp, 'NULL'))
+						WHEN 'CHANGE_LOG_INDEX_TABLESPACE' THEN format('" . $data->clean($lang['streventchangeidxtsp']) . "',
+																	coalesce(rlchg_log_index_tsp, 'NULL'),
+																	coalesce(rlchg_new_log_index_tsp, 'NULL'))
+						WHEN 'CHANGE_IGNORED_TRIGGERS' THEN format('" . $data->clean($lang['streventchangeignoredtriggers']) . "',
+																coalesce(array_to_string(rlchg_ignored_triggers, ','), 'NULL'),
+																coalesce(array_to_string(rlchg_new_ignored_triggers, ','), 'NULL'))
 						WHEN 'REPAIR_TABLE' THEN '" . $data->clean($lang['streventrepairtable']) . "'
 						ELSE 'Unknown event (' || change_kind || ') !!!'
 					END AS ev_text

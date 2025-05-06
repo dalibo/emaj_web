@@ -7,6 +7,23 @@
 	// Include application functions
 	include_once('./libraries/lib.inc.php');
 
+/********************************************************************************************************
+ * Callback functions
+ *******************************************************************************************************/
+
+	// Callback function to dynamicaly add an icon to each history row
+	function renderHistoryGraphic($val) {
+		global $misc, $lang;
+
+		$icon = $misc->icon($val);
+		$div = "<div><img src=\"$icon\" alt=\"$icon\" class=\"fullsizecellicon\" /></div>";
+		return $div;
+	}
+
+/********************************************************************************************************
+ * Main functions displaying pages
+ *******************************************************************************************************/
+
 	/**
 	 * Show the sequence E-Maj history.
 	 */
@@ -37,6 +54,14 @@
 				echo "<p>{$lang['strdescendingeventsorder']}</p>\n";
 
 				$columns = array(
+					'graphic' => array(
+						'title' => '',
+						'field' => field('ev_graphic'),
+						'type'	=> 'callback',
+						'params'=> array('function' => 'renderHistoryGraphic'),
+						'class' => 'nopadding center',
+						'filter'=> false,
+					),
 					'time' => array(
 						'title' => $lang['strdatetime'],
 						'field' => field('ev_ts'),

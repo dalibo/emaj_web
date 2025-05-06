@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="23" viewBox="0 0 23 23" preserveAspectRatio="xMinYMid">
+<defs><style>.cls-1{fill:#33e62c;}.cls-2{fill:#b0b0b0;}</style></defs>
+<title>GreyAndGreenCross</title>
+<g id="layer1">
+  <rect id="rect1" class="cls-1" x="9" y="0" width="5" height="9" />
+  <path id="path1" class="cls-1" d="M 4,11.5 A 2.5,2.5 0 0 1 6.5,9 H 16.5 A 2.5,2.5 0 0 1 19,11.5 Z" />
+  <path id="path2" class="cls-2" d="M 4,11.5 A 2.5,2.5 0 0 0 6.5,14 H 16.5 A 2.5,2.5 0 0 0 19,11.5 Z" />
+  <rect id="rect2" class="cls-2" x="9" y="14" width="5" height="9" />
+</g>
+</svg>

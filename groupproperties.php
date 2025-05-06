@@ -101,7 +101,7 @@
 
 		$parts = explode('#', $val);
 		if ($parts[0] == '')
-			$parts[0] = 'Simple';
+			$parts[0] = 'Straight';
 		$logSessionInfo = sprintf($lang['strlogsessionstart'], $parts[1]);
 		if ($parts[2] == '') {
 			$color = 'Green';

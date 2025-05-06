@@ -1311,7 +1311,7 @@ class EmajDb {
 
 		$data->clean($group);
 
-		$sql = "SELECT lower(lses_time_range), 'LS' AS event, 'strlogsession#GreySimple' AS graphic,
+		$sql = "SELECT lower(lses_time_range), 'LS' AS event, 'strlogsession#GreyStraight' AS graphic,
 					   NULL AS create_drop_time,NULL AS grph_log_sessions,
 					   to_char(b.time_tx_timestamp,'{$this->tsFormat}') AS start_time,
 					   to_char(e.time_tx_timestamp,'{$this->tsFormat}') AS stop_time,
@@ -3959,7 +3959,7 @@ class EmajDb {
 							WHEN rlchg_change_kind::TEXT LIKE 'ADD_%' THEN 'Begin'
 							WHEN rlchg_change_kind::TEXT LIKE 'MOVE_%' THEN 'Cross'
 							WHEN rlchg_change_kind::TEXT LIKE 'REMOVE_%' THEN 'End'
-							WHEN rlchg_change_kind::TEXT LIKE 'CHANGE_%' OR rlchg_change_kind = 'REPAIR_TABLE' THEN 'Simple'
+							WHEN rlchg_change_kind::TEXT LIKE 'CHANGE_%' OR rlchg_change_kind = 'REPAIR_TABLE' THEN 'Straight'
 							ELSE ''
 						END 
 						AS ev_graphic,

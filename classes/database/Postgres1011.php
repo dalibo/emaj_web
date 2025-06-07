@@ -1,14 +1,14 @@
 <?php
 
 /*
- * PostgreSQL 9.2 to 11 support
+ * PostgreSQL 10 to 11 support
  */
 
 include_once('./classes/database/Postgres.php');
 
-class Postgres9211 extends Postgres {
+class Postgres1011 extends Postgres {
 
-	var $major_version = 9.2;
+	var $major_version = 10;
 
 	/**
 	 * Constructor
@@ -41,6 +41,7 @@ class Postgres9211 extends Postgres {
 	}
 
 	function hasWithOids() { return true; }
+	function hasGeneratedColumn() { return false; }
 
 }
 ?>

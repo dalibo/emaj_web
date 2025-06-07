@@ -71,20 +71,24 @@ class Connection {
 		// Detect version and choose appropriate database driver
 
 		switch (substr($version,0,2)) {
-			case '15': return 'Postgres'; break;
-			case '14': return 'Postgres'; break;
-			case '13': return 'Postgres'; break;
+			case '18':
+			case '17':
+			case '16':
+			case '15':
+			case '14':
+			case '13':
 			case '12': return 'Postgres'; break;
-			case '11': return 'Postgres9211'; break;
-			case '10': return 'Postgres9211'; break;
+			case '11':
+			case '10': return 'Postgres1011'; break;
 		}
 		switch (substr($version,0,3)) {
-			case '9.6': return 'Postgres9211'; break;
-			case '9.5': return 'Postgres9211'; break;
-			case '9.4': return 'Postgres9211'; break;
-			case '9.3': return 'Postgres9211'; break;
-			case '9.2': return 'Postgres9211'; break;
-			case '9.1': return 'Postgres91'; break;
+			case '9.6':
+			case '9.5': return 'Postgres9596'; break;
+			case '9.4':
+			case '9.3':
+			case '9.2':
+			case '9.1':
+			case '9.0': return null; break;
 		}
 
 		/* All 9.0- versions are not supported */

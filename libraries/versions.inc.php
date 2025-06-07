@@ -9,7 +9,7 @@
 	$appVersion = '4.6';
 
 	// PostgreSQL and PHP minimum version
-	$postgresqlMinVer = '9.1';
+	$postgresqlMinVer = '9.5';
 	$phpMinVer = '7.0';
 
 	// E-Maj versions

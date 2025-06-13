@@ -1409,7 +1409,7 @@ class EmajDb {
 		$data->clean($schema);
 
 		if ($data->hasWithOids()) {
-			$goodTypeConditions = "c.relpersistence = 'p' and not c.relhasoids";
+			$goodTypeConditions = "c.relpersistence = 'p' AND NOT c.relhasoids";
 		} else {
 			$goodTypeConditions = "c.relpersistence = 'p'";
 		}
@@ -3820,6 +3820,77 @@ class EmajDb {
 							ELSE '' END AS emaj_type";
 
 		return $data->selectField($sql,'emaj_type');
+	}
+
+	/**
+	 * Retrieve the columns definition of a table.
+	 * Returns all columns in order.
+	 */
+	function getColumns($schema, $table) {
+		global $data;
+
+		$data->clean($schema);
+		$data->clean($table);
+
+		if (! $data->hasIdentityColumn())									// PG 9.6-
+			$valuationKind =
+					"WHEN a.atthasdef THEN 'DEF'";
+		if ($data->hasIdentityColumn() && ! $data->hasGeneratedColumn())	// PG 10 - 11
+			$valuationKind =
+					"WHEN attidentity = 'd' THEN 'GDI'
+					WHEN attidentity = 'a' THEN 'GAI'
+					WHEN a.atthasdef THEN 'DEF'";
+		if ($data->hasIdentityColumn() && $data->hasGeneratedColumn())		// PG 12+
+			$valuationKind =
+					"WHEN attidentity = 'd' THEN 'GDI'
+					WHEN attidentity = 'a' THEN 'GAI'
+					WHEN a.atthasdef AND attgenerated = 's' THEN 'GAES'
+					WHEN a.atthasdef AND attgenerated = 'v' THEN 'GAE'
+					WHEN a.atthasdef AND attgenerated = '' THEN 'DEF'";
+		if (! $data->hasIdentityColumn())									// PG 9.6-
+			$identitySequence = "";
+		else
+			$identitySequence =												// PG 10+
+					"WHEN a.attidentity <> '' THEN (
+						SELECT 'nextval(''' || quote_ident(n2.nspname) || '.' || quote_ident(c2.relname) || ''')'
+							FROM pg_class c2
+								JOIN pg_namespace n2 ON c2.relnamespace = n2.oid
+								JOIN pg_depend d ON (classid = 'pg_catalog.pg_class'::regclass AND d.objid = c2.oid AND
+													 refclassid = 'pg_catalog.pg_class'::regclass AND d.refobjid = c1.oid AND
+													 d.refobjsubid = attnum)
+						)";
+
+		$sql = "
+			SELECT
+				attnum, attname,
+				atttypmod, pg_catalog.format_type(atttypid, atttypmod) As type,
+				attnotnull,
+				CASE
+					$valuationKind
+					ELSE ''
+				END AS valuationkind,
+				CASE
+					WHEN a.atthasdef THEN (
+						SELECT pg_catalog.pg_get_expr(adbin, adrelid, true)
+							FROM pg_catalog.pg_attrdef
+							WHERE adrelid = a.attrelid AND adnum = a.attnum
+						)
+					$identitySequence
+					ELSE ''
+				END AS expression,
+				pg_catalog.col_description(a.attrelid, a.attnum) AS comment
+			FROM
+				pg_catalog.pg_attribute a
+				JOIN pg_catalog.pg_class c1 ON (c1.oid = a.attrelid)
+				JOIN pg_catalog.pg_namespace n1 ON (n1.oid = c1.relnamespace)
+				LEFT OUTER JOIN pg_catalog.pg_type t ON a.atttypid = t.oid
+			WHERE c1.relname='{$table}'
+			  AND n1.nspname = '{$schema}'
+			  AND attnum > 0
+			  AND NOT attisdropped
+			ORDER BY attnum";
+
+		return $data->selectSet($sql);
 	}
 
 	/**

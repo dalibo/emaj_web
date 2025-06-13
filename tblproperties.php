@@ -9,8 +9,36 @@
 	include_once('./libraries/tblseqcommon.inc.php');
 	include_once('./libraries/tblactions.inc.php');
 
+	// Callback function to modify the notnull column content
+	// It replaces the TRUE value by an icon
+	function renderIsNotNull($val) {
+		global $misc, $lang;
+		if ($val == 't') {
+			$icon = $misc->icon('Checkmark');
+			$alt = $lang['strnotnull'];
+			return "<img src=\"{$icon}\" width=18 alt=\"{$alt}\" title=\"{$alt}\"/>";
+		}
+		return;
+	}
+
+	// Callback function to modify the valuationkind column content
+	function renderValuationKind($val) {
+		global $misc, $lang;
+
+		$icon = '';
+		switch ($val) {
+			case 'DEF': $icon = $misc->icon('ColDEF'); $alt = $lang['strcolDEF']; break;
+			case 'GDI': $icon = $misc->icon('ColGDI'); $alt = $lang['strcolGDI']; break;
+			case 'GAI': $icon = $misc->icon('ColGAI'); $alt = $lang['strcolGAI']; break;
+			case 'GAES': $icon = $misc->icon('ColGAES'); $alt = $lang['strcolGAES']; break;
+			case 'GAE': $icon = $misc->icon('ColGAE'); $alt = $lang['strcolGAE']; break;
+			default: return $val;
+		}
+		return "<img src=\"{$icon}\" alt=\"{$alt}\" title=\"{$alt}\" class=\"cellicon\"/>";
+	}
+
 	// Callback function to adjust the icons and links for constraints on table columns
-	function cstrRender($s, $p) {
+	function renderConstraints($s, $p) {
 		global $misc, $data;
 
 		$str ='';
@@ -52,21 +80,6 @@
 		return;
 	}
 
-	// Function to dynamicaly modify actions list for each table column description
-	function attPre(&$rowdata, $actions) {
-		global $data;
-		$rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
-		$attname = $rowdata->fields['attname'];
-		$table = $_REQUEST['table'];
-		$data->fieldClean($attname);
-		$data->fieldClean($table);
-
-		$actions['browse']['attr']['href']['urlvars']['query'] = "SELECT \"{$attname}\", count(*) AS \"count\"
-			FROM \"{$table}\" GROUP BY \"{$attname}\" ORDER BY \"{$attname}\"";
-
-		return $actions;
-	}
-
 	// Function to dynamicaly modify actions list for each trigger
 	function triggerPre(&$rowdata, $actions) {
 
@@ -96,7 +109,7 @@
 		// Get table information
 		$tdata = $data->getTable($_REQUEST['table']);
 		// Get columns description
-		$attrs = $data->getTableAttributes($_REQUEST['table']);
+		$attrs = $emajdb->getColumns($_REQUEST['schema'], $_REQUEST['table']);
 		// Get constraints keys
 		$ck = $data->getConstraintsWithFields($_REQUEST['table']);
 		// Get triggers
@@ -260,34 +273,60 @@
 
 			// Display the table structure
 			$columns = array(
+				'num' => array(
+					'title' => '#',
+					'field' => field('attnum'),
+					'params'=> array(
+						'align' => 'center',
+					),
+					'filter'=> false,
+				),
 				'column' => array(
 					'title' => $lang['strcolumn'],
 					'field' => field('attname'),
-					'vars'  => array('column' => 'attname'),
 				),
 				'type' => array(
 					'title' => $lang['strtype'],
-					'field' => field('+type'),
+					'field' => field('type'),
 				),
 				'notnull' => array(
 					'title' => $lang['strnotnull'],
 					'field' => field('attnotnull'),
-					'type'  => 'bool',
-					'params'=> array('true' => 'NOT NULL', 'false' => ''),
+					'type'  => 'callback',
+					'params'=> array(
+						'function' => 'renderIsNotNull',
+						'align' => 'center',
+					),
+					'filter'=> false,
 				),
-				'default' => array(
-					'title' => $lang['strdefault'],
-					'field' => field('adsrc'),
+				'valuationkind' => array(
+					'upper_title' => $lang['strvaluation'],
+					'upper_title_colspan' => 2,
+					'title' => $lang['strtype'],
+					'field' => field('valuationkind'),
+					'type'  => 'callback',
+					'params'=> array(
+						'function' => 'renderValuationKind',
+						'align' => 'center',
+					),
+					'filter'=> false,
+					'sorter'=> false,
+				),
+				'expression' => array(
+					'title' => $lang['strexpression'],
+					'field' => field('expression'),
 				),
 				'keyprop' => array(
 					'title' => $lang['strconstraints'],
 					'field' => field('attname'),
 					'type'  => 'callback',
 					'params'=> array(
-						'function' => 'cstrRender',
+						'function' => 'renderConstraints',
 						'keys' => $ck->getArray(),
 						'align' => 'center',
 					),
+					'filter'=> false,
+					'sorter'=> false,
 				),
 				'comment' => array(
 					'title' => $lang['strcomment'],
@@ -302,7 +341,7 @@
 
 			$actions = array();
 
-			$misc->printTable($attrs, $columns, $actions, 'tblproperties-columns', null, 'attPre');
+			$misc->printTable($attrs, $columns, $actions, 'tblproperties-columns', null, null, array('sorter' => true, 'filter' => true));
 
 			echo "<hr/>\n";
 

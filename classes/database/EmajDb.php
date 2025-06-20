@@ -672,7 +672,7 @@ class EmajDb {
 		if ($this->getNumEmajVersion() >= 40400) {		// version 4.4+
 			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, group_comment,
 						CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END as group_type,
-						to_char(time_tx_timestamp,'{$this->tsFormat}') as creation_datetime,
+						to_char(time_clock_timestamp,'{$this->tsFormat}') as creation_datetime,
 						1 as has_waiting_changes,
 						(SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
 					FROM emaj.emaj_group
@@ -684,7 +684,7 @@ class EmajDb {
 			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, group_comment,
 					CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END
 						as group_type,
-					to_char(time_tx_timestamp,'{$this->tsFormat}') as creation_datetime, ";
+					to_char(time_clock_timestamp,'{$this->tsFormat}') as creation_datetime, ";
 			if ($this->getNumEmajVersion() < 40000){	// version 3.x
 				$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes, ";
 			} else {
@@ -711,7 +711,7 @@ class EmajDb {
 						CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
 							WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
 							ELSE 'ROLLBACKABLE-PROTECTED' END as group_type,
-						to_char(time_tx_timestamp,'{$this->tsFormat}') as creation_datetime,
+						to_char(time_clock_timestamp,'{$this->tsFormat}') as creation_datetime,
 						1 as has_waiting_changes,
 						(SELECT count(*) FROM emaj.emaj_mark WHERE mark_group = emaj_group.group_name) as nb_mark
 					FROM emaj.emaj_group
@@ -724,7 +724,7 @@ class EmajDb {
 					CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
 						WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
 						ELSE 'ROLLBACKABLE-PROTECTED' END as group_type,
-					to_char(time_tx_timestamp,'{$this->tsFormat}') as creation_datetime, ";
+					to_char(time_clock_timestamp,'{$this->tsFormat}') as creation_datetime, ";
 			if ($this->getNumEmajVersion() < 40000){	// version 3.x
 				$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes, ";
 			} else {
@@ -752,7 +752,7 @@ class EmajDb {
 					WHERE NOT EXISTS (SELECT 0 FROM emaj.emaj_group WHERE group_name = grph_group)
 					GROUP BY 1
 				)
-				SELECT h.grph_group, to_char(time_tx_timestamp,'{$this->tsFormat}') AS latest_drop_datetime,
+				SELECT h.grph_group, to_char(time_clock_timestamp,'{$this->tsFormat}') AS latest_drop_datetime,
 					   CASE WHEN h.grph_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END AS latest_is_rollbackable
 					FROM selected_group s JOIN emaj.emaj_group_hist h ON (h.grph_group = s.grph_group AND upper(grph_time_range) = lastest_drop_time_id)
 					JOIN emaj.emaj_time_stamp ON (time_id = upper(grph_time_range) - 1)
@@ -998,8 +998,8 @@ class EmajDb {
 
 		if ($this->getNumEmajVersion() >= 40400) {		// version 4.4+
 			$sql = "SELECT group_name, group_nb_table, group_nb_sequence,
-						to_char(c.time_tx_timestamp,'{$this->tsFormat}') as group_creation_datetime,
-						to_char(s.time_tx_timestamp,'{$this->tsFormat}') as group_start_datetime,
+						to_char(c.time_clock_timestamp,'{$this->tsFormat}') as group_creation_datetime,
+						to_char(s.time_clock_timestamp,'{$this->tsFormat}') as group_start_datetime,
 						CASE WHEN group_is_logging THEN 'LOGGING' ELSE 'IDLE' END as group_state,
 						CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
 							WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
@@ -1018,7 +1018,7 @@ class EmajDb {
 					WHERE group_name = '$group'";
 		} else {
 			$sql = "SELECT group_name, group_nb_table, group_nb_sequence,
-					to_char(time_tx_timestamp,'{$this->tsFormat}') as group_creation_datetime,
+					to_char(time_clock_timestamp,'{$this->tsFormat}') as group_creation_datetime,
 					CASE WHEN group_is_logging THEN 'LOGGING' ELSE 'IDLE' END as group_state,
 					CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
 						WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
@@ -1191,7 +1191,7 @@ class EmajDb {
 //				and the log session start and stop times.
 			$sql = "WITH mark_1 AS (
 						SELECT mark_time_id, mark_group, mark_name, mark_comment,
-							to_char(m.time_tx_timestamp,'{$this->tsFormat}') AS mark_datetime,
+							to_char(m.time_clock_timestamp,'{$this->tsFormat}') AS mark_datetime,
 							CASE WHEN mark_time_id = lower(lses_time_range) THEN 'Begin'
 								 WHEN first_value(mark_name) OVER (PARTITION BY lses_group, lses_time_range ORDER BY mark_time_id
 										RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) = mark_name THEN 'First'
@@ -1232,7 +1232,7 @@ class EmajDb {
 		} else {
 			$sql = "WITH mark_1 AS (
 						SELECT mark_time_id, mark_group, mark_name,
-							to_char(time_tx_timestamp,'{$this->tsFormat}') as mark_datetime, mark_comment,
+							to_char(time_clock_timestamp,'{$this->tsFormat}') as mark_datetime, mark_comment,
 							CASE WHEN mark_is_deleted THEN 'DELETED'
 								WHEN NOT mark_is_deleted AND mark_is_rlbk_protected THEN 'ACTIVE-PROTECTED'
 								ELSE 'ACTIVE' END as mark_state,
@@ -1284,7 +1284,7 @@ class EmajDb {
 		$data->clean($group);
 
 		$sql = "SELECT rel_kind || '+' AS relkind, rel_schema, rel_tblseq,
-					to_char(time_tx_timestamp,'{$this->tsFormat}') as start_time,
+					to_char(time_clock_timestamp,'{$this->tsFormat}') as start_time,
 					rel_priority, rel_log_dat_tsp, rel_log_idx_tsp,
 					rel_log_schema || '.' || rel_log_table as full_log_table,
 					CASE WHEN rel_kind = 'r' THEN
@@ -1313,8 +1313,8 @@ class EmajDb {
 
 		$sql = "SELECT lower(lses_time_range), 'LS' AS event, 'strlogsession#GreyStraight' AS graphic,
 					   NULL AS create_drop_time,NULL AS grph_log_sessions,
-					   to_char(b.time_tx_timestamp,'{$this->tsFormat}') AS start_time,
-					   to_char(e.time_tx_timestamp,'{$this->tsFormat}') AS stop_time,
+					   to_char(b.time_clock_timestamp,'{$this->tsFormat}') AS start_time,
+					   to_char(e.time_clock_timestamp,'{$this->tsFormat}') AS stop_time,
 					   lses_marks, lses_log_rows
 					FROM emaj.emaj_log_session
 					     LEFT OUTER JOIN emaj.emaj_time_stamp b ON (b.time_id = lower(lses_time_range))
@@ -1322,7 +1322,7 @@ class EmajDb {
 					WHERE lses_group = '$group'
 			UNION ALL
 				SELECT lower(grph_time_range), 'C', 'strgroupcreate#GreyBegin',
-					   to_char(time_tx_timestamp,'{$this->tsFormat}'), grph_log_sessions,
+					   to_char(time_clock_timestamp,'{$this->tsFormat}'), grph_log_sessions,
 					   NULL, NULL, NULL, NULL
 					FROM emaj.emaj_group_hist
 					     LEFT OUTER JOIN emaj.emaj_time_stamp ON (time_id = lower(grph_time_range))
@@ -1330,7 +1330,7 @@ class EmajDb {
 						AND NOT lower_inf(grph_time_range)
 			UNION ALL
 				SELECT upper(grph_time_range) - 1, 'D', 'strgroupdrop#GreyEnd',
-					   to_char(time_tx_timestamp,'{$this->tsFormat}'), grph_log_sessions,
+					   to_char(time_clock_timestamp,'{$this->tsFormat}'), grph_log_sessions,
 					   NULL, NULL, NULL, NULL
 					FROM emaj.emaj_group_hist
 					     LEFT OUTER JOIN emaj.emaj_time_stamp ON (time_id = upper(grph_time_range) -1)
@@ -1461,7 +1461,7 @@ class EmajDb {
 		$data->clean($schema);
 		$data->clean($tblseq);
 
-		$sql = "SELECT coalesce(rel_group, '') AS rel_group, to_char(time_tx_timestamp,'{$this->tsFormat}') AS assign_ts,
+		$sql = "SELECT coalesce(rel_group, '') AS rel_group, to_char(time_clock_timestamp,'{$this->tsFormat}') AS assign_ts,
 					   coalesce(rel_priority::text, '') AS rel_priority,
 					   coalesce(rel_log_dat_tsp, '') AS rel_log_dat_tsp, coalesce(rel_log_idx_tsp, '') AS rel_log_idx_tsp
 					FROM emaj.emaj_relation
@@ -2641,7 +2641,7 @@ class EmajDb {
 		$data->clean($group);
 
 		if ($this->getNumEmajVersion() >= 40400){	// version 4.4+
-			$sql = "SELECT mark_name, to_char(time_tx_timestamp,'{$this->tsFormat}') as mark_datetime, mark_is_rlbk_protected
+			$sql = "SELECT mark_name, to_char(time_clock_timestamp,'{$this->tsFormat}') as mark_datetime, mark_is_rlbk_protected
 					FROM emaj.emaj_mark
 						JOIN emaj.emaj_time_stamp ON (time_id = mark_time_id)
 						JOIN emaj.emaj_log_session ON (lses_group = mark_group AND lses_time_range @> mark_time_id)
@@ -2649,7 +2649,7 @@ class EmajDb {
 					AND upper_inf(lses_time_range)
 					ORDER BY mark_time_id DESC";
 		} else {
-			$sql = "SELECT mark_name, to_char(time_tx_timestamp,'{$this->tsFormat}') as mark_datetime, mark_is_rlbk_protected
+			$sql = "SELECT mark_name, to_char(time_clock_timestamp,'{$this->tsFormat}') as mark_datetime, mark_is_rlbk_protected
 					FROM emaj.emaj_mark, emaj.emaj_time_stamp
 					WHERE mark_group = '$group'
 					AND NOT mark_is_deleted
@@ -2739,7 +2739,7 @@ class EmajDb {
 
 		// Look at the alter group operations executed after the mark.
 		if ($this->getNumEmajVersion() >= 40000){	// version >= 4.0.0
-			$sql = "SELECT to_char(time_tx_timestamp,'{$this->tsFormat}') as time_tx_timestamp,
+			$sql = "SELECT to_char(time_clock_timestamp,'{$this->tsFormat}') as time_clock_timestamp,
 					CASE
 					WHEN rlchg_change_kind = 'REMOVE_TABLE' THEN
 						format('{$emajlang['stralteredremovetbl']}', rlchg_schema, rlchg_tblseq, rlchg_group)
@@ -2776,9 +2776,9 @@ class EmajDb {
 						AND rlchg_change_kind IN   ('ADD_TABLE', 'ADD_SEQUENCE', 'REMOVE_TABLE', 'REMOVE_SEQUENCE',
 													'REPAIR_TABLE', 'MOVE_TABLE', 'MOVE_SEQUENCE', 'CHANGE_LOG_DATA_TABLESPACE',
 													'CHANGE_LOG_INDEX_TABLESPACE', 'CHANGE_PRIORITY', 'CHANGE_IGNORED_TRIGGERS')
-					ORDER BY time_tx_timestamp, rlchg_schema, rlchg_tblseq, rlchg_change_kind";
+					ORDER BY time_clock_timestamp, rlchg_schema, rlchg_tblseq, rlchg_change_kind";
 		} else {
-			$sql = "SELECT to_char(time_tx_timestamp,'{$this->tsFormat}') as time_tx_timestamp, altr_step,
+			$sql = "SELECT to_char(time_clock_timestamp,'{$this->tsFormat}') as time_clock_timestamp, altr_step,
 					CASE
 					WHEN altr_step = 'REMOVE_TBL' THEN
 						format('{$emajlang['stralteredremovetbl']}', altr_schema, altr_tblseq, altr_group)
@@ -2820,7 +2820,7 @@ class EmajDb {
 						AND altr_step IN ('ADD_TBL', 'ADD_SEQ', 'REMOVE_TBL', 'REMOVE_SEQ', 'REPAIR_TBL', 'REPAIR_SEQ', 'MOVE_TBL', 'MOVE_SEQ',
 											'CHANGE_TBL_LOG_SCHEMA', 'CHANGE_TBL_NAMES_PREFIX', 'CHANGE_TBL_LOG_DATA_TSP',
 											'CHANGE_TBL_LOG_INDEX_TSP', 'CHANGE_REL_PRIORITY')
-					ORDER BY time_tx_timestamp, altr_schema, altr_tblseq, altr_step";
+					ORDER BY time_clock_timestamp, altr_schema, altr_tblseq, altr_step";
 		}
 		return $data->selectSet($sql);
 	}
@@ -2926,7 +2926,7 @@ class EmajDb {
 
 		if ($this->getNumEmajVersion() >= 40400){	// version 4.4+
 			$sql = "SELECT t.mark_name, t.mark_datetime, t.mark_is_rlbk_protected
-					FROM (SELECT mark_name, to_char(time_tx_timestamp,'{$this->tsFormat}') as mark_datetime, mark_is_rlbk_protected,
+					FROM (SELECT mark_name, to_char(time_clock_timestamp,'{$this->tsFormat}') as mark_datetime, mark_is_rlbk_protected,
 								 array_agg (mark_group) AS groups
 						FROM emaj.emaj_mark
 							 JOIN emaj.emaj_group ON (mark_group = group_name)
@@ -2939,7 +2939,7 @@ class EmajDb {
 					ORDER BY t.mark_datetime DESC";
 		} else {
 			$sql = "SELECT t.mark_name, t.mark_datetime, t.mark_is_rlbk_protected
-					FROM (SELECT mark_name, to_char(time_tx_timestamp,'{$this->tsFormat}') as mark_datetime, mark_is_rlbk_protected,
+					FROM (SELECT mark_name, to_char(time_clock_timestamp,'{$this->tsFormat}') as mark_datetime, mark_is_rlbk_protected,
 								array_agg (mark_group) AS groups
 						FROM emaj.emaj_mark,emaj.emaj_group,
 							emaj.emaj_time_stamp
@@ -2962,7 +2962,7 @@ class EmajDb {
 		$data->clean($groups);
 		$groups="'".str_replace(', ',"','",$groups)."'";
 
-		$sql = "SELECT max(time_tx_timestamp) AS youngest_mark_datetime
+		$sql = "SELECT max(time_clock_timestamp) AS youngest_mark_datetime
 				  FROM emaj.emaj_mark , emaj.emaj_time_stamp
 				  WHERE time_id = mark_time_id
 					AND mark_group IN ($groups) AND mark_is_rlbk_protected";
@@ -3129,9 +3129,9 @@ class EmajDb {
 					LIMIT $nb";
 		} else {
 			$sql = "SELECT rlbk_id, rlbk_groups, array_to_string(rlbk_groups,', ') as rlbk_groups_list, rlbk_status,
-						to_char(tr.time_tx_timestamp,'{$this->tsFormat}') AS rlbk_start_datetime,
+						to_char(tr.time_clock_timestamp,'{$this->tsFormat}') AS rlbk_start_datetime,
 						to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
-						to_char(rlbk_end_datetime - tr.time_tx_timestamp, '{$this->intervalFormat}') as rlbk_duration,
+						to_char(rlbk_end_datetime - tr.time_clock_timestamp, '{$this->intervalFormat}') as rlbk_duration,
 						rlbk_mark, rlbk_is_logged, rlbk_nb_session
 					FROM emaj.emaj_rlbk
 						 JOIN emaj.emaj_time_stamp tr ON (tr.time_id = rlbk_time_id)
@@ -3172,8 +3172,8 @@ class EmajDb {
 		global $data;
 
 		$sql = "SELECT cons_group,
-					cons_target_rlbk_mark_name, to_char(tt.time_tx_timestamp,'{$this->tsFormat}') AS cons_target_rlbk_mark_datetime,
-					cons_end_rlbk_mark_name, to_char(rt.time_tx_timestamp,'{$this->tsFormat}') AS cons_end_rlbk_mark_datetime,
+					cons_target_rlbk_mark_name, to_char(tt.time_clock_timestamp,'{$this->tsFormat}') AS cons_target_rlbk_mark_datetime,
+					cons_end_rlbk_mark_name, to_char(rt.time_clock_timestamp,'{$this->tsFormat}') AS cons_end_rlbk_mark_datetime,
 					cons_rows, cons_marks
 				FROM emaj.emaj_get_consolidable_rollbacks(),
 					emaj.emaj_time_stamp tt, emaj.emaj_time_stamp rt
@@ -3242,7 +3242,7 @@ class EmajDb {
 						to_char(rlbk_end_datetime - rlbk_start_datetime,'{$this->intervalFormat}') AS rlbk_global_duration,
 						to_char(rlbk_end_planning_datetime - rlbk_start_datetime,'{$this->intervalFormat}') AS rlbk_planning_duration,
 						to_char(rlbk_end_locking_datetime - rlbk_end_planning_datetime,'{$this->intervalFormat}') AS rlbk_locking_duration,
-						rlbk_mark, to_char(tm.time_tx_timestamp,'{$this->tsFormat}') as rlbk_mark_datetime, rlbk_is_logged, rlbk_nb_session,
+						rlbk_mark, to_char(tm.time_clock_timestamp,'{$this->tsFormat}') as rlbk_mark_datetime, rlbk_is_logged, rlbk_nb_session,
 						format('%s / %s', rlbk_eff_nb_table, rlbk_nb_table) AS rlbk_tbl,
 						format('%s / %s', coalesce(rlbk_eff_nb_sequence::TEXT, '?'), rlbk_nb_sequence) AS rlbk_seq,
 						rlbk_prior, rlbk_next
@@ -3258,12 +3258,12 @@ class EmajDb {
 						FROM emaj.emaj_rlbk
 					)
 					SELECT rlbk_id, array_to_string(rlbk_groups,', ') AS rlbk_groups_list, rlbk_status,
-						to_char(tr.time_tx_timestamp,'{$this->tsFormat}') AS rlbk_start_datetime,
+						to_char(tr.time_clock_timestamp,'{$this->tsFormat}') AS rlbk_start_datetime,
 						to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
-						to_char(rlbk_end_datetime - tr.time_tx_timestamp,'{$this->intervalFormat}') AS rlbk_global_duration,
+						to_char(rlbk_end_datetime - tr.time_clock_timestamp,'{$this->intervalFormat}') AS rlbk_global_duration,
 						'' AS rlbk_planning_duration,
 						'' AS rlbk_locking_duration,
-						rlbk_mark, to_char(tm.time_tx_timestamp,'{$this->tsFormat}') as rlbk_mark_datetime, rlbk_is_logged, rlbk_nb_session,
+						rlbk_mark, to_char(tm.time_clock_timestamp,'{$this->tsFormat}') as rlbk_mark_datetime, rlbk_is_logged, rlbk_nb_session,
 						format('%s / %s', rlbk_eff_nb_table, rlbk_nb_table) AS rlbk_tbl,";
 			if ($this->getNumEmajVersion() >= 40200){	// version >= 4.2.0
 				$sql = $sql . "
@@ -4049,7 +4049,7 @@ class EmajDb {
 						FROM group_hist
 						WHERE NOT upper_inf(grph_time_range)
 				)
-				SELECT ev_graphic, time_tx_timestamp AS ev_ts,
+				SELECT ev_graphic, time_clock_timestamp AS ev_ts,
 					CASE change_kind
 						WHEN 'CREATE_GROUP' THEN format('" . $data->clean($lang['streventcreategroup']) . "', rlchg_group)
 						WHEN 'DROP_GROUP' THEN format('" . $data->clean($lang['streventdropgroup']) . "', rlchg_group)
@@ -4076,7 +4076,7 @@ class EmajDb {
 					END AS ev_text
 					FROM event
 						JOIN emaj.emaj_time_stamp ON (time_id = rlchg_time_id)
-				ORDER BY time_tx_timestamp DESC, rank DESC";
+				ORDER BY time_clock_timestamp DESC, rank DESC";
 
 		return $data->selectSet($sql);
 	}
@@ -4230,8 +4230,8 @@ class EmajDb {
 
 		$sql = "SELECT mark_group AS group,
 					mark_name AS latest_mark,
-					to_char(time_tx_timestamp, 'YYYY/MM/DD HH24:MI:SS') AS latest_mark_ts,
-					extract(EPOCH FROM time_tx_timestamp) AS latest_mark_epoch,
+					to_char(time_clock_timestamp, 'YYYY/MM/DD HH24:MI:SS') AS latest_mark_ts,
+					extract(EPOCH FROM time_clock_timestamp) AS latest_mark_epoch,
 					NULL AS changes_since_previous, NULL AS cps_since_previous,
 					NULL AS changes_since_mark, NULL AS cps_since_mark
 				FROM emaj.emaj_mark

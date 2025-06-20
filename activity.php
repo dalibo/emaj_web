@@ -203,6 +203,12 @@
 					'latest_mark_ts' => array(
 						'title' => $lang['strmarksetat'],
 						'field' => field('latest_mark_ts'),
+						'type' => 'spanned',
+						'params'=> array(
+							'dateformat' => $lang['stroldtimestampformat'],
+							'locale' => $lang['applocale'],
+							'class' => 'tooltip left-aligned-tooltip',
+							),
 					),
 					'changes_since_mark' => array(
 						'upper_title' => $lang['strsincelatestmark'],

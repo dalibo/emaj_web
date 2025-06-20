@@ -4230,7 +4230,7 @@ class EmajDb {
 
 		$sql = "SELECT mark_group AS group,
 					mark_name AS latest_mark,
-					to_char(time_clock_timestamp, 'YYYY/MM/DD HH24:MI:SS') AS latest_mark_ts,
+					time_clock_timestamp AS latest_mark_ts,
 					extract(EPOCH FROM time_clock_timestamp) AS latest_mark_epoch,
 					NULL AS changes_since_previous, NULL AS cps_since_previous,
 					NULL AS changes_since_mark, NULL AS cps_since_mark

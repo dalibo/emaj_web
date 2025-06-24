@@ -53,7 +53,6 @@
 
 		// get group's characteristics
 		$group = $emajdb->getGroup($_REQUEST['group']);
-
 		if ($marks->recordCount() < 1) {
 
 			// No mark recorded for the group => no update logged => no stat to display
@@ -80,7 +79,8 @@
 			echo "\t<div class=\"form-label\">{$lang['strendmark']}</div>\n";
 			echo "\t<div class=\"form-input\">\n";
 			echo "\t\t<select name=\"rangeend\" id=\"rangeend\" >\n";
-			echo "\t\t\t<option value=\"currentsituation\">{$lang['strcurrentsituation']}</option>\n";
+			if ($group->fields['group_state'] == 'LOGGING')
+				echo "\t\t\t<option value=\"currentsituation\">{$lang['strcurrentsituation']}</option>\n";
 			foreach($marks as $r)
 				echo "\t\t\t<option value=\"", htmlspecialchars($r['mark_name']), "\" >", htmlspecialchars($r['mark_name']), " ({$r['mark_datetime']})</option>\n";
 			echo "\t\t</select>\n";
@@ -107,19 +107,22 @@
 			echo "  $(\"#rangeend option:last-child\").remove();\n";
 
 			// JQuery to set the selected start mark by default
-			// (the previous requested start mark or the first mark if no stat are already displayed)
+			// (the previous requested start mark if stat are already displayed or the first or second mark depending on the group state)
 			if (isset($_REQUEST['rangestart'])) {
 				echo "  $(\"#rangestart option[value='{$_REQUEST['rangestart']}']\").attr(\"selected\", true);\n";
 			} else {
-				echo "  $(\"#rangestart option:first-child\").attr(\"selected\", true);\n";
+				if ($group->fields['group_state'] == 'LOGGING')
+					echo "  $(\"#rangestart option:eq(0)\").attr(\"selected\", true);\n";
+				else
+					echo "  $(\"#rangestart option:eq(1)\").attr(\"selected\", true);\n";
 			}
 
 			// JQuery to set the selected end mark by default
-			// (the previous requested end mark or the current state if no stat are already displayed)
+			// (the previous requested end mark if stat are already displayed or the first mark or current state depending on the group state)
 			if (isset($_REQUEST['rangeend'])) {
 				echo "  $(\"#rangeend option[value='{$_REQUEST['rangeend']}']\").attr(\"selected\", true);\n";
 			} else {
-				echo "  $(\"#rangeend option:first-child\").attr(\"selected\", true);\n";
+				echo "  $(\"#rangeend option:eq(0)\").attr(\"selected\", true);\n";
 			}
 
 			// JQuery script to avoid rangestart > rangeend

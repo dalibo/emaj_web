@@ -377,7 +377,7 @@
 	$lang['strmarksetat'] = 'Posée le';
 	$lang['strprotectedmarkindicator'] = 'Marque protégée ? Une marque protégée bloque les rollbacks E-Maj sur des marques antérieures.';
 	$lang['stractivemark'] = 'Marque active, donc utilisable pour un rollback E-Maj.';
-	$lang['strdeletedmark'] = 'Un arrêt de l\'enregistrement des mises à jour a rendu la marque inactive, donc inutilisable pour un rollback E-Maj.';
+	$lang['strinactivemark'] = 'Un arrêt de l\'enregistrement des mises à jour a rendu la marque inactive, donc inutilisable pour un rollback E-Maj.';
 	$lang['strprotectedmark'] = 'La protection mise sur la marque bloque les rollbacks E-Maj sur des marques antérieures.';
 	$lang['strsetmark'] = 'Poser une marque';
 

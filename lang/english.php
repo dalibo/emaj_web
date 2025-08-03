@@ -377,7 +377,7 @@
 	$lang['strmarksetat'] = 'Set at';
 	$lang['strprotectedmarkindicator'] = 'Protected mark ? A protected mark blocks E-Maj rollbacks on prior marks.';
 	$lang['stractivemark'] = 'Active mark, thus usable for an E-Maj rollback.';
-	$lang['strdeletedmark'] = 'A stop of the changes recording has left the mark inactive, thus unusable for an E-Maj rollback.';
+	$lang['strinactivemark'] = 'A stop of the changes recording has left the mark inactive, thus unusable for an E-Maj rollback.';
 	$lang['strprotectedmark'] = 'The protection set on the mark blocks any E-Maj rollbacks on prior marks.';
 	$lang['strsetmark'] = 'Set a mark';
 

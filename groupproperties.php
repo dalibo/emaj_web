@@ -129,7 +129,7 @@
 			if ($val == 'ACTIVE') {
 				$img = "<img src=\"{$misc->icon('ActiveMark')}\" alt=\"active_mark\" title=\"{$lang['stractivemark']}\"/>";
 			} elseif ($val == 'DELETED') {
-				$img = "<img src=\"{$misc->icon('DeletedMark')}\" alt=\"deleted_mark\" title=\"{$lang['strdeletedmark']}\"/>";
+				$img = "<img src=\"{$misc->icon('InactiveMark')}\" alt=\"inactive_mark\" title=\"{$lang['strinactivemark']}\"/>";
 			} elseif ($val == 'ACTIVE-PROTECTED') {
 				$img = "<img src=\"{$misc->icon('ActiveMark')}\" alt=\"active_mark\" title=\"{$lang['stractivemark']}\"/>";
 				$img .= "<img src=\"{$misc->icon('EmajPadlock')}\" alt=\"protected\" title=\"{$lang['strprotectedmark']}\"/>";

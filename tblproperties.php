@@ -9,6 +9,10 @@
 	include_once('./libraries/tblseqcommon.inc.php');
 	include_once('./libraries/tblactions.inc.php');
 
+/********************************************************************************************************
+ * Callback functions
+ *******************************************************************************************************/
+
 	// Callback function to modify the notnull column content
 	// It replaces the TRUE value by an icon
 	function renderIsNotNull($val) {
@@ -95,6 +99,10 @@
 		return $actions;
 	}
 
+/********************************************************************************************************
+ * Main functions displaying pages
+ *******************************************************************************************************/
+
 	/**
 	 * Show the table's properties: E-Maj group owning the table, if any, list of columns in the table, list of triggers
 	 */
@@ -104,7 +112,7 @@
 		$misc->printHeader('table', 'table', 'properties');
 
 		$misc->printMsg($msg, $errMsg);
-		$misc->printTitle(sprintf($lang['strnamedtable'], $_REQUEST['schema'], $_REQUEST['table']));
+		$misc->printTitle(sprintf($lang['strnamedtable'], htmlspecialchars($_REQUEST['schema']), htmlspecialchars($_REQUEST['table'])));
 
 		// Get table information
 		$tdata = $data->getTable($_REQUEST['table']);

@@ -416,7 +416,7 @@
 					'params'=> array('function' => 'renderLogSession'),
 					'class' => 'nopadding center',
 					'filter'=> false,
-			),
+				),
 			));
 		}
 

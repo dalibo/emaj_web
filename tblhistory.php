@@ -13,10 +13,10 @@
 
 	// Callback function to dynamicaly add an icon to each history row
 	function renderHistoryGraphic($val) {
-		global $misc, $lang;
+		global $misc;
 
 		$icon = $misc->icon($val);
-		$div = "<div><img src=\"$icon\" alt=\"$icon\" class=\"fullsizecellicon\" /></div>";
+		$div = "<div><img src=\"$icon\" alt=\"$val\" class=\"fullsizecellicon\" /></div>";
 		return $div;
 	}
 

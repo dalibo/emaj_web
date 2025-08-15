@@ -59,6 +59,22 @@ sub loadStrings {
 				$nbUsedString = $nbUsedString + 4;
 				next;
 			}
+			if ($str =~ /^(tblstat.php:\d+:lang\[)'strlogsession'/) {
+				push(@usedStrings, "$1'strlogsessionBegin']");
+				push(@usedStrings, "$1'strlogsessionEnd']");
+				push(@usedStrings, "$1'strlogsessionBeginEnd']");
+				push(@usedStrings, "$1'strlogsessionStraight']");
+				$nbUsedString = $nbUsedString + 4;
+				next;
+			}
+			if ($str =~ /^(seqstat.php:\d+:lang\[)'strlogsession'/) {
+				push(@usedStrings, "$1'strlogsessionBegin']");
+				push(@usedStrings, "$1'strlogsessionEnd']");
+				push(@usedStrings, "$1'strlogsessionBeginEnd']");
+				push(@usedStrings, "$1'strlogsessionStraight']");
+				$nbUsedString = $nbUsedString + 4;
+				next;
+			}
 # Usual case.
 			push(@usedStrings, $str);
 			$nbUsedString++;

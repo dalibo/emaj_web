@@ -44,6 +44,7 @@
 	$lang['strcolumn'] = 'Column';
 	$lang['strcomment'] = 'Comment';
 	$lang['strcommentlabel'] = 'Comment: ';
+	$lang['strcompute'] = 'Compute';
 	$lang['strconfirm'] = 'Confirm';
 	$lang['strconstraints'] = 'Constraints';
 	$lang['strcontent'] = 'Content';
@@ -820,6 +821,22 @@
 	$lang['strremovesequencesok'] = '%s sequences have been removed from their tables group.';
 	$lang['strremovesequenceerr'] = 'Error while removing the sequence "%s.%s" from its tables group "%s".';
 	$lang['strremovesequenceserr'] = 'Error while removing these %s sequences of schema "%s" from their tables group.';
+
+	// Tables and sequences Emaj stats
+	$lang['strchangestable'] = 'Recorded changes for table "%s.%s"';
+	$lang['strnomarktbl'] = 'No known mark for the table.';
+	$lang['strchangessequence'] = 'Recorded changes for sequence "%s.%s"';
+	$lang['strnomarkseq'] = 'No known mark for the sequence.';
+	$lang['strrecchangesbetween'] = 'Recorded changes between marks "%s" and "%s"';
+	$lang['strrecchangessince'] = 'Recorded changes since mark "%s"';
+	$lang['strdeletedmark'] = 'deleted mark';
+	$lang['strnbrollbacks'] = '# rollbacks';
+	$lang['strdescendingintervalsorder'] = 'Most recent time intervals are placed ahead on the sheet.';
+	$lang['strnostatoninterval'] = 'No statistics on this time interval.';
+	$lang['strlogsessionBegin'] = 'First log session slice';
+	$lang['strlogsessionEnd'] = 'Last log session slice';
+	$lang['strlogsessionBeginEnd'] = 'First and last log session slice';
+	$lang['strlogsessionStraight'] = 'Intermediate slice';
 
 	// Tables and sequences Emaj history
 	$lang['stremajhistorytable'] = 'E-Maj history for table "%s.%s"';

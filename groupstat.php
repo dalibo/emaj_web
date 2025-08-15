@@ -53,6 +53,7 @@
 
 		// get group's characteristics
 		$group = $emajdb->getGroup($_REQUEST['group']);
+
 		if ($marks->recordCount() < 1) {
 
 			// No mark recorded for the group => no update logged => no stat to display
@@ -290,7 +291,31 @@
 				),
 			);
 
-			if ($emajdb->getNumEmajVersion() >= 40300) {			// version >= 4.3.0
+			if ($emajdb->getNumEmajVersion() >= 40700) {			// version >= 4.7.0
+				// Request parameters to prepare the SQL statement to edit
+				$actions = array(
+					'gen_sql_dump_changes' => array(
+						'content' => $lang['strbrowsechanges'],
+						'icon' => 'Eye',
+						'attr' => array (
+							'href' => array (
+								'url' => 'groupstat.php',
+								'urlvars' => array_merge($urlvars, array (
+									'action' => 'gen_sql_dump_changes',
+									'group' => field('stat_group'),
+									'schema' => field('stat_schema'),
+									'table' => field('stat_table'),
+									'startMark' => field('stat_first_mark'),
+									'startTimeId' => field('stat_first_time_id'),
+									'endMark' => field('stat_last_mark'),
+									'endTimeId' => field('stat_last_time_id'),
+									'verb' => '',
+									'role' => '',
+									'knownRoles' => ''
+						)))),
+					),
+				);
+			} elseif ($emajdb->getNumEmajVersion() >= 40300) {			// version >= 4.3.0
 				// Request parameters to prepare the SQL statement to edit
 				$actions = array(
 					'gen_sql_dump_changes' => array(
@@ -572,7 +597,31 @@
 				),
 			);
 
-			if ($emajdb->getNumEmajVersion() >= 40300) {			// version >= 4.3.0
+			if ($emajdb->getNumEmajVersion() >= 40700) {			// version >= 4.7.0
+				// Request parameters to prepare the SQL statement to edit
+				$actions = array(
+					'gen_sql_dump_changes' => array(
+						'content' => $lang['strbrowsechanges'],
+						'icon' => 'Eye',
+						'attr' => array (
+							'href' => array (
+								'url' => 'groupstat.php',
+								'urlvars' => array_merge($urlvars, array (
+									'action' => 'gen_sql_dump_changes',
+									'group' => field('stat_group'),
+									'schema' => field('stat_schema'),
+									'table' => field('stat_table'),
+									'startMark' => field('stat_first_mark'),
+									'startTimeId' => field('stat_first_time_id'),
+									'endMark' => field('stat_last_mark'),
+									'endTimeId' => field('stat_last_time_id'),
+									'verb' => field('stat_verb'),
+									'role' => field('stat_role'),
+									'knownRoles' => $rolesList
+						)))),
+					),
+				);
+			} elseif ($emajdb->getNumEmajVersion() >= 40300) {			// version >= 4.3.0
 				// Request parameters to prepare the SQL statement to edit
 				$actions = array(
 					'gen_sql_dump_changes' => array(
@@ -645,15 +694,24 @@
 	 * We are already in the target frame
 	 */
 	function gen_sql_dump_changes() {
-		global $misc;
+		global $misc, $emajdb;
 
-		echo "<meta http-equiv=\"refresh\" content=\"0;url=sqledit.php?subject=table&amp;{$misc->href}&amp;action=gen_sql_dump_changes" .
-			 "&amp;group=" . urlencode($_REQUEST['group']) .
-			 "&amp;schema=" . urlencode($_REQUEST['schema']) . "&amp;table=" . urlencode($_REQUEST['table']) .
-			 "&amp;startMark=" . urlencode($_REQUEST['startMark']) . "&amp;startTs=" . urlencode($_REQUEST['startTs']) .
-			 "&amp;endMark=" . urlencode($_REQUEST['endMark']) . "&amp;endTs=" . urlencode($_REQUEST['endTs']) .
-			 "&amp;verb=" . urlencode($_REQUEST['verb']) . "&amp;role=" . urlencode($_REQUEST['role']) .
-			 "&amp;knownRoles=" . urlencode($_REQUEST['knownRoles']) . "\">";
+		if ($emajdb->getNumEmajVersion() >= 40700) 				// version >= 4.7
+			echo "<meta http-equiv=\"refresh\" content=\"0;url=sqledit.php?subject=table&amp;{$misc->href}&amp;action=gen_sql_dump_changes" .
+				"&amp;group=" . urlencode($_REQUEST['group']) .
+				"&amp;schema=" . urlencode($_REQUEST['schema']) . "&amp;table=" . urlencode($_REQUEST['table']) .
+				"&amp;startMark=" . urlencode($_REQUEST['startMark']) . "&amp;startTimeId=" . urlencode($_REQUEST['startTimeId']) .
+				"&amp;endMark=" . urlencode($_REQUEST['endMark']) . "&amp;endTimeId=" . urlencode($_REQUEST['endTimeId']) .
+				"&amp;verb=" . urlencode($_REQUEST['verb']) . "&amp;role=" . urlencode($_REQUEST['role']) .
+				"&amp;knownRoles=" . urlencode($_REQUEST['knownRoles']) . "\">";
+		else
+			echo "<meta http-equiv=\"refresh\" content=\"0;url=sqledit.php?subject=table&amp;{$misc->href}&amp;action=gen_sql_dump_changes" .
+				"&amp;group=" . urlencode($_REQUEST['group']) .
+				"&amp;schema=" . urlencode($_REQUEST['schema']) . "&amp;table=" . urlencode($_REQUEST['table']) .
+				"&amp;startMark=" . urlencode($_REQUEST['startMark']) . "&amp;startTs=" . urlencode($_REQUEST['startTs']) .
+				"&amp;endMark=" . urlencode($_REQUEST['endMark']) . "&amp;endTs=" . urlencode($_REQUEST['endTs']) .
+				"&amp;verb=" . urlencode($_REQUEST['verb']) . "&amp;role=" . urlencode($_REQUEST['role']) .
+				"&amp;knownRoles=" . urlencode($_REQUEST['knownRoles']) . "\">";
 	}
 
 /********************************************************************************************************

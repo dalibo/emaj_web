@@ -36,8 +36,12 @@
 
 		// Check whether the table has a PK
 		$hasPk = $emajdb->hasTablePk($_REQUEST['schema'], $_REQUEST['table']);
+
 		// Get the E-Maj columns list for the related log table
-		$emajCols = $emajdb->getEmajColumns($_REQUEST['group'], $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['startMark'], $_REQUEST['startTs']);
+		if ($emajdb->getNumEmajVersion() >= 40700) 					// version >= 4.7
+			$emajCols = $emajdb->getEmajColumns_2($_REQUEST['group'], $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['startTimeId']);
+		else
+			$emajCols = $emajdb->getEmajColumns_1($_REQUEST['group'], $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['startMark'], $_REQUEST['startTs']);
 
 		echo "<div>\n";
 		echo "<p>{$lang['strtable']} = \"<b>" . htmlspecialchars($_REQUEST['schema']) . "." . htmlspecialchars($_REQUEST['table']) . "</b>\"<br>\n";
@@ -57,10 +61,15 @@
 		echo "\t<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "\t<input type=\"hidden\" name=\"schema\" value=\"", htmlspecialchars($_REQUEST['schema']), "\" />\n";
 		echo "\t<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
-		echo "\t<input type=\"hidden\" name=\"startMark\" value=\"", htmlspecialchars($_REQUEST['startMark']), "\" />\n";
-		echo "\t<input type=\"hidden\" name=\"startTs\" value=\"", htmlspecialchars($_REQUEST['startTs']), "\" />\n";
-		echo "\t<input type=\"hidden\" name=\"endMark\" value=\"", htmlspecialchars($_REQUEST['endMark']), "\" />\n";
-		echo "\t<input type=\"hidden\" name=\"endTs\" value=\"", htmlspecialchars($_REQUEST['endTs']), "\" />\n";
+		if ($emajdb->getNumEmajVersion() >= 40700) {					// version >= 4.7
+			echo "\t<input type=\"hidden\" name=\"startTimeId\" value=\"", htmlspecialchars($_REQUEST['startTimeId']), "\" />\n";
+			echo "\t<input type=\"hidden\" name=\"endTimeId\" value=\"", htmlspecialchars($_REQUEST['endTimeId']), "\" />\n";
+		} else {
+			echo "\t<input type=\"hidden\" name=\"startMark\" value=\"", htmlspecialchars($_REQUEST['startMark']), "\" />\n";
+			echo "\t<input type=\"hidden\" name=\"startTs\" value=\"", htmlspecialchars($_REQUEST['startTs']), "\" />\n";
+			echo "\t<input type=\"hidden\" name=\"endMark\" value=\"", htmlspecialchars($_REQUEST['endMark']), "\" />\n";
+			echo "\t<input type=\"hidden\" name=\"endTs\" value=\"", htmlspecialchars($_REQUEST['endTs']), "\" />\n";
+		}
 
 		echo "<div class=\"form-container\">\n";
 
@@ -174,9 +183,14 @@
 		$orderBy = (isset($_POST['orderBy'])) ? $_POST['orderBy'] : 'TIME';
 
 		// And call the emaj function that generates the sql
-		$sql_text = $emajdb->genSqlDumpChanges($_POST['group'], $_POST['schema'], $_POST['table'],
-											   $_POST['startMark'], $_POST['startTs'], $_POST['endMark'], $_POST['endTs'],
-											   $consolidation, $emajColumnsList, $colsOrder, $orderBy);
+		if ($emajdb->getNumEmajVersion() >= 40700) 					// version >= 4.7
+			$sql_text = $emajdb->genSqlDumpChanges_2($_POST['group'], $_POST['schema'], $_POST['table'],
+												$_POST['startTimeId'], $_POST['endTimeId'],
+												$consolidation, $emajColumnsList, $colsOrder, $orderBy);
+		else
+			$sql_text = $emajdb->genSqlDumpChanges_1($_POST['group'], $_POST['schema'], $_POST['table'],
+												$_POST['startMark'], $_POST['startTs'], $_POST['endMark'], $_POST['endTs'],
+												$consolidation, $emajColumnsList, $colsOrder, $orderBy);
 
 		// Process the sql verbs filter if any
 		if (isset($_POST['verbs']) && count($_POST['verbs']) < 4) {

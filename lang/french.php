@@ -44,6 +44,7 @@
 	$lang['strcolumn'] = 'Colonne';
 	$lang['strcomment'] = 'Commentaire';
 	$lang['strcommentlabel'] = 'Commentaire : ';
+	$lang['strcompute'] = 'Calculer';
 	$lang['strconfirm'] = 'Confirmer';
 	$lang['strconstraints'] = 'Contraintes';
 	$lang['strcontent'] = 'Contenu';
@@ -652,7 +653,7 @@
 	// Group's history
 	$lang['strgrouphistory'] = 'Historique du groupe de tables "%s"';
 	$lang['stremajnohistory'] = 'Il n\'y a aucun historique à afficher pour ce groupe.';
-	$lang['strgrouphistoryorder'] = 'Les plus récentes créations de groupe, suppressions de groupe et sessions de log sont placées en début de tableau.';
+	$lang['strgrouphistoryorder'] = 'Les plus récentes créations de groupe, suppressions de groupe et sessions de log sont en tête de tableau.';
 	$lang['strnblogsessions'] = 'Sessions de log';
 	$lang['strgroupcreate'] = 'Création du groupe';
 	$lang['strgroupdrop'] = 'Suppression du groupe';
@@ -820,6 +821,22 @@
 	$lang['strremovesequencesok'] = '%s séquences ont été retirées de leur groupe de tables.';
 	$lang['strremovesequenceerr'] = 'Erreur lors de la sortie de la sequence "%s.%s" du groupe de tables "%s".';
 	$lang['strremovesequenceserr'] = 'Erreur lors de la sortie des %s sequences du schéma "%s" de leur groupe de tables.';
+
+	// Tables and sequences Emaj stats
+	$lang['strchangestable'] = 'Mises à jour enregistrées pour la table "%s.%s"';
+	$lang['strnomarktbl'] = 'Aucune marque connue pour la table.';
+	$lang['strchangessequence'] = 'Mises à jour enregistrées pour la séquence "%s.%s"';
+	$lang['strnomarkseq'] = 'Aucune marque connue pour la séquence.';
+	$lang['strrecchangesbetween'] = 'Mises à jour enregistrées entre les marques "%s" et "%s"';
+	$lang['strrecchangessince'] = 'Mises à jour enregistrées depuis la marque "%s"';
+	$lang['strdeletedmark'] = 'marque supprimée';
+	$lang['strnbrollbacks'] = 'Nb rollbacks';
+	$lang['strdescendingintervalsorder'] = 'Les intervalles de temps les plus récents sont en tête de tableau.';
+	$lang['strnostatoninterval'] = 'Aucune statistique sur cet intervalle de temps.';
+	$lang['strlogsessionBegin'] = 'Première tranche de la session de log';
+	$lang['strlogsessionEnd'] = 'Dernière tranche de la session de log';
+	$lang['strlogsessionBeginEnd'] = 'Première et dernière tranche de la session de log';
+	$lang['strlogsessionStraight'] = 'Tranche intermédiaire';
 
 	// Tables and sequences Emaj history
 	$lang['stremajhistorytable'] = 'Historique E-Maj pour la table "%s.%s"';

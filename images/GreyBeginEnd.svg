@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="23" viewBox="0 0 23 23" preserveAspectRatio="xMinYMid">
+<defs><style>.cls-1{fill:#b0b0b0;}</style></defs>
+<title>GreyBeginEnd</title>
+<g id="layer1">
+  <rect id="rect1" class="cls-1" x="9" y="5" width="5" height="13" />
+  <path id="path1" class="cls-1" d="M 6.5,3 a 2.5,2.5 0 0 0 -2.5,2.5 2.5,2.5 0 0 0 2.5,2.5 h 10.1 a 2.5,2.5 0 0 0 2.4,-2.5 2.5,2.5 0 0 0 -2.5,-2.5 Z" />
+  <path id="path2" class="cls-1" d="M 6.5,15 a 2.5,2.5 0 0 0 -2.5,2.5 2.5,2.5 0 0 0 2.5,2.5 h 10.1 a 2.5,2.5 0 0 0 2.4,-2.5 2.5,2.5 0 0 0 -2.5,-2.5 Z" />
+</g>
+</svg>

@@ -3490,7 +3490,14 @@ class EmajDb {
 		$data->clean($firstMark);
 		$data->clean($lastMark);
 
-		if ($this->getNumEmajVersion() >= 40300) {			// version >= 4.3.0
+		if ($this->getNumEmajVersion() >= 40700) {				// version >= 4.7.0
+			$sql = "CREATE TEMP TABLE tmp_stat AS
+					SELECT stat_group, stat_schema, stat_table,
+						   stat_first_mark, stat_first_mark_datetime, stat_first_time_id, stat_last_mark, stat_last_mark_datetime, stat_last_time_id,
+						   stat_rows
+						FROM emaj.emaj_log_stat_group('$group','$firstMark','$lastMark')
+						WHERE stat_rows > 0";
+		} elseif ($this->getNumEmajVersion() >= 40300) {		// version >= 4.3.0
 			$sql = "CREATE TEMP TABLE tmp_stat AS
 					SELECT stat_group, stat_schema, stat_table,
 						   stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
@@ -3512,7 +3519,12 @@ class EmajDb {
 
 		$data->execute($sql);
 
-		if ($this->getNumEmajVersion() >= 40300) {				// version >= 4.3.0
+		if ($this->getNumEmajVersion() >= 40700) {					// version >= 4.7.0
+			$sql = "SELECT stat_group, stat_schema, stat_table,	stat_first_mark, stat_first_mark_datetime, stat_first_time_id,
+						   stat_last_mark, stat_last_mark_datetime, stat_last_time_id, stat_rows
+						FROM tmp_stat
+						ORDER BY stat_group, stat_schema, stat_table, stat_first_time_id";
+		} elseif ($this->getNumEmajVersion() >= 40300) {			// version >= 4.3.0
 			$sql = "SELECT stat_group, stat_schema, stat_table,	stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, stat_rows
 						FROM tmp_stat
 						ORDER BY stat_group, stat_schema, stat_table";
@@ -3548,20 +3560,37 @@ class EmajDb {
 		$data->clean($firstMark);
 		$data->clean($lastMark);
 
+		if ($this->getNumEmajVersion() >= 40700) {			// version >= 4.7.0
 		$sql = "CREATE TEMP TABLE tmp_stat AS
-				SELECT stat_group, stat_schema, stat_sequence,
-					   stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
-					   stat_increments, stat_has_structure_changed
-					FROM emaj.emaj_sequence_stat_group('$group','$firstMark','$lastMark')
-					WHERE stat_increments <> 0 OR stat_has_structure_changed";
+					SELECT stat_group, stat_schema, stat_sequence,
+						   stat_first_mark, stat_first_mark_datetime, stat_first_time_id, stat_last_mark, stat_last_mark_datetime, stat_last_time_id,
+						   stat_increments, stat_has_structure_changed
+						FROM emaj.emaj_sequence_stat_group('$group','$firstMark','$lastMark')
+						WHERE stat_increments <> 0 OR stat_has_structure_changed";
+		} else {
+			$sql = "CREATE TEMP TABLE tmp_stat AS
+					SELECT stat_group, stat_schema, stat_sequence,
+						   stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
+						   stat_increments, stat_has_structure_changed
+						FROM emaj.emaj_sequence_stat_group('$group','$firstMark','$lastMark')
+						WHERE stat_increments <> 0 OR stat_has_structure_changed";
+		}
 
 		$data->execute($sql);
 
-		$sql = "SELECT stat_group, stat_schema, stat_sequence,
-					   stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
-					   stat_increments, stat_has_structure_changed
-					FROM tmp_stat
-					ORDER BY stat_group, stat_schema, stat_sequence, stat_first_mark_datetime";
+		if ($this->getNumEmajVersion() >= 40700) {			// version >= 4.7.0
+			$sql = "SELECT stat_group, stat_schema, stat_sequence,
+						   stat_first_mark, stat_first_mark_datetime, stat_first_time_id, stat_last_mark, stat_last_mark_datetime, stat_last_time_id,
+						   stat_increments, stat_has_structure_changed
+						FROM tmp_stat
+						ORDER BY stat_group, stat_schema, stat_sequence, stat_first_time_id";
+		} else {
+			$sql = "SELECT stat_group, stat_schema, stat_sequence,
+						   stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
+						   stat_increments, stat_has_structure_changed
+						FROM tmp_stat
+						ORDER BY stat_group, stat_schema, stat_sequence, stat_first_mark_datetime";
+		}
 
 		return $data->selectSet($sql);
 	}
@@ -3590,7 +3619,14 @@ class EmajDb {
 		$data->clean($firstMark);
 		$data->clean($lastMark);
 
-		if ($this->getNumEmajVersion() >= 40300) {	// version >= 4.3.0
+		if ($this->getNumEmajVersion() >= 40700) {	// version >= 4.7.0
+			$sql = "CREATE TEMP TABLE tmp_stat AS
+					SELECT stat_group, stat_schema, stat_table,
+						   stat_first_mark, stat_first_mark_datetime, stat_first_time_id, stat_last_mark, stat_last_mark_datetime, stat_last_time_id,
+						   stat_role, stat_verb, stat_rows
+						FROM emaj.emaj_detailed_log_stat_group('$group','$firstMark','$lastMark')
+						WHERE stat_rows > 0";
+		} elseif ($this->getNumEmajVersion() >= 40300) {	// version >= 4.3.0
 			$sql = "CREATE TEMP TABLE tmp_stat AS
 					SELECT stat_group, stat_schema, stat_table,
 						   stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
@@ -3612,7 +3648,13 @@ class EmajDb {
 		}
 		$data->execute($sql);
 
-		if ($this->getNumEmajVersion() >= 40300) {				// version >= 4.3.0
+		if ($this->getNumEmajVersion() >= 40700) {				// version >= 4.7.0
+			$sql = "SELECT stat_group, stat_schema, stat_table,
+						   stat_first_mark, stat_first_mark_datetime, stat_first_time_id, stat_last_mark, stat_last_mark_datetime, stat_last_time_id,
+						   stat_role, stat_verb, stat_rows
+						FROM tmp_stat
+						ORDER BY stat_group, stat_schema, stat_table, stat_role, stat_verb";
+		} elseif ($this->getNumEmajVersion() >= 40300) {				// version >= 4.3.0
 			$sql = "SELECT stat_group, stat_schema, stat_table,	stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
 						   stat_role, stat_verb, stat_rows
 						FROM tmp_stat
@@ -3657,8 +3699,9 @@ class EmajDb {
 
 	/**
 	 * Get the E-Maj technical columns names for a log table linked to an application table at a given mark.
+	 * This function is called with emaj prior 4.7.
 	 */
-	function getEmajColumns($group, $schema, $table, $mark, $markTs) {
+	function getEmajColumns_1($group, $schema, $table, $mark, $markTs) {
 		global $data;
 
 		$data->clean($group);
@@ -3667,9 +3710,9 @@ class EmajDb {
 		$data->clean($mark);
 		$data->clean($markTs);
 
-		// Get the start mark time_id
+		// Get the mark time_id
 		if ($mark == '[deleted mark]') {
-			// The mark name is unknown. So get the time id from the start mark timestamp.
+			// The mark name is unknown. So get the time id from the mark timestamp.
 			$sql = "SELECT time_id
 						FROM emaj.emaj_relation
 							JOIN emaj.emaj_time_stamp ON (time_id = lower(rel_time_range))
@@ -3697,10 +3740,35 @@ class EmajDb {
 	}
 
 	/**
+	 * Get the E-Maj technical columns names for a log table linked to an application table at a given mark.
+	 * This function is called with emaj 4.7+.
+	 */
+	function getEmajColumns_2($group, $schema, $table, $timeId) {
+		global $data;
+
+		$data->clean($group);
+		$data->clean($schema);
+		$data->clean($table);
+
+		// Get the requested column names
+		$sql = "SELECT attname
+					FROM emaj.emaj_relation
+						 JOIN pg_catalog.pg_class ON (relname = rel_log_table)
+						 JOIN pg_catalog.pg_namespace ON (pg_namespace.oid = relnamespace AND nspname = rel_log_schema)
+						 JOIN pg_catalog.pg_attribute ON (attrelid = pg_class.oid)
+					WHERE rel_schema = '$schema' AND rel_tblseq = '$table'
+					  AND rel_time_range @> $timeId::BIGINT
+					  AND attnum >= rel_emaj_verb_attnum AND NOT attisdropped";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
 	 * Generate the SQL statement that dumps changes for a table of a group on a mark range.
 	 * Various options are provided.
+	 * This function is called with emaj prior 4.7.
 	 */
-	function genSqlDumpChanges($group, $schema, $table, $startMark, $startTs, $endMark, $endTs, $consolidation, $emajColumnsList, $colsOrder, $orderBy) {
+	function genSqlDumpChanges_1($group, $schema, $table, $startMark, $startTs, $endMark, $endTs, $consolidation, $emajColumnsList, $colsOrder, $orderBy) {
 		global $data;
 
 		$data->clean($group);
@@ -3773,6 +3841,53 @@ class EmajDb {
 														'$emajColumnsList', '$colsOrder', '$orderBy') AS sql_text
 						FROM emaj.emaj_relation
 						WHERE rel_schema = '$schema' AND rel_tblseq = '$table' AND rel_time_range && int8range($lowerTimeId, $upperTimeId,'[)')";
+		}
+
+		// Generate the statement
+		$sqlText = $data->selectField($sql,'sql_text') . ";";
+
+		// For performance reason, add the GUC adjusment when the consolidation level is FULL
+		if ($consolidation == 'FULL') {
+			$sqlText = "--SET enable_nestloop = FALSE;\n" . $sqlText; // . "\nRESET enable_nestloop;";
+		}
+
+		return $sqlText;
+	}
+
+	/**
+	 * Generate the SQL statement that dumps changes for a table of a group on a mark range.
+	 * Various options are provided.
+	 * This function is called with emaj 4.7+.
+	 */
+	function genSqlDumpChanges_2($group, $schema, $table, $startTimeId, $endTimeId, $consolidation, $emajColumnsList, $colsOrder, $orderBy) {
+		global $data;
+
+		$data->clean($group);
+		$data->clean($schema);
+		$data->clean($table);
+		$data->clean($consolidation);
+		$data->clean($emajColumnsList);
+		$data->clean($colsOrder);
+		$data->clean($orderBy);
+
+		// Build the SQL statement
+		if ($endTimeId == '') {
+			// No end time id
+			$sql = "SELECT emaj._gen_sql_dump_changes_tbl(rel_log_schema, rel_log_table, rel_emaj_verb_attnum, rel_pk_cols,
+														tsmin.time_last_emaj_gid, +9223372036854775807, '$consolidation',
+														'$emajColumnsList', '$colsOrder', '$orderBy') AS sql_text
+						FROM emaj.emaj_relation
+							 JOIN emaj.emaj_time_stamp tsmin ON (tsmin.time_id = $startTimeId)
+						WHERE rel_schema = '$schema' AND rel_tblseq = '$table' AND upper_inf(rel_time_range)";
+		} else {
+			// The end time id is known
+			$sql = "SELECT emaj._gen_sql_dump_changes_tbl(rel_log_schema, rel_log_table, rel_emaj_verb_attnum, rel_pk_cols,
+														tsmin.time_last_emaj_gid, tsmax.time_last_emaj_gid, '$consolidation',
+														'$emajColumnsList', '$colsOrder', '$orderBy') AS sql_text
+						FROM emaj.emaj_relation
+							 JOIN emaj.emaj_time_stamp tsmin ON (tsmin.time_id = $startTimeId)
+							 JOIN emaj.emaj_time_stamp tsmax ON (tsmax.time_id = $endTimeId)
+						WHERE rel_schema = '$schema' AND rel_tblseq = '$table' AND rel_time_range && int8range($startTimeId, $endTimeId,'[)')";
 		}
 
 		// Generate the statement
@@ -3997,6 +4112,156 @@ class EmajDb {
 							WHERE d.classid = t.tableoid AND d.objid = t.oid AND d.deptype = 'i' AND c.contype = 'f'))";
 
 		return $data->selectField($sql,'nbtriggers');
+	}
+
+	/**
+	 * Is a table or a sequence in a group currenctly in logging state.
+	 */
+	function isTblseqInLoggingGroup($schema, $tblseq) {
+		global $data;
+
+		$data->clean($schema);
+		$data->clean($tblseq);
+
+		$sql = "SELECT EXISTS(
+					SELECT 0
+						FROM emaj.emaj_relation
+							 JOIN emaj.emaj_group ON (group_name = rel_group)
+						WHERE rel_schema = '$schema'
+						  AND rel_tblseq = '$tblseq'
+						  AND upper_inf(rel_time_range)
+						  AND group_is_logging
+					) AS is_in_logging_group";
+
+		return $data->selectField($sql,'is_in_logging_group');
+	}
+
+	/**
+	 * Get the list of marks recorded for a single table.
+	 * The function is only called when emaj version >= 4.7.0
+	 */
+	function getMarksTable($schema, $table) {
+		global $data;
+
+		$data->clean($schema);
+		$data->clean($table);
+
+		$sql = "SELECT mark_time_id, rel_group, mark_name, time_clock_timestamp AS mark_datetime,
+					   rel_group || '.' || mark_name AS mark_id
+				FROM emaj.emaj_table
+					 JOIN emaj.emaj_relation ON (rel_schema = tbl_schema AND rel_tblseq = tbl_name)
+					 JOIN emaj.emaj_time_stamp ON (time_id = tbl_time_id)
+					 JOIN emaj.emaj_mark ON (mark_group = rel_group AND mark_time_id = tbl_time_id)
+				WHERE tbl_schema = '$schema'
+				  AND tbl_name = '$table'
+				  AND (tbl_time_id <@ rel_time_range OR tbl_time_id = upper(rel_time_range))
+				ORDER BY mark_time_id DESC";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Get the changes statistics for a single table on all marks interval between 2 points in time.
+	 * The function is only called when emaj version >= 4.7.0
+	 */
+	function getLogStatTable($schema, $table, $startTimeId, $endTimeId) {
+		global $data, $lang;
+
+		$data->clean($schema);
+		$data->clean($table);
+
+		if ($endTimeId == '')
+			$endTimeId = 'NULL';
+
+		$sql = "SELECT CASE
+							WHEN stat_is_log_start AND NOT stat_is_log_stop THEN 'Begin'
+							WHEN NOT stat_is_log_start AND stat_is_log_stop THEN 'End'
+							WHEN stat_is_log_start AND stat_is_log_stop THEN 'BeginEnd'
+							ELSE 'Straight'
+					   END AS graphic,
+					   stat_group,
+					   CASE stat_first_mark
+							WHEN '[deleted mark]' THEN '[{$lang['strdeletedmark']}]'
+							ELSE stat_first_mark
+					   END AS stat_first_mark,
+					   to_char(stat_first_mark_datetime, '{$this->tsFormat}') AS stat_first_mark_datetime,
+					   stat_first_time_id,
+					   CASE stat_last_mark
+							WHEN '[current state]' THEN '[{$lang['strcurrentsituation']}]'
+							WHEN '[deleted mark]' THEN '[{$lang['strdeletedmark']}]'
+							ELSE stat_last_mark
+					   END AS stat_last_mark,
+					   to_char(stat_last_mark_datetime, '{$this->tsFormat}') AS stat_last_mark_datetime,
+					   stat_last_time_id,
+					   stat_changes, stat_rollbacks
+					FROM emaj._log_stat_table('$schema', '$table', $startTimeId, $endTimeId)
+					ORDER BY stat_first_time_id DESC";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Get the list of marks recorded for a single sequennce.
+	 * The function is only called when emaj version >= 4.7.0
+	 */
+	function getMarksSequence($schema, $sequence) {
+		global $data;
+
+		$data->clean($schema);
+		$data->clean($sequence);
+
+		$sql = "SELECT mark_time_id, rel_group, mark_name, time_clock_timestamp AS mark_datetime,
+					   rel_group || '.' || mark_name AS mark_id
+				FROM emaj.emaj_sequence
+					 JOIN emaj.emaj_relation ON (rel_schema = sequ_schema AND rel_tblseq = sequ_name)
+					 JOIN emaj.emaj_time_stamp ON (time_id = sequ_time_id)
+					 JOIN emaj.emaj_mark ON (mark_group = rel_group AND mark_time_id = sequ_time_id)
+				WHERE sequ_schema = '$schema'
+				  AND sequ_name = '$sequence'
+				  AND (sequ_time_id <@ rel_time_range OR sequ_time_id = upper(rel_time_range))
+				ORDER BY mark_time_id DESC";
+
+		return $data->selectSet($sql);
+	}
+
+	/**
+	 * Get the changes statistics for a single sequence on all marks interval between 2 points in time.
+	 * The function is only called when emaj version >= 4.7.0
+	 */
+	function getLogStatSequence($schema, $sequence, $startTimeId, $endTimeId) {
+		global $data, $lang;
+
+		$data->clean($schema);
+		$data->clean($sequence);
+
+		if ($endTimeId == '')
+			$endTimeId = 'NULL';
+
+		$sql = "SELECT CASE
+							WHEN stat_is_log_start AND NOT stat_is_log_stop THEN 'Begin'
+							WHEN NOT stat_is_log_start AND stat_is_log_stop THEN 'End'
+							WHEN stat_is_log_start AND stat_is_log_stop THEN 'BeginEnd'
+							ELSE 'Straight'
+					   END AS graphic,
+					   stat_group,
+					   CASE stat_first_mark
+							WHEN '[deleted mark]' THEN '[{$lang['strdeletedmark']}]'
+							ELSE stat_first_mark
+					   END AS stat_first_mark,
+					   to_char(stat_first_mark_datetime, '{$this->tsFormat}') AS stat_first_mark_datetime,
+					   stat_first_time_id,
+					   CASE stat_last_mark
+							WHEN '[current state]' THEN '[{$lang['strcurrentsituation']}]'
+							WHEN '[deleted mark]' THEN '[{$lang['strdeletedmark']}]'
+							ELSE stat_last_mark
+					   END AS stat_last_mark,
+					   to_char(stat_last_mark_datetime, '{$this->tsFormat}') AS stat_last_mark_datetime,
+					   stat_last_time_id,
+					   stat_increments, stat_has_structure_changed, stat_rollbacks
+					FROM emaj._log_stat_sequence('$schema', '$sequence', $startTimeId, $endTimeId)
+					ORDER BY stat_first_time_id DESC";
+
+		return $data->selectSet($sql);
 	}
 
 	/**

@@ -852,9 +852,9 @@ class EmajDb {
 		$data->clean($relKind);
 		$relsArray = "ARRAY['".str_replace(', ',"','",$tblSeqsList)."']";
 		if ($relKind == 'table')
-			$kind = 'r';
+			$kindCondition = "IN ('r','p')";
 		else
-			$kind = 'S';
+			$kindCondition = "= 'S'";
 
 		$sql = "SELECT count(*) AS nb_tblseqs, string_agg(name, ', ') AS tblseqs_list
 					FROM unnest($relsArray) AS name
@@ -864,7 +864,7 @@ class EmajDb {
 								 JOIN pg_catalog.pg_namespace ON (pg_namespace.oid = relnamespace)
 							WHERE nspname = '$schema'
 							  AND relname = name
-							  AND relkind = '$kind')";
+							  AND relkind $kindCondition)";
 
 		return $data->selectSet($sql);
 	}

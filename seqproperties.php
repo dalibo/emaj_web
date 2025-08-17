@@ -122,9 +122,9 @@
 								),
 							);
 						}
-					}
 
-					$misc->printLinksList($navlinks, 'buttonslist');
+						$misc->printLinksList($navlinks, 'buttonslist');
+					}
 				}
 			}
 
@@ -211,7 +211,10 @@
  * Main piece of code
  *******************************************************************************************************/
 
-	// Check that emaj and the sequence still exist.
+	// Check that the emaj extension and the sequence still exist.
+	// Do not check the emaj extension when just displaying the properties.
+	if ($action != '')
+		$misc->onErrorRedirect('emaj');
 	$misc->onErrorRedirect('sequence');
 
 	// Print header

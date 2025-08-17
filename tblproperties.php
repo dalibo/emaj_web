@@ -489,7 +489,10 @@
  * Main piece of code
  *******************************************************************************************************/
 
-	// Check that emaj and the table still exist.
+	// Check that emaj extension and the table still exist.
+	// Do not check the emaj extension when just displaying the properties.
+	if ($action != '')
+		$misc->onErrorRedirect('emaj');
 	$misc->onErrorRedirect('table');
 
 	$scripts = "<script src=\"js/schemas.js\"></script>";

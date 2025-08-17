@@ -413,7 +413,7 @@
 		doBrowseFK();
 	}
 
-	// If it is a table content display, check that emaj and the table still exist.
+	// If it is a table content display, check that the table still exists.
 	if (isset($_REQUEST['schema']) && isset($_REQUEST['table'])) {
 		$misc->onErrorRedirect('table');
 	}

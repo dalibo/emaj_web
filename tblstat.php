@@ -345,6 +345,7 @@
  *******************************************************************************************************/
 
 	// Check that emaj and the table still exist.
+	$misc->onErrorRedirect('emaj');
 	$misc->onErrorRedirect('table');
 
 	$misc->printHtmlHeader($lang['strtables'] . ' - ' . $_REQUEST['table']);

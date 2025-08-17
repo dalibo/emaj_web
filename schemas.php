@@ -339,7 +339,7 @@
 				'sequence' => array(
 					'title' => $lang['strsequence'],
 					'field' => field('seqname'),
-					'url'   => "seqproperties.php?action=properties&amp;{$misc->href}&amp;",
+					'url'   => "seqproperties.php?subject=sequence&amp;{$misc->href}&amp;",
 					'vars'  => array('sequence' => 'seqname'),
 				),
 			);

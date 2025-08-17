@@ -188,7 +188,7 @@
 	$lang['strinvalidserverparam'] = 'Attempt to connect with invalid server parameter. Possibly someone is trying to hack your system.';
 	$lang['strnoserversupplied'] = 'No server supplied!';
 	$lang['strconnectionfail'] = 'Can not connect to server.';
-	$lang['stremajnowmissing'] = 'The emaj extension is not installed in the database anymore or is not accessible by the user anymore.';
+	$lang['stremajmissing'] = 'The emaj extension is not installed in the database or accessible by the user anymore.';
 	$lang['strimporterror-uploadedfile'] = 'Import error: file could not be uploaded to the server';
 	$lang['strimportfiletoobig'] = 'Import error: the file to upload is too big.';
 	$lang['strnotjsonfile'] = 'The file %s has not a valid JSON format.';

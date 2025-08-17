@@ -136,6 +136,7 @@
  *******************************************************************************************************/
 
 	// Check that emaj and the group still exist.
+	$misc->onErrorRedirect('emaj');
 	$misc->onErrorRedirect('emajgroup');
 
 	$misc->printHtmlHeader($lang['strgroupsmanagement']);

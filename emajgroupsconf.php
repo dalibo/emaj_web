@@ -700,7 +700,7 @@
  *******************************************************************************************************/
 
 	// Check that emaj still exists
-	$misc->onErrorRedirect();
+	$misc->onErrorRedirect('emaj');
 
 	$misc->printHtmlHeader($lang['strgroupsconfiguration']);
 	$misc->printBody();

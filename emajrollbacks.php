@@ -956,7 +956,7 @@
  *******************************************************************************************************/
 
 	// Check that emaj still exists
-	$misc->onErrorRedirect();
+	$misc->onErrorRedirect('emaj');
 
 	$isAutoRefresh = (isset($_REQUEST['autorefresh']) && $_REQUEST['autorefresh'] == 1) ? 1 : 0;
 

@@ -585,7 +585,7 @@
  *******************************************************************************************************/
 
 	// Check that emaj still exists.
-	$misc->onErrorRedirect();
+	$misc->onErrorRedirect('emaj');
 
 	// If the Erase Parameters button (that is only available for test prupose) has been hit, forget session data
 	//   and behave as an initial page display with the form only.

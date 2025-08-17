@@ -91,6 +91,7 @@
  *******************************************************************************************************/
 
 	// Check that emaj and the sequence still exist.
+	$misc->onErrorRedirect('emaj');
 	$misc->onErrorRedirect('sequence');
 
 	$misc->printHtmlHeader($lang['strsequences'] . ' - ' . $_REQUEST['sequence']);

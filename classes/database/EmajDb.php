@@ -1140,6 +1140,10 @@ class EmajDb {
 					WHEN 252 THEN format('" . $data->clean($lang['strgroupsconfimport252']) . "', rpt_text_var_1)
 					WHEN 260 THEN format('" . $data->clean($lang['strgroupsconfimport260']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
 					WHEN 261 THEN format('" . $data->clean($lang['strgroupsconfimport261']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3, rpt_text_var_4)
+					WHEN 270 THEN format('" . $data->clean($lang['strgroupsconfimport270']) . "', rpt_text_var_1, rpt_text_var_2, rpt_int_var_1)
+					WHEN 271 THEN format('" . $data->clean($lang['strgroupsconfimport271']) . "', rpt_text_var_1, rpt_text_var_2, rpt_int_var_1)
+					WHEN 272 THEN format('" . $data->clean($lang['strgroupsconfimport272']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
+					WHEN 273 THEN format('" . $data->clean($lang['strgroupsconfimport273']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
                     ELSE 'Message not decoded (' || rpt_msg_type || ')'
 				END as rpt_message
 			FROM emaj._import_groups_conf_prepare('$groupsConfig'::json, $groupsArray, true, NULL)";

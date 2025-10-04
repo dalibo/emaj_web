@@ -1131,7 +1131,6 @@ class EmajDb {
 					WHEN 20 THEN format('" . $data->clean($lang['strcheckconfgroups20']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
 					WHEN 21 THEN format('" . $data->clean($lang['strcheckconfgroups21']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
 					WHEN 22 THEN format('" . $data->clean($lang['strcheckconfgroups22']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
-					WHEN 30 THEN format('" . $data->clean($lang['strcheckconfgroups30']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
 					WHEN 31 THEN format('" . $data->clean($lang['strcheckconfgroups31']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
 					WHEN 32 THEN format('" . $data->clean($lang['strcheckconfgroups32']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
 					WHEN 33 THEN format('" . $data->clean($lang['strcheckconfgroups33']) . "', rpt_text_var_1, rpt_text_var_2, rpt_text_var_3)
@@ -2061,10 +2060,10 @@ class EmajDb {
 
 		$sql = "SELECT chk_severity,
 				CASE chk_msg_type
-					WHEN  1 THEN format('" . $data->clean($lang['strcheckconfgroups01']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN  1 THEN format('" . $data->clean($lang['strcheckconfgroups01o']) . "', chk_group, chk_schema, chk_tblseq)
 					WHEN  2 THEN format('" . $data->clean($lang['strcheckconfgroups02']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN  3 THEN format('" . $data->clean($lang['strcheckconfgroups03']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN  4 THEN format('" . $data->clean($lang['strcheckconfgroups04']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN  3 THEN format('" . $data->clean($lang['strcheckconfgroups03o']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN  4 THEN format('" . $data->clean($lang['strcheckconfgroups04o']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
 					WHEN  5 THEN format('" . $data->clean($lang['strcheckconfgroups05']) . "', chk_group, chk_schema, chk_tblseq)
 					WHEN 10 THEN format('" . $data->clean($lang['strcheckconfgroups10']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
 					WHEN 11 THEN format('" . $data->clean($lang['strcheckconfgroups11']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
@@ -2073,10 +2072,10 @@ class EmajDb {
 					WHEN 20 THEN format('" . $data->clean($lang['strcheckconfgroups20']) . "', chk_group, chk_schema, chk_tblseq)
 					WHEN 21 THEN format('" . $data->clean($lang['strcheckconfgroups21']) . "', chk_group, chk_schema, chk_tblseq)
 					WHEN 22 THEN format('" . $data->clean($lang['strcheckconfgroups22']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 30 THEN format('" . $data->clean($lang['strcheckconfgroups30']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 31 THEN format('" . $data->clean($lang['strcheckconfgroups31']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 32 THEN format('" . $data->clean($lang['strcheckconfgroups32']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 33 THEN format('" . $data->clean($lang['strcheckconfgroups33']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 30 THEN format('" . $data->clean($lang['strcheckconfgroups30o']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 31 THEN format('" . $data->clean($lang['strcheckconfgroups31o']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 32 THEN format('" . $data->clean($lang['strcheckconfgroups32o']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 33 THEN format('" . $data->clean($lang['strcheckconfgroups33o']) . "', chk_group, chk_schema, chk_tblseq)
 				END as chk_message
 			FROM emaj._check_conf_groups ($groupsArray)";
 
@@ -2095,10 +2094,10 @@ class EmajDb {
 
 		$sql = "SELECT chk_severity,
 				CASE chk_msg_type
-					WHEN  1 THEN format('" . $data->clean($lang['strcheckconfgroups01']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN  1 THEN format('" . $data->clean($lang['strcheckconfgroups01o']) . "', chk_group, chk_schema, chk_tblseq)
 					WHEN  2 THEN format('" . $data->clean($lang['strcheckconfgroups02']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN  3 THEN format('" . $data->clean($lang['strcheckconfgroups03']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN  4 THEN format('" . $data->clean($lang['strcheckconfgroups04']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
+					WHEN  3 THEN format('" . $data->clean($lang['strcheckconfgroups03o']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN  4 THEN format('" . $data->clean($lang['strcheckconfgroups04o']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
 					WHEN  5 THEN format('" . $data->clean($lang['strcheckconfgroups05']) . "', chk_group, chk_schema, chk_tblseq)
 					WHEN 10 THEN format('" . $data->clean($lang['strcheckconfgroups10']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
 					WHEN 11 THEN format('" . $data->clean($lang['strcheckconfgroups11']) . "', chk_group, chk_schema, chk_tblseq, chk_extra_data)
@@ -2107,10 +2106,10 @@ class EmajDb {
 					WHEN 20 THEN format('" . $data->clean($lang['strcheckconfgroups20']) . "', chk_group, chk_schema, chk_tblseq)
 					WHEN 21 THEN format('" . $data->clean($lang['strcheckconfgroups21']) . "', chk_group, chk_schema, chk_tblseq)
 					WHEN 22 THEN format('" . $data->clean($lang['strcheckconfgroups22']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 30 THEN format('" . $data->clean($lang['strcheckconfgroups30']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 31 THEN format('" . $data->clean($lang['strcheckconfgroups31']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 32 THEN format('" . $data->clean($lang['strcheckconfgroups32']) . "', chk_group, chk_schema, chk_tblseq)
-					WHEN 33 THEN format('" . $data->clean($lang['strcheckconfgroups33']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 30 THEN format('" . $data->clean($lang['strcheckconfgroups30o']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 31 THEN format('" . $data->clean($lang['strcheckconfgroups31o']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 32 THEN format('" . $data->clean($lang['strcheckconfgroups32o']) . "', chk_group, chk_schema, chk_tblseq)
+					WHEN 33 THEN format('" . $data->clean($lang['strcheckconfgroups33o']) . "', chk_group, chk_schema, chk_tblseq)
 				END as chk_message
 			FROM emaj._check_conf_groups ($groupsArray), emaj.emaj_group
 	        WHERE 	chk_group = group_name

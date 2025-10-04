@@ -340,10 +340,13 @@
 	$lang['strgroupconfwithdiag'] = 'Les contrôles sur la configuration du groupe de tables "%s" montrent que :';
 	$lang['strgroupsconfok'] = 'La configuration des groupes de tables "%s" est correcte.';
 	$lang['strgroupsconfwithdiag'] = 'Les contrôles sur la configuration des groupes de tables "%s" montrent que :';
-	$lang['strcheckconfgroups01'] = 'Dans le groupe de tables "%s", la table ou séquence "%s.%s" n\'existe pas.';
+	$lang['strcheckconfgroups01o'] = 'Dans le groupe de tables "%s", la table ou séquence "%s.%s" n\'existe pas.';
+	$lang['strcheckconfgroups01'] = 'Dans le groupe de tables "%s", la table "%s.%s" n\'existe pas.';
 	$lang['strcheckconfgroups02'] = 'Dans le groupe de tables "%s", la table "%s.%s" est une table partitionnée (seule les partitions élémentaires sont supportées par E-Maj).';
-	$lang['strcheckconfgroups03'] = 'Dans le groupe de tables "%s", la table ou séquence "%s.%s" appartient à un schéma E-Maj.';
-	$lang['strcheckconfgroups04'] = 'Dans le groupe de tables "%s", la table ou séquence "%s.%s" appartient déjà au groupe "%s".';
+	$lang['strcheckconfgroups03o'] = 'Dans le groupe de tables "%s", la table ou séquence "%s.%s" appartient à un schéma E-Maj.';
+	$lang['strcheckconfgroups03'] = 'Dans le groupe de tables "%s", la table "%s.%s" appartient à un schéma E-Maj.';
+	$lang['strcheckconfgroups04o'] = 'Dans le groupe de tables "%s", la table ou séquence "%s.%s" appartient déjà au groupe "%s".';
+	$lang['strcheckconfgroups04'] = 'Dans le groupe de tables "%s", la table "%s.%s" est déjà assignée au groupe "%s".';
 	$lang['strcheckconfgroups05'] = 'Dans le groupe de tables "%s", la table "%s.%s" est une table temporaire.';
 	$lang['strcheckconfgroups10'] = 'Dans le groupe de tables "%s", la table "%s.%s" générerait un doublon de préfixe de noms E-Maj "%s".';
 	$lang['strcheckconfgroups11'] = 'Dans le groupe de tables "%s", la table "%s.%s" a un préfixe de noms E-Maj déjà utilisé ("%s").';
@@ -354,10 +357,13 @@
 	$lang['strcheckconfgroups20'] = 'Dans le groupe de tables "%s", la table "%s.%s" est une table UNLOGGED.';
 	$lang['strcheckconfgroups21'] = 'Dans le groupe de tables "%s", la table "%s.%s" est déclarée WITH OIDS.';
 	$lang['strcheckconfgroups22'] = 'Dans le groupe de tables "%s", la table "%s.%s" n\'a pas de PRIMARY KEY.';
-	$lang['strcheckconfgroups30'] = 'Dans le groupe de tables "%s" et pour la séquence "%s.%s", le suffixe de schéma secondaire de log n\'est pas NULL.';
-	$lang['strcheckconfgroups31'] = 'Dans le groupe de tables "%s" et pour la séquence "%s.%s", le préfixe des noms E-Maj n\'est pas NULL.';
-	$lang['strcheckconfgroups32'] = 'Dans le groupe de tables "%s" et pour la séquence "%s.%s", le tablespace de la table de log n\'est pas NULL.';
-	$lang['strcheckconfgroups33'] = 'Dans le groupe de tables "%s" et pour la séquence "%s.%s", le tablespace de l\'index de log n\'est pas NULL.';
+	$lang['strcheckconfgroups30o'] = 'Dans le groupe de tables "%s" et pour la séquence "%s.%s", le suffixe de schéma secondaire de log n\'est pas NULL.';
+	$lang['strcheckconfgroups31o'] = 'Dans le groupe de tables "%s" et pour la séquence "%s.%s", le préfixe des noms E-Maj n\'est pas NULL.';
+	$lang['strcheckconfgroups32o'] = 'Dans le groupe de tables "%s" et pour la séquence "%s.%s", le tablespace de la table de log n\'est pas NULL.';
+	$lang['strcheckconfgroups33o'] = 'Dans le groupe de tables "%s" et pour la séquence "%s.%s", le tablespace de l\'index de log n\'est pas NULL.';
+	$lang['strcheckconfgroups31'] = 'Dans le groupe de tables "%s", la séquence "%s.%s" n\'existe pas.';
+	$lang['strcheckconfgroups32'] = 'Dans le groupe de tables "%s", la séquence "%s.%s" est déjà assignée au groupe "%s".';
+	$lang['strcheckconfgroups33'] = 'Dans le groupe de tables "%s", la séquence "%s.%s" appartient à un schéma E-Maj.';
 
 	// Group forget
 	$lang['strforgetagroup'] = 'E-Maj : Effacer un groupe de tables des historiques';

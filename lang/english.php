@@ -340,10 +340,13 @@
 	$lang['strgroupconfwithdiag'] = 'The checks performed on the tables group "%s" configuration show that:';
 	$lang['strgroupsconfok'] = 'The configuration of the tables groups "%s" is correct.';
 	$lang['strgroupsconfwithdiag'] = 'The checks performed on the tables groups "%s" configuration show that:';
-	$lang['strcheckconfgroups01'] = 'In tables group "%s", the table or sequence "%s.%s" does not exist.';
+	$lang['strcheckconfgroups01o'] = 'In tables group "%s", the table or sequence "%s.%s" does not exist.';
+	$lang['strcheckconfgroups01'] = 'In tables group "%s", the table "%s.%s" does not exist.';
 	$lang['strcheckconfgroups02'] = 'In tables group "%s", the table "%s.%s" is a partitionned table (only elementary partitions are supported by E-Maj).';
-	$lang['strcheckconfgroups03'] = 'In tables group "%s", the table or sequence "%s.%s" belongs to an E-Maj schema.';
-	$lang['strcheckconfgroups04'] = 'In tables group "%s", the table or sequence "%s.%s" already belongs to the group "%s".';
+	$lang['strcheckconfgroups03o'] = 'In tables group "%s", the table or sequence "%s.%s" belongs to an E-Maj schema.';
+	$lang['strcheckconfgroups03'] = 'In tables group "%s", the table "%s.%s" belongs to an E-Maj schema.';
+	$lang['strcheckconfgroups04o'] = 'In tables group "%s", the table or sequence "%s.%s" already belongs to the group "%s".';
+	$lang['strcheckconfgroups04'] = 'In tables group "%s", the table "%s.%s" is already assigned to the group "%s".';
 	$lang['strcheckconfgroups05'] = 'In tables group "%s", the table "%s.%s" is a TEMPORARY table.';
 	$lang['strcheckconfgroups10'] = 'In tables group "%s", the table "%s.%s" would have a duplicate emaj prefix "%s".';
 	$lang['strcheckconfgroups11'] = 'In tables group "%s", the table "%s.%s" would have an already used emaj prefix "%s".';
@@ -354,10 +357,13 @@
 	$lang['strcheckconfgroups20'] = 'In tables group "%s", the table "%s.%s" is an UNLOGGED table.';
 	$lang['strcheckconfgroups21'] = 'In tables group "%s", the table "%s.%s" is declared WITH OIDS.';
 	$lang['strcheckconfgroups22'] = 'In tables group "%s", the table "%s.%s" has no PRIMARY KEY.';
-	$lang['strcheckconfgroups30'] = 'in tables group "%s" and for the sequence "%s.%s", the secondary log schema suffix is not NULL.';
-	$lang['strcheckconfgroups31'] = 'In tables group "%s" and for the sequence "%s.%s", the emaj names prefix is not NULL.';
-	$lang['strcheckconfgroups32'] = 'In tables group "%s" and for the sequence "%s.%s", the data log tablespace is not NULL.';
-	$lang['strcheckconfgroups33'] = 'In tables group "%s" and for the sequence "%s.%s", the index log tablespace is not NULL.';
+	$lang['strcheckconfgroups30o'] = 'in tables group "%s" and for the sequence "%s.%s", the secondary log schema suffix is not NULL.';
+	$lang['strcheckconfgroups31o'] = 'In tables group "%s" and for the sequence "%s.%s", the emaj names prefix is not NULL.';
+	$lang['strcheckconfgroups32o'] = 'In tables group "%s" and for the sequence "%s.%s", the data log tablespace is not NULL.';
+	$lang['strcheckconfgroups33o'] = 'In tables group "%s" and for the sequence "%s.%s", the index log tablespace is not NULL.';
+	$lang['strcheckconfgroups31'] = 'In tables group "%s", the sequence "%s.%s" does not exist.';
+	$lang['strcheckconfgroups32'] = 'In tables group "%s", the sequence "%s.%s" is already assigned to the group "%s".';
+	$lang['strcheckconfgroups33'] = 'In tables group "%s", the sequence "%s.%s" belongs to an E-Maj schema.';
 
 	// Group forget
 	$lang['strforgetagroup'] = 'E-Maj: Erase a tables group from histories';

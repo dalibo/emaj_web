@@ -59,7 +59,7 @@
 				$misc->printTable($prop, $columns, $actions, 'seqproperties-emaj', $lang['strseqnogroupownership']);
 				// Display the buttons corresponding to the available functions for the sequence.
 
-				if ($emajdb->isEmaj_Adm() && $emajdb->getNumEmajVersion() >= 30200) {			// version >= 3.2.0
+				if ($emajdb->isEmajAdmin() && $emajdb->getNumEmajVersion() >= 30200) {			// version >= 3.2.0
 
 					// Get the number of created groups (needed to display or hide some actions)
 					if ($emajdb->isAccessible())

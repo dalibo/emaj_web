@@ -179,7 +179,7 @@
 
 				// Display the buttons corresponding to the available functions for the table.
 
-				if ($emajdb->isEmaj_Adm() && $emajdb->getNumEmajVersion() >= 30200) {			// version >= 3.2.0
+				if ($emajdb->isEmajAdmin() && $emajdb->getNumEmajVersion() >= 30200) {			// version >= 3.2.0
 
 					// Get the number of created groups (needed to display or hide some actions)
 					if ($emajdb->isAccessible())
@@ -416,7 +416,7 @@
 			$actions = array();
 			if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
 				if ($emajdb->getNumEmajVersion() >= 30100) {			// version >= 3.1.0
-					if ($emajdb->isEmaj_Adm()) {
+					if ($emajdb->isEmajAdmin()) {
 						$actions = array_merge($actions, array(
 							'noAutoDisableTrigger' => array(
 								'content' => 'Manuel',

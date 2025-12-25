@@ -13,8 +13,14 @@ class EmajDb {
 	private $emaj_version = '?';
 	private $emaj_version_num = 0;
 	private $enabled = null;
+	private $installed_as_extension = null;
+	private $installed_by_superuser = null;
+	private $installer_role = null;
+	private $installed_with_emaj_adm = null;
+	private $installed_with_emaj_viewer = null;
+	private $installed_with_event_triggers = null;
 	private $accessible = null;
-	private $emaj_adm = null;
+	private $emaj_admin = null;
 	private $emaj_viewer = null;
 	private $dblink_usable = null;
 	private $dblink_schema = null;
@@ -55,6 +61,32 @@ class EmajDb {
 			$this->emaj_schema = $schema;
 			$this->enabled = true;
 		}
+
+		// If emaj is installed in version 4.8+, load the emaj_install_conf table.
+		if ($this->enabled) {
+			if ($this->getNumEmajVersion() >= 40800){	// version >= 4.8.0
+				$sql = "SELECT CASE WHEN inst_as_extension THEN 1 ELSE 0 END AS as_extension,
+							   CASE WHEN inst_by_superuser THEN 1 ELSE 0 END AS by_superuser,
+							   inst_installer_role,
+							   CASE WHEN inst_with_emaj_adm THEN 1 ELSE 0 END AS with_emaj_adm,
+							   CASE WHEN inst_with_emaj_viewer THEN 1 ELSE 0 END AS with_emaj_viewer,
+							   CASE WHEN inst_with_event_triggers THEN 1 ELSE 0 END AS with_event_triggers
+						FROM emaj.emaj_install_conf";
+				$rs = $data->selectSet($sql);
+				if ($rs->recordCount() == 1) {
+					$this->installed_as_extension = $rs->fields['as_extension'];
+					$this->installed_by_superuser = $rs->fields['by_superuser'];
+					$this->installer_role = $rs->fields['inst_installer_role'];
+					$this->installed_with_emaj_adm = $rs->fields['with_emaj_adm'];
+					$this->installed_with_emaj_viewer = $rs->fields['with_emaj_viewer'];
+					$this->installed_with_event_triggers = $rs->fields['with_event_triggers'];
+				}
+			} else {
+				$this->installed_with_emaj_adm = true;
+				$this->installed_with_emaj_viewer = true;
+				$this->installed_with_event_triggers = true;
+			}
+		}
 		return $this->enabled;
 	}
 
@@ -67,52 +99,65 @@ class EmajDb {
 		if ($this->accessible !== null) return $this->accessible;
 
 		// Otherwise compute
-		$this->accessible = $this->enabled&&($this->isEmaj_Adm()||$this->isEmaj_Viewer());
+		$this->accessible = $this->enabled && ($this->isEmajAdmin() || $this->isEmajViewer());
 		return $this->accessible;
 	}
 
 	/**
-	 * Determine whether the current user is granted the 'emaj_adm' role.
+	 * Determine whether the current user is an E-Maj administrator role.
 	 * @return True if Emaj is accessible by the current user as E-maj administrator, false otherwise.
 	 */
-	function isEmaj_Adm() {
+	function isEmajAdmin() {
 		// Access cache
-		if ($this->emaj_adm !== null) return $this->emaj_adm;
+		if ($this->emaj_admin !== null) return $this->emaj_admin;
 
 		global $data, $misc;
 
-		$this->emaj_adm = false;
-		$server_info = $misc->getServerInfo();
-		// If the current role is superuser, he is considered as E-maj administration.
-		if ($data->isSuperUser($server_info['username'])) {
-			$this->emaj_adm = true;
-		} else {
-		// Otherwise, is the current role member of emaj_adm role ?
-			$sql = "SELECT CASE WHEN pg_catalog.pg_has_role('emaj_adm','USAGE') THEN 1 ELSE 0 END AS is_emaj_adm";
-			$this->emaj_adm = $data->selectField($sql,'is_emaj_adm');
+		$this->emaj_admin = false;
+		if ($this->isEnabled()) {
+			$server_info = $misc->getServerInfo();
+			// If the current role is superuser, he is considered as E-maj administration.
+			if ($data->isSuperUser($server_info['username'])) {
+				$this->emaj_admin = true;
+			} elseif ($this->installed_with_emaj_adm) {
+			// Otherwise, if the emaj_adm role exists, is the current role member of emaj_adm role ?
+				$sql = "SELECT CASE WHEN pg_catalog.pg_has_role('emaj_adm','USAGE') THEN 1 ELSE 0 END AS is_emaj_admin";
+				$this->emaj_admin = $data->selectField($sql,'is_emaj_admin');
+			} else {
+			// Otherwise, is the current role the installer role ?
+				$this->emaj_admin = ($server_info['username'] == $this->installer_role);
+			}
 		}
-		return $this->emaj_adm;
+		return $this->emaj_admin;
 	}
 
 	/**
 	 * Determine whether the current user is granted the 'emaj_viewer' role.
 	 * @return True if Emaj is accessible by the current user as E-maj viewer, false otherwise.
-	 * Note that an 'emaj_adm' role is also considered as 'emaj_viewer'.
+	 * Note that an 'emaj_admin' role is also considered as 'emaj_viewer'.
 	 */
-	function isEmaj_Viewer() {
+	function isEmajViewer() {
 		// Access cache.
 		if ($this->emaj_viewer !== null) return $this->emaj_viewer;
 
 		global $data, $misc;
 
 		$this->emaj_viewer = false;
-		if ($this->emaj_adm) {
-		// emaj_adm role is also considered as E-maj viewer.
-			$this->emaj_viewer = true;
-		} else {
-		// Otherwise, is the current role member of emaj_viewer role ?
-			$sql = "SELECT CASE WHEN pg_catalog.pg_has_role('emaj_viewer','USAGE') THEN 1 ELSE 0 END AS is_emaj_viewer";
-			$this->emaj_viewer = $data->selectField($sql,'is_emaj_viewer');
+		if ($this->isEnabled()) {
+			$server_info = $misc->getServerInfo();
+			if ($this->emaj_admin) {
+			// emaj_admin role is also considered as E-maj viewer.
+				$this->emaj_viewer = true;
+			} else {
+				if ($this->installed_with_emaj_viewer) {
+			// Otherwise, if the emaj_viewer role exists, is the current role member of emaj_viewer role ?
+					$sql = "SELECT CASE WHEN pg_catalog.pg_has_role('emaj_viewer','USAGE') THEN 1 ELSE 0 END AS is_emaj_viewer";
+					$this->emaj_viewer = $data->selectField($sql,'is_emaj_viewer');
+				} else {
+			// Otherwise, is the current role the installer role ?
+					$this->emaj_viewer = ($server_info['username'] == $this->installer_role);
+				}
+			}
 		}
 		return $this->emaj_viewer;
 	}
@@ -229,8 +274,14 @@ class EmajDb {
 			$this->emaj_version = '?';
 			$this->emaj_version_num = 0;
 			$this->enabled = null;
+			$this->installed_as_extension = null;
+			$this->installed_by_superuser = null;
+			$this->installer_role = null;
+			$this->installed_with_emaj_adm = null;
+			$this->installed_with_emaj_viewer = null;
+			$this->installed_with_event_triggers = null;
 			$this->accessible = null;
-			$this->emaj_adm = null;
+			$this->emaj_admin = null;
 			$this->emaj_viewer = null;
 			$this->dblink_usable = null;
 			$this->dblink_schema = null;
@@ -261,8 +312,14 @@ class EmajDb {
 			$this->emaj_version = '?';
 			$this->emaj_version_num = 0;
 			$this->enabled = null;
+			$this->installed_as_extension = null;
+			$this->installed_by_superuser = null;
+			$this->installer_role = null;
+			$this->installed_with_emaj_adm = null;
+			$this->installed_with_emaj_viewer = null;
+			$this->installed_with_event_triggers = null;
 			$this->accessible = null;
-			$this->emaj_adm = null;
+			$this->emaj_admin = null;
 			$this->emaj_viewer = null;
 			$this->dblink_usable = null;
 			$this->dblink_schema = null;
@@ -273,7 +330,7 @@ class EmajDb {
 
 	/**
 	 * Drop the emaj extension.
-	 * The emaj_adm and emaj_viewer roles are not dropped as they can bu used in other databases.
+	 * The emaj_admin and emaj_viewer roles are not dropped as they can be used in other databases.
 	 */
 	function dropEmajExtension() {
 		global $data;
@@ -306,7 +363,13 @@ class EmajDb {
 			$this->emaj_version_num = 0;
 			$this->enabled = null;
 			$this->accessible = null;
-			$this->emaj_adm = null;
+			$this->installed_as_extension = null;
+			$this->installed_by_superuser = null;
+			$this->installer_role = null;
+			$this->installed_with_emaj_adm = null;
+			$this->installed_with_emaj_viewer = null;
+			$this->installed_with_event_triggers = null;
+			$this->emaj_admin = null;
 			$this->emaj_viewer = null;
 			$this->dblink_usable = null;
 			$this->dblink_schema = null;
@@ -507,7 +570,7 @@ class EmajDb {
 	function getEmajSize() {
 		global $data;
 
-		if ($this->emaj_adm){
+		if ($this->emaj_admin){
 			$sql = "SELECT coalesce(pg_size_pretty(t.emajtotalsize) ||
 							to_char(t.emajtotalsize * 100 / pg_database_size(current_database())::float,' = FM990D0%'), '0 B = 0%') as emajsize
 					FROM
@@ -559,7 +622,7 @@ class EmajDb {
 	function getExtensionParams() {
 		global $data;
 
-		if (!$this->isEmaj_Adm()) {
+		if (!$this->isEmajAdmin()) {
 			$table = 'emaj_visible_param';
 		} else {
 			$table = 'emaj_param';

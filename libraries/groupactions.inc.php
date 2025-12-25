@@ -658,7 +658,7 @@
 		$urlvars = $misc->getRequestVars();
 
 		$actions = array();
-		if ($emajdb->isEmaj_Adm()) {
+		if ($emajdb->isEmajAdmin()) {
 			$actions = array_merge($actions, array(
 				'multiactions' => array(
 					'keycols' => array('group' => 'group_name'),
@@ -871,7 +871,7 @@
 					$urlvars = $misc->getRequestVars();
 
 					$actions = array();
-					if ($emajdb->isEmaj_Adm()) {
+					if ($emajdb->isEmajAdmin()) {
 						$actions = array_merge($actions, array(
 							'multiactions' => array(
 								'keycols' => array('group' => 'grp_name'),

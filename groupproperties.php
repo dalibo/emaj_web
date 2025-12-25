@@ -249,7 +249,7 @@
 
 		// display the buttons corresponding to the available functions for the group, depending on its state
 
-		if ($emajdb->isEmaj_Adm()) {
+		if ($emajdb->isEmajAdmin()) {
 			$navlinks = array();
 
 			// start_group
@@ -474,7 +474,7 @@
 		$urlvars = $misc->getRequestVars();
 
 		$actions = array();
-		if ($emajdb->isEmaj_Adm() && ($nbMarks > 1)) {
+		if ($emajdb->isEmajAdmin() && ($nbMarks > 1)) {
 			$actions = array_merge($actions, array(
 				'multiactions' => array(
 					'keycols' => array('group' => 'mark_group', 'mark' => 'mark_name'),
@@ -482,7 +482,7 @@
 				),
 			));
 		}
-		if ($emajdb->isEmaj_Adm() && $groupType == "ROLLBACKABLE") {
+		if ($emajdb->isEmajAdmin() && $groupType == "ROLLBACKABLE") {
 			$actions = array_merge($actions, array(
 				'rollbackgroup' => array(
 					'content' => $lang['strrlbk'],
@@ -498,7 +498,7 @@
 				),
 			));
 		}
-		if ($emajdb->isEmaj_Adm() && $groupState == 'LOGGING' && $groupType != "AUDIT_ONLY") {
+		if ($emajdb->isEmajAdmin() && $groupState == 'LOGGING' && $groupType != "AUDIT_ONLY") {
 			$actions = array_merge($actions, array(
 				'protectmark' => array(
 					'content' => $lang['strprotect'],
@@ -526,7 +526,7 @@
 				),
 			));
 		};
-		if ($emajdb->isEmaj_Adm()) {
+		if ($emajdb->isEmajAdmin()) {
 			$actions = array_merge($actions, array(
 				'renamemark' => array(
 					'content' => $lang['strrename'],
@@ -542,7 +542,7 @@
 				),
 			));
 		}
-		if ($emajdb->isEmaj_Adm() && ($nbMarks > 1)) {
+		if ($emajdb->isEmajAdmin() && ($nbMarks > 1)) {
 			$actions = array_merge($actions, array(
 				'deletemark' => array(
 					'content' => $lang['strdelete'],
@@ -559,7 +559,7 @@
 				),
 			));
 		}
-		if ($emajdb->isEmaj_Adm()) {
+		if ($emajdb->isEmajAdmin()) {
 			$actions = array_merge($actions, array(
 				'deletebeforemark' => array(
 					'content' => $lang['strfirstmark'],
@@ -575,7 +575,7 @@
 				),
 			));
 		}
-		if ($emajdb->isEmaj_Adm()) {
+		if ($emajdb->isEmajAdmin()) {
 			$actions = array_merge($actions, array(
 				'commentmark' => array(
 					'content' => $lang['strsetcomment'],

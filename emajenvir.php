@@ -36,7 +36,7 @@
 			$value = $paramValue[$param];
 			// Specific adjustments for some parameters
 			if ($param == 'dblink_user_password') {
-				if ($emajdb->isEmaj_Adm()) {
+				if ($emajdb->isEmajAdmin()) {
 					// For emaj_adm roles, display the parameter in tooltip
 					$value = "<div class=\"tooltip right-aligned-tooltip\">#############...<span>" . htmlspecialchars($value) . "</span></div>";
 				} else {
@@ -58,7 +58,7 @@
 			echo "<div class=\"form-param-def-value\">${defValParam[$param]}&nbsp;<sup>(def)</sup></div>\n";
 		}
 
-//		if ($emajdb->isEmaj_Adm()) {
+//		if ($emajdb->isEmajAdmin()) {
 ////TODO: Modify button to insert
 //			echo "<div class=\"form-button-param\">"
 //				. $lang['strupdate']
@@ -329,7 +329,7 @@
 
 		$misc->printHeader('database', 'database', 'emajenvir');
 
-		if (($emajdb->isEmaj_Adm()) && $emajdb->getNumEmajVersion() >= 30300) {
+		if (($emajdb->isEmajAdmin()) && $emajdb->getNumEmajVersion() >= 30300) {
 
 			$misc->printTitle($lang['strimportparamconf']);
 
@@ -630,7 +630,7 @@
 		//
 
 		if ($isEnabled) {
-			if ($emajdb->isEmaj_Adm()) {
+			if ($emajdb->isEmajAdmin()) {
 				echo "<hr/>\n";
 				$misc->printTitle($lang['strcharacteristics']);
 				echo "<p>".sprintf($lang['strdiskspace'],$emajdb->getEmajSize())."</p>\n";
@@ -714,7 +714,7 @@
 
 			echo "</div>\n";
 
-			if (($emajdb->isEmaj_Adm()) && $emajdb->getNumEmajVersion() >= 30300) {
+			if (($emajdb->isEmajAdmin()) && $emajdb->getNumEmajVersion() >= 30300) {
 
 				// Prepare and generate the export and import buttons list
 				$navlinks = array();

@@ -778,9 +778,9 @@
 				// print the tooltip to show E-Maj rights
 				if ($data->isSuperUser($server_info['username']))
 					$help = $lang['strusersuperuser'];
-				elseif ($emajdb->isEmaj_Adm())
+				elseif ($emajdb->isEmajAdmin())
 					$help = $lang['struseremajadm'];
-				elseif ($emajdb->isEmaj_Viewer())
+				elseif ($emajdb->isEmajViewer())
 					$help = $lang['struseremajviewer'];
 				else
 					$help = $lang['strusernoright'];
@@ -1159,8 +1159,8 @@
 				case 'database':
 					$emajNotAvail = (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
 						&& $emajdb->getNumEmajVersion() >= $oldest_supported_emaj_version_num));
-					$hideGroupConf = $emajNotAvail || !($emajdb->isEmaj_Adm()) || $emajdb->getNumEmajVersion() >= 30200;
-					$hideActivity = $emajNotAvail || !($emajdb->isEmaj_Viewer()) || $emajdb->getNumEmajVersion() < 40500;
+					$hideGroupConf = $emajNotAvail || !($emajdb->isEmajAdmin()) || $emajdb->getNumEmajVersion() >= 30200;
+					$hideActivity = $emajNotAvail || !($emajdb->isEmajViewer()) || $emajdb->getNumEmajVersion() < 40500;
 
 					$tabs = array (
 						'emajgroups' => array (

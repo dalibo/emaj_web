@@ -179,7 +179,7 @@
 		$urlvars = $misc->getRequestVars();
 
 		$loggingActions = array();
-		if ($emajdb->isEmaj_Adm()) {
+		if ($emajdb->isEmajAdmin()) {
 			$loggingActions = array_merge($loggingActions, array(
 				'multiactions' => array(
 					'keycols' => array('group' => 'group_name'),
@@ -282,7 +282,7 @@
 		};
 
 		$idleActions = array();
-		if ($emajdb->isEmaj_Adm()) {
+		if ($emajdb->isEmajAdmin()) {
 			$idleActions = array_merge($idleActions, array(
 				'multiactions' => array(
 					'keycols' => array('group' => 'group_name'),
@@ -381,7 +381,7 @@
 			),
 		);
 
-		if ($emajdb->isEmaj_Adm()) {
+		if ($emajdb->isEmajAdmin()) {
 			$configuredActions = array(
 				'create_group' => array(
 					'content' => $lang['strcreate'],
@@ -419,7 +419,7 @@
 			$misc->printTable($configuredGroups, $configuredColumns, $configuredActions, 'configuredGroups', $lang['strnoconfiguredgroups'], null, array('sorter' => true, 'filter' => true));
 
 			// for emaj_adm role only, give information about how to create a group
-			if ($emajdb->isEmaj_Adm()) {
+			if ($emajdb->isEmajAdmin()) {
 				echo "<p>{$lang['strnoconfiguredgroup']}</p>\n";
 				echo "<form id=\"createEmptyGroup_form\" action=\"emajgroups.php?action=create_group&amp;back=list&amp;empty=true&amp;{$misc->href}\"";
 				echo " method=\"post\" enctype=\"multipart/form-data\">\n";
@@ -429,7 +429,7 @@
 		} else {
 			// Emaj Version 3.2+
 			// for emaj_adm role only, display additional buttons
-			if ($emajdb->isEmaj_Adm()) {
+			if ($emajdb->isEmajAdmin()) {
 				echo "<div class=\"actionslist\">\n";
 				// display the "new group" button
 				echo "\t<form id=\"createEmptyGroup_form\" method=\"post\" action=\"emajgroups.php?action=create_group&amp;back=list&amp;{$misc->href}\">\n";
@@ -491,7 +491,7 @@
 				),
 			);
 
-			if ($emajdb->isEmaj_Adm()) {
+			if ($emajdb->isEmajAdmin()) {
 				$droppedActions = array(
 					'create_group' => array(
 						'content' => $lang['strrecreate'],

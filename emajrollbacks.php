@@ -1,4 +1,4 @@
-<?php
+s<?php
 
 	/*
 	 * Manage E-Maj rollbacks monitoring and consolidation
@@ -139,7 +139,7 @@
 				'params'=> array('align' => 'right'),
 			),
 		);
-		if ($emajdb->getNumEmajVersion() >= 40300 && $emajdb->isEmaj_Adm()) {	// version >= 4.3
+		if ($emajdb->getNumEmajVersion() >= 40300 && $emajdb->isEmajAdmin()) {	// version >= 4.3
 			$columnsInProgressRlbk = array_merge($columnsInProgressRlbk, array(
 				'actions' => array(
 					'title' => $lang['stractions'],
@@ -161,7 +161,7 @@
 		};
 
 		$actions = array();
-		if ($emajdb->getNumEmajVersion() >= 40300 && $emajdb->isEmaj_Adm()) {	// version >= 4.3
+		if ($emajdb->getNumEmajVersion() >= 40300 && $emajdb->isEmajAdmin()) {	// version >= 4.3
 			$actions = array_merge($actions, array(
 				'comment_rollback' => array(
 					'content' => $lang['strsetcomment'],
@@ -261,7 +261,7 @@
 				'params'=> array('align' => 'right'),
 			),
 		);
-		if ($emajdb->getNumEmajVersion() >= 40300 && $emajdb->isEmaj_Adm()) {	// version >= 4.3
+		if ($emajdb->getNumEmajVersion() >= 40300 && $emajdb->isEmajAdmin()) {	// version >= 4.3
 			$columnsCompletedRlbk = array_merge($columnsCompletedRlbk, array(
 				'actions' => array(
 					'title' => $lang['stractions'],
@@ -346,7 +346,7 @@
 				'title' => $lang['stractions'],
 			),
 		);
-		if ($emajdb->isEmaj_Adm()) {
+		if ($emajdb->isEmajAdmin()) {
 			$actions = array(
 				'consolidate' => array(
 					'content' => $lang['strconsolidate'],
@@ -784,7 +784,7 @@
 		// display the buttons corresponding to the available functions for the rollback
 
 		$navlinks = array();
-		if ($emajdb->isEmaj_Adm()) {
+		if ($emajdb->isEmajAdmin()) {
 
 			// comment_group
 			if ($emajdb->getNumEmajVersion() >= 40300) {	// version >= 4.3

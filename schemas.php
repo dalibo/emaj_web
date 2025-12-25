@@ -252,7 +252,7 @@
 					)
 				),
 			);
-			if ($emajAttributesToManage && $emajdb->isEmaj_Adm() && $emajdb->getNumEmajVersion() >= 30200) {			// version >= 3.2.0
+			if ($emajAttributesToManage && $emajdb->isEmajAdmin() && $emajdb->getNumEmajVersion() >= 30200) {			// version >= 3.2.0
 				$actions = array_merge($actions, array(
 					'multiactions' => array(
 						'keycols' => array('appschema' => 'nspname', 'table' => 'relname', 'group' => 'rel_group', 'type' => 'relkind'),
@@ -343,7 +343,7 @@
 					'vars'  => array('sequence' => 'seqname'),
 				),
 			);
-			if ($emajAttributesToManage && $emajdb->isEmaj_Adm() && $emajdb->getNumEmajVersion() >= 30200) {			// version >= 3.2.0
+			if ($emajAttributesToManage && $emajdb->isEmajAdmin() && $emajdb->getNumEmajVersion() >= 30200) {			// version >= 3.2.0
 				$columns = array_merge($columns, array(
 					'actions' => array(
 						'title' => $lang['stractions'],
@@ -376,7 +376,7 @@
 				),
 			));
 
-			if ($emajAttributesToManage && $emajdb->isEmaj_Adm() && $emajdb->getNumEmajVersion() >= 30200) {			// version >= 3.2.0
+			if ($emajAttributesToManage && $emajdb->isEmajAdmin() && $emajdb->getNumEmajVersion() >= 30200) {			// version >= 3.2.0
 				$actions = array(
 					'multiactions' => array(
 						'keycols' => array('appschema' => 'nspname', 'sequence' => 'seqname', 'group' => 'rel_group', 'type' => 'relkind'),

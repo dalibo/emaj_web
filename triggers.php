@@ -95,7 +95,7 @@
 		$actions = array();
 		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
 			if ($emajdb->getNumEmajVersion() >= 30100) {			// version >= 3.1.0
-				if ($emajdb->isEmaj_Adm()) {
+				if ($emajdb->isEmajAdmin()) {
 					$actions = array_merge($actions, array(
 						'multiactions' => array(
 							'keycols' => array(

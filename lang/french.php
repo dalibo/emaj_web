@@ -348,6 +348,7 @@
 	$lang['strcheckconfgroups04o'] = 'Dans le groupe de tables "%s", la table ou séquence "%s.%s" appartient déjà au groupe "%s".';
 	$lang['strcheckconfgroups04'] = 'Dans le groupe de tables "%s", la table "%s.%s" est déjà assignée au groupe "%s".';
 	$lang['strcheckconfgroups05'] = 'Dans le groupe de tables "%s", la table "%s.%s" est une table temporaire.';
+	$lang['strcheckconfgroups06'] = 'Dans le groupe de tables "%s", le propriétaire de la table "%s.%s" n\'est pas le rôle qui a installé emaj.';
 	$lang['strcheckconfgroups10'] = 'Dans le groupe de tables "%s", la table "%s.%s" générerait un doublon de préfixe de noms E-Maj "%s".';
 	$lang['strcheckconfgroups11'] = 'Dans le groupe de tables "%s", la table "%s.%s" a un préfixe de noms E-Maj déjà utilisé ("%s").';
 	$lang['strcheckconfgroups12'] = 'Dans le groupe de tables "%s" et pour la table "%s.%s", le tablespace de la table de log "%s" n\'existe pas.';
@@ -364,6 +365,7 @@
 	$lang['strcheckconfgroups31'] = 'Dans le groupe de tables "%s", la séquence "%s.%s" n\'existe pas.';
 	$lang['strcheckconfgroups32'] = 'Dans le groupe de tables "%s", la séquence "%s.%s" est déjà assignée au groupe "%s".';
 	$lang['strcheckconfgroups33'] = 'Dans le groupe de tables "%s", la séquence "%s.%s" appartient à un schéma E-Maj.';
+	$lang['strcheckconfgroups34'] = 'Dans le groupe de tables "%s", le propriétaire de la séquence "%s.%s" n\'est pas le rôle qui a installé emaj.';
 
 	// Group forget
 	$lang['strforgetagroup'] = 'E-Maj : Effacer un groupe de tables des historiques';

@@ -348,6 +348,7 @@
 	$lang['strcheckconfgroups04o'] = 'In tables group "%s", the table or sequence "%s.%s" already belongs to the group "%s".';
 	$lang['strcheckconfgroups04'] = 'In tables group "%s", the table "%s.%s" is already assigned to the group "%s".';
 	$lang['strcheckconfgroups05'] = 'In tables group "%s", the table "%s.%s" is a TEMPORARY table.';
+	$lang['strcheckconfgroups06'] = 'In tables group "%s", the "%s.%s" table owner is not the emaj installer role.';
 	$lang['strcheckconfgroups10'] = 'In tables group "%s", the table "%s.%s" would have a duplicate emaj prefix "%s".';
 	$lang['strcheckconfgroups11'] = 'In tables group "%s", the table "%s.%s" would have an already used emaj prefix "%s".';
 	$lang['strcheckconfgroups12'] = 'In tables group "%s" and for the table "%s.%s", the data log tablespace %s does not exist.';
@@ -364,6 +365,7 @@
 	$lang['strcheckconfgroups31'] = 'In tables group "%s", the sequence "%s.%s" does not exist.';
 	$lang['strcheckconfgroups32'] = 'In tables group "%s", the sequence "%s.%s" is already assigned to the group "%s".';
 	$lang['strcheckconfgroups33'] = 'In tables group "%s", the sequence "%s.%s" belongs to an E-Maj schema.';
+	$lang['strcheckconfgroups34'] = 'In tables group "%s", the "%s.%s" sequence owner is not the emaj installer role.';
 
 	// Group forget
 	$lang['strforgetagroup'] = 'E-Maj: Erase a tables group from histories';

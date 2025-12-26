@@ -1,4 +1,4 @@
-s<?php
+<?php
 
 	/*
 	 * Manage E-Maj rollbacks monitoring and consolidation

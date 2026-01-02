@@ -37,10 +37,6 @@
 	require_once('./classes/Misc.php');
 	$misc = new Misc();
 
-	// Create EmajDb class references
-	require_once('./classes/database/EmajDb.php');
-	$emajdb = new EmajDb();
-
 	// Start session (if not auto-started)
 	if (!ini_get('session.auto_start')) {
 		session_name('EMAJ_ID');
@@ -193,6 +189,11 @@
 				exit;
 			}
 		}
+
+		// Create EmajDb class references
+		require_once('./classes/database/EmajDb.php');
+		$emajdb = new EmajDb();
+
 	}
 
 	// Initialize the requested action

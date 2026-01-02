@@ -8,23 +8,26 @@
 class EmajDb {
 
 	/**
+	 * Class attributes.
+	 */
+	var $isSuperuser;					// Is the current user a superuser ?
+	var $isEnabled;						// Is the emaj extension installed in the database ?
+	var $isExtension;					// Is emaj installed as an EXTENSION ?
+	var $isEmajInstaller;				// Is the current user the emaj schema owner ?
+	var $isEmajAdmin;					// Has the current user emaj administration privileges ?
+	var $isEmajViewer;					// Has the current user emaj viewer privileges ?
+	var $emajVersion;					// The emaj version ('?' if not installed or unknown)
+	var $emajVersionNum;				// The emaj version in numeric format (0 if not installed or unknown ; 999999 for the 'devel' version)
+
+	/**
 	 * Cache of static data.
 	 */
-	private $emaj_version = '?';
-	private $emaj_version_num = 0;
-	private $enabled = null;
-	private $installed_as_extension = null;
-	private $installed_by_superuser = null;
-	private $installer_role = null;
-	private $installed_with_emaj_adm = null;
-	private $installed_with_emaj_viewer = null;
-	private $installed_with_event_triggers = null;
-	private $accessible = null;
-	private $emaj_admin = null;
-	private $emaj_viewer = null;
-	private $dblink_usable = null;
-	private $dblink_schema = null;
-	private $asyncRlbkUsable = null;
+	private $emajOwner;
+	private $installedBySuperuser;
+	private $installedWithEventTtriggers;
+	private $isDblinkUsable;
+	private $dblinkSchema;
+	private $asyncRlbkUsable;
 
 	/**
 	 * Constants.
@@ -38,128 +41,166 @@ class EmajDb {
 	 * Constructor.
 	 */
 	function __construct() {
+		global $misc, $data;
+
+		// Set the $isSuperuser attribute.
+		$server_info = $misc->getServerInfo();
+		$this->isSuperuser = $data->isSuperUser($server_info['username']);
+
+		// Load the emaj installation configuration.
+		$this->loadEmajInstallConf();
 	}
 
 	/**
-	 * Determine whether Emaj is installed in the current database, by looking for a schema named 'emaj'.
-	 * @return True if Emaj is installed, false otherwise.
+	 * Determine whether the emaj extension is installed in the database.
+     * Initialize the class attributes accordingly.
 	 */
-	function isEnabled() {
-		// Access cache
-		if ($this->enabled !== null) return $this->enabled;
-
+	function loadEmajInstallConf() {
 		global $data;
 
-		$this->enabled = false;
-		// Check for the emaj schema in the namespace relation.
-		$sql = "SELECT nspname AS schema
-				FROM pg_catalog.pg_namespace
-				WHERE nspname = 'emaj'";
+		// Check the emaj schema existence.
+		$sql = "SELECT nspowner::regrole AS emaj_schema_owner
+					FROM pg_catalog.pg_namespace
+					WHERE nspname = 'emaj'";
 		$rs = $data->selectSet($sql);
 		if ($rs->recordCount() == 1) {
-			$schema = $rs->fields['schema'];
-			$this->emaj_schema = $schema;
-			$this->enabled = true;
+			// An emaj extension is installed in this database
+			$this->isEnabled = true;
+			$this->emajOwner = $rs->fields['emaj_schema_owner'];
+		} else {
+			// No emaj extension is currently installed in this database.
+			// Reset attributes and exit.
+			$this->resetEmajInstallConf();
+			return;
 		}
 
-		// If emaj is installed in version 4.8+, load the emaj_install_conf table.
-		if ($this->enabled) {
-			if ($this->getNumEmajVersion() >= 40800){	// version >= 4.8.0
+		// emaj is installed in the database.
+
+		// Determine the rights owned by the user.
+		if ($this->isSuperuser) {
+			$this->isEmajInstaller = true;
+			$this->isEmajAdmin = true;
+			$this->isEmajViewer = true;
+		} else {
+			$this->isEmajInstaller = false;
+			$this->isEmajAdmin = false;
+			$this->isEmajViewer = false;
+			$sql = "SELECT CASE WHEN current_user = '{$this->emajOwner}' THEN 'installer'
+								WHEN pg_catalog.pg_has_role(to_regrole('emaj_adm'),'USAGE') THEN 'admin'
+								WHEN pg_catalog.pg_has_role(to_regrole('emaj_viewer'),'USAGE') THEN 'viewer'
+								ELSE 'none'
+						   END AS maximum_rights";
+			$rs = $data->selectSet($sql);
+			if ($rs->recordCount() == 1) {
+				$maxRights = $rs->fields['maximum_rights'];
+				if ($maxRights == 'installer') {
+					$this->isEmajInstaller = true;
+					$this->isEmajAdmin = true;
+					$this->isEmajViewer = true;
+				} elseif ($maxRights == 'admin') {
+					$this->isEmajAdmin = true;
+					$this->isEmajViewer = true;
+				} elseif ($maxRights == 'viewer') {
+					$this->isEmajViewer = true;
+				}
+			}
+		}
+
+		// Get the emaj version number, if we are allowed to access emaj.
+
+		// Initialize version values.
+		$this->emajVersion = '?';
+		$this->emajVersionNum = 0;
+
+		if ($this->isEmajViewer) {
+			// Look for the emaj_get_version() function in the catalog (only introduced in 4.4.0).
+			$sql = "SELECT 1 AS exists
+					FROM pg_catalog.pg_proc JOIN pg_catalog.pg_namespace n ON (pronamespace = n.oid)
+					WHERE nspname = 'emaj' AND proname = 'emaj_get_version'";
+			if ($data->selectField($sql, 'exists') == 1) {
+				// The emaj_get_version() function exists, so call it.
+				$sql = "SELECT emaj.emaj_get_version() AS version";
+			} else {
+				// The emaj_get_version() function doesn't exist, so read the emaj_param table through the emaj_visible_param view.
+				$sql = "SELECT param_value_text AS version
+						FROM emaj.emaj_visible_param
+						WHERE param_key = 'emaj_version'";
+			}
+			$rs = $data->selectSet($sql);
+			if ($rs->recordCount() == 1){
+	
+				// Set both version attributes.
+				$this->emajVersion = $rs->fields['version'];
+				if (substr_count($this->emajVersion, '.') == 2) {
+					list($v1,$v2,$v3) = explode(".",$this->emajVersion);
+					$this->emajVersionNum = 10000 * $v1 + 100 * $v2 + $v3;
+				} elseif (substr_count($this->emajVersion, '.') == 1) {
+					list($v1,$v2) = explode(".",$this->emajVersion);
+					$this->emajVersionNum = 10000 * $v1 + 100 * $v2;
+				} else {
+					$this->emajVersion = htmlspecialchars($this->emajVersion);
+					$this->emajVersionNum = 999999;
+				}
+			}
+		}
+
+		// Load the installation configuration, if we are allowed to access emaj.
+		if ($this->isEmajViewer) {
+			// In version 4.8+, just read the emaj_install_conf table.
+			if ($this->emajVersionNum >= 40800){	// version >= 4.8.0
 				$sql = "SELECT CASE WHEN inst_as_extension THEN 1 ELSE 0 END AS as_extension,
 							   CASE WHEN inst_by_superuser THEN 1 ELSE 0 END AS by_superuser,
-							   inst_installer_role,
-							   CASE WHEN inst_with_emaj_adm THEN 1 ELSE 0 END AS with_emaj_adm,
-							   CASE WHEN inst_with_emaj_viewer THEN 1 ELSE 0 END AS with_emaj_viewer,
 							   CASE WHEN inst_with_event_triggers THEN 1 ELSE 0 END AS with_event_triggers
 						FROM emaj.emaj_install_conf";
 				$rs = $data->selectSet($sql);
 				if ($rs->recordCount() == 1) {
-					$this->installed_as_extension = $rs->fields['as_extension'];
-					$this->installed_by_superuser = $rs->fields['by_superuser'];
-					$this->installer_role = $rs->fields['inst_installer_role'];
-					$this->installed_with_emaj_adm = $rs->fields['with_emaj_adm'];
-					$this->installed_with_emaj_viewer = $rs->fields['with_emaj_viewer'];
-					$this->installed_with_event_triggers = $rs->fields['with_event_triggers'];
+					$this->isExtension = $rs->fields['as_extension'];
+					$this->installedBySuperuser = $rs->fields['by_superuser'];
+					$this->installedWithEventTtriggers = $rs->fields['with_event_triggers'];
 				}
 			} else {
-				$this->installed_with_emaj_adm = true;
-				$this->installed_with_emaj_viewer = true;
-				$this->installed_with_event_triggers = true;
-			}
-		}
-		return $this->enabled;
-	}
+			// In prior versions, compute the 3 flags.
+				$sql = "SELECT 1 FROM pg_catalog.pg_extension WHERE extname = 'emaj'";
+				$rs = $data->selectSet($sql);
+				$this->isExtension = ($rs->recordCount() == 1);
 
-	/**
-	 * Determine whether the current user is granted to access emaj schema.
-	 * @return True if enabled Emaj is accessible by the current user, false otherwise.
-	 */
-	function isAccessible() {
-		// Access cache
-		if ($this->accessible !== null) return $this->accessible;
-
-		// Otherwise compute
-		$this->accessible = $this->enabled && ($this->isEmajAdmin() || $this->isEmajViewer());
-		return $this->accessible;
-	}
-
-	/**
-	 * Determine whether the current user is an E-Maj administrator role.
-	 * @return True if Emaj is accessible by the current user as E-maj administrator, false otherwise.
-	 */
-	function isEmajAdmin() {
-		// Access cache
-		if ($this->emaj_admin !== null) return $this->emaj_admin;
-
-		global $data, $misc;
-
-		$this->emaj_admin = false;
-		if ($this->isEnabled()) {
-			$server_info = $misc->getServerInfo();
-			// If the current role is superuser, he is considered as E-maj administration.
-			if ($data->isSuperUser($server_info['username'])) {
-				$this->emaj_admin = true;
-			} elseif ($this->installed_with_emaj_adm) {
-			// Otherwise, if the emaj_adm role exists, is the current role member of emaj_adm role ?
-				$sql = "SELECT CASE WHEN pg_catalog.pg_has_role('emaj_adm','USAGE') THEN 1 ELSE 0 END AS is_emaj_admin";
-				$this->emaj_admin = $data->selectField($sql,'is_emaj_admin');
-			} else {
-			// Otherwise, is the current role the installer role ?
-				$this->emaj_admin = ($server_info['username'] == $this->installer_role);
-			}
-		}
-		return $this->emaj_admin;
-	}
-
-	/**
-	 * Determine whether the current user is granted the 'emaj_viewer' role.
-	 * @return True if Emaj is accessible by the current user as E-maj viewer, false otherwise.
-	 * Note that an 'emaj_admin' role is also considered as 'emaj_viewer'.
-	 */
-	function isEmajViewer() {
-		// Access cache.
-		if ($this->emaj_viewer !== null) return $this->emaj_viewer;
-
-		global $data, $misc;
-
-		$this->emaj_viewer = false;
-		if ($this->isEnabled()) {
-			$server_info = $misc->getServerInfo();
-			if ($this->emaj_admin) {
-			// emaj_admin role is also considered as E-maj viewer.
-				$this->emaj_viewer = true;
-			} else {
-				if ($this->installed_with_emaj_viewer) {
-			// Otherwise, if the emaj_viewer role exists, is the current role member of emaj_viewer role ?
-					$sql = "SELECT CASE WHEN pg_catalog.pg_has_role('emaj_viewer','USAGE') THEN 1 ELSE 0 END AS is_emaj_viewer";
-					$this->emaj_viewer = $data->selectField($sql,'is_emaj_viewer');
-				} else {
-			// Otherwise, is the current role the installer role ?
-					$this->emaj_viewer = ($server_info['username'] == $this->installer_role);
+				$sql = "SELECT CASE WHEN rolsuper THEN 1 ELSE 0 END AS emaj_owner_is_superuser
+							FROM pg_catalog.pg_roles
+							WHERE rolname = '{$this->emajOwner}'";
+				$rs = $data->selectSet($sql);
+				if ($rs->recordCount() == 1) {
+					$this->installedBySuperuser = $rs->fields['emaj_owner_is_superuser'];
 				}
+
+				$this->installedWithEventTtriggers = true;
 			}
 		}
-		return $this->emaj_viewer;
+		return;
+	}
+
+	/**
+	 * Reset the class attributes and private variables when there is no emaj extension inside the database.
+	 */
+	function resetEmajInstallConf() {
+
+		// Reset class attributes.
+		$this->isEnabled = false;
+		$this->emajOwner = null;
+		$this->isExtension = null;
+		$this->isEmajInstaller = null;
+		$this->isEmajAdmin = null;
+		$this->isEmajViewer = null;
+		$this->emajVersion = '?';
+		$this->emajVersionNum = 0;
+
+		// Reset private variables.
+		$this->installedBySuperuser = null;
+		$this->installedWithEventTtriggers = null;
+		$this->isDblinkUsable = null;
+		$this->dblinkSchema = null;
+		$this->asyncRlbkUsable = null;
+
+		return;
 	}
 
 	/**
@@ -169,20 +210,6 @@ class EmajDb {
 		global $data;
 
 		$sql = "SELECT 1 FROM pg_catalog.pg_available_extensions WHERE name = 'emaj'";
-		$rs = $data->selectSet($sql);
-		if ($rs->recordCount() == 1) {
-			return 1;
-		}
-		return 0;
-	}
-
-	/**
-	 * Determine whether E-Maj has been created as an extension.
-	 */
-	function isExtension() {
-		global $data;
-
-		$sql = "SELECT 1 FROM pg_catalog.pg_extension WHERE extname = 'emaj'";
 		$rs = $data->selectSet($sql);
 		if ($rs->recordCount() == 1) {
 			return 1;
@@ -212,7 +239,7 @@ class EmajDb {
 
 		$sql = "SELECT CASE WHEN EXISTS (
 				  SELECT target FROM pg_catalog.pg_extension_update_paths('emaj')
-					WHERE source = '{$this->emaj_version}' AND path IS NOT NULL
+					WHERE source = '{$this->emajVersion}' AND path IS NOT NULL
 					  AND (target = 'devel' OR target >= '$oldest_supported_emaj_version')
 				) THEN 1 ELSE 0 END AS versions_exist";
 
@@ -238,7 +265,7 @@ class EmajDb {
 		global $data, $oldest_supported_emaj_version;
 
 		$sql = "SELECT target FROM pg_catalog.pg_extension_update_paths('emaj')
-				  WHERE source = '{$this->emaj_version}' AND path IS NOT NULL
+				  WHERE source = '{$this->emajVersion}' AND path IS NOT NULL
 					AND (target = 'devel' OR target >= '$oldest_supported_emaj_version')
 				  ORDER BY 1 DESC";
 
@@ -270,22 +297,9 @@ class EmajDb {
 		$status = $data->execute($sql);
 
 		if ($status == 0) {
-			// The extension has been created, so reset all emajdb cached variables.
-			$this->emaj_version = '?';
-			$this->emaj_version_num = 0;
-			$this->enabled = null;
-			$this->installed_as_extension = null;
-			$this->installed_by_superuser = null;
-			$this->installer_role = null;
-			$this->installed_with_emaj_adm = null;
-			$this->installed_with_emaj_viewer = null;
-			$this->installed_with_event_triggers = null;
-			$this->accessible = null;
-			$this->emaj_admin = null;
-			$this->emaj_viewer = null;
-			$this->dblink_usable = null;
-			$this->dblink_schema = null;
-			$this->asyncRlbkUsable = null;
+			// The extension has been created, so set all emajdb attributes and private variables.
+			$this->resetEmajInstallConf();
+			$this->loadEmajInstallConf();
 		}
 		return $status;
 	}
@@ -308,22 +322,9 @@ class EmajDb {
 		$status = $data->execute($sql);
 
 		if ($status == 0) {
-			// The extension version has changed, so reset all emajdb cached variables.
-			$this->emaj_version = '?';
-			$this->emaj_version_num = 0;
-			$this->enabled = null;
-			$this->installed_as_extension = null;
-			$this->installed_by_superuser = null;
-			$this->installer_role = null;
-			$this->installed_with_emaj_adm = null;
-			$this->installed_with_emaj_viewer = null;
-			$this->installed_with_event_triggers = null;
-			$this->accessible = null;
-			$this->emaj_admin = null;
-			$this->emaj_viewer = null;
-			$this->dblink_usable = null;
-			$this->dblink_schema = null;
-			$this->asyncRlbkUsable = null;
+			// The extension version has changed, so reload all emajdb attributes and private variables.
+			$this->resetEmajInstallConf();
+			$this->loadEmajInstallConf();
 		}
 		return $status;
 	}
@@ -358,22 +359,8 @@ class EmajDb {
 		$status = $data->execute($sql);
 
 		if ($status == 0) {
-			// The extension has been dropped, so reset all emajdb cached variables.
-			$this->emaj_version = '?';
-			$this->emaj_version_num = 0;
-			$this->enabled = null;
-			$this->accessible = null;
-			$this->installed_as_extension = null;
-			$this->installed_by_superuser = null;
-			$this->installer_role = null;
-			$this->installed_with_emaj_adm = null;
-			$this->installed_with_emaj_viewer = null;
-			$this->installed_with_event_triggers = null;
-			$this->emaj_admin = null;
-			$this->emaj_viewer = null;
-			$this->dblink_usable = null;
-			$this->dblink_schema = null;
-			$this->asyncRlbkUsable = null;
+			// The extension has been dropped, so reset all emajdb attributes and private variables.
+			$this->resetEmajInstallConf();
 		}
 		return $status;
 	}
@@ -383,7 +370,7 @@ class EmajDb {
 	 */
 	function isDblinkUsable() {
 		// Access cache
-		if ($this->dblink_usable !== null) return $this->dblink_usable;
+		if ($this->isDblinkUsable !== null) return $this->isDblinkUsable;
 
 		global $data;
 
@@ -394,9 +381,9 @@ class EmajDb {
                        EXISTS(SELECT 1 FROM pg_catalog.pg_proc WHERE proname = 'dblink_connect_u')
                    AND EXISTS(SELECT 1 FROM emaj.emaj_visible_param WHERE param_key = 'dblink_user_password')
                                  THEN 1 ELSE 0 END as cnx_ok";
-		$this->dblink_usable = $data->selectField($sql,'cnx_ok');
+		$this->isDblinkUsable = $data->selectField($sql,'cnx_ok');
 
-		return $this->dblink_usable;
+		return $this->isDblinkUsable;
 	}
 
 	/**
@@ -421,7 +408,7 @@ class EmajDb {
 			// If the _dblink_open_cnx() function is available for the user,
 			//   open a test dblink connection, analyse the result and close it if effectively opened.
 			$test_cnx_ok = 0;
-			if ($this->getNumEmajVersion() >= 40600){	// version >= 4.6.0
+			if ($this->emajVersionNum >= 40600){	// version >= 4.6.0
 				$sql = "SELECT CASE
 							WHEN pg_catalog.has_function_privilege('emaj._dblink_open_cnx(text, text)', 'EXECUTE')
 								THEN 1 ELSE 0 END as grant_open_ok";
@@ -431,33 +418,33 @@ class EmajDb {
 								THEN 1 ELSE 0 END as grant_open_ok";
 			}
 			if ($data->selectField($sql, 'grant_open_ok')) {
-				if ($this->getNumEmajVersion() >= 40600){	// version >= 4.6.0
+				if ($this->emajVersionNum >= 40600){	// version >= 4.6.0
 					$sql = "SELECT CASE WHEN p_status >= 0 THEN 1 ELSE 0 END as cnx_ok, p_schema
 							FROM emaj._dblink_open_cnx('test', current_role)";
 					$rs = $data->selectSet($sql);
 					if ($rs->fields['cnx_ok']) {
-						$this->dblink_schema = $rs->fields['p_schema'];
-						$sql = "SELECT emaj._dblink_close_cnx('test', '{$this->dblink_schema}')";
+						$this->dblinkSchema = $rs->fields['p_schema'];
+						$sql = "SELECT emaj._dblink_close_cnx('test', '{$this->dblinkSchema}')";
 						$data->execute($sql);
 						$test_cnx_ok = 1;
 					}
-				} elseif ($this->getNumEmajVersion() >= 40000){	// version >= 4.0.0
+				} elseif ($this->emajVersionNum >= 40000){	// version >= 4.0.0
 					$sql = "SELECT CASE WHEN p_status >= 0 THEN 1 ELSE 0 END as cnx_ok, p_schema
 							FROM emaj._dblink_open_cnx('test')";
 					$rs = $data->selectSet($sql);
 					if ($rs->fields['cnx_ok']) {
-						$this->dblink_schema = $rs->fields['p_schema'];
-						$sql = "SELECT emaj._dblink_close_cnx('test', '{$this->dblink_schema}')";
+						$this->dblinkSchema = $rs->fields['p_schema'];
+						$sql = "SELECT emaj._dblink_close_cnx('test', '{$this->dblinkSchema}')";
 						$data->execute($sql);
 						$test_cnx_ok = 1;
 					}
-				} elseif ($this->getNumEmajVersion() >= 30100){	// version >= 3.1.0
+				} elseif ($this->emajVersionNum >= 30100){	// version >= 3.1.0
 					$sql = "SELECT CASE WHEN v_status >= 0 THEN 1 ELSE 0 END as cnx_ok, v_schema
 							FROM emaj._dblink_open_cnx('test')";
 					$rs = $data->selectSet($sql);
 					if ($rs->fields['cnx_ok']) {
-						$this->dblink_schema = $rs->fields['v_schema'];
-						$sql = "SELECT emaj._dblink_close_cnx('test', '{$this->dblink_schema}')";
+						$this->dblinkSchema = $rs->fields['v_schema'];
+						$sql = "SELECT emaj._dblink_close_cnx('test', '{$this->dblinkSchema}')";
 						$data->execute($sql);
 						$test_cnx_ok = 1;
 					}
@@ -501,76 +488,13 @@ class EmajDb {
 	}
 
 	/**
-	 * Get the emaj version from either the cache or a getVersion() call.
-	 */
-	function getEmajVersion() {
-		// Access cache
-		if ($this->emaj_version !== '?') return $this->emaj_version;
-		// otherwise read from the emaj_param table
-		$this->getVersion();
-		return $this->emaj_version;
-	}
-
-	/**
-	 * Get the emaj version in numeric format from either the cache or a getVersion() call.
-	 */
-	function getNumEmajVersion() {
-		// Access cache
-		if ($this->emaj_version_num !== 0) return $this->emaj_version_num;
-		// otherwise read from the emaj_param table
-		$this->getVersion();
-		return $this->emaj_version_num;
-	}
-
-	/**
-	 * Get emaj version from the emaj_visible_param.
-	 */
-	function getVersion() {
-		global $data;
-
-		// Initialize version values.
-		$this->emaj_version = '?';
-		$this->emaj_version_num = 0;
-
-		// Ask the catalog whether the emaj_get_version() function exists (only introduced in 4.4.0).
-		$sql = "SELECT 1 AS exists
-				FROM pg_catalog.pg_proc JOIN pg_catalog.pg_namespace n ON (pronamespace = n.oid)
-				WHERE nspname = 'emaj' AND proname = 'emaj_get_version'";
-		if ($data->selectField($sql, 'exists') == 1) {
-			// The function exists, so call it.
-			$sql = "SELECT emaj.emaj_get_version() AS version";
-		} else {
-			// The function doesn't exist, so read the emaj_param table through the emaj_visible_param view.
-			$sql = "SELECT param_value_text AS version
-					FROM emaj.emaj_visible_param
-					WHERE param_key = 'emaj_version'";
-		}
-		$rs = $data->selectSet($sql);
-		if ($rs->recordCount() == 1){
-			// Set the cached values.
-			$this->emaj_version = $rs->fields['version'];
-			if (substr_count($this->emaj_version, '.') == 2) {
-				list($v1,$v2,$v3) = explode(".",$this->emaj_version);
-				$this->emaj_version_num = 10000 * $v1 + 100 * $v2 + $v3;
-			} elseif (substr_count($this->emaj_version, '.') == 1) {
-				list($v1,$v2) = explode(".",$this->emaj_version);
-				$this->emaj_version_num = 10000 * $v1 + 100 * $v2;
-			} else {
-				$this->emaj_version = htmlspecialchars($this->emaj_version);
-				$this->emaj_version_num = 999999;
-			}
-		}
-		return;
-	}
-
-	/**
 	 * Get the E-Maj size on disk.
 	 * = size of all relations in emaj primary and secondary schemas + size of linked toast tables.
 	 */
 	function getEmajSize() {
 		global $data;
 
-		if ($this->emaj_admin){
+		if ($this->isEmajAdmin){
 			$sql = "SELECT coalesce(pg_size_pretty(t.emajtotalsize) ||
 							to_char(t.emajtotalsize * 100 / pg_database_size(current_database())::float,' = FM990D0%'), '0 B = 0%') as emajsize
 					FROM
@@ -622,11 +546,7 @@ class EmajDb {
 	function getExtensionParams() {
 		global $data;
 
-		if (!$this->isEmajAdmin()) {
-			$table = 'emaj_visible_param';
-		} else {
-			$table = 'emaj_param';
-		}
+		$table = ($this->isEmajAdmin) ? 'emaj_param' : 'emaj_visible_param';
 
 		$sql = "SELECT
 					param_key,
@@ -703,7 +623,7 @@ class EmajDb {
 		global $data;
 
 		$sql = "SELECT group_name, group_comment";
-		if ($this->getNumEmajVersion() >= 30300){	// version >= 3.3.0
+		if ($this->emajVersionNum >= 30300){	// version >= 3.3.0
 			$sql .= ", group_nb_table, group_nb_sequence,
 					  CASE WHEN group_is_logging THEN 'LOGGING' ELSE 'IDLE' END
 						as group_state,
@@ -732,7 +652,7 @@ class EmajDb {
 	function getIdleGroups() {
 		global $data;
 
-		if ($this->getNumEmajVersion() >= 40400) {		// version 4.4+
+		if ($this->emajVersionNum >= 40400) {		// version 4.4+
 			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, group_comment,
 						CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END as group_type,
 						to_char(time_clock_timestamp,'{$this->tsFormat}') as creation_datetime,
@@ -748,7 +668,7 @@ class EmajDb {
 					CASE WHEN group_is_rollbackable THEN 'ROLLBACKABLE' ELSE 'AUDIT_ONLY' END
 						as group_type,
 					to_char(time_clock_timestamp,'{$this->tsFormat}') as creation_datetime, ";
-			if ($this->getNumEmajVersion() < 40000){	// version 3.x
+			if ($this->emajVersionNum < 40000){	// version 3.x
 				$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes, ";
 			} else {
 				$sql .=	"1 as has_waiting_changes, ";
@@ -769,7 +689,7 @@ class EmajDb {
 	function getLoggingGroups() {
 		global $data;
 
-		if ($this->getNumEmajVersion() >= 40400) {		// version 4.4+
+		if ($this->emajVersionNum >= 40400) {		// version 4.4+
 			$sql = "SELECT group_name, group_nb_table, group_nb_sequence, group_comment,
 						CASE WHEN NOT group_is_rollbackable THEN 'AUDIT_ONLY'
 							WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
@@ -788,7 +708,7 @@ class EmajDb {
 						WHEN group_is_rollbackable AND NOT group_is_rlbk_protected THEN 'ROLLBACKABLE'
 						ELSE 'ROLLBACKABLE-PROTECTED' END as group_type,
 					to_char(time_clock_timestamp,'{$this->tsFormat}') as creation_datetime, ";
-			if ($this->getNumEmajVersion() < 40000){	// version 3.x
+			if ($this->emajVersionNum < 40000){	// version 3.x
 				$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes, ";
 			} else {
 				$sql .=	"1 as has_waiting_changes, ";
@@ -1059,7 +979,7 @@ class EmajDb {
 
 		$data->clean($group);
 
-		if ($this->getNumEmajVersion() >= 40400) {		// version 4.4+
+		if ($this->emajVersionNum >= 40400) {		// version 4.4+
 			$sql = "SELECT group_name, group_nb_table, group_nb_sequence,
 						to_char(c.time_clock_timestamp,'{$this->tsFormat}') as group_creation_datetime,
 						to_char(s.time_clock_timestamp,'{$this->tsFormat}') as group_start_datetime,
@@ -1090,7 +1010,7 @@ class EmajDb {
 					pg_size_pretty((SELECT sum(pg_total_relation_size(quote_ident(rel_log_schema) || '.' || quote_ident(rel_log_table)))
 						FROM emaj.emaj_relation
 						WHERE rel_group = group_name AND rel_kind = 'r')::bigint) as log_size, ";
-			if ($this->getNumEmajVersion() < 40000){	// version 3.x
+			if ($this->emajVersionNum < 40000){	// version 3.x
 				$sql .=	"CASE WHEN group_has_waiting_changes THEN 1 ELSE 0 END as has_waiting_changes, ";
 			} else {
 				$sql .=	"1 as has_waiting_changes,";
@@ -1233,7 +1153,7 @@ class EmajDb {
 
 		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 
-		if ($this->getNumEmajVersion() >= 40000){	// version 4.0+
+		if ($this->emajVersionNum >= 40000){	// version 4.0+
 			$sql = "SELECT emaj._import_groups_conf_exec('$groupsConfig'::json, $groupsArray, '$mark') AS nb_groups";
 		} else {
 			$sql = "SELECT emaj._import_groups_conf_exec('$groupsConfig'::json, $groupsArray, ) AS nb_groups";
@@ -1254,7 +1174,7 @@ class EmajDb {
 
 		$data->clean($group);
 
-		if ($this->getNumEmajVersion() >= 40400){	// version 4.4+
+		if ($this->emajVersionNum >= 40400){	// version 4.4+
 //			The mark_log_session column is the concatetion of 3 fields separeted with #: the position of the mark in its log session,
 //				and the log session start and stop times.
 			$sql = "WITH mark_1 AS (
@@ -1659,7 +1579,7 @@ class EmajDb {
 			$goodTypeConditions = "c.relpersistence = 'p'";
 		}
 
-		if ($this->getNumEmajVersion() >= 30100){			// version >= 3.1.0
+		if ($this->emajVersionNum >= 30100){			// version >= 3.1.0
 			$sql = "SELECT 1, nspname, c.relname,
 						c.relkind::TEXT || case when relkind = 'S' or (relkind = 'r' and ${goodTypeConditions}) then '+' else '-' end as relkind,
 						pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
@@ -1813,7 +1733,7 @@ class EmajDb {
 
 		// Insert the new row into the emaj_group_def table.
 		$sql = "INSERT INTO emaj.emaj_group_def (grpdef_schema, grpdef_tblseq, grpdef_group, grpdef_priority,";
-		if ($this->getNumEmajVersion() < 30100){			// version < 3.1.0
+		if ($this->emajVersionNum < 30100){			// version < 3.1.0
 			$sql .= "grpdef_log_schema_suffix, grpdef_emaj_names_prefix,";
 		}
 		$sql .= "grpdef_log_dat_tsp, grpdef_log_idx_tsp)
@@ -1822,7 +1742,7 @@ class EmajDb {
 			$sql .= ", NULL";
 		else
 			$sql .= ", $priority";
-		if ($this->getNumEmajVersion() < 30100){			// version < 3.1.0
+		if ($this->emajVersionNum < 30100){			// version < 3.1.0
 			if ($logSchemaSuffix == '' || $relkind == 'S')
 				$sql .= ", NULL";
 			else
@@ -1879,7 +1799,7 @@ class EmajDb {
 			$sql .= ", grpdef_priority = NULL";
 		else
 			$sql .= ", grpdef_priority = $priority";
-		if ($this->getNumEmajVersion() < 30100){			// version < 3.1.0
+		if ($this->emajVersionNum < 30100){			// version < 3.1.0
 			if ($logSchemaSuffix == '' || $relkind == 'S')
 				$sql .= ", grpdef_log_schema_suffix = NULL";
 			else
@@ -2101,7 +2021,7 @@ class EmajDb {
 
 		$data->clean($group);
 
-		if ($this->getNumEmajVersion() >= 40000){	// version >= 4.0.0
+		if ($this->emajVersionNum >= 40000){	// version >= 4.0.0
 			$sql = "SELECT CASE WHEN EXISTS(SELECT 1 FROM emaj.emaj_group WHERE group_name = '$group') THEN 0 ELSE 1 END AS result";
 		} else {
 			$sql = "SELECT CASE WHEN
@@ -2231,16 +2151,16 @@ class EmajDb {
 
 		$boolIsRollbackable = ($isRollbackable) ? 'true' : 'false';
 
-		if ($isEmpty && $this->getNumEmajVersion() < 40000) {
+		if ($isEmpty && $this->emajVersionNum < 40000) {
 			$sql = "SELECT emaj.emaj_create_group('$group',$boolIsRollbackable,true) AS nbtblseq";
-		} elseif ($this->getNumEmajVersion() < 40600) {
+		} elseif ($this->emajVersionNum < 40600) {
 			$sql = "SELECT emaj.emaj_create_group('$group',$boolIsRollbackable) AS nbtblseq";
 		} else {
 			$sql = "SELECT emaj.emaj_create_group('$group',$boolIsRollbackable,'$comment') AS nbtblseq";
 		}
 		$rt = $data->execute($sql);
 
-		if ($this->getNumEmajVersion() < 40600 && $comment <> '') {
+		if ($this->emajVersionNum < 40600 && $comment <> '') {
 			$sql = "SELECT emaj.emaj_comment_group('$group','$comment')";
 			$data->execute($sql);
 		}
@@ -2553,14 +2473,14 @@ class EmajDb {
 		$data->clean($mark);
 		$data->clean($comment);
 
-		if ($this->getNumEmajVersion() < 40600) {
+		if ($this->emajVersionNum < 40600) {
 			$sql = "SELECT emaj.emaj_set_mark_group('$group','$mark') AS nbtblseq";
 		} else {
 			$sql = "SELECT emaj.emaj_set_mark_group('$group','$mark','$comment') AS nbtblseq";
 		}
 		$rt = $data->execute($sql);
 
-		if ($this->getNumEmajVersion() < 40600 && $comment <> '') {
+		if ($this->emajVersionNum < 40600 && $comment <> '') {
 			$sql = "SELECT emaj.emaj_comment_mark_group('$group','$mark','$comment')";
 			$data->execute($sql);
 		}
@@ -2708,7 +2628,7 @@ class EmajDb {
 
 		$data->clean($group);
 
-		if ($this->getNumEmajVersion() >= 40400){	// version 4.4+
+		if ($this->emajVersionNum >= 40400){	// version 4.4+
 			$sql = "SELECT mark_name, to_char(time_clock_timestamp,'{$this->tsFormat}') as mark_datetime, mark_is_rlbk_protected
 					FROM emaj.emaj_mark
 						JOIN emaj.emaj_time_stamp ON (time_id = mark_time_id)
@@ -2741,7 +2661,7 @@ class EmajDb {
 		$data->clean($mark);
 
 		// Check the mark is active.
-		if ($this->getNumEmajVersion() >= 40400){	// version 4.4+
+		if ($this->emajVersionNum >= 40400){	// version 4.4+
 			$sql = "SELECT CASE WHEN EXISTS
 					(SELECT 0 FROM emaj.emaj_mark
 								   JOIN emaj.emaj_log_session ON (lses_group = mark_group AND lses_time_range @> mark_time_id)
@@ -2806,7 +2726,7 @@ class EmajDb {
 		$firstGroup = substr($groups, 0, strpos($groups.',', ','));
 
 		// Look at the alter group operations executed after the mark.
-		if ($this->getNumEmajVersion() >= 40000){	// version >= 4.0.0
+		if ($this->emajVersionNum >= 40000){	// version >= 4.0.0
 			$sql = "SELECT to_char(time_clock_timestamp,'{$this->tsFormat}') as time_clock_timestamp,
 					CASE
 					WHEN rlchg_change_kind = 'REMOVE_TABLE' THEN
@@ -2992,7 +2912,7 @@ class EmajDb {
 		$data->clean($groups);
 		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 
-		if ($this->getNumEmajVersion() >= 40400){	// version 4.4+
+		if ($this->emajVersionNum >= 40400){	// version 4.4+
 			$sql = "SELECT t.mark_name, t.mark_datetime, t.mark_is_rlbk_protected
 					FROM (SELECT mark_name, to_char(time_clock_timestamp,'{$this->tsFormat}') as mark_datetime, mark_is_rlbk_protected,
 								 array_agg (mark_group) AS groups
@@ -3074,7 +2994,7 @@ class EmajDb {
 		$nbGroups = substr_count($groupsArray,',') + 1;
 
 		// Check the mark is active (i.e. belongs to logging groups).
-		if ($this->getNumEmajVersion() >= 40400){	// version 4.4+
+		if ($this->emajVersionNum >= 40400){	// version 4.4+
 			$sql = "SELECT CASE WHEN
 					(SELECT COUNT(*)
 						FROM emaj.emaj_mark
@@ -3185,7 +3105,7 @@ class EmajDb {
 		$data->execute($sql);
 
 		// Get the latest rollback operations.
-		if ($this->getNumEmajVersion() >= 40300){	// version >= 4.3.0
+		if ($this->emajVersionNum >= 40300){	// version >= 4.3.0
 			$sql = "SELECT rlbk_id, array_to_string(rlbk_groups,', ') as rlbk_groups_list, rlbk_status,
 						to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
 						to_char(rlbk_end_datetime,'{$this->tsFormat}') AS rlbk_end_datetime,
@@ -3224,7 +3144,7 @@ class EmajDb {
 					to_char(rlbk_elapse,'{$this->intervalFormat}') AS rlbk_current_elapse,
 					to_char(rlbk_remaining, '{$this->intervalFormat}') AS rlbk_remaining,
 					rlbk_completion_pct";
-		if ($this->getNumEmajVersion() >= 40300){	// version >= 4.3.0
+		if ($this->emajVersionNum >= 40300){	// version >= 4.3.0
 			$sql .= ", rlbk_comment";
 		}
 		$sql .= " FROM emaj.emaj_rollback_activity()
@@ -3297,7 +3217,7 @@ class EmajDb {
 		$data->execute($sql);
 
 		// Get the emaj_rlbk data.
-		if ($this->getNumEmajVersion() >= 40300){	// version >= 4.3.0
+		if ($this->emajVersionNum >= 40300){	// version >= 4.3.0
 			$sql = "WITH rlbks AS (
 					SELECT rlbk_id AS id,
 						lag(rlbk_id) OVER (ORDER BY rlbk_id) AS rlbk_prior,
@@ -3333,7 +3253,7 @@ class EmajDb {
 						'' AS rlbk_locking_duration,
 						rlbk_mark, to_char(tm.time_clock_timestamp,'{$this->tsFormat}') as rlbk_mark_datetime, rlbk_is_logged, rlbk_nb_session,
 						format('%s / %s', rlbk_eff_nb_table, rlbk_nb_table) AS rlbk_tbl,";
-			if ($this->getNumEmajVersion() >= 40200){	// version >= 4.2.0
+			if ($this->emajVersionNum >= 40200){	// version >= 4.2.0
 				$sql = $sql . "
 						format('%s / %s', coalesce(rlbk_eff_nb_sequence::TEXT, '?'), rlbk_nb_sequence) AS rlbk_seq,";
 			} else {
@@ -3363,7 +3283,7 @@ class EmajDb {
 		$sql = "SELECT rlbk_status,
 					to_char(rlbk_start_datetime,'{$this->tsFormat}') AS rlbk_start_datetime,
 					to_char(rlbk_elapse,'{$this->intervalFormat}') AS rlbk_current_elapse,";
-		if ($this->getNumEmajVersion() >= 40300){	// version >= 4.3.0
+		if ($this->emajVersionNum >= 40300){	// version >= 4.3.0
 			$sql = $sql . "
 					to_char(rlbk_planning_duration,'{$this->intervalFormat}') AS rlbk_planning_duration,
 					to_char(rlbk_locking_duration,'{$this->intervalFormat}') AS rlbk_locking_duration,";
@@ -3558,14 +3478,14 @@ class EmajDb {
 		$data->clean($firstMark);
 		$data->clean($lastMark);
 
-		if ($this->getNumEmajVersion() >= 40700) {				// version >= 4.7.0
+		if ($this->emajVersionNum >= 40700) {				// version >= 4.7.0
 			$sql = "CREATE TEMP TABLE tmp_stat AS
 					SELECT stat_group, stat_schema, stat_table,
 						   stat_first_mark, stat_first_mark_datetime, stat_first_time_id, stat_last_mark, stat_last_mark_datetime, stat_last_time_id,
 						   stat_rows
 						FROM emaj.emaj_log_stat_group('$group','$firstMark','$lastMark')
 						WHERE stat_rows > 0";
-		} elseif ($this->getNumEmajVersion() >= 40300) {		// version >= 4.3.0
+		} elseif ($this->emajVersionNum >= 40300) {		// version >= 4.3.0
 			$sql = "CREATE TEMP TABLE tmp_stat AS
 					SELECT stat_group, stat_schema, stat_table,
 						   stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
@@ -3587,12 +3507,12 @@ class EmajDb {
 
 		$data->execute($sql);
 
-		if ($this->getNumEmajVersion() >= 40700) {					// version >= 4.7.0
+		if ($this->emajVersionNum >= 40700) {					// version >= 4.7.0
 			$sql = "SELECT stat_group, stat_schema, stat_table,	stat_first_mark, stat_first_mark_datetime, stat_first_time_id,
 						   stat_last_mark, stat_last_mark_datetime, stat_last_time_id, stat_rows
 						FROM tmp_stat
 						ORDER BY stat_group, stat_schema, stat_table, stat_first_time_id";
-		} elseif ($this->getNumEmajVersion() >= 40300) {			// version >= 4.3.0
+		} elseif ($this->emajVersionNum >= 40300) {			// version >= 4.3.0
 			$sql = "SELECT stat_group, stat_schema, stat_table,	stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime, stat_rows
 						FROM tmp_stat
 						ORDER BY stat_group, stat_schema, stat_table";
@@ -3628,7 +3548,7 @@ class EmajDb {
 		$data->clean($firstMark);
 		$data->clean($lastMark);
 
-		if ($this->getNumEmajVersion() >= 40700) {			// version >= 4.7.0
+		if ($this->emajVersionNum >= 40700) {			// version >= 4.7.0
 		$sql = "CREATE TEMP TABLE tmp_stat AS
 					SELECT stat_group, stat_schema, stat_sequence,
 						   stat_first_mark, stat_first_mark_datetime, stat_first_time_id, stat_last_mark, stat_last_mark_datetime, stat_last_time_id,
@@ -3646,7 +3566,7 @@ class EmajDb {
 
 		$data->execute($sql);
 
-		if ($this->getNumEmajVersion() >= 40700) {			// version >= 4.7.0
+		if ($this->emajVersionNum >= 40700) {			// version >= 4.7.0
 			$sql = "SELECT stat_group, stat_schema, stat_sequence,
 						   stat_first_mark, stat_first_mark_datetime, stat_first_time_id, stat_last_mark, stat_last_mark_datetime, stat_last_time_id,
 						   stat_increments, stat_has_structure_changed
@@ -3687,14 +3607,14 @@ class EmajDb {
 		$data->clean($firstMark);
 		$data->clean($lastMark);
 
-		if ($this->getNumEmajVersion() >= 40700) {	// version >= 4.7.0
+		if ($this->emajVersionNum >= 40700) {	// version >= 4.7.0
 			$sql = "CREATE TEMP TABLE tmp_stat AS
 					SELECT stat_group, stat_schema, stat_table,
 						   stat_first_mark, stat_first_mark_datetime, stat_first_time_id, stat_last_mark, stat_last_mark_datetime, stat_last_time_id,
 						   stat_role, stat_verb, stat_rows
 						FROM emaj.emaj_detailed_log_stat_group('$group','$firstMark','$lastMark')
 						WHERE stat_rows > 0";
-		} elseif ($this->getNumEmajVersion() >= 40300) {	// version >= 4.3.0
+		} elseif ($this->emajVersionNum >= 40300) {	// version >= 4.3.0
 			$sql = "CREATE TEMP TABLE tmp_stat AS
 					SELECT stat_group, stat_schema, stat_table,
 						   stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
@@ -3716,13 +3636,13 @@ class EmajDb {
 		}
 		$data->execute($sql);
 
-		if ($this->getNumEmajVersion() >= 40700) {				// version >= 4.7.0
+		if ($this->emajVersionNum >= 40700) {				// version >= 4.7.0
 			$sql = "SELECT stat_group, stat_schema, stat_table,
 						   stat_first_mark, stat_first_mark_datetime, stat_first_time_id, stat_last_mark, stat_last_mark_datetime, stat_last_time_id,
 						   stat_role, stat_verb, stat_rows
 						FROM tmp_stat
 						ORDER BY stat_group, stat_schema, stat_table, stat_role, stat_verb";
-		} elseif ($this->getNumEmajVersion() >= 40300) {				// version >= 4.3.0
+		} elseif ($this->emajVersionNum >= 40300) {				// version >= 4.3.0
 			$sql = "SELECT stat_group, stat_schema, stat_table,	stat_first_mark, stat_first_mark_datetime, stat_last_mark, stat_last_mark_datetime,
 						   stat_role, stat_verb, stat_rows
 						FROM tmp_stat
@@ -4094,8 +4014,8 @@ class EmajDb {
 						 WHEN t.tgenabled = 'A' THEN 'Enabled Always'
 							END AS tgstate,
 				";
-		if ($this->isEnabled() && $this->isAccessible()) {
-			if ($this->getNumEmajVersion() >= 40000) {				# emaj version 4.0+
+		if ($this->isEnabled && $this->isEmajViewer) {
+			if ($this->emajVersionNum >= 40000) {				# emaj version 4.0+
 				$sql .= "CASE
 							WHEN NOT EXISTS (
 								SELECT 1 FROM emaj.emaj_relation
@@ -4106,7 +4026,7 @@ class EmajDb {
 									WHERE rel_schema = rn.nspname AND rel_tblseq = relname AND upper_inf(rel_time_range)
 										AND tgname = ANY(rel_ignored_triggers))
 							END	AS tgisautodisable,";
-			} elseif ($this->getNumEmajVersion() >= 30100) {		# emaj version [3.1 - 4.0[
+			} elseif ($this->emajVersionNum >= 30100) {		# emaj version [3.1 - 4.0[
 				$sql .= "NOT EXISTS (
 							SELECT 1 FROM emaj.emaj_ignored_app_trigger
 								WHERE trg_schema = rn.nspname AND trg_table = relname AND trg_name = tgname)
@@ -4138,7 +4058,7 @@ class EmajDb {
 	function getOrphanAppTriggers() {
 		global $data;
 
-		if ($this->getNumEmajVersion() >= 40000) {				# emaj version 4.0+
+		if ($this->emajVersionNum >= 40000) {				# emaj version 4.0+
 			$sql = "	SELECT rel_schema, rel_tblseq, unnest(rel_ignored_triggers)
 							FROM emaj.emaj_relation";
 		} else {
@@ -4438,8 +4358,8 @@ class EmajDb {
 						tgname IN ('emaj_trunc_trg', 'emaj_log_trg') as tgisemaj,
 				";
 
-		if ($this->isEnabled() && $this->isAccessible()) {
-			if ($this->getNumEmajVersion() >= 40000) {
+		if ($this->isEnabled && $this->isEmajViewer) {
+			if ($this->emajVersionNum >= 40000) {
 				$sql .= " 	CASE WHEN tgname IN ('emaj_trunc_trg', 'emaj_log_trg') THEN NULL
 								 WHEN NOT EXISTS (
 									SELECT 1 FROM emaj.emaj_relation
@@ -4450,7 +4370,7 @@ class EmajDb {
 										WHERE rel_schema = '$schema' AND rel_tblseq = '$table' AND upper_inf(rel_time_range)
 											  AND tgname = ANY(rel_ignored_triggers))
 							END as tgisautodisable,";
-			} elseif ($this->getNumEmajVersion() >= 30100) {
+			} elseif ($this->emajVersionNum >= 30100) {
 				$sql .= " 	CASE WHEN tgname IN ('emaj_trunc_trg', 'emaj_log_trg') THEN NULL
 								ELSE NOT EXISTS (
 									SELECT 1 FROM emaj.emaj_ignored_app_trigger
@@ -4489,7 +4409,7 @@ class EmajDb {
 		$data->clean($table);
 		$data->clean($trigger);
 
-		if ($this->getNumEmajVersion() >= 40000) {				# emaj version 4.0+
+		if ($this->emajVersionNum >= 40000) {				# emaj version 4.0+
 			# Build the new list of "triggers to ignore at rollback time", by adding or removing the given trigger to or from the existing triggers array
 			if ($action == 'ADD') {
 				$arrayFunction = 'array_append';

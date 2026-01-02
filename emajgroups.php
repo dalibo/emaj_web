@@ -179,7 +179,7 @@
 		$urlvars = $misc->getRequestVars();
 
 		$loggingActions = array();
-		if ($emajdb->isEmajAdmin()) {
+		if ($emajdb->isEmajAdmin) {
 			$loggingActions = array_merge($loggingActions, array(
 				'multiactions' => array(
 					'keycols' => array('group' => 'group_name'),
@@ -263,7 +263,7 @@
 							))))
 				))
 			);
-			if ($emajdb->getNumEmajVersion() < 30200) {	// version < 3.2
+			if ($emajdb->emajVersionNum < 30200) {	// version < 3.2
 				$loggingActions = array_merge($loggingActions, array(
 					'alter_group' => array(
 						'content' => $lang['strApplyConfChanges'],
@@ -282,7 +282,7 @@
 		};
 
 		$idleActions = array();
-		if ($emajdb->isEmajAdmin()) {
+		if ($emajdb->isEmajAdmin) {
 			$idleActions = array_merge($idleActions, array(
 				'multiactions' => array(
 					'keycols' => array('group' => 'group_name'),
@@ -316,7 +316,7 @@
 				),
 			));
 
-			if ($emajdb->getNumEmajVersion() < 30200) {				// version < 3.2
+			if ($emajdb->emajVersionNum < 30200) {				// version < 3.2
 				$idleActions = array_merge($idleActions, array(
 					'alter_group' => array(
 						'content' => $lang['strApplyConfChanges'],
@@ -381,7 +381,7 @@
 			),
 		);
 
-		if ($emajdb->isEmajAdmin()) {
+		if ($emajdb->isEmajAdmin) {
 			$configuredActions = array(
 				'create_group' => array(
 					'content' => $lang['strcreate'],
@@ -410,7 +410,7 @@
 
 		echo "<hr/>\n";
 
-		if ($emajdb->getNumEmajVersion() < 30200) {					// version < 3.2
+		if ($emajdb->emajVersionNum < 30200) {					// version < 3.2
 			// configured but not yet created tables groups section
 			$configuredGroups = $emajdb->getConfiguredGroups();
 
@@ -419,7 +419,7 @@
 			$misc->printTable($configuredGroups, $configuredColumns, $configuredActions, 'configuredGroups', $lang['strnoconfiguredgroups'], null, array('sorter' => true, 'filter' => true));
 
 			// for emaj_adm role only, give information about how to create a group
-			if ($emajdb->isEmajAdmin()) {
+			if ($emajdb->isEmajAdmin) {
 				echo "<p>{$lang['strnoconfiguredgroup']}</p>\n";
 				echo "<form id=\"createEmptyGroup_form\" action=\"emajgroups.php?action=create_group&amp;back=list&amp;empty=true&amp;{$misc->href}\"";
 				echo " method=\"post\" enctype=\"multipart/form-data\">\n";
@@ -429,7 +429,7 @@
 		} else {
 			// Emaj Version 3.2+
 			// for emaj_adm role only, display additional buttons
-			if ($emajdb->isEmajAdmin()) {
+			if ($emajdb->isEmajAdmin) {
 				echo "<div class=\"actionslist\">\n";
 				// display the "new group" button
 				echo "\t<form id=\"createEmptyGroup_form\" method=\"post\" action=\"emajgroups.php?action=create_group&amp;back=list&amp;{$misc->href}\">\n";
@@ -437,7 +437,7 @@
 				echo "\t</form>\n";
 
 				// display the "export groups configuration" and "import groups configuration" buttons
-				if ($emajdb->getNumEmajVersion() >= 30300) {			// version >= 3.3.0
+				if ($emajdb->emajVersionNum >= 30300) {			// version >= 3.3.0
 					// form to export groups configuration
 					// the export button is disabled when no group exists
 					echo "\t<form id=\"exportGroupsConf_form\" method=\"post\" action=\"emajgroups.php?action=export_groups&amp;back=list&amp;{$misc->href}\">\n";
@@ -454,7 +454,7 @@
 				echo "</div>\n";
 			}
 		}
-		if ($emajdb->getNumEmajVersion() >= 40400) {					// version >= 4.4
+		if ($emajdb->emajVersionNum >= 40400) {					// version >= 4.4
 		// display the list of dropped tables group
 
 			$droppedGroups = $emajdb->getDroppedGroups();
@@ -491,7 +491,7 @@
 				),
 			);
 
-			if ($emajdb->isEmajAdmin()) {
+			if ($emajdb->isEmajAdmin) {
 				$droppedActions = array(
 					'create_group' => array(
 						'content' => $lang['strrecreate'],

@@ -139,14 +139,14 @@
 				'params'=> array('align' => 'right'),
 			),
 		);
-		if ($emajdb->getNumEmajVersion() >= 40300 && $emajdb->isEmajAdmin()) {	// version >= 4.3
+		if ($emajdb->emajVersionNum >= 40300 && $emajdb->isEmajAdmin) {	// version >= 4.3
 			$columnsInProgressRlbk = array_merge($columnsInProgressRlbk, array(
 				'actions' => array(
 					'title' => $lang['stractions'],
 				),
 			));
 		};
-		if ($emajdb->getNumEmajVersion() >= 40300) {	// version >= 4.3
+		if ($emajdb->emajVersionNum >= 40300) {	// version >= 4.3
 			$columnsInProgressRlbk = array_merge($columnsInProgressRlbk, array(
 				'comment' => array(
 					'title' => $lang['strcomment'],
@@ -161,7 +161,7 @@
 		};
 
 		$actions = array();
-		if ($emajdb->getNumEmajVersion() >= 40300 && $emajdb->isEmajAdmin()) {	// version >= 4.3
+		if ($emajdb->emajVersionNum >= 40300 && $emajdb->isEmajAdmin) {	// version >= 4.3
 			$actions = array_merge($actions, array(
 				'comment_rollback' => array(
 					'content' => $lang['strsetcomment'],
@@ -261,14 +261,14 @@
 				'params'=> array('align' => 'right'),
 			),
 		);
-		if ($emajdb->getNumEmajVersion() >= 40300 && $emajdb->isEmajAdmin()) {	// version >= 4.3
+		if ($emajdb->emajVersionNum >= 40300 && $emajdb->isEmajAdmin) {	// version >= 4.3
 			$columnsCompletedRlbk = array_merge($columnsCompletedRlbk, array(
 				'actions' => array(
 					'title' => $lang['stractions'],
 				),
 			));
 		};
-		if ($emajdb->getNumEmajVersion() >= 40300) {	// version >= 4.3
+		if ($emajdb->emajVersionNum >= 40300) {	// version >= 4.3
 			$columnsCompletedRlbk = array_merge($columnsCompletedRlbk, array(
 				'comment' => array(
 					'title' => $lang['strcomment'],
@@ -346,7 +346,7 @@
 				'title' => $lang['stractions'],
 			),
 		);
-		if ($emajdb->isEmajAdmin()) {
+		if ($emajdb->isEmajAdmin) {
 			$actions = array(
 				'consolidate' => array(
 					'content' => $lang['strconsolidate'],
@@ -389,7 +389,7 @@
 		$nextRlbk = isset($rlbkInfo->fields['rlbk_next']) ? $rlbkInfo->fields['rlbk_next'] : '';
 		$status = $rlbkInfo->fields['rlbk_status'];
 		$isCompleted = ($status == 'COMPLETED' || $status == 'COMMITTED' || $status == 'ABORTED');
-		if ($emajdb->getNumEmajVersion() >= 40300) {	// version >= 4.3
+		if ($emajdb->emajVersionNum >= 40300) {	// version >= 4.3
 			$comment = $rlbkInfo->fields['rlbk_comment'];
 		};
 
@@ -777,17 +777,17 @@
 		$misc->printTable($rlbkInfo, $columnsProperties, $actions, 'detailRlbkProperties', 'No rollback, internal error !');
 
 		// display rollback comment if exists
-		if ($emajdb->getNumEmajVersion() >= 40300 && $comment<>'') {	// version >= 4.3
+		if ($emajdb->emajVersionNum >= 40300 && $comment<>'') {	// version >= 4.3
 			echo "<p>{$lang['strcommentlabel']}<span class=\"comment\">{$comment}</span></p>\n";
 		}
 
 		// display the buttons corresponding to the available functions for the rollback
 
 		$navlinks = array();
-		if ($emajdb->isEmajAdmin()) {
+		if ($emajdb->isEmajAdmin) {
 
 			// comment_group
-			if ($emajdb->getNumEmajVersion() >= 40300) {	// version >= 4.3
+			if ($emajdb->emajVersionNum >= 40300) {	// version >= 4.3
 				$navlinks['comment_rollback'] = array (
 					'content' => $lang['strsetcomment'],
 					'attr'=> array (
@@ -946,8 +946,8 @@
 	}
 
 	// redirect to the emajenvir.php page if the emaj extension is not installed or accessible or is too old
-	if (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
-		&& $emajdb->getNumEmajVersion() >= $oldest_supported_emaj_version_num)) {
+	if (!(isset($emajdb) && $emajdb->isEnabled && $emajdb->isEmajViewer
+		&& $emajdb->emajVersionNum >= $oldest_supported_emaj_version_num)) {
 		header('Location: emajenvir.php?' . $_SERVER["QUERY_STRING"]);
 	}
 

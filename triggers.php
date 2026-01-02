@@ -73,8 +73,8 @@
 				'field' => field('tgstate'),
 			),
 		);
-		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
-			if ($emajdb->getNumEmajVersion() >= 30100) {			// version >= 3.1.0
+		if ($emajdb->isEnabled && $emajdb->isEmajViewer) {
+			if ($emajdb->emajVersionNum >= 30100) {			// version >= 3.1.0
 				$columns = array_merge($columns, array(
 					'emajisautodisable' => array(
 						'title' => $lang['strisautodisable'],
@@ -93,49 +93,47 @@
 		}
 
 		$actions = array();
-		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
-			if ($emajdb->getNumEmajVersion() >= 30100) {			// version >= 3.1.0
-				if ($emajdb->isEmajAdmin()) {
-					$actions = array_merge($actions, array(
-						'multiactions' => array(
-							'keycols' => array(
-								'schema' => 'nspname',
-								'table' => 'relname',
-								'trigger' => 'tgname',
-								'tgisdisableauto' => 'tgisautodisable',
-							),
-							'url' => 'triggers.php',
+		if ($emajdb->isEnabled && $emajdb->isEmajAdmin) {
+			if ($emajdb->emajVersionNum >= 30100) {			// version >= 3.1.0
+				$actions = array_merge($actions, array(
+					'multiactions' => array(
+						'keycols' => array(
+							'schema' => 'nspname',
+							'table' => 'relname',
+							'trigger' => 'tgname',
+							'tgisdisableauto' => 'tgisautodisable',
 						),
-						'noAutoDisableTrigger' => array(
-							'content' => 'Manuel',
-							'icon' => 'Off',
-							'attr' => array (
-								'href' => array (
-									'url' => 'triggers.php',
-									'urlvars' => array_merge($urlvars, array (
-										'action' => 'no_auto_disable_trigger',
-										'schema' => field('nspname'),
-										'table' => field('relname'),
-										'trigger' => field('tgname'),
-									)))),
-							'multiaction' => 'no_auto_disable_triggers',
-						),
-						'autoDisableTrigger' => array(
-							'content' => 'Auto',
-							'icon' => 'On',
-							'attr' => array (
-								'href' => array (
-									'url' => 'triggers.php',
-									'urlvars' => array_merge($urlvars, array (
-										'action' => 'auto_disable_trigger',
-										'schema' => field('nspname'),
-										'table' => field('relname'),
-										'trigger' => field('tgname'),
-									)))),
-							'multiaction' => 'auto_disable_triggers',
-						),
-					));
-				}
+						'url' => 'triggers.php',
+					),
+					'noAutoDisableTrigger' => array(
+						'content' => 'Manuel',
+						'icon' => 'Off',
+						'attr' => array (
+							'href' => array (
+								'url' => 'triggers.php',
+								'urlvars' => array_merge($urlvars, array (
+									'action' => 'no_auto_disable_trigger',
+									'schema' => field('nspname'),
+									'table' => field('relname'),
+									'trigger' => field('tgname'),
+								)))),
+						'multiaction' => 'no_auto_disable_triggers',
+					),
+					'autoDisableTrigger' => array(
+						'content' => 'Auto',
+						'icon' => 'On',
+						'attr' => array (
+							'href' => array (
+								'url' => 'triggers.php',
+								'urlvars' => array_merge($urlvars, array (
+									'action' => 'auto_disable_trigger',
+									'schema' => field('nspname'),
+									'table' => field('relname'),
+									'trigger' => field('tgname'),
+								)))),
+						'multiaction' => 'auto_disable_triggers',
+					),
+				));
 			}
 		}
 
@@ -144,8 +142,8 @@
 		$misc->printTable($triggers, $columns, $actions, 'triggers-triggers', $lang['strnoapptrigger'], 'appTriggerPre', array('sorter' => true, 'filter' => true));
 
 		// Check if orphan triggers exist in the emaj_ignored_app_trigger table
-		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
-			if ($emajdb->getNumEmajVersion() >= 30100) {			// version >= 3.1.0
+		if ($emajdb->isEnabled && $emajdb->isEmajViewer) {
+			if ($emajdb->emajVersionNum >= 30100) {			// version >= 3.1.0
 				$orphanTriggers = $emajdb->getOrphanAppTriggers();
 
 				if (!$orphanTriggers->EOF) {

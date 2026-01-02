@@ -557,7 +557,7 @@
 				case 'emaj':
 					// Check the emaj extension.
 					// Redirect to the emajenvir.php page if the emaj extension is not installed or is not accessible by the user
-					if (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible())) {
+					if (!(isset($emajdb) && $emajdb->isEnabled && $emajdb->isEmajViewer)) {
 						$url = "emajenvir.php";
 						$errMsg = $lang['stremajmissing'];
 					}
@@ -778,9 +778,9 @@
 				// print the tooltip to show E-Maj rights
 				if ($data->isSuperUser($server_info['username']))
 					$help = $lang['strusersuperuser'];
-				elseif ($emajdb->isEmajAdmin())
+				elseif ($emajdb->isEmajAdmin)
 					$help = $lang['struseremajadm'];
-				elseif ($emajdb->isEmajViewer())
+				elseif ($emajdb->isEmajViewer)
 					$help = $lang['struseremajviewer'];
 				else
 					$help = $lang['strusernoright'];
@@ -1157,10 +1157,10 @@
 					break;
 
 				case 'database':
-					$emajNotAvail = (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
-						&& $emajdb->getNumEmajVersion() >= $oldest_supported_emaj_version_num));
-					$hideGroupConf = $emajNotAvail || !($emajdb->isEmajAdmin()) || $emajdb->getNumEmajVersion() >= 30200;
-					$hideActivity = $emajNotAvail || !($emajdb->isEmajViewer()) || $emajdb->getNumEmajVersion() < 40500;
+					$emajNotAvail = (!(isset($emajdb) && $emajdb->isEnabled && $emajdb->isEmajViewer
+						&& $emajdb->emajVersionNum >= $oldest_supported_emaj_version_num));
+					$hideGroupConf = $emajNotAvail || !($emajdb->isEmajAdmin) || $emajdb->emajVersionNum >= 30200;
+					$hideActivity = $emajNotAvail || !($emajdb->isEmajViewer) || $emajdb->emajVersionNum < 40500;
 
 					$tabs = array (
 						'emajgroups' => array (
@@ -1235,7 +1235,7 @@
 
 				case 'emajgroup':
 					$droppedGroup = (! $emajdb->existsGroup($_REQUEST['group']));
-					$historyNotAvail = ($emajdb->getNumEmajVersion() < 40400);
+					$historyNotAvail = ($emajdb->emajVersionNum < 40400);
 					$tabs = array (
 						'emajgroupproperties' => array (
 							'title' => $lang['strproperties'],
@@ -1285,10 +1285,10 @@
 					break;
 
 				case 'table':
-					$statNotAvail = (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
-						&& $emajdb->getNumEmajVersion() >= 40700));
-					$historyNotAvail = (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
-						&& $emajdb->getNumEmajVersion() >= 40400));
+					$statNotAvail = (!(isset($emajdb) && $emajdb->isEnabled && $emajdb->isEmajViewer
+						&& $emajdb->emajVersionNum >= 40700));
+					$historyNotAvail = (!(isset($emajdb) && $emajdb->isEnabled && $emajdb->isEmajViewer
+						&& $emajdb->emajVersionNum >= 40400));
 					$tabs = array (
 						'properties' => array (
 							'title' => $lang['strproperties'],
@@ -1336,10 +1336,10 @@
 					break;
 
 				case 'sequence':
-					$statNotAvail = (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
-						&& $emajdb->getNumEmajVersion() >= 40700));
-					$historyNotAvail = (!(isset($emajdb) && $emajdb->isEnabled() && $emajdb->isAccessible()
-						&& $emajdb->getNumEmajVersion() >= 40400));
+					$statNotAvail = (!(isset($emajdb) && $emajdb->isEnabled && $emajdb->isEmajViewer
+						&& $emajdb->emajVersionNum >= 40700));
+					$historyNotAvail = (!(isset($emajdb) && $emajdb->isEnabled && $emajdb->isEmajViewer
+						&& $emajdb->emajVersionNum >= 40400));
 					$tabs = array (
 						'properties' => array (
 							'title' => $lang['strproperties'],

@@ -21,7 +21,7 @@
 		$misc->printTitle(sprintf($lang['strnamedsequence'], $_REQUEST['schema'], $_REQUEST['sequence']));
 
 		// Display the E-Maj properties, if any
-		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
+		if ($emajdb->isEnabled && $emajdb->isEmajViewer) {
 
 			$misc->printSubtitle($lang['stremajproperties']);
 
@@ -59,10 +59,10 @@
 				$misc->printTable($prop, $columns, $actions, 'seqproperties-emaj', $lang['strseqnogroupownership']);
 				// Display the buttons corresponding to the available functions for the sequence.
 
-				if ($emajdb->isEmajAdmin() && $emajdb->getNumEmajVersion() >= 30200) {			// version >= 3.2.0
+				if ($emajdb->isEmajAdmin && $emajdb->emajVersionNum >= 30200) {			// version >= 3.2.0
 
 					// Get the number of created groups (needed to display or hide some actions)
-					if ($emajdb->isAccessible())
+					if ($emajdb->isEmajViewer)
 						$nbGroups = $emajdb->getNbGroups();
 					else
 						$nbGroups = 0;

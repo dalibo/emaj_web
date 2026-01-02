@@ -91,7 +91,7 @@
 		};
 
 		// Get the schemas list
-		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
+		if ($emajdb->isEnabled && $emajdb->isEmajViewer) {
 			$schemas = $emajdb->getAllSchemas();
 		} else {
 			$schemas = $data->getSchemas();
@@ -108,7 +108,7 @@
 				'vars'  => array('schema' => 'nspname'),
 			),
 		);
-		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
+		if ($emajdb->isEnabled && $emajdb->isEmajViewer) {
 			$columns = array_merge($columns, array(
 				'isemaj' => array(
 					'title' => $lang['strisemaj'],
@@ -146,7 +146,7 @@
 
 			// is it an E-Maj schema ?
 			$isEmajSchema = false;
-			if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
+			if ($emajdb->isEnabled && $emajdb->isEmajViewer) {
 				foreach ($schemas as $schema) {
 					if ($schema['nspname'] == $_REQUEST['schema'] && $schema['nspisemaj'] == 't') {
 						$isEmajSchema = true;
@@ -154,10 +154,10 @@
 				}
 			}
 			// E-Maj attributes and actions to manage ?
-			$emajAttributesToManage = ($emajdb->isEnabled() && $emajdb->isAccessible() && ! $isEmajSchema);
+			$emajAttributesToManage = ($emajdb->isEnabled && $emajdb->isEmajViewer && ! $isEmajSchema);
 
 			// Get the number of created groups (needed to display or hide some actions)
-			if ($emajdb->isAccessible())
+			if ($emajdb->isEmajViewer)
 				$nbGroups = $emajdb->getNbGroups();
 			else
 				$nbGroups = 0;
@@ -252,7 +252,7 @@
 					)
 				),
 			);
-			if ($emajAttributesToManage && $emajdb->isEmajAdmin() && $emajdb->getNumEmajVersion() >= 30200) {			// version >= 3.2.0
+			if ($emajAttributesToManage && $emajdb->isEmajAdmin && $emajdb->emajVersionNum >= 30200) {			// version >= 3.2.0
 				$actions = array_merge($actions, array(
 					'multiactions' => array(
 						'keycols' => array('appschema' => 'nspname', 'table' => 'relname', 'group' => 'rel_group', 'type' => 'relkind'),
@@ -343,7 +343,7 @@
 					'vars'  => array('sequence' => 'seqname'),
 				),
 			);
-			if ($emajAttributesToManage && $emajdb->isEmajAdmin() && $emajdb->getNumEmajVersion() >= 30200) {			// version >= 3.2.0
+			if ($emajAttributesToManage && $emajdb->isEmajAdmin && $emajdb->emajVersionNum >= 30200) {			// version >= 3.2.0
 				$columns = array_merge($columns, array(
 					'actions' => array(
 						'title' => $lang['stractions'],
@@ -376,7 +376,7 @@
 				),
 			));
 
-			if ($emajAttributesToManage && $emajdb->isEmajAdmin() && $emajdb->getNumEmajVersion() >= 30200) {			// version >= 3.2.0
+			if ($emajAttributesToManage && $emajdb->isEmajAdmin && $emajdb->emajVersionNum >= 30200) {			// version >= 3.2.0
 				$actions = array(
 					'multiactions' => array(
 						'keycols' => array('appschema' => 'nspname', 'sequence' => 'seqname', 'group' => 'rel_group', 'type' => 'relkind'),

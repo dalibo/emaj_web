@@ -124,7 +124,7 @@
 		$triggers = $emajdb->getTriggersTable($_REQUEST['schema'], $_REQUEST['table']);
 
 		// Display the E-Maj properties, if any
-		if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
+		if ($emajdb->isEnabled && $emajdb->isEmajViewer) {
 
 			$misc->printSubtitle($lang['stremajproperties']);
 
@@ -179,10 +179,10 @@
 
 				// Display the buttons corresponding to the available functions for the table.
 
-				if ($emajdb->isEmajAdmin() && $emajdb->getNumEmajVersion() >= 30200) {			// version >= 3.2.0
+				if ($emajdb->isEmajAdmin && $emajdb->emajVersionNum >= 30200) {			// version >= 3.2.0
 
 					// Get the number of created groups (needed to display or hide some actions)
-					if ($emajdb->isAccessible())
+					if ($emajdb->isEmajViewer)
 						$nbGroups = $emajdb->getNbGroups();
 					else
 						$nbGroups = 0;
@@ -394,8 +394,8 @@
 					'sorter_text_extraction' => 'img_alt',
 				),
 			);
-			if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
-				if ($emajdb->getNumEmajVersion() >= 30100) {			// version >= 3.1.0
+			if ($emajdb->isEnabled && $emajdb->isEmajViewer) {
+				if ($emajdb->emajVersionNum >= 30100) {			// version >= 3.1.0
 					$columns = array_merge($columns, array(
 						'emajisautodisable' => array(
 							'title' => $lang['strisautodisable'],
@@ -414,9 +414,9 @@
 			}
 
 			$actions = array();
-			if ($emajdb->isEnabled() && $emajdb->isAccessible()) {
-				if ($emajdb->getNumEmajVersion() >= 30100) {			// version >= 3.1.0
-					if ($emajdb->isEmajAdmin()) {
+			if ($emajdb->isEnabled && $emajdb->isEmajViewer) {
+				if ($emajdb->emajVersionNum >= 30100) {			// version >= 3.1.0
+					if ($emajdb->isEmajAdmin) {
 						$actions = array_merge($actions, array(
 							'noAutoDisableTrigger' => array(
 								'content' => 'Manuel',

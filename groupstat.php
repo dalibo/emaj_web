@@ -93,7 +93,7 @@
 			echo "<div class=\"actionslist\">\n";
 			echo "\t<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 			echo "\t<input type=\"submit\" name=\"estimatetables\" value=\"{$lang['strestimatetables']}\" />\n";
-			if ($emajdb->getNumEmajVersion() >= 40301) {			// version >= 4.3.1
+			if ($emajdb->emajVersionNum >= 40301) {			// version >= 4.3.1
 				echo "\t<input type=\"submit\" name=\"estimatesequences\" value=\"{$lang['strestimatesequences']}\" />\n";
 			}
 			echo "\t<input type=\"submit\" name=\"detailtables\" value=\"{$lang['strdetailtables']}\" />\n";
@@ -201,7 +201,7 @@
 
 		$summary = $emajdb->getLogStatSummary();
 
-		if ($emajdb->getNumEmajVersion() >= 40400) {			// version >= 4.4.0
+		if ($emajdb->emajVersionNum >= 40400) {			// version >= 4.4.0
 			$nbLogSession = $emajdb->getNbLogSessionInPeriod($_REQUEST['group'], $_REQUEST['rangestart'], $_REQUEST['rangeend']);
 		} else {
 			$nbLogSession = 0;
@@ -291,7 +291,7 @@
 				),
 			);
 
-			if ($emajdb->getNumEmajVersion() >= 40700) {			// version >= 4.7.0
+			if ($emajdb->emajVersionNum >= 40700) {			// version >= 4.7.0
 				// Request parameters to prepare the SQL statement to edit
 				$actions = array(
 					'gen_sql_dump_changes' => array(
@@ -315,7 +315,7 @@
 						)))),
 					),
 				);
-			} elseif ($emajdb->getNumEmajVersion() >= 40300) {			// version >= 4.3.0
+			} elseif ($emajdb->emajVersionNum >= 40300) {			// version >= 4.3.0
 				// Request parameters to prepare the SQL statement to edit
 				$actions = array(
 					'gen_sql_dump_changes' => array(
@@ -490,7 +490,7 @@
 		$roles = $emajdb->getDetailedLogStatRoles();
 		$rolesList = implode(', ', $roles);
 
-		if ($emajdb->getNumEmajVersion() >= 40400) {			// version >= 4.4.0
+		if ($emajdb->emajVersionNum >= 40400) {			// version >= 4.4.0
 			$nbLogSession = $emajdb->getNbLogSessionInPeriod($_REQUEST['group'], $_REQUEST['rangestart'], $_REQUEST['rangeend']);
 		} else {
 			$nbLogSession = 0;
@@ -597,7 +597,7 @@
 				),
 			);
 
-			if ($emajdb->getNumEmajVersion() >= 40700) {			// version >= 4.7.0
+			if ($emajdb->emajVersionNum >= 40700) {			// version >= 4.7.0
 				// Request parameters to prepare the SQL statement to edit
 				$actions = array(
 					'gen_sql_dump_changes' => array(
@@ -621,7 +621,7 @@
 						)))),
 					),
 				);
-			} elseif ($emajdb->getNumEmajVersion() >= 40300) {			// version >= 4.3.0
+			} elseif ($emajdb->emajVersionNum >= 40300) {			// version >= 4.3.0
 				// Request parameters to prepare the SQL statement to edit
 				$actions = array(
 					'gen_sql_dump_changes' => array(
@@ -696,7 +696,7 @@
 	function gen_sql_dump_changes() {
 		global $misc, $emajdb;
 
-		if ($emajdb->getNumEmajVersion() >= 40700) 				// version >= 4.7
+		if ($emajdb->emajVersionNum >= 40700) 				// version >= 4.7
 			echo "<meta http-equiv=\"refresh\" content=\"0;url=sqledit.php?subject=table&amp;{$misc->href}&amp;action=gen_sql_dump_changes" .
 				"&amp;group=" . urlencode($_REQUEST['group']) .
 				"&amp;schema=" . urlencode($_REQUEST['schema']) . "&amp;table=" . urlencode($_REQUEST['table']) .

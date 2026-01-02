@@ -38,7 +38,7 @@
 		$hasPk = $emajdb->hasTablePk($_REQUEST['schema'], $_REQUEST['table']);
 
 		// Get the E-Maj columns list for the related log table
-		if ($emajdb->getNumEmajVersion() >= 40700) 					// version >= 4.7
+		if ($emajdb->emajVersionNum >= 40700) 					// version >= 4.7
 			$emajCols = $emajdb->getEmajColumns_2($_REQUEST['group'], $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['startTimeId']);
 		else
 			$emajCols = $emajdb->getEmajColumns_1($_REQUEST['group'], $_REQUEST['schema'], $_REQUEST['table'], $_REQUEST['startMark'], $_REQUEST['startTs']);
@@ -61,7 +61,7 @@
 		echo "\t<input type=\"hidden\" name=\"group\" value=\"", htmlspecialchars($_REQUEST['group']), "\" />\n";
 		echo "\t<input type=\"hidden\" name=\"schema\" value=\"", htmlspecialchars($_REQUEST['schema']), "\" />\n";
 		echo "\t<input type=\"hidden\" name=\"table\" value=\"", htmlspecialchars($_REQUEST['table']), "\" />\n";
-		if ($emajdb->getNumEmajVersion() >= 40700) {					// version >= 4.7
+		if ($emajdb->emajVersionNum >= 40700) {					// version >= 4.7
 			echo "\t<input type=\"hidden\" name=\"startTimeId\" value=\"", htmlspecialchars($_REQUEST['startTimeId']), "\" />\n";
 			echo "\t<input type=\"hidden\" name=\"endTimeId\" value=\"", htmlspecialchars($_REQUEST['endTimeId']), "\" />\n";
 		} else {
@@ -183,7 +183,7 @@
 		$orderBy = (isset($_POST['orderBy'])) ? $_POST['orderBy'] : 'TIME';
 
 		// And call the emaj function that generates the sql
-		if ($emajdb->getNumEmajVersion() >= 40700) 					// version >= 4.7
+		if ($emajdb->emajVersionNum >= 40700) 					// version >= 4.7
 			$sql_text = $emajdb->genSqlDumpChanges_2($_POST['group'], $_POST['schema'], $_POST['table'],
 												$_POST['startTimeId'], $_POST['endTimeId'],
 												$consolidation, $emajColumnsList, $colsOrder, $orderBy);

@@ -132,7 +132,7 @@
 					'field' => field('grpdef_priority'),
 					'params'=> array('align' => 'center'),
 				));
-			if ($emajdb->getNumEmajVersion() < 30100) {			// version < 3.1.0
+			if ($emajdb->emajVersionNum < 30100) {			// version < 3.1.0
 				$columns = array_merge($columns, array(
 					'logschemasuffix' => array(
 						'title' => $lang['strlogschemasuffix'],
@@ -260,7 +260,7 @@
 		$knownGroups = $emajdb->getKnownGroups();
 
 		// Get log schema suffix already known in emaj_group_def table
-		if ($emajdb->getNumEmajVersion() < 30100) {			// version < 3.1.0
+		if ($emajdb->emajVersionNum < 30100) {			// version < 3.1.0
 			$knownSuffix = $emajdb->getKnownSuffix();
 		}
 
@@ -332,7 +332,7 @@
 		}
 
 		// log schema name suffix
-		if ($emajdb->getNumEmajVersion() < 30100 && $nbTbl >= 1) {			// version < 3.1.0
+		if ($emajdb->emajVersionNum < 30100 && $nbTbl >= 1) {			// version < 3.1.0
 			echo "\t<div class=\"form-label\">{$lang['strenterlogschema']}</div>\n";
 			echo "\t<div class=\"form-input\">";
 			echo "<input type=\"text\" name=\"suffix\" list=\"suffixList\" value=\"\"/ autocomplete=\"off\">";
@@ -349,7 +349,7 @@
 		}
 
 		// objects name prefix (only for tables)
-		if ($emajdb->getNumEmajVersion() < 30100 && $nbTbl == 1) {			// version < 3.1.0
+		if ($emajdb->emajVersionNum < 30100 && $nbTbl == 1) {			// version < 3.1.0
 			// the names prefix is accessible only for a single table assignment
 			echo "\t<div class=\"form-label\">{$lang['strenternameprefix']}</div>\n";
 			echo "\t<div class=\"form-input\">";
@@ -458,7 +458,7 @@
 		$knownGroups = $emajdb->getKnownGroups();
 
 		// Get log schema suffix already known in emaj_group_def table
-		if ($emajdb->getNumEmajVersion() < 30100) {			// version < 3.1.0
+		if ($emajdb->emajVersionNum < 30100) {			// version < 3.1.0
 			$knownSuffix = $emajdb->getKnownSuffix();
 		}
 
@@ -507,7 +507,7 @@
 		}
 
 		// log schema name suffix (only for tables)
-		if ($emajdb->getNumEmajVersion() < 30100 && $_REQUEST['type'] == 'r+') {			// version < 3.1.0
+		if ($emajdb->emajVersionNum < 30100 && $_REQUEST['type'] == 'r+') {			// version < 3.1.0
 			echo "\t<div class=\"form-label\">{$lang['strenterlogschema']}</div>\n";
 			echo "\t<div class=\"form-input\">";
 			echo "<input type=\"text\" name=\"suffix\" list=\"suffixList\" value=\"", htmlspecialchars($_REQUEST['logschemasuffix']), "\"/ autocomplete=\"off\">";
@@ -524,7 +524,7 @@
 		}
 
 		// objects name prefix (only for tables)
-		if ($emajdb->getNumEmajVersion() < 30100 && $_REQUEST['type'] == 'r+') {			// version < 3.1.0
+		if ($emajdb->emajVersionNum < 30100 && $_REQUEST['type'] == 'r+') {			// version < 3.1.0
 			// the names prefix is accessible only for a table
 			echo "\t<div class=\"form-label\">{$lang['strenternameprefix']}</div>\n";
 			echo "\t<div class=\"form-input\">";

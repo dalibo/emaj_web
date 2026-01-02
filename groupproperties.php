@@ -119,7 +119,7 @@
 	function renderMarkState($val) {
 		global $misc, $lang, $emajdb;
 
-		if ($emajdb->getNumEmajVersion() >= 40400) {	// version >= 4.4
+		if ($emajdb->emajVersionNum >= 40400) {	// version >= 4.4
 			if ($val == 'PROTECTED') {
 				$img = "<img src=\"{$misc->icon('EmajPadlock')}\" alt=\"protected\" title=\"{$lang['strprotectedmark']}\"/>";
 			} else {
@@ -205,7 +205,7 @@
 				'params'=> array('function' => 'renderGroupState','align' => 'center')
 			),
 		);
-		if ($emajdb->getNumEmajVersion() >= 40400) {					// version 4.4+
+		if ($emajdb->emajVersionNum >= 40400) {					// version 4.4+
 			if ($groupState == 'LOGGING') {
 				$columns = array_merge($columns, array(
 					'startedat' => array(
@@ -249,7 +249,7 @@
 
 		// display the buttons corresponding to the available functions for the group, depending on its state
 
-		if ($emajdb->isEmajAdmin()) {
+		if ($emajdb->isEmajAdmin) {
 			$navlinks = array();
 
 			// start_group
@@ -363,7 +363,7 @@
 			);
 
 			// alter_group
-			if ($hasWaitingChanges && $emajdb->getNumEmajVersion() < 30200) {
+			if ($hasWaitingChanges && $emajdb->emajVersionNum < 30200) {
 				$navlinks['alter_group'] = array (
 					'content' => $lang['strApplyConfChanges'],
 					'attr'=> array (
@@ -406,7 +406,7 @@
 		$misc->printTitle(sprintf($lang['strgroupmarks'], htmlspecialchars($_REQUEST['group'])));
 
 		$columns = array();
-		if ($emajdb->getNumEmajVersion() >= 40400) {
+		if ($emajdb->emajVersionNum >= 40400) {
 			$columns = array_merge($columns, array(
 				'log_session' => array(
 					'title' => '',
@@ -439,7 +439,7 @@
 					),
 			),
 			'state' => array(
-				'title' => ($emajdb->getNumEmajVersion() >= 40400) ?
+				'title' => ($emajdb->emajVersionNum >= 40400) ?
 								"<img src=\"{$misc->icon('EmajPadlock')}\"/ title=\"{$lang['strprotectedmarkindicator']}\"> ?" :
 								$lang['strstate'],
 				'field' => field('mark_state'),
@@ -474,7 +474,7 @@
 		$urlvars = $misc->getRequestVars();
 
 		$actions = array();
-		if ($emajdb->isEmajAdmin() && ($nbMarks > 1)) {
+		if ($emajdb->isEmajAdmin && ($nbMarks > 1)) {
 			$actions = array_merge($actions, array(
 				'multiactions' => array(
 					'keycols' => array('group' => 'mark_group', 'mark' => 'mark_name'),
@@ -482,7 +482,7 @@
 				),
 			));
 		}
-		if ($emajdb->isEmajAdmin() && $groupType == "ROLLBACKABLE") {
+		if ($emajdb->isEmajAdmin && $groupType == "ROLLBACKABLE") {
 			$actions = array_merge($actions, array(
 				'rollbackgroup' => array(
 					'content' => $lang['strrlbk'],
@@ -498,7 +498,7 @@
 				),
 			));
 		}
-		if ($emajdb->isEmajAdmin() && $groupState == 'LOGGING' && $groupType != "AUDIT_ONLY") {
+		if ($emajdb->isEmajAdmin && $groupState == 'LOGGING' && $groupType != "AUDIT_ONLY") {
 			$actions = array_merge($actions, array(
 				'protectmark' => array(
 					'content' => $lang['strprotect'],
@@ -526,7 +526,7 @@
 				),
 			));
 		};
-		if ($emajdb->isEmajAdmin()) {
+		if ($emajdb->isEmajAdmin) {
 			$actions = array_merge($actions, array(
 				'renamemark' => array(
 					'content' => $lang['strrename'],
@@ -542,7 +542,7 @@
 				),
 			));
 		}
-		if ($emajdb->isEmajAdmin() && ($nbMarks > 1)) {
+		if ($emajdb->isEmajAdmin && ($nbMarks > 1)) {
 			$actions = array_merge($actions, array(
 				'deletemark' => array(
 					'content' => $lang['strdelete'],
@@ -559,7 +559,7 @@
 				),
 			));
 		}
-		if ($emajdb->isEmajAdmin()) {
+		if ($emajdb->isEmajAdmin) {
 			$actions = array_merge($actions, array(
 				'deletebeforemark' => array(
 					'content' => $lang['strfirstmark'],
@@ -575,7 +575,7 @@
 				),
 			));
 		}
-		if ($emajdb->isEmajAdmin()) {
+		if ($emajdb->isEmajAdmin) {
 			$actions = array_merge($actions, array(
 				'commentmark' => array(
 					'content' => $lang['strsetcomment'],

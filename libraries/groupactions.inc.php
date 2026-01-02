@@ -658,7 +658,7 @@
 		$urlvars = $misc->getRequestVars();
 
 		$actions = array();
-		if ($emajdb->isEmajAdmin()) {
+		if ($emajdb->isEmajAdmin) {
 			$actions = array_merge($actions, array(
 				'multiactions' => array(
 					'keycols' => array('group' => 'group_name'),
@@ -871,7 +871,7 @@
 					$urlvars = $misc->getRequestVars();
 
 					$actions = array();
-					if ($emajdb->isEmajAdmin()) {
+					if ($emajdb->isEmajAdmin) {
 						$actions = array_merge($actions, array(
 							'multiactions' => array(
 								'keycols' => array('group' => 'grp_name'),
@@ -893,7 +893,7 @@
 					$misc->printTable($groups, $columns, $actions, 'groups', '', null, array('sorter' => true, 'filter' => true));
 
 					// Add an input to specify the mark name to set
-					if ($emajdb->getNumEmajVersion() >= 40000){	// version 4.0+
+					if ($emajdb->emajVersionNum >= 40000){	// version 4.0+
 						echo "<div class=\"form-container\" style=\"margin-top: 15px; margin-bottom: 15px;\">\n";
 						echo "\t<div class=\"form-label\">{$lang['strmark']}</div>\n";
 						echo "\t<div class=\"form-input\"><input name=\"mark\" size=\"32\" value=\"IMPORT_%\" /></div>\n";
@@ -1758,7 +1758,7 @@
 		echo "</p>\n";
 
 		// comment line
-		if ($emajdb->getNumEmajVersion() >= 40300) {	// version >= 4.3.0) {
+		if ($emajdb->emajVersionNum >= 40300) {	// version >= 4.3.0) {
 			echo "<p>{$lang['strcomment']} : \n";
 			$comment = (isset($_REQUEST['comment'])) ? $_REQUEST['comment'] : '';
 			echo "\t<input name=\"comment\" size=\"80\" value=\"", htmlspecialchars($comment), "\" />\n";
@@ -2076,7 +2076,7 @@
 		echo "</p>\n";
 
 		// comment line
-		if ($emajdb->getNumEmajVersion() >= 40300) {	// version >= 4.3.0) {
+		if ($emajdb->emajVersionNum >= 40300) {	// version >= 4.3.0) {
 			echo "<p>{$lang['strcomment']} : \n";
 			$comment = (isset($_REQUEST['comment'])) ? $_REQUEST['comment'] : '';
 			echo "\t<input name=\"comment\" size=\"80\" value=\"", htmlspecialchars($comment), "\" />\n";

@@ -36,7 +36,7 @@
 			$value = $paramValue[$param];
 			// Specific adjustments for some parameters
 			if ($param == 'dblink_user_password') {
-				if ($emajdb->isEmajAdmin()) {
+				if ($emajdb->isEmajAdmin) {
 					// For emaj_adm roles, display the parameter in tooltip
 					$value = "<div class=\"tooltip right-aligned-tooltip\">#############...<span>" . htmlspecialchars($value) . "</span></div>";
 				} else {
@@ -58,7 +58,7 @@
 			echo "<div class=\"form-param-def-value\">${defValParam[$param]}&nbsp;<sup>(def)</sup></div>\n";
 		}
 
-//		if ($emajdb->isEmajAdmin()) {
+//		if ($emajdb->isEmajAdmin) {
 ////TODO: Modify button to insert
 //			echo "<div class=\"form-button-param\">"
 //				. $lang['strupdate']
@@ -140,7 +140,7 @@
 			doDefault();
 		} else {
 			// recheck that emaj does not exist
-			if (! $emajdb->isEnabled()) {
+			if (! $emajdb->isEnabled) {
 				$status = $emajdb->createEmajExtension($_POST['version']);
 				if ($status == 0) {
 					$_reload_browser = true;
@@ -280,7 +280,7 @@
 			doDefault();
 		} else {
 			// recheck that emaj still exists
-			if ($emajdb->isEnabled()) {
+			if ($emajdb->isEnabled) {
 				$status = $emajdb->dropEmajExtension();
 				if ($status == 0) {
 					$_reload_browser = true;
@@ -329,7 +329,7 @@
 
 		$misc->printHeader('database', 'database', 'emajenvir');
 
-		if (($emajdb->isEmajAdmin()) && $emajdb->getNumEmajVersion() >= 30300) {
+		if (($emajdb->isEmajAdmin) && $emajdb->emajVersionNum >= 30300) {
 
 			$misc->printTitle($lang['strimportparamconf']);
 
@@ -490,7 +490,7 @@
 		echo "<p>{$lang['strpgversion']}{$server_info['pgVersion']}</p>\n";
 
 		// check if E-Maj is installed in the current database
-		$isEnabled = $emajdb->isEnabled();
+		$isEnabled = $emajdb->isEnabled;
 		$isExtensionAvailable = $emajdb->isExtensionAvailable();
 
 		if (! $isEnabled) {
@@ -512,44 +512,38 @@
 		} else {
 			// emaj is installed,
 			// check that the user has enought rights to continue
-			if (! $emajdb->isAccessible()) {
+			if (! $emajdb->isEmajViewer) {
 				echo "<p>{$lang['strnogrant']}</p>\n";
 				return;
 			}
 
 			// OK, now display the E-Maj version
-			$emajVersion = $emajdb->getEmajVersion();
-			$numEmajVersion = $emajdb->getNumEmajVersion();
+			$isExtension = $emajdb->isExtension;
 
-			$isExtension = $emajdb->isExtension();
-			if ($isExtension) {
-				$installationMode = $lang['strasextension'];
-			} else {
-				$installationMode = $lang['strasscript'];
-			}
-			echo "<p>{$lang['strversion']}$emajVersion ({$installationMode})</p>\n";
+			$installationMode = ($isExtension) ? $lang['strasextension'] : $lang['strasscript'];
+			echo "<p>{$lang['strversion']}{$emajdb->emajVersion} ({$installationMode})</p>\n";
 
 			// check if the emaj version is not too old for this emaj_web
-			if ($numEmajVersion < $oldest_supported_emaj_version_num) {
+			if ($emajdb->emajVersionNum < $oldest_supported_emaj_version_num) {
 				echo "<p>" . sprintf($lang['strtooold'],$emajVersion,$oldest_supported_emaj_version) . "</p>\n";
 				return;
 			}
 
 			// if there are more recent emaj or emaj_web versions, tell it
-			if ($numEmajVersion <> 999999) {
-				if ($numEmajVersion < $last_known_emaj_version_num) {
+			if ($emajdb->emajVersionNum <> 999999) {
+				if ($emajdb->emajVersionNum < $last_known_emaj_version_num) {
 					if ($data->isSuperUser($server_info['username']))
 						echo "<p>{$lang['strversionmorerecent']}</p>\n";
 					else
 						echo "<p>{$lang['strversionmorerecent']} {$lang['strcontactdba']}</p>\n";
 				}
-				if ($numEmajVersion > $last_known_emaj_version_num) {
+				if ($emajdb->emajVersionNum > $last_known_emaj_version_num) {
 					echo "<p>{$lang['strwebversionmorerecent']} {$lang['strcontactdba']}</p>\n";
 				}
 			}
 
 			// if the version is <devel>, raise a warning
-			if ($numEmajVersion == 999999) {
+			if ($emajdb->emajVersionNum == 999999) {
 				echo "<p><img src=\"{$misc->icon('Warning')}\" alt=\"Warning\" style=\"width: 20px;\"/> " . htmlspecialchars($lang['strwarningdevel']) . "</p>\n";
 			}
 		}
@@ -630,7 +624,7 @@
 		//
 
 		if ($isEnabled) {
-			if ($emajdb->isEmajAdmin()) {
+			if ($emajdb->isEmajAdmin) {
 				echo "<hr/>\n";
 				$misc->printTitle($lang['strcharacteristics']);
 				echo "<p>".sprintf($lang['strdiskspace'],$emajdb->getEmajSize())."</p>\n";
@@ -714,7 +708,7 @@
 
 			echo "</div>\n";
 
-			if (($emajdb->isEmajAdmin()) && $emajdb->getNumEmajVersion() >= 30300) {
+			if (($emajdb->isEmajAdmin) && $emajdb->emajVersionNum >= 30300) {
 
 				// Prepare and generate the export and import buttons list
 				$navlinks = array();

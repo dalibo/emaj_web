@@ -596,7 +596,7 @@ class Postgres extends ADODB_base {
 		$sql = "
 			SELECT c.relname AS seqname, s.*,
 				pg_catalog.obj_description(s.tableoid, 'pg_class') AS seqcomment,
-				u.usename AS seqowner, n.nspname
+				u.usename AS relowner, n.nspname
 			FROM \"{$sequence}\" AS s, pg_catalog.pg_class c, pg_catalog.pg_user u, pg_catalog.pg_namespace n
 			WHERE c.relowner=u.usesysid AND c.relnamespace=n.oid
 				AND c.relname = '{$c_sequence}' AND c.relkind = 'S' AND n.nspname='{$c_schema}'
@@ -612,7 +612,7 @@ class Postgres extends ADODB_base {
 	function getSequences($all = false) {
 		if ($all) {
 			// Exclude pg_catalog and information_schema tables
-			$sql = "SELECT n.nspname, c.relname AS seqname, u.usename AS seqowner
+			$sql = "SELECT n.nspname, c.relname AS seqname, u.usename AS relowner
 				FROM pg_catalog.pg_class c, pg_catalog.pg_user u, pg_catalog.pg_namespace n
 				WHERE c.relowner=u.usesysid AND c.relnamespace=n.oid
 				AND c.relkind = 'S'
@@ -621,7 +621,7 @@ class Postgres extends ADODB_base {
 		} else {
 			$c_schema = $this->_schema;
 			$this->clean($c_schema);
-			$sql = "SELECT c.relname AS seqname, pg_catalog.pg_get_userbyid(c.relowner) AS seqowner,
+			$sql = "SELECT c.relname AS seqname, pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
 						pg_catalog.obj_description(c.oid, 'pg_class') AS seqcomment,
 						(SELECT spcname FROM pg_catalog.pg_tablespace pt WHERE pt.oid=c.reltablespace) AS tablespace
 					FROM pg_catalog.pg_class c, pg_catalog.pg_namespace n

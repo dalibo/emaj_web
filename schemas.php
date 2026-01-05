@@ -17,7 +17,7 @@
 
 	// Function to modify actions list for tables and sequences
 	function tblseqPre(&$rowdata, $actions) {
-		global $nbGroups;
+		global $nbGroups, $emajdb;
 
 		// if E-Maj schema or no action, return
 		if (!isset($rowdata->fields['rel_group'])) return $actions;
@@ -34,8 +34,10 @@
 			$actions['remove']['disable'] = true;
 		};
 		// disable also 'assign' for unsupported object type or if no group exists
+		//		or if emaj has been installed by a non superuser and  the table/sequence owner is not the installer role
 		if (($rowdata->fields['relkind'] != 'r+' and $rowdata->fields['relkind'] != 'S')
-			|| $nbGroups == 0) {
+			|| $nbGroups == 0
+			|| (! $emajdb->installedBySuperuser && $rowdata->fields['relowner'] <> $emajdb->emajOwner)) {
 			$actions['assign']['disable'] = true;
 		}
 		// disable also 'move' if only 1 group exists
@@ -363,7 +365,7 @@
 			$columns = array_merge($columns, array(
 				'owner' => array(
 					'title' => $lang['strowner'],
-					'field' => field('seqowner'),
+					'field' => field('relowner'),
 				),
 				'comment' => array(
 					'title' => $lang['strcomment'],

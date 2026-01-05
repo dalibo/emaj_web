@@ -12,18 +12,18 @@ class EmajDb {
 	 */
 	var $isSuperuser;					// Is the current user a superuser ?
 	var $isEnabled;						// Is the emaj extension installed in the database ?
+	var $emajOwner;						// The emaj schema owner, i.e. the emaj installer
 	var $isExtension;					// Is emaj installed as an EXTENSION ?
 	var $isEmajInstaller;				// Is the current user the emaj schema owner ?
 	var $isEmajAdmin;					// Has the current user emaj administration privileges ?
 	var $isEmajViewer;					// Has the current user emaj viewer privileges ?
 	var $emajVersion;					// The emaj version ('?' if not installed or unknown)
 	var $emajVersionNum;				// The emaj version in numeric format (0 if not installed or unknown ; 999999 for the 'devel' version)
+	var $installedBySuperuser;			// Has emaj been installed by a superuser role ?
 
 	/**
 	 * Cache of static data.
 	 */
-	private $emajOwner;
-	private $installedBySuperuser;
 	private $installedWithEventTtriggers;
 	private $isDblinkUsable;
 	private $dblinkSchema;
@@ -192,9 +192,9 @@ class EmajDb {
 		$this->isEmajViewer = null;
 		$this->emajVersion = '?';
 		$this->emajVersionNum = 0;
+		$this->installedBySuperuser = null;
 
 		// Reset private variables.
-		$this->installedBySuperuser = null;
 		$this->installedWithEventTtriggers = null;
 		$this->isDblinkUsable = null;
 		$this->dblinkSchema = null;
@@ -1433,7 +1433,7 @@ class EmajDb {
 		$data->clean($schema);
 
 		$sql = "SELECT nspname, c.relname AS seqname, c.relkind,
-					pg_catalog.pg_get_userbyid(c.relowner) AS seqowner,
+					pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
 					pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment,
 					coalesce(rel_group, '') AS rel_group
 					FROM pg_catalog.pg_class c

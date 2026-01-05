@@ -247,15 +247,21 @@ class EmajDb {
 	}
 
 	/**
-	 * Return the number of E-Maj event triggers.
+	 * Return a boolean indicating whether any event triggers are missing.
 	 */
-	function getNumberEventTriggers() {
+	function areThereMissingEventTriggers() {
 		global $data;
 
-		$sql = "SELECT count(*) nb_event_trigger FROM pg_catalog.pg_event_trigger
-				  WHERE evtname IN ('emaj_protection_trg','emaj_sql_drop_trg','emaj_table_rewrite_trg')";
-
-		return $data->selectField($sql,'nb_event_trigger');
+		if ($this->installedWithEventTtriggers) {
+			// event triggers have been created at emaj install. So we should find 3 event triggers
+			$sql = "SELECT CASE WHEN (count(*) < 3) THEN 1 ELSE 0 END AS missing_event_trigger
+						FROM pg_catalog.pg_event_trigger
+						WHERE evtname IN ('emaj_protection_trg','emaj_sql_drop_trg','emaj_table_rewrite_trg')";
+			return $data->selectField($sql,'missing_event_trigger');
+		} else {
+			// event triggers have not been created at emaj install (the installer role was not a superuser)
+			return false;
+		}
 	}
 
 	/**

@@ -166,9 +166,10 @@
 
 		$server_info = $misc->getServerInfo();
 
-		// Count the number of event triggers and report if some event triggers are missing for postgres 9.5+
-		$nbEventTrigger = $emajdb->getNumberEventTriggers();
-		if (version_compare($server_info['pgVersion'], '9.5', '>=') && $nbEventTrigger < 3) {
+		// Warn if some event triggers are missing
+		$missingEventTriggers = $emajdb->areThereMissingEventTriggers();
+
+		if ($missingEventTriggers) {
 			echo "<p>{$lang['strmissingeventtriggers']}</p>\n";
 		}
 
@@ -183,7 +184,7 @@
 				(version_compare($pgMajorVersion, $xrefEmajPg[$v['version']]['minPostgresVersion'], '>=') &&
 				 version_compare($pgMajorVersion, $xrefEmajPg[$v['version']]['maxPostgresVersion'], '<='))) {
 				// block the update if the target version >= 4.2 and some event triggers are missing
-				if ($v['target'] < '4.2.0' || $nbEventTrigger >= 3) {
+				if ($v['target'] < '4.2.0' || ! $missingEventTriggers) {
 					$usableVersions[] = $v['target'];
 				}
 			}

@@ -12,28 +12,27 @@
 	$_no_db_connection = true;
 	$_no_bottom_link = true;
 	include_once('./libraries/lib.inc.php');
-	
+
 	// Output header
-	$scripts = '
-		<script src="xloadtree/xtree2.js"></script>
-		<script src="xloadtree/xloadtree2.js"></script>
-		<style>
-			.webfx-tree-children { background-image: url("' . $misc->icon('I') . '"); }
-		</style>';
+	$scripts =
+		"<script src=\"xloadtree/xtree2.js\"></script>\n" .
+		"<script src=\"xloadtree/xloadtree2.js\"></script>\n" .
+		"<style>\n" .
+		"	.webfx-tree-children { background-image: url(\"" . $misc->icon('I') . "\"); }\n" .
+		"</style>";
 	$misc->printHtmlHeader('', $scripts, 'browser');
-	
+
 	$misc->printBody('browser');
 
 	echo "<div class=\"logo\"><a href=\"intro.php\" target=\"detail\">";
 	echo "<img src=\"{$misc->icon('title')}\" alt=\"" . htmlspecialchars($appName) . "\" title=\"" . htmlspecialchars($appName) . "\" />";
-	echo "</a></div>";
+	echo "</a></div>\n";
 	echo "<div class=\"refresh\"><a href=\"browser.php\" target=\"browser\" >";
 	echo "<img src=\"{$misc->icon('Refresh')}\" alt=\"{$lang['strrefresh']}\" title=\"{$lang['strrefresh']}\" />";
-	echo "</a></div>";
+	echo "</a></div>\n";
 
 	echo "<div class=\"tree\" dir=\"ltr\">\n";
 ?>
-
 <script type="text/javascript">
 
 webFXTreeConfig.rootIcon		= "<?php echo $misc->icon('Servers') ?>";
@@ -78,9 +77,8 @@ tree.write();
 tree.setExpanded(true);
 
 </script>
-
 <?php
-   // Output footer
    echo "</div>\n";
-   $misc->printFooter();
+   echo "</body>\n";
+   echo "</html>\n";
 ?>

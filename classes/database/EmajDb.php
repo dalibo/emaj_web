@@ -381,14 +381,23 @@ class EmajDb {
 		global $data;
 
 		// It checks that
-		// - dblink is installed into the database by testing the existence of the dblink_connect_u function,
+		// - dblink is installed into the database by testing the existence of the dblink_connect function,
 		// - the dblink_user_password E-Maj parameter has been configured.
-		$sql = "SELECT CASE WHEN
-                       EXISTS(SELECT 1 FROM pg_catalog.pg_proc WHERE proname = 'dblink_connect_u')
-                   AND EXISTS(SELECT 1 FROM emaj.emaj_visible_param WHERE param_key = 'dblink_user_password')
-                                 THEN 1 ELSE 0 END as cnx_ok";
+		// In emaj 4.8+, if emaj has been installed by a non superuser, it also checks that the installer role is allowed to execute dblink_connect_u()
+		// - if emaj has been.
+		if ($this->emajVersionNum >= 40800 && ! $this->installedBySuperuser) {
+			$sql = "SELECT CASE WHEN
+						EXISTS(SELECT 1 FROM pg_catalog.pg_proc WHERE proname = 'dblink_connect')
+					AND EXISTS(SELECT 1 FROM emaj.emaj_visible_param WHERE param_key = 'dblink_user_password')
+					AND pg_catalog.has_function_privilege('dblink_connect_u(text, text)', 'EXECUTE')
+									THEN 1 ELSE 0 END as cnx_ok";
+		} else {
+			$sql = "SELECT CASE WHEN
+						EXISTS(SELECT 1 FROM pg_catalog.pg_proc WHERE proname = 'dblink_connect')
+					AND EXISTS(SELECT 1 FROM emaj.emaj_visible_param WHERE param_key = 'dblink_user_password')
+									THEN 1 ELSE 0 END as cnx_ok";
+		}
 		$this->isDblinkUsable = $data->selectField($sql,'cnx_ok');
-
 		return $this->isDblinkUsable;
 	}
 

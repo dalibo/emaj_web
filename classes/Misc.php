@@ -779,7 +779,7 @@
 				if ($data->isSuperUser($server_info['username']))
 					$help = $lang['strusersuperuser'];
 				elseif ($emajdb->isEmajAdmin)
-					$help = $lang['struseremajadm'];
+					$help = $lang['struseremajadmin'];
 				elseif ($emajdb->isEmajViewer)
 					$help = $lang['struseremajviewer'];
 				else

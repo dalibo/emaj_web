@@ -234,8 +234,8 @@
 	$lang['strlogindisallowed'] = 'Login disallowed for security reasons.';
 	$lang['strconfdropcred'] = 'For security reason, disconnecting will destroy your shared login information. Are you sure you want to disconnect ?';
 	$lang['strusersuperuser'] = 'The user has SUPERUSER rights.';
-	$lang['struseremajadm'] = 'The user has emaj_adm and emaj_viewer rights.';
-	$lang['struseremajviewer'] = 'The user has emaj_viewer rights.';
+	$lang['struseremajadmin'] = 'The user has E-Maj administration rights.';
+	$lang['struseremajviewer'] = 'The user has E-Maj read only rights.';
 	$lang['strusernoright'] = 'The user has no E-Maj rights.';
 
 	// User-supplied SQL editing

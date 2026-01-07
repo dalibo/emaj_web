@@ -234,8 +234,8 @@
 	$lang['strlogindisallowed'] = 'Connexion désactivée pour raison de sécurité';
 	$lang['strconfdropcred'] = 'Par mesure de sécurité, la déconnexion supprimera le partage de vos identifiants pour tous les serveurs. Êtes-vous certain de vouloir vous déconnecter ?';
 	$lang['strusersuperuser'] = 'L\'utilisateur a les droits de SUPERUSER.';
-	$lang['struseremajadm'] = 'L\'utilisateur a les droits emaj_adm et emaj_viewer.';
-	$lang['struseremajviewer'] = 'L\'utilisateur a les droits emaj_viewer.';
+	$lang['struseremajadmin'] = 'L\'utilisateur a les droits d\'administration E-Maj.';
+	$lang['struseremajviewer'] = 'L\'utilisateur a les droits de consultation E-Maj.';
 	$lang['strusernoright'] = 'L\'utilisateur n\'a aucun droit E-Maj.';
 
 	// User-supplied SQL editing

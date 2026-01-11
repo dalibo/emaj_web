@@ -13,7 +13,6 @@ class EmajDb {
 	var $isSuperuser;					// Is the current user a superuser ?
 	var $isEnabled;						// Is the emaj extension installed in the database ?
 	var $emajOwner;						// The emaj schema owner, i.e. the emaj installer
-	var $isExtension;					// Is emaj installed as an EXTENSION ?
 	var $isEmajInstaller;				// Is the current user the emaj schema owner ?
 	var $isEmajAdmin;					// Has the current user emaj administration privileges ?
 	var $isEmajViewer;					// Has the current user emaj viewer privileges ?
@@ -148,22 +147,16 @@ class EmajDb {
 		if ($this->isEmajViewer) {
 			// In version 4.8+, just read the emaj_install_conf table.
 			if ($this->emajVersionNum >= 40800){	// version >= 4.8.0
-				$sql = "SELECT CASE WHEN inst_as_extension THEN 1 ELSE 0 END AS as_extension,
-							   CASE WHEN inst_by_superuser THEN 1 ELSE 0 END AS by_superuser,
+				$sql = "SELECT CASE WHEN inst_by_superuser THEN 1 ELSE 0 END AS by_superuser,
 							   CASE WHEN inst_with_event_triggers THEN 1 ELSE 0 END AS with_event_triggers
 						FROM emaj.emaj_install_conf";
 				$rs = $data->selectSet($sql);
 				if ($rs->recordCount() == 1) {
-					$this->isExtension = $rs->fields['as_extension'];
 					$this->installedBySuperuser = $rs->fields['by_superuser'];
 					$this->installedWithEventTtriggers = $rs->fields['with_event_triggers'];
 				}
 			} else {
-			// In prior versions, compute the 3 flags.
-				$sql = "SELECT 1 FROM pg_catalog.pg_extension WHERE extname = 'emaj'";
-				$rs = $data->selectSet($sql);
-				$this->isExtension = ($rs->recordCount() == 1);
-
+			// In prior versions, compute both data.
 				$sql = "SELECT CASE WHEN rolsuper THEN 1 ELSE 0 END AS emaj_owner_is_superuser
 							FROM pg_catalog.pg_roles
 							WHERE rolname = '{$this->emajOwner}'";
@@ -186,7 +179,6 @@ class EmajDb {
 		// Reset class attributes.
 		$this->isEnabled = false;
 		$this->emajOwner = null;
-		$this->isExtension = null;
 		$this->isEmajInstaller = null;
 		$this->isEmajAdmin = null;
 		$this->isEmajViewer = null;
@@ -201,6 +193,20 @@ class EmajDb {
 		$this->asyncRlbkUsable = null;
 
 		return;
+	}
+
+	/**
+	 * Determine whether E-Maj has been created as an extension.
+	 */
+	function isExtension() {
+		global $data;
+
+		$sql = "SELECT 1 FROM pg_catalog.pg_extension WHERE extname = 'emaj'";
+		$rs = $data->selectSet($sql);
+		if ($rs->recordCount() == 1) {
+			return 1;
+		}
+		return 0;
 	}
 
 	/**

@@ -519,7 +519,7 @@
 			}
 
 			// OK, now display the E-Maj version
-			$isExtension = $emajdb->isExtension;
+			$isExtension = $emajdb->isExtension();
 
 			$installationMode = ($isExtension) ? $lang['strasextension'] : $lang['strasscript'];
 			echo "<p>{$lang['strversion']}{$emajdb->emajVersion} ({$installationMode})</p>\n";

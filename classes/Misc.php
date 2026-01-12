@@ -772,22 +772,32 @@
 
 			if ($server_info && isset($server_info['platform']) && isset($server_info['username'])) {
 
-				// print current user info
+				// display the current user info
 				echo "\t\t{$lang['struser']}&nbsp;<span class=\"username\">" . htmlspecialchars($server_info['username']) . "</span>\n";
 
-				// print the tooltip to show E-Maj rights
-				if ($data->isSuperUser($server_info['username']))
-					$help = $lang['strusersuperuser'];
-				elseif ($emajdb->isEmajAdmin)
-					$help = $lang['struseremajadmin'];
-				elseif ($emajdb->isEmajViewer)
-					$help = $lang['struseremajviewer'];
-				else
-					$help = $lang['strusernoright'];
+				// if emaj is installed into the database, display the tooltip to show E-Maj rights owned by the connected user
+				if (isset($_REQUEST['database']) && $emajdb->isEnabled) {
+					if ($data->isSuperUser($server_info['username'])) {
+						$help = $lang['strusersuperuser'];
+						$letter = 'S';
+						$class = 'superuser-bullet';
+					} elseif ($emajdb->isEmajAdmin) {
+						$help = $lang['struseremajadmin'];
+						$letter = 'A';
+						$class = 'admin-bullet';
+					}elseif ($emajdb->isEmajViewer) {
+						$help = $lang['struseremajviewer'];
+						$letter = 'V';
+						$class = 'viewer-bullet';
+					} else {
+						$help = $lang['strusernoright'];
+						$letter = 'X';
+						$class = 'no-rights-bullet';
+					}
+					echo "<div class=\"bullet $class bullet-tooltip\">$letter<span>$help</span></div>";
+				}
 
-				echo "<img src=\"{$this->icon('Info-inv')}\" class=\"help-icon\" alt=\"info\" title=\"{$help}\"/>";
-
-				// disconnection button
+				// display the disconnection button
 				$logoutHref = htmlentities("servers.php?action=logout&logoutServer=" .
 											urlencode("{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}"));
 				echo "\t\t<a href=\"$logoutHref\"><img src=\"{$this->icon('Logout-light')}\" class=\"button\" alt=\"{$lang['strlogout']}\" title=\"{$lang['strlogout']}\"  /></a>\n";

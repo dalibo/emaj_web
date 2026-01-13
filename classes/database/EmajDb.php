@@ -429,7 +429,11 @@ class EmajDb {
 			// If the _dblink_open_cnx() function is available for the user,
 			//   open a test dblink connection, analyse the result and close it if effectively opened.
 			$test_cnx_ok = 0;
-			if ($this->emajVersionNum >= 40600){	// version >= 4.6.0
+			if ($this->emajVersionNum >= 40800){	// version >= 4.8.0
+				$sql = "SELECT CASE
+							WHEN pg_catalog.has_function_privilege('emaj._dblink_open_cnx(text, boolean)', 'EXECUTE')
+								THEN 1 ELSE 0 END as grant_open_ok";
+			} elseif ($this->emajVersionNum >= 40600){	// version >= 4.6.0
 				$sql = "SELECT CASE
 							WHEN pg_catalog.has_function_privilege('emaj._dblink_open_cnx(text, text)', 'EXECUTE')
 								THEN 1 ELSE 0 END as grant_open_ok";
@@ -439,7 +443,17 @@ class EmajDb {
 								THEN 1 ELSE 0 END as grant_open_ok";
 			}
 			if ($data->selectField($sql, 'grant_open_ok')) {
-				if ($this->emajVersionNum >= 40600){	// version >= 4.6.0
+				if ($this->emajVersionNum >= 40800){	// version >= 4.8.0
+					$sql = "SELECT CASE WHEN p_status >= 0 THEN 1 ELSE 0 END as cnx_ok, p_schema
+							FROM emaj._dblink_open_cnx('test', FALSE)";
+					$rs = $data->selectSet($sql);
+					if ($rs->fields['cnx_ok']) {
+						$this->dblinkSchema = $rs->fields['p_schema'];
+						$sql = "SELECT emaj._dblink_close_cnx('test', '{$this->dblinkSchema}')";
+						$data->execute($sql);
+						$test_cnx_ok = 1;
+					}
+				} elseif ($this->emajVersionNum >= 40600){	// version >= 4.6.0
 					$sql = "SELECT CASE WHEN p_status >= 0 THEN 1 ELSE 0 END as cnx_ok, p_schema
 							FROM emaj._dblink_open_cnx('test', current_role)";
 					$rs = $data->selectSet($sql);

@@ -337,8 +337,8 @@
 			echo "\t\t<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"2097152\">\n";
 			echo "\t\t<label for=\"file-upload\" class=\"custom-file-upload\">{$lang['strselectfile']}</label>";
 			echo "\t\t<p><input type=\"file\" id=\"file-upload\" name=\"file_name\"></p>\n";
-			echo "\t\t<p><input type=\"checkbox\" name=\"replaceCurrent\" id=\"replaceCurrent\"/ checked>{$lang['strdeletecurrentparam']}";
-			echo " <img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strdeletecurrentparaminfo']}\"/></p>\n";
+			echo "\t\t<p><input type=\"checkbox\" name=\"resetother\" id=\"resetother\"/ checked>{$lang['strresetotherparams']}";
+			echo " <img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$lang['strresetotherparamsinfo']}\"/></p>\n";
 			echo "\t\t<div class=\"actionslist\">";
 			echo "\t\t\t<input type=\"submit\" name=\"cancel\" value=\"{$lang['strcancel']}\" /> \n";
 			echo "\t\t\t<input type=\"submit\" name=\"sendfile\" value=\"{$lang['strimport']}\" disabled>";
@@ -397,9 +397,9 @@
 					if ($errors->recordCount() == 0) {
 
 						// No error has been detected in the json structure, so effectively import the parameter configuration
-						$nbParam = $emajdb->importParamConfig($jsonContent, isSet($_POST['replaceCurrent']));
+						$nbParam = $emajdb->importParamConfig($jsonContent, isSet($_POST['resetother']));
 						if ($nbParam >= 0) {
-							if (isSet($_POST['replaceCurrent'])) {
+							if (isSet($_POST['resetother'])) {
 								$m = $lang['strnewconf'];
 							} else {
 								$m = $lang['strnewmodifiedconf'];
@@ -434,7 +434,6 @@
 						$actions = array ();
 
 						$misc->printTable($errors, $columns, $actions, 'paramsconfchecks', null, null, array('sorter' => true, 'filter' => false));
-
 						echo "<form action=\"emajenvir.php\" method=\"post\">\n";
 						echo "<input type=\"hidden\" name=\"action\" value=\"import_parameters_ok\" />\n";
 						echo $misc->form;

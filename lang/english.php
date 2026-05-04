@@ -1059,8 +1059,8 @@
 
 	// Import parameters
 	$lang['strimportparamconf'] = 'Import a parameters configuration';
-	$lang['strdeletecurrentparam'] = 'Delete all existing parameters';
-	$lang['strdeletecurrentparaminfo'] = 'If the box is checked, all existing parameters of the emaj extension are deleted before loading the file.';
+	$lang['strresetotherparams'] = 'Reset other parameters';
+	$lang['strresetotherparamsinfo'] = 'If the box is checked, parameters not described in the imported JSON structure are reset to their default value.';
 	$lang['strcheckjsonparamconf101'] = 'The JSON structure does not contain any "parameters" array.';
 	$lang['strcheckjsonparamconf102'] = 'The #%s parameter has no "key" attribute or a "key" set to null.';
 	$lang['strcheckjsonparamconf103'] = 'For the parameter "%s", the attribute "%s" is unknown.';

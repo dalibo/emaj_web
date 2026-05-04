@@ -670,12 +670,12 @@ class EmajDb {
 	/**
 	 * Import the parameters configuration.
 	 */
-	function importParamConfig($paramConfig, $replaceCurrent) {
+	function importParamConfig($paramConfig, $resetOtherParams) {
 		global $data;
 
 		$data->clean($paramConfig);
 
-		if ($replaceCurrent) { $bool = 'true'; } else { $bool = 'false'; }
+		if ($resetOtherParams) { $bool = 'true'; } else { $bool = 'false'; }
 		$sql = "SELECT emaj.emaj_import_parameters_configuration(E'" . $paramConfig . "'::json, " . $bool . ") AS nb_parameters";
 		return $data->selectField($sql,'nb_parameters');
 	}

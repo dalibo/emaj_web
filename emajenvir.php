@@ -27,15 +27,15 @@
 
 	// Display the value of a single parameter in the parameter section of the main page.
 	function displayOneParameter($param, $label, $info) {
-		global $lang, $misc, $emajdb, $paramValue, $defValParam;
+		global $lang, $misc, $emajdb, $paramValue, $paramIsDefault;
 
 		echo "\t<div class=\"form-param-label\">{$label}</div>\n";
 		echo "\t<div class=\"form-param-info\"><img src=\"{$misc->icon('Info')}\" alt=\"info\" title=\"{$info}\"/></div>";
 
-		if (isset($paramValue[$param])) {
+		if ($paramIsDefault[$param] == 0) {
 			$value = $paramValue[$param];
 			// Specific adjustments for some parameters
-			if ($param == 'dblink_user_password') {
+			if ($param == 'dblink_user_password' && $value != '') {
 				if ($emajdb->isEmajAdmin) {
 					// For emaj_adm roles, display the parameter in tooltip
 					$value = "<div class=\"tooltip right-aligned-tooltip\">#############...<span>" . htmlspecialchars($value) . "</span></div>";
@@ -48,14 +48,10 @@
 				// Add a line feed between ADD COLUMN directives
 				$value = preg_replace('/,(\s*ADD\s+COLUMN)/i', ',<br>$1', $value);
 			}
-			if (preg_match("/fixed_|avg_/",$param)) {
-				// Drop unsignificant zeros on the left and add a unit to cost parameters
-				$value = preg_replace('/^0+/','', $value) . " µs";
-			}
 			echo "<div class=\"form-param-value\">{$value}</div>\n";
 		} else {
 			// The parameter has its default value
-			echo "<div class=\"form-param-def-value\">${defValParam[$param]}&nbsp;<sup>(def)</sup></div>\n";
+			echo "<div class=\"form-param-def-value\">{$paramValue[$param]}&nbsp;<sup>(def)</sup></div>\n";
 		}
 
 //		if ($emajdb->isEmajAdmin) {
@@ -475,7 +471,7 @@
 		global $misc, $lang, $data, $emajdb;
 		global $oldest_supported_emaj_version_num, $oldest_supported_emaj_version, $last_known_emaj_version_num;
 		global $appVersion;
-		global $paramValue, $defValParam;
+		global $paramValue, $paramIsDefault;
 
 		$misc->printHeader('database', 'database', 'emajenvir');
 
@@ -665,22 +661,12 @@
 			echo "<hr/>\n";
 			$misc->printTitle($lang['strextparams']);
 
-			// Set the default values for all existing parameters
-			$defValParam['alter_log_table'] = '';
-			$defValParam['avg_fkey_check_duration'] = '20 µs';
-			$defValParam['avg_row_delete_log_duration'] = '10 µs';
-			$defValParam['avg_row_rollback_duration'] = '100 µs';
-			$defValParam['dblink_user_password'] = '';
-			$defValParam['fixed_dblink_rollback_duration'] = '4000 µs';
-			$defValParam['fixed_step_rollback_duration'] = '2500 µs';
-			$defValParam['fixed_table_rollback_duration'] = '1000 µs';
-			$defValParam['history_retention'] = '1 YEAR';
-
-			// Read and process the data from emaj_param
+			// Read and store the data from emaj_param
 			$params = $emajdb->getExtensionParams();
 
 			while (!$params->EOF) {
 				$paramValue[$params->fields['param_key']] = $params->fields['param_value'];
+				$paramIsDefault[$params->fields['param_key']] = $params->fields['param_is_default'];
 				$params->moveNext();
 			}
 
@@ -690,8 +676,6 @@
 			echo "<div class=\"form-container-param\">\n";
 			displayOneParameter('history_retention', $lang['strparhistret'], $lang['strparhistretinfo']);
 			displayOneParameter('dblink_user_password', $lang['strpardblinkcon'], $lang['strpardblinkconinfo']);
-
-			# add line feed if several columns added to the log tables
 			displayOneParameter('alter_log_table', $lang['strparalterlog'], $lang['strparalterloginfo']);
 			echo "</div>\n";
 

@@ -576,28 +576,59 @@ class EmajDb {
 	}
 
 	/**
-	 * Get the parameters stored into the emaj_param table.
+	 * Get the extension parameters.
 	 */
 	function getExtensionParams() {
 		global $data;
 
-		$table = ($this->isEmajAdmin) ? 'emaj_param' : 'emaj_visible_param';
+		if ($this->emajVersionNum >= 40800) {	// version >= 4.8.0
 
-		$sql = "SELECT
-					param_key,
-					CASE
-						WHEN param_key IN ('dblink_user_password', 'alter_log_table') THEN coalesce(param_value_text, '')
-						WHEN param_key = 'history_retention' THEN coalesce(param_value_interval::text, '1 YEAR')
-						WHEN param_key = 'avg_row_rollback_duration' THEN coalesce(to_char(param_value_interval,'US'), '100')
-						WHEN param_key = 'avg_row_delete_log_duration' THEN coalesce(to_char(param_value_interval,'US'), '10')
-						WHEN param_key = 'avg_fkey_check_duration' THEN coalesce(to_char(param_value_interval,'US'), '20')
-						WHEN param_key = 'fixed_step_rollback_duration' THEN coalesce(to_char(param_value_interval,'US'), '2500')
-						WHEN param_key = 'fixed_table_rollback_duration' THEN coalesce(to_char(param_value_interval,'US'), '1000')
-						WHEN param_key = 'fixed_dblink_rollback_duration' THEN coalesce(to_char(param_value_interval,'US'), '4000')
-					END AS param_value
-					FROM emaj.$table
-					WHERE param_key <> 'emaj_version'";			# The 'emaj_version' key no longer exists since emaj 4.4.0
+			$table = ($this->isEmajAdmin) ? 'emaj_all_param' : 'emaj_visible_param';
 
+			$sql = "SELECT param_key,
+						   CASE
+								WHEN param_key ~ '^(avg|fixed)_' THEN
+											(extract(EPOCH FROM param_value::INTERVAL) * 1000000)::INT::TEXT || ' µs'
+								ELSE param_value
+						   END AS param_value,
+						   CASE WHEN param_value = param_default THEN 1 ELSE 0 END AS param_is_default
+						FROM emaj.$table
+						ORDER BY param_rank";
+
+		} else {
+
+			$table = ($this->isEmajAdmin) ? 'emaj_param' : 'emaj_visible_param';
+
+			$sql = "WITH cte_default AS (SELECT * FROM (VALUES
+								('history_retention', '1 year', 'INTERVAL', 1),
+								('dblink_user_password', '', NULL, 2),
+								('alter_log_table', '', NULL, 3),
+								('avg_row_rollback_duration', '100 us', 'INTERVAL', 4),
+								('avg_row_delete_log_duration', '10 us', 'INTERVAL', 5),
+								('avg_fkey_check_duration', '20 us', 'INTERVAL', 6),
+								('fixed_step_rollback_duration', '2.5 ms', 'INTERVAL', 7),
+								('fixed_table_rollback_duration', '1 ms', 'INTERVAL', 8),
+								('fixed_dblink_rollback_duration', '4 ms', 'INTERVAL', 9))
+									AS t(param_key, param_default, param_cast, param_rank))
+						SELECT cte_default.param_key,
+							CASE
+									WHEN param_cast IS NULL THEN
+											coalesce(param_value_text, param_default)
+									WHEN cte_default.param_key = 'history_retention' THEN
+											coalesce(param_value_interval::TEXT, param_default)
+									WHEN param_cast = 'INTERVAL' THEN
+											(extract(EPOCH FROM coalesce(param_value_interval, param_default::INTERVAL)) * 1000000)::INT::TEXT || ' µs'
+							END AS param_value,
+							CASE
+									WHEN (param_cast IS NULL AND (param_value_text IS NULL OR param_value_text = param_default)) OR
+										(param_cast = 'INTERVAL' AND (param_value_interval IS NULL OR param_value_interval = param_default::INTERVAL))
+										THEN 1
+										ELSE 0
+							END AS param_is_default
+							FROM cte_default
+								LEFT OUTER JOIN emaj.$table ON (emaj_param.param_key = cte_default.param_key)
+							ORDER BY param_rank";
+		}
 		return $data->selectSet($sql);
 	}
 
@@ -627,6 +658,7 @@ class EmajDb {
 					WHEN 103 THEN format('" . $data->clean($lang['strcheckjsonparamconf103']) . "', rpt_text_var_1, rpt_text_var_2)
 					WHEN 104 THEN format('" . $data->clean($lang['strcheckjsonparamconf104']) . "', rpt_text_var_1)
 					WHEN 105 THEN format('" . $data->clean($lang['strcheckjsonparamconf105']) . "', rpt_text_var_1)
+					WHEN 106 THEN format('" . $data->clean($lang['strcheckjsonparamconf106']) . "', rpt_text_var_1, rpt_text_var_2)
                     ELSE 'Message not decoded (' || rpt_msg_type || ')'
 				END as rpt_message
 			FROM emaj._check_json_param_conf(E'$json'::json)

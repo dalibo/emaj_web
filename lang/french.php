@@ -1039,23 +1039,23 @@
 	$lang['strpargeneral'] = 'Paramètres généraux';
 	$lang['strparcostmodel'] = 'Paramètres du modèle de coûts des rollbacks E-Maj';
 	$lang['strparhistret'] = 'Délai de rétention des historiques';
-	$lang['strparhistretinfo'] = 'Le paramètre \'history_retention\' de la table emaj_param détermine le délai de rétention du contenu des différentes tables internes d\'historiques des opérations E-Maj. La valeur par défaut est de 1 an. Le paramètre est de type INTERVAL.';
+	$lang['strparhistretinfo'] = 'Le paramètre \'history_retention\' détermine le délai de rétention du contenu des différentes tables internes d\'historiques des opérations E-Maj. La valeur par défaut est de 1 an. Le paramètre est de type INTERVAL.';
 	$lang['strpardblinkcon'] = 'Chaine de connexion dblink';
-	$lang['strpardblinkconinfo'] = 'Le paramètre \'dblink_user_password\' de la table emaj_param définit la chaîne de connexion utilisée par dblink pour permettre le suivi des opérations de rollback E-Maj en cours d\'exécution. Le format du paramètre correspond aux chaînes de connexion habituelles pour PostgreSQL, par exemple \'user=<user> password=<password>\'. Par défaut le paramètre est vide, empếchant le suivi des opérations de rollback E-Maj.';
+	$lang['strpardblinkconinfo'] = 'Le paramètre \'dblink_user_password\' définit les identifiants utilisés pour les connexions dblink utilisées par les rollbacks E-Maj. Le format du paramètre correspond aux chaînes de connexion habituelles pour PostgreSQL, typiquement \'user=<user> password=<password>\'. Par défaut le paramètre est vide, empếchant le suivi en temps réel des opérations de rollback E-Maj et la soumission de rollback E-Maj parallélisé.';
 	$lang['strparalterlog'] = 'Modification de la structure des tables de log';
-	$lang['strparalterloginfo'] = 'Le paramètre \'alter_log_table\' de la table emaj_param définit la modification de la structure des tables de log à leur création. Il prend la forme d\'une directive de type ALTER TABLE, par exemple \'ADD COLUMN emaj_appname TEXT DEFAULT current_setting(\'\'application_name\'\')\'. Le paramètre est vide par défaut.';
+	$lang['strparalterloginfo'] = 'Le paramètre \'alter_log_table\' définit la modification de la structure des tables de log à leur création. Il prend la forme d\'une directive de type ALTER TABLE, par exemple \'ADD COLUMN emaj_appname TEXT DEFAULT current_setting(\'\'application_name\'\')\'. Le paramètre est vide par défaut.';
 	$lang['strparfixedstep'] = 'Coût fixe d\'une étape de rollback';
-	$lang['strparfixedstepinfo'] = 'Le paramètre \'fixed_step_rollback_duration\' de la table emaj_param détermine un coût fixe de traitement d\'une étape élémentaire de rollback E-Maj. Le paramètre est de type INTERVAL. La valeur par défaut est de 2,5 ms.';
+	$lang['strparfixedstepinfo'] = 'Le paramètre \'fixed_step_rollback_duration\' détermine un coût fixe de traitement d\'une étape élémentaire de rollback E-Maj. Le paramètre est de type INTERVAL. La valeur par défaut est de 2,5 ms.';
 	$lang['strparfixeddblink'] = 'Surcoût dblink d\'une étape de rollback';
-	$lang['strparfixeddblinkinfo'] = 'Le paramètre \'fixed_dblink_rollback_duration\' de la table emaj_param détermine un surcoût pour chaque étape élémentaire de rollback E-Maj lorsqu\'une connexion dblink est utilisée. Le paramètre est de type INTERVAL. La valeur par défaut est de 4 ms.';
+	$lang['strparfixeddblinkinfo'] = 'Le paramètre \'fixed_dblink_rollback_duration\' détermine un surcoût pour chaque étape élémentaire de rollback E-Maj lorsqu\'une connexion dblink est utilisée. Le paramètre est de type INTERVAL. La valeur par défaut est de 4 ms.';
 	$lang['strparfixedrlbktbl'] = 'Coût fixe de rollback d\'une table';
-	$lang['strparfixedrlbktblinfo'] = 'Le paramètre \'fixed_table_rollback_duration\' de la table emaj_param détermine un coût fixe de rollback d\'une table ou séquence. Le paramètre est de type INTERVAL. La valeur par défaut est de 1 ms.';
+	$lang['strparfixedrlbktblinfo'] = 'Le paramètre \'fixed_table_rollback_duration\' détermine un coût fixe de rollback d\'une table ou séquence. Le paramètre est de type INTERVAL. La valeur par défaut est de 1 ms.';
 	$lang['strparavgrowrlbk'] = 'Coût moyen de rollback d\'une mise à jour';
-	$lang['strparavgrowrlbkinfo'] = 'Le paramètre \'avg_row_rollback_duration\' de la table emaj_param détermine le coût moyen de rollback d\'une mise à jour élémentaire. Le paramètre est de type INTERVAL. La valeur par défaut est de 100 µs.';
+	$lang['strparavgrowrlbkinfo'] = 'Le paramètre \'avg_row_rollback_duration\' détermine le coût moyen de rollback d\'une mise à jour élémentaire. Le paramètre est de type INTERVAL. La valeur par défaut est de 100 µs.';
 	$lang['strparavgrowdel'] = 'Coût moyen de suppression d\'une mise à jour des logs';
-	$lang['strparavgrowdelinfo'] = 'Le paramètre \'avg_row_delete_log_duration\' de la table emaj_param détermine le coût moyen de suppression d\'une mise à jour élémentaire dans le log E-Maj. Le paramètre est de type INTERVAL. La valeur par défaut est de 10 µs.';
+	$lang['strparavgrowdelinfo'] = 'Le paramètre \'avg_row_delete_log_duration\' détermine le coût moyen de suppression d\'une mise à jour élémentaire dans le log E-Maj. Le paramètre est de type INTERVAL. La valeur par défaut est de 10 µs.';
 	$lang['strparavgfkcheck'] = 'Coût moyen de vérification d\'une clé étrangère';
-	$lang['strparavgfkcheckinfo'] = 'Le paramètre \'avg_fkey_check_duration\' de la table emaj_param détermine le coût moyen de vérification d\'une clé étrangère. Le paramètre est de type INTERVAL. La valeur par défaut est de 20 µs.';
+	$lang['strparavgfkcheckinfo'] = 'Le paramètre \'avg_fkey_check_duration\' détermine le coût moyen de vérification d\'une clé étrangère. Le paramètre est de type INTERVAL. La valeur par défaut est de 20 µs.';
 
 	// Import parameters
 	$lang['strimportparamconf'] = 'Importer une configuration de paramètres';
@@ -1066,6 +1066,7 @@
 	$lang['strcheckjsonparamconf103'] = 'Pour le paramètre "%s", l\'attribut "%s" est inconnu.';
 	$lang['strcheckjsonparamconf104'] = '"%s" n\'est pas un paramètre E-Maj connu.';
 	$lang['strcheckjsonparamconf105'] = 'La structure JSON référence plusieurs fois le paramètre "%s".';
+	$lang['strcheckjsonparamconf106'] = 'La valeur du paramètre "%s" (%s) n\'est pas un interval de temps valide.';
 	$lang['strparamconfimported'] = '%s : %s paramètres importés depuis le fichier %s.';
 	$lang['strnewconf'] = 'Nouvelle configuration';
 	$lang['strnewmodifiedconf'] = 'Configuration modifiée';

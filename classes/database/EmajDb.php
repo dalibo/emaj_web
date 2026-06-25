@@ -145,8 +145,8 @@ class EmajDb {
 
 		// Load the installation configuration, if we are allowed to access emaj.
 		if ($this->isEmajViewer) {
-			// In version 4.8+, just read the emaj_install_conf table.
-			if ($this->emajVersionNum >= 40800){	// version >= 4.8.0
+			// In version 5.0+, just read the emaj_install_conf table.
+			if ($this->emajVersionNum >= 50000){	// version >= 5.0.0
 				$sql = "SELECT CASE WHEN inst_by_superuser THEN 1 ELSE 0 END AS by_superuser,
 							   CASE WHEN inst_with_event_triggers THEN 1 ELSE 0 END AS with_event_triggers
 						FROM emaj.emaj_install_conf";
@@ -389,9 +389,9 @@ class EmajDb {
 		// It checks that
 		// - dblink is installed into the database by testing the existence of the dblink_connect function,
 		// - the dblink_user_password E-Maj parameter has been configured.
-		// In emaj 4.8+, if emaj has been installed by a non superuser, it also checks that the installer role is allowed to execute dblink_connect_u()
+		// In emaj 5.0+, if emaj has been installed by a non superuser, it also checks that the installer role is allowed to execute dblink_connect_u()
 		// - if emaj has been.
-		if ($this->emajVersionNum >= 40800 && ! $this->installedBySuperuser) {
+		if ($this->emajVersionNum >= 50000 && ! $this->installedBySuperuser) {
 			$sql = "SELECT CASE WHEN
 						EXISTS(SELECT 1 FROM pg_catalog.pg_proc WHERE proname = 'dblink_connect')
 					AND EXISTS(SELECT 1 FROM emaj.emaj_visible_param WHERE param_key = 'dblink_user_password')
@@ -429,7 +429,7 @@ class EmajDb {
 			// If the _dblink_open_cnx() function is available for the user,
 			//   open a test dblink connection, analyse the result and close it if effectively opened.
 			$test_cnx_ok = 0;
-			if ($this->emajVersionNum >= 40800){	// version >= 4.8.0
+			if ($this->emajVersionNum >= 50000){	// version >= 5.0.0
 				$sql = "SELECT CASE
 							WHEN pg_catalog.has_function_privilege('emaj._dblink_open_cnx(text, boolean)', 'EXECUTE')
 								THEN 1 ELSE 0 END as grant_open_ok";
@@ -443,7 +443,7 @@ class EmajDb {
 								THEN 1 ELSE 0 END as grant_open_ok";
 			}
 			if ($data->selectField($sql, 'grant_open_ok')) {
-				if ($this->emajVersionNum >= 40800){	// version >= 4.8.0
+				if ($this->emajVersionNum >= 50000){	// version >= 5.0.0
 					$sql = "SELECT CASE WHEN p_status >= 0 THEN 1 ELSE 0 END as cnx_ok, p_schema
 							FROM emaj._dblink_open_cnx('test', FALSE)";
 					$rs = $data->selectSet($sql);
@@ -581,7 +581,7 @@ class EmajDb {
 	function getExtensionParams() {
 		global $data;
 
-		if ($this->emajVersionNum >= 40800) {	// version >= 4.8.0
+		if ($this->emajVersionNum >= 50000) {	// version >= 5.0.0
 
 			$table = ($this->isEmajAdmin) ? 'emaj_all_param' : 'emaj_visible_param';
 

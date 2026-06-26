@@ -1,7 +1,7 @@
 <?php
 
 	/*
-	 * Actions on tables groups.
+	 * Actions on table groups.
 	 * This file is included into groupproperties.php and emajgroups.php
 	 */
 
@@ -109,7 +109,7 @@
 
 			$misc->printTable($checks, $columns, $actions, 'checks', null, null, array('sorter' => true, 'filter' => false));
 
-			// determine whether the tables group can be audit_only
+			// determine whether the table group can be audit_only
 			$rollbackable = false;
 			$checks->moveFirst();
 			while (!$checks->EOF) {
@@ -690,7 +690,7 @@
 	}
 
 	/**
-	 * Export a tables groups configuration
+	 * Export a table groups configuration
 	 */
 	function export_groups_ok() {
 		global $misc, $emajdb, $lang;
@@ -738,7 +738,7 @@
 	}
 
 	/**
-	 * Import a tables groups configuration
+	 * Import a table groups configuration
 	 */
 	function import_groups() {
 
@@ -747,7 +747,7 @@
 		printHeader();
 		$misc->printTitle($lang['strimportgroupsconf']);
 
-		// form to import a tables groups configuration
+		// form to import a table groups configuration
 		echo "<div>\n";
 		echo "\t<form name=\"importgroups\" id=\"importgroups\" enctype=\"multipart/form-data\" method=\"post\"";
 		echo " action=\"emajgroups.php?action=import_groups_select&amp;{$misc->href}\">\n";
@@ -784,7 +784,7 @@
 	}
 
 	/**
-	 * Upload and open the tables group configuration file and let the user select the groups he wants to import
+	 * Upload and open the table group configuration file and let the user select the groups he wants to import
 	 */
 	function import_groups_select() {
 
@@ -810,11 +810,11 @@
 				$errors = $emajdb->checkJsonGroupsConf($jsonContent);
 
 				if ($errors->recordCount() == 0) {
-					// No error has been detected in the json structure, so display the tables groups to select
+					// No error has been detected in the json structure, so display the table groups to select
 
 					echo "<p>" . sprintf($lang['strimportgroupsinfile'], $_FILES['file_name']['name']) . "</p>\n";
 
-					// Extract the list of configured tables groups
+					// Extract the list of configured table groups
 					$groupsArray = array();
 					foreach($jsonStructure["tables_groups"] as $jsonGroup){
 						if (isSet($jsonGroup["group"])) {
@@ -962,7 +962,7 @@
 	}
 
 	/**
-	 * Effectively import a tables groups configuration
+	 * Effectively import a table groups configuration
 	 */
 	function import_groups_ok() {
 
@@ -974,7 +974,7 @@
 		// Build the groups list
 		$groupsList = groupsArray2list($_REQUEST['ma']);
 
-		// prepare the tables groups configuration import
+		// prepare the table groups configuration import
 		$errors = $emajdb->importGroupsConfPrepare($_POST['json'], $groupsList);
 		if ($errors->recordCount() == 0) {
 			// no error detected, so execute the effective configuration import

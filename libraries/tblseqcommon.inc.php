@@ -115,7 +115,7 @@
 
 	/**
 	 * Check that a set of tables or sequences in a schema still exists.
-	 * Tables and sequences that are assigned to tables group are protected by the main event trigger. But not the others.
+	 * Tables and sequences that are assigned to table group are protected by the main event trigger. But not the others.
 	 */
 	function checkRelations($schema, $tblSeqsList, $relKind, $errMsgAction) {
 		global $emajdb, $lang, $misc;

@@ -1,6 +1,6 @@
 <?php
 	/*
-	 * Manage the tables groups recorded changes statistics
+	 * Manage the table groups recorded changes statistics
 	 */
 
 	// Include application functions

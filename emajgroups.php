@@ -1,6 +1,6 @@
 <?php
 	/*
-	 * Manage the E-Maj tables groups
+	 * Manage the E-Maj table groups
 	 */
 
 	// Include application functions
@@ -411,7 +411,7 @@
 		echo "<hr/>\n";
 
 		if ($emajdb->emajVersionNum < 30200) {					// version < 3.2
-			// configured but not yet created tables groups section
+			// configured but not yet created table groups section
 			$configuredGroups = $emajdb->getConfiguredGroups();
 
 			$misc->printTitle($lang['strconfiguredgroups'], null, $lang['strconfiguredgrouphelp']);
@@ -455,7 +455,7 @@
 			}
 		}
 		if ($emajdb->emajVersionNum >= 40400) {					// version >= 4.4
-		// display the list of dropped tables group
+		// display the list of dropped table group
 
 			$droppedGroups = $emajdb->getDroppedGroups();
 

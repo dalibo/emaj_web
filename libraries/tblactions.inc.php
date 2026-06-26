@@ -118,7 +118,7 @@
 	}
 
 	/**
-	 * Perform tables assignment into a tables group
+	 * Perform tables assignment into a table group
 	 */
 	function assign_tables_ok() {
 		global $lang, $data, $emajdb, $_reload_browser;
@@ -135,7 +135,7 @@
 		// Check that the schema and the tables still exist
 		checkRelations($_REQUEST['schema'], $_POST['tables'], 'table', $errMsgAction);
 
-		// Check that the tables group still exists
+		// Check that the table group still exists
 		recheckGroups($_POST['group'], $errMsgAction);
 
 		// Check the mark name
@@ -184,7 +184,7 @@
 		else
 			$errMsgAction = sprintf($lang['strmovetableserr'], $nbTbl, htmlspecialchars($_REQUEST['schema']));
 
-		// Check that the tables group still exists
+		// Check that the table group still exists
 		recheckGroups($groupsList, $errMsgAction);
 
 		$misc->printHeader('database', 'database', 'schemas');
@@ -232,7 +232,7 @@
 	}
 
 	/**
-	 * Perform tables move into another tables group
+	 * Perform tables move into another table group
 	 */
 	function move_tables_ok() {
 		global $lang, $data, $emajdb;
@@ -248,7 +248,7 @@
 
 		$allGroups = $_POST['oldgroups'] . ', ' . $_POST['newgroup'];
 
-		// Check that the tables group still exists
+		// Check that the table group still exists
 		recheckGroups($allGroups, $errMsgAction);
 
 		// Check the mark name
@@ -288,7 +288,7 @@
 		else
 			$errMsgAction = sprintf($lang['strmodifytableserr'], $nbTbl, htmlspecialchars($_REQUEST['schema']));
 
-		// Check that the tables group still exists
+		// Check that the table group still exists
 		recheckGroups($groupsList, $errMsgAction);
 
 		$misc->printHeader('database', 'database', 'schemas');
@@ -416,7 +416,7 @@
 		else
 			$errMsgAction = sprintf($lang['strmodifytableserr'], $_POST['nbtables'], htmlspecialchars($_POST['schema']));
 
-		// Check that the tables group still exists
+		// Check that the table group still exists
 		recheckGroups($_POST['groups'], $errMsgAction);
 
 		// Check the mark name
@@ -457,7 +457,7 @@
 		else
 			$errMsgAction = sprintf($lang['strremovetableserr'], $nbTbl, htmlspecialchars($_REQUEST['schema']));
 
-		// Check that the tables group still exists
+		// Check that the table group still exists
 		recheckGroups($groupsList, $errMsgAction);
 
 		$misc->printHeader('database', 'database', 'schemas');
@@ -494,7 +494,7 @@
 	}
 
 	/**
-	 * Perform tables remove from their tables group
+	 * Perform tables remove from their table group
 	 */
 	function remove_tables_ok() {
 		global $lang, $data, $emajdb, $_reload_browser;
@@ -508,7 +508,7 @@
 		else
 			$errMsgAction = sprintf($lang['strremovetableserr'], $_POST['nbtables'], htmlspecialchars($_POST['schema']));
 
-		// Check that the tables group still exists
+		// Check that the table group still exists
 		recheckGroups($_POST['groups'], $errMsgAction);
 
 		// Check the mark name

@@ -72,7 +72,7 @@
 						$navlinks = array();
 
 						if (! $isAssigned) {
-							// Not yet assigned to a tables group
+							// Not yet assigned to a table group
 							$navlinks['assign_sequence'] = array (
 								'content' => $lang['strassign'],
 								'attr'=> array (
@@ -87,7 +87,7 @@
 								),
 							);
 						} else {
-							// Already assigned to a tables group
+							// Already assigned to a table group
 							$prop->moveFirst();
 							$group = $prop->fields['rel_group'];
 

@@ -16,7 +16,7 @@ The main goals of E-Maj are:
 * log updates performed on one or several sets of tables.
 * cancel these updates if needed, and reset a tables set to a predefined stable state.
 
-The client allows users to easily look at the tables groups state and perform all E-Maj operations.
+The client allows users to easily look at the table groups state and perform all E-Maj operations.
 
 
 3- Documentation

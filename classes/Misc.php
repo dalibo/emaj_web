@@ -544,7 +544,7 @@
 		}
 
 		/**
-		 * Performs initial checks on the existence of emaj extension, table, séquence or tables group,
+		 * Performs initial checks on the existence of emaj extension, table, séquence or table group,
 		 * If some expected objects are missing, redirect the user to another predefined page.
 		 * @param $check indicator of the kind of check to perform ('emaj', 'emajgroup', 'table', 'sequence')
 		 */
@@ -1048,7 +1048,7 @@
 
 			if (isset($_REQUEST['group']) && !$done) {
 				$trail['emaj'] = array(
-					'title' => $lang['strtablesgroup'],
+					'title' => $lang['strtablegroup'],
 					'text'  => $_REQUEST['group'],
 					'url'   => $this->getHREFSubject('emajgroup'),
 					'icon'  => 'EmajGroup'

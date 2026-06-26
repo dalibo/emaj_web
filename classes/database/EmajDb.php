@@ -791,7 +791,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Get all inexistent tables groups that are known as having existed in the past and having been dropped.
+	 * Get all inexistent table groups that are known as having existed in the past and having been dropped.
 	 */
 	function getDroppedGroups() {
 		global $data;
@@ -1039,7 +1039,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Get properties of a single tables group.
+	 * Get properties of a single table group.
 	 */
 	function getGroup($group) {
 		global $data;
@@ -1137,7 +1137,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Export a tables groups configuration.
+	 * Export a table groups configuration.
 	 */
 	function exportGroupsConfig($groups) {
 		global $data;
@@ -1150,7 +1150,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Prepare the a tables groups configuration import.
+	 * Prepare the a table groups configuration import.
 	 */
 	function importGroupsConfPrepare($groupsConfig, $groups) {
 		global $data, $lang;
@@ -1159,7 +1159,7 @@ class EmajDb {
 		$data->clean($groups);
 		$groupsArray = "ARRAY['".str_replace(', ',"','",$groups)."']";
 
-		// The tables groups configuration import prepare step is inserted into a transaction,
+		// The table groups configuration import prepare step is inserted into a transaction,
 		//   so that it can be properly canceled if errors are detected.
 		// The transaction will be commited just later in the importGroupsConfig() function call.
 		$status = $data->beginTransaction();
@@ -1209,7 +1209,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Import a tables groups configuration.
+	 * Import a table groups configuration.
 	 */
 	function importGroupsConfig($groupsConfig, $groups, $mark) {
 		global $data;
@@ -1331,7 +1331,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Get the content of a single tables group.
+	 * Get the content of a single table group.
 	 */
 	function getContentGroup($group) {
 		global $data;
@@ -1358,7 +1358,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Return the history of create-drop and log sessions for a tables group.
+	 * Return the history of create-drop and log sessions for a table group.
 	 */
 	function getHistoryGroup($group) {
 
@@ -1920,7 +1920,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Dynamically assign tables to a tables group.
+	 * Dynamically assign tables to a table group.
 	 */
 	function assignTables($schema,$tables,$group,$priority,$logDatTsp,$logIdxTsp,$mark) {
 		global $data;
@@ -1948,7 +1948,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Dynamically move tables into another tables groups.
+	 * Dynamically move tables into another table groups.
 	 */
 	function moveTables($schema,$tables,$group,$mark) {
 		global $data;
@@ -1967,7 +1967,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Dynamically modify tables in their tables groups.
+	 * Dynamically modify tables in their table groups.
 	 */
 	function modifyTables($schema,$tables,$priority,$logDatTsp,$logIdxTsp,$mark) {
 		global $data;
@@ -2005,7 +2005,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Dynamically remove tables from their tables groups.
+	 * Dynamically remove tables from their table groups.
 	 */
 	function removeTables($schema,$tables,$mark) {
 		global $data;
@@ -2023,7 +2023,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Dynamically assign sequences to a tables group.
+	 * Dynamically assign sequences to a table group.
 	 */
 	function assignSequences($schema,$sequences,$group,$mark) {
 		global $data;
@@ -2042,7 +2042,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Dynamically move sequences into another tables groups.
+	 * Dynamically move sequences into another table groups.
 	 */
 	function moveSequences($schema,$sequences,$group,$mark) {
 		global $data;
@@ -2061,7 +2061,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Dynamically remove sequences from their tables groups.
+	 * Dynamically remove sequences from their table groups.
 	 */
 	function removeSequences($schema,$sequences,$mark) {
 		global $data;
@@ -2172,7 +2172,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Check that a JSON structure representing tables groups configuration is valid, before importing it.
+	 * Check that a JSON structure representing table groups configuration is valid, before importing it.
 	 */
 	function checkJsonGroupsConf($json) {
 		global $data, $lang;
@@ -2264,7 +2264,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Erase all traces of a dropped group from the tables groups histories.
+	 * Erase all traces of a dropped group from the table groups histories.
 	 */
 	function forgetGroup($group) {
 		global $data;
@@ -3471,7 +3471,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Get the number of tables and sequences that a tables group owned during a marks interval.
+	 * Get the number of tables and sequences that a table group owned during a marks interval.
 	 */
 	function getNbObjectsGroupInPeriod($group,$firstMark,$lastMark) {
 		global $data;
@@ -3501,7 +3501,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Get the number of log sessions covering a marks interval for a tables group.
+	 * Get the number of log sessions covering a marks interval for a table group.
 	 */
 	function getNbLogSessionInPeriod($group,$firstMark,$lastMark) {
 		global $data;
@@ -3961,7 +3961,7 @@ class EmajDb {
 	 * It returns:
      *   - 'L' when the table or sequence is a Log object,
      *   - 'E' if it is an internal E-maj object,
-	 *   - 'U' if a table is not eligible to be assigned to a tables group (partitionned, temporary, unlogged or wih OIDS table)
+	 *   - 'U' if a table is not eligible to be assigned to a table group (partitionned, temporary, unlogged or wih OIDS table)
      *   - '' in other cases
 	 */
 	function getEmajTypeTblSeq($schema, $tblseq) {
@@ -4540,7 +4540,7 @@ class EmajDb {
 	}
 
 	/**
-	 * Get the tables groups in logging state for the E-Maj Activity reporting.
+	 * Get the table groups in logging state for the E-Maj Activity reporting.
 	 */
 	function emajStatGetGroups($groupsIncludeFilter, $groupsExcludeFilter) {
 		global $data;

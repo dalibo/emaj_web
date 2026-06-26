@@ -1,6 +1,6 @@
 <?php
 	/*
-	 * Manage the tables groups history
+	 * Manage the table groups history
 	 */
 
 	// Include application functions

@@ -45,7 +45,7 @@
 
 		echo "<div>\n";
 		echo "<p>{$lang['strtable']} = \"<b>" . htmlspecialchars($_REQUEST['schema']) . "." . htmlspecialchars($_REQUEST['table']) . "</b>\"<br>\n";
-		echo "{$lang['strtablesgroup']} = \"<b>" . htmlspecialchars($_REQUEST['group']) . "</b>\"<br>\n";
+		echo "{$lang['strtablegroup']} = \"<b>" . htmlspecialchars($_REQUEST['group']) . "</b>\"<br>\n";
 		echo "{$lang['strsqlgenmarksinterval']} = \"<b>" . htmlspecialchars($_REQUEST['startMark']) . "</b>\" - ";
 		if ($_REQUEST['endMark'] != '')
 			echo "\"<b>" . htmlspecialchars($_REQUEST['endMark']) . "</b>\"</p>\n";

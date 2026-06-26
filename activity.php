@@ -183,7 +183,7 @@
 			$globalData = new ArrayRecordSet(array(''));	// Empty array because all fields to display are literals
 			$misc->printTable($globalData, $columns, $actions, 'activity-global');
 
-			// Display the tables groups
+			// Display the table groups
 			if ($rq['max-groups'] > 0) {
 				$misc->printSubtitle($lang['strlogginggroupstitle'], "(x {$globalCounters['nb_logging_groups']}/{$globalCounters['nb_groups']})");
 
@@ -415,7 +415,7 @@
 			return array(true, null, null, null, null, null, null, null, null);
 
 		// If the emaj_time_stamp sequence value has changed rebuild the global counters.
-		// A new emaj_time_stamp row is often due to a tables group structure change or a new mark set for a group.
+		// A new emaj_time_stamp row is often due to a table group structure change or a new mark set for a group.
 		if ($currentEmajTimeStampTimeIdSeq != $previousEmajTimeStampTimeIdSeq) {
 			// Get global counters from the database
 			$rs = $emajdb->emajStatGetGlobalCounters();
@@ -426,7 +426,7 @@
 		// If the emaj_time_stamp sequence value has changed or if filters have been modified by the user,
 		//   rebuild the groups, tables and sequences arrays.
 		if ($currentEmajTimeStampTimeIdSeq != $previousEmajTimeStampTimeIdSeq || $areRegExpFiltersModified) {
-			// Get tables groups from the database
+			// Get table groups from the database
 			$rs = $emajdb->emajStatGetGroups($rq['groups-include'], $rq['groups-exclude']);
 			$loggingGroups = array();
 			while (!$rs->EOF) {

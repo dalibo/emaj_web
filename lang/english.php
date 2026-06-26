@@ -148,7 +148,7 @@
 	$lang['strstop'] = 'Stop';
 	$lang['strtable'] = 'Table';
 	$lang['strtables'] = 'Tables';
-	$lang['strtablesgroup'] = 'Tables group';
+	$lang['strtablegroup'] = 'Table group';
 	$lang['strtablespace'] = 'Tablespace';
 	$lang['strtrue'] = 'TRUE';
 	$lang['strtxid'] = 'Transaction id.';
@@ -255,7 +255,7 @@
 
 	// E-Maj html titles and tabs
 	$lang['strgroupsmanagement'] = 'E-Maj groups management';
-	$lang['strgroupsconfiguration'] = 'Tables groups\' configuration';
+	$lang['strgroupsconfiguration'] = 'Table groups\' configuration';
 	$lang['strgroupsconf'] = 'Groups conf.';
 	$lang['strrollbacksmanagement'] = 'E-Maj rollbacks management';
 	$lang['strrlbkop'] = 'E-Maj Rollbacks';
@@ -273,116 +273,116 @@
 // E-Maj groups
 
 	// E-Maj groups lists
-	$lang['stridlegroups'] = 'Tables groups in "IDLE" state ';
-	$lang['strlogginggroups'] = 'Tables groups in "LOGGING" state ';
-	$lang['strconfiguredgroups'] = 'Configured but not yet created tables groups ';
-	$lang['strlogginggrouphelp'] = 'When a tables group is in \'logging\' state, the row insertions, updates and deletions on its tables are recorded.';
- 	$lang['stridlegrouphelp'] = 'When a tables group is in \'idle\' state, the row insertions, updates and deletions on its tables are NOT recorded.';
+	$lang['stridlegroups'] = 'Table groups in "IDLE" state ';
+	$lang['strlogginggroups'] = 'Table groups in "LOGGING" state ';
+	$lang['strconfiguredgroups'] = 'Configured but not yet created table groups ';
+	$lang['strlogginggrouphelp'] = 'When a table group is in \'logging\' state, the row insertions, updates and deletions on its tables are recorded.';
+ 	$lang['stridlegrouphelp'] = 'When a table group is in \'idle\' state, the row insertions, updates and deletions on its tables are NOT recorded.';
 	$lang['strconfiguredgrouphelp'] = 'The group configuration defines the tables and sequences that will compose it. Once \'configured\', the group must be \'created\' in order to prepare all abjects that will be needed for its use (log tables, functions,...).';
 	$lang['strApplyConfChanges'] = 'Apply conf changes';
-	$lang['strnoidlegroup'] = 'No tables group is currently in idle state.';
-	$lang['strnologginggroup'] = 'No tables group is currently in logging state.';
-	$lang['strnoconfiguredgroups'] = 'No tables group is currently configured but not created.';
-	$lang['strnoconfiguredgroup'] = 'To create a (another) tables group, go first to the groups configuration tab.<br>Alternatively, you can create an empty group, then add tables and sequences into it, and apply the configuration change.';
+	$lang['strnoidlegroup'] = 'No table group is currently in idle state.';
+	$lang['strnologginggroup'] = 'No table group is currently in logging state.';
+	$lang['strnoconfiguredgroups'] = 'No table group is currently configured but not created.';
+	$lang['strnoconfiguredgroup'] = 'To create a (another) table group, go first to the groups configuration tab.<br>Alternatively, you can create an empty group, then add tables and sequences into it, and apply the configuration change.';
 	$lang['strcreateemptygroup'] = 'Create an empty group';
 	$lang['strnewgroup'] = 'New group';
-	$lang['strdroppedgroupslist'] = 'Old dropped tables groups';
-	$lang['strnodroppedgroup'] = 'No old dropped tables groups.';
-	$lang['strnoselectedgroup'] = 'No tables group has been selected!';
+	$lang['strdroppedgroupslist'] = 'Old dropped table groups';
+	$lang['strnodroppedgroup'] = 'No old dropped table groups.';
+	$lang['strnoselectedgroup'] = 'No table group has been selected!';
 	$lang['strgrouplatestdropat'] = 'Latest drop at';
 	$lang['strgrouplatesttype'] = 'Latest type';
 
 	// Group creation
-	$lang['strcreateagroup'] = 'E-Maj: Create a tables group';
-	$lang['strcreategroupok'] = 'The tables group "%s" has been created.';
-	$lang['strcreategrouperr'] = 'Error while creating the tables group "%s".';
+	$lang['strcreateagroup'] = 'E-Maj: Create a table group';
+	$lang['strcreategroupok'] = 'The table group "%s" has been created.';
+	$lang['strcreategrouperr'] = 'Error while creating the table group "%s".';
 
 	// Export groups configuration
-	$lang['strexportgroupsconf'] = 'Export a tables groups configuration';
-	$lang['strexportgroupsconfselect'] = 'Select the tables groups whose configuration will be exported on a local file.';
-	$lang['strexportgroupserr'] = 'Error while exporting tables groups "%s".';
+	$lang['strexportgroupsconf'] = 'Export a table groups configuration';
+	$lang['strexportgroupsconfselect'] = 'Select the table groups whose configuration will be exported on a local file.';
+	$lang['strexportgroupserr'] = 'Error while exporting table groups "%s".';
 
 	// Import groups configuration
-	$lang['strimportgroupsconf'] = 'Import a tables groups configuration';
-	$lang['strimportgroupsinfile'] = 'Select the tables groups to import from the file "%s":';
+	$lang['strimportgroupsconf'] = 'Import a table groups configuration';
+	$lang['strimportgroupsinfile'] = 'Select the table groups to import from the file "%s":';
 	$lang['strimportgroupsinfileerr'] = 'Some errors have been detected in the file "%s":';
 	$lang['strcheckjsongroupsconf201'] = 'The JSON structure does not contain any "tables_groups" array.';
-	$lang['strcheckjsongroupsconf202'] = 'The JSON structure references several times the tables groups "%s".';
-	$lang['strcheckjsongroupsconf210'] = 'The tables group #%s has no "group" attribute.';
-	$lang['strcheckjsongroupsconf211'] = 'For tables group "%s", the keyword "%s" is unknown.';
-	$lang['strcheckjsongroupsconf212'] = 'For tables group "%s", the "is_rollbackable" attribute is not a boolean.';
-	$lang['strcheckjsongroupsconf220'] = 'In tables group "%s", the table #%s has no "schema" attribute.';
-	$lang['strcheckjsongroupsconf221'] = 'In tables group "%s", the table #%s has no "table" attribute.';
-	$lang['strcheckjsongroupsconf222'] = 'In tables group "%s" and for the table %s.%s, the keyword "%s" is unknown.';
-	$lang['strcheckjsongroupsconf223'] = 'In tables group "%s" and for the table %s.%s, the "priority" attribute is not a number.';
-	$lang['strcheckjsongroupsconf224'] = 'In tables group "%s" and for the table %s.%s, the trigger #%s has no "trigger" attribute.';
-	$lang['strcheckjsongroupsconf225'] = 'In tables group "%s" and for a trigger of the table %s.%s, the keyword "%s" is unknown.';
-	$lang['strcheckjsongroupsconf226'] = 'In tables group "%s" and for the table %s.%s, the trigger #%s is not a string.';
-	$lang['strcheckjsongroupsconf227'] = 'In tables group "%s" and for the table %s.%s, the "ignored_triggers" attribute is not an array.';
-	$lang['strcheckjsongroupsconf230'] = 'In tables group "%s", the sequence #%s has no "schema" attribute.';
-	$lang['strcheckjsongroupsconf231'] = 'In tables group "%s", the sequence #%s has no "sequence" attribute.';
-	$lang['strcheckjsongroupsconf232'] = 'In tables group "%s" and for the sequence %s.%s, the keyword "%s" is unknown.';
-	$lang['strgroupsconfimport250'] = 'The tables group "%s" to import is not referenced in the JSON structure.';
-	$lang['strgroupsconfimport251'] = 'The tables group "%s" already exists.';
-	$lang['strgroupsconfimport252'] = 'Changing the type of the tables group "%s" is not allowed. You may drop this tables group before importing the configuration.';
-	$lang['strgroupsconfimport260'] = 'In tables group "%s" and for the table %s.%s, the trigger %s does not exist.';
-	$lang['strgroupsconfimport261'] = 'In tables group "%s" and for the table %s.%s, the trigger %s is an E-Maj trigger.';
-    $lang['strgroupsconfimport270'] = 'The table %s.%s is referenced in %s different tables groups.';
-    $lang['strgroupsconfimport271'] = 'The sequence %s.%s is referenced in %s different tables groups.';
-    $lang['strgroupsconfimport272'] = 'In tables group "%s", the table %s.%s is referenced several times.';
-    $lang['strgroupsconfimport273'] = 'In tables group "%s", the sequence %s.%s is referenced several times.';
-	$lang['strgroupsconfimportpreperr'] = 'Importing the configuration of tables groups "%s" from the file  "%s" has failed for the following reasons:';
-	$lang['strgroupsconfimported'] = '%s tables groups have been imported from the file "%s".';
-	$lang['strgroupsconfimporterr'] = 'Error while importing tables groups from file "%s"';
+	$lang['strcheckjsongroupsconf202'] = 'The JSON structure references several times the table groups "%s".';
+	$lang['strcheckjsongroupsconf210'] = 'The table group #%s has no "group" attribute.';
+	$lang['strcheckjsongroupsconf211'] = 'For table group "%s", the keyword "%s" is unknown.';
+	$lang['strcheckjsongroupsconf212'] = 'For table group "%s", the "is_rollbackable" attribute is not a boolean.';
+	$lang['strcheckjsongroupsconf220'] = 'In table group "%s", the table #%s has no "schema" attribute.';
+	$lang['strcheckjsongroupsconf221'] = 'In table group "%s", the table #%s has no "table" attribute.';
+	$lang['strcheckjsongroupsconf222'] = 'In table group "%s" and for the table %s.%s, the keyword "%s" is unknown.';
+	$lang['strcheckjsongroupsconf223'] = 'In table group "%s" and for the table %s.%s, the "priority" attribute is not a number.';
+	$lang['strcheckjsongroupsconf224'] = 'In table group "%s" and for the table %s.%s, the trigger #%s has no "trigger" attribute.';
+	$lang['strcheckjsongroupsconf225'] = 'In table group "%s" and for a trigger of the table %s.%s, the keyword "%s" is unknown.';
+	$lang['strcheckjsongroupsconf226'] = 'In table group "%s" and for the table %s.%s, the trigger #%s is not a string.';
+	$lang['strcheckjsongroupsconf227'] = 'In table group "%s" and for the table %s.%s, the "ignored_triggers" attribute is not an array.';
+	$lang['strcheckjsongroupsconf230'] = 'In table group "%s", the sequence #%s has no "schema" attribute.';
+	$lang['strcheckjsongroupsconf231'] = 'In table group "%s", the sequence #%s has no "sequence" attribute.';
+	$lang['strcheckjsongroupsconf232'] = 'In table group "%s" and for the sequence %s.%s, the keyword "%s" is unknown.';
+	$lang['strgroupsconfimport250'] = 'The table group "%s" to import is not referenced in the JSON structure.';
+	$lang['strgroupsconfimport251'] = 'The table group "%s" already exists.';
+	$lang['strgroupsconfimport252'] = 'Changing the type of the table group "%s" is not allowed. You may drop this table group before importing the configuration.';
+	$lang['strgroupsconfimport260'] = 'In table group "%s" and for the table %s.%s, the trigger %s does not exist.';
+	$lang['strgroupsconfimport261'] = 'In table group "%s" and for the table %s.%s, the trigger %s is an E-Maj trigger.';
+    $lang['strgroupsconfimport270'] = 'The table %s.%s is referenced in %s different table groups.';
+    $lang['strgroupsconfimport271'] = 'The sequence %s.%s is referenced in %s different table groups.';
+    $lang['strgroupsconfimport272'] = 'In table group "%s", the table %s.%s is referenced several times.';
+    $lang['strgroupsconfimport273'] = 'In table group "%s", the sequence %s.%s is referenced several times.';
+	$lang['strgroupsconfimportpreperr'] = 'Importing the configuration of table groups "%s" from the file  "%s" has failed for the following reasons:';
+	$lang['strgroupsconfimported'] = '%s table groups have been imported from the file "%s".';
+	$lang['strgroupsconfimporterr'] = 'Error while importing table groups from file "%s"';
 
 	// Groups content checks
-	$lang['strgroupconfok'] = 'The configuration of the tables group "%s" is correct.';
-	$lang['strgroupconfwithdiag'] = 'The checks performed on the tables group "%s" configuration show that:';
-	$lang['strgroupsconfok'] = 'The configuration of the tables groups "%s" is correct.';
-	$lang['strgroupsconfwithdiag'] = 'The checks performed on the tables groups "%s" configuration show that:';
-	$lang['strcheckconfgroups01o'] = 'In tables group "%s", the table or sequence "%s.%s" does not exist.';
-	$lang['strcheckconfgroups01'] = 'In tables group "%s", the table "%s.%s" does not exist.';
-	$lang['strcheckconfgroups02'] = 'In tables group "%s", the table "%s.%s" is a partitionned table (only elementary partitions are supported by E-Maj).';
-	$lang['strcheckconfgroups03o'] = 'In tables group "%s", the table or sequence "%s.%s" belongs to an E-Maj schema.';
-	$lang['strcheckconfgroups03'] = 'In tables group "%s", the table "%s.%s" belongs to an E-Maj schema.';
-	$lang['strcheckconfgroups04o'] = 'In tables group "%s", the table or sequence "%s.%s" already belongs to the group "%s".';
-	$lang['strcheckconfgroups04'] = 'In tables group "%s", the table "%s.%s" is already assigned to the group "%s".';
-	$lang['strcheckconfgroups05'] = 'In tables group "%s", the table "%s.%s" is a TEMPORARY table.';
-	$lang['strcheckconfgroups06'] = 'In tables group "%s", the "%s.%s" table owner is not the emaj installer role.';
-	$lang['strcheckconfgroups10'] = 'In tables group "%s", the table "%s.%s" would have a duplicate emaj prefix "%s".';
-	$lang['strcheckconfgroups11'] = 'In tables group "%s", the table "%s.%s" would have an already used emaj prefix "%s".';
-	$lang['strcheckconfgroups12'] = 'In tables group "%s" and for the table "%s.%s", the data log tablespace %s does not exist.';
-	$lang['strcheckconfgroups13'] = 'In tables group "%s" and for the table "%s.%s", the index log tablespace %s does not exist.';
-	$lang['strcheckconfgroups15'] = 'In tables group "%s" and for the table "%s.%s", the trigger "%s" does not exist.';
-	$lang['strcheckconfgroups16'] = 'In tables group "%s" and for the table "%s.%s", the trigger "%s" is an E-Maj trigger.';
-	$lang['strcheckconfgroups20'] = 'In tables group "%s", the table "%s.%s" is an UNLOGGED table.';
-	$lang['strcheckconfgroups21'] = 'In tables group "%s", the table "%s.%s" is declared WITH OIDS.';
-	$lang['strcheckconfgroups22'] = 'In tables group "%s", the table "%s.%s" has no PRIMARY KEY.';
-	$lang['strcheckconfgroups30o'] = 'in tables group "%s" and for the sequence "%s.%s", the secondary log schema suffix is not NULL.';
-	$lang['strcheckconfgroups31o'] = 'In tables group "%s" and for the sequence "%s.%s", the emaj names prefix is not NULL.';
-	$lang['strcheckconfgroups32o'] = 'In tables group "%s" and for the sequence "%s.%s", the data log tablespace is not NULL.';
-	$lang['strcheckconfgroups33o'] = 'In tables group "%s" and for the sequence "%s.%s", the index log tablespace is not NULL.';
-	$lang['strcheckconfgroups31'] = 'In tables group "%s", the sequence "%s.%s" does not exist.';
-	$lang['strcheckconfgroups32'] = 'In tables group "%s", the sequence "%s.%s" is already assigned to the group "%s".';
-	$lang['strcheckconfgroups33'] = 'In tables group "%s", the sequence "%s.%s" belongs to an E-Maj schema.';
-	$lang['strcheckconfgroups34'] = 'In tables group "%s", the "%s.%s" sequence owner is not the emaj installer role.';
+	$lang['strgroupconfok'] = 'The configuration of the table group "%s" is correct.';
+	$lang['strgroupconfwithdiag'] = 'The checks performed on the table group "%s" configuration show that:';
+	$lang['strgroupsconfok'] = 'The configuration of the table groups "%s" is correct.';
+	$lang['strgroupsconfwithdiag'] = 'The checks performed on the table groups "%s" configuration show that:';
+	$lang['strcheckconfgroups01o'] = 'In table group "%s", the table or sequence "%s.%s" does not exist.';
+	$lang['strcheckconfgroups01'] = 'In table group "%s", the table "%s.%s" does not exist.';
+	$lang['strcheckconfgroups02'] = 'In table group "%s", the table "%s.%s" is a partitionned table (only elementary partitions are supported by E-Maj).';
+	$lang['strcheckconfgroups03o'] = 'In table group "%s", the table or sequence "%s.%s" belongs to an E-Maj schema.';
+	$lang['strcheckconfgroups03'] = 'In table group "%s", the table "%s.%s" belongs to an E-Maj schema.';
+	$lang['strcheckconfgroups04o'] = 'In table group "%s", the table or sequence "%s.%s" already belongs to the group "%s".';
+	$lang['strcheckconfgroups04'] = 'In table group "%s", the table "%s.%s" is already assigned to the group "%s".';
+	$lang['strcheckconfgroups05'] = 'In table group "%s", the table "%s.%s" is a TEMPORARY table.';
+	$lang['strcheckconfgroups06'] = 'In table group "%s", the "%s.%s" table owner is not the emaj installer role.';
+	$lang['strcheckconfgroups10'] = 'In table group "%s", the table "%s.%s" would have a duplicate emaj prefix "%s".';
+	$lang['strcheckconfgroups11'] = 'In table group "%s", the table "%s.%s" would have an already used emaj prefix "%s".';
+	$lang['strcheckconfgroups12'] = 'In table group "%s" and for the table "%s.%s", the data log tablespace %s does not exist.';
+	$lang['strcheckconfgroups13'] = 'In table group "%s" and for the table "%s.%s", the index log tablespace %s does not exist.';
+	$lang['strcheckconfgroups15'] = 'In table group "%s" and for the table "%s.%s", the trigger "%s" does not exist.';
+	$lang['strcheckconfgroups16'] = 'In table group "%s" and for the table "%s.%s", the trigger "%s" is an E-Maj trigger.';
+	$lang['strcheckconfgroups20'] = 'In table group "%s", the table "%s.%s" is an UNLOGGED table.';
+	$lang['strcheckconfgroups21'] = 'In table group "%s", the table "%s.%s" is declared WITH OIDS.';
+	$lang['strcheckconfgroups22'] = 'In table group "%s", the table "%s.%s" has no PRIMARY KEY.';
+	$lang['strcheckconfgroups30o'] = 'in table group "%s" and for the sequence "%s.%s", the secondary log schema suffix is not NULL.';
+	$lang['strcheckconfgroups31o'] = 'In table group "%s" and for the sequence "%s.%s", the emaj names prefix is not NULL.';
+	$lang['strcheckconfgroups32o'] = 'In table group "%s" and for the sequence "%s.%s", the data log tablespace is not NULL.';
+	$lang['strcheckconfgroups33o'] = 'In table group "%s" and for the sequence "%s.%s", the index log tablespace is not NULL.';
+	$lang['strcheckconfgroups31'] = 'In table group "%s", the sequence "%s.%s" does not exist.';
+	$lang['strcheckconfgroups32'] = 'In table group "%s", the sequence "%s.%s" is already assigned to the group "%s".';
+	$lang['strcheckconfgroups33'] = 'In table group "%s", the sequence "%s.%s" belongs to an E-Maj schema.';
+	$lang['strcheckconfgroups34'] = 'In table group "%s", the "%s.%s" sequence owner is not the emaj installer role.';
 
 	// Group forget
-	$lang['strforgetagroup'] = 'E-Maj: Erase a tables group from histories';
-	$lang['strconfirmforgetgroup'] = 'Are you sure you want to erase the tables group "%s" from histories?';
-	$lang['strforgetgroupok'] = 'The tables group "%s" has been erased from histories.';
-	$lang['strforgetgrouperr'] = 'Error while erasing the tables group "%s" from histories.';
+	$lang['strforgetagroup'] = 'E-Maj: Erase a table group from histories';
+	$lang['strconfirmforgetgroup'] = 'Are you sure you want to erase the table group "%s" from histories?';
+	$lang['strforgetgroupok'] = 'The table group "%s" has been erased from histories.';
+	$lang['strforgetgrouperr'] = 'Error while erasing the table group "%s" from histories.';
 
 	// Group's properties and marks
-	$lang['strgroupproperties'] = 'Tables group "%s" properties';
-	$lang['strgroupmarks'] = 'Tables group "%s" marks';
-	$lang['strlogsessionshelp'] = 'Log session, representing the time interval between the tables group start and stop.';
+	$lang['strgroupproperties'] = 'Table group "%s" properties';
+	$lang['strgroupmarks'] = 'Table group "%s" marks';
+	$lang['strlogsessionshelp'] = 'Log session, representing the time interval between the table group start and stop.';
 	$lang['strlogsessionstart'] = 'Log session started at: %s';
 	$lang['strlogsessionstop'] = ' and stopped at: %s';
 	$lang['strtimestamp'] = 'Date/Time';
 	$lang['strcumchangeshelp'] = 'The cummulative number of row changes represents the number of row changes to cancel in case of E-Maj rollback to the corresponding mark.';
 	$lang['strfirstmark'] = 'First mark';
-	$lang['strnomark'] = 'The tables group has no mark';
+	$lang['strnomark'] = 'The table group has no mark';
 	$lang['strgroupcreatedat'] = 'Created at';
 	$lang['strgroupcreateddroppedat'] = 'Created/dropped at';
 	$lang['strgroupstartedat'] = 'Started at';
@@ -395,163 +395,163 @@
 	$lang['strsetmark'] = 'Set a mark';
 
 	// Generic error messages for groups and marks checks
-	$lang['strgroupmissing'] = 'The tables group "%s" does not exist anymore!';
-	$lang['strgroupsmissing'] = '%s tables groups (%s) do not exist anymore!';
-	$lang['strgroupalreadyexists'] = 'The tables group "%s" already exists!';
-	$lang['strgroupstillexists'] = 'The tables group "%s" still exists!';
-	$lang['strgroupnotstopped'] = 'The tables group "%s" is not stopped anymore!';
-	$lang['strgroupsnotstopped'] = '%s tables group (%s) are not stopped anymore!';
-	$lang['strgroupnotstarted'] = 'The tables group "%s" is not started anymore!';
-	$lang['strgroupsnotstarted'] = '%s tables group (%s) are not started anymore!';
-	$lang['strgroupprotected'] = 'The tables group "%s" is protected.';
-	$lang['strgroupsprotected'] = '%s tables groups (%s) are protected.';
+	$lang['strgroupmissing'] = 'The table group "%s" does not exist anymore!';
+	$lang['strgroupsmissing'] = '%s table groups (%s) do not exist anymore!';
+	$lang['strgroupalreadyexists'] = 'The table group "%s" already exists!';
+	$lang['strgroupstillexists'] = 'The table group "%s" still exists!';
+	$lang['strgroupnotstopped'] = 'The table group "%s" is not stopped anymore!';
+	$lang['strgroupsnotstopped'] = '%s table group (%s) are not stopped anymore!';
+	$lang['strgroupnotstarted'] = 'The table group "%s" is not started anymore!';
+	$lang['strgroupsnotstarted'] = '%s table group (%s) are not started anymore!';
+	$lang['strgroupprotected'] = 'The table group "%s" is protected.';
+	$lang['strgroupsprotected'] = '%s table groups (%s) are protected.';
 	$lang['strinvalidmark'] = 'The supplied mark (%s) is invalid!';
-	$lang['strduplicatemarkgroup'] = 'The mark "%s" already exists in the tables group "%s"!';
-	$lang['strduplicatemarkgroups'] = 'The mark "%s" already exists in %s tables groups (%s)!';
+	$lang['strduplicatemarkgroup'] = 'The mark "%s" already exists in the table group "%s"!';
+	$lang['strduplicatemarkgroups'] = 'The mark "%s" already exists in %s table groups (%s)!';
 	$lang['strmarkmissing'] = 'The mark "%s" does not exist anymore!';
 	$lang['strmarksmissing'] = '%s marks (%s) do not exist anymore!';
-	$lang['strmissingmarkgroup'] = 'The mark does not exist anymore in the tables group "%s"!';
-	$lang['strmissingmarkgroups'] = 'The mark does not exist anymore in %s tables groups (%s)!';
+	$lang['strmissingmarkgroup'] = 'The mark does not exist anymore in the table group "%s"!';
+	$lang['strmissingmarkgroups'] = 'The mark does not exist anymore in %s table groups (%s)!';
 	$lang['stradoreturncode'] = 'Return code from the ADO layer = %s.';
 
 	// Group drop
-	$lang['strdropagroup'] = 'E-Maj: Drop a tables group';
-	$lang['strconfirmdropgroup'] = 'Are you sure you want to drop the tables group "%s"?';
-	$lang['strdropgroupok'] = 'The tables group "%s" has been dropped.';
-	$lang['strdropgrouperr'] = 'Error while dropping tables group "%s".';
+	$lang['strdropagroup'] = 'E-Maj: Drop a table group';
+	$lang['strconfirmdropgroup'] = 'Are you sure you want to drop the table group "%s"?';
+	$lang['strdropgroupok'] = 'The table group "%s" has been dropped.';
+	$lang['strdropgrouperr'] = 'Error while dropping table group "%s".';
 
 	// Groups drop
-	$lang['strdropgroups'] = 'E-Maj: Drop tables groups';
-	$lang['strconfirmdropgroups'] = 'Are you sure you want to drop the tables groups "%s"?';
-	$lang['strdropgroupsok'] = 'The tables groups "%s" have been dropped.';
-	$lang['strdropgroupserr'] = 'Error while dropping tables groups "%s".';
+	$lang['strdropgroups'] = 'E-Maj: Drop table groups';
+	$lang['strconfirmdropgroups'] = 'Are you sure you want to drop the table groups "%s"?';
+	$lang['strdropgroupsok'] = 'The table groups "%s" have been dropped.';
+	$lang['strdropgroupserr'] = 'Error while dropping table groups "%s".';
 
 	// Group alter
 	$lang['straltergroups'] = 'E-Maj: Apply configuration changes';
 	$lang['stralteraloggingroup'] = 'The group "%s" is in LOGGING state. You can specify a mark name.';
-	$lang['strconfirmaltergroup'] = 'Are you sure you want to apply the configuration changes for the tables group "%s"?';
+	$lang['strconfirmaltergroup'] = 'Are you sure you want to apply the configuration changes for the table group "%s"?';
 	$lang['strcantaltergroup'] = 'Applying the configuration changes for the group "%s" would generate actions that cannot be executed on LOGGING group. Stop the group before altering it.';
-	$lang['straltergroupok'] = 'The configuration changes for the tables group "%s" have been applied.';
-	$lang['straltergrouperr'] = 'Error during tables group "%s" configuration change!';
+	$lang['straltergroupok'] = 'The configuration changes for the table group "%s" have been applied.';
+	$lang['straltergrouperr'] = 'Error during table group "%s" configuration change!';
 
 	// Groups alter
 	$lang['stralterallloggingroups'] = 'The groups "%s" are in LOGGING state. You can specify a mark name.';
-	$lang['strconfirmaltergroups'] = 'Are you sure you want to apply the configuration changes for the tables groups "%s"?';
-	$lang['straltergroupsok'] = 'The configuration changes for the tables groups "%s" have been applied.';
-	$lang['straltergroupserr'] = 'Error during tables groups "%s" configuration change!';
+	$lang['strconfirmaltergroups'] = 'Are you sure you want to apply the configuration changes for the table groups "%s"?';
+	$lang['straltergroupsok'] = 'The configuration changes for the table groups "%s" have been applied.';
+	$lang['straltergroupserr'] = 'Error during table groups "%s" configuration change!';
 
 	// Group comment
-	$lang['strcommentagroup'] = 'E-Maj: Record a comment for a tables group';
-	$lang['strcommentgroup'] = 'Enter, modify or erase the comment for tables group "%s".';
-	$lang['strcommentgroupok'] = 'The comment for the tables group "%s" has been recorded.';
-	$lang['strcommentgrouperr'] = 'Error while commenting the tables group "%s".';
+	$lang['strcommentagroup'] = 'E-Maj: Record a comment for a table group';
+	$lang['strcommentgroup'] = 'Enter, modify or erase the comment for table group "%s".';
+	$lang['strcommentgroupok'] = 'The comment for the table group "%s" has been recorded.';
+	$lang['strcommentgrouperr'] = 'Error while commenting the table group "%s".';
 
 	// Group start
-	$lang['strstartagroup'] = 'E-Maj: Start a tables group';
-	$lang['strconfirmstartgroup'] = 'Starting the tables group "%s"';
+	$lang['strstartagroup'] = 'E-Maj: Start a table group';
+	$lang['strconfirmstartgroup'] = 'Starting the table group "%s"';
 	$lang['strinitmark'] = 'Initial mark';
 	$lang['stroldlogsdeletion'] = 'Old logs deletion';
-	$lang['strstartgroupok'] = 'The tables group "%s" is started with the mark "%s".';
-	$lang['strstartgrouperr'] = 'Error while starting tables group "%s".';
-	$lang['strstartgrouperr2'] = 'Error while starting tables group "%s" with the mark "%s".';
+	$lang['strstartgroupok'] = 'The table group "%s" is started with the mark "%s".';
+	$lang['strstartgrouperr'] = 'Error while starting table group "%s".';
+	$lang['strstartgrouperr2'] = 'Error while starting table group "%s" with the mark "%s".';
 
 	// Groups start
-	$lang['strstartgroups'] = 'E-Maj: Start tables groups';
-	$lang['strconfirmstartgroups'] = 'Starting the tables groups "%s"';
-	$lang['strstartgroupsok'] = 'The tables groups "%s" are started with the mark "%s".';
-	$lang['strstartgroupserr'] = 'Error while starting the tables groups "%s".';
-	$lang['strstartgroupserr2'] = 'Error while starting the tables groups "%s" with the mark "%s".';
+	$lang['strstartgroups'] = 'E-Maj: Start table groups';
+	$lang['strconfirmstartgroups'] = 'Starting the table groups "%s"';
+	$lang['strstartgroupsok'] = 'The table groups "%s" are started with the mark "%s".';
+	$lang['strstartgroupserr'] = 'Error while starting the table groups "%s".';
+	$lang['strstartgroupserr2'] = 'Error while starting the table groups "%s" with the mark "%s".';
 
 	// Group stop
-	$lang['strstopagroup'] = 'E-Maj: Stop a tables group';
-	$lang['strconfirmstopgroup'] = 'Stopping the tables group "%s"';
+	$lang['strstopagroup'] = 'E-Maj: Stop a table group';
+	$lang['strconfirmstopgroup'] = 'Stopping the table group "%s"';
 	$lang['strstopmark'] = 'Final mark';
 	$lang['strforcestop'] = 'Forced stop (in case of problem only)';
-	$lang['strstopgroupok'] = 'The tables group "%s" has been stopped.';
-	$lang['strstopgrouperr'] = 'Error while stopping the tables group "%s".';
-	$lang['strstopgrouperr2'] = 'Error while stopping the tables group "%s" with the mark "%s".';
+	$lang['strstopgroupok'] = 'The table group "%s" has been stopped.';
+	$lang['strstopgrouperr'] = 'Error while stopping the table group "%s".';
+	$lang['strstopgrouperr2'] = 'Error while stopping the table group "%s" with the mark "%s".';
 
 	// Groups stop
-	$lang['strstopgroups'] = 'E-Maj: Stop tables groups';
-	$lang['strconfirmstopgroups'] = 'Stopping the tables groups "%s"';
-	$lang['strstopgroupsok'] = 'The tables groups "%s" have been stopped.';
-	$lang['strstopgroupserr'] = 'Error while stopping the tables groups "%s".';
-	$lang['strstopgroupserr2'] = 'Error while stopping the tables groups "%s" with the mark "%s".';
+	$lang['strstopgroups'] = 'E-Maj: Stop table groups';
+	$lang['strconfirmstopgroups'] = 'Stopping the table groups "%s"';
+	$lang['strstopgroupsok'] = 'The table groups "%s" have been stopped.';
+	$lang['strstopgroupserr'] = 'Error while stopping the table groups "%s".';
+	$lang['strstopgroupserr2'] = 'Error while stopping the table groups "%s" with the mark "%s".';
 
 	// Group reset
-	$lang['strresetagroup'] = 'E-Maj: Reset a tables group';
-	$lang['strconfirmresetgroup'] = 'Are you sure you want to reset the tables group "%s"?';
-	$lang['strresetgroupok'] = 'The tables group "%s" has been reset.';
-	$lang['strresetgrouperr'] = 'Error while resetting the tables group "%s".';
+	$lang['strresetagroup'] = 'E-Maj: Reset a table group';
+	$lang['strconfirmresetgroup'] = 'Are you sure you want to reset the table group "%s"?';
+	$lang['strresetgroupok'] = 'The table group "%s" has been reset.';
+	$lang['strresetgrouperr'] = 'Error while resetting the table group "%s".';
 
 	// Groups reset
-	$lang['strresetgroups'] = 'E-Maj: Reset tables groups';
-	$lang['strconfirmresetgroups'] = 'Are you sure you want to reset the tables groups "%s"?';
-	$lang['strresetgroupsok'] = 'The tables group "%s" have been reset.';
-	$lang['strresetgroupserr'] = 'Error while resetting the tables groups "%s".';
+	$lang['strresetgroups'] = 'E-Maj: Reset table groups';
+	$lang['strconfirmresetgroups'] = 'Are you sure you want to reset the table groups "%s"?';
+	$lang['strresetgroupsok'] = 'The table group "%s" have been reset.';
+	$lang['strresetgroupserr'] = 'Error while resetting the table groups "%s".';
 
 	// Group protect
-	$lang['strprotectgroupok'] = 'The tables group "%s" is now protected against rollbacks.';
-	$lang['strprotectgrouperr'] = 'Error while protecting the tables group "%s".';
+	$lang['strprotectgroupok'] = 'The table group "%s" is now protected against rollbacks.';
+	$lang['strprotectgrouperr'] = 'Error while protecting the table group "%s".';
 
 	// Groups protect
-	$lang['strprotectgroupsok'] = 'The tables groups "%s" are now protected against rollbacks.';
-	$lang['strprotectgroupserr'] = 'Error while protecting the tables groups "%s".';
+	$lang['strprotectgroupsok'] = 'The table groups "%s" are now protected against rollbacks.';
+	$lang['strprotectgroupserr'] = 'Error while protecting the table groups "%s".';
 
 	// Group unprotect
-	$lang['strunprotectgroupok'] = 'The tables group "%s" is now unprotected.';
-	$lang['strunprotectgrouperr'] = 'Error while unprotecting the tables group "%s".';
+	$lang['strunprotectgroupok'] = 'The table group "%s" is now unprotected.';
+	$lang['strunprotectgrouperr'] = 'Error while unprotecting the table group "%s".';
 
 	// Groups unprotect
-	$lang['strunprotectgroupsok'] = 'The tables groups "%s" are now unprotected.';
-	$lang['strunprotectgroupserr'] = 'Error while unprotecting the tables groups "%s".';
+	$lang['strunprotectgroupsok'] = 'The table groups "%s" are now unprotected.';
+	$lang['strunprotectgroupserr'] = 'Error while unprotecting the table groups "%s".';
 
 	// Set Mark for one group
 	$lang['strsetamark'] = 'E-Maj: Set a mark';
-	$lang['strconfirmsetmarkgroup'] = 'Setting a mark for the tables group "%s":';
-	$lang['strsetmarkgroupok'] = 'The mark "%s" has been set for the tables group "%s".';
-	$lang['strsetmarkgrouperr'] = 'Error while setting a for the tables group "%s".';
-	$lang['strsetmarkgrouperr2'] = 'Error while setting the mark "%s" for the tables group "%s".';
+	$lang['strconfirmsetmarkgroup'] = 'Setting a mark for the table group "%s":';
+	$lang['strsetmarkgroupok'] = 'The mark "%s" has been set for the table group "%s".';
+	$lang['strsetmarkgrouperr'] = 'Error while setting a for the table group "%s".';
+	$lang['strsetmarkgrouperr2'] = 'Error while setting the mark "%s" for the table group "%s".';
 
 	// Set Mark for several groups
-	$lang['strconfirmsetmarkgroups'] = 'Setting a mark for the tables groups "%s":';
-	$lang['strsetmarkgroupsok'] = 'The mark "%s" has been set for the tables groups "%s".';
-	$lang['strsetmarkgroupserr'] = 'Error while setting a mark for the tables groups "%s".';
-	$lang['strsetmarkgroupserr2'] = 'Error while setting the mark "%s" for the tables groups "%s".';
+	$lang['strconfirmsetmarkgroups'] = 'Setting a mark for the table groups "%s":';
+	$lang['strsetmarkgroupsok'] = 'The mark "%s" has been set for the table groups "%s".';
+	$lang['strsetmarkgroupserr'] = 'Error while setting a mark for the table groups "%s".';
+	$lang['strsetmarkgroupserr2'] = 'Error while setting the mark "%s" for the table groups "%s".';
 
 	// Group rollback
-	$lang['strrlbkagroup'] = 'E-Maj: Rollback a tables group';
-	$lang['strconfirmrlbkgroup'] = 'Rollbacking the tables group "%s" to the mark "%s"';
+	$lang['strrlbkagroup'] = 'E-Maj: Rollback a table group';
+	$lang['strconfirmrlbkgroup'] = 'Rollbacking the table group "%s" to the mark "%s"';
 	$lang['strunknownestimate'] = 'unknown';
 	$lang['strdurationminutesseconds'] = '%s min %s s';
 	$lang['strdurationhoursminutes'] = '%s h %s min';
 	$lang['strdurationovertendays'] = '> 10 days';
-	$lang['strselectmarkgroup'] = 'Rollbacking the tables group "%s" to the mark: ';
+	$lang['strselectmarkgroup'] = 'Rollbacking the table group "%s" to the mark: ';
 	$lang['strrlbkthenmonitor'] = 'Rollback and monitor';
 	$lang['strcantrlbkinvalidmarkgroup'] = 'The mark "%s" is not valid.';
-	$lang['strreachaltergroup'] = 'Rollbacking the tables group "%s" to the mark "%s" would reach a point in time prior alter_group operations. Please confirm the rollback.';
+	$lang['strreachaltergroup'] = 'Rollbacking the table group "%s" to the mark "%s" would reach a point in time prior alter_group operations. Please confirm the rollback.';
 	$lang['strautorolledback'] = 'Automatically rolled back?';
-	$lang['strrlbkgrouperr'] = 'Error while rollbacking the tables group "%s".';
-	$lang['strrlbkgrouperr2'] = 'Error while rollbacking the tables group "%s" to the mark "%s".';
-	$lang['strestimrlbkgrouperr'] = 'Error while estimating the rollback duration for the tables group "%s" to the mark "%s".';
+	$lang['strrlbkgrouperr'] = 'Error while rollbacking the table group "%s".';
+	$lang['strrlbkgrouperr2'] = 'Error while rollbacking the table group "%s" to the mark "%s".';
+	$lang['strestimrlbkgrouperr'] = 'Error while estimating the rollback duration for the table group "%s" to the mark "%s".';
 	$lang['strbadconfparam'] = 'Error: asynchronous rollback is not possible anymore. Check the dblink extension exists and both the pathname of the psql command (%s) and the temporary directory (%s) configuration parameters are correct.';
 	$lang['strasyncrlbkstarted'] = 'Rollback #%s started.';
-	$lang['strrlbkgroupreport'] = 'Rollback execution report for the tables group "%s" to the mark "%s"';
+	$lang['strrlbkgroupreport'] = 'Rollback execution report for the table group "%s" to the mark "%s"';
 
 	// Groups rollback
-	$lang['strrlbkgroups'] = 'E-Maj: Rollback tables groups';
-	$lang['strselectmarkgroups'] = 'Rollbacking the tables groups "%s" to the mark: ';
-	$lang['strnomarkgroups'] = 'No common mark for the tables groups "%s" can be used for a rollback.';
-	$lang['strcantrlbkinvalidmarkgroups'] = 'Rollbacking the tables groups "%s" is not possible. The mark "%s" is not valid.';
-	$lang['strreachaltergroups'] = 'Rollbacking the tables groups "%s" to the mark "%s" would reach a point in time prior alter_group operations. Please confirm the rollback.';
-	$lang['strrlbkgroupserr'] = 'Error while rollbacking tables groups "%s".';
-	$lang['strrlbkgroupserr2'] = 'Error while rollbacking tables groups "%s" to mark "%s".';
-	$lang['strestimrlbkgroupserr'] = 'Error while estimating the rollback duration for the tables groups "%s" to the mark "%s".';
-	$lang['strrlbkgroupsreport'] = 'Rollback execution report for the tables groups "%s" to the mark "%s"';
+	$lang['strrlbkgroups'] = 'E-Maj: Rollback table groups';
+	$lang['strselectmarkgroups'] = 'Rollbacking the table groups "%s" to the mark: ';
+	$lang['strnomarkgroups'] = 'No common mark for the table groups "%s" can be used for a rollback.';
+	$lang['strcantrlbkinvalidmarkgroups'] = 'Rollbacking the table groups "%s" is not possible. The mark "%s" is not valid.';
+	$lang['strreachaltergroups'] = 'Rollbacking the table groups "%s" to the mark "%s" would reach a point in time prior alter_group operations. Please confirm the rollback.';
+	$lang['strrlbkgroupserr'] = 'Error while rollbacking table groups "%s".';
+	$lang['strrlbkgroupserr2'] = 'Error while rollbacking table groups "%s" to mark "%s".';
+	$lang['strestimrlbkgroupserr'] = 'Error while estimating the rollback duration for the table groups "%s" to the mark "%s".';
+	$lang['strrlbkgroupsreport'] = 'Rollback execution report for the table groups "%s" to the mark "%s"';
 
 	// Elementary alter group actions previously executed, reported at rollback time
-	$lang['stralteredremovetbl'] = 'The table "%s.%s" has been removed from the tables group "%s"';
-	$lang['stralteredremoveseq'] = 'The sequence "%s.%s" has been removed from the tables group "%s"';
+	$lang['stralteredremovetbl'] = 'The table "%s.%s" has been removed from the table group "%s"';
+	$lang['stralteredremoveseq'] = 'The sequence "%s.%s" has been removed from the table group "%s"';
 	$lang['stralteredrepairtbl'] = 'E-Maj objects for the table "%s.%s" have been repaired';
 	$lang['stralteredrepairseq'] = 'E-Maj objects for the sequence "%s.%s" have been repaired';
 	$lang['stralteredchangetbllogschema'] = 'The E-Maj log schema for the table "%s.%s" has been changed';
@@ -560,53 +560,53 @@
 	$lang['stralteredchangetbllogindextsp'] = 'The tablespace for the log index files of the table "%s.%s" has been changed';
 	$lang['stralteredchangerelpriority'] = 'The E-Maj priority for the table "%s.%s" has been changed';
 	$lang['stralteredchangeignoredtriggers'] = 'the triggers to be ignored at rollback for the table "%s.%s" have been changed';
-	$lang['stralteredmovetbl'] = 'The table "%s.%s" has been moved from the tables groupe "%s" to the tables group "%s"';
-	$lang['stralteredmoveseq'] = 'The sequence "%s.%s" has been moved from the tables groupe "%s" to the tables group "%s"';
-	$lang['stralteredaddtbl'] = 'The table "%s.%s" has been added to the tables group "%s"';
-	$lang['stralteredaddseq'] = 'The sequence "%s.%s" has been added to the tables group "%s"';
+	$lang['stralteredmovetbl'] = 'The table "%s.%s" has been moved from the table groupe "%s" to the table group "%s"';
+	$lang['stralteredmoveseq'] = 'The sequence "%s.%s" has been moved from the table groupe "%s" to the table group "%s"';
+	$lang['stralteredaddtbl'] = 'The table "%s.%s" has been added to the table group "%s"';
+	$lang['stralteredaddseq'] = 'The sequence "%s.%s" has been added to the table group "%s"';
 
 	// Protect mark
-	$lang['strprotectmarkok'] = 'The mark "%s" for the tables group "%s" is now protected against rollbacks.';
-	$lang['strprotectmarkerr'] = 'Error while protecting the mark "%s" for the tables group "%s".';
+	$lang['strprotectmarkok'] = 'The mark "%s" for the table group "%s" is now protected against rollbacks.';
+	$lang['strprotectmarkerr'] = 'Error while protecting the mark "%s" for the table group "%s".';
 
 	// Unprotect mark
-	$lang['strunprotectmarkok'] = 'The mark "%s" for the tables group "%s" is now unprotected.';
-	$lang['strunprotectmarkerr'] = 'Error while unprotecting the mark "%s" for the tables group "%s".';
+	$lang['strunprotectmarkok'] = 'The mark "%s" for the table group "%s" is now unprotected.';
+	$lang['strunprotectmarkerr'] = 'Error while unprotecting the mark "%s" for the table group "%s".';
 
 	// Comment mark
 	$lang['strcommentamark'] = 'E-Maj: Record a comment for a mark';
-	$lang['strcommentmark'] = 'Enter, modify or erase the comment for the mark "%s" of the tables group "%s"';
-	$lang['strcommentmarkok'] = 'The comment for the mark "%s" of the tables group "%s" has been recorded.';
-	$lang['strcommentmarkerr'] = 'Error while commenting the mark "%s" of the tables group "%s".';
+	$lang['strcommentmark'] = 'Enter, modify or erase the comment for the mark "%s" of the table group "%s"';
+	$lang['strcommentmarkok'] = 'The comment for the mark "%s" of the table group "%s" has been recorded.';
+	$lang['strcommentmarkerr'] = 'Error while commenting the mark "%s" of the table group "%s".';
 
 	// Mark renaming
 	$lang['strrenameamark'] = 'E-Maj : Rename a mark';
-	$lang['strconfirmrenamemark'] = 'Renaming the mark "%s" of the tables group "%s"';
+	$lang['strconfirmrenamemark'] = 'Renaming the mark "%s" of the table group "%s"';
 	$lang['strnewnamemark'] = 'New name';
-	$lang['strrenamemarkok'] = 'The mark "%s" of the tables group "%s" has been renamed into "%s".';
-	$lang['strrenamemarkerr'] = 'Error while renaming the mark "%s" of the tables group "%s" into "%s".';
-	$lang['strrenamemarkerr2'] = 'Error while renaming the mark "%s" of the tables group "%s" into "%s".';
+	$lang['strrenamemarkok'] = 'The mark "%s" of the table group "%s" has been renamed into "%s".';
+	$lang['strrenamemarkerr'] = 'Error while renaming the mark "%s" of the table group "%s" into "%s".';
+	$lang['strrenamemarkerr2'] = 'Error while renaming the mark "%s" of the table group "%s" into "%s".';
 
 	// Mark deletion
 	$lang['strdeleteamark'] = 'E-Maj: Delete a mark';
-	$lang['strconfirmdeletemark'] = 'Are you sure you want to delete the mark "%s" for the tables group "%s"?';
-	$lang['strdeletemarkok'] = 'The mark "%s" has been deleted for the tables group "%s".';
-	$lang['strdeletemarkerr'] = 'Error while deleting the mark "%s" of the tables group "%s".';
+	$lang['strconfirmdeletemark'] = 'Are you sure you want to delete the mark "%s" for the table group "%s"?';
+	$lang['strdeletemarkok'] = 'The mark "%s" has been deleted for the table group "%s".';
+	$lang['strdeletemarkerr'] = 'Error while deleting the mark "%s" of the table group "%s".';
 
 	// Marks deletion
 	$lang['strdeletemarks'] = 'E-Maj: Delete marks';
-	$lang['strconfirmdeletemarks'] = 'Are you sure you want to delete these %s marks for the tables group "%s"?';
-	$lang['strdeletemarksok'] = 'The %s marks have been deleted for the tables group "%s".';
-	$lang['strdeletemarkserr'] = 'Error while deleting marks "%s" of the tables group "%s".';
+	$lang['strconfirmdeletemarks'] = 'Are you sure you want to delete these %s marks for the table group "%s"?';
+	$lang['strdeletemarksok'] = 'The %s marks have been deleted for the table group "%s".';
+	$lang['strdeletemarkserr'] = 'Error while deleting marks "%s" of the table group "%s".';
 
 	// Marks before mark deletion
 	$lang['strdelmarksprior'] = 'E-Maj: Delete marks';
-	$lang['strconfirmdelmarksprior'] = 'Are you sure you want to delete all marks and logs preceeding the mark "%s" for the tables group "%s"?';
-	$lang['strdelmarkspriorok'] = 'All (%s) marks preceeding mark "%s" have been deleted for the tables group "%s".';
-	$lang['strdelmarkspriorerr'] = 'Error while deleting all marks preceeding mark "%s" for the tables group "%s".';
+	$lang['strconfirmdelmarksprior'] = 'Are you sure you want to delete all marks and logs preceeding the mark "%s" for the table group "%s"?';
+	$lang['strdelmarkspriorok'] = 'All (%s) marks preceeding mark "%s" have been deleted for the table group "%s".';
+	$lang['strdelmarkspriorerr'] = 'Error while deleting all marks preceeding mark "%s" for the table group "%s".';
 
 	// Statistics
-	$lang['strchangesgroup'] = 'Recorded changes for the tables group "%s"';
+	$lang['strchangesgroup'] = 'Recorded changes for the table group "%s"';
 	$lang['strcurrentsituation'] = 'Current state';
 	$lang['strestimatetables'] = 'Estimate tables';
 	$lang['strestimatesequences'] = 'Estimate sequences';
@@ -657,13 +657,13 @@
 	$lang['strsqlgenerate'] = 'Generate SQL';
 
 	// Group's content
-	$lang['strgroupcontent'] = 'Current content of the tables group "%s"';
-	$lang['stremptygroup'] = 'The tables group "%s" is currently empty.';
+	$lang['strgroupcontent'] = 'Current content of the table group "%s"';
+	$lang['stremptygroup'] = 'The table group "%s" is currently empty.';
 	$lang['strpriority'] = 'Priority';
 	$lang['strcurrentlogtable'] = 'Current log table';
 
 	// Group's history
-	$lang['strgrouphistory'] = 'Tables group "%s" history';
+	$lang['strgrouphistory'] = 'Table group "%s" history';
 	$lang['stremajnohistory'] = 'There is no history to display for this group.';
 	$lang['strgrouphistoryorder'] = 'Most recent group creations, group drops and log sessions are placed ahead on the sheet.';
 	$lang['strnblogsessions'] = 'Log sessions';
@@ -681,9 +681,9 @@
 	$lang['strlogschemasuffix'] = 'Log schema suffix';
 	$lang['strnamesprefix'] = 'Objects name prefix';
 	$lang['strspecifytblseqtoassign'] = 'Specify at least one table or sequence to assign';
-	$lang['strtblseqyetgroup'] = 'Error, "%s.%s" is already assigned to a tables group.';
+	$lang['strtblseqyetgroup'] = 'Error, "%s.%s" is already assigned to a table group.';
 	$lang['strtblseqbadtype'] = 'Error, type of "%s.%s" is not supported by E-Maj.';
-	$lang['strassigntblseq'] = 'E-Maj: Assign tables / sequences to a tables group';
+	$lang['strassigntblseq'] = 'E-Maj: Assign tables / sequences to a table group';
 	$lang['strconfirmassigntblseq'] = 'Assign:';
 	$lang['strfromgroup'] = 'from the group "%s"';
 	$lang['strenterlogschema'] = 'Log schema suffix';
@@ -691,14 +691,14 @@
 	$lang['strenternameprefix'] = 'E-Maj objects name prefix';
 	$lang['strnameprefixhelp'] = 'By default, log objects names are prefixed by <schema>_<table>. But another prefix can be defined for the table. It must be unique in the database.';
 	$lang['strspecifytblseqtoupdate'] = 'Specify at least one table or sequence to update';
-	$lang['strupdatetblseq'] = 'E-Maj: Update properties of a table / sequence in a tables group';
+	$lang['strupdatetblseq'] = 'E-Maj: Update properties of a table / sequence in a table group';
 	$lang['strspecifytblseqtoremove'] = 'Specify at least one table or sequence to remove';
-	$lang['strtblseqnogroup'] = 'Error, "%s.%s" is not currently assigned to any tables group.';
-	$lang['strremovetblseq'] = 'E-Maj: Remove tables / sequences from tables groups';
-	$lang['strconfirmremove1tblseq'] = 'Are you sure you want to remove %s from the tables group "%s"?';
+	$lang['strtblseqnogroup'] = 'Error, "%s.%s" is not currently assigned to any table group.';
+	$lang['strremovetblseq'] = 'E-Maj: Remove tables / sequences from table groups';
+	$lang['strconfirmremove1tblseq'] = 'Are you sure you want to remove %s from the table group "%s"?';
 	$lang['strconfirmremovetblseq'] = 'Are you sure you want to remove:';
-	$lang['strmodifygroupok'] = 'The configuration change is recorded. It will take effect when the concerned tables groups will be (re)created or when the configuration changes will be applied for these groups.';
-	$lang['strmodifygrouperr'] = 'An error occured while recording the tables groups configuration change.';
+	$lang['strmodifygroupok'] = 'The configuration change is recorded. It will take effect when the concerned table groups will be (re)created or when the configuration changes will be applied for these groups.';
+	$lang['strmodifygrouperr'] = 'An error occured while recording the table groups configuration change.';
 
 // Schemas
 
@@ -717,8 +717,8 @@
 	$lang['strnograntontable'] = 'You have not the necessary privileges to look at the table\'s content.';
 	$lang['stremajlogtable'] = 'The table is an E-Maj log table.';
 	$lang['stremajinternaltable'] = 'The table is an internal E-Maj table.';
-	$lang['strnotassignabletable'] = 'Due to its characteristics, the table cannot be assigned to an E-Maj tables group';
-	$lang['strtblnogroupownership'] = 'The table does not currently belong to any tables group.';
+	$lang['strnotassignabletable'] = 'Due to its characteristics, the table cannot be assigned to an E-Maj table group';
+	$lang['strtblnogroupownership'] = 'The table does not currently belong to any table group.';
 	$lang['strcolDEF'] = 'DEFAULT expression';
 	$lang['strcolGDI'] = 'GENERATED BY DEFAULT AS IDENTITY';
 	$lang['strcolGAI'] = 'GENERATED ALWAYS AS IDENTITY';
@@ -741,7 +741,7 @@
 	$lang['striscalled'] = 'Will increment last value before returning next value (is_called)?';
 	$lang['stremajlogsequence'] = 'The sequence is an E-Maj log sequence.';
 	$lang['stremajinternalsequence'] = 'The sequence is an internal E-Maj sequence.';
-	$lang['strseqnogroupownership'] = 'The sequence does not currently belong to any tables group.';
+	$lang['strseqnogroupownership'] = 'The sequence does not currently belong to any table group.';
 
 	// Dynamic groups content management: common messages
 	$lang['strlogdattsp'] = 'Log tables tablespace';
@@ -764,27 +764,27 @@
 	$lang['strsequencesmissing'] = '%s sequences (%s) do not exist anymore.';
 
 	// Assign tables
-	$lang['strassigntable'] = 'E-Maj: Assign tables to a tables group';
+	$lang['strassigntable'] = 'E-Maj: Assign tables to a table group';
 	$lang['strconfirmassigntable'] = 'Assign the table "%s.%s"';
 	$lang['strconfirmassigntables'] = 'Assign these %s tables of schema "%s":';
 	$lang['strtableshavetriggers'] = 'This tables set has %s triggers. They will be automatically disabled at E-Maj rollback time. You will be able to change this behaviour with the "Triggers" tab.';
-	$lang['strassigntableok'] = '%s table has been assigned to the tables group %s.';
-	$lang['strassigntablesok'] = '%s tables have been assigned to the tables group %s.';
+	$lang['strassigntableok'] = '%s table has been assigned to the table group %s.';
+	$lang['strassigntablesok'] = '%s tables have been assigned to the table group %s.';
 	$lang['strassigntableerr'] = 'Error while assigning the table "%s.%s".';
-	$lang['strassigntableerr2'] = 'Error while assigning the table "%s.%s" to the tables group "%s".';
+	$lang['strassigntableerr2'] = 'Error while assigning the table "%s.%s" to the table group "%s".';
 	$lang['strassigntableserr'] = 'Error while assigning these %s tables of schema "%s".';
-	$lang['strassigntableserr2'] = 'Error while assigning these %s tables of schema "%s" to the tables group "%s".';
+	$lang['strassigntableserr2'] = 'Error while assigning these %s tables of schema "%s" to the table group "%s".';
 
 	// Move tables
-	$lang['strmovetable'] = 'E-Maj: Move tables to another tables group';
-	$lang['strconfirmmovetable'] = 'Move the table "%s.%s" from its tables group "%s".';
+	$lang['strmovetable'] = 'E-Maj: Move tables to another table group';
+	$lang['strconfirmmovetable'] = 'Move the table "%s.%s" from its table group "%s".';
 	$lang['strconfirmmovetables'] = 'Move these %s tables of schema "%s":';
-	$lang['strmovetableok'] = '%s table has been moved to the tables group %s.';
-	$lang['strmovetablesok'] = '%s tables have been moved to the tables group %s.';
+	$lang['strmovetableok'] = '%s table has been moved to the table group %s.';
+	$lang['strmovetablesok'] = '%s tables have been moved to the table group %s.';
 	$lang['strmovetableerr'] = 'Error while moving the table "%s.%s".';
-	$lang['strmovetableerr2'] = 'Error while moving the table "%s.%s" from tables group "%s" to tables group "%s".';
+	$lang['strmovetableerr2'] = 'Error while moving the table "%s.%s" from table group "%s" to table group "%s".';
 	$lang['strmovetableserr'] = 'Error while moving these %s tables of schema "%s".';
-	$lang['strmovetableserr2'] = 'Error while moving these %s tables of schema "%s" from their tables group to the tables group "%s".';
+	$lang['strmovetableserr2'] = 'Error while moving these %s tables of schema "%s" from their table group to the table group "%s".';
 
 	// Modify table
 	$lang['strmodifytable'] = 'E-Maj: Modify tables E-Maj properties';
@@ -795,44 +795,44 @@
 	$lang['strmodifytableserr'] = 'Error while modifying E-Maj properties of these %s tables from schema "%s":';
 
 	// Remove tables
-	$lang['strremovetable'] = 'E-Maj : Remove tables from their tables group';
-	$lang['strconfirmremovetable'] = 'Remove the table "%s.%s" from its tables group "%s".';
-	$lang['strconfirmremovetables'] = 'Remove these %s tables of schema "%s" from their tables group:';
-	$lang['strremovetableok'] = '%s table has been removed from its tables group.';
-	$lang['strremovetablesok'] = '%s tables have been removed from their tables group.';
-	$lang['strremovetableerr'] = 'Error while removing the table "%s.%s" from its tables group "%s".';
-	$lang['strremovetableserr'] = 'Error while removing these %s tables of schema "%s" from their tables group.';
+	$lang['strremovetable'] = 'E-Maj : Remove tables from their table group';
+	$lang['strconfirmremovetable'] = 'Remove the table "%s.%s" from its table group "%s".';
+	$lang['strconfirmremovetables'] = 'Remove these %s tables of schema "%s" from their table group:';
+	$lang['strremovetableok'] = '%s table has been removed from its table group.';
+	$lang['strremovetablesok'] = '%s tables have been removed from their table group.';
+	$lang['strremovetableerr'] = 'Error while removing the table "%s.%s" from its table group "%s".';
+	$lang['strremovetableserr'] = 'Error while removing these %s tables of schema "%s" from their table group.';
 
 	// Assign sequences
-	$lang['strassignsequence'] = 'E-Maj: Assign sequences to a tables group';
+	$lang['strassignsequence'] = 'E-Maj: Assign sequences to a table group';
 	$lang['strconfirmassignsequence'] = 'Assign the sequence "%s.%s"';
 	$lang['strconfirmassignsequences'] = 'Assign these %s sequences of schema "%s":';
-	$lang['strassignsequenceok'] = '%s sequence has been assigned to the tables group %s.';
-	$lang['strassignsequencesok'] = '%s sequences have been assigned to the tables group %s.';
+	$lang['strassignsequenceok'] = '%s sequence has been assigned to the table group %s.';
+	$lang['strassignsequencesok'] = '%s sequences have been assigned to the table group %s.';
 	$lang['strassignsequenceerr'] = 'Error while assigning the sequence "%s.%s".';
-	$lang['strassignsequenceerr2'] = 'Error while assigning the sequence "%s.%s" to the tables group "%s".';
+	$lang['strassignsequenceerr2'] = 'Error while assigning the sequence "%s.%s" to the table group "%s".';
 	$lang['strassignsequenceserr'] = 'Error while assigning these %s sequences of schema "%s".';
-	$lang['strassignsequenceserr2'] = 'Error while assigning these %s sequences of schema "%s" to the tables group "%s".';
+	$lang['strassignsequenceserr2'] = 'Error while assigning these %s sequences of schema "%s" to the table group "%s".';
 
 	// Move sequences
-	$lang['strmovesequence'] = 'E-Maj: Move sequences to another tables group';
-	$lang['strconfirmmovesequence'] = 'Move the sequence "%s.%s" from its tables group "%s".';
+	$lang['strmovesequence'] = 'E-Maj: Move sequences to another table group';
+	$lang['strconfirmmovesequence'] = 'Move the sequence "%s.%s" from its table group "%s".';
 	$lang['strconfirmmovesequences'] = 'Move these %s sequences from schema "%s":';
-	$lang['strmovesequenceok'] = '%s sequence has been moved to the tables group %s.';
-	$lang['strmovesequencesok'] = '%s sequences have been moved to the tables group %s.';
+	$lang['strmovesequenceok'] = '%s sequence has been moved to the table group %s.';
+	$lang['strmovesequencesok'] = '%s sequences have been moved to the table group %s.';
 	$lang['strmovesequenceerr'] = 'Error while moving the sequence "%s.%s".';
-	$lang['strmovesequenceerr2'] = 'Error while moving the sequence "%s.%s" from tables group "%s" to tables group "%s".';
+	$lang['strmovesequenceerr2'] = 'Error while moving the sequence "%s.%s" from table group "%s" to table group "%s".';
 	$lang['strmovesequenceserr'] = 'Error while moving these %s sequences of schema "%s".';
-	$lang['strmovesequenceserr2'] = 'Error while moving these %s sequences of schema "%s" from their tables group to the tables group "%s".';
+	$lang['strmovesequenceserr2'] = 'Error while moving these %s sequences of schema "%s" from their table group to the table group "%s".';
 
 	// Remove sequences
-	$lang['strremovesequence'] = 'E-Maj : Remove sequences from their tables group';
-	$lang['strconfirmremovesequence'] = 'Remove the sequence "%s.%s" from its tables group "%s".';
+	$lang['strremovesequence'] = 'E-Maj : Remove sequences from their table group';
+	$lang['strconfirmremovesequence'] = 'Remove the sequence "%s.%s" from its table group "%s".';
 	$lang['strconfirmremovesequences'] = 'Remove these %s sequences from schema "%s" :';
-	$lang['strremovesequenceok'] = '%s sequence has been removed from its tables group.';
-	$lang['strremovesequencesok'] = '%s sequences have been removed from their tables group.';
-	$lang['strremovesequenceerr'] = 'Error while removing the sequence "%s.%s" from its tables group "%s".';
-	$lang['strremovesequenceserr'] = 'Error while removing these %s sequences of schema "%s" from their tables group.';
+	$lang['strremovesequenceok'] = '%s sequence has been removed from its table group.';
+	$lang['strremovesequencesok'] = '%s sequences have been removed from their table group.';
+	$lang['strremovesequenceerr'] = 'Error while removing the sequence "%s.%s" from its table group "%s".';
+	$lang['strremovesequenceserr'] = 'Error while removing these %s sequences of schema "%s" from their table group.';
 
 	// Tables and sequences Emaj stats
 	$lang['strchangestable'] = 'Recorded changes for table "%s.%s"';
@@ -855,8 +855,8 @@
 	$lang['stremajhistorysequence'] = 'E-Maj history for sequence "%s.%s"';
 	$lang['strnoemajhistory'] = 'No E-Maj history to display.';
 	$lang['strdescendingeventsorder'] = 'Most recent events are at the top.';
-	$lang['streventcreategroup'] = 'Tables group "%s" creation';
-	$lang['streventdropgroup'] = 'Tables group "%s" drop';
+	$lang['streventcreategroup'] = 'Table group "%s" creation';
+	$lang['streventdropgroup'] = 'Table group "%s" drop';
 	$lang['streventassigntable'] = 'Table assignment to group "%s"';
 	$lang['streventassignsequence'] = 'Sequence assignment to group "%s"';
 	$lang['streventmovetable'] = 'Table move from group "%s" to group "%s"';
@@ -922,9 +922,9 @@
 
 	// Consolidate an E-Maj rollback
 	$lang['strconsolidaterlbk'] = 'Consolidate a logged rollback';
-	$lang['strconfirmconsolidaterlbk'] = 'Are you sure you want to consolidate the rollback ended with the mark "%s" of the tables group "%s"?';
-	$lang['strconsolidaterlbkok'] = 'The rollback ended with the mark "%s" of the tables group "%s" has been consolidated.';
-	$lang['strconsolidaterlbkerr'] = 'Error while consolidating the rollback ended by the mark "%s" of the tables group "%s"!';
+	$lang['strconfirmconsolidaterlbk'] = 'Are you sure you want to consolidate the rollback ended with the mark "%s" of the table group "%s"?';
+	$lang['strconsolidaterlbkok'] = 'The rollback ended with the mark "%s" of the table group "%s" has been consolidated.';
+	$lang['strconsolidaterlbkerr'] = 'Error while consolidating the rollback ended by the mark "%s" of the table group "%s"!';
 
 	// E-Maj rollback details
 	$lang['strrlbkprogress'] = 'Rollback progress';
@@ -981,7 +981,7 @@
 	$lang['strerrortrapped'] = 'An error has been trapped while reading sequences.';
 	$lang['strglobalactivity'] = 'Global activity';
 	$lang['strlogginggroupstitle'] = 'Logging groups';
-	$lang['strnogroupselected'] = 'No tables group selected.';
+	$lang['strnogroupselected'] = 'No table group selected.';
 	$lang['strtablesinlogginggroups'] = 'Tables in logging groups';
 	$lang['strnotableselected'] = 'No table selected.';
 	$lang['strsequencesinlogginggroups'] = 'Sequences in logging groups';
@@ -1023,7 +1023,7 @@
 	$lang['strupdateextensionok'] = 'The "emaj" extension has been updated.';
 	$lang['strupdateextensionerr'] = 'Error while updating the "emaj" extension.';
 	$lang['strdropextension'] = 'Drop extension';
-	$lang['strdropextensiongroupsexist'] = 'Some (%s) tables groups currently exist. Dropping the extension will automatically drop these groups.';
+	$lang['strdropextensiongroupsexist'] = 'Some (%s) table groups currently exist. Dropping the extension will automatically drop these groups.';
 	$lang['strdropemajextension'] = 'Drop the "emaj" extension';
 	$lang['strconfirmdropextension'] = 'Confirm the "emaj" extension drop';
 	$lang['strdropextensionok'] = 'The "emaj" extension has been dropped.';

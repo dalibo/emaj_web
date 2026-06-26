@@ -1,7 +1,7 @@
 <?php
 
 	/*
-	 * Display the E-Maj history of a sequence, i.e. the tables group ownership.
+	 * Display the E-Maj history of a sequence, i.e. the table group ownership.
 	 */
 
 	// Include application functions

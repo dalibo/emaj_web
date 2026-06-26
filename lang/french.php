@@ -148,7 +148,7 @@
 	$lang['strstop'] = 'Arrêter';
 	$lang['strtable'] = 'Table';
 	$lang['strtables'] = 'Tables';
-	$lang['strtablesgroup'] = 'Groupe de tables';
+	$lang['strtablegroup'] = 'Groupe de tables';
 	$lang['strtablespace'] = 'Tablespace';
 	$lang['strtrue'] = 'TRUE';
 	$lang['strtxid'] = 'Id. transaction';

@@ -72,7 +72,7 @@
 	}
 
 	/**
-	 * Perform sequences assignment into a tables group
+	 * Perform sequences assignment into a table group
 	 */
 	function assign_sequences_ok() {
 		global $lang, $data, $emajdb;
@@ -89,7 +89,7 @@
 		// Check that the schema and the sequences still exist
 		checkRelations($_REQUEST['schema'], $_POST['sequences'], 'sequence', $errMsgAction);
 
-		// Check that the tables group still exists
+		// Check that the table group still exists
 		recheckGroups($_POST['group'], $errMsgAction);
 
 		// Check the mark name
@@ -129,7 +129,7 @@
 		else
 			$errMsgAction = sprintf($lang['strmovesequenceserr'], $nbSeq, htmlspecialchars($_REQUEST['schema']));
 
-		// Check that the tables group still exists
+		// Check that the table group still exists
 		recheckGroups($groupsList, $errMsgAction);
 
 		$misc->printHeader('database', 'database', 'schemas');
@@ -177,7 +177,7 @@
 	}
 
 	/**
-	 * Perform sequences move into another tables group
+	 * Perform sequences move into another table group
 	 */
 	function move_sequences_ok() {
 		global $lang, $data, $emajdb;
@@ -193,7 +193,7 @@
 
 		$allGroups = $_POST['oldgroups'] . ', ' . $_POST['newgroup'];
 
-		// Check that the tables group still exists
+		// Check that the table group still exists
 		recheckGroups($allGroups, $errMsgAction);
 
 		// Check the mark name
@@ -233,7 +233,7 @@
 		else
 			$errMsgAction = sprintf($lang['strremovesequenceserr'], $nbSeq, htmlspecialchars($_REQUEST['schema']));
 
-		// Check that the tables group still exists
+		// Check that the table group still exists
 		recheckGroups($groupsList, $errMsgAction);
 
 		$misc->printHeader('database', 'database', 'schemas');
@@ -269,7 +269,7 @@
 	}
 
 	/**
-	 * Perform sequences remove from their tables group
+	 * Perform sequences remove from their table group
 	 */
 	function remove_sequences_ok() {
 		global $lang, $data, $emajdb;
@@ -283,7 +283,7 @@
 		else
 			$errMsgAction = sprintf($lang['strremovesequenceserr'], $_POST['nbsequences'], htmlspecialchars($_POST['schema']));
 
-		// Check that the tables group still exists
+		// Check that the table group still exists
 		recheckGroups($_POST['groups'], $errMsgAction);
 
 		// Check the mark name

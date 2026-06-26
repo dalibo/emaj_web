@@ -1,7 +1,7 @@
 <?php
 
 	/*
-	 * Display the properties of a table: columns and tables group ownership
+	 * Display the properties of a table: columns and table group ownership
 	 */
 
 	// Include application functions
@@ -192,7 +192,7 @@
 						$navlinks = array();
 
 						if (! $isAssigned) {
-							// Not yet assigned to a tables group
+							// Not yet assigned to a table group
 							$navlinks['assign_table'] = array (
 								'content' => $lang['strassign'],
 								'attr'=> array (
@@ -207,7 +207,7 @@
 								),
 							);
 						} else {
-							// Already assigned to a tables group
+							// Already assigned to a table group
 							$prop->moveFirst();
 							$group = $prop->fields['rel_group'];
 

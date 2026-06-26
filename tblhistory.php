@@ -1,7 +1,7 @@
 <?php
 
 	/*
-	 * Display the E-Maj history of a table, i.e. the tables group ownership and E-Maj properties changes.
+	 * Display the E-Maj history of a table, i.e. the table group ownership and E-Maj properties changes.
 	 */
 
 	// Include application functions

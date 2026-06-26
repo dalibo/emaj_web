@@ -1,7 +1,7 @@
 <?php
 
 	/*
-	 * Manage the E-Maj tables groups configuration
+	 * Manage the E-Maj table groups configuration
 	 */
 
 	// Include application functions
@@ -393,7 +393,7 @@
 	}
 
 	/**
-	 * Perform table/sequence insertion into a tables group
+	 * Perform table/sequence insertion into a table group
 	 */
 	function assign_tblseq_ok() {
 		global $lang, $data, $emajdb;
@@ -568,7 +568,7 @@
 	}
 
 	/**
-	 * Perform table/sequence insertion into a tables group
+	 * Perform table/sequence insertion into a table group
 	 */
 	function update_tblseq_ok() {
 		global $lang, $data, $emajdb;
@@ -657,7 +657,7 @@
 	}
 
 	/**
-	 * Perform table/sequence removal from a tables group
+	 * Perform table/sequence removal from a table group
 	 */
 	function remove_tblseq_ok() {
 		global $lang, $data, $emajdb;

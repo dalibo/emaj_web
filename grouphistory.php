@@ -1,6 +1,6 @@
 <?php
 	/*
-	 * Manage the tables groups history
+	 * Manage the table groups history
 	 */
 
 	// Include application functions
@@ -27,7 +27,7 @@
  *******************************************************************************************************/
 
 	/**
-	 * Displays the history of the tables group, ie. group creation, drop, start and stop events
+	 * Displays the history of the table group, ie. group creation, drop, start and stop events
 	 */
 	function doDefault() {
 		global $misc, $lang, $emajdb;
